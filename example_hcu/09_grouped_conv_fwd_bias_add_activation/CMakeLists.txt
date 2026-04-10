@@ -1,0 +1,6 @@
+add_custom_target(example_grouped_conv_fwd_bias_add_activation_mmac)
+
+add_compile_options("SHELL: -mllvm -support-768-vgprs=true -Rpass-analysis=kernel-resource-usage")
+add_example_executable(example_grouped_conv_fwd_bias_add_relu_mmac_nhwc_fp16_cshuffle grouped_conv_fwd_bias_add_relu_mmac_nhwc_fp16_cshuffle.cpp)
+
+add_dependencies(example_grouped_conv_fwd_bias_add_activation_mmac example_grouped_conv_fwd_bias_add_relu_mmac_nhwc_fp16_cshuffle)

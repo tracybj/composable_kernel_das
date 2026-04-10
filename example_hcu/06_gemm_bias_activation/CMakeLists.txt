@@ -1,0 +1,8 @@
+# hcu examples
+add_custom_target(example_gemm_mmac_bias_activation)
+
+add_example_executable(example_gemm_bias_relu_mmac_fp16 gemm_bias_relu_mmac_fp16.cpp)
+add_example_executable(example_gemm_bias_relu_mmac_fp16_wavelet gemm_bias_relu_mmac_fp16_wavelet.cpp)
+
+add_dependencies(example_gemm_mmac_bias_activation example_gemm_bias_relu_mmac_fp16)
+add_dependencies(example_gemm_mmac_bias_activation example_gemm_bias_relu_mmac_fp16_wavelet)

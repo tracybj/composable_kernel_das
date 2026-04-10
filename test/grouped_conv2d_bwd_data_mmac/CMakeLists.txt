@@ -1,0 +1,7 @@
+add_gtest_executable(test_grouped_conv2d_bwd_data_mmac grouped_conv2d_bwd_data_mmac.cpp)
+target_link_libraries(
+  test_grouped_conv2d_bwd_data_mmac PRIVATE
+  utility
+  device_grouped_conv2d_bwd_gfx928_instance
+  device_grouped_conv2d_bwd_gfx936_instance
+)

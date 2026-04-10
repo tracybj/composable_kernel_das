@@ -1,0 +1,3 @@
+add_example_executable(tile_example_conv_fwd  conv_fwd.cpp)
+add_example_executable(tile_example_conv_fwd_dsreadm  conv_fwd_dsreadm.cpp)
+add_example_executable(tile_example_conv_fwd_lds_direct  conv_fwd_lds_direct.cpp)
