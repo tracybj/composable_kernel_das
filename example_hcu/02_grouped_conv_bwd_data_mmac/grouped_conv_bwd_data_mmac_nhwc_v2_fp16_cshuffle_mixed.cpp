@@ -78,7 +78,7 @@ using DeviceGroupedConvInstance =
         1,                 // NmmacInterleave
         S<1, 32, 8>,       // ABlockTransferThreadClusterLengths_B_M_K
         2,                 // ABlockTransferSrcVectorDim
-        2,                 // ABlockTransferSrcScalarPerVector
+        4,                 // ABlockTransferSrcScalarPerVector
         S<1, 2, 1, 8, 16>, // BBlockTransferThreadClusterLengths_B_N0_K0_K1_N1
         4,                 // BBlockTransferSrcVectorDim
         2,                 // BBlockTransferSrcScalarPerVector

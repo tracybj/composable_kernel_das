@@ -923,12 +923,12 @@ struct numeric_limits<ck::host::bf8_t> : public float8_base_numeric_limits<ck::h
 // User-defined literals
 //
 
-ck::host::fp8_t operator"" _fe4m3(long double x) { return ck::host::fp8_t(float(x)); }
+ck::host::fp8_t operator""_fe4m3(long double x) { return ck::host::fp8_t(float(x)); }
 
-ck::host::fp8_t operator"" _fe4m3(unsigned long long int x) { return ck::host::fp8_t(int(x)); }
+ck::host::fp8_t operator""_fe4m3(unsigned long long int x) { return ck::host::fp8_t(int(x)); }
 
-ck::host::bf8_t operator"" _fe5m2(long double x) { return ck::host::bf8_t(float(x)); }
+ck::host::bf8_t operator""_fe5m2(long double x) { return ck::host::bf8_t(float(x)); }
 
-ck::host::bf8_t operator"" _fe5m2(unsigned long long int x) { return ck::host::bf8_t(int(x)); }
+ck::host::bf8_t operator""_fe5m2(unsigned long long int x) { return ck::host::bf8_t(int(x)); }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
