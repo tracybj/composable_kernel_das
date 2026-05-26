@@ -7,6 +7,30 @@
 
 namespace ck_tile {
 
+template <typename Shape, typename = void>
+struct ConvIgemmShapeMPerBlock
+{
+    static constexpr index_t value = Shape::MPerBlock;
+};
+
+template <typename Shape>
+struct ConvIgemmShapeMPerBlock<Shape, std::void_t<decltype(Shape::kMPerBlock)>>
+{
+    static constexpr index_t value = Shape::kMPerBlock;
+};
+
+template <typename Shape, typename = void>
+struct ConvIgemmShapeNPerBlock
+{
+    static constexpr index_t value = Shape::NPerBlock;
+};
+
+template <typename Shape>
+struct ConvIgemmShapeNPerBlock<Shape, std::void_t<decltype(Shape::kNPerBlock)>>
+{
+    static constexpr index_t value = Shape::kNPerBlock;
+};
+
 template <typename IgemmShape, bool DeviceCTileIndexCheck = false>
 struct ConvIgemmTilePartitioner
 {
@@ -15,8 +39,8 @@ struct ConvIgemmTilePartitioner
     static constexpr auto I2 = number<2>{};
     static constexpr auto I3 = number<3>{};
 
-    static constexpr index_t MPerBlock = IgemmShape::MPerBlock;
-    static constexpr index_t NPerBlock = IgemmShape::NPerBlock;
+    static constexpr index_t MPerBlock = ConvIgemmShapeMPerBlock<IgemmShape>::value;
+    static constexpr index_t NPerBlock = ConvIgemmShapeNPerBlock<IgemmShape>::value;
 
     CK_TILE_HOST ConvIgemmTilePartitioner() = default;
 

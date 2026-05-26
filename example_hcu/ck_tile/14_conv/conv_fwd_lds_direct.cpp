@@ -153,6 +153,7 @@ bool run_grouped_conv_fwd(const ck_tile::conv::ConvParam& conv_param)
                                                               16,
                                                               MmmacInterleave,
                                                               NmmacInterleave,
+                                                              2,
                                                               true>;
 
     using Epilogue = ck_tile::LdsCShuffleEpilogue<EpilogueProblem, WG>;
