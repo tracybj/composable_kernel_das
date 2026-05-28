@@ -863,6 +863,66 @@ struct WarpGemmAttributeMmacImplI8I8F32M16N16K32Scale
 
 };
 
+// int4
+struct WarpGemmAttributeMmacImplI4I4I32M16N16K64
+{
+    using ADataType = pk_int4_t;
+    using BDataType = pk_int4_t;
+    using CDataType = int32_t;
+
+    using AComputeDataType = int32_t;
+    using BComputeDataType = int32_t;
+    using CComputeDataType = int32_t;
+
+    using AVecType = ext_vector_t<int32_t, 2>;
+    using BVecType = ext_vector_t<int32_t, 2>;
+    using CVecType = ext_vector_t<int32_t, 4>;
+
+    using AInt4VecType = ext_vector_t<int8_t, 8>;
+    using BInt4VecType = ext_vector_t<int8_t, 8>;
+    using CInt32VecType = ext_vector_t<int32_t, 4>;
+
+    static constexpr index_t kM = 16;
+    static constexpr index_t kN = 16;
+    static constexpr index_t kK = 64;
+
+    static constexpr index_t kAMLane     = 16;
+    static constexpr index_t kBNLane     = 16;
+    static constexpr index_t kABKLane    = 4;
+    static constexpr index_t kABKPerLane = 8; // 8 packed pk_int4_t values = 16 int4 values
+
+    static constexpr index_t kCMLane = 16;
+    static constexpr index_t kCNLane = 4;
+
+    static constexpr index_t kCMPerLane  = 1;
+    static constexpr index_t kCN0PerLane = 4;
+    static constexpr index_t kCN1PerLane = 1;
+
+    CK_TILE_DEVICE void
+    operator()(CVecType& c_vec, const AVecType& a_vec, const BVecType& b_vec) const
+    {
+#if defined(__gfx938__)
+        c_vec = __builtin_hcu_mmac_i32_16x16x64_i4(a_vec, b_vec, c_vec);
+#else
+        ignore = c_vec;
+        ignore = a_vec;
+        ignore = b_vec;
+#endif
+    }
+
+    CK_TILE_DEVICE CVecType operator()(const AVecType& a_vec, const BVecType& b_vec) const
+    {
+#if defined(__gfx938__)
+        return bit_cast<CVecType>(
+            __builtin_hcu_mmac_i32_16x16x64_i4(a_vec, b_vec, int32x4_t{0}));
+#else
+        ignore = a_vec;
+        ignore = b_vec;
+        return CVecType{0};
+#endif
+    }
+};
+
 // FP8
 template <typename AType_, typename BType_>
 struct WarpGemmAttributeMmacImpl_f32_16x16x32_f8_base

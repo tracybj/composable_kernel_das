@@ -99,7 +99,7 @@ template <typename ALayout,
           typename GemmConfig,
           template <typename>
           typename DTypeTraits>
-void dump_gemm_json_results(const std::string& json_filename,
+inline void dump_gemm_json_results(const std::string& json_filename,
                             int M,
                             int N,
                             int K,
@@ -145,7 +145,7 @@ void dump_gemm_json_results(const std::string& json_filename,
     END_JSON_DUMP_FILE();
 }
 
-void dump_batched_gemm_json_results(const std::string& json_filename,
+inline void dump_batched_gemm_json_results(const std::string& json_filename,
                                     const std::string& op_name,
                                     int M,
                                     int N,
@@ -182,7 +182,7 @@ void dump_batched_gemm_json_results(const std::string& json_filename,
 }
 
 template <typename ALayout, typename BLayout, typename CLayout>
-void dump_grouped_gemm_json_results(const std::string& json_filename,
+inline void dump_grouped_gemm_json_results(const std::string& json_filename,
                                     const std::string& op_name,
                                     int group_count,
                                     bool pass,
@@ -203,7 +203,7 @@ void dump_grouped_gemm_json_results(const std::string& json_filename,
     END_JSON_DUMP_FILE();
 }
 
-void dump_flatmm_json_results(const std::string& json_filename,
+inline void dump_flatmm_json_results(const std::string& json_filename,
                               const std::string& datatype,
                               int M,
                               int N,
@@ -233,7 +233,7 @@ void dump_flatmm_json_results(const std::string& json_filename,
     END_JSON_DUMP_FILE();
 }
 
-void dump_gemm_multi_d_fp16_json_results(const std::string& json_filename,
+inline void dump_gemm_multi_d_fp16_json_results(const std::string& json_filename,
                                          const std::string& op_name,
                                          int M,
                                          int N,
@@ -265,7 +265,7 @@ void dump_gemm_multi_d_fp16_json_results(const std::string& json_filename,
     END_JSON_DUMP_FILE();
 }
 
-void dump_elementwise_json_results(const std::string& json_filename,
+inline void dump_elementwise_json_results(const std::string& json_filename,
                                    const std::string& prec,
                                    int grid_size,
                                    int block_size,
@@ -283,7 +283,7 @@ void dump_elementwise_json_results(const std::string& json_filename,
     END_JSON_DUMP_FILE();
 }
 
-void dump_layernorm2d_fwd_json_results(const std::string& json_filename,
+inline void dump_layernorm2d_fwd_json_results(const std::string& json_filename,
                                        const std::string& prec_i,
                                        const std::string& prec_o,
                                        const std::string& prec_sm,
@@ -318,7 +318,7 @@ void dump_layernorm2d_fwd_json_results(const std::string& json_filename,
 }
 
 template <typename DataType, template <typename> typename DTypeTraits>
-void dump_reduce_json_results(const std::string& json_filename,
+inline void dump_reduce_json_results(const std::string& json_filename,
                               int N,
                               int C,
                               int H,
@@ -342,7 +342,7 @@ void dump_reduce_json_results(const std::string& json_filename,
     END_JSON_DUMP_FILE();
 }
 
-void dump_permute_json_results(const std::string& json_filename,
+inline void dump_permute_json_results(const std::string& json_filename,
                                const std::string& data_type,
                                bool pass,
                                float ave_time,
@@ -358,7 +358,7 @@ void dump_permute_json_results(const std::string& json_filename,
     END_JSON_DUMP_FILE();
 }
 
-void dump_topk_softmax_json(const std::string& json_filename,
+inline void dump_topk_softmax_json(const std::string& json_filename,
                             const std::string& input_prec,
                             const std::string& weight_prec,
                             int tokens,
@@ -386,7 +386,7 @@ void dump_topk_softmax_json(const std::string& json_filename,
     END_JSON_DUMP_FILE();
 }
 
-void dump_rmsnorm2d_fwd_json(const std::string& json_filename,
+inline void dump_rmsnorm2d_fwd_json(const std::string& json_filename,
                              const std::string& prec_str,
                              int m,
                              int n,
@@ -416,7 +416,7 @@ void dump_rmsnorm2d_fwd_json(const std::string& json_filename,
     END_JSON_DUMP_FILE();
 }
 
-void dump_add_rmsnorm2d_rdquant_fwd_json(
+inline void dump_add_rmsnorm2d_rdquant_fwd_json(
     const std::string& json_filename,
     const std::string& input_data_type,
     const std::string& quantized_data_type,
@@ -443,7 +443,7 @@ void dump_add_rmsnorm2d_rdquant_fwd_json(
     END_JSON_DUMP_FILE();
 }
 
-void dump_smoothquant_json(const std::string& json_filename,
+inline void dump_smoothquant_json(const std::string& json_filename,
                            const std::string& prec_str,
                            int m,
                            int n,
@@ -467,7 +467,7 @@ void dump_smoothquant_json(const std::string& json_filename,
     END_JSON_DUMP_FILE();
 }
 
-void dump_moe_sorting_json(const std::string& json_filename,
+inline void dump_moe_sorting_json(const std::string& json_filename,
                            const std::string& index_prec,
                            const std::string& weight_prec,
                            const std::string& workspace_size,
@@ -495,7 +495,7 @@ void dump_moe_sorting_json(const std::string& json_filename,
     END_JSON_DUMP_FILE();
 }
 
-void dump_batched_transpose_json(const std::string& json_filename,
+inline void dump_batched_transpose_json(const std::string& json_filename,
                                  int N,
                                  int C,
                                  int H,
@@ -523,7 +523,7 @@ void dump_batched_transpose_json(const std::string& json_filename,
     END_JSON_DUMP_FILE();
 }
 
-void dump_moe_smoothquant_json(const std::string& json_filename,
+inline void dump_moe_smoothquant_json(const std::string& json_filename,
                                const std::string& prec_i,
                                const std::string& prec_o,
                                int tokens,
@@ -551,7 +551,7 @@ void dump_moe_smoothquant_json(const std::string& json_filename,
     END_JSON_DUMP_FILE();
 }
 
-void dump_fused_moe_json(const std::string& json_filename,
+inline void dump_fused_moe_json(const std::string& json_filename,
                          const std::string& api_str,
                          const std::string& prec_str,
                          int tokens,
@@ -595,7 +595,7 @@ void dump_fused_moe_json(const std::string& json_filename,
     END_JSON_DUMP_FILE();
 }
 
-void dump_fmha_fwd_json_results(const std::string& json_filename,
+inline void dump_fmha_fwd_json_results(const std::string& json_filename,
                                 const std::string& prec,
                                 const std::string& mode,
                                 const std::string& io_layout,
@@ -643,7 +643,7 @@ void dump_fmha_fwd_json_results(const std::string& json_filename,
     END_JSON_DUMP_FILE();
 }
 
-void dump_fmha_bwd_json_results(const std::string& json_filename,
+inline void dump_fmha_bwd_json_results(const std::string& json_filename,
                                 const std::string& data_type,
                                 const std::string& mode,
                                 const std::string& i_perm,

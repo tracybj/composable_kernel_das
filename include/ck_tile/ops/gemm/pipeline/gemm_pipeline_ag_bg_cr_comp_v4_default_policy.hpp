@@ -23,8 +23,8 @@ struct GemmPipelineAgBgCrCompV4DefaultPolicy
     CK_TILE_HOST_DEVICE static constexpr auto GetBlockGemm()
     {
         // using AccDataType     = float;
-        using BlockWarps = typename Problem::BlockGemmShape::BlockWarps;    //<2, 2, 1>
-        using WarpTile   = typename Problem::BlockGemmShape::WarpTile;      //<32, 32, 16>
+        using BlockWarps = typename Problem::BlockGemmShape::BlockWarps;    // <2, 2, 1>
+        using WarpTile   = typename Problem::BlockGemmShape::WarpTile;      // <32, 32, 16>
 
         using WarpGemm = WarpGemmMmacDispatcher<typename Problem::ADataType,  // half
                                                 typename Problem::BDataType,  // half

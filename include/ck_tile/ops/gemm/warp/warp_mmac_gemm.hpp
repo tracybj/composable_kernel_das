@@ -43,6 +43,9 @@ using WarpGemmMmacBF16BF16F32_WT16x32x128_MR1NR1MI1NI2 = WarpGemmImpl<
 using WarpGemmMmacBF16BF16F32_WT16x16x128_MR1NR1MI1NI1 = WarpGemmImpl<
     WarpGemmAttributeMmacIterateK<WarpGemmAttributeMmacImplBf16Bf16F32M16N16K16, 1, 1, 1, 1, 8>>;
 
+using WarpGemmMmacBF16BF16F32_WT16x64x32_MR1NR4MI1NI1 = WarpGemmImpl<
+    WarpGemmAttributeMmacIterateK<WarpGemmAttributeMmacImplBf16Bf16F32M16N16K16, 1, 4, 1, 1, 2>>;
+
 // v2 refers to KIterate not continuous in KPerLane
 using WarpGemmMmacF16F16F32_WT32x16x256_MR2NR1MI1NI1_TRANSC = WarpGemmImpl<
     WarpGemmAttributeMmacIterateKTransC_v2<WarpGemmAttributeMmacImplF16F16F32M16N16K16TransC,
@@ -148,6 +151,32 @@ using WarpGemmMmacI8I8I32_WT16x64x128_MR1NR4MI1NI1_TRANSC = WarpInt8GemmImpl<War
 using WarpGemmMmacI8I8I32_WT16x32x128_MR1NR2MI1NI1_TRANSC_Preshuffle = WarpInt8GemmImpl<WarpGemmAttributeInt8MmacIterateKTransC_Shuffle<WarpGemmAttributeMmacImplI8I8I32M16N16K32TransC, 1, 2, 1, 1, 4>>;
 using WarpGemmMmacI8I8I32_WT16x32x256_MR1NR2MI1NI1_TRANSC_Preshuffle = WarpInt8GemmImpl<WarpGemmAttributeInt8MmacIterateKTransC_Shuffle<WarpGemmAttributeMmacImplI8I8I32M16N16K32TransC, 1, 2, 1, 1, 8>>;
 
+// int4
+using WarpGemmMmacI4I4I32_WT16x16x64_MR1NR1MI1NI1 =
+    WarpInt4GemmImpl<WarpGemmAttributeInt4MmacIterateK<
+        WarpGemmAttributeMmacImplI4I4I32M16N16K64, 1, 1, 1, 1, 1>>;
+using WarpGemmMmacI4I4I32_WT16x64x64_MR1NR4MI1NI1 =
+    WarpInt4GemmImpl<WarpGemmAttributeInt4MmacIterateK<
+        WarpGemmAttributeMmacImplI4I4I32M16N16K64, 1, 4, 1, 1, 1>>;
+using WarpGemmMmacI4I4I32_WT16x64x64_MR1NR2MI1NI2 =
+    WarpInt4GemmImpl<WarpGemmAttributeInt4MmacIterateK<
+        WarpGemmAttributeMmacImplI4I4I32M16N16K64, 1, 2, 1, 2, 1>>;
+using WarpGemmMmacI4I4I32_WT16x32x64_MR1NR2MI1NI1 =
+    WarpInt4GemmImpl<WarpGemmAttributeInt4MmacIterateK<
+        WarpGemmAttributeMmacImplI4I4I32M16N16K64, 1, 2, 1, 1, 1>>;
+using WarpGemmMmacI4I4I32_WT32x16x64_MR2NR1MI1NI1 =
+    WarpInt4GemmImpl<WarpGemmAttributeInt4MmacIterateK<
+        WarpGemmAttributeMmacImplI4I4I32M16N16K64, 2, 1, 1, 1, 1>>;
+using WarpGemmMmacI4I4I32_WT32x32x64_MR2NR2MI1NI1 =
+    WarpInt4GemmImpl<WarpGemmAttributeInt4MmacIterateK<
+        WarpGemmAttributeMmacImplI4I4I32M16N16K64, 2, 2, 1, 1, 1>>;
+using WarpGemmMmacI4I4I32_WT32x64x64_MR2NR4MI1NI1 =
+    WarpInt4GemmImpl<WarpGemmAttributeInt4MmacIterateK<
+        WarpGemmAttributeMmacImplI4I4I32M16N16K64, 2, 4, 1, 1, 1>>;
+using WarpGemmMmacI4I4I32_WT32x64x64_MR2NR2MI1NI2 =
+    WarpInt4GemmImpl<WarpGemmAttributeInt4MmacIterateK<
+        WarpGemmAttributeMmacImplI4I4I32M16N16K64, 2, 2, 1, 2, 1>>;
+
 //fp8 fp8
 using WarpGemmMmacfp8fp8f32_WT16x16x32_MR1NR1MI1NI1 = WarpFp8Bf8GemmImpl<WarpGemmAttributeFp8Bf8MmacIterateK<WarpGemmAttributeMmacImpl_f32_16x16x32_fp8_fp8, 1, 1, 1, 1, 1>>;
 using WarpGemmMmacfp8fp8f32_WT16x32x32_MR1NR2MI1NI1 = WarpFp8Bf8GemmImpl<WarpGemmAttributeFp8Bf8MmacIterateK<WarpGemmAttributeMmacImpl_f32_16x16x32_fp8_fp8, 1, 2, 1, 1, 1>>;
@@ -155,6 +184,7 @@ using WarpGemmMmacfp8fp8f32_WT16x32x64_MR1NR2MI1NI1 = WarpFp8Bf8GemmImpl<WarpGem
 using WarpGemmMmacfp8fp8f32_WT16x64x32_MR1NR4MI1NI1 = WarpFp8Bf8GemmImpl<WarpGemmAttributeFp8Bf8MmacIterateK<WarpGemmAttributeMmacImpl_f32_16x16x32_fp8_fp8, 1, 4, 1, 1, 1>>;
 using WarpGemmMmacfp8fp8f32_WT16x64x64_MR1NR4MI1NI1 = WarpFp8Bf8GemmImpl<WarpGemmAttributeFp8Bf8MmacIterateK<WarpGemmAttributeMmacImpl_f32_16x16x32_fp8_fp8, 1, 4, 1, 1, 2>>;
 using WarpGemmMmacfp8fp8f32_WT32x64x32_MR2NR1MI1NI4 = WarpFp8Bf8GemmImpl<WarpGemmAttributeFp8Bf8MmacIterateK<WarpGemmAttributeMmacImpl_f32_16x16x32_fp8_fp8, 2, 1, 1, 4, 1>>;
+using WarpGemmMmacfp8fp8f32_WT32x64x32_MR2NR4MI1NI1 = WarpFp8Bf8GemmImpl<WarpGemmAttributeFp8Bf8MmacIterateK<WarpGemmAttributeMmacImpl_f32_16x16x32_fp8_fp8, 2, 4, 1, 1, 1>>;
 using WarpGemmMmacfp8fp8f32_WT32x64x64_MR2NR4MI1NI1 = WarpFp8Bf8GemmImpl<WarpGemmAttributeFp8Bf8MmacIterateK<WarpGemmAttributeMmacImpl_f32_16x16x32_fp8_fp8, 2, 4, 1, 1, 2>>;
 
 //fp8 fp8 scale
@@ -168,5 +198,7 @@ using WarpGemmMmacbf8fp8f32_WT32x64x32_MR2NR1MI1NI4 = WarpFp8Bf8GemmImpl<WarpGem
 
 //bf8 bf8
 using WarpGemmMmacbf8bf8f32_WT32x64x32_MR2NR1MI1NI4 = WarpFp8Bf8GemmImpl<WarpGemmAttributeFp8Bf8MmacIterateK<WarpGemmAttributeMmacImpl_f32_16x16x32_bf8_bf8, 2, 1, 1, 4, 1>>;
+using WarpGemmMmacbf8bf8f32_WT32x64x32_MR2NR4MI1NI1 = WarpFp8Bf8GemmImpl<WarpGemmAttributeFp8Bf8MmacIterateK<WarpGemmAttributeMmacImpl_f32_16x16x32_bf8_bf8, 2, 4, 1, 1, 1>>;
+using WarpGemmMmacbf8bf8f32_WT32x64x64_MR2NR4MI1NI1 = WarpFp8Bf8GemmImpl<WarpGemmAttributeFp8Bf8MmacIterateK<WarpGemmAttributeMmacImpl_f32_16x16x32_bf8_bf8, 2, 4, 1, 1, 2>>;
 
 } // namespace ck_tile
