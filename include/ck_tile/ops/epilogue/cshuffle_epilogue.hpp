@@ -607,7 +607,6 @@ struct CShuffleEpilogue
         constexpr auto dram_tile_distribution =
             TileEncodingPattern::make_2d_static_tile_distribution();
 
-        static_assert(NumDTensor==0, "Currently, the CShuffle Epilogue only supports no D tensors");
         auto d_dram_windows = generate_tuple(
             [&](auto idx) {
                 return make_tile_window(ds_dram_windows[idx], dram_tile_distribution);

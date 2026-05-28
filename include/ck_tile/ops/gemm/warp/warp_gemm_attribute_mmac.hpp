@@ -1569,6 +1569,142 @@ template <typename WarpGemmAttributeMmacImpl_,
           index_t MInterleave,
           index_t NInterleave,
           index_t kKIter>
+struct WarpGemmAttributeInt4MmacIterateK
+{
+    static_assert(kKIter > 0, "wrong!");
+
+    using Impl = remove_cvref_t<WarpGemmAttributeMmacImpl_>;
+
+    using ADataType = typename Impl::ADataType;
+    using BDataType = typename Impl::BDataType;
+    using CDataType = typename Impl::CDataType;
+
+    using AComputeDataType = typename Impl::AComputeDataType;
+    using BComputeDataType = typename Impl::BComputeDataType;
+    using CComputeDataType = typename Impl::CComputeDataType;
+
+    using AVecType =
+        ext_vector_t<int8_t, vector_traits<typename Impl::AInt4VecType>::vector_size * kKIter *
+                                 MRepeat * MInterleave>;
+    using BVecType =
+        ext_vector_t<int8_t, vector_traits<typename Impl::BInt4VecType>::vector_size * kKIter *
+                                 NRepeat * NInterleave>;
+    using CVecType =
+        ext_vector_t<CDataType,
+                     vector_traits<typename Impl::CVecType>::vector_size * MRepeat * NRepeat *
+                         MInterleave * NInterleave>;
+
+    static constexpr index_t kM = Impl::kM * MRepeat * MInterleave;
+    static constexpr index_t kN = Impl::kN * NRepeat * NInterleave;
+    static constexpr index_t kK = Impl::kK * kKIter;
+    static constexpr index_t kKPerThread = Impl::kABKPerLane * kKIter;
+
+    using AWarpDstrEncoding =
+        tile_distribution_encoding<sequence<>,
+                                   tuple<sequence<MRepeat, Impl::kAMLane, MInterleave>,
+                                         sequence<Impl::kABKLane, Impl::kABKPerLane * kKIter>>,
+                                   tuple<sequence<2, 1>>,
+                                   tuple<sequence<0, 1>>,
+                                   sequence<1, 1, 2>,
+                                   sequence<0, 2, 1>>;
+
+    using BWarpDstrEncoding =
+        tile_distribution_encoding<sequence<>,
+                                   tuple<sequence<NRepeat, Impl::kBNLane, NInterleave>,
+                                         sequence<Impl::kABKLane, Impl::kABKPerLane * kKIter>>,
+                                   tuple<sequence<2, 1>>,
+                                   tuple<sequence<0, 1>>,
+                                   sequence<1, 1, 2>,
+                                   sequence<0, 2, 1>>;
+
+    using CWarpDstrEncoding = tile_distribution_encoding<
+        sequence<>,
+        tuple<sequence<MRepeat, Impl::kCMLane, MInterleave, Impl::kCMPerLane>,
+              sequence<NRepeat, Impl::kCNLane, NInterleave, Impl::kCN0PerLane, Impl::kCN1PerLane>>,
+        tuple<sequence<2, 1>>,
+        tuple<sequence<1, 1>>,
+        sequence<1, 2, 1, 1, 2, 2, 2>,
+        sequence<0, 0, 2, 3, 3, 2, 4>>;
+
+    using CWarpOutputDstrEncoding = tile_distribution_encoding<
+        sequence<>,
+        tuple<sequence<MRepeat, Impl::kCMLane, MInterleave, Impl::kCMPerLane>,
+              sequence<NRepeat, Impl::kCN0PerLane, Impl::kCNLane, NInterleave * Impl::kCN1PerLane>>,
+        tuple<sequence<2, 1>>,
+        tuple<sequence<2, 1>>,
+        sequence<1, 2, 1, 1, 2, 2>,
+        sequence<0, 0, 2, 3, 1, 3>>;
+
+    CK_TILE_DEVICE void
+    operator()(CVecType& c_vec, const AVecType& a_vec, const BVecType& b_vec) const
+    {
+        using buf_a =
+            thread_buffer<typename Impl::AInt4VecType, kKIter * MRepeat * MInterleave>;
+        using buf_b =
+            thread_buffer<typename Impl::BInt4VecType, kKIter * NRepeat * NInterleave>;
+        using buf_c = thread_buffer<typename Impl::CVecType,
+                                    MRepeat * NRepeat * MInterleave * NInterleave>;
+
+        static_for<0, MRepeat, 1>{}([&](auto iMRepeat) {
+            static_for<0, NRepeat, 1>{}([&](auto iNRepeat) {
+                static_for<0, MInterleave, 1>{}([&](auto iMInterleave) {
+                    static_for<0, NInterleave, 1>{}([&](auto iNInterleave) {
+                        static_for<0, kKIter, 1>{}([&](auto iKIter) {
+                            Impl{}(reinterpret_cast<buf_c&>(c_vec)
+                                       .template get_as<typename Impl::CVecType>()
+                                           [iMRepeat * NRepeat * MInterleave * NInterleave +
+                                            iNRepeat * MInterleave * NInterleave +
+                                            iMInterleave * NInterleave + iNInterleave],
+                                   reinterpret_cast<const buf_a&>(a_vec)
+                                       .template get_as<typename Impl::AVecType>()
+                                           [iMRepeat * MInterleave * kKIter +
+                                            iMInterleave * kKIter + iKIter],
+                                   reinterpret_cast<const buf_b&>(b_vec)
+                                       .template get_as<typename Impl::BVecType>()
+                                           [iNRepeat * NInterleave * kKIter +
+                                            iNInterleave * kKIter + iKIter]);
+                        });
+                    });
+                });
+            });
+        });
+    }
+
+    template <typename CWarpTensor>
+    CK_TILE_DEVICE auto MakeCOutputLayout(const CWarpTensor& c_warp_tensor) const
+    {
+        constexpr auto c_warp_output_distribution =
+            make_static_tile_distribution(CWarpOutputDstrEncoding{});
+        auto c_warp_output_tensor =
+            make_static_distributed_tensor<CDataType>(c_warp_output_distribution);
+
+        static_for<0, MRepeat, 1>{}([&](auto iMR) {
+            static_for<0, NRepeat, 1>{}([&](auto iNR) {
+                static_for<0, MInterleave, 1>{}([&](auto iMI) {
+                    static_for<0, NInterleave, 1>{}([&](auto iNI) {
+                        static_for<0, Impl::kCN0PerLane, 1>{}([&](auto iCN0) {
+                            c_warp_output_tensor.set_y_sliced_thread_data(
+                                sequence<iMR, iNR, iMI, 0, iCN0, iNI>{},
+                                sequence<1, 1, 1, 1, 1, Impl::kCN1PerLane>{},
+                                c_warp_tensor.get_y_sliced_thread_data(
+                                    sequence<iMR, iNR, iMI, 0, iNI, iCN0, 0>{},
+                                    sequence<1, 1, 1, 1, 1, 1, Impl::kCN1PerLane>{}));
+                        });
+                    });
+                });
+            });
+        });
+
+        return c_warp_output_tensor;
+    }
+};
+
+template <typename WarpGemmAttributeMmacImpl_,
+          index_t MRepeat,
+          index_t NRepeat,
+          index_t MInterleave,
+          index_t NInterleave,
+          index_t kKIter>
 struct WarpGemmAttributeFp8Bf8MmacIterateK
 {
     static_assert(kKIter > 0, "wrong!");

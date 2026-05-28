@@ -71,7 +71,7 @@ struct BlockGemmARegBRegCRegV1
         static constexpr index_t NWarp        = config.template at<2>();    // 2
         static constexpr index_t MIterPerWarp = MPerBlock / (MWarp * WarpGemm::kM);     //128/(2*32)=2
         static constexpr index_t NIterPerWarp = NPerBlock / (NWarp * WarpGemm::kN);     //128/(2*32)=2
-        static constexpr index_t KIterPerWarp = KPerBlock / WarpGemm::kK;               //64/16=4
+        static constexpr index_t KIterPerWarp = KPerBlock * ck_tile::numeric_traits<ADataType>::PackedSize / WarpGemm::kK;               // e.g. pk_int4: 64*2/64=2
 
         static constexpr index_t KPack = WarpGemm::kKPerThread;
     };
@@ -545,7 +545,7 @@ struct BlockGemmARegBRegCRegV1
         {
             constexpr auto c_block_outer_dstr_encoding = tile_distribution_encoding<
                 sequence<>,
-                tuple<sequence<MIterPerWarp, MWarp>, sequence<NIterPerWarp, NWarp>>,        //<2, 2>, <2, 2>
+                tuple<sequence<MIterPerWarp, MWarp>, sequence<NIterPerWarp, NWarp>>,
                 tuple<sequence<1, 2>>,
                 tuple<sequence<1, 1>>,
                 c_distr_ys_major,

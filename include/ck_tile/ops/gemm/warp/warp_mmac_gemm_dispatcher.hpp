@@ -35,6 +35,9 @@ template<> struct WarpGemmMmacDispatcher<half_t, half_t, float, 16, 64, 32, fals
 template<> struct WarpGemmMmacDispatcher<half_t, half_t, float, 16, 64, 32, false, 1, 4, 1, 1> { using Type = WarpGemmMmacF16F16F32_WT16x64x32_MR1NR4MI1NI1; };
 template<> struct WarpGemmMmacDispatcher<half_t, half_t, float, 32, 64, 32, false, 2, 4, 1, 1> { using Type = WarpGemmMmacF16F16F32_WT32x64x32_MR2NR4MI1NI1; };
 
+// bf16
+template<> struct WarpGemmMmacDispatcher<bf16_t, bf16_t, float, 16, 64, 32, false, 1, 4, 1, 1> { using Type = WarpGemmMmacBF16BF16F32_WT16x64x32_MR1NR4MI1NI1; };
+
 //int8
 template<> struct WarpGemmMmacDispatcher<int8_t, int8_t, int32_t, 16, 16, 32, false, 1, 1, 1, 1> { using Type = WarpGemmMmacI8I8I32_WT16x16x32_MR1NR1MI1NI1; };
 template<> struct WarpGemmMmacDispatcher<int8_t, int8_t, int32_t, 32, 64, 32, false, 2, 1, 1, 4> { using Type = WarpGemmMmacI8I8I32_WT32x64x32_MR2NR1MI1NI4; };
@@ -54,6 +57,16 @@ template<> struct WarpGemmMmacDispatcher<int8_t, int8_t, float, 32, 64, 64, fals
 template<> struct WarpGemmMmacDispatcher<int8_t, int8_t, int32_t, 16, 32, 128, false, 1, 1, 1, 2> { using Type = WarpGemmMmacI8I8I32_WT16x32x128_MR1NR1MI1NI2; };
 template<> struct WarpGemmMmacDispatcher<int8_t, int8_t, int32_t, 16, 64, 128, false, 1, 1, 1, 4> { using Type = WarpGemmMmacI8I8I32_WT16x64x128_MR1NR1MI1NI4; };
 
+// int4
+template<> struct WarpGemmMmacDispatcher<pk_int4_t, pk_int4_t, int32_t, 16, 16, 64, false, 1, 1, 1, 1> { using Type = WarpGemmMmacI4I4I32_WT16x16x64_MR1NR1MI1NI1; };
+template<> struct WarpGemmMmacDispatcher<pk_int4_t, pk_int4_t, int32_t, 16, 32, 64, false, 1, 2, 1, 1> { using Type = WarpGemmMmacI4I4I32_WT16x32x64_MR1NR2MI1NI1; };
+template<> struct WarpGemmMmacDispatcher<pk_int4_t, pk_int4_t, int32_t, 16, 64, 64, false, 1, 4, 1, 1> { using Type = WarpGemmMmacI4I4I32_WT16x64x64_MR1NR4MI1NI1; };
+template<> struct WarpGemmMmacDispatcher<pk_int4_t, pk_int4_t, int32_t, 16, 64, 64, false, 1, 2, 1, 2> { using Type = WarpGemmMmacI4I4I32_WT16x64x64_MR1NR2MI1NI2; };
+template<> struct WarpGemmMmacDispatcher<pk_int4_t, pk_int4_t, int32_t, 32, 16, 64, false, 2, 1, 1, 1> { using Type = WarpGemmMmacI4I4I32_WT32x16x64_MR2NR1MI1NI1; };
+template<> struct WarpGemmMmacDispatcher<pk_int4_t, pk_int4_t, int32_t, 32, 32, 64, false, 2, 2, 1, 1> { using Type = WarpGemmMmacI4I4I32_WT32x32x64_MR2NR2MI1NI1; };
+template<> struct WarpGemmMmacDispatcher<pk_int4_t, pk_int4_t, int32_t, 32, 64, 64, false, 2, 4, 1, 1> { using Type = WarpGemmMmacI4I4I32_WT32x64x64_MR2NR4MI1NI1; };
+template<> struct WarpGemmMmacDispatcher<pk_int4_t, pk_int4_t, int32_t, 32, 64, 64, false, 2, 2, 1, 2> { using Type = WarpGemmMmacI4I4I32_WT32x64x64_MR2NR2MI1NI2; };
+
 // fp8 fp8
 template<> struct WarpGemmMmacDispatcher<fp8_t, fp8_t, float, 16, 16, 32, false, 1, 1, 1, 1> { using Type = WarpGemmMmacfp8fp8f32_WT16x16x32_MR1NR1MI1NI1; };
 template<> struct WarpGemmMmacDispatcher<fp8_t, fp8_t, float, 16, 32, 32, false, 1, 2, 1, 1> { using Type = WarpGemmMmacfp8fp8f32_WT16x32x32_MR1NR2MI1NI1; };
@@ -61,6 +74,7 @@ template<> struct WarpGemmMmacDispatcher<fp8_t, fp8_t, float, 16, 32, 64, false,
 template<> struct WarpGemmMmacDispatcher<fp8_t, fp8_t, float, 16, 64, 64, false, 1, 4, 1, 1> { using Type = WarpGemmMmacfp8fp8f32_WT16x64x64_MR1NR4MI1NI1; };
 template<> struct WarpGemmMmacDispatcher<fp8_t, fp8_t, float, 32, 64, 32, false, 2, 1, 1, 4> { using Type = WarpGemmMmacfp8fp8f32_WT32x64x32_MR2NR1MI1NI4; };
 template<> struct WarpGemmMmacDispatcher<fp8_t, fp8_t, float, 16, 64, 32, false, 1, 4, 1, 1> { using Type = WarpGemmMmacfp8fp8f32_WT16x64x32_MR1NR4MI1NI1; };
+template<> struct WarpGemmMmacDispatcher<fp8_t, fp8_t, float, 32, 64, 32, false, 2, 4, 1, 1> { using Type = WarpGemmMmacfp8fp8f32_WT32x64x32_MR2NR4MI1NI1; };
 template<> struct WarpGemmMmacDispatcher<fp8_t, fp8_t, float, 32, 64, 64, false, 2, 4, 1, 1> { using Type = WarpGemmMmacfp8fp8f32_WT32x64x64_MR2NR4MI1NI1; };
 
 //fp8 fp8 scale
@@ -74,6 +88,8 @@ template<> struct WarpGemmMmacDispatcher<bf8_t, fp8_t, float, 32, 64, 32, false,
 
 // bf8 bf8
 template<> struct WarpGemmMmacDispatcher<bf8_t, bf8_t, float, 32, 64, 32, false, 2, 1, 1, 4> { using Type = WarpGemmMmacbf8bf8f32_WT32x64x32_MR2NR1MI1NI4; };
+template<> struct WarpGemmMmacDispatcher<bf8_t, bf8_t, float, 32, 64, 32, false, 2, 4, 1, 1> { using Type = WarpGemmMmacbf8bf8f32_WT32x64x32_MR2NR4MI1NI1; };
+template<> struct WarpGemmMmacDispatcher<bf8_t, bf8_t, float, 32, 64, 64, false, 2, 4, 1, 1> { using Type = WarpGemmMmacbf8bf8f32_WT32x64x64_MR2NR4MI1NI1; };
 
 // clang-format on
 } // namespace impl

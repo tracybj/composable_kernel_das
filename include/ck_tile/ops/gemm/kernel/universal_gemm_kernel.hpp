@@ -328,16 +328,22 @@ struct UniversalGemmKernel
             const index_t K_t   = __builtin_amdgcn_readfirstlane(kargs.k_batch * K1);
             const index_t KRead = __builtin_amdgcn_readfirstlane((kargs.K + K_t - 1) / K_t * K1);
 
+            // Convert logical K to physical (packed) units for pk_int4_t etc.
+            // Tensor views, window steps, and num_loop all operate in packed element units.
+            constexpr index_t PackedSize = ck_tile::numeric_traits<ADataType>::PackedSize;
+            const index_t KReadPacked =
+                __builtin_amdgcn_readfirstlane(KRead / PackedSize);
+
             static_for<0, NumATensor, 1>{}([&](auto index) {
                 using AiLayout = remove_cvref_t<std::tuple_element_t<index.value, AsLayout>>;
                 if constexpr(std::is_same_v<tensor_layout::gemm::RowMajor, AiLayout>)
                 {
-                    as_k_split_offset[index] = __builtin_amdgcn_readfirstlane(k_id * KRead);
+                    as_k_split_offset[index] = __builtin_amdgcn_readfirstlane(k_id * KReadPacked);
                 }
                 else if constexpr(std::is_same_v<tensor_layout::gemm::ColumnMajor, AiLayout>)
                 {
                     as_k_split_offset[index] =
-                        __builtin_amdgcn_readfirstlane(k_id * KRead * kargs.stride_As[index]);
+                        __builtin_amdgcn_readfirstlane(k_id * KReadPacked * kargs.stride_As[index]);
                 }
             });
 
@@ -346,21 +352,22 @@ struct UniversalGemmKernel
                 if constexpr(std::is_same_v<tensor_layout::gemm::RowMajor, BiLayout>)
                 {
                     bs_k_split_offset[index] =
-                        __builtin_amdgcn_readfirstlane(k_id * KRead * kargs.stride_Bs[index]);
+                        __builtin_amdgcn_readfirstlane(k_id * KReadPacked * kargs.stride_Bs[index]);
                 }
                 else if constexpr(std::is_same_v<tensor_layout::gemm::ColumnMajor, BiLayout>)
                 {
-                    bs_k_split_offset[index] = __builtin_amdgcn_readfirstlane(k_id * KRead);
+                    bs_k_split_offset[index] = __builtin_amdgcn_readfirstlane(k_id * KReadPacked);
                 }
             });
 
             if(k_id < static_cast<uint32_t>(kargs.k_batch - 1))
             {
-                splitted_k = __builtin_amdgcn_readfirstlane(KRead);
+                splitted_k = __builtin_amdgcn_readfirstlane(KReadPacked);
             }
             else
             {
-                splitted_k = __builtin_amdgcn_readfirstlane(kargs.K - KRead * (kargs.k_batch - 1));
+                splitted_k = __builtin_amdgcn_readfirstlane(
+                    (kargs.K / PackedSize) - KReadPacked * (kargs.k_batch - 1));
             }
         }
 

@@ -34,6 +34,22 @@ struct Add
     {
         y = x0 + x1;
     }
+
+    template <>
+    CK_TILE_HOST_DEVICE void
+    operator()(ck_tile::bf16_t& y, const ck_tile::bf16_t& x0, const ck_tile::bf16_t& x1) const
+    {
+        const float f0 = ck_tile::type_convert<float>(x0);
+        const float f1 = ck_tile::type_convert<float>(x1);
+        y = ck_tile::type_convert<ck_tile::bf16_t>(f0 + f1);
+    }
+
+    template <>
+    CK_TILE_HOST_DEVICE void
+    operator()(int32_t& y, const int32_t& x0, const int32_t& x1) const
+    {
+        y = x0 + x1;
+    }
 };
 
 struct AddRelu
