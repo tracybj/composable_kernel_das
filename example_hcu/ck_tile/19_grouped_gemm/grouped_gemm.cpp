@@ -23,65 +23,86 @@ std::size_t ck_tile_dcu_grouped_gemm_workspace_size(int group_count, int num_d_t
     return static_cast<std::size_t>(group_count) * sizeof(ck_tile::GemmTransKernelArgImpl<2>);
 }
 
+namespace {
+
+// For MOE with dynamic M per group, use the kPadM instance when any group
+// has M not aligned to the tile boundary.
+//   fp16/bf16 V4: MPerBlock=64 → check M % 64
+//   fp8/bf8 V5/Bf8K64: MPerBlock=128 → check M % 128
+bool grouped_gemm_need_mpad(const ck_tile_dcu_grouped_gemm_desc* descs, int group_count, int align_m = 64)
+{
+    for(int i = 0; i < group_count; ++i)
+    {
+        if(descs[i].M % align_m != 0)
+            return true;
+    }
+    return false;
+}
+
+} // namespace
+
 int ck_tile_dcu_grouped_gemm_run(const ck_tile_dcu_grouped_gemm_desc* descs,
                                  int group_count,
                                  int dtype,
                                  char a_layout,
                                  char b_layout,
                                  void* workspace,
-                                 hipStream_t stream,
-                                 int warmup,
-                                 int repeat,
-                                 float* avg_ms)
+                                 hipStream_t stream)
 {
     try
     {
 #if !defined(CK_TILE_GROUPED_GEMM_FAST_BUILD) || defined(CK_TILE_GROUPED_GEMM_FAST_FP16)
         if(dtype == CK_TILE_DCU_GROUPED_GEMM_FP16)
         {
+            if(grouped_gemm_need_mpad(descs, group_count))
+                return grouped_gemm_c_run_fp16_mpad(descs, group_count,
+                    a_layout, b_layout, workspace, stream);
             return grouped_gemm_c_run_fp16(descs, group_count,
-                a_layout, b_layout, workspace, stream,
-                warmup, repeat, avg_ms);
+                a_layout, b_layout, workspace, stream);
         }
 #endif
 #if !defined(CK_TILE_GROUPED_GEMM_FAST_BUILD) || defined(CK_TILE_GROUPED_GEMM_FAST_FP8)
         if(dtype == CK_TILE_DCU_GROUPED_GEMM_FP8)
         {
+            if(grouped_gemm_need_mpad(descs, group_count, 128))
+                return grouped_gemm_c_run_fp8_mpad(descs, group_count,
+                    a_layout, b_layout, workspace, stream);
             return grouped_gemm_c_run_fp8(descs, group_count,
-                a_layout, b_layout, workspace, stream,
-                warmup, repeat, avg_ms);
+                a_layout, b_layout, workspace, stream);
         }
 #endif
 #if !defined(CK_TILE_GROUPED_GEMM_FAST_BUILD) || defined(CK_TILE_GROUPED_GEMM_FAST_BF16)
         if(dtype == CK_TILE_DCU_GROUPED_GEMM_BF16)
         {
+            if(grouped_gemm_need_mpad(descs, group_count))
+                return grouped_gemm_c_run_bf16_mpad(descs, group_count,
+                    a_layout, b_layout, workspace, stream);
             return grouped_gemm_c_run_bf16(descs, group_count,
-                a_layout, b_layout, workspace, stream,
-                warmup, repeat, avg_ms);
+                a_layout, b_layout, workspace, stream);
         }
 #endif
 #if !defined(CK_TILE_GROUPED_GEMM_FAST_BUILD) || defined(CK_TILE_GROUPED_GEMM_FAST_BF8)
         if(dtype == CK_TILE_DCU_GROUPED_GEMM_BF8)
         {
+            if(grouped_gemm_need_mpad(descs, group_count, 128))
+                return grouped_gemm_c_run_bf8_mpad(descs, group_count,
+                    a_layout, b_layout, workspace, stream);
             return grouped_gemm_c_run_bf8(descs, group_count,
-                a_layout, b_layout, workspace, stream,
-                warmup, repeat, avg_ms);
+                a_layout, b_layout, workspace, stream);
         }
 #endif
 #if !defined(CK_TILE_GROUPED_GEMM_FAST_BUILD) || defined(CK_TILE_GROUPED_GEMM_FAST_INT8)
         if(dtype == CK_TILE_DCU_GROUPED_GEMM_INT8)
         {
             return grouped_gemm_c_run_int8(descs, group_count,
-                a_layout, b_layout, workspace, stream,
-                warmup, repeat, avg_ms);
+                a_layout, b_layout, workspace, stream);
         }
 #endif
 #if !defined(CK_TILE_GROUPED_GEMM_FAST_BUILD) || defined(CK_TILE_GROUPED_GEMM_FAST_INT4)
         if(dtype == CK_TILE_DCU_GROUPED_GEMM_INT4)
         {
             return grouped_gemm_c_run_int4(descs, group_count,
-                a_layout, b_layout, workspace, stream,
-                warmup, repeat, avg_ms);
+                a_layout, b_layout, workspace, stream);
         }
 #endif
         return -5;
@@ -97,7 +118,7 @@ int run_grouped_gemm_example(int argc, char* argv[])
     auto [result, arg_parser] = create_args(argc, argv);
     if(!result)
     {
-        return -1;
+        return 0;
     }
 
     const std::string a_layout  = arg_parser.get_str("a_layout");
@@ -160,11 +181,20 @@ int run_grouped_gemm_example(int argc, char* argv[])
     else
 #endif
     {
-        throw std::runtime_error("Unsupported data type configuration.");
+        std::cerr << "Unsupported data type configuration: " << data_type << std::endl;
+        return 0;
     }
 }
 
 int main(int argc, char* argv[])
 {
-    return !run_grouped_gemm_example(argc, argv);
+    try
+    {
+        return run_grouped_gemm_example(argc, argv) ? 0 : 1;
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << "Error: " << e.what() << std::endl;
+        return 1;
+    }
 }

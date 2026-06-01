@@ -4,6 +4,7 @@
 #pragma once
 
 #include <cstddef>
+#include <fstream>
 #include <string>
 #include <tuple>
 
@@ -191,6 +192,14 @@ struct GemmConfigComputeV4 : public GemmConfigBase
     static constexpr int kBlockPerCu = 1;
 };
 
+// V4 variant with kPadM=true for MOE dynamic-M (fixed N/K).
+// Inherits all V4 tile config (64x128x64/K_Tile persistent); only M padding differs.
+template <typename PrecType>
+struct GemmConfigComputeV4Mpad : public GemmConfigComputeV4<PrecType>
+{
+    static constexpr bool kPadM = true;
+};
+
 template <typename PrecType>
 struct GemmConfigComputeV5 : public GemmConfigBase
 {
@@ -213,6 +222,13 @@ struct GemmConfigComputeV5 : public GemmConfigBase
     static constexpr ck_tile::index_t Pipeline = CK_TILE_PIPELINE_COMPUTE_V4;
     
     static constexpr int kBlockPerCu = 1;
+};
+
+// V5 variant with kPadM=true for fp8 MOE dynamic-M (fixed N/K).
+template <typename PrecType>
+struct GemmConfigComputeV5Mpad : public GemmConfigComputeV5<PrecType>
+{
+    static constexpr bool kPadM = true;
 };
 
 template <typename PrecType>
@@ -301,6 +317,13 @@ struct GemmConfigComputeBf8K64 : public GemmConfigBase
     static constexpr ck_tile::index_t Pipeline = CK_TILE_PIPELINE_COMPUTE_V4;
 
     static constexpr int kBlockPerCu = 1;
+};
+
+// Bf8K64 variant with kPadM=true for bf8 MOE dynamic-M (fixed N/K).
+template <typename PrecType>
+struct GemmConfigComputeBf8K64Mpad : public GemmConfigComputeBf8K64<PrecType>
+{
+    static constexpr bool kPadM = true;
 };
 
 template <typename PrecType>
@@ -522,38 +545,41 @@ int ck_tile_dcu_grouped_gemm_run(const ck_tile_dcu_grouped_gemm_desc* descs,
                                  char a_layout,
                                  char b_layout,
                                  void* workspace,
-                                 hipStream_t stream,
-                                 int warmup,
-                                 int repeat,
-                                 float* avg_ms);
+                                 hipStream_t stream);
 
 } // extern "C"
 
 // Per-dtype C ABI dispatch wrappers (non-template, defined in instances/)
 int grouped_gemm_c_run_fp16(const ck_tile_dcu_grouped_gemm_desc* descs,
     int group_count, char a_layout, char b_layout,
-    void* workspace, hipStream_t stream,
-    int warmup, int repeat, float* avg_ms);
+    void* workspace, hipStream_t stream);
+int grouped_gemm_c_run_fp16_mpad(const ck_tile_dcu_grouped_gemm_desc* descs,
+    int group_count, char a_layout, char b_layout,
+    void* workspace, hipStream_t stream);
 int grouped_gemm_c_run_bf16(const ck_tile_dcu_grouped_gemm_desc* descs,
     int group_count, char a_layout, char b_layout,
-    void* workspace, hipStream_t stream,
-    int warmup, int repeat, float* avg_ms);
+    void* workspace, hipStream_t stream);
+int grouped_gemm_c_run_bf16_mpad(const ck_tile_dcu_grouped_gemm_desc* descs,
+    int group_count, char a_layout, char b_layout,
+    void* workspace, hipStream_t stream);
 int grouped_gemm_c_run_fp8(const ck_tile_dcu_grouped_gemm_desc* descs,
     int group_count, char a_layout, char b_layout,
-    void* workspace, hipStream_t stream,
-    int warmup, int repeat, float* avg_ms);
+    void* workspace, hipStream_t stream);
+int grouped_gemm_c_run_fp8_mpad(const ck_tile_dcu_grouped_gemm_desc* descs,
+    int group_count, char a_layout, char b_layout,
+    void* workspace, hipStream_t stream);
 int grouped_gemm_c_run_bf8(const ck_tile_dcu_grouped_gemm_desc* descs,
     int group_count, char a_layout, char b_layout,
-    void* workspace, hipStream_t stream,
-    int warmup, int repeat, float* avg_ms);
+    void* workspace, hipStream_t stream);
+int grouped_gemm_c_run_bf8_mpad(const ck_tile_dcu_grouped_gemm_desc* descs,
+    int group_count, char a_layout, char b_layout,
+    void* workspace, hipStream_t stream);
 int grouped_gemm_c_run_int8(const ck_tile_dcu_grouped_gemm_desc* descs,
     int group_count, char a_layout, char b_layout,
-    void* workspace, hipStream_t stream,
-    int warmup, int repeat, float* avg_ms);
+    void* workspace, hipStream_t stream);
 int grouped_gemm_c_run_int4(const ck_tile_dcu_grouped_gemm_desc* descs,
     int group_count, char a_layout, char b_layout,
-    void* workspace, hipStream_t stream,
-    int warmup, int repeat, float* avg_ms);
+    void* workspace, hipStream_t stream);
 
 // Per-dtype example runner wrappers (non-template, defined in instances/)
 int grouped_gemm_example_run_fp16(std::string a_layout, std::string b_layout, int argc, char* argv[]);
@@ -577,6 +603,19 @@ int grouped_gemm_example_run_int4(std::string a_layout, std::string b_layout, in
 inline std::pair<bool, ck_tile::ArgParser> create_args(int argc, char* argv[])
 {
     ck_tile::ArgParser arg_parser;
+#if defined(CK_TILE_GROUPED_GEMM_FAST_FP16)
+    const char* default_prec = "fp16";
+#elif defined(CK_TILE_GROUPED_GEMM_FAST_BF16)
+    const char* default_prec = "bf16";
+#elif defined(CK_TILE_GROUPED_GEMM_FAST_FP8)
+    const char* default_prec = "fp8";
+#elif defined(CK_TILE_GROUPED_GEMM_FAST_BF8)
+    const char* default_prec = "bf8";
+#elif defined(CK_TILE_GROUPED_GEMM_FAST_INT4)
+    const char* default_prec = "int4";
+#else
+    const char* default_prec = "int8";
+#endif
     arg_parser.insert("Ms", "", "M dimensions - empty by default.")
         .insert("Ns", "", "N dimensions - empty by default.")
         .insert("Ks", "", "K dimensions - empty by default.")
@@ -587,7 +626,7 @@ inline std::pair<bool, ck_tile::ArgParser> create_args(int argc, char* argv[])
         .insert("b_layout", "C", "B tensor data layout - Row by default.")
         .insert("c_layout", "R", "C tensor data layout - Row by default.")
         .insert("validate", "1", "0. No validation, 1. Validation on CPU.")
-        .insert("prec", "int8", "data type. fp16/bf16/fp8/bf8/int8/int4")
+        .insert("prec", default_prec, "data type. fp16/bf16/fp8/bf8/int8/int4")
         .insert("config", "", "optional config selector, e.g. int8_32x32/bf8_128x64/bf8_128x128")
         .insert("warmup", "10", "number of iterations before benchmark the kernel.")
         .insert("repeat", "100", "number of iterations to benchmark the kernel.")

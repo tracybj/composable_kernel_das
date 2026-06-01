@@ -8,13 +8,10 @@ int grouped_gemm_c_run_int8(const ck_tile_dcu_grouped_gemm_desc* descs,
                             char a_layout,
                             char b_layout,
                             void* workspace,
-                            hipStream_t stream,
-                            int warmup,
-                            int repeat,
-                            float* avg_ms)
+                            hipStream_t stream)
 {
-    return dispatch_grouped_gemm_c_layout<GemmConfigComputeV7<ck_tile::int8_t>, ck_tile::int8_t>(
-        descs, group_count, a_layout, b_layout, workspace, stream, warmup, repeat, avg_ms);
+    return dispatch_grouped_gemm_c_layout<GemmConfigComputeV6<ck_tile::int8_t>, ck_tile::int8_t>(
+        descs, group_count, a_layout, b_layout, workspace, stream);
 }
 
 // --- Example Runner (two config variants) ---

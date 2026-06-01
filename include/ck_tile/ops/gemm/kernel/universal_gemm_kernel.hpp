@@ -768,7 +768,7 @@ struct UniversalGemmKernel
                     return pad_tensor_view(a_tensor_view[i],
                                            make_tuple(number<TilePartitioner::MPerBlock>{},
                                                       number<TilePartitioner::KPerBlock>{}),
-                                           sequence<false, GemmPipeline::kPadK>{});
+                                           sequence<GemmPipeline::kPadM, GemmPipeline::kPadK>{});
                 }
                 else
                 {
@@ -832,7 +832,7 @@ struct UniversalGemmKernel
                 return pad_tensor_view(e_tensor_view,
                                        make_tuple(number<TilePartitioner::MPerBlock>{},
                                                   number<TilePartitioner::NPerBlock>{}),
-                                       sequence<false, GemmPipeline::kPadN>{});
+                                       sequence<GemmPipeline::kPadM, GemmPipeline::kPadN>{});
             }
             else
             {
