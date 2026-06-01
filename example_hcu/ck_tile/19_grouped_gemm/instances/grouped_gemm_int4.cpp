@@ -6,12 +6,9 @@ template <typename GemmConfig, typename ALayout, typename BLayout, typename CLay
 int grouped_gemm_c_run_int4_impl(const ck_tile_dcu_grouped_gemm_desc* descs,
                                  int group_count,
                                  void* workspace,
-                                 hipStream_t stream,
-                                 int warmup,
-                                 int repeat,
-                                 float* avg_ms)
+                                 hipStream_t stream)
 {
-    if(descs == nullptr || group_count <= 0 || avg_ms == nullptr)
+    if(descs == nullptr || group_count <= 0)
     {
         return -1;
     }
@@ -55,22 +52,21 @@ int grouped_gemm_c_run_int4_impl(const ck_tile_dcu_grouped_gemm_desc* descs,
         kargs_ptr = owned_workspace.GetDeviceBuffer();
     }
 
-    const auto stream_cfg =
-        ck_tile::stream_config{stream, repeat > 0, 0, warmup, repeat > 0 ? repeat : 1};
+    const auto stream_cfg = ck_tile::stream_config{stream, false, 0, 0, 1};
     HIP_CHECK_ERROR(hipMemcpyWithStream(kargs_ptr,
                                         kargs.data(),
                                         kargs.size() * sizeof(ck_tile::GemmTransKernelArg),
                                         hipMemcpyHostToDevice,
                                         stream_cfg.stream_id_));
 
-    *avg_ms = grouped_gemm_tileloop<GemmConfig,
-                                    ALayout,
-                                    BLayout,
-                                    CLayout,
-                                    ck_tile::pk_int4_t,
-                                    ck_tile::pk_int4_t,
-                                    int32_t,
-                                    int32_t>(
+    grouped_gemm_tileloop<GemmConfig,
+                          ALayout,
+                          BLayout,
+                          CLayout,
+                          ck_tile::pk_int4_t,
+                          ck_tile::pk_int4_t,
+                          int32_t,
+                          int32_t>(
         stream_cfg, group_count, kargs_ptr, k_batch > 1);
     return 0;
 }
@@ -80,10 +76,7 @@ int grouped_gemm_c_run_int4(const ck_tile_dcu_grouped_gemm_desc* descs,
                             char a_layout,
                             char b_layout,
                             void* workspace,
-                            hipStream_t stream,
-                            int warmup,
-                            int repeat,
-                            float* avg_ms)
+                            hipStream_t stream)
 {
     using Row = ck_tile::tensor_layout::gemm::RowMajor;
     using Col = ck_tile::tensor_layout::gemm::ColumnMajor;
@@ -92,22 +85,22 @@ int grouped_gemm_c_run_int4(const ck_tile_dcu_grouped_gemm_desc* descs,
     if(a_layout == 'R' && b_layout == 'C')
     {
         return grouped_gemm_c_run_int4_impl<Config, Row, Col, Row>(
-            descs, group_count, workspace, stream, warmup, repeat, avg_ms);
+            descs, group_count, workspace, stream);
     }
     if(a_layout == 'R' && b_layout == 'R')
     {
         return grouped_gemm_c_run_int4_impl<Config, Row, Row, Row>(
-            descs, group_count, workspace, stream, warmup, repeat, avg_ms);
+            descs, group_count, workspace, stream);
     }
     if(a_layout == 'C' && b_layout == 'R')
     {
         return grouped_gemm_c_run_int4_impl<Config, Col, Row, Row>(
-            descs, group_count, workspace, stream, warmup, repeat, avg_ms);
+            descs, group_count, workspace, stream);
     }
     if(a_layout == 'C' && b_layout == 'C')
     {
         return grouped_gemm_c_run_int4_impl<Config, Col, Col, Row>(
-            descs, group_count, workspace, stream, warmup, repeat, avg_ms);
+            descs, group_count, workspace, stream);
     }
     return -4;
 }

@@ -23,6 +23,38 @@
 #include "ck_tile/host.hpp"
 #include "../grouped_gemm.hpp"
 
+namespace {
+
+[[maybe_unused]] bool grouped_gemm_same_plain_descs(const ck_tile_dcu_grouped_gemm_desc* descs, int group_count)
+{
+    static std::vector<ck_tile_dcu_grouped_gemm_desc> cached;
+    if(static_cast<int>(cached.size()) != group_count)
+    {
+        return false;
+    }
+    for(int i = 0; i < group_count; ++i)
+    {
+        const auto& d = descs[i];
+        const auto& c = cached[i];
+        if(d.a_ptr != c.a_ptr || d.b_ptr != c.b_ptr || d.c_ptr != c.c_ptr || d.M != c.M ||
+           d.N != c.N || d.K != c.K || d.k_batch != c.k_batch || d.stride_A != c.stride_A ||
+           d.stride_B != c.stride_B || d.stride_C != c.stride_C)
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+[[maybe_unused]] void grouped_gemm_update_plain_desc_cache(const ck_tile_dcu_grouped_gemm_desc* descs,
+                                          int group_count)
+{
+    static std::vector<ck_tile_dcu_grouped_gemm_desc> cached;
+    cached.assign(descs, descs + group_count);
+}
+
+} // namespace
+
 template <typename GemmConfig,
           typename ALayout,
           typename BLayout,
@@ -34,12 +66,9 @@ template <typename GemmConfig,
 int run_grouped_gemm_c_impl(const ck_tile_dcu_grouped_gemm_desc* descs,
                             int group_count,
                             void* workspace,
-                            hipStream_t stream,
-                            int warmup,
-                            int repeat,
-                            float* avg_ms)
+                            hipStream_t stream)
 {
-    if(descs == nullptr || group_count <= 0 || avg_ms == nullptr)
+    if(descs == nullptr || group_count <= 0)
     {
         return -1;
     }
@@ -60,8 +89,7 @@ int run_grouped_gemm_c_impl(const ck_tile_dcu_grouped_gemm_desc* descs,
 
     ck_tile::DeviceMem owned_workspace;
     void* kargs_ptr = workspace;
-    const auto stream_cfg =
-        ck_tile::stream_config{stream, repeat > 0, 0, warmup, repeat > 0 ? repeat : 1};
+    const auto stream_cfg = ck_tile::stream_config{stream, false, 0, 0, 1};
 
     if(use_multi_d)
     {
@@ -121,17 +149,17 @@ int run_grouped_gemm_c_impl(const ck_tile_dcu_grouped_gemm_desc* descs,
                                     hipMemcpyHostToDevice,
                                     stream_cfg.stream_id_));
 
-            *avg_ms = grouped_gemm<GemmConfig,
-                                   ADataType,
-                                   BDataType,
-                                   ck_tile::tuple<CDataType>,
-                                   AccDataType,
-                                   CDataType,
-                                   ALayout,
-                                   BLayout,
-                                   ck_tile::tuple<CLayout>,
-                                   CLayout,
-                                   ck_tile::element_wise::Add>(
+            grouped_gemm<GemmConfig,
+                         ADataType,
+                         BDataType,
+                         ck_tile::tuple<CDataType>,
+                         AccDataType,
+                         CDataType,
+                         ALayout,
+                         BLayout,
+                         ck_tile::tuple<CLayout>,
+                         CLayout,
+                         ck_tile::element_wise::Add>(
                 gemm_descs_vec,
                 stream_cfg,
                 kargs_ptr);
@@ -192,17 +220,17 @@ int run_grouped_gemm_c_impl(const ck_tile_dcu_grouped_gemm_desc* descs,
                                 hipMemcpyHostToDevice,
                                 stream_cfg.stream_id_));
 
-        *avg_ms = grouped_gemm<GemmConfig,
-                               ADataType,
-                               BDataType,
-                               ck_tile::tuple<CDataType, CDataType>,
-                               AccDataType,
-                               CDataType,
-                               ALayout,
-                               BLayout,
-                               ck_tile::tuple<CLayout, CLayout>,
-                               CLayout,
-                               ck_tile::element_wise::AddAdd>(
+        grouped_gemm<GemmConfig,
+                     ADataType,
+                     BDataType,
+                     ck_tile::tuple<CDataType, CDataType>,
+                     AccDataType,
+                     CDataType,
+                     ALayout,
+                     BLayout,
+                     ck_tile::tuple<CLayout, CLayout>,
+                     CLayout,
+                     ck_tile::element_wise::AddAdd>(
             gemm_descs_vec,
             stream_cfg,
             kargs_ptr);
@@ -210,8 +238,8 @@ int run_grouped_gemm_c_impl(const ck_tile_dcu_grouped_gemm_desc* descs,
     }
     else
     {
-        std::vector<ck_tile::GemmTransKernelArg> kargs;
-        kargs.reserve(group_count);
+        std::vector<grouped_gemm_kargs> gemm_descs_vec;
+        gemm_descs_vec.reserve(group_count);
         for(int i = 0; i < group_count; ++i)
         {
             const auto& arg = descs[i];
@@ -221,18 +249,16 @@ int run_grouped_gemm_c_impl(const ck_tile_dcu_grouped_gemm_desc* descs,
                 return -3;
             }
 
-            kargs.emplace_back(ck_tile::UniversalGemmKernelArgs<>{{arg.a_ptr},
-                                                                  {arg.b_ptr},
-                                                                  {},
-                                                                  arg.c_ptr,
-                                                                  arg.M,
-                                                                  arg.N,
-                                                                  arg.K,
-                                                                  {arg.stride_A},
-                                                                  {arg.stride_B},
-                                                                  {},
-                                                                  arg.stride_C,
-                                                                  arg.k_batch});
+            gemm_descs_vec.emplace_back(arg.a_ptr,
+                                         arg.b_ptr,
+                                         arg.c_ptr,
+                                         arg.k_batch,
+                                         arg.M,
+                                         arg.N,
+                                         arg.K,
+                                         arg.stride_A,
+                                         arg.stride_B,
+                                         arg.stride_C);
         }
 
         if(kargs_ptr == nullptr)
@@ -240,21 +266,60 @@ int run_grouped_gemm_c_impl(const ck_tile_dcu_grouped_gemm_desc* descs,
             owned_workspace.Realloc(ck_tile_dcu_grouped_gemm_workspace_size(group_count));
             kargs_ptr = owned_workspace.GetDeviceBuffer();
         }
-        HIP_CHECK_ERROR(hipMemcpyWithStream(kargs_ptr,
-                                            kargs.data(),
-                                            kargs.size() * sizeof(ck_tile::GemmTransKernelArg),
-                                            hipMemcpyHostToDevice,
-                                            stream_cfg.stream_id_));
 
-        *avg_ms = grouped_gemm_tileloop<GemmConfig,
-                                        ALayout,
-                                        BLayout,
-                                        CLayout,
-                                        ADataType,
-                                        BDataType,
-                                        AccDataType,
-                                        CDataType>(
-            stream_cfg, group_count, kargs_ptr, k_batch > 1);
+        if constexpr(GemmConfig::Persistent)
+        {
+            std::vector<ck_tile::GemmTransKernelArg> kargs;
+            kargs.reserve(group_count);
+            const bool splitk = gemm_descs_vec[0].k_batch > 1;
+            for(const auto& arg : gemm_descs_vec)
+            {
+                kargs.emplace_back(ck_tile::UniversalGemmKernelArgs<>{{arg.a_ptr},
+                                                                      {arg.b_ptr},
+                                                                      {/*arg.ds_ptr*/},
+                                                                      arg.e_ptr,
+                                                                      arg.M,
+                                                                      arg.N,
+                                                                      arg.K,
+                                                                      {arg.stride_A},
+                                                                      {arg.stride_B},
+                                                                      {/*arg.stride_Ds*/},
+                                                                      arg.stride_E,
+                                                                      arg.k_batch});
+            }
+            if(!grouped_gemm_same_plain_descs(descs, group_count))
+            {
+                HIP_CHECK_ERROR(hipMemcpyWithStream(kargs_ptr,
+                                                    kargs.data(),
+                                                    kargs.size() * sizeof(ck_tile::GemmTransKernelArg),
+                                                    hipMemcpyHostToDevice,
+                                                    stream_cfg.stream_id_));
+                grouped_gemm_update_plain_desc_cache(descs, group_count);
+            }
+
+            grouped_gemm_tileloop<GemmConfig,
+                                  ALayout,
+                                  BLayout,
+                                  CLayout,
+                                  ADataType,
+                                  BDataType,
+                                  AccDataType,
+                                  CDataType>(stream_cfg, group_count, kargs_ptr, splitk);
+        }
+        else
+        {
+            grouped_gemm<GemmConfig,
+                         ADataType,
+                         BDataType,
+                         ck_tile::tuple<>,
+                         AccDataType,
+                         CDataType,
+                         ALayout,
+                         BLayout,
+                         ck_tile::tuple<>,
+                         CLayout,
+                         ck_tile::element_wise::PassThrough>(gemm_descs_vec, stream_cfg, kargs_ptr);
+        }
     }
     return 0;
 }
@@ -265,10 +330,7 @@ int dispatch_grouped_gemm_c_layout(const ck_tile_dcu_grouped_gemm_desc* descs,
                                    char a_layout,
                                    char b_layout,
                                    void* workspace,
-                                   hipStream_t stream,
-                                   int warmup,
-                                   int repeat,
-                                   float* avg_ms)
+                                   hipStream_t stream)
 {
     using Row   = ck_tile::tensor_layout::gemm::RowMajor;
     using Col   = ck_tile::tensor_layout::gemm::ColumnMajor;
@@ -291,10 +353,7 @@ int dispatch_grouped_gemm_c_layout(const ck_tile_dcu_grouped_gemm_desc* descs,
                                        CDataType>(descs,
                                                   group_count,
                                                   workspace,
-                                                  stream,
-                                                  warmup,
-                                                  repeat,
-                                                  avg_ms);
+                                                  stream);
     }
     if(a_layout == 'R' && b_layout == 'R')
     {
@@ -308,10 +367,7 @@ int dispatch_grouped_gemm_c_layout(const ck_tile_dcu_grouped_gemm_desc* descs,
                                        CDataType>(descs,
                                                   group_count,
                                                   workspace,
-                                                  stream,
-                                                  warmup,
-                                                  repeat,
-                                                  avg_ms);
+                                                  stream);
     }
     if(a_layout == 'C' && b_layout == 'R')
     {
@@ -325,10 +381,7 @@ int dispatch_grouped_gemm_c_layout(const ck_tile_dcu_grouped_gemm_desc* descs,
                                        CDataType>(descs,
                                                   group_count,
                                                   workspace,
-                                                  stream,
-                                                  warmup,
-                                                  repeat,
-                                                  avg_ms);
+                                                  stream);
     }
     if(a_layout == 'C' && b_layout == 'C')
     {
@@ -342,10 +395,7 @@ int dispatch_grouped_gemm_c_layout(const ck_tile_dcu_grouped_gemm_desc* descs,
                                        CDataType>(descs,
                                                   group_count,
                                                   workspace,
-                                                  stream,
-                                                  warmup,
-                                                  repeat,
-                                                  avg_ms);
+                                                  stream);
     }
     return -4;
 }

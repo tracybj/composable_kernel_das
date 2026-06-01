@@ -8,13 +8,21 @@ int grouped_gemm_c_run_bf8(const ck_tile_dcu_grouped_gemm_desc* descs,
                            char a_layout,
                            char b_layout,
                            void* workspace,
-                           hipStream_t stream,
-                           int warmup,
-                           int repeat,
-                           float* avg_ms)
+                           hipStream_t stream)
 {
     return dispatch_grouped_gemm_c_layout<GemmConfigComputeBf8K64<ck_tile::bf8_t>, ck_tile::bf8_t>(
-        descs, group_count, a_layout, b_layout, workspace, stream, warmup, repeat, avg_ms);
+        descs, group_count, a_layout, b_layout, workspace, stream);
+}
+
+int grouped_gemm_c_run_bf8_mpad(const ck_tile_dcu_grouped_gemm_desc* descs,
+                                 int group_count,
+                                 char a_layout,
+                                 char b_layout,
+                                 void* workspace,
+                                 hipStream_t stream)
+{
+    return dispatch_grouped_gemm_c_layout<GemmConfigComputeBf8K64Mpad<ck_tile::bf8_t>, ck_tile::bf8_t>(
+        descs, group_count, a_layout, b_layout, workspace, stream);
 }
 
 // --- Example Runner (multiple config variants) ---

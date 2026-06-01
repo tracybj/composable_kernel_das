@@ -225,12 +225,6 @@ struct GroupedGemmKernel
         HIP_CHECK_ERROR(
             hipOccupancyMaxActiveBlocksPerMultiprocessor(&occupancy, kernel, kBlockSize, 0));
         const int grid_size = get_available_compute_units(s) * occupancy;
-        
-        // just for debug
-        printf("MaxOccupancyGridSize: compute_units=%d, occupancy=%d, grid_size=%d\n",
-               get_available_compute_units(s),
-               occupancy,
-               grid_size);
 
         return dim3(grid_size, 1, 1);
     }
