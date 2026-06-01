@@ -29,7 +29,7 @@ namespace {
 // has M not aligned to the tile boundary.
 //   fp16/bf16 V4: MPerBlock=64 → check M % 64
 //   fp8/bf8 V5/Bf8K64: MPerBlock=128 → check M % 128
-bool grouped_gemm_need_mpad(const ck_tile_dcu_grouped_gemm_desc* descs, int group_count, int align_m = 64)
+[[maybe_unused]] bool grouped_gemm_need_mpad(const ck_tile_dcu_grouped_gemm_desc* descs, int group_count, int align_m = 64)
 {
     for(int i = 0; i < group_count; ++i)
     {
