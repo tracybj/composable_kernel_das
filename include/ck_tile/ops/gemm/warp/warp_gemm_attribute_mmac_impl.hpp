@@ -901,7 +901,7 @@ struct WarpGemmAttributeMmacImplI4I4I32M16N16K64
     CK_TILE_DEVICE void
     operator()(CVecType& c_vec, const AVecType& a_vec, const BVecType& b_vec) const
     {
-#if defined(__gfx938__)
+#if defined(__gfx936__) || defined(__gfx938__)
         c_vec = __builtin_hcu_mmac_i32_16x16x64_i4(a_vec, b_vec, c_vec);
 #else
         ignore = c_vec;
@@ -912,7 +912,7 @@ struct WarpGemmAttributeMmacImplI4I4I32M16N16K64
 
     CK_TILE_DEVICE CVecType operator()(const AVecType& a_vec, const BVecType& b_vec) const
     {
-#if defined(__gfx938__)
+#if defined(__gfx936__) || defined(__gfx938__)
         return bit_cast<CVecType>(
             __builtin_hcu_mmac_i32_16x16x64_i4(a_vec, b_vec, int32x4_t{0}));
 #else

@@ -7,6 +7,48 @@ list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
 enable_testing()
 
+if (DTYPES)
+    add_definitions(-DDTYPES)
+    if (DTYPES MATCHES "int8")
+        add_definitions(-DCK_ENABLE_INT8)
+        set(CK_ENABLE_INT8 "ON")
+    endif()
+    if (DTYPES MATCHES "fp8")
+        add_definitions(-DCK_ENABLE_FP8)
+        set(CK_ENABLE_FP8 "ON")
+    endif()
+    if (DTYPES MATCHES "bf8")
+        add_definitions(-DCK_ENABLE_BF8)
+        set(CK_ENABLE_BF8 "ON")
+    endif()
+    if (DTYPES MATCHES "fp16")
+        add_definitions(-DCK_ENABLE_FP16)
+        set(CK_ENABLE_FP16 "ON")
+    endif()
+    if (DTYPES MATCHES "fp32")
+        add_definitions(-DCK_ENABLE_FP32)
+        set(CK_ENABLE_FP32 "ON")
+    endif()
+    if (DTYPES MATCHES "fp64")
+        add_definitions(-DCK_ENABLE_FP64)
+        set(CK_ENABLE_FP64 "ON")
+    endif()
+    if (DTYPES MATCHES "bf16")
+        add_definitions(-DCK_ENABLE_BF16)
+        set(CK_ENABLE_BF16 "ON")
+    endif()
+    message(STATUS "DTYPES macro set to ${DTYPES}")
+else()
+    add_definitions(-DCK_ENABLE_INT8 -DCK_ENABLE_FP16 -DCK_ENABLE_FP32 -DCK_ENABLE_FP64 -DCK_ENABLE_BF16 -DCK_ENABLE_FP8 -DCK_ENABLE_BF8)
+    set(CK_ENABLE_INT8 "ON")
+    set(CK_ENABLE_FP16 "ON")
+    set(CK_ENABLE_FP32 "ON")
+    set(CK_ENABLE_FP64 "ON")
+    set(CK_ENABLE_BF16 "ON")
+    set(CK_ENABLE_FP8 "ON")
+    set(CK_ENABLE_BF8 "ON")
+endif()
+
 set(ROCM_SYMLINK_LIBS OFF)
 find_package(ROCM REQUIRED PATHS /opt/rocm)
 
@@ -98,6 +140,9 @@ endif()
 message(STATUS "Build with HIP ${HIP_VERSION}")
 link_libraries(hip::device)
 add_compile_definitions(__HIP_PLATFORM_HCC__=1)
+
+# CK config file to record supported datatypes and optional kernel families.
+configure_file(include/ck/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/include/ck/config.h)
 
 ## tidy
 include(EnableCompilerWarnings)
@@ -245,6 +290,7 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin)
 
 include_directories(BEFORE
+    ${PROJECT_BINARY_DIR}/include
     ${PROJECT_SOURCE_DIR}/include
     ${PROJECT_SOURCE_DIR}/library/include
     ${HIP_INCLUDE_DIRS}
@@ -315,6 +361,11 @@ rocm_install(FILES
     "${CMAKE_CURRENT_BINARY_DIR}/composable_kernelConfig.cmake"
     "${CMAKE_CURRENT_BINARY_DIR}/composable_kernelConfigVersion.cmake"
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/composable_kernel
+)
+
+rocm_install(FILES
+    ${PROJECT_BINARY_DIR}/include/ck/config.h
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/ck/
 )
 
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
