@@ -216,6 +216,90 @@ struct BlockToCTileMap_M00_N0_M01Adapt
     CGridDesc_M_N c_grid_desc_m_n_;
 };
 
+// Grouped Rows of column-vectors WGP mapping
+template <index_t GroupNum, index_t MPerBlock, index_t NPerBlock>
+struct BlockToCTileMap_Grouped_M00_N0_M01Adapt
+{
+    static constexpr auto I0 = Number<0>{};
+    static constexpr auto I1 = Number<1>{};
+
+    __host__ __device__ BlockToCTileMap_Grouped_M00_N0_M01Adapt() = default;
+
+    __host__ __device__ BlockToCTileMap_Grouped_M00_N0_M01Adapt(index_t M,
+                                                                index_t N,
+                                                                index_t M01 = 8)
+        : M_(M), N_(N), M01_(M01)
+    {
+    }
+
+    __host__ __device__ static constexpr index_t CalculateGridSize(index_t M, index_t N)
+    {
+        const auto M0 = math::integer_divide_ceil(M, MPerBlock);
+        const auto N0 = math::integer_divide_ceil(N, NPerBlock);
+
+        return M0 * N0;
+    }
+
+    template <typename CGridDesc_M_N>
+    __host__ bool CheckValidity(const CGridDesc_M_N& /* c_grid_desc_m_n */) const
+    {
+        return true;
+    }
+
+    template <typename TopIdx>
+    __host__ __device__ constexpr auto CalculateBottomIndex(const TopIdx& idx_top) const
+    {
+        auto block_1d_id = idx_top[I0];
+
+        const auto M0 = math::integer_divide_ceil(M_, MPerBlock);
+        const auto N0 = math::integer_divide_ceil(N_, NPerBlock);
+
+        if(M0 == 1)
+        {
+            return make_tuple(0, block_1d_id);
+        }
+        else if(N0 == 1)
+        {
+            return make_tuple(block_1d_id, 0);
+        }
+        else
+        {
+            const auto group_size    = math::integer_divide_ceil(M0 * N0, GroupNum);
+            const auto big_group_num = GroupNum - (group_size * GroupNum - M0 * N0);
+            auto group_id_x          = block_1d_id % GroupNum;
+            auto group_id_y          = block_1d_id / GroupNum;
+            auto remap_block_1d_id =
+                group_id_x <= big_group_num
+                    ? group_id_x * group_size + group_id_y
+                    : group_id_x * group_size + big_group_num - group_id_x + group_id_y;
+
+            index_t idx_N0 = remap_block_1d_id % N0;
+            index_t idx_M0 = remap_block_1d_id / N0;
+
+            const auto M01_adapt = (idx_M0 < M0 - M0 % M01_) ? M01_ : M0 % M01_;
+
+            index_t idx_M00          = idx_M0 / M01_;
+            index_t idx_M01          = idx_M0 % M01_;
+            index_t idx_N0_M01_local = idx_N0 + idx_M01 * N0;
+
+            return make_tuple(idx_N0_M01_local % M01_adapt + idx_M00 * M01_,
+                              idx_N0_M01_local / M01_adapt);
+        }
+    }
+
+    template <typename CTileIdx, typename CTileDim>
+    __host__ __device__ bool ValidCTileIndex(const CTileIdx& /* c_tile_idx */,
+                                             const CTileDim& /* c_tile_dim */) const
+    {
+        return true;
+    }
+
+    private:
+    index_t M_;
+    index_t N_;
+    index_t M01_;
+};
+
 // 2D slices of column-vectors in 3D space
 // This C-tile map dynamically adjusts M01 when C-tile index is out of range
 template <index_t MPerBlock, index_t NPerBlock, typename CGridDesc_M_N>

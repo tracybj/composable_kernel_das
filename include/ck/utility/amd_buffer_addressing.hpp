@@ -6,6 +6,18 @@
 
 namespace ck {
 
+enum struct AmdBufferCoherenceEnum
+{
+    DefaultCoherence = 0,
+    GLC              = 1,
+    SLC              = 2,
+    GLC_SLC          = 3,
+    DEVICE_NT0       = 0,
+    SYSTEM_NT0       = 0,
+    DEVICE_NT1       = GLC,
+    SYSTEM_NT1       = SLC,
+};
+
 template <typename T>
 union BufferResource
 {

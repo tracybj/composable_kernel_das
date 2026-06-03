@@ -177,6 +177,8 @@ struct Tuple : detail::TupleImpl<typename arithmetic_sequence_gen<0, sizeof...(X
     }
 
     __host__ __device__ static constexpr bool IsStaticBuffer() { return true; }
+
+    __host__ __device__ static constexpr bool IsTuple() { return true; }
 };
 
 template <>
@@ -193,6 +195,8 @@ struct Tuple<>
     }
 
     __host__ __device__ static constexpr bool IsStaticBuffer() { return true; }
+
+    __host__ __device__ static constexpr bool IsTuple() { return true; }
 };
 
 template <index_t I, typename TTuple>

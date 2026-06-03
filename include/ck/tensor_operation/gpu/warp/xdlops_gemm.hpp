@@ -281,8 +281,18 @@ struct mfma_type<MfmaInstr::mfma_f32_32x32x8bf16_1k>
 template <>
 struct mfma_type<MfmaInstr::mfma_f32_16x16x16bf16_1k>
 {
-    static constexpr index_t group_size          = 4;
-    static constexpr index_t num_groups_per_blk  = 1;
+    static constexpr index_t group_size =
+#if defined(__gfx928__) || defined(__gfx936__) || defined(__gfx938__)
+        1;
+#else
+        4;
+#endif
+    static constexpr index_t num_groups_per_blk =
+#if defined(__gfx928__) || defined(__gfx936__) || defined(__gfx938__)
+        4;
+#else
+        1;
+#endif
     static constexpr index_t num_regs_per_blk    = 4;
     static constexpr index_t num_threads_per_blk = 16;
     static constexpr index_t wave_size           = 64;
@@ -563,7 +573,8 @@ struct MfmaSelector
     template <>
     static constexpr auto GetMfma<bhalf_t, 16, 16>()
     {
-#if defined(CK_USE_AMD_MFMA_BF16_1K_OP)
+#if defined(CK_USE_AMD_MFMA_BF16_1K_OP) || defined(__gfx928__) || defined(__gfx936__) ||         \
+    defined(__gfx938__)
         return MfmaInstr::mfma_f32_16x16x16bf16_1k;
 #else
         return MfmaInstr::mfma_f32_16x16x8bf16;
@@ -875,18 +886,38 @@ struct XdlopsGemm
         const auto blk_id = blk_idx[I0];
         const auto blk_td = blk_idx[I1];
 
+        if constexpr(use_hcu_bf16_mmac_c_layout)
+        {
+            ignore = xdlops_i;
+            ignore = blk_i;
+
+            index_t m_offset = blk_td;
+            index_t n_offset = blk_id * mfma_instr.group_size;
+
+            return TransposeC ? CIndex{n_offset, m_offset} : CIndex{m_offset, n_offset};
+        }
+
         index_t n_offset = blk_i * mfma_instr.n_per_blk + blk_td;
         index_t m_offset = xdlops_i * mfma_instr.m_per_blk + blk_id * mfma_instr.group_size;
 
         return TransposeC ? CIndex{n_offset, m_offset} : CIndex{m_offset, n_offset};
     }
 
-    __device__ static CIndex4D GetBeginOfThreadBlk4D(index_t /* xdlops_i */, index_t /* blk_i */)
+    __device__ static CIndex4D GetBeginOfThreadBlk4D(index_t xdlops_i, index_t blk_i)
     {
         const auto blk_idx = GetBlkIdx();
 
         const auto blk_id = blk_idx[I0];
         const auto blk_td = blk_idx[I1];
+
+        if constexpr(use_hcu_bf16_mmac_c_layout)
+        {
+            ignore = xdlops_i;
+            ignore = blk_i;
+
+            return TransposeC ? CIndex4D{I0, blk_id, I0, blk_td}
+                              : CIndex4D{blk_td, I0, blk_id, I0};
+        }
 
         return TransposeC ? CIndex4D{blk_td, I0, blk_id, I0} : CIndex4D{I0, blk_id, I0, blk_td};
     }
@@ -894,6 +925,13 @@ struct XdlopsGemm
     static constexpr auto mfma = MfmaSelector<base_type, MPerXdlops, NPerXdlops>{};
 
     static constexpr auto mfma_instr = mfma.selected_mfma;
+
+    static constexpr bool use_hcu_bf16_mmac_c_layout =
+#if defined(__gfx928__) || defined(__gfx936__) || defined(__gfx938__)
+        is_same<base_type, bhalf_t>::value && MPerXdlops == 16 && NPerXdlops == 16;
+#else
+        false;
+#endif
 
     static constexpr auto KPerXdlops  = mfma.GetKPerXdlops();
     static constexpr auto K1PerXdlops = mfma.GetK1PerXdlops();
