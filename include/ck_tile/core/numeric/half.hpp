@@ -14,16 +14,16 @@ using fp16_hip_t = _Float16; // most of hip internal function use this type
 using fp16_raw_t = uint16_t;
 
 CK_TILE_HOST_DEVICE
-constexpr float fp16_to_float_hip(const fp16_hip_t& x);
+float fp16_to_float_hip(const fp16_hip_t& x);
 
 CK_TILE_HOST_DEVICE
-constexpr double fp16_to_double_hip(const fp16_hip_t& x);
+double fp16_to_double_hip(const fp16_hip_t& x);
 
 CK_TILE_HOST_DEVICE
-constexpr fp16_hip_t float_to_fp16_hip(const float& x);
+fp16_hip_t float_to_fp16_hip(const float& x);
 
 CK_TILE_HOST_DEVICE
-constexpr fp16_hip_t double_to_fp16_hip(const double& x);
+fp16_hip_t double_to_fp16_hip(const double& x);
 
 #if CK_TILE_USE_CUSTOM_DATA_TYPE
 // HIP use fp16_hip_t as interchangable data type for float16
@@ -113,33 +113,106 @@ using fp16_raw_t = ushort;
 #endif
 
 // conversions
+// NOTE: DTK clang 17.0.0 host-side __half2float/__float2half are broken (return garbage).
+// On device they map to hardware v_cvt instructions and work correctly.
 CK_TILE_HOST_DEVICE
-constexpr float fp16_to_float_hip(const fp16_hip_t& x)
+float fp16_to_float_hip(const fp16_hip_t& x)
 {
-    // return __half2float(x);
-    return static_cast<float>(x);
+#if defined(__HIP_DEVICE_COMPILE__)
+    return __half2float(x);
+#else
+    const uint16_t raw = ck_tile::bit_cast<uint16_t>(x);
+    const uint32_t sign = static_cast<uint32_t>(raw & 0x8000u) << 16;
+    const int exp16 = (raw >> 10) & 0x1F;
+    const uint32_t mant16 = raw & 0x3FFu;
+    uint32_t f32;
+    if(exp16 == 0)
+    {
+        if(mant16 == 0)
+        {
+            f32 = sign;
+        }
+        else
+        {
+            // subnormal: normalize with unrolled shifts (warp-divergence-free on GPU)
+            uint32_t m = mant16;
+            int e = -14;
+            if(m < 0x040u) { m <<= 6; e -= 6; }
+            if(m < 0x100u) { m <<= 4; e -= 4; }
+            if(m < 0x200u) { m <<= 2; e -= 2; }
+            if(m < 0x400u) { m <<= 1; e -= 1; }
+            m &= 0x3FFu;
+            f32 = sign | (static_cast<uint32_t>(e + 127) << 23) | (m << 13);
+        }
+    }
+    else if(exp16 == 31)
+    {
+        f32 = sign | (0xFFu << 23) | (mant16 << 13);
+    }
+    else
+    {
+        f32 = sign | (static_cast<uint32_t>(exp16 - 15 + 127) << 23) | (mant16 << 13);
+    }
+    return ck_tile::bit_cast<float>(f32);
+#endif
 }
 
 CK_TILE_HOST_DEVICE
-constexpr double fp16_to_double_hip(const fp16_hip_t& x)
+double fp16_to_double_hip(const fp16_hip_t& x)
 {
     return static_cast<double>(fp16_to_float_hip(x));
 }
 
 CK_TILE_HOST_DEVICE
-constexpr fp16_hip_t float_to_fp16_hip(const float& x)
+fp16_hip_t float_to_fp16_hip(const float& x)
 {
-    // return __float2half(x);
-    return static_cast<fp16_hip_t>(x);
+#if defined(__HIP_DEVICE_COMPILE__)
+    return __float2half(x);
+#else
+    const uint32_t f32 = ck_tile::bit_cast<uint32_t>(x);
+    const uint16_t sign = static_cast<uint16_t>((f32 >> 16) & 0x8000u);
+    const int exp32 = static_cast<int>((f32 >> 23) & 0xFFu);
+    const uint32_t mant32 = f32 & 0x7FFFFFu;
+    uint16_t raw;
+    if(exp32 == 0)
+    {
+        raw = sign; // zero or subnormal → zero
+    }
+    else if(exp32 == 0xFF)
+    {
+        raw = sign | 0x7C00u | static_cast<uint16_t>((mant32 >> 13) & 0x3FFu);
+    }
+    else
+    {
+        int exp16 = exp32 - 127 + 15;
+        if(exp16 <= 0)
+        {
+            if(exp16 < -10)
+                raw = sign;
+            else
+            {
+                int shift = 14 - exp16;
+                uint32_t m = (0x800000u | mant32) >> shift;
+                raw = sign | static_cast<uint16_t>(m & 0x3FFu);
+            }
+        }
+        else if(exp16 >= 31)
+            raw = sign | 0x7C00u;
+        else
+            raw = sign | static_cast<uint16_t>(exp16 << 10) |
+                  static_cast<uint16_t>((mant32 >> 13) & 0x3FFu);
+    }
+    return ck_tile::bit_cast<fp16_hip_t>(raw);
+#endif
 }
 
 CK_TILE_HOST_DEVICE
-constexpr fp16_hip_t double_to_fp16_hip(const double& x)
+fp16_hip_t double_to_fp16_hip(const double& x)
 {
-    // return __float2half(x);
-    return static_cast<fp16_hip_t>(x);
+    return float_to_fp16_hip(static_cast<float>(x));
 }
 
+#if CK_TILE_USE_CUSTOM_DATA_TYPE
 CK_TILE_HOST_DEVICE
 constexpr float fp16_to_float(const half_t& x) { return static_cast<float>(x); }
 
@@ -151,6 +224,19 @@ constexpr half_t float_to_fp16(const float& x) { return static_cast<half_t>(x); 
 
 CK_TILE_HOST_DEVICE
 constexpr half_t double_to_fp16(const double& x) { return static_cast<half_t>(x); }
+#else
+CK_TILE_HOST_DEVICE
+float fp16_to_float(const half_t& x) { return fp16_to_float_hip(x); }
+
+CK_TILE_HOST_DEVICE
+float fp16_to_double(const half_t& x) { return fp16_to_double_hip(x); }
+
+CK_TILE_HOST_DEVICE
+half_t float_to_fp16(const float& x) { return float_to_fp16_hip(x); }
+
+CK_TILE_HOST_DEVICE
+half_t double_to_fp16(const double& x) { return double_to_fp16_hip(x); }
+#endif
 
 // limits
 template <class T>
