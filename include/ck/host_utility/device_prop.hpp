@@ -7,6 +7,7 @@
 #include <map>
 #include <mutex>
 #include <hip/hip_runtime.h>
+#include "ck/ck.hpp"
 #include "ck_tile/host/device_prop.hpp"
 
 namespace ck {
@@ -69,6 +70,105 @@ inline HCUTargetEnum get_hcu_target_enum()
     if(match != hcu_target_map.end())
         return match->second;
     return HCUTargetEnum::HCU_TARGET_UNKNOWN;
+}
+
+inline bool is_hcu_supported()
+{
+    return get_hcu_target_enum() != HCUTargetEnum::HCU_TARGET_UNKNOWN;
+}
+
+inline bool is_hcu_xdl_supported()
+{
+    const auto target = get_hcu_target_enum();
+    return target == HCUTargetEnum::HCU_TARGET_GFX928 ||
+           target == HCUTargetEnum::HCU_TARGET_GFX936 ||
+           target == HCUTargetEnum::HCU_TARGET_GFX938 ||
+           target == HCUTargetEnum::HCU_TARGET_GFX92A;
+}
+
+inline bool is_gfx90a() { return ck::get_device_name() == "gfx90a"; }
+
+inline bool is_gfx11_supported() { return false; }
+
+inline bool is_gfx12_supported() { return false; }
+
+inline bool is_gfx101_supported() { return false; }
+
+inline bool is_gfx103_supported() { return false; }
+
+inline bool is_gfx120_supported() { return false; }
+
+inline bool is_gfx125_supported() { return false; }
+
+inline bool is_xdl_supported()
+{
+    return is_hcu_xdl_supported() || ck::get_device_name() == "gfx908" ||
+           ck::get_device_name() == "gfx90a" || ck::get_device_name() == "gfx942";
+}
+
+template <typename ADataType,
+          typename BDataType,
+          index_t MPerXDL64,
+          index_t NPerXDL64,
+          index_t MPerXDL32 = MPerXDL64,
+          index_t NPerXDL32 = NPerXDL64>
+inline bool is_xdl_wmma_supported()
+{
+    if(is_hcu_xdl_supported() || ck::get_device_name() == "gfx908" ||
+       ck::get_device_name() == "gfx90a" || ck::get_device_name() == "gfx942")
+    {
+        return true;
+    }
+
+    return false;
+}
+
+template <typename ADataType, index_t KPerBlock, index_t KPack = 256>
+inline bool is_xdl_wmma_k_supported()
+{
+    if(is_hcu_xdl_supported() || ck::get_device_name() == "gfx908" ||
+       ck::get_device_name() == "gfx90a" || ck::get_device_name() == "gfx942")
+    {
+        return true;
+    }
+
+    if(is_gfx11_supported())
+    {
+        return (KPerBlock % 16 == 0) && (KPack % 16 == 0);
+    }
+
+    return false;
+}
+
+template <typename ADataType, index_t KPerBlock, index_t KPack = 256>
+inline bool is_xdl_wmma_k_supported(Number<KPerBlock>, Number<KPack> = Number<KPack>{})
+{
+    return is_xdl_wmma_k_supported<ADataType, KPerBlock, KPack>();
+}
+
+inline bool is_lds_direct_load_supported() { return false; }
+
+inline bool is_bf16_atomic_supported() { return false; }
+
+inline bool is_wmma_supported() { return false; }
+
+inline bool is_tf32_supported() { return false; }
+
+inline int __host__ get_lds_size()
+{
+    int device = 0;
+    int result = 0;
+    auto status = hipGetDevice(&device);
+    if(status == hipSuccess)
+    {
+        status = hipDeviceGetAttribute(&result, hipDeviceAttributeMaxSharedMemoryPerBlock, device);
+        if(status == hipSuccess)
+        {
+            return result;
+        }
+    }
+
+    return 64 * 1024;
 }
 
 } // namespace ck

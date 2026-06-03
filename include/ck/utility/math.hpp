@@ -256,5 +256,18 @@ struct less
     __host__ __device__ constexpr bool operator()(T x, T y) const { return x < y; }
 };
 
+template <index_t X>
+__host__ __device__ constexpr auto next_power_of_two()
+{
+    constexpr index_t Y = X > 1 ? (1 << (32 - __builtin_clz(X - 1))) : X;
+    return Y;
+}
+
+template <index_t X>
+__host__ __device__ constexpr auto next_power_of_two(Number<X>)
+{
+    return Number<next_power_of_two<X>()>{};
+}
+
 } // namespace math
 } // namespace ck

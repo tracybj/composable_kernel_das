@@ -21,6 +21,8 @@ namespace ck {
 namespace detail {
 // TODO: How to fix this? It uses an struct instead of lambda because lambda
 // doesn't have constructor
+#ifndef CK_DETAIL_LAMBDA_SCALAR_ACCESS_UTILS_DEFINED
+#define CK_DETAIL_LAMBDA_SCALAR_ACCESS_UTILS_DEFINED
 template <index_t VectorDim, index_t ScalarPerVector>
 struct lambda_scalar_per_access
 {
@@ -38,6 +40,7 @@ struct lambda_scalar_step_in_vector
         return (i == VectorDim) ? 1 : 0;
     }
 };
+#endif
 } // namespace detail
 
 // Assume:

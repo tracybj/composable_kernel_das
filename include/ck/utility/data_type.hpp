@@ -13,9 +13,44 @@ using half_t  = _Float16;
 #ifdef CK_EXPERIMENTAL_BIT_INT_EXTENSION
 using fp8_t   = _BitInt(8);
 using bf8_t   = unsigned _BitInt(8);
+using f8_t    = fp8_t;
+using f8_ocp_t = fp8_t;
 using int4_t  = _BitInt(4);
 using uint4_t = unsigned _BitInt(4);
+
+struct pk_i4_t
+{
+    using type = int8_t;
+    type data;
+    __host__ __device__ constexpr pk_i4_t() : data{type{}} {}
+    __host__ __device__ constexpr pk_i4_t(type init) : data{init} {}
+};
 #endif
+
+template <typename T>
+struct packed_type_info
+{
+    using element_type = remove_cvref_t<T>;
+    static constexpr index_t packed_size = 1;
+};
+
+#ifdef CK_EXPERIMENTAL_BIT_INT_EXTENSION
+template <>
+struct packed_type_info<pk_i4_t>
+{
+    using element_type = int4_t;
+    static constexpr index_t packed_size = 2;
+};
+#endif
+
+template <typename T>
+using element_type_t = typename packed_type_info<remove_cvref_t<T>>::element_type;
+
+template <typename T>
+inline constexpr index_t packed_size_v = packed_type_info<remove_cvref_t<T>>::packed_size;
+
+template <typename T>
+inline constexpr bool is_packed_type_v = packed_size_v<remove_cvref_t<T>> > 1;
 
 // vector_type
 template <typename T, index_t N>

@@ -14,6 +14,8 @@ namespace ck {
 namespace detail {
 // TODO: How to fix this? It uses an struct instead of lambda because lambda
 // doesn't have constructor
+#ifndef CK_DETAIL_LAMBDA_SRC_DST_ACCESS_UTIL_DEFINED
+#define CK_DETAIL_LAMBDA_SRC_DST_ACCESS_UTIL_DEFINED
 template <index_t SrcVectorDim,
           index_t SrcScalarPerVector,
           index_t DstVectorDim,
@@ -40,6 +42,7 @@ struct lambda_scalar_per_access_for_src_and_dst
         }
     }
 };
+#endif
 
 } // namespace detail
 
