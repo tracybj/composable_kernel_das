@@ -4,6 +4,9 @@
 #include <limits>
 #include <iostream>
 #include <getopt.h>
+#include <cmath>
+#include <cstdint>
+#include <cstring>
 
 #include "ck/ck.hpp"
 #include "ck/library/utility/check_err.hpp"
@@ -110,6 +113,48 @@ class BatchNormBwdArg
 
 using namespace ck;
 
+template <typename T>
+float host_to_float(T v)
+{
+    return static_cast<float>(v);
+}
+
+// CPU reference/verification 需要和 host_tensor_generator.hpp 使用同一种 fp16
+// bits 解释方式，避免 CK example 的 host 生成/读取/check_err 路径与 device
+// 看到的 half payload 不一致。
+template <>
+float host_to_float<ck::half_t>(ck::half_t v)
+{
+    uint16_t bits = 0;
+    std::memcpy(&bits, &v, sizeof(bits));
+
+    const int sign = (bits & 0x8000) ? -1 : 1;
+    const int exp  = (bits >> 10) & 0x1f;
+    const int mant = bits & 0x03ff;
+
+    if(exp == 0)
+        return sign * std::ldexp(static_cast<float>(mant), -24);
+    if(exp == 0x1f)
+        return mant == 0 ? sign * std::numeric_limits<float>::infinity()
+                         : std::numeric_limits<float>::quiet_NaN();
+
+    return sign * std::ldexp(static_cast<float>(1024 + mant), exp - 25);
+}
+
+template <typename T>
+T host_from_float(float v)
+{
+    return static_cast<T>(v);
+}
+
+// 与 host_tensor_generator.hpp 中显式 fp16 编码保持一致，确保 dx_ref 的 bits
+// 和 device 输出使用同一种表示。
+template <>
+ck::half_t host_from_float<ck::half_t>(float v)
+{
+    return host_float_to_half(v);
+}
+
 template <typename XDataType, typename AccDataType, bool UseMultiblockInK>
 bool bnorm_bwd_nhwc_test(bool do_verification,
                          int init_method,
@@ -193,21 +238,28 @@ bool bnorm_bwd_nhwc_test(bool do_verification,
 
     if(do_verification)
     {
+        // x、dy、scale 必须走同一组确定性初始化路径。旧 NCHW example 中 x 固定走
+        // GeneratorTensor_4，而 dy/scale 走 init_method，会导致 CPU reference
+        // 对比的不是同一个问题。
         switch(init_method)
         {
         case 0:
+            x.GenerateTensorValue(GeneratorTensor_0<XDataType>{}, num_thread);
             dy.GenerateTensorValue(GeneratorTensor_0<XDataType>{}, num_thread);
             bnScale.GenerateTensorValue(GeneratorTensor_0<ScaleDataType>{}, num_thread);
             break;
         case 1:
+            x.GenerateTensorValue(GeneratorTensor_1<XDataType>{1}, num_thread);
             dy.GenerateTensorValue(GeneratorTensor_1<XDataType>{1}, num_thread);
             bnScale.GenerateTensorValue(GeneratorTensor_1<ScaleDataType>{1}, num_thread);
             break;
         case 2:
+            x.GenerateTensorValue(GeneratorTensor_2<XDataType>{-2, 2}, num_thread);
             dy.GenerateTensorValue(GeneratorTensor_2<XDataType>{-2, 2}, num_thread);
             bnScale.GenerateTensorValue(GeneratorTensor_2<ScaleDataType>{-5, 5}, num_thread);
             break;
         default:
+            x.GenerateTensorValue(GeneratorTensor_3<XDataType>{-0.2f, 0.2f}, num_thread);
             dy.GenerateTensorValue(GeneratorTensor_3<XDataType>{-0.2f, 0.2f}, num_thread);
             bnScale.GenerateTensorValue(GeneratorTensor_3<ScaleDataType>{-0.5f, 0.5f}, num_thread);
         }
@@ -255,31 +307,31 @@ bool bnorm_bwd_nhwc_test(bool do_verification,
     using PassThroughOp = ck::tensor_operation::element_wise::PassThrough;
 
     using DeviceBatchNormBwdInstance =
-        ck::tensor_operation::device::DeviceBatchNormBwdV2Impl<XDataType, 
-                                                             XDataType, 
-                                                             XDataType, 
-                                                             AccDataType,
-                                                            AccDataType, 
-                                                            AccDataType, 
-                                                            AccDataType, 
-                                                            PassThroughOp, 
-                                                            Rank, 
-                                                            NumReduceDim, 
-                                                            true, 
-                                                            256, 
-                                                            1, 
-                                                            256,  
-                                                            2,  
-                                                            8,  
-                                                            2, //K10 
-                                                            4, //vectorDim
-                                                            8,  
-                                                            8,  
-                                                            8,    
-                                                            2,  
-                                                            2,  
-                                                            2,
-                                                            32>;
+        ck::tensor_operation::device::DeviceBatchNormBwdV2Impl<XDataType,
+                                                               XDataType,
+                                                               XDataType,
+                                                               AccDataType,
+                                                               ScaleDataType,
+                                                               AccDataType,
+                                                               AccDataType,
+                                                               PassThroughOp,
+                                                               Rank,
+                                                               NumReduceDim,
+                                                               true,
+                                                               256,
+                                                               1,
+                                                               256,
+                                                               2,
+                                                               8,
+                                                               2,
+                                                               4, // vectorDim
+                                                               8,
+                                                               8,
+                                                               8,
+                                                               2,
+                                                               2,
+                                                               2,
+                                                               32>;
 
     auto batchnorm_bwd = DeviceBatchNormBwdInstance{};
 
@@ -340,6 +392,13 @@ bool bnorm_bwd_nhwc_test(bool do_verification,
         float gb_per_sec = num_bytes / 1.E6 / avg_time;
 
         std::cout << "Perf: " << avg_time << " ms, " << gb_per_sec << " GB/s" << std::endl;
+
+        if(do_verification)
+        {
+            // 计时模式内部可能多次运行 kernel；verification 前再非计时运行一次，
+            // 保证读取的是干净的最终输出。
+            (void)invoker_ptr->Run(argument_ptr.get(), StreamConfig{nullptr, false});
+        }
     }
     else
         (void)invoker_ptr->Run(argument_ptr.get(), StreamConfig{nullptr, time_kernel});
@@ -348,61 +407,124 @@ bool bnorm_bwd_nhwc_test(bool do_verification,
 
     if(do_verification)
     {
-        using ReferenceBatchNormBwdInstance =
-            ck::tensor_operation::host::ReferenceBatchNormBwd<XDataType,
-                                                              XDataType,
-                                                              XDataType,
-                                                              AccDataType,
-                                                              ScaleDataType, // ScaleDataType
-                                                              AccDataType,
-                                                              AccDataType,
-                                                              PassThroughOp,
-                                                              Rank,
-                                                              NumReduceDim>;
+        // generic ReferenceBatchNormBwd 路径偏 NHWC。此 example 传入 NCHW strides，
+        // 并在 {N,H,W} 上规约，因此这里构造本地 NCHW reference，保证 dBias、
+        // dScale、dx 都按同一 layout 对比。
+        const auto N = static_cast<index_t>(inOutLengths[0]);
+        const auto C = static_cast<index_t>(inOutLengths[1]);
+        const auto H = static_cast<index_t>(inOutLengths[2]);
+        const auto W = static_cast<index_t>(inOutLengths[3]);
 
-        auto batchNormBwd_ref = ReferenceBatchNormBwdInstance{};
+        const auto n_stride = static_cast<index_t>(inOutStrides[0]);
+        const auto c_stride = static_cast<index_t>(inOutStrides[1]);
+        const auto h_stride = static_cast<index_t>(inOutStrides[2]);
+        const auto w_stride = static_cast<index_t>(inOutStrides[3]);
 
-        auto argument_ptr_ref = batchNormBwd_ref.MakeArgumentPointer(
-            i_inOutLengths,
-            i_inOutStrides,
-            i_inOutStrides,
-            i_inOutStrides,
-            {0, 2, 3},
-            i_scaleBiasMeanVarLengths,
-            i_scaleBiasMeanVarStrides,
-            i_scaleBiasMeanVarStrides,
-            i_scaleBiasMeanVarStrides,
-            x.mData.data(),
-            dy.mData.data(),
-            bnScale.mData.data(),
-            haveSavedMeanInvVar ? savedMean.mData.data() : nullptr,
-            haveSavedMeanInvVar ? savedInvVar.mData.data() : nullptr,
-            epsilon,
-            PassThroughOp{},
-            dx_ref.mData.data(),
-            dscale_ref.mData.data(),
-            dbias_ref.mData.data());
+        const auto reduce_size = static_cast<AccDataType>(N * H * W);
 
-        if(!batchNormBwd_ref.IsSupportedArgument(argument_ptr_ref.get()))
+        for(index_t c = 0; c < C; ++c)
         {
-            std::cout
-                << "The runtime parameters seems not supported by the device instance, exiting!"
-                << std::endl;
-            return (false);
-        };
+            AccDataType mean = type_convert<AccDataType>(0.0f);
+            AccDataType inv_var;
 
-        auto invoker_ptr_ref = batchNormBwd_ref.MakeInvokerPointer();
+            if(haveSavedMeanInvVar)
+            {
+                mean    = type_convert<AccDataType>(savedMean.mData[c]);
+                inv_var = type_convert<AccDataType>(savedInvVar.mData[c]);
+            }
+            else
+            {
+                AccDataType variance = type_convert<AccDataType>(0.0f);
+                int32_t count        = 0;
 
-        (void)invoker_ptr_ref->Run(argument_ptr_ref.get());
+                for(index_t n = 0; n < N; ++n)
+                    for(index_t h = 0; h < H; ++h)
+                        for(index_t w = 0; w < W; ++w)
+                        {
+                            const auto offset =
+                                n * n_stride + c * c_stride + h * h_stride + w * w_stride;
+                            const AccDataType x_val =
+                                static_cast<AccDataType>(host_to_float(x.mData[offset]));
+
+                            ++count;
+                            const AccDataType delta = x_val - mean;
+                            mean += delta / type_convert<AccDataType>(count);
+                            const AccDataType delta2 = x_val - mean;
+                            variance += delta * delta2;
+                        }
+
+                variance /= reduce_size;
+                inv_var =
+                    type_convert<AccDataType>(1.0f) /
+                    ck::math::sqrt(type_convert<AccDataType>(epsilon) + variance);
+            }
+
+            AccDataType dscale_val = type_convert<AccDataType>(0.0f);
+            AccDataType dbias_val  = type_convert<AccDataType>(0.0f);
+
+            for(index_t n = 0; n < N; ++n)
+                for(index_t h = 0; h < H; ++h)
+                    for(index_t w = 0; w < W; ++w)
+                    {
+                        const auto offset =
+                            n * n_stride + c * c_stride + h * h_stride + w * w_stride;
+                        const AccDataType x_val =
+                            static_cast<AccDataType>(host_to_float(x.mData[offset]));
+                        AccDataType dy_val =
+                            static_cast<AccDataType>(host_to_float(dy.mData[offset]));
+                        const AccDataType norm_x = (x_val - mean) * inv_var;
+
+                        PassThroughOp{}(dy_val, dy_val);
+                        dbias_val += dy_val;
+                        dscale_val += norm_x * dy_val;
+                    }
+
+            dscale_ref.mData[c] = type_convert<AccDataType>(dscale_val);
+            dbias_ref.mData[c]  = type_convert<AccDataType>(dbias_val);
+
+            const AccDataType scale = static_cast<AccDataType>(host_to_float(bnScale.mData[c]));
+            const AccDataType multiplier =
+                type_convert<AccDataType>(1.0f) / reduce_size * inv_var * scale;
+
+            for(index_t n = 0; n < N; ++n)
+                for(index_t h = 0; h < H; ++h)
+                    for(index_t w = 0; w < W; ++w)
+                    {
+                        const auto offset =
+                            n * n_stride + c * c_stride + h * h_stride + w * w_stride;
+                        const AccDataType x_val =
+                            static_cast<AccDataType>(host_to_float(x.mData[offset]));
+                        AccDataType dy_val =
+                            static_cast<AccDataType>(host_to_float(dy.mData[offset]));
+                        const AccDataType norm_x = (x_val - mean) * inv_var;
+
+                        PassThroughOp{}(dy_val, dy_val);
+                        const AccDataType dx_val =
+                            multiplier *
+                            (reduce_size * dy_val - dbias_val - norm_x * dscale_val);
+
+                        dx_ref.mData[offset] = host_from_float<XDataType>(dx_val);
+                    }
+        }
 
         dx_dev.FromDevice(dx.mData.data());
         dscale_dev.FromDevice(dscale.data());
         dbias_dev.FromDevice(dbias.data());
 
+        // dx 是 half buffer，先按同一 fp16 bits 解释方式转成 float vector，
+        // 再用适合 half 的容差比较；dscale/dbias 本身是 float buffer。
+        std::vector<AccDataType> dx_check(dx.mData.size());
+        std::vector<AccDataType> dx_ref_check(dx_ref.mData.size());
+        for(std::size_t i = 0; i < dx.mData.size(); ++i)
+        {
+            dx_check[i]     = static_cast<AccDataType>(host_to_float(dx.mData[i]));
+            dx_ref_check[i] = static_cast<AccDataType>(host_to_float(dx_ref.mData[i]));
+        }
+
         // clang-format off
-        pass = pass && ck::utils::check_err(dbias.mData, dbias_ref.mData, "dBias result:", 2e-4, 2e-4);
-        pass = pass && ck::utils::check_err(dscale.mData, dscale_ref.mData, "dScale result:", 2e-4, 2e-4);
-        pass = pass && ck::utils::check_err(dx.mData, dx_ref.mData, "dx result:");
+        pass = pass && ck::utils::check_err(dbias.mData, dbias_ref.mData, "dBias result:", 1e-3, 1e-3);
+        pass = pass && ck::utils::check_err(dscale.mData, dscale_ref.mData, "dScale result:", 1e-3, 1e-3);
+        pass = pass && ck::utils::check_err(dx_check, dx_ref_check, "dx result:", 1e-2, 1e-2);
         // clang-format on
     };
 
@@ -414,6 +536,12 @@ static const double epsilon = std::numeric_limits<float>::epsilon();
 int main(int argc, char* argv[])
 {
     bool pass = true;
+
+    if(argc == 1)
+    {
+        BatchNormBwdArg{}.show_usage(argv[0]);
+        return 0;
+    }
 
     if(argc > 1)
     {

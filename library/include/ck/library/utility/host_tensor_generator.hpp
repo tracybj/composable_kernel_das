@@ -9,6 +9,55 @@
 
 #include "ck/ck.hpp"
 
+#include <cmath>
+#include <cstdint>
+#include <cstring>
+
+// host 侧 half 测试数据需要稳定的 fp16 bits；这里显式编码，避免 CK example
+// 的 host 生成/校验路径与 device 看到的 half payload 不一致。
+inline ck::half_t host_float_to_half(float value)
+{
+    uint32_t bits = 0;
+    std::memcpy(&bits, &value, sizeof(bits));
+
+    const uint16_t sign = static_cast<uint16_t>((bits >> 16) & 0x8000);
+    int32_t exp         = static_cast<int32_t>((bits >> 23) & 0xff) - 127 + 15;
+    uint32_t mant       = bits & 0x7fffff;
+
+    uint16_t half_bits = sign;
+    if(exp <= 0)
+    {
+        if(exp >= -10)
+        {
+            mant = mant | 0x800000;
+            const uint32_t shift = static_cast<uint32_t>(14 - exp);
+            half_bits |= static_cast<uint16_t>((mant + (1u << (shift - 1))) >> shift);
+        }
+    }
+    else if(exp >= 31)
+    {
+        half_bits |= static_cast<uint16_t>(0x7c00 | (mant ? 1 : 0));
+    }
+    else
+    {
+        mant += 0x1000;
+        if(mant & 0x800000)
+        {
+            mant = 0;
+            ++exp;
+        }
+
+        if(exp >= 31)
+            half_bits |= 0x7c00;
+        else
+            half_bits |= static_cast<uint16_t>((exp << 10) | (mant >> 13));
+    }
+
+    ck::half_t out;
+    std::memcpy(&out, &half_bits, sizeof(half_bits));
+    return out;
+}
+
 template <typename T>
 struct GeneratorTensor_0
 {
@@ -28,6 +77,18 @@ struct GeneratorTensor_1
     T operator()(Is...)
     {
         return value;
+    }
+};
+
+template <>
+struct GeneratorTensor_1<ck::half_t>
+{
+    float value = 1.0;
+
+    template <typename... Is>
+    ck::half_t operator()(Is...)
+    {
+        return host_float_to_half(value);
     }
 };
 
@@ -65,6 +126,20 @@ struct GeneratorTensor_2
     T operator()(Is...)
     {
         return static_cast<T>((std::rand() % (max_value - min_value)) + min_value);
+    }
+};
+
+template <>
+struct GeneratorTensor_2<ck::half_t>
+{
+    int min_value = 0;
+    int max_value = 1;
+
+    template <typename... Is>
+    ck::half_t operator()(Is...)
+    {
+        float tmp = (std::rand() % (max_value - min_value)) + min_value;
+        return host_float_to_half(tmp);
     }
 };
 
@@ -111,6 +186,23 @@ struct GeneratorTensor_3
 };
 
 template <>
+struct GeneratorTensor_3<ck::half_t>
+{
+    float min_value = 0;
+    float max_value = 1;
+
+    template <typename... Is>
+    ck::half_t operator()(Is...)
+    {
+        float tmp = float(std::rand()) / float(RAND_MAX);
+
+        float fp32_tmp = min_value + tmp * (max_value - min_value);
+
+        return host_float_to_half(fp32_tmp);
+    }
+};
+
+template <>
 struct GeneratorTensor_3<ck::bhalf_t>
 {
     float min_value = 0;
@@ -142,6 +234,24 @@ struct GeneratorTensor_4
         float tmp = distribution(generator);
 
         return ck::type_convert<T>(tmp);
+    }
+};
+
+template <>
+struct GeneratorTensor_4<ck::half_t>
+{
+    std::mt19937 generator;
+    std::normal_distribution<float> distribution;
+
+    GeneratorTensor_4(float mean, float stddev, unsigned int seed = 1)
+        : generator(seed), distribution(mean, stddev){};
+
+    template <typename... Is>
+    ck::half_t operator()(Is...)
+    {
+        float tmp = distribution(generator);
+
+        return host_float_to_half(tmp);
     }
 };
 
