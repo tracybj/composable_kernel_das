@@ -1133,20 +1133,139 @@ inline __host__ __device__ constexpr bhalf_t type_convert<bhalf_t, float>(float 
     return uint16_t(u.int32 >> 16);
 }
 
+// convert fp16 to fp32
+template <>
+inline __host__ __device__ constexpr float type_convert<float, half_t>(half_t x)
+{
+#ifdef __HIP_DEVICE_COMPILE__
+    return static_cast<float>(x);
+#else
+    union
+    {
+        half_t fp16;
+        uint16_t int16;
+    } in = {x};
+
+    const uint32_t sign = static_cast<uint32_t>(in.int16 & 0x8000) << 16;
+    uint32_t exp        = (in.int16 >> 10) & 0x1f;
+    uint32_t mant       = in.int16 & 0x03ff;
+    uint32_t bits       = 0;
+
+    if(exp == 0)
+    {
+        if(mant == 0)
+        {
+            bits = sign;
+        }
+        else
+        {
+            exp = 127 - 15 + 1;
+            while((mant & 0x0400) == 0)
+            {
+                mant <<= 1;
+                --exp;
+            }
+            mant &= 0x03ff;
+            bits = sign | (exp << 23) | (mant << 13);
+        }
+    }
+    else if(exp == 0x1f)
+    {
+        bits = sign | 0x7f800000 | (mant << 13);
+    }
+    else
+    {
+        bits = sign | ((exp + (127 - 15)) << 23) | (mant << 13);
+    }
+
+    union
+    {
+        uint32_t int32;
+        float fp32;
+    } out = {bits};
+
+    return out.fp32;
+#endif
+}
+
+// convert fp32 to fp16
+template <>
+inline __host__ __device__ constexpr half_t type_convert<half_t, float>(float x)
+{
+#ifdef __HIP_DEVICE_COMPILE__
+    return static_cast<half_t>(x);
+#else
+    union
+    {
+        float fp32;
+        uint32_t int32;
+    } in = {x};
+
+    const uint32_t sign = (in.int32 >> 16) & 0x8000;
+    const uint32_t fp32_exp = (in.int32 >> 23) & 0xff;
+    int32_t exp             = static_cast<int32_t>(fp32_exp) - 127 + 15;
+    uint32_t mant           = in.int32 & 0x7fffff;
+    uint16_t bits           = 0;
+
+    if(fp32_exp == 0xff)
+    {
+        bits = static_cast<uint16_t>(sign | 0x7c00 | (mant ? 0x0200 : 0));
+    }
+    else if(exp <= 0)
+    {
+        if(exp < -10)
+        {
+            bits = static_cast<uint16_t>(sign);
+        }
+        else
+        {
+            mant = (mant | 0x800000) >> (1 - exp);
+            bits = static_cast<uint16_t>(sign | ((mant + 0x1000) >> 13));
+        }
+    }
+    else if(exp >= 0x1f)
+    {
+        bits = static_cast<uint16_t>(sign | 0x7c00);
+    }
+    else
+    {
+        uint32_t half_mant = (mant + 0x1000) >> 13;
+
+        if(half_mant == 0x400)
+        {
+            half_mant = 0;
+            ++exp;
+        }
+
+        bits = exp >= 0x1f ? static_cast<uint16_t>(sign | 0x7c00)
+                           : static_cast<uint16_t>(sign | (static_cast<uint32_t>(exp) << 10) |
+                                                   half_mant);
+    }
+
+    union
+    {
+        uint16_t int16;
+        half_t fp16;
+    } out = {bits};
+
+    return out.fp16;
+#endif
+}
+
 // convert bfp16 to fp16 via fp32
 template <>
 inline __host__ __device__ constexpr half_t type_convert<half_t, bhalf_t>(bhalf_t x)
 {
     float x_fp32 = type_convert<float>(x);
 
-    return static_cast<half_t>(x_fp32);
+    return type_convert<half_t>(x_fp32);
 }
 
 // convert fp16 to bfp16 via fp32
 template <>
 inline __host__ __device__ constexpr bhalf_t type_convert<bhalf_t, half_t>(half_t x)
 {
-    float x_fp32 = static_cast<float>(x);
+    float x_fp32 = type_convert<float>(x);
 
     return type_convert<bhalf_t>(x_fp32);
 }
