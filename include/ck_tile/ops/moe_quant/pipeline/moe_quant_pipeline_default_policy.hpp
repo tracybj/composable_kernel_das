@@ -19,8 +19,8 @@ struct quantPipelineDefaultPolicy
         return make_static_tile_distribution(
             tile_distribution_encoding<
                 sequence<>,
-                tuple<sequence<S::Repeat_M, S::WarpPerBlock_M, S::ThreadPerWarp_M, S::Vector_M>,    //<32, 4, 1, 1>
-                      sequence<S::Repeat_N, S::WarpPerBlock_N, S::ThreadPerWarp_N, S::Vector_N>>,   //<1, 1, 64, 2>
+                tuple<sequence<S::Repeat_M, S::WarpPerBlock_M, S::ThreadPerWarp_M, S::Vector_M>,    // <32, 4, 1, 1>
+                      sequence<S::Repeat_N, S::WarpPerBlock_N, S::ThreadPerWarp_N, S::Vector_N>>,   // <1, 1, 64, 2>
                 tuple<sequence<1, 2>, sequence<1, 2>>,
                 tuple<sequence<1, 1>, sequence<2, 2>>,
                 sequence<1, 1, 2, 2>,
