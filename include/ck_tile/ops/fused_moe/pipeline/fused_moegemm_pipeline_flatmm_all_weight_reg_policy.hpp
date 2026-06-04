@@ -428,7 +428,7 @@ struct FusedMoeGemmPipelineFlatmmWRegPolicy
                                                       number<N_rep>{},
                                                       number<NLane>{},
                                                       number<NInterleave>{}>,   // <4,2,16,1>
-                                             sequence<number<KLane>{}, number<KVecotrLength>{}>>,   //<4,16>
+                                             sequence<number<KLane>{}, number<KVecotrLength>{}>>,   // <4,16>
                                        tuple<sequence<1>, sequence<2, 1>>,
                                        tuple<sequence<0>, sequence<0, 2>>,
                                        sequence<1, 1, 2>,
@@ -1082,8 +1082,8 @@ struct FusedMoeGemmPipelineFlatmmWRegPolicy
 
         constexpr auto b_block_outer_dstr_encoding =
             tile_distribution_encoding<sequence<>,
-                                       tuple<sequence<S_::Repeat_N0, S_::WarpPerBlock_N0>,      //<1, 4>
-                                             sequence<S_::Repeat_K0, S_::WarpPerBlock_K0>>,     //<1, 1>
+                                       tuple<sequence<S_::Repeat_N0, S_::WarpPerBlock_N0>,      // <1, 4>
+                                             sequence<S_::Repeat_K0, S_::WarpPerBlock_K0>>,     // <1, 1>
                                        tuple<sequence<1, 2>>,
                                        tuple<sequence<1, 1>>,
                                        sequence<1, 2>,
@@ -1105,8 +1105,8 @@ struct FusedMoeGemmPipelineFlatmmWRegPolicy
 
         constexpr auto b_block_outer_dstr_encoding =
             tile_distribution_encoding<sequence<>,
-                                       tuple<sequence<S_::Repeat_N0, S_::WarpPerBlock_N0>,      //<1, 4>
-                                             sequence<S_::Repeat_K0, S_::WarpPerBlock_K0>>,     //<1, 1>
+                                       tuple<sequence<S_::Repeat_N0, S_::WarpPerBlock_N0>,      // <1, 4>
+                                             sequence<S_::Repeat_K0, S_::WarpPerBlock_K0>>,     // <1, 1>
                                        tuple<sequence<1, 2>>,
                                        tuple<sequence<1, 1>>,
                                        sequence<1, 2>,

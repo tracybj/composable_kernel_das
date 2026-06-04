@@ -657,7 +657,7 @@ struct FusedMoeGemmPipelineFlatmmW8A8QuantPolicy
 
         constexpr auto bridge_tile_dstr_enc = tile_distribution_encoding<
             sequence<>,
-            tuple<sequence<MRepeat, MWarps, MLane>, sequence<NWarps, kCN0PerLane, NLane, NVector>>,     //<1, 1, 16>, <4, 4, 4, 2>
+            tuple<sequence<MRepeat, MWarps, MLane>, sequence<NWarps, kCN0PerLane, NLane, NVector>>,     // <1, 1, 16>, <4, 4, 4, 2>
             tuple<sequence<1, 2>, sequence<2, 1>>,
             tuple<sequence<1, 0>, sequence<2, 2>>,
             sequence<1, 2, 2>,

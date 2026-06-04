@@ -570,7 +570,7 @@ struct FusedMoeGemmPipelineFlatmmW4A8QuantPolicy
 
         constexpr auto bridge_tile_dstr_enc = tile_distribution_encoding<
             sequence<>,
-            tuple<sequence<MRepeat, MWarps, MLane>, sequence<NWarps, kCN0PerLane, NLane, NVector>>,     //<1, 1, 16>, <4, 4, 4, 1>
+            tuple<sequence<MRepeat, MWarps, MLane>, sequence<NWarps, kCN0PerLane, NLane, NVector>>,     // <1, 1, 16>, <4, 4, 4, 1>
             tuple<sequence<1, 2>, sequence<2, 1>>,
             tuple<sequence<1, 0>, sequence<2, 2>>,
             sequence<1, 2, 2>,
@@ -761,8 +761,8 @@ struct FusedMoeGemmPipelineFlatmmW4A8QuantPolicy
 
         constexpr auto b_block_outer_dstr_encoding =
             tile_distribution_encoding<sequence<>,
-                                       tuple<sequence<S_::Repeat_N0, S_::WarpPerBlock_N0>,      //<1, 4>
-                                             sequence<S_::Repeat_K0, S_::WarpPerBlock_K0>>,     //<1, 1>
+                                       tuple<sequence<S_::Repeat_N0, S_::WarpPerBlock_N0>,      // <1, 4>
+                                             sequence<S_::Repeat_K0, S_::WarpPerBlock_K0>>,     // <1, 1>
                                        tuple<sequence<1, 2>>,
                                        tuple<sequence<1, 1>>,
                                        sequence<1, 2>,
@@ -784,8 +784,8 @@ struct FusedMoeGemmPipelineFlatmmW4A8QuantPolicy
 
         constexpr auto b_block_outer_dstr_encoding =
             tile_distribution_encoding<sequence<>,
-                                       tuple<sequence<S_::Repeat_N0, S_::WarpPerBlock_N0>,      //<1, 4>
-                                             sequence<S_::Repeat_K0, S_::WarpPerBlock_K0>>,     //<1, 1>
+                                       tuple<sequence<S_::Repeat_N0, S_::WarpPerBlock_N0>,      // <1, 4>
+                                             sequence<S_::Repeat_K0, S_::WarpPerBlock_K0>>,     // <1, 1>
                                        tuple<sequence<1, 2>>,
                                        tuple<sequence<1, 1>>,
                                        sequence<1, 2>,
