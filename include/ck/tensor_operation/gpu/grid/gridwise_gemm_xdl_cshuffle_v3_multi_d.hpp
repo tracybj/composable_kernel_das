@@ -1055,16 +1055,35 @@ struct GridwiseGemmMultiD_xdl_cshuffle_v3
 
         if constexpr(NXdlPerWave % CShuffleNXdlPerWavePerShuffle != 0)
         {
+            if(ck::EnvIsEnabled(CK_ENV(CK_LOGGING)))
+            {
+                std::cout << "GridwiseGemmMultiD_xdl_cshuffle_v3 rejected: NXdlPerWave="
+                          << NXdlPerWave
+                          << " is not divisible by CShuffleNXdlPerWavePerShuffle="
+                          << CShuffleNXdlPerWavePerShuffle << std::endl;
+            }
             return false;
         }
         constexpr index_t ldsBufferCount =
             BlkGemmPipelineVer == BlockGemmPipelineVersion::v4 ? 2 : 1;
         if(GetSharedMemoryNumberOfByteOnHost() * ldsBufferCount > get_lds_size())
         {
+            if(ck::EnvIsEnabled(CK_ENV(CK_LOGGING)))
+            {
+                std::cout << "GridwiseGemmMultiD_xdl_cshuffle_v3 rejected: LDS usage "
+                          << GetSharedMemoryNumberOfByteOnHost() * ldsBufferCount
+                          << " exceeds LDS size " << get_lds_size() << std::endl;
+            }
             return false;
         }
         if(!is_xdl_wmma_k_supported<ComputeTypeA, KPerBlock>())
         {
+            if(ck::EnvIsEnabled(CK_ENV(CK_LOGGING)))
+            {
+                std::cout << "GridwiseGemmMultiD_xdl_cshuffle_v3 rejected: KPerBlock="
+                          << KPerBlock << " is not supported by XDL/WMMA for ComputeTypeA"
+                          << std::endl;
+            }
             return false;
         }
         if constexpr(!(GemmSpec == tensor_operation::device::GemmSpecialization::MPadding ||
@@ -1128,6 +1147,13 @@ struct GridwiseGemmMultiD_xdl_cshuffle_v3
             auto KReadPadSplited    = math::integer_divide_ceil(karg.K, K_t) * KReadVec;
             if((KReadPadSplited * (karg.KBatch - 1)) >= karg.K)
             {
+                if(ck::EnvIsEnabled(CK_ENV(CK_LOGGING)))
+                {
+                    std::cout << "GridwiseGemmMultiD_xdl_cshuffle_v3 rejected: padded split-K "
+                                 "read range exceeds K. K="
+                              << karg.K << ", KBatch=" << karg.KBatch
+                              << ", KReadVec=" << KReadVec << std::endl;
+                }
                 return false;
             }
         }
@@ -1228,6 +1254,16 @@ struct GridwiseGemmMultiD_xdl_cshuffle_v3
         {
             if(num_k_loop <= BlockwiseGemmPipe::PrefetchStages)
             {
+                if(ck::EnvIsEnabled(CK_ENV(CK_LOGGING)))
+                {
+                    std::cout << "GridwiseGemmMultiD_xdl_cshuffle_v3 rejected: num_k_loop="
+                              << num_k_loop << " must be greater than PrefetchStages="
+                              << BlockwiseGemmPipe::PrefetchStages
+                              << " for pipeline version enum value "
+                              << static_cast<int>(BlkGemmPipelineVer)
+                              << ". K=" << karg.K << ", KBatch=" << karg.KBatch
+                              << ", KPerBlock=" << KPerBlock << std::endl;
+                }
                 return false;
             }
         }
@@ -1239,6 +1275,12 @@ struct GridwiseGemmMultiD_xdl_cshuffle_v3
                  karg.N * karg.K * sizeof(BDataType) <= TwoGB &&
                  karg.M * karg.N * sizeof(CDataType) <= TwoGB))
             {
+                if(ck::EnvIsEnabled(CK_ENV(CK_LOGGING)))
+                {
+                    std::cout << "GridwiseGemmMultiD_xdl_cshuffle_v3 rejected: descriptor size "
+                                 "exceeds 2GB in non-large-tensor mode"
+                              << std::endl;
+                }
                 return false;
             }
         }
