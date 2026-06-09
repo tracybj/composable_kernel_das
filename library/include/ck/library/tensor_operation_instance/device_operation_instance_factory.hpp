@@ -16,20 +16,37 @@ namespace instance {
 // aliasing, for commonly used data type
 using F64  = double;
 using F32  = float;
+using TF32 = ck::tf32_t;
 using F16  = ck::half_t;
 using BF16 = ck::bhalf_t;
 using I8   = int8_t;
 using I32  = int32_t;
+#ifdef CK_EXPERIMENTAL_BIT_INT_EXTENSION
+using F8  = ck::f8_t;
+using BF8 = ck::bf8_t;
+using I4  = ck::pk_i4_t;
+#endif
+
+#ifndef CK_CODE_GEN_RTC
+using E8M0   = ck::e8m0_bexp_t;
+using E8M0PK = int32_t;
+#endif
 
 using Empty_Tuple = ck::Tuple<>;
 
+using BF16_Tuple = ck::Tuple<BF16>;
+
 using F16_Tuple     = ck::Tuple<F16>;
 using F16_F16_Tuple = ck::Tuple<F16, F16>;
+using BF16_BF16_Tuple = ck::Tuple<BF16, BF16>;
 
 using F64_Tuple     = ck::Tuple<F64>;
 using F32_Tuple     = ck::Tuple<F32>;
 using I32_Tuple     = ck::Tuple<I32>;
 using I32_F32_Tuple = ck::Tuple<I32, F32>;
+using I8_Tuple      = ck::Tuple<I8>;
+
+using F32_F32_Tuple = ck::Tuple<F32, F32>;
 
 // GEMM layout
 using Row = ck::tensor_layout::gemm::RowMajor;
@@ -37,6 +54,7 @@ using Col = ck::tensor_layout::gemm::ColumnMajor;
 
 using Row_Tuple     = ck::Tuple<Row>;
 using Row_Row_Tuple = ck::Tuple<Row, Row>;
+using Row_Col_Tuple = ck::Tuple<Row, Col>;
 
 // Conv layout
 //
@@ -61,9 +79,17 @@ using GKXC   = ck::tensor_layout::convolution::GKXC;
 using GKYXC  = ck::tensor_layout::convolution::GKYXC;
 using GKZYXC = ck::tensor_layout::convolution::GKZYXC;
 
+using GKCX   = ck::tensor_layout::convolution::GKCX;
+using GKCYX  = ck::tensor_layout::convolution::GKCYX;
+using GKCZYX = ck::tensor_layout::convolution::GKCZYX;
+
 using GNWK   = ck::tensor_layout::convolution::GNWK;
 using GNHWK  = ck::tensor_layout::convolution::GNHWK;
 using GNDHWK = ck::tensor_layout::convolution::GNDHWK;
+
+using NGKW   = ck::tensor_layout::convolution::NGKW;
+using NGKHW  = ck::tensor_layout::convolution::NGKHW;
+using NGKDHW = ck::tensor_layout::convolution::NGKDHW;
 
 //
 using NWGC   = ck::tensor_layout::convolution::NWGC;
@@ -77,6 +103,18 @@ using KZYXGC = ck::tensor_layout::convolution::KZYXGC;
 using NWGK   = ck::tensor_layout::convolution::NWGK;
 using NHWGK  = ck::tensor_layout::convolution::NHWGK;
 using NDHWGK = ck::tensor_layout::convolution::NDHWGK;
+
+using NGCW   = ck::tensor_layout::convolution::NGCW;
+using NGCHW  = ck::tensor_layout::convolution::NGCHW;
+using NGCDHW = ck::tensor_layout::convolution::NGCDHW;
+
+using NGCHWc32 = ck::tensor_layout::convolution::NGCHWc32;
+using GKCYXc32 = ck::tensor_layout::convolution::GKCYXc32;
+using NGKHWk32 = ck::tensor_layout::convolution::NGKHWk32;
+
+using NGCHWc16 = ck::tensor_layout::convolution::NGCHWc<16>;
+using GKCYXc16 = ck::tensor_layout::convolution::GKCYXc<16>;
+using NGKHWk16 = ck::tensor_layout::convolution::NGKHWk<16>;
 
 //
 using GK          = ck::tensor_layout::convolution::G_K;

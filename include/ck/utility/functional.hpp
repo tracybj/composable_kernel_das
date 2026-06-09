@@ -1,5 +1,5 @@
+// Copyright (c) Advanced Micro Devices, Inc., or its affiliates.
 // SPDX-License-Identifier: MIT
-// Copyright (c) 2018-2022, , Inc. All rights reserved.
 
 #pragma once
 
@@ -120,11 +120,11 @@ constexpr auto conditional_expr(X&& x, Y&& y)
 {
     if constexpr(predicate)
     {
-        return std::forward<X>(x);
+        return ck::forward<X>(x);
     }
     else
     {
-        return std::forward<Y>(y);
+        return ck::forward<Y>(y);
     }
 }
 

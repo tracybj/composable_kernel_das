@@ -1,8 +1,9 @@
+// Copyright (c) Advanced Micro Devices, Inc., or its affiliates.
 // SPDX-License-Identifier: MIT
-// Copyright (c) 2018-2022, , Inc. All rights reserved.
 
 #pragma once
 
+#include "ck/utility/get_shift.hpp"
 #include "ck/utility/reduction_enums.hpp"
 
 namespace ck {
@@ -24,17 +25,5 @@ struct float_equal_zero
         return x <= static_cast<T>(0.0f) and x >= static_cast<T>(0.0f);
     };
 };
-
-template <index_t N>
-static constexpr __device__ index_t get_shift()
-{
-    return (get_shift<N / 2>() + 1);
-};
-
-template <>
-constexpr __device__ index_t get_shift<1>()
-{
-    return (0);
-}
 
 } // namespace ck

@@ -130,7 +130,7 @@ struct HostTensorDescriptor
         return std::inner_product(iss.begin(), iss.end(), mStrides.begin(), std::size_t{0});
     }
 
-    std::size_t GetOffsetFromMultiIndex(std::vector<std::size_t> iss) const
+    std::size_t GetOffsetFromMultiIndex(const std::vector<std::size_t>& iss) const
     {
         return std::inner_product(iss.begin(), iss.end(), mStrides.begin(), std::size_t{0});
     }
@@ -300,9 +300,11 @@ struct Tensor
 
     std::size_t GetElementSpaceSize() const { return mDesc.GetElementSpaceSize(); }
 
+    bool empty() const { return mData.empty(); }
+
     std::size_t GetElementSpaceSizeInBytes() const { return sizeof(T) * GetElementSpaceSize(); }
 
-    void SetZero() { ck::ranges::fill<T>(mData, 0); }
+    void SetZero() { ck::ranges::fill<T>(mData, T{0}); }
 
     template <typename F>
     void ForEach_impl(F&& f, std::vector<size_t>& idx, size_t rank)
@@ -407,8 +409,45 @@ struct Tensor
                                        mDesc.GetLengths()[5])(num_thread);
             break;
         }
+        case 12: {
+            auto f = [&](auto i0,
+                         auto i1,
+                         auto i2,
+                         auto i3,
+                         auto i4,
+                         auto i5,
+                         auto i6,
+                         auto i7,
+                         auto i8,
+                         auto i9,
+                         auto i10,
+                         auto i11) {
+                (*this)(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, i10, i11) =
+                    g(i0, i1, i2, i3, i4, i5, i6, i7, i8, i9, i10, i11);
+            };
+            make_ParallelTensorFunctor(f,
+                                       mDesc.GetLengths()[0],
+                                       mDesc.GetLengths()[1],
+                                       mDesc.GetLengths()[2],
+                                       mDesc.GetLengths()[3],
+                                       mDesc.GetLengths()[4],
+                                       mDesc.GetLengths()[5],
+                                       mDesc.GetLengths()[6],
+                                       mDesc.GetLengths()[7],
+                                       mDesc.GetLengths()[8],
+                                       mDesc.GetLengths()[9],
+                                       mDesc.GetLengths()[10],
+                                       mDesc.GetLengths()[11])(num_thread);
+            break;
+        }
         default: throw std::runtime_error("unspported dimension");
         }
+    }
+
+    template <typename... Is>
+    std::size_t GetOffsetFromMultiIndex(Is... is) const
+    {
+        return mDesc.GetOffsetFromMultiIndex(is...);
     }
 
     template <typename... Is>
@@ -423,12 +462,12 @@ struct Tensor
         return mData[mDesc.GetOffsetFromMultiIndex(is...)];
     }
 
-    T& operator()(std::vector<std::size_t> idx)
+    T& operator()(const std::vector<std::size_t>& idx)
     {
         return mData[mDesc.GetOffsetFromMultiIndex(idx)];
     }
 
-    const T& operator()(std::vector<std::size_t> idx) const
+    const T& operator()(const std::vector<std::size_t>& idx) const
     {
         return mData[mDesc.GetOffsetFromMultiIndex(idx)];
     }

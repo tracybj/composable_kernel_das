@@ -1,5 +1,5 @@
+// Copyright (c) Advanced Micro Devices, Inc., or its affiliates.
 // SPDX-License-Identifier: MIT
-// Copyright (c) 2018-2022, , Inc. All rights reserved.
 
 #ifndef CK_CONTAINER_HELPER_HPP
 #define CK_CONTAINER_HELPER_HPP
@@ -19,7 +19,7 @@ __host__ __device__ constexpr auto container_push_back(const Array<TData, NSize>
 {
     Array<TData, NSize + 1> r;
 
-    static_for<0, NSize, 1>{}([&r, &a ](auto i) constexpr { r(i) = a[i]; });
+    static_for<0, NSize, 1>{}([&r, &a](auto i) constexpr { r(i) = a[i]; });
 
     r(Number<NSize>{}) = x;
 
@@ -326,14 +326,14 @@ template <typename T, index_t NX, index_t NY>
 __host__ __device__ constexpr auto container_concat(const Array<T, NX>& ax, const Array<T, NY>& ay)
 {
     return unpack2(
-        [&](auto&&... zs) { return make_array(std::forward<decltype(zs)>(zs)...); }, ax, ay);
+        [&](auto&&... zs) { return make_array(ck::forward<decltype(zs)>(zs)...); }, ax, ay);
 }
 
 template <typename... X, typename... Y>
 __host__ __device__ constexpr auto container_concat(const Tuple<X...>& tx, const Tuple<Y...>& ty)
 {
     return unpack2(
-        [&](auto&&... zs) { return make_tuple(std::forward<decltype(zs)>(zs)...); }, tx, ty);
+        [&](auto&&... zs) { return make_tuple(ck::forward<decltype(zs)>(zs)...); }, tx, ty);
 }
 
 template <typename Container>

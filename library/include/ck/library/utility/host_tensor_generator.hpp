@@ -13,6 +13,8 @@
 #include <cstdint>
 #include <cstring>
 
+#include "ck/utility/data_type.hpp"
+
 // host 侧 half 测试数据需要稳定的 fp16 bits；这里显式编码，避免 CK example
 // 的 host 生成/校验路径与 device 看到的 half payload 不一致。
 inline ck::half_t host_float_to_half(float value)
@@ -116,6 +118,59 @@ struct GeneratorTensor_1<int8_t>
     }
 };
 
+#ifdef CK_EXPERIMENTAL_BIT_INT_EXTENSION
+template <>
+struct GeneratorTensor_1<ck::pk_i4_t>
+{
+    int8_t value = 1;
+
+    template <typename... Is>
+    ck::pk_i4_t operator()(Is...)
+    {
+        int t = value + 8;
+        return ck::pk_i4_t{static_cast<ck::pk_i4_t::type>(((t << 4) + t) & 0xff)};
+    }
+};
+#endif
+
+#ifndef CK_CODE_GEN_RTC
+template <>
+struct GeneratorTensor_1<ck::e8m0_bexp_t>
+{
+    float value = 1.0;
+
+    template <typename... Is>
+    ck::e8m0_bexp_t operator()(Is...)
+    {
+        return ck::e8m0_bexp_t{value};
+    }
+};
+
+template <>
+struct GeneratorTensor_1<ck::e4m3_scale_t>
+{
+    float value = 1.0;
+
+    template <typename... Is>
+    ck::e4m3_scale_t operator()(Is...)
+    {
+        return ck::e4m3_scale_t{value};
+    }
+};
+
+template <>
+struct GeneratorTensor_1<ck::e5m3_scale_t>
+{
+    float value = 1.0;
+
+    template <typename... Is>
+    ck::e5m3_scale_t operator()(Is...)
+    {
+        return ck::e5m3_scale_t{value};
+    }
+};
+#endif
+
 template <typename T>
 struct GeneratorTensor_2
 {
@@ -170,6 +225,67 @@ struct GeneratorTensor_2<int8_t>
     }
 };
 
+#ifdef CK_EXPERIMENTAL_BIT_INT_EXTENSION
+template <>
+struct GeneratorTensor_2<ck::pk_i4_t>
+{
+    int min_value = 0;
+    int max_value = 1;
+
+    template <typename... Is>
+    ck::pk_i4_t operator()(Is...)
+    {
+        int hi = std::rand() % (max_value - min_value) + min_value + 8;
+        int lo = std::rand() % (max_value - min_value) + min_value + 8;
+        return ck::pk_i4_t{static_cast<ck::pk_i4_t::type>(((hi & 0xf) << 4) + (lo & 0xf))};
+    }
+};
+#endif
+
+#ifndef CK_CODE_GEN_RTC
+template <>
+struct GeneratorTensor_2<ck::e8m0_bexp_t>
+{
+    int min_value = 0;
+    int max_value = 1;
+
+    template <typename... Is>
+    ck::e8m0_bexp_t operator()(Is...)
+    {
+        float tmp = (std::rand() % (max_value - min_value)) + min_value;
+        return ck::e8m0_bexp_t{tmp};
+    }
+};
+
+template <>
+struct GeneratorTensor_2<ck::e4m3_scale_t>
+{
+    int min_value = 0;
+    int max_value = 1;
+
+    template <typename... Is>
+    ck::e4m3_scale_t operator()(Is...)
+    {
+        float tmp = (std::rand() % (max_value - min_value)) + min_value;
+        return ck::e4m3_scale_t{tmp};
+    }
+};
+
+template <>
+struct GeneratorTensor_2<ck::e5m3_scale_t>
+{
+    int min_value = 0;
+    int max_value = 1;
+
+    template <typename... Is>
+    ck::e5m3_scale_t operator()(Is...)
+    {
+        float tmp = (std::rand() % (max_value - min_value)) + min_value;
+        return ck::e5m3_scale_t{tmp};
+    }
+};
+#endif
+
 template <typename T>
 struct GeneratorTensor_3
 {
@@ -218,6 +334,67 @@ struct GeneratorTensor_3<ck::bhalf_t>
         return ck::type_convert<ck::bhalf_t>(fp32_tmp);
     }
 };
+
+#ifdef CK_EXPERIMENTAL_BIT_INT_EXTENSION
+template <>
+struct GeneratorTensor_3<ck::pk_i4_t>
+{
+    int min_value = 0;
+    int max_value = 1;
+
+    template <typename... Is>
+    ck::pk_i4_t operator()(Is...)
+    {
+        int hi = std::rand() % (max_value - min_value) + min_value + 8;
+        int lo = std::rand() % (max_value - min_value) + min_value + 8;
+        return ck::pk_i4_t{static_cast<ck::pk_i4_t::type>(((hi & 0xf) << 4) + (lo & 0xf))};
+    }
+};
+#endif
+
+#ifndef CK_CODE_GEN_RTC
+template <>
+struct GeneratorTensor_3<ck::e8m0_bexp_t>
+{
+    float min_value = 0;
+    float max_value = 1;
+
+    template <typename... Is>
+    ck::e8m0_bexp_t operator()(Is...)
+    {
+        float tmp = float(std::rand()) / float(RAND_MAX);
+        return ck::e8m0_bexp_t{min_value + tmp * (max_value - min_value)};
+    }
+};
+
+template <>
+struct GeneratorTensor_3<ck::e4m3_scale_t>
+{
+    float min_value = 0;
+    float max_value = 1;
+
+    template <typename... Is>
+    ck::e4m3_scale_t operator()(Is...)
+    {
+        float tmp = float(std::rand()) / float(RAND_MAX);
+        return ck::e4m3_scale_t{min_value + tmp * (max_value - min_value)};
+    }
+};
+
+template <>
+struct GeneratorTensor_3<ck::e5m3_scale_t>
+{
+    float min_value = 0;
+    float max_value = 1;
+
+    template <typename... Is>
+    ck::e5m3_scale_t operator()(Is...)
+    {
+        float tmp = float(std::rand()) / float(RAND_MAX);
+        return ck::e5m3_scale_t{min_value + tmp * (max_value - min_value)};
+    }
+};
+#endif
 
 template <typename T>
 struct GeneratorTensor_4
@@ -270,6 +447,22 @@ struct GeneratorTensor_Checkboard
     }
 };
 
+/**
+ * @brief Is used to generate sequential values based on the specified dimension.
+ *
+ * @tparam Dim The specific dimension used for generation.
+ *
+ * GeneratorTensor_Sequential<1>{} will generate the following values for a 3x3 tensor:
+ *
+ * 0 1 2
+ * 0 1 2
+ * 0 1 2
+ *
+ * Essentially, the values generated are logical coordinates of the generated element that
+ * correspond to dimension Dim. E.g. for 2-dimensional tensor and Dim=1, the values are the column
+ * indices.
+ *
+ */
 template <ck::index_t Dim>
 struct GeneratorTensor_Sequential
 {
