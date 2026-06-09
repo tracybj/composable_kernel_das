@@ -10,8 +10,31 @@
 #include <cmath>
 #include <cstdint>
 
+// Architecture detection for MX fast paths.
+// AMD gfx950/gfx125 use __builtin_amdgcn_cvt_scalef32_* (pk16/pk32 batch).
+// HCU (gfx92a/gfx938/gfx946) uses __builtin_hcu_cvt_scale_* (pk=2 pair).
+// HCU fast paths deferred: batch semantics differ (pk2 vs pk16/pk32),
+// requires loop-based adaptation of the 2-element HCU builtins.
+#if defined(__gfx950__) && __HIP_DEVICE_COMPILE__
+#define CK_MX_ARCH_950 1
+#else
 #define CK_MX_ARCH_950 0
+#endif
+#if defined(__gfx125__) && __HIP_DEVICE_COMPILE__
+#define CK_MX_ARCH_125 1
+#else
 #define CK_MX_ARCH_125 0
+#endif
+
+// HCU architecture detection for future fast-path enablement.
+// gfx92a+: __builtin_hcu_cvt_scale_f32_fp8/bf8, __builtin_hcu_cvt_scale_pk_fp6/bf6/fp4_f32
+// gfx938+: __builtin_hcu_cvt_sr_fp8/bf8_f32 (stochastic rounding)
+// gfx946+: __builtin_hcu_cvt_scale_sr_* (scaled stochastic rounding), F8F6F4 MMAC
+#if defined(__gfx92a__) || defined(__gfx938__) || defined(__gfx946__)
+#define CK_MX_ARCH_HCU 1
+#else
+#define CK_MX_ARCH_HCU 0
+#endif
 
 #ifdef CK_CODE_GEN_RTC
 #define UINT_MAX 4294967295
