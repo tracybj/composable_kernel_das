@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.14)
 
 # Check support for CUDA/HIP in Cmake
-project(composable_kernel)
+set(version 1.0.0)
+project(composable_kernel VERSION ${version})
 
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
@@ -62,6 +63,38 @@ include(CheckCXXCompilerFlag)
 rocm_setup_version(VERSION 0.2.0)
 include(TargetFlags)
 list(APPEND CMAKE_PREFIX_PATH ${CMAKE_INSTALL_PREFIX} ${CMAKE_INSTALL_PREFIX}/llvm ${CMAKE_INSTALL_PREFIX}/hip /opt/rocm /opt/rocm/llvm /opt/rocm/hip)
+
+# CK version file records the release version and git commit hash identifying
+# the DCU CK source tree. Degrade gracefully for release tarballs without .git.
+find_package(Git)
+set(COMMIT_ID "unknown")
+set(CK_PARENT_COMMIT_ID "unknown")
+if(GIT_FOUND)
+    execute_process(
+        COMMAND "${GIT_EXECUTABLE}" log -1 --format=%H -- .
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+        OUTPUT_VARIABLE GIT_COMMIT_ID
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        RESULT_VARIABLE GIT_LOG_RESULT
+        ERROR_QUIET
+    )
+    if(GIT_LOG_RESULT EQUAL 0 AND GIT_COMMIT_ID)
+        set(COMMIT_ID "${GIT_COMMIT_ID}")
+    endif()
+
+    execute_process(
+        COMMAND "${GIT_EXECUTABLE}" rev-parse HEAD
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+        OUTPUT_VARIABLE GIT_REPO_HEAD
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        RESULT_VARIABLE GIT_REV_PARSE_RESULT
+        ERROR_QUIET
+    )
+    if(GIT_REV_PARSE_RESULT EQUAL 0 AND GIT_REPO_HEAD)
+        set(CK_PARENT_COMMIT_ID "${GIT_REPO_HEAD}")
+    endif()
+endif()
+configure_file(include/ck/version.h.in ${CMAKE_CURRENT_BINARY_DIR}/include/ck/version.h)
 
 set(USE_BITINT_EXTENSION ON)
 option(USE_OPT_NAVI3X, "Whether to enable LDS cumode and Wavefront32 mode for NAVI3X silicons." OFF)
@@ -344,7 +377,6 @@ add_subdirectory(profiler)
 #Create an interface target for the include only files and call it "composablekernels"
 include(CMakePackageConfigHelpers)
 
-set(version 1.0.0)
 write_basic_package_version_file(
     "${CMAKE_CURRENT_BINARY_DIR}/composable_kernelConfigVersion.cmake"
     VERSION "${version}"
@@ -364,6 +396,7 @@ rocm_install(FILES
 )
 
 rocm_install(FILES
+    ${PROJECT_BINARY_DIR}/include/ck/version.h
     ${PROJECT_BINARY_DIR}/include/ck/config.h
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/ck/
 )

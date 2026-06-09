@@ -42,6 +42,8 @@ __host__ __device__ fp8_t run_cast_to_f8(T x, uint32_t rng)
     // nan code is same for float and half
     constexpr uint8_t nan_code  = 0x80;
     constexpr uint32_t nan_mask = is_half ? 0x7C00 : 0x7F800000;
+    constexpr uint8_t ocp_inf_exp = (1 << f8_exp) - 1;
+    constexpr uint8_t ocp_qnan    = 0x7F;
 
     // convert to bitwise
     typedef typename std::conditional<std::is_same<T, half_t>::value, uint16_t, uint32_t>::type
@@ -64,7 +66,6 @@ __host__ __device__ fp8_t run_cast_to_f8(T x, uint32_t rng)
         sign     = head >> (type_exp + type_mant);
     }
 
-    uint32_t signed_inf   = (sign << (type_exp + type_mant)) + (((1 << type_exp) - 1) << type_mant);
     uint32_t drop_mask    = (1 << (type_mant - f8_mant)) - 1;
     constexpr int max_exp = (1 << f8_exp) - (negative_zero_nan ? 1 : 2);
     constexpr int exp_low_cutoff =
@@ -78,7 +79,9 @@ __host__ __device__ fp8_t run_cast_to_f8(T x, uint32_t rng)
     else
     {
         if((x_bitwise & nan_mask) == nan_mask)
-            return signed_inf + (mantissa != 0 ? 1 : 0);
+            return mantissa == 0 ? fp8_t((sign << (f8_exp + f8_mant)) |
+                                         (ocp_inf_exp << f8_mant))
+                                 : fp8_t(ocp_qnan);
     }
 
     // check if x is 0.0
@@ -121,7 +124,7 @@ __host__ __device__ fp8_t run_cast_to_f8(T x, uint32_t rng)
         }
         else
         {
-            return signed_inf;
+            return fp8_t((sign << (f8_exp + f8_mant)) | (ocp_inf_exp << f8_mant));
         }
     }
 
@@ -174,9 +177,13 @@ __host__ __device__ T run_cast_from_f8(fp8_t x)
     }
 
     // unpack the input
-    uint32_t sign     = x >> (f8_exp + f8_mant);
-    uint32_t mantissa = x & ((1 << f8_mant) - 1);
-    int exponent      = (x & 0x7F) >> f8_mant;
+    const uint8_t raw = static_cast<uint8_t>(x);
+    uint32_t sign     = raw >> (f8_exp + f8_mant);
+    uint32_t mantissa = raw & ((1 << f8_mant) - 1);
+    int exponent      = (raw & 0x7F) >> f8_mant;
+
+    if(exponent == 0 && mantissa == 0)
+        return sign ? fNeg0 : static_cast<T>(0);
 
     constexpr int exp_low_cutoff =
         (1 << (type_exp - 1)) - (1 << (f8_exp - 1)) + 1 - (negative_zero_nan ? 1 : 0);
@@ -184,12 +191,12 @@ __host__ __device__ T run_cast_from_f8(fp8_t x)
 
     if constexpr(negative_zero_nan)
     {
-        if(x == nan_code)
+        if(raw == nan_code)
             return fNaN;
     }
     else
     {
-        if(x == nan_code)
+        if(raw == nan_code)
             return fNeg0;
         if(exponent == ((1 << f8_exp) - 1))
             return (mantissa == 0) ? (sign ? fNegInf : fInf) : fNaN;

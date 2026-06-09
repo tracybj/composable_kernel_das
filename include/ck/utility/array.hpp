@@ -1,5 +1,5 @@
+// Copyright (c) Advanced Micro Devices, Inc., or its affiliates.
 // SPDX-License-Identifier: MIT
-// Copyright (c) 2018-2022, , Inc. All rights reserved.
 
 #ifndef CK_ARRAY_HPP
 #define CK_ARRAY_HPP
@@ -52,7 +52,7 @@ template <typename X, typename... Xs>
 __host__ __device__ constexpr auto make_array(X&& x, Xs&&... xs)
 {
     using data_type = remove_cvref_t<X>;
-    return Array<data_type, sizeof...(Xs) + 1>{std::forward<X>(x), std::forward<Xs>(xs)...};
+    return Array<data_type, sizeof...(Xs) + 1>{ck::forward<X>(x), ck::forward<Xs>(xs)...};
 }
 
 // make empty array

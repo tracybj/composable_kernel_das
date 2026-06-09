@@ -16,20 +16,37 @@ namespace instance {
 // aliasing, for commonly used data type
 using F64  = double;
 using F32  = float;
+using TF32 = ck::tf32_t;
 using F16  = ck::half_t;
 using BF16 = ck::bhalf_t;
 using I8   = int8_t;
 using I32  = int32_t;
+#ifdef CK_EXPERIMENTAL_BIT_INT_EXTENSION
+using F8  = ck::f8_t;
+using BF8 = ck::bf8_t;
+using I4  = ck::pk_i4_t;
+#endif
+
+#ifndef CK_CODE_GEN_RTC
+using E8M0   = ck::e8m0_bexp_t;
+using E8M0PK = int32_t;
+#endif
 
 using Empty_Tuple = ck::Tuple<>;
 
+using BF16_Tuple = ck::Tuple<BF16>;
+
 using F16_Tuple     = ck::Tuple<F16>;
 using F16_F16_Tuple = ck::Tuple<F16, F16>;
+using BF16_BF16_Tuple = ck::Tuple<BF16, BF16>;
 
 using F64_Tuple     = ck::Tuple<F64>;
 using F32_Tuple     = ck::Tuple<F32>;
 using I32_Tuple     = ck::Tuple<I32>;
 using I32_F32_Tuple = ck::Tuple<I32, F32>;
+using I8_Tuple      = ck::Tuple<I8>;
+
+using F32_F32_Tuple = ck::Tuple<F32, F32>;
 
 // GEMM layout
 using Row = ck::tensor_layout::gemm::RowMajor;
@@ -37,6 +54,7 @@ using Col = ck::tensor_layout::gemm::ColumnMajor;
 
 using Row_Tuple     = ck::Tuple<Row>;
 using Row_Row_Tuple = ck::Tuple<Row, Row>;
+using Row_Col_Tuple = ck::Tuple<Row, Col>;
 
 // Conv layout
 //

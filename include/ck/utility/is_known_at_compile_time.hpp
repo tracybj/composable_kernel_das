@@ -1,5 +1,5 @@
+// Copyright (c) Advanced Micro Devices, Inc., or its affiliates.
 // SPDX-License-Identifier: MIT
-// Copyright (c) 2018-2022, , Inc. All rights reserved.
 
 #pragma once
 
@@ -15,6 +15,12 @@ struct is_known_at_compile_time;
 
 template <>
 struct is_known_at_compile_time<index_t>
+{
+    static constexpr bool value = false;
+};
+
+template <>
+struct is_known_at_compile_time<unsigned int>
 {
     static constexpr bool value = false;
 };

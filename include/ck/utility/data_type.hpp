@@ -3,6 +3,9 @@
 
 #pragma once
 
+#include "ck/utility/e4m3.hpp"
+#include "ck/utility/e5m3.hpp"
+#include "ck/utility/e8m0.hpp"
 #include "ck/utility/statically_indexed_array.hpp"
 
 namespace ck {
@@ -17,6 +20,8 @@ using f8_t    = fp8_t;
 using f8_ocp_t = fp8_t;
 using int4_t  = _BitInt(4);
 using uint4_t = unsigned _BitInt(4);
+using f6_t    = _BitInt(6);
+using bf6_t   = unsigned _BitInt(6);
 
 struct pk_i4_t
 {
@@ -186,6 +191,29 @@ struct scalar_type<uint8_t>
     static constexpr index_t vector_size = 1;
 };
 
+#ifndef CK_CODE_GEN_RTC
+template <>
+struct scalar_type<e8m0_bexp_t>
+{
+    using type                           = typename e8m0_bexp_t::type;
+    static constexpr index_t vector_size = 1;
+};
+
+template <>
+struct scalar_type<e4m3_scale_t>
+{
+    using type                           = e4m3_scale_t::type;
+    static constexpr index_t vector_size = 1;
+};
+
+template <>
+struct scalar_type<e5m3_scale_t>
+{
+    using type                           = e5m3_scale_t::type;
+    static constexpr index_t vector_size = 1;
+};
+#endif
+
 #ifdef CK_EXPERIMENTAL_BIT_INT_EXTENSION
 template <>
 struct scalar_type<fp8_t>
@@ -212,6 +240,20 @@ template <>
 struct scalar_type<uint4_t>
 {
     using type                           = uint4_t;
+    static constexpr index_t vector_size = 1;
+};
+
+template <>
+struct scalar_type<f6_t>
+{
+    using type                           = f6_t;
+    static constexpr index_t vector_size = 1;
+};
+
+template <>
+struct scalar_type<bf6_t>
+{
+    using type                           = bf6_t;
     static constexpr index_t vector_size = 1;
 };
 #endif
@@ -996,8 +1038,12 @@ struct storage_type<uint4_t>
 using int64_t = long;
 
 // fp64
-using double2_t = typename vector_type<double, 2>::type;
-using double4_t = typename vector_type<double, 4>::type;
+using double2_t  = typename vector_type<double, 2>::type;
+using double4_t  = typename vector_type<double, 4>::type;
+using double8_t  = typename vector_type<double, 8>::type;
+using double16_t = typename vector_type<double, 16>::type;
+using double32_t = typename vector_type<double, 32>::type;
+using double64_t = typename vector_type<double, 64>::type;
 
 // fp32
 using float2_t  = typename vector_type<float, 2>::type;
@@ -1340,15 +1386,111 @@ struct NumericLimits<half_t>
     __host__ __device__ static constexpr half_t QuietNaN() { return bit_cast<half_t>(binary_qnan); }
 };
 
+#ifndef CK_CODE_GEN_RTC
+template <>
+struct NumericLimits<e8m0_bexp_t>
+{
+    static constexpr uint8_t binary_min      = 0x00;
+    static constexpr uint8_t binary_max      = 0xFE;
+    static constexpr uint8_t binary_qnan     = 0xFF;
+    static constexpr uint8_t binary_1        = 0x7F;
+    static constexpr uint8_t binary_2        = 0x80;
+    static constexpr uint8_t binary_half     = 0x7E;
+    static constexpr uint8_t binary_quarter  = 0x7D;
+    static constexpr uint8_t binary_rcp_8    = 0x7C;
+    static constexpr uint8_t binary_rcp_16   = 0x7B;
+    static constexpr uint8_t binary_rcp_32   = 0x7A;
+    static constexpr uint8_t binary_rcp_64   = 0x79;
+    static constexpr uint8_t binary_rcp_128  = 0x78;
+    static constexpr uint8_t binary_rcp_256  = 0x77;
+    static constexpr uint8_t binary_rcp_512  = 0x76;
+    static constexpr uint8_t binary_rcp_1024 = 0x75;
+
+    __host__ __device__ static constexpr e8m0_bexp_t Min() { return e8m0_bexp_t(binary_min); }
+
+    __host__ __device__ static constexpr e8m0_bexp_t Max() { return e8m0_bexp_t(binary_max); }
+
+    __host__ __device__ static constexpr e8m0_bexp_t Lowest() { return e8m0_bexp_t(binary_min); }
+
+    __host__ __device__ static constexpr e8m0_bexp_t QuietNaN()
+    {
+        return e8m0_bexp_t(binary_qnan);
+    }
+
+    __host__ __device__ static constexpr e8m0_bexp_t Binary_1()
+    {
+        return e8m0_bexp_t(binary_1);
+    }
+};
+
+template <>
+struct NumericLimits<e4m3_scale_t>
+{
+    static constexpr uint8_t binary_min    = 0x08;
+    static constexpr uint8_t binary_max    = e4m3_scale_t::max_finite;
+    static constexpr uint8_t binary_lowest = 0x00;
+    static constexpr uint8_t binary_qnan   = e4m3_scale_t::nan_mask;
+
+    __host__ __device__ static constexpr e4m3_scale_t Min()
+    {
+        return e4m3_scale_t(binary_min);
+    }
+
+    __host__ __device__ static constexpr e4m3_scale_t Max()
+    {
+        return e4m3_scale_t(binary_max);
+    }
+
+    __host__ __device__ static constexpr e4m3_scale_t Lowest()
+    {
+        return e4m3_scale_t(binary_lowest);
+    }
+
+    __host__ __device__ static constexpr e4m3_scale_t QuietNaN()
+    {
+        return e4m3_scale_t(binary_qnan);
+    }
+};
+
+template <>
+struct NumericLimits<e5m3_scale_t>
+{
+    static constexpr uint8_t binary_min    = 0x08;
+    static constexpr uint8_t binary_max    = e5m3_scale_t::max_finite;
+    static constexpr uint8_t binary_lowest = 0x00;
+    static constexpr uint8_t binary_qnan   = e5m3_scale_t::nan_mask;
+
+    __host__ __device__ static constexpr e5m3_scale_t Min()
+    {
+        return e5m3_scale_t(binary_min);
+    }
+
+    __host__ __device__ static constexpr e5m3_scale_t Max()
+    {
+        return e5m3_scale_t(binary_max);
+    }
+
+    __host__ __device__ static constexpr e5m3_scale_t Lowest()
+    {
+        return e5m3_scale_t(binary_lowest);
+    }
+
+    __host__ __device__ static constexpr e5m3_scale_t QuietNaN()
+    {
+        return e5m3_scale_t(binary_qnan);
+    }
+};
+#endif
+
 #ifdef CK_EXPERIMENTAL_BIT_INT_EXTENSION
 template <>
 struct NumericLimits<fp8_t>
 {
-    // negative zero nan mode with exp bias = 8
-    static constexpr uint8_t binary_min    = 0x08; // 0b00001000
-    static constexpr uint8_t binary_max    = 0x7F; // 0b01111111
-    static constexpr uint8_t binary_lowest = 0xFF; // 0b11111111
-    static constexpr uint8_t binary_qnan   = 0x80; // 0b10000000
+    // OCP E4M3 mode with exp bias = 7
+    static constexpr uint8_t binary_min    = 0x08; // 0b00001000 = 2^-6
+    static constexpr uint8_t binary_max    = 0x7E; // 0b01111110 = 448
+    static constexpr uint8_t binary_lowest = 0xFE; // 0b11111110 = -448
+    static constexpr uint8_t binary_qnan   = 0x7F; // 0b01111111
 
     __host__ __device__ static constexpr fp8_t Min() { return fp8_t(binary_min); }
 
@@ -1362,11 +1504,11 @@ struct NumericLimits<fp8_t>
 template <>
 struct NumericLimits<bf8_t>
 {
-    // negative zero nan mode with exp bias = 16
-    static constexpr uint8_t binary_min    = 0x04; // 0b00000100
-    static constexpr uint8_t binary_max    = 0x7F; // 0b01111111
-    static constexpr uint8_t binary_lowest = 0xFF; // 0b11111111
-    static constexpr uint8_t binary_qnan   = 0x80; // 0b10000000
+    // OCP E5M2 mode with exp bias = 15
+    static constexpr uint8_t binary_min    = 0x04; // 0b00000100 = 2^-14
+    static constexpr uint8_t binary_max    = 0x7B; // 0b01111011 = 57344
+    static constexpr uint8_t binary_lowest = 0xFB; // 0b11111011 = -57344
+    static constexpr uint8_t binary_qnan   = 0x7D; // 0b01111101
 
     __host__ __device__ static constexpr bf8_t Min() { return bf8_t(binary_min); }
 
@@ -1395,6 +1537,75 @@ struct NumericLimits<uint4_t>
     __host__ __device__ static constexpr uint4_t Max() { return uint4_t(15); }
 
     __host__ __device__ static constexpr uint4_t Lowest() { return uint4_t(0); }
+};
+
+template <>
+struct NumericLimits<f6_t>
+{
+    static constexpr uint8_t binary_min_normal    = 0x08;
+    static constexpr uint8_t binary_max_normal    = 0x1F;
+    static constexpr uint8_t binary_lowest_normal = 0x3F;
+    static constexpr uint8_t binary_min_subnorm   = 0x01;
+    static constexpr uint8_t binary_max_subnorm   = 0x07;
+
+    static constexpr float data_max_normal_number    = 7.5f;
+    static constexpr float data_min_subnormal_number = 0.125f;
+
+    __host__ __device__ static constexpr f6_t Min() { return f6_t(binary_min_normal & 0b111111); }
+
+    __host__ __device__ static constexpr f6_t Max() { return f6_t(binary_max_normal & 0b111111); }
+
+    __host__ __device__ static constexpr f6_t Lowest()
+    {
+        return f6_t(binary_lowest_normal & 0b111111);
+    }
+
+    __host__ __device__ static constexpr f6_t MinSubnorm()
+    {
+        return f6_t(binary_min_subnorm & 0b111111);
+    }
+
+    __host__ __device__ static constexpr f6_t MaxSubnorm()
+    {
+        return f6_t(binary_max_subnorm & 0b111111);
+    }
+
+    __host__ __device__ static constexpr float DataMaxNorm() { return data_max_normal_number; }
+
+    __host__ __device__ static constexpr float DataMinSubnorm()
+    {
+        return data_min_subnormal_number;
+    }
+};
+
+template <>
+struct NumericLimits<bf6_t>
+{
+    static constexpr uint8_t binary_min_normal    = 0x08;
+    static constexpr uint8_t binary_max_normal    = 0x1F;
+    static constexpr uint8_t binary_lowest_normal = 0x3F;
+    static constexpr uint8_t binary_min_subnorm   = 0x01;
+    static constexpr uint8_t binary_max_subnorm   = 0x03;
+
+    static constexpr float data_max_normal_number    = 28.0f;
+    static constexpr float data_min_subnormal_number = 0.0625f;
+
+    __host__ __device__ static constexpr bf6_t Min() { return bf6_t(binary_min_normal); }
+
+    __host__ __device__ static constexpr bf6_t Max() { return bf6_t(binary_max_normal); }
+
+    __host__ __device__ static constexpr bf6_t Lowest() { return bf6_t(binary_lowest_normal); }
+
+    __host__ __device__ static constexpr bf6_t MinSubnorm() { return bf6_t(binary_min_subnorm); }
+
+    __host__ __device__ static constexpr bf6_t MaxSubnorm() { return bf6_t(binary_max_subnorm); }
+
+    __host__ __device__ static constexpr float DataMaxNorm() { return data_max_normal_number; }
+
+    __host__ __device__ static constexpr float DataMinSubnorm()
+    {
+        return data_min_subnormal_number;
+    }
 };
 #endif // CK_EXPERIMENTAL_BIT_INT_EXTENSION
 
