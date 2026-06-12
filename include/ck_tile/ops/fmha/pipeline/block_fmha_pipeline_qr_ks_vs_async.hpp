@@ -7,6 +7,7 @@
 #include "ck_tile/ops/common/tensor_layout.hpp"
 #include "ck_tile/ops/fmha/block/block_attention_bias_enum.hpp"
 #include "ck_tile/ops/fmha/pipeline/block_fmha_pipeline_qr_ks_vs_async_default_policy.hpp"
+#include "ck_tile/ops/fmha/pipeline/block_fmha_pipeline_reduce.hpp"
 #include "ck_tile/ops/fmha/block/block_dropout.hpp"
 #include "ck_tile/ops/reduce/block/block_reduce.hpp"
 
@@ -324,10 +325,13 @@ struct BlockFmhaPipelineQRKSVSAsync
         auto randval_dram_window = dropout.template MakeRandvalDramWindow<decltype(gemm_0)>(
             randval_dram_block_window_tmp, seqlen_k_start);
 
+        // [DCU移植] V 窗口起点用真实 origin 而非硬编码 0（上游为 {0, seqlen_k_start}），
+        // 以正确支持 hdim 切分 / 非零 V 起点。
+        const auto v_origin = v_dram_block_window_tmp.get_window_origin();
         auto v_dram_window =
             make_tile_window(v_dram_block_window_tmp.get_bottom_tensor_view(),
                              v_dram_block_window_tmp.get_window_lengths(),
-                             {0, seqlen_k_start}, // TODO: hdim split?
+                             {v_origin.at(number<0>{}), seqlen_k_start},
                              Policy::template MakeVDramTileDistribution<Problem>());
 
         // prefetch K tile
@@ -473,7 +477,8 @@ struct BlockFmhaPipelineQRKSVSAsync
                 sequence<1>{},
                 f_max,
                 -numeric<SMPLComputeDataType>::infinity()); // m_local = rowmax(S{j})
-            block_tile_reduce_sync(m_local, f_max, bool_constant<false>{});
+            // [DCU移植] 上游为 block_tile_reduce_sync，改为 MMAC 16-lane 行规约（见 block_fmha_pipeline_reduce.hpp）。
+            fmha_reduce_sync_16lane(m_local, f_max);
 
             const auto m_old = m; // m{j-1}
             tile_elementwise_inout(
@@ -561,7 +566,8 @@ struct BlockFmhaPipelineQRKSVSAsync
             auto rowsum_p = block_tile_reduce<SMPLComputeDataType>(
                 p_compute, sequence<1>{}, f_sum, SMPLComputeDataType{0}); // rowsum(Pcompute{j})
 
-            block_tile_reduce_sync(rowsum_p, f_sum, bool_constant<false>{});
+            fmha_reduce_sync_16lane(rowsum_p, f_sum);
+
             // l{j}, Oacc{j}
             constexpr auto o_spans = decltype(o_acc)::get_distributed_spans();
             sweep_tile_span(o_spans[number<0>{}], [&](auto idx0) {
@@ -603,7 +609,7 @@ struct BlockFmhaPipelineQRKSVSAsync
                     randval_dram_window);
             }
 
-            const auto p = [&]() {
+            auto p = [&]() {
                 if constexpr(std::is_same_v<PDataType, fp16_t>)
                     return impl::cast_tile_pk_fp16_fp32<PDataType>(
                         tile_elementwise_in(p_compute_element_func, p_compute));
@@ -611,6 +617,51 @@ struct BlockFmhaPipelineQRKSVSAsync
                     return cast_tile<PDataType>(
                         tile_elementwise_in(p_compute_element_func, p_compute));
             }();
+
+            // [DCU移植] P-bridge：FMHA 移植新增的关键步骤（上游 github CK 没有）。
+            // 在 DCU 上，QK GEMM 输出 C 的 lane 布局与 PV GEMM 输入 A 的 lane 布局对不上
+            // （MFMA 上两者天然衔接），因此把 P 经一块专用 LDS scratch（K/V 共享缓冲之后）
+            // 做一次“写按 QK-C 布局、读按 PV-A 布局”的重排。LDS 大小见 GetSmemSizePBridge。
+            // Bridge: rearrange P from QK CWarpTensor layout to PV AWarpTensor layout
+            // via dedicated LDS scratch after the K/V shared buffer region.
+            // LitLts QK C encoding: buffer[c*4+r] -> (row=4*(lane/16)+r, col=c*16+lane%16)
+            // Basic QK C encoding:  buffer[c*4+r] -> (row=lane%16,       col=c*16+r*4+lane/16)
+            // PV A encoding:        buffer[k]     -> (row=lane%16,       col=(lane/16)*16+k)
+            {
+                auto* scratch = reinterpret_cast<PDataType*>(
+                    reinterpret_cast<char*>(smem_ptr) +
+                    Policy::template GetSmemSizeKVWithoutPBridge<Problem>());
+                constexpr index_t kRowStride = kN0;
+                int lane = get_lane_id();
+
+                // Write: QK CWarpTensor -> LDS row-major (row, col). gfx938/gfx946 use the
+                // LitLts C layout; gfx928/gfx92a/gfx936 use the basic MMAC C layout.
+                for (int r = 0; r < 4; r++) {
+#if defined(__gfx938__) || defined(__gfx946__)
+                    int m_row = 4 * (lane / 16) + r;
+#else
+                    int m_row = lane % 16;
+#endif
+                    for (int c = 0; c < 4; c++) {
+#if defined(__gfx938__) || defined(__gfx946__)
+                        int n_col = c * 16 + lane % 16;
+#else
+                        int n_col = c * 16 + r * 4 + lane / 16;
+#endif
+                        scratch[m_row * kRowStride + n_col] = p.get_thread_buffer()[c * 4 + r];
+                    }
+                }
+
+                __builtin_amdgcn_sched_barrier(0);
+                __builtin_amdgcn_s_barrier();
+                __builtin_amdgcn_sched_barrier(0);
+
+                // Read: LDS row-major -> PV AWarpTensor layout
+                for (int k = 0; k < 16; k++) {
+                    p.get_thread_buffer()[k] =
+                        scratch[(lane % 16) * kRowStride + (lane / 16) * 16 + k];
+                }
+            }
 
             // STAGE 3, KV gemm
             if constexpr(k1_loops > 1)
@@ -661,13 +712,18 @@ struct BlockFmhaPipelineQRKSVSAsync
                 // move K tile windows
                 move_tile_window(k_dram_block_window, {kN0, 0});
                 k_dram_window.set_window_origin(k_dram_block_window.get_window_origin());
+                if constexpr(k1_loops == 1)
+                    move_tile_window(v_dram_window, {0, kN0});
 
-                if constexpr(k1_loops >= 2 &&
-                             LdsSeq.at(number<0>{}) == LdsSeq.at(number<k0_loops + k1_loops - 2>{}))
-                    __builtin_amdgcn_s_barrier();
-                async_load_tile_raw(
-                    k_lds_store(LdsSeq.at(number<0>{})), k_dram_window, k_oob_ck, k_pre_np);
-                move_tile_window(k_dram_window, {0, kK0});
+                if constexpr(k1_loops >= 2)
+                {
+                    if constexpr(LdsSeq.at(number<0>{}) ==
+                                 LdsSeq.at(number<k0_loops + k1_loops - 2>{}))
+                        __builtin_amdgcn_s_barrier();
+                    async_load_tile_raw(
+                        k_lds_store(LdsSeq.at(number<0>{})), k_dram_window, k_oob_ck, k_pre_np);
+                    move_tile_window(k_dram_window, {0, kK0});
+                }
             }
             // tail
             {
@@ -679,6 +735,15 @@ struct BlockFmhaPipelineQRKSVSAsync
                         v_lds_window,
                         sequence<(LdsSeq.at(number<k0_loops + k1_loops - 1>{})) * kN1, 0>{},
                         sequence<(LdsSeq.at(number<k0_loops + k1_loops - 1>{}) + 1) * kN1, kK1>{}));
+            }
+            if constexpr(k1_loops == 1)
+            {
+                if(i_total_loops < num_total_loop)
+                {
+                    async_load_tile_raw(
+                        k_lds_store(LdsSeq.at(number<0>{})), k_dram_window, k_oob_ck, k_pre_np);
+                    move_tile_window(k_dram_window, {0, kK0});
+                }
             }
         } while(i_total_loops < num_total_loop);
 

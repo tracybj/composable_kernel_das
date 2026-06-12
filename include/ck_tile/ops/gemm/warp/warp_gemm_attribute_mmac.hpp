@@ -8,6 +8,10 @@
 
 namespace ck_tile {
 
+// [DCU移植] MMAC（海光 DCU 原生矩阵指令）warp GEMM 的基类。对应上游 github CK 的
+// MFMA 版本（WarpGemmAttributeMfmaIterateK）。注意：本基类的 CWarpDstrEncoding 必须
+// 维持与 DCU GEMM example（03_gemm/19_grouped_gemm）一致的 C 寄存器布局，FMHA 所需的
+// 裸硬件布局/转置布局一律走下面派生的 ...IterateKCRaw / ...IterateKLitLts，切勿改基类。
 template <typename WarpGemmAttributeMmacImpl_,
           index_t MRepeat,
           index_t NRepeat,
@@ -154,6 +158,58 @@ struct WarpGemmAttributeMmacIterateK
 
         return c_warp_output_tensor;
     }
+};
+
+// [DCU移植] 本结构体为 FMHA 移植新增（上游 github CK 没有）。
+// basic MMAC（gfx936/gfx928/gfx92a，非 lit_lts）的 QK/PV C 矩阵在寄存器中的“裸硬件”
+// 布局为：lane = m + 16*(n%4), reg = n/4，即 col = c*16 + r*4 + lane/16。FMHA 直接在
+// 寄存器里消费该 C tile，必须用这套编码；而 GEMM example 走基类编码。两者不可合并。
+// ------------------------------------------------------------------
+// FMHA fwd (gfx936/gfx928/gfx92a basic MMAC) C register layout.
+//
+// The base WarpGemmAttributeMmacIterateK::CWarpDstrEncoding maps the MMAC C registers
+// the way the standalone GEMM epilogue (basic_gemm / grouped_gemm) expects, and must NOT
+// be changed or those examples break (compile + fp16/bf16 precision). FMHA instead
+// consumes the QK / PV C tile directly in-register and needs the *raw* hardware layout:
+//   lane = m + 16 * (n % 4), reg = n / 4   (i.e. col = c*16 + r*4 + lane/16).
+// This struct provides only that CWarpDstrEncoding override; everything else is inherited
+// from the base. Reference it via the dedicated WarpGemmMmac*_FMHA aliases.
+template <typename WarpGemmAttributeMmacImpl_,
+          index_t MRepeat_,
+          index_t NRepeat_,
+          index_t MInterleave_,
+          index_t NInterleave_,
+          index_t kKIter>
+struct WarpGemmAttributeMmacIterateKCRaw
+    : public WarpGemmAttributeMmacIterateK<WarpGemmAttributeMmacImpl_,
+                                           MRepeat_,
+                                           NRepeat_,
+                                           MInterleave_,
+                                           NInterleave_,
+                                           kKIter>
+{
+    using Base = WarpGemmAttributeMmacIterateK<WarpGemmAttributeMmacImpl_,
+                                               MRepeat_,
+                                               NRepeat_,
+                                               MInterleave_,
+                                               NInterleave_,
+                                               kKIter>;
+
+    using Impl = typename Base::Impl;
+
+    static constexpr index_t MRepeat     = MRepeat_;
+    static constexpr index_t NRepeat     = NRepeat_;
+    static constexpr index_t MInterleave = MInterleave_;
+    static constexpr index_t NInterleave = NInterleave_;
+
+    using CWarpDstrEncoding = tile_distribution_encoding<
+        sequence<>,
+        tuple<sequence<MRepeat, Impl::kCMLane, MInterleave, Impl::kCMPerLane>,
+              sequence<NRepeat, Impl::kCN0PerLane, Impl::kCNLane, NInterleave * Impl::kCN1PerLane>>,
+        tuple<sequence<2, 1>>,
+        tuple<sequence<2, 1>>,
+        sequence<1, 2, 1, 1, 2, 2>,
+        sequence<0, 0, 2, 3, 1, 3>>;
 };
 
 template <typename WarpGemmAttributeMmacImpl_,
@@ -549,6 +605,96 @@ struct WarpGemmAttributeMmacIterateKTransC_v3
                     static_for<0, NInterleave, 1>{}([&](auto iNInterleave) {
                         static_for<0, kKIter, 1>{}([&](auto iKIter) {
                             // 1 mmac issue
+                            Impl{}(c_buf(iMRepeat * NRepeat * MInterleave * NInterleave +
+                                         iNRepeat * MInterleave * NInterleave +
+                                         iMInterleave * NInterleave + iNInterleave),
+                                   a_buf[iMRepeat * MInterleave * kKIter + iMInterleave * kKIter +
+                                         iKIter],
+                                   b_buf[iNRepeat * NInterleave * kKIter + iNInterleave * kKIter +
+                                         iKIter]);
+                        });
+                    });
+                });
+            });
+        });
+    }
+};
+
+// [DCU移植] 本结构体为 FMHA 移植新增（上游 github CK 没有）。仅用于 gfx938/gfx946。
+// 这些新架构上 MMAC 的“操作数交换”不像 AMD MFMA 那样能转置 C 布局，因此改用带 lts
+// (lane transpose sum) 的 _lit_lts 内建函数得到转置后的 C，并配套这套 CWarpDstrEncoding。
+// ------------------------------------------------------------------
+// LitLts: Hygon DCU gfx938+ __builtin_hcu_mmac_f32_16x16x16_f16_lit_lts(lit=true,lts=true).
+// Hardware C register layout: row = 4*(lane/16)+r, col = c*16+lane%16.
+// Each lane holds kCM1PerLane=4 consecutive M elements and kCNPerLane=1 N element.
+// Lane distribution: kCMLane=4 (M lanes), kCNLane=16 (N lanes).
+// Uses TransC-style CWarpDstrEncoding which correctly handles 4×16 lane grouping.
+// Key difference from AMD TransC: M elements are consecutive (kCM0PerLane=1,kCM1PerLane=4),
+// not strided (kCM0PerLane=4,kCM1PerLane=1).
+template <typename WarpGemmAttributeMmacImpl_,
+          index_t MRepeat_,
+          index_t NRepeat_,
+          index_t MInterleave_,
+          index_t NInterleave_,
+          index_t kKIter>
+struct WarpGemmAttributeMmacIterateKLitLts
+    : public WarpGemmAttributeMmacIterateK<WarpGemmAttributeMmacImpl_,
+                                           MRepeat_,
+                                           NRepeat_,
+                                           MInterleave_,
+                                           NInterleave_,
+                                           kKIter>
+{
+    using Base = WarpGemmAttributeMmacIterateK<WarpGemmAttributeMmacImpl_,
+                                               MRepeat_,
+                                               NRepeat_,
+                                               MInterleave_,
+                                               NInterleave_,
+                                               kKIter>;
+
+    using Impl = typename Base::Impl;
+
+    using ADataType = typename Base::ADataType;
+    using BDataType = typename Base::BDataType;
+    using CDataType = typename Base::CDataType;
+
+    using ABufType = typename Base::ABufType;
+    using BBufType = typename Base::BBufType;
+    using CBufType = typename Base::CBufType;
+
+    static constexpr index_t kM          = Base::kM;
+    static constexpr index_t kN          = Base::kN;
+    static constexpr index_t kK          = Base::kK;
+    static constexpr index_t MRepeat     = MRepeat_;
+    static constexpr index_t NRepeat     = NRepeat_;
+    static constexpr index_t MInterleave = MInterleave_;
+    static constexpr index_t NInterleave = NInterleave_;
+
+    using AWarpDstrEncoding = typename Base::AWarpDstrEncoding;
+    using BWarpDstrEncoding = typename Base::BWarpDstrEncoding;
+
+    // CWarpDstrEncoding: base structure + Ps2RHss swapped from <2,1> to <1,2>.
+    // Hardware lane layout for LitLts: lane = M_lane*16 + N_lane (P[0]→M_lane, P[1]→N_lane).
+    // Base encoding uses P[0]→N_lane, P[1]→M_lane which is transposed vs hardware,
+    // causing a transposed (M,N) mapping. Swapping Ps2RHss fixes this.
+    // Uses kCMPerLane/kCN0PerLane/kCN1PerLane (base sub-dims), same as base encoding.
+    using CWarpDstrEncoding = tile_distribution_encoding<
+        sequence<>,
+        tuple<sequence<MRepeat, Impl::kCMLane, MInterleave, Impl::kCMPerLane>,
+              sequence<NRepeat, Impl::kCNLane, NInterleave, Impl::kCN0PerLane, Impl::kCN1PerLane>>,
+        tuple<sequence<1, 2>>,
+        tuple<sequence<1, 1>>,
+        sequence<1, 2, 1, 1, 2, 2, 2>,
+        sequence<0, 0, 2, 3, 3, 2, 4>>;
+
+    CK_TILE_DEVICE void
+    operator()(CBufType& c_buf, const ABufType& a_buf, const BBufType& b_buf) const
+    {
+        static_for<0, MRepeat, 1>{}([&](auto iMRepeat) {
+            static_for<0, NRepeat, 1>{}([&](auto iNRepeat) {
+                static_for<0, MInterleave, 1>{}([&](auto iMInterleave) {
+                    static_for<0, NInterleave, 1>{}([&](auto iNInterleave) {
+                        static_for<0, kKIter, 1>{}([&](auto iKIter) {
                             Impl{}(c_buf(iMRepeat * NRepeat * MInterleave * NInterleave +
                                          iNRepeat * MInterleave * NInterleave +
                                          iMInterleave * NInterleave + iNInterleave),

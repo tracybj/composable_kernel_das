@@ -4,7 +4,9 @@
 #pragma once
 
 #include "ck_tile/core.hpp"
-#include "ck_tile/ops/gemm/warp/warp_gemm.hpp"
+// [DCU移植] 非 gfx9 分支的默认 warp gemm 由上游 MFMA 32x32 TransposedCDistribution
+// 改为 DCU MMAC 16x32x64 TransC（WarpGemmMmac*_WT16x32x64_MR1NR2MI1NI1_TRANSC，MWarp/NWarp=1）。
+#include "ck_tile/ops/gemm/warp/warp_mmac_gemm.hpp"
 
 namespace ck_tile {
 
@@ -41,14 +43,14 @@ struct BlockGemmARegBSmemCRegV1DefaultPolicy
                 return make_tuple(WarpGemmMfmaF16F16F32M32N32K8{}, 4, 1);
             }
 #else
-            return make_tuple(WarpGemmMfmaF16F16F32M32N32K8TransposedCDistribution{}, 4, 1);
+            return make_tuple(WarpGemmMmacF16F16F32_WT16x32x64_MR1NR2MI1NI1_TRANSC{}, 1, 1);
 #endif
         }
         else if constexpr(std::is_same_v<typename Problem::ADataType, bf16_t> &&
                           std::is_same_v<typename Problem::BDataType, bf16_t> &&
                           std::is_same_v<typename Problem::CDataType, float>)
         {
-            return make_tuple(WarpGemmMfmaBf16Bf16F32M32N32K8TransposedCDistribution{}, 4, 1);
+            return make_tuple(WarpGemmMmacBF16BF16F32_WT16x32x64_MR1NR2MI1NI1_TRANSC{}, 1, 1);
         }
     }
 };

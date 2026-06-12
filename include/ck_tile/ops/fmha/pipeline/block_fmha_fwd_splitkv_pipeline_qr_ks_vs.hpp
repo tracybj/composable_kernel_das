@@ -6,6 +6,7 @@
 #include "ck_tile/core.hpp"
 #include "ck_tile/ops/fmha/block/block_attention_bias_enum.hpp"
 #include "ck_tile/ops/fmha/pipeline/block_fmha_fwd_splitkv_pipeline_qr_ks_vs_default_policy.hpp"
+#include "ck_tile/ops/fmha/pipeline/block_fmha_pipeline_reduce.hpp"
 #include "ck_tile/ops/reduce/block/block_reduce.hpp"
 
 namespace ck_tile {
@@ -262,9 +263,10 @@ struct BlockFmhaFwdSplitKVPipelineQRKSVS
                              {bias_origin.at(number<0>{}), adjusted_seqlen_k_start}, // M/N
                              Policy::template MakeBiasDramTileDistribution<decltype(gemm_0)>());
 
+        const auto v_origin = v_dram_block_window_tmp.get_window_origin();
         auto [i_page_block_v, v_dram_window] = v_page_block_navigator.make_tile_window(
             v_dram_block_window_lengths,
-            {0, adjusted_seqlen_k_start}, // TODO: hdim split?
+            {v_origin.at(number<0>{}), adjusted_seqlen_k_start},
             Policy::template MakeVDramTileDistribution<Problem>());
 
         auto q_tile = tile_elementwise_in(q_element_func, q);
@@ -438,7 +440,8 @@ struct BlockFmhaFwdSplitKVPipelineQRKSVS
                 sequence<1>{},
                 f_max,
                 -numeric<SMPLComputeDataType>::infinity()); // m_local = rowmax(S{j})
-            block_tile_reduce_sync(m_local, f_max, bool_constant<false>{});
+            // [DCU移植] 上游为 block_tile_reduce_sync，改为 MMAC 16-lane 行规约。
+            fmha_reduce_sync_16lane(m_local, f_max);
 
             const auto m_old = m; // m{j-1}
             tile_elementwise_inout(
@@ -490,7 +493,7 @@ struct BlockFmhaFwdSplitKVPipelineQRKSVS
             auto rowsum_p = block_tile_reduce<SMPLComputeDataType>(
                 p_compute, sequence<1>{}, f_sum, SMPLComputeDataType{0}); // rowsum(Pcompute{j})
 
-            block_tile_reduce_sync(rowsum_p, f_sum, bool_constant<false>{});
+            fmha_reduce_sync_16lane(rowsum_p, f_sum);
             // l{j}, Oacc{j}
             constexpr auto o_spans = decltype(o_acc)::get_distributed_spans();
             sweep_tile_span(o_spans[number<0>{}], [&](auto idx0) {

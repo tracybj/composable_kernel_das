@@ -92,6 +92,30 @@ struct TileFmhaFwdAppendKVTraits
     static constexpr index_t kBlockPerCu = kBlockPerCu_;
 };
 
+// Traits consumed by the FMHA BWD dq_dk_dv codegen. The codegen passes
+// <kPadHeadDimQ, kPadHeadDimV, BiasEnum, kHasBiasGrad, kBlockPerCu> where the head-dim
+// pads arrive as the alignment ints (0 / 8 / 1) used elsewhere, so they are normalized
+// to bool here. BWD always tiles seqlen with boundary handling, so seqlen padding is
+// always enabled (correct for any seqlen; only forgoes an exact-multiple optimization).
+template <index_t kPadHeadDimQ_,
+          index_t kPadHeadDimV_,
+          BlockAttentionBiasEnum BiasEnum_,
+          bool kHasBiasGrad_,
+          index_t kBlockPerCu_ = -1 /* overwrite occupancy if not -1 */>
+struct TileFmhaBwdTraits
+{
+    static constexpr bool kPadSeqLenQ       = true;
+    static constexpr bool kPadSeqLenK       = true;
+    static constexpr bool kPadHeadDimQ      = (kPadHeadDimQ_ > 0);
+    static constexpr bool kPadHeadDimV      = (kPadHeadDimV_ > 0);
+    static constexpr auto BiasEnum          = BiasEnum_;
+    static constexpr bool kHasBiasGrad      = kHasBiasGrad_;
+    static constexpr bool kStoreLSE         = true;
+    static constexpr bool kHasDropout       = false;
+    static constexpr bool kDoFp8StaticQuant = false;
+    static constexpr index_t kBlockPerCu    = kBlockPerCu_;
+};
+
 template <bool kPadSeqLenQ_ /* padding for seqlen_q */,
           bool kPadHeadDimV_ /* paddding for hdim_v */,
           index_t kBlockPerCu_ = 2 /* hint to occupancy */>
