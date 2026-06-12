@@ -35,8 +35,20 @@ template<> struct WarpGemmMmacDispatcher<half_t, half_t, float, 16, 64, 32, fals
 template<> struct WarpGemmMmacDispatcher<half_t, half_t, float, 16, 64, 32, false, 1, 4, 1, 1> { using Type = WarpGemmMmacF16F16F32_WT16x64x32_MR1NR4MI1NI1; };
 template<> struct WarpGemmMmacDispatcher<half_t, half_t, float, 32, 64, 32, false, 2, 4, 1, 1> { using Type = WarpGemmMmacF16F16F32_WT32x64x32_MR2NR4MI1NI1; };
 
+// [DCU移植] FMHA BWD 移植新增：把 16x16x{32,16}（含 TransC）注册进 MMAC dispatcher。
+// fp16 FMHA BWD 16x16 warp tiles (basic MMAC layout)
+template<> struct WarpGemmMmacDispatcher<half_t, half_t, float, 16, 16, 32, false, 1, 1, 1, 1> { using Type = WarpGemmMmacF16F16F32_WT16x16x32_MR1NR1MI1NI1; };
+template<> struct WarpGemmMmacDispatcher<half_t, half_t, float, 16, 16, 16, false, 1, 1, 1, 1> { using Type = WarpGemmMmacF16F16F32_WT16x16x16_MR1NR1MI1NI1; };
+template<> struct WarpGemmMmacDispatcher<half_t, half_t, float, 16, 16, 32, true,  1, 1, 1, 1> { using Type = WarpGemmMmacF16F16F32_WT16x16x32_MR1NR1MI1NI1_TRANSC; };
+template<> struct WarpGemmMmacDispatcher<half_t, half_t, float, 16, 16, 16, true,  1, 1, 1, 1> { using Type = WarpGemmMmacF16F16F32_WT16x16x16_MR1NR1MI1NI1_TRANSC; };
+
 // bf16
 template<> struct WarpGemmMmacDispatcher<bf16_t, bf16_t, float, 16, 64, 32, false, 1, 4, 1, 1> { using Type = WarpGemmMmacBF16BF16F32_WT16x64x32_MR1NR4MI1NI1; };
+// bf16 FMHA BWD 16x16 warp tiles (basic MMAC layout)
+template<> struct WarpGemmMmacDispatcher<bf16_t, bf16_t, float, 16, 16, 32, false, 1, 1, 1, 1> { using Type = WarpGemmMmacBF16BF16F32_WT16x16x32_MR1NR1MI1NI1; };
+template<> struct WarpGemmMmacDispatcher<bf16_t, bf16_t, float, 16, 16, 16, false, 1, 1, 1, 1> { using Type = WarpGemmMmacBF16BF16F32_WT16x16x16_MR1NR1MI1NI1; };
+template<> struct WarpGemmMmacDispatcher<bf16_t, bf16_t, float, 16, 16, 32, true,  1, 1, 1, 1> { using Type = WarpGemmMmacBF16BF16F32_WT16x16x32_MR1NR1MI1NI1_TRANSC; };
+template<> struct WarpGemmMmacDispatcher<bf16_t, bf16_t, float, 16, 16, 16, true,  1, 1, 1, 1> { using Type = WarpGemmMmacBF16BF16F32_WT16x16x16_MR1NR1MI1NI1_TRANSC; };
 
 //int8
 template<> struct WarpGemmMmacDispatcher<int8_t, int8_t, int32_t, 16, 16, 32, false, 1, 1, 1, 1> { using Type = WarpGemmMmacI8I8I32_WT16x16x32_MR1NR1MI1NI1; };

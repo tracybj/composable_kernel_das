@@ -545,6 +545,10 @@ struct FmhaFwdKernel
         // divide problem
         const auto [i_tile_m, i_tile_n, i_nhead, i_batch] =
             TilePartitioner{}(kargs.seqlen_q, kargs.hdim_v);
+        // [DCU移植] DCU 编译器（aicc）在 lambda 里捕获结构化绑定变量（i_nhead/i_batch）会出错，
+        // 故先拷成普通变量供后续各 lambda 引用，替换上游的 [&, i_nhead_ = i_nhead] 写法。
+        const auto i_nhead_copy = i_nhead;
+        const auto i_batch_copy = i_batch;
 
         const index_t i_m0 = __builtin_amdgcn_readfirstlane(i_tile_m * FmhaPipeline::kM0);
         const index_t i_n1 = __builtin_amdgcn_readfirstlane(i_tile_n * FmhaPipeline::kN1);
@@ -737,16 +741,14 @@ struct FmhaFwdKernel
             make_tile_window(v_dram,
                              make_tuple(number<FmhaPipeline::kN1>{}, number<FmhaPipeline::kK1>{}),
                              {i_n1, 0});
-        /// FIXME: Before C++20, capturing structured binding variables are not supported. Remove
-        /// following copy capture of the 'i_nhead' if in C++20
-        const auto bias_dram_window = [&, i_nhead_ = i_nhead]() {
+        const auto bias_dram_window = [&]() {
             constexpr auto bias_dram_window_lengths =
                 make_tuple(number<FmhaPipeline::kM0>{}, number<FmhaPipeline::kN0>{});
             if constexpr(BiasEnum == BlockAttentionBiasEnum::ELEMENTWISE_BIAS)
             {
                 const BiasDataType* bias_ptr =
                     reinterpret_cast<const BiasDataType*>(kargs.bias_ptr) +
-                    static_cast<long_index_t>(i_nhead_) * kargs.nhead_stride_bias +
+                    static_cast<long_index_t>(i_nhead_copy) * kargs.nhead_stride_bias +
                     batch_offset_bias;
 
                 const auto bias_dram = [&]() {
@@ -771,13 +773,14 @@ struct FmhaFwdKernel
         }();
 
         // lse
-        auto lse_dram_window = [&, i_nhead_ = i_nhead]() {
+        auto lse_dram_window = [&]() {
             constexpr auto lse_dram_window_lengths = make_tuple(number<FmhaPipeline::kM0>{});
             if constexpr(kStoreLSE)
             {
                 LSEDataType* lse_ptr =
                     reinterpret_cast<LSEDataType*>(kargs.lse_ptr) +
-                    static_cast<long_index_t>(i_nhead_) * kargs.nhead_stride_lse + batch_offset_lse;
+                    static_cast<long_index_t>(i_nhead_copy) * kargs.nhead_stride_lse +
+                    batch_offset_lse;
 
                 const auto lse_dram = [&]() {
                     const auto lse_dram_naive = make_naive_tensor_view<address_space_enum::global>(
@@ -799,11 +802,11 @@ struct FmhaFwdKernel
             }
         }();
 
-        auto dropout = [&, i_nhead_ = i_nhead, i_batch_ = i_batch]() {
+        auto dropout = [&]() {
             if constexpr(kHasDropout)
             {
-                return BlockDropout{i_batch_,
-                                    i_nhead_,
+                return BlockDropout{i_batch_copy,
+                                    i_nhead_copy,
                                     kargs.num_head_q,
                                     kargs.is_drop_seed_offset_from_host ? kargs.drop_seed.val
                                                                         : *kargs.drop_seed.ptr,
@@ -819,14 +822,14 @@ struct FmhaFwdKernel
             };
         }();
 
-        auto randval_dram_window = [&, i_nhead_ = i_nhead]() {
+        auto randval_dram_window = [&]() {
             constexpr auto randval_dram_window_lengths =
                 make_tuple(number<FmhaPipeline::kM0>{}, number<FmhaPipeline::kN0>{});
             if constexpr(kHasDropout)
             {
                 RandValOutputDataType* rand_val_ptr =
                     reinterpret_cast<RandValOutputDataType*>(kargs.rand_val_ptr) +
-                    static_cast<long_index_t>(i_nhead_) * kargs.nhead_stride_randval +
+                    static_cast<long_index_t>(i_nhead_copy) * kargs.nhead_stride_randval +
                     batch_offset_randval;
 
                 const auto randval_dram = [&]() {
@@ -863,15 +866,14 @@ struct FmhaFwdKernel
                 return FmhaMask{kargs.seqlen_q, kargs.seqlen_k};
         }();
 
-        // WA i_batch capture structure binding before c++20
-        auto position_encoding = [&, i_batch_ = i_batch, i_nhead_ = i_nhead]() {
+        auto position_encoding = [&]() {
             if constexpr(BiasEnum == BlockAttentionBiasEnum::ALIBI)
             {
                 // data loading, shared by entire wg
                 // TODO: how to use s_read?
                 SaccDataType slope =
                     *(reinterpret_cast<const SaccDataType*>(kargs.alibi_slope_ptr) +
-                      i_batch_ * kargs.alibi_slope_stride + i_nhead_);
+                      i_batch_copy * kargs.alibi_slope_stride + i_nhead_copy);
 #if CK_TILE_FMHA_FWD_FAST_EXP2
                 slope *= ck_tile::log2e_v<>;
 #endif

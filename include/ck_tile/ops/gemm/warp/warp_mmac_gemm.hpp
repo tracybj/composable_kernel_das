@@ -26,6 +26,25 @@ using WarpGemmMmacF16F16F32_WT16x64x32_MR1NR4MI1NI1 = WarpGemmImpl<
     WarpGemmAttributeMmacIterateK<WarpGemmAttributeMmacImplF16F16F32M16N16K16, 1, 4, 1, 1, 2>>;
 using WarpGemmMmacF16F16F32_WT16x64x32_MR1NR1MI1NI4 = WarpGemmImpl<
     WarpGemmAttributeMmacIterateK<WarpGemmAttributeMmacImplF16F16F32M16N16K16, 1, 1, 1, 4, 2>>;
+using WarpGemmMmacF16F16F32_WT16x32x64_MR1NR2MI1NI1 = WarpGemmImpl<
+    WarpGemmAttributeMmacIterateK<WarpGemmAttributeMmacImplF16F16F32M16N16K16, 1, 2, 1, 1, 4>>;
+
+// [DCU移植] 以下 _FMHA 别名为 FMHA 移植新增：与上面 QK(16x64x32)/PV(16x32x64) 形状相同，
+// 但基于 WarpGemmAttributeMmacIterateKCRaw（裸硬件 C 布局），供 FMHA 流水线在寄存器内直接
+// 消费；普通别名保留基类 C 布局给 GEMM example，两套不可混用。
+// ---- FMHA fwd (gfx936/gfx928/gfx92a basic MMAC) warp tiles ----
+// Same shapes as the QK (16x64x32) and PV (16x32x64) aliases above, but built on
+// WarpGemmAttributeMmacIterateKCRaw, which carries the raw-hardware C register layout the
+// FMHA pipeline consumes in-register. The plain aliases keep the base C layout that the
+// standalone basic_gemm / grouped_gemm epilogue depends on; do not merge the two.
+using WarpGemmMmacF16F16F32_WT16x64x32_MR1NR4MI1NI1_FMHA = WarpGemmImpl<
+    WarpGemmAttributeMmacIterateKCRaw<WarpGemmAttributeMmacImplF16F16F32M16N16K16, 1, 4, 1, 1, 2>>;
+using WarpGemmMmacBF16BF16F32_WT16x64x32_MR1NR4MI1NI1_FMHA = WarpGemmImpl<
+    WarpGemmAttributeMmacIterateKCRaw<WarpGemmAttributeMmacImplBf16Bf16F32M16N16K16, 1, 4, 1, 1, 2>>;
+using WarpGemmMmacF16F16F32_WT16x32x64_MR1NR2MI1NI1_FMHA = WarpGemmImpl<
+    WarpGemmAttributeMmacIterateKCRaw<WarpGemmAttributeMmacImplF16F16F32M16N16K16, 1, 2, 1, 1, 4>>;
+using WarpGemmMmacBF16BF16F32_WT16x32x64_MR1NR2MI1NI1_FMHA = WarpGemmImpl<
+    WarpGemmAttributeMmacIterateKCRaw<WarpGemmAttributeMmacImplBf16Bf16F32M16N16K16, 1, 2, 1, 1, 4>>;
 
 using WarpGemmMmacF16F16F32_WT32x64x32_MR2NR4MI1NI1 = WarpGemmImpl<
     WarpGemmAttributeMmacIterateK<WarpGemmAttributeMmacImplF16F16F32M16N16K16, 2, 4, 1, 1, 2>>;
@@ -43,8 +62,40 @@ using WarpGemmMmacBF16BF16F32_WT16x32x128_MR1NR1MI1NI2 = WarpGemmImpl<
 using WarpGemmMmacBF16BF16F32_WT16x16x128_MR1NR1MI1NI1 = WarpGemmImpl<
     WarpGemmAttributeMmacIterateK<WarpGemmAttributeMmacImplBf16Bf16F32M16N16K16, 1, 1, 1, 1, 8>>;
 
+// [DCU移植] 以下 16x16 系列别名为 FMHA BWD 移植新增（WIP）：BWD 的 5 个 GEMM 都切成
+// 16x16 warp tile（K=32/16），_TRANSC 变体用于两个转置 GEMM（P^T*dO、dS^T*Q^T）。
+// ---- FMHA BWD (gfx9 basic MMAC) warp tiles ----
+// The BWD pipeline tiles every GEMM to a 16x16 warp tile with K=32 (kK0/kK2/kK4)
+// or K=16 (kK1/kK3). These reuse the basic (non lit_lts) MMAC C register layout that
+// was reverse-engineered/fixed for FWD, so non gfx938/946 archs avoid the TransC_GFX938
+// path. The _TRANSC variants provide the transposed-C distribution used by the two
+// transposed GEMMs (P^T*dO and dS^T*Q^T).
+using WarpGemmMmacF16F16F32_WT16x16x32_MR1NR1MI1NI1 = WarpGemmImpl<
+    WarpGemmAttributeMmacIterateK<WarpGemmAttributeMmacImplF16F16F32M16N16K16, 1, 1, 1, 1, 2>>;
+using WarpGemmMmacF16F16F32_WT16x16x16_MR1NR1MI1NI1 = WarpGemmImpl<
+    WarpGemmAttributeMmacIterateK<WarpGemmAttributeMmacImplF16F16F32M16N16K16, 1, 1, 1, 1, 1>>;
+using WarpGemmMmacBF16BF16F32_WT16x16x32_MR1NR1MI1NI1 = WarpGemmImpl<
+    WarpGemmAttributeMmacIterateK<WarpGemmAttributeMmacImplBf16Bf16F32M16N16K16, 1, 1, 1, 1, 2>>;
+using WarpGemmMmacBF16BF16F32_WT16x16x16_MR1NR1MI1NI1 = WarpGemmImpl<
+    WarpGemmAttributeMmacIterateK<WarpGemmAttributeMmacImplBf16Bf16F32M16N16K16, 1, 1, 1, 1, 1>>;
+
+using WarpGemmMmacF16F16F32_WT16x16x32_MR1NR1MI1NI1_TRANSC = WarpGemmImpl<
+    WarpGemmAttributeMmacIterateKTransC<WarpGemmAttributeMmacImplF16F16F32M16N16K16TransC,
+                                        1, 1, 1, 1, 2>>;
+using WarpGemmMmacF16F16F32_WT16x16x16_MR1NR1MI1NI1_TRANSC = WarpGemmImpl<
+    WarpGemmAttributeMmacIterateKTransC<WarpGemmAttributeMmacImplF16F16F32M16N16K16TransC,
+                                        1, 1, 1, 1, 1>>;
+using WarpGemmMmacBF16BF16F32_WT16x16x32_MR1NR1MI1NI1_TRANSC = WarpGemmImpl<
+    WarpGemmAttributeMmacIterateKTransC<WarpGemmAttributeMmacImplBF16BF16F32M16N16K16TransC,
+                                        1, 1, 1, 1, 2>>;
+using WarpGemmMmacBF16BF16F32_WT16x16x16_MR1NR1MI1NI1_TRANSC = WarpGemmImpl<
+    WarpGemmAttributeMmacIterateKTransC<WarpGemmAttributeMmacImplBF16BF16F32M16N16K16TransC,
+                                        1, 1, 1, 1, 1>>;
+
 using WarpGemmMmacBF16BF16F32_WT16x64x32_MR1NR4MI1NI1 = WarpGemmImpl<
     WarpGemmAttributeMmacIterateK<WarpGemmAttributeMmacImplBf16Bf16F32M16N16K16, 1, 4, 1, 1, 2>>;
+using WarpGemmMmacBF16BF16F32_WT16x32x64_MR1NR2MI1NI1 = WarpGemmImpl<
+    WarpGemmAttributeMmacIterateK<WarpGemmAttributeMmacImplBf16Bf16F32M16N16K16, 1, 2, 1, 1, 4>>;
 
 // v2 refers to KIterate not continuous in KPerLane
 using WarpGemmMmacF16F16F32_WT32x16x256_MR2NR1MI1NI1_TRANSC = WarpGemmImpl<
@@ -89,6 +140,41 @@ using WarpGemmMmacF16F16F32_WT16x32x64_MR1NR2MI1NI1_TRANSC = WarpGemmImpl<
                                         1,
                                         1,
                                         4>>;
+
+// gfx938/946 FMHA types: use LitLts impl with dedicated IterateKLitLts which provides
+// the correct CWarpDstrEncoding for the lit_lts MMAC C register layout
+// (kCMLane=4, kCNLane=16, kCM0PerLane=1, kCM1PerLane=4, kCNPerLane=1).
+using WarpGemmMmacF16F16F32_WT16x64x32_MR1NR4MI1NI1_GFX938 = WarpGemmImpl<
+    WarpGemmAttributeMmacIterateKLitLts<WarpGemmAttributeMmacImplF16F16F32M16N16K16LitLts,
+                                         1,
+                                         4,
+                                         1,
+                                         1,
+                                         2>>;
+
+using WarpGemmMmacF16F16F32_WT16x32x64_MR1NR2MI1NI1_TRANSC_GFX938 = WarpGemmImpl<
+    WarpGemmAttributeMmacIterateKLitLts<WarpGemmAttributeMmacImplF16F16F32M16N16K16LitLts,
+                                         1,
+                                         2,
+                                         1,
+                                         1,
+                                         4>>;
+
+using WarpGemmMmacBF16BF16F32_WT16x64x32_MR1NR4MI1NI1_GFX938 = WarpGemmImpl<
+    WarpGemmAttributeMmacIterateKLitLts<WarpGemmAttributeMmacImplBf16Bf16F32M16N16K16LitLts,
+                                         1,
+                                         4,
+                                         1,
+                                         1,
+                                         2>>;
+
+using WarpGemmMmacBF16BF16F32_WT16x32x64_MR1NR2MI1NI1_TRANSC_GFX938 = WarpGemmImpl<
+    WarpGemmAttributeMmacIterateKLitLts<WarpGemmAttributeMmacImplBf16Bf16F32M16N16K16LitLts,
+                                         1,
+                                         2,
+                                         1,
+                                         1,
+                                         4>>;
 // bf16
 using WarpGemmMmacBF16BF16F32_WT16x32x128_MR1NR2MI1NI1_TRANSC = WarpGemmImpl<
     WarpGemmAttributeMmacIterateKTransC<WarpGemmAttributeMmacImplBF16BF16F32M16N16K16TransC,

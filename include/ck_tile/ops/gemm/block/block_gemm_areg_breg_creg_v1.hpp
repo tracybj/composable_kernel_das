@@ -4,7 +4,14 @@
 #pragma once
 
 #include "ck_tile/core.hpp"
-#include "ck_tile/ops/gemm/block/block_gemm_areg_breg_creg_v1_default_policy.hpp"
+// NOTE(DCU/FMHA-BWD): the default policy pulls in the MFMA warp_gemm.hpp, whose
+// WarpGemmImpl collides with the HCU MMAC WarpGemmImpl when this header is used from
+// a MMAC translation unit (e.g. the FMHA BWD pipeline). All current users of
+// BlockGemmARegBRegCRegV1 pass an explicit policy, so we only forward-declare the
+// default policy here and let any caller that actually needs it include the header.
+namespace ck_tile {
+struct BlockGemmARegBRegCRegV1DefaultPolicy;
+}
 
 namespace ck_tile {
 

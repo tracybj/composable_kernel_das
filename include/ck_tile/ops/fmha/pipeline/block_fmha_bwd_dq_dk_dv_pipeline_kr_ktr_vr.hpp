@@ -776,4 +776,9 @@ struct BlockFmhaBwdDQDKDVPipelineKRKTRVR
     }
 };
 
+// Generic name expected by the BWD codegen; on the DCU/HCU port the only dq_dk_dv
+// pipeline variant is the KR/KTR/VR one.
+template <typename Problem, typename Policy = BlockFmhaBwdPipelineDefaultPolicy>
+using BlockFmhaBwdDQDKDVPipeline = BlockFmhaBwdDQDKDVPipelineKRKTRVR<Problem, Policy>;
+
 } // namespace ck_tile

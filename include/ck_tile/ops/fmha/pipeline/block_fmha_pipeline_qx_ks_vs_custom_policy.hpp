@@ -8,8 +8,8 @@
 #include "ck_tile/ops/gemm/block/block_gemm_problem.hpp"
 #include "ck_tile/ops/gemm/pipeline/gemm_pipeline_problem.hpp"
 #include "ck_tile/ops/gemm/pipeline/tile_gemm_shape.hpp"
-#include "ck_tile/ops/gemm/warp/warp_gemm.hpp"
-#include "ck_tile/ops/gemm/warp/warp_gemm_dispatcher.hpp"
+#include "ck_tile/ops/gemm/warp/warp_mmac_gemm.hpp"
+#include "ck_tile/ops/gemm/warp/warp_mmac_gemm_dispatcher.hpp"
 #include "ck_tile/ops/gemm/block/block_gemm_asmem_bsmem_creg_v1_custom_policy.hpp"
 #include "ck_tile/ops/gemm/block/block_gemm_asmem_bsmem_creg_v1.hpp"
 #include "ck_tile/ops/gemm/block/block_gemm_areg_bsmem_creg_v1_custom_policy.hpp"
@@ -104,37 +104,42 @@ struct BlockFmhaPipelineQXCustomPolicy</* QLoadOnce = */ true>
                                            typename Problem::BlockFmhaShape::Gemm0WarpTile>>;
 
         constexpr auto warp_gemm = []() {
-            constexpr index_t WarpGemmM = Problem::BlockFmhaShape::Gemm0WarpTile::at(number<0>{});
-            static_assert(WarpGemmM == 16 || WarpGemmM == 32);
+            using WarpTile              = typename Problem::BlockFmhaShape::Gemm0WarpTile;
+            constexpr index_t WarpGemmM = WarpTile::at(number<0>{});
+            constexpr index_t WarpGemmN = WarpTile::at(number<1>{});
+            constexpr index_t WarpGemmK = WarpTile::at(number<2>{});
 
-            if constexpr(std::is_same_v<typename Problem::QDataType, half_t> &&
-                         std::is_same_v<typename Problem::KDataType, half_t> &&
-                         std::is_same_v<typename Problem::SaccDataType, float>)
+            if constexpr((std::is_same_v<typename Problem::QDataType, half_t> &&
+                          std::is_same_v<typename Problem::KDataType, half_t>) ||
+                         (std::is_same_v<typename Problem::QDataType, bf16_t> &&
+                          std::is_same_v<typename Problem::KDataType, bf16_t>))
             {
-                if constexpr(WarpGemmM == 32)
-                    return WarpGemmMfmaF16F16F32M32N32K16SwizzleBTransposedCDistribution{};
-                else // WarpGemmM == 16
-                    return WarpGemmMfmaF16F16F32M16N16K16TransposedCDistribution{};
-            }
-            else if constexpr(std::is_same_v<typename Problem::QDataType, bf16_t> &&
-                              std::is_same_v<typename Problem::KDataType, bf16_t> &&
-                              std::is_same_v<typename Problem::SaccDataType, float>)
-            {
-                if constexpr(WarpGemmM == 32)
-                    return WarpGemmMfmaBf16Bf16F32M32N32K16SwizzleBTransposedCDistribution{};
-                else // WarpGemmM == 16
-                    return WarpGemmMfmaBf16Bf16F32M16N16K16TransposedCDistribution{};
+                // [DCU移植] QK GEMM 选择 warp gemm：上游用 MFMA 32x32 SwizzleB/TransposedC 系列，
+                // DCU 改为 MMAC 16x64x32。gfx938/gfx946 用 _GFX938(lit_lts)，其余 basic 架构用
+                // _FMHA（裸 C 布局）。当前仅支持 16x64x32，fp8 路径暂缓。
+                static_assert(std::is_same_v<typename Problem::SaccDataType, float>);
+                static_assert(WarpGemmM == 16 && WarpGemmN == 64 && WarpGemmK == 32,
+                              "HCU FMHA QK bring-up currently supports only MMAC 16x64x32.");
+#if defined(__gfx938__) || defined(__gfx946__)
+                if constexpr(std::is_same_v<typename Problem::QDataType, half_t>)
+                    return WarpGemmMmacF16F16F32_WT16x64x32_MR1NR4MI1NI1_GFX938{};
+                else
+                    return WarpGemmMmacBF16BF16F32_WT16x64x32_MR1NR4MI1NI1_GFX938{};
+#else
+                // Basic-MMAC archs (gfx936/gfx928/gfx92a): use the dedicated FMHA C-layout
+                // warp gemm so the standalone GEMM examples keep the base C layout.
+                if constexpr(std::is_same_v<typename Problem::QDataType, half_t>)
+                    return WarpGemmMmacF16F16F32_WT16x64x32_MR1NR4MI1NI1_FMHA{};
+                else
+                    return WarpGemmMmacBF16BF16F32_WT16x64x32_MR1NR4MI1NI1_FMHA{};
+#endif
             }
             else if constexpr(std::is_same_v<typename Problem::QDataType, fp8_t> &&
                               std::is_same_v<typename Problem::KDataType, fp8_t> &&
                               std::is_same_v<typename Problem::SaccDataType, float>)
             {
-                static_assert(WarpGemmM == 32);
-
-                // TODO: hard coded here. Otherwise, it may incorrect result
-                constexpr index_t swizzle_factor = 4;
-                return WarpGemmMfmaFp8Fp8F32M32N32K16SwizzleBTransposedCDistribution<
-                    swizzle_factor>{};
+                static_assert(!std::is_same_v<typename Problem::QDataType, fp8_t>,
+                              "HCU FMHA fp8 QK MMAC path is deferred.");
             } // TODO - bf8_t
         }();
 
@@ -248,22 +253,28 @@ struct [[deprecated]] BlockFmhaPipelineQXCustomPolicy</* QLoadOnce = */ false>
                          std::is_same_v<typename Problem::KDataType, half_t> &&
                          std::is_same_v<typename Problem::SaccDataType, float>)
             {
-                return WarpGemmMfmaF16F16F32M32N32K16SwizzleBTransposedCDistribution{};
+#if defined(__gfx938__) || defined(__gfx946__)
+                return WarpGemmMmacF16F16F32_WT16x64x32_MR1NR4MI1NI1_GFX938{};
+#else
+                return WarpGemmMmacF16F16F32_WT16x64x32_MR1NR4MI1NI1_FMHA{};
+#endif
             }
             else if constexpr(std::is_same_v<typename Problem::QDataType, bf16_t> &&
                               std::is_same_v<typename Problem::KDataType, bf16_t> &&
                               std::is_same_v<typename Problem::SaccDataType, float>)
             {
-                return WarpGemmMfmaBf16Bf16F32M32N32K16SwizzleBTransposedCDistribution{};
+#if defined(__gfx938__) || defined(__gfx946__)
+                return WarpGemmMmacBF16BF16F32_WT16x64x32_MR1NR4MI1NI1_GFX938{};
+#else
+                return WarpGemmMmacBF16BF16F32_WT16x64x32_MR1NR4MI1NI1_FMHA{};
+#endif
             }
             else if constexpr(std::is_same_v<typename Problem::QDataType, fp8_t> &&
                               std::is_same_v<typename Problem::KDataType, fp8_t> &&
                               std::is_same_v<typename Problem::SaccDataType, float>)
             {
-                // TODO: hard coded here. Otherwise, it may incorrect result
-                constexpr index_t swizzle_factor = 4;
-                return WarpGemmMfmaFp8Fp8F32M32N32K16SwizzleBTransposedCDistribution<
-                    swizzle_factor>{};
+                static_assert(!std::is_same_v<typename Problem::QDataType, fp8_t>,
+                              "HCU FMHA fp8 QK MMAC path is deferred.");
             } // TODO - bf8_t
         }();
 
@@ -290,7 +301,7 @@ struct BlockFmhaPipelineQXKSVSCustomPolicy : BlockFmhaPipelineQXCustomPolicy<QLo
     static constexpr bool AsyncCopyV = AsyncCopyV_; // TODO: this not supported yet
 
     static constexpr index_t NumPrefetchK = NumPrefetchK_;
-    static constexpr index_t NumPrefetchV = NumPrefetchK_;
+    static constexpr index_t NumPrefetchV = NumPrefetchV_;
 
     using QXPolicy = BlockFmhaPipelineQXCustomPolicy<QLoadOnce_>;
 
@@ -699,6 +710,12 @@ struct BlockFmhaPipelineQXKSVSCustomPolicy : BlockFmhaPipelineQXCustomPolicy<QLo
     template <typename Problem>
     CK_TILE_HOST_DEVICE static constexpr ck_tile::index_t GetSmemSizeKV()
     {
+        return GetSmemSizeKVWithoutPBridge<Problem>() + GetSmemSizePBridge<Problem>();
+    }
+
+    template <typename Problem>
+    CK_TILE_HOST_DEVICE static constexpr ck_tile::index_t GetSmemSizeKVWithoutPBridge()
+    {
         // TODO: assume Q is in register
         // TODO: assume K/V has same data type
         constexpr index_t single_smem_size =
@@ -706,6 +723,18 @@ struct BlockFmhaPipelineQXKSVSCustomPolicy : BlockFmhaPipelineQXCustomPolicy<QLo
 
         return QXPolicy::template GetSmemSizeQ<Problem>() +
                single_smem_size * max(NumPrefetchK, NumPrefetchV);
+    }
+
+    // [DCU移植] FMHA 移植新增：为 P-bridge（QK-C → PV-A 的 LDS 重排，见 async 流水线）
+    // 额外预留的 LDS 大小，kM0*kN0*sizeof(P) 并按 16 字节对齐。
+    template <typename Problem>
+    CK_TILE_HOST_DEVICE static constexpr ck_tile::index_t GetSmemSizePBridge()
+    {
+        constexpr index_t p_scratch_size = Problem::BlockFmhaShape::kM0 *
+                                           Problem::BlockFmhaShape::kN0 *
+                                           sizeof(typename Problem::PDataType);
+
+        return integer_least_multiple(p_scratch_size, 16);
     }
 
     template <typename Problem>
@@ -946,26 +975,48 @@ struct BlockFmhaPipelineQXKSVSCustomPolicy : BlockFmhaPipelineQXCustomPolicy<QLo
                                            typename Problem::BlockFmhaShape::Gemm1WarpTile>>;
 
         auto warp_gemm = [&]() {
+            using WarpTile              = typename Problem::BlockFmhaShape::Gemm1WarpTile;
+            constexpr index_t WarpGemmM = WarpTile::at(number<0>{});
+            constexpr index_t WarpGemmN = WarpTile::at(number<1>{});
+            constexpr index_t WarpGemmK = WarpTile::at(number<2>{});
+
             if constexpr(std::is_same_v<typename Problem::KDataType, fp8_t> &&
                          std::is_same_v<typename Problem::VDataType, fp8_t> &&
                          std::is_same_v<typename Problem::OaccDataType, float>)
             {
-                return WarpGemmMfmaFp8Fp8F32M32N32K16SwizzleBTransposedCDistribution<>{};
-                // return
-                // WarpGemmImpl<WarpGemmAtrributeMfmaTransposedCDistribution_SwizzleB<
-                //         WarpGemmAttributeMfmaImpl_f32_32x32x16_f8_base<typename
-                //         Problem::PDataType, typename Problem::VDataType>>>{};
+                static_assert(!std::is_same_v<typename Problem::KDataType, fp8_t>,
+                              "HCU FMHA fp8 PV MMAC path is deferred.");
+            }
+            // [DCU移植] PV GEMM 选择 warp gemm：上游用 MFMA dispatcher，DCU 改为 MMAC 16x32x64
+            // TransC（转置 C）。gfx938/gfx946 用 _TRANSC_GFX938(lit_lts)，其余 basic 架构用 _FMHA。
+            else if constexpr(std::is_same_v<typename Problem::PDataType, half_t> &&
+                              std::is_same_v<typename Problem::VDataType, half_t> &&
+                              std::is_same_v<typename Problem::OaccDataType, float>)
+            {
+                static_assert(WarpGemmM == 16 && WarpGemmN == 32 && WarpGemmK == 64,
+                              "HCU FMHA PV bring-up currently supports only MMAC 16x32x64.");
+#if defined(__gfx938__) || defined(__gfx946__)
+                return WarpGemmMmacF16F16F32_WT16x32x64_MR1NR2MI1NI1_TRANSC_GFX938{};
+#else
+                return WarpGemmMmacF16F16F32_WT16x32x64_MR1NR2MI1NI1_FMHA{};
+#endif
+            }
+            else if constexpr(std::is_same_v<typename Problem::PDataType, bf16_t> &&
+                              std::is_same_v<typename Problem::VDataType, bf16_t> &&
+                              std::is_same_v<typename Problem::OaccDataType, float>)
+            {
+                static_assert(WarpGemmM == 16 && WarpGemmN == 32 && WarpGemmK == 64,
+                              "HCU FMHA PV bring-up currently supports only MMAC 16x32x64.");
+#if defined(__gfx938__) || defined(__gfx946__)
+                return WarpGemmMmacBF16BF16F32_WT16x32x64_MR1NR2MI1NI1_TRANSC_GFX938{};
+#else
+                return WarpGemmMmacBF16BF16F32_WT16x32x64_MR1NR2MI1NI1_FMHA{};
+#endif
             }
             else
             {
-                return WarpGemmMfmaDispatcher<
-                    typename Problem::PDataType,
-                    typename Problem::VDataType,
-                    typename Problem::OaccDataType,
-                    Problem::BlockFmhaShape::Gemm1WarpTile::at(number<0>{}),
-                    Problem::BlockFmhaShape::Gemm1WarpTile::at(number<1>{}),
-                    Problem::BlockFmhaShape::Gemm1WarpTile::at(number<2>{}),
-                    true>{};
+                static_assert(std::is_same_v<typename Problem::PDataType, half_t>,
+                              "Unsupported HCU FMHA PV dtype.");
             }
         }();
 

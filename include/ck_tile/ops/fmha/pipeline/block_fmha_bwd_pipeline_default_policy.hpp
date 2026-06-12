@@ -7,16 +7,14 @@
 #include "ck_tile/ops/common/tensor_layout.hpp"
 #include "ck_tile/ops/gemm/block/block_gemm_problem.hpp"
 #include "ck_tile/ops/gemm/pipeline/tile_gemm_shape.hpp"
-#include "ck_tile/ops/gemm/warp/warp_gemm.hpp"
-#include "ck_tile/ops/gemm/warp/warp_gemm_dispatcher.hpp"
-#include "ck_tile/ops/gemm/block/block_gemm_areg_bsmem_creg_v1_custom_policy.hpp"
-#include "ck_tile/ops/gemm/block/block_gemm_areg_bsmem_creg_v1.hpp"
+#include "ck_tile/ops/gemm/warp/warp_mmac_gemm.hpp"
+#include "ck_tile/ops/gemm/warp/warp_mmac_gemm_dispatcher.hpp"
+// BWD only constructs BlockGemmARegBRegCRegV1 (with an explicit custom policy). The
+// other block-gemm variants are unused here and some of them transitively pull in the
+// MFMA warp_gemm.hpp, which conflicts with the HCU MMAC WarpGemmImpl, so they are not
+// included.
 #include "ck_tile/ops/gemm/block/block_gemm_areg_breg_creg_v1_custom_policy.hpp"
 #include "ck_tile/ops/gemm/block/block_gemm_areg_breg_creg_v1.hpp"
-#include "ck_tile/ops/gemm/block/block_gemm_asmem_breg_creg_v1_custom_policy.hpp"
-#include "ck_tile/ops/gemm/block/block_gemm_asmem_breg_creg_v1.hpp"
-#include "ck_tile/ops/gemm/block/block_gemm_asmem_bsmem_creg_v1_custom_policy.hpp"
-#include "ck_tile/ops/gemm/block/block_gemm_asmem_bsmem_creg_v1.hpp"
 
 namespace ck_tile {
 
@@ -36,7 +34,7 @@ struct BlockFmhaBwdPipelineDefaultPolicy
                                            typename Problem::BlockFmhaShape::Gemm0BlockWarps,
                                            typename Problem::BlockFmhaShape::Gemm0WarpTile>>;
 
-        using WarpGemm = WarpGemmMfmaDispatcher<
+        using WarpGemm = WarpGemmMmacDispatcher<
             typename Problem::QDataType,
             typename Problem::KDataType,
             typename Problem::AccDataType,
@@ -44,7 +42,7 @@ struct BlockFmhaBwdPipelineDefaultPolicy
             Problem::BlockFmhaShape::Gemm0WarpTile::at(number<1>{}),
             Problem::BlockFmhaShape::Gemm0WarpTile::at(number<2>{}),
             false,
-            Problem::BlockFmhaShape::Gemm0WarpTile::at(number<0>{}) == 16 ? false : true>;
+            1, 1, 1, 1>;
 
         using BlockGemmPolicy =
             BlockGemmARegBRegCRegV1CustomPolicy<typename Problem::QDataType,
@@ -71,13 +69,14 @@ struct BlockFmhaBwdPipelineDefaultPolicy
                                            typename Problem::BlockFmhaShape::Gemm1WarpTile>>;
 
         using WarpGemm =
-            WarpGemmMfmaDispatcher<typename Problem::GemmDataType,
+            WarpGemmMmacDispatcher<typename Problem::GemmDataType,
                                    typename Problem::OGradDataType,
                                    typename Problem::AccDataType,
                                    Problem::BlockFmhaShape::Gemm1WarpTile::at(number<0>{}),
                                    Problem::BlockFmhaShape::Gemm1WarpTile::at(number<1>{}),
                                    Problem::BlockFmhaShape::Gemm1WarpTile::at(number<2>{}),
-                                   true>;
+                                   true,
+                                   1, 1, 1, 1>;
 
         using BlockGemmPolicy =
             BlockGemmARegBRegCRegV1CustomPolicy<typename Problem::GemmDataType,
@@ -103,7 +102,7 @@ struct BlockFmhaBwdPipelineDefaultPolicy
                                            typename Problem::BlockFmhaShape::Gemm2BlockWarps,
                                            typename Problem::BlockFmhaShape::Gemm2WarpTile>>;
 
-        using WarpGemm = WarpGemmMfmaDispatcher<
+        using WarpGemm = WarpGemmMmacDispatcher<
             typename Problem::OGradDataType,
             typename Problem::VDataType,
             typename Problem::AccDataType,
@@ -111,7 +110,7 @@ struct BlockFmhaBwdPipelineDefaultPolicy
             Problem::BlockFmhaShape::Gemm2WarpTile::at(number<1>{}),
             Problem::BlockFmhaShape::Gemm2WarpTile::at(number<2>{}),
             false,
-            Problem::BlockFmhaShape::Gemm0WarpTile::at(number<0>{}) == 16 ? false : true>;
+            1, 1, 1, 1>;
 
         using BlockGemmPolicy =
             BlockGemmARegBRegCRegV1CustomPolicy<typename Problem::OGradDataType,
@@ -138,13 +137,14 @@ struct BlockFmhaBwdPipelineDefaultPolicy
                                            typename Problem::BlockFmhaShape::Gemm3WarpTile>>;
 
         using WarpGemm =
-            WarpGemmMfmaDispatcher<typename Problem::GemmDataType,
+            WarpGemmMmacDispatcher<typename Problem::GemmDataType,
                                    typename Problem::QDataType,
                                    typename Problem::AccDataType,
                                    Problem::BlockFmhaShape::Gemm3WarpTile::at(number<0>{}),
                                    Problem::BlockFmhaShape::Gemm3WarpTile::at(number<1>{}),
                                    Problem::BlockFmhaShape::Gemm3WarpTile::at(number<2>{}),
-                                   true>;
+                                   true,
+                                   1, 1, 1, 1>;
 
         using BlockGemmPolicy =
             BlockGemmARegBRegCRegV1CustomPolicy<typename Problem::GemmDataType,
@@ -171,13 +171,14 @@ struct BlockFmhaBwdPipelineDefaultPolicy
                                            typename Problem::BlockFmhaShape::Gemm4WarpTile>>;
 
         using WarpGemm =
-            WarpGemmMfmaDispatcher<typename Problem::GemmDataType,
+            WarpGemmMmacDispatcher<typename Problem::GemmDataType,
                                    typename Problem::KDataType,
                                    typename Problem::AccDataType,
                                    Problem::BlockFmhaShape::Gemm4WarpTile::at(number<0>{}),
                                    Problem::BlockFmhaShape::Gemm4WarpTile::at(number<1>{}),
                                    Problem::BlockFmhaShape::Gemm4WarpTile::at(number<2>{}),
-                                   false>;
+                                   false,
+                                   1, 1, 1, 1>;
 
         using BlockGemmPolicy =
             BlockGemmARegBRegCRegV1CustomPolicy<typename Problem::GemmDataType,

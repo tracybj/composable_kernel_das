@@ -37,6 +37,7 @@ struct WarpGemmAttributeMmacImplF16F16F32M16N16K16
     static constexpr index_t kCMPerLane  = 1;
     static constexpr index_t kCN0PerLane = 4; // jump layout
     static constexpr index_t kCN1PerLane = 1;
+    static constexpr index_t kCM1PerLane = kCMPerLane;
 
     // c_vec += a_vec * b_vec
     CK_TILE_DEVICE void
@@ -107,23 +108,35 @@ struct WarpGemmAttributeMmacImplF16F16F32M16N16K16TransC
     static constexpr index_t kCN0PerLane = -1;
     static constexpr index_t kCN1PerLane = -1;
 
-    // c_vec += b_vec * a_vec
+    // [DCU移植] TransC 路径：上游靠交换 A/B 操作数来转置 C；DCU MMAC 交换操作数并不能像
+    // AMD MFMA 那样转置 C 寄存器布局。故 gfx938/gfx946 改调用 _lit_lts(lts=true) 内建函数
+    // 实现转置；旧架构 gfx928/gfx936/gfx92a 仍走普通 mmac。
+    // c_vec += a_vec * b_vec with LTS (lane transpose sum) to transpose C layout.
+    // HCU basic MMAC operand swap does NOT change C register layout the same way
+    // AMD MFMA does; use _lit_lts with lts=true on gfx938+ to achieve transposed C.
     CK_TILE_DEVICE void
     operator()(CVecType& c_vec, const AVecType& a_vec, const BVecType& b_vec) const
     {
-#if defined(__gfx928__) || defined(__gfx936__) || defined(__gfx938__) || defined(__gfx92a__) || \
-    defined(__gfx946__)
+#if defined(__gfx938__) || defined(__gfx946__)
+        constexpr bool lit = false;
+        constexpr bool lts = true;
+        c_vec = __builtin_hcu_mmac_f32_16x16x16_f16_lit_lts(b_vec, a_vec, c_vec, lit, lts);
+#elif defined(__gfx928__) || defined(__gfx936__) || defined(__gfx92a__)
         c_vec = __builtin_hcu_mmac_f32_16x16x16_f16(b_vec, a_vec, c_vec);
 #else
         detail::swallow{a_vec, b_vec, c_vec};
 #endif
     }
 
-    // c_vec = b_vec * a_vec
+    // c_vec = a_vec * b_vec with LTS (lane transpose sum) to transpose C layout.
     CK_TILE_DEVICE CVecType operator()(const AVecType& a_vec, const BVecType& b_vec) const
     {
-#if defined(__gfx928__) || defined(__gfx936__) || defined(__gfx938__) || defined(__gfx92a__) || \
-    defined(__gfx946__)
+#if defined(__gfx938__) || defined(__gfx946__)
+        constexpr bool lit = false;
+        constexpr bool lts = true;
+        return bit_cast<CVecType>(
+            __builtin_hcu_mmac_f32_16x16x16_f16_lit_lts(a_vec, b_vec, fp32x4_t{0.f}, lit, lts));
+#elif defined(__gfx928__) || defined(__gfx936__) || defined(__gfx92a__)
         return bit_cast<CVecType>(
             __builtin_hcu_mmac_f32_16x16x16_f16(b_vec, a_vec, fp32x4_t{0.f}));
 #else
@@ -163,7 +176,6 @@ struct WarpGemmAttributeMmacImplF16F16F32M16N16K16Lit
     static constexpr index_t kCMPerLane  = 1;
     static constexpr index_t kCN0PerLane = 1; // jump layout
     static constexpr index_t kCN1PerLane = 4;
-
     // c_vec += a_vec * b_vec
     CK_TILE_DEVICE void
     operator()(CVecType& c_vec, const AVecType& a_vec, const BVecType& b_vec) const
@@ -286,13 +298,18 @@ struct WarpGemmAttributeMmacImplF16F16F32M16N16K16LitLts
     static constexpr index_t kABKLane    = 4;
     static constexpr index_t kABKPerLane = 4; // 4 element per thread vec
 
-    // mmac C layout
+    // mmac C layout (matches AMD MFMA: kCMLane=4, kCNLane=16)
     static constexpr index_t kCMLane = 4;
     static constexpr index_t kCNLane = 16;
 
     static constexpr index_t kCM0PerLane = 1;
     static constexpr index_t kCM1PerLane = 4; // continuous
     static constexpr index_t kCNPerLane  = 1;
+
+    // kCMPerLane/kCN0PerLane/kCN1PerLane needed by base CWarpDstrEncoding / MakeCOutputLayout
+    static constexpr index_t kCMPerLane  = 4;
+    static constexpr index_t kCN0PerLane = 1;
+    static constexpr index_t kCN1PerLane = 1;
 
     // c_vec += a_vec * b_vec
     CK_TILE_DEVICE void
@@ -357,6 +374,7 @@ struct WarpGemmAttributeMmacImplBf16Bf16F32M16N16K16
     static constexpr index_t kCNPerLane  = 4;
     static constexpr index_t kCN0PerLane = 4; // jump layout
     static constexpr index_t kCN1PerLane = 1;
+    static constexpr index_t kCM1PerLane = kCMPerLane;
 
     // c_vec += a_vec * b_vec
     CK_TILE_DEVICE void
@@ -580,14 +598,16 @@ struct WarpGemmAttributeMmacImplBf16Bf16F32M16N16K16Lts
 
 // BF16 LIT LTS
 // Composed of LIT and LTS
+// [DCU移植] 修正：上游/早期 DCU 版本此处 A/B 误写成 fp16_t（从 fp16 结构体拷贝而来），
+// bf16 LitLts 的输入类型应为 bf16_t，否则 bf16 FMHA 结果错误。
 struct WarpGemmAttributeMmacImplBf16Bf16F32M16N16K16LitLts
 {
-    using ADataType = fp16_t;
-    using BDataType = fp16_t;
+    using ADataType = bf16_t;
+    using BDataType = bf16_t;
     using CDataType = float;
 
-    using AVecType = ext_vector_t<fp16_t, 4>;
-    using BVecType = ext_vector_t<fp16_t, 4>;
+    using AVecType = ext_vector_t<bf16_t, 4>;
+    using BVecType = ext_vector_t<bf16_t, 4>;
     using CVecType = ext_vector_t<float, 4>;
 
     // mmac inst size
@@ -601,12 +621,18 @@ struct WarpGemmAttributeMmacImplBf16Bf16F32M16N16K16LitLts
     static constexpr index_t kABKLane    = 4;
     static constexpr index_t kABKPerLane = 4; // 4 element per thread vec
 
-    // mmac C layout
+    // mmac C layout (matches AMD MFMA: kCMLane=4, kCNLane=16)
     static constexpr index_t kCMLane = 4;
     static constexpr index_t kCNLane = 16;
 
-    static constexpr index_t kCMPerLane = 1;
-    static constexpr index_t kCNPerLane = 4; // continuous
+    static constexpr index_t kCM0PerLane = 1;
+    static constexpr index_t kCM1PerLane = 4; // continuous
+    static constexpr index_t kCNPerLane  = 1;
+
+    // kCMPerLane/kCN0PerLane/kCN1PerLane needed by base CWarpDstrEncoding / MakeCOutputLayout
+    static constexpr index_t kCMPerLane  = 4;
+    static constexpr index_t kCN0PerLane = 1;
+    static constexpr index_t kCN1PerLane = 1;
 
     // c_vec += a_vec * b_vec
     CK_TILE_DEVICE void
