@@ -69,8 +69,7 @@ using fmha_bwd_shape_{F_idx} = ck_tile::TileFmhaBwdShape<fmha_block_tile_{F_idx}
                                                          fmha_block_warps1_{F_idx},
                                                          fmha_warp_tile1_{F_idx},
                                                          fmha_block_warps2_{F_idx},
-                                                         fmha_warp_tile2_{F_idx},
-                                                         {F_maxq}>;
+                                                         fmha_warp_tile2_{F_idx}>; // DCU移植: 旧 TileFmhaBwdShape 仅 11 个模板参，去掉上游新增的末位 maxq
 
 using fmha_bwd_trait_{F_idx} = ck_tile::TileFmhaBwdTraits<{F_dpad},
                                                        {F_dvpad},
@@ -101,8 +100,7 @@ using fmha_bwd_pipeline_problem_{F_idx} = ck_tile::BlockFmhaBwdPipelineProblem<
     {F_deterministic},
     fmha_mask_{F_idx},
     fmha_dropout_{F_idx},
-    {F_trload},
-    fmha_bwd_trait_{F_idx}>;
+    fmha_bwd_trait_{F_idx}>; // DCU移植: 旧 BlockFmhaBwdPipelineProblem 无 kUseTrLoad 模板参，去掉 trload 实参
 
 using fmha_bwd_pipeline_{F_idx} = ck_tile::BlockFmhaBwdDQDKDVPipeline<fmha_bwd_pipeline_problem_{F_idx}>;
 
@@ -124,11 +122,12 @@ using fmha_bwd_dq_epilogue_{F_idx} = ck_tile::Default2DEpilogue<
                                       false,
                                       ({F_dpad} > 0)>>;
 
+// DCU移植: 旧 FmhaBwdDQDKDVKernel 仅 3 个模板参（pipeline + dK/dV epilogue）；
+//          dQ 经 dq_acc + convert_dq 输出，不需要独立 dq epilogue，故去掉第 4 个实参。
 using fmha_bwd_dq_dk_dv_kernel_{F_idx} =
     ck_tile::FmhaBwdDQDKDVKernel<fmha_bwd_pipeline_{F_idx},
                                  fmha_bwd_dk_epilogue_{F_idx},
-                                 fmha_bwd_dv_epilogue_{F_idx},
-                                 fmha_bwd_dq_epilogue_{F_idx}>;
+                                 fmha_bwd_dv_epilogue_{F_idx}>;
 
 using dq_dk_dv_trait_{F_idx} = fmha_bwd_dq_dk_dv_traits_<{F_hdim},
                                                          {F_dtype},
@@ -153,18 +152,10 @@ float fmha_bwd_dq_dk_dv_<dq_dk_dv_trait_{F_idx}, {F_arch.tag}>(const ck_tile::st
     auto [kargs, grids]                    = fmha_bwd_dq_dk_dv_create_kargs_and_grids<k_>(a);
     const dim3 blocks                      = k_::BlockSize();
     constexpr ck_tile::index_t kBlockPerCu = k_::kBlockPerCu;
-    if constexpr(k_::kNeedsKernelPrezeroDqAcc)
-    {{
-        using pk_ = typename k_::DqAccPrezeroKernel;
-        return ck_tile::launch_kernel(
-            s,
-            ck_tile::make_kernel<pk_::kBlockPerCu, {F_arch.tag}>(
-                pk_{{}}, pk_::GridSize(), pk_::BlockSize(), 0,
-                k_::MakeDqAccPrezeroKargs(a.workspace_ptr, a.batch)),
-            ck_tile::make_kernel<kBlockPerCu, {F_arch.tag}>(k_{{}}, grids, blocks, 0, kargs));
-    }}
+    // DCU移植: 旧 kernel 头无 kNeedsKernelPrezeroDqAcc / DqAccPrezeroKernel 内核预清零路径，
+    //          dq_acc 预清零交由 launcher (fmha_bwd.hpp) 负责，这里直接单 kernel launch。
     return ck_tile::launch_kernel(
-        s, ck_tile::make_kernel<kBlockPerCu, {F_arch.tag}>(k_{{}}, grids, blocks, 0, kargs));
+        s, ck_tile::make_kernel<CK_TILE_MAX_THREAD_PER_BLOCK, kBlockPerCu>(k_{{}}, grids, blocks, 0, kargs));
 }}
 
 template <>
@@ -174,58 +165,52 @@ void fmha_bwd_dq_dk_dv_oneshot_<dq_dk_dv_trait_{F_idx}, {F_arch.tag}>(const ck_t
     auto [kargs, grids]                    = fmha_bwd_dq_dk_dv_create_kargs_and_grids<k_>(a);
     const dim3 blocks                      = k_::BlockSize();
     constexpr ck_tile::index_t kBlockPerCu = k_::kBlockPerCu;
-    if constexpr(k_::kNeedsKernelPrezeroDqAcc)
-    {{
-        using pk_ = typename k_::DqAccPrezeroKernel;
-        ck_tile::make_kernel<pk_::kBlockPerCu, {F_arch.tag}>(
-            pk_{{}}, pk_::GridSize(), pk_::BlockSize(), 0,
-            k_::MakeDqAccPrezeroKargs(a.workspace_ptr, a.batch))(
-            ck_tile::stream_config{{s.stream_id_}});
-    }}
-    ck_tile::make_kernel<kBlockPerCu, {F_arch.tag}>(k_{{}}, grids, blocks, 0, kargs)(
+    // DCU移植: 同上，去掉内核预清零分支。
+    ck_tile::make_kernel<CK_TILE_MAX_THREAD_PER_BLOCK, kBlockPerCu>(k_{{}}, grids, blocks, 0, kargs)(
         ck_tile::stream_config{{s.stream_id_}});
 }}
 
+// DCU移植: 旧 kernel 头不提供 kMaxSeqLenQ / GetWorkspace* / NeedsZeroDqAcc 等较新上游接口。
+// 旧 DCU dq_dk_dv 流程把 dq 累加到外部 fp32 dq_acc 缓冲（即 workspace_ptr），再由 convert_dq
+// 转回 dq。这里在 codegen 侧自包含实现这些 dispatch 桩，不触碰核心 kernel 头：
+//   - maxq 概念已移除，返回编译期常量。
+//   - 无 host 端 workspace 元数据，host_size / prepare 返回 0。
+//   - device 端 workspace 即 dq_acc（fp32，按 dq 布局），需在 launch 前清零。
 template <>
 int fmha_bwd_dq_dk_dv_maxq_<dq_dk_dv_trait_{F_idx}, {F_arch.tag}>()
 {{
-    using k_ = fmha_bwd_dq_dk_dv_kernel_{F_idx};
-    return k_::kMaxSeqLenQ;
+    return {F_maxq};
 }}
 
 template <>
-size_t fmha_bwd_dq_dk_dv_dq_ws_host_size_<dq_dk_dv_trait_{F_idx}, {F_arch.tag}>(int batch_size)
+size_t fmha_bwd_dq_dk_dv_dq_ws_host_size_<dq_dk_dv_trait_{F_idx}, {F_arch.tag}>(int /*batch_size*/)
 {{
-    using k_ = fmha_bwd_dq_dk_dv_kernel_{F_idx};
-    return k_::GetWorkspaceHostSize(batch_size);
+    return 0;
 }}
 
 template <>
 size_t fmha_bwd_dq_dk_dv_dq_ws_device_upper_bound_<dq_dk_dv_trait_{F_idx}, {F_arch.tag}>(
-    ck_tile::index_t max_batch, ck_tile::index_t hdim_q, ck_tile::index_t nhead_q,
-    ck_tile::index_t total_seqlen_q_padded, ck_tile::index_t max_seqlen_k)
+    ck_tile::index_t /*max_batch*/, ck_tile::index_t hdim_q, ck_tile::index_t nhead_q,
+    ck_tile::index_t total_seqlen_q_padded, ck_tile::index_t /*max_seqlen_k*/)
 {{
-    using k_ = fmha_bwd_dq_dk_dv_kernel_{F_idx};
-    return k_::GetWorkspaceDeviceSizeUpperBound(
-        max_batch, hdim_q, nhead_q, total_seqlen_q_padded, max_seqlen_k);
+    // dq_acc: fp32, [total_seqlen_q_padded, nhead_q, hdim_q] 布局上界（非确定性单 split）。
+    return static_cast<size_t>(total_seqlen_q_padded) * static_cast<size_t>(nhead_q) *
+           static_cast<size_t>(hdim_q) * sizeof(float);
 }}
 
 template <>
 size_t fmha_bwd_dq_dk_dv_dq_prepare_ws_host_<dq_dk_dv_trait_{F_idx}, {F_arch.tag}>(
-    void* cpu_ws, ck_tile::index_t batch_size, ck_tile::index_t hdim_q,
-    ck_tile::index_t nhead_q, ck_tile::index_t seqlen_q, ck_tile::index_t seqlen_k,
-    const ck_tile::index_t* seqstart_qs, const ck_tile::index_t* seqstart_ks)
+    void* /*cpu_ws*/, ck_tile::index_t /*batch_size*/, ck_tile::index_t /*hdim_q*/,
+    ck_tile::index_t /*nhead_q*/, ck_tile::index_t /*seqlen_q*/, ck_tile::index_t /*seqlen_k*/,
+    const ck_tile::index_t* /*seqstart_qs*/, const ck_tile::index_t* /*seqstart_ks*/)
 {{
-    using k_ = fmha_bwd_dq_dk_dv_kernel_{F_idx};
-    return k_::PrepareWorkspaceHost(
-        cpu_ws, batch_size, hdim_q, nhead_q, seqlen_q, seqlen_k, seqstart_qs, seqstart_ks);
+    return 0;
 }}
 
 template <>
 bool fmha_bwd_dq_dk_dv_needs_zero_dq_acc_<dq_dk_dv_trait_{F_idx}, {F_arch.tag}>()
 {{
-    using k_ = fmha_bwd_dq_dk_dv_kernel_{F_idx};
-    return k_::NeedsZeroDqAcc();
+    return true;
 }}
 
 template <>
@@ -456,7 +441,21 @@ class FmhaBwdDQDKDVKernel:
 
 
 class KernelComponentFactoryBase:
-    pass
+    @staticmethod
+    def supports_trait_combo(
+        dtype: str,
+        tr_load: str,
+        mode: str,
+        mask: str,
+        bias: str,
+        dbias: str,
+        dropout: str,
+        spad1d: str,
+        dpad: int,
+        dvpad: int,
+        deterministic: str,
+    ) -> bool:
+        return True
 
 
 class KernelComponentFactoryGfx9(KernelComponentFactoryBase):
@@ -492,6 +491,58 @@ class KernelComponentFactoryGfx936(KernelComponentFactoryGfx9):
     # is emitted with arch tag `void` (matching the FWD port and the `Arch = void`
     # default of the fmha_bwd_dq_dk_dv_ dispatch declarations).
     arch = ArchTrait("gfx936", preprocessor_check="defined(__gfx936__)", tag="void")
+
+    @staticmethod
+    def get_dq_dk_dv_tiles(dtype: str, tr_load: str) -> List[FmhaBwdDQDKDVTileSize]:
+        # DCU移植: HCU MMAC 使用 16x16x32 (K=32) 和 16x16x16 (K=16) warp tile。
+        # 上游 gfx9 的 d128 tile 的 bk2=16，但 G2 warp K=min(32,bk4)=32，
+        # 导致 KIter=16/32=0.5 无效。此外 pipeline 约束 kM0==kK1, kM0==kK3，
+        # 且 bk0/bk2 应等于 bhdq/bhdv 以保证 headdim 全量计算。
+        # 此处提供 HCU 兼容的 tile 集合。
+        if tr_load == "t":
+            return []
+        if dtype in ["fp16", "bf16"]:
+            return [
+                #                     bm0  bn0  bk0  bk1  bk2  bk3  bk4 bhdq bhdv
+                # d64 tile (same as upstream, verified working on gfx938)
+                FmhaBwdDQDKDVTileSize(  32, 128,  64,  32,  64,  32,  32,  64,  64, 1, 4, 1, 4, 1, 1, 1, 4, 1, 16, 16, 32, 16, 16, 16, 1),
+                # d128 tile: bk0=bhdq=128, bk2=bhdv=128, bk1=bk3=kM0=16, bk4=32
+                # G0(16,128,128) w16x16x32 KIter=4, G1(128,128,16) w16x16x16 KIter=1,
+                # G2(16,128,128) w16x16x32 KIter=4, G3(128,128,16) w16x16x16 KIter=1,
+                # G4(16,128,32)  w16x16x32 KIter=1, k4_loops=4
+                FmhaBwdDQDKDVTileSize(  16, 128, 128,  16, 128,  16,  32, 128, 128, 1, 4, 1, 4, 1, 1, 1, 4, 1, 16, 16, 32, 16, 16, 16, 1),
+            ]  # fmt: skip
+        return []
+
+    @staticmethod
+    def supports_trait_combo(
+        dtype: str,
+        tr_load: str,
+        mode: str,
+        mask: str,
+        bias: str,
+        dbias: str,
+        dropout: str,
+        spad1d: str,
+        dpad: int,
+        dvpad: int,
+        deterministic: str,
+    ) -> bool:
+        # DCU移植: 首轮 HCU BWD bring-up 只生成最小 batch/no-pad/no-dropout
+        # 基础闭包。dropout/dbias/group/pad/trload 后续在 dQ/dK/dV 正确后逐个打开。
+        return (
+            dtype in ["fp16", "bf16"]
+            and tr_load == "f"
+            and mode == "batch"
+            and mask == "s_no"
+            and bias == "no"
+            and dbias == "f"
+            and dropout == "no"
+            and spad1d == "f"
+            and dpad == 0
+            and dvpad == 0
+            and deterministic == "f"
+        )
 
 
 class KernelComponentFactoryGfx938(KernelComponentFactoryGfx936):
@@ -613,7 +664,7 @@ using fmha_bwd_dot_do_o_pipeline_problem_{F_idx} = ck_tile::BlockFmhaBwdOGradDot
     typename FmhaBwdTypeConfig<fmha_dtype_{F_idx}>::ODataType,
     typename FmhaBwdTypeConfig<fmha_dtype_{F_idx}>::OGradDataType,
     typename FmhaBwdTypeConfig<fmha_dtype_{F_idx}>::DDataType,
-    typename FmhaBwdTypeConfig<fmha_dtype_{F_idx}>::LSEDataType,
+    // DCU移植: 旧 BlockFmhaBwdOGradDotOPipelineProblem 无 LSEDataType 模板参，去掉。
     /* BlockSize = M0 = */ {F_bm0},
     {F_hdim},
     {F_mode},
@@ -638,7 +689,7 @@ float fmha_bwd_dot_do_o_<dot_do_o_trait_{F_idx}, {F_arch.tag}>(const ck_tile::st
     const dim3 blocks                      = k_::BlockSize();
     constexpr ck_tile::index_t kBlockPerCu = k_::kBlockPerCu;
     return ck_tile::launch_kernel(
-        s, ck_tile::make_kernel<kBlockPerCu, {F_arch.tag}>(k_{{}}, grids, blocks, 0, kargs));
+        s, ck_tile::make_kernel<CK_TILE_MAX_THREAD_PER_BLOCK, kBlockPerCu>(k_{{}}, grids, blocks, 0, kargs));
 }}
 
 template <>
@@ -648,7 +699,7 @@ void fmha_bwd_dot_do_o_oneshot_<dot_do_o_trait_{F_idx}, {F_arch.tag}>(const ck_t
     auto [kargs, grids]                    = fmha_bwd_dot_do_o_create_kargs_and_grids<k_>(a);
     const dim3 blocks                      = k_::BlockSize();
     constexpr ck_tile::index_t kBlockPerCu = k_::kBlockPerCu;
-    ck_tile::make_kernel<kBlockPerCu, {F_arch.tag}>(k_{{}}, grids, blocks, 0, kargs)(
+    ck_tile::make_kernel<CK_TILE_MAX_THREAD_PER_BLOCK, kBlockPerCu>(k_{{}}, grids, blocks, 0, kargs)(
         ck_tile::stream_config{{s.stream_id_}});
 }}
 
@@ -730,6 +781,9 @@ using fmha_bwd_convert_dq_pipeline_problem_{F_idx} =
         typename FmhaBwdTypeConfig<fmha_dtype_{F_idx}>::QGradDataType,
         /* BlockSize = */ 256,
         {F_bm0},
+        // DCU移植: 旧 problem 需 kN0(=dq_dk_dv 的 k-seqlen tile bn0，用于确定性 dq_acc split 计数；
+        //          非确定性路径不用到) 与 kQKHeaddim(=hdim) 两个独立参数。
+        {F_bn0},
         {F_hdim},
         {F_mode},
         {F_deterministic},
@@ -758,7 +812,7 @@ float fmha_bwd_convert_dq_<convert_dq_trait_{F_idx}, {F_arch.tag}>(const ck_tile
     const dim3 blocks                      = k_::BlockSize();
     constexpr ck_tile::index_t kBlockPerCu = k_::kBlockPerCu;
     return ck_tile::launch_kernel(
-        s, ck_tile::make_kernel<kBlockPerCu, {F_arch.tag}>(k_{{}}, grids, blocks, 0, kargs));
+        s, ck_tile::make_kernel<CK_TILE_MAX_THREAD_PER_BLOCK, kBlockPerCu>(k_{{}}, grids, blocks, 0, kargs));
 }}
 
 template <>
@@ -768,7 +822,7 @@ void fmha_bwd_convert_dq_oneshot_<convert_dq_trait_{F_idx}, {F_arch.tag}>(const 
     auto [kargs, grids]                    = fmha_bwd_convert_dq_create_kargs_and_grids<k_>(a);
     const dim3 blocks                      = k_::BlockSize();
     constexpr ck_tile::index_t kBlockPerCu = k_::kBlockPerCu;
-    ck_tile::make_kernel<kBlockPerCu, {F_arch.tag}>(k_{{}}, grids, blocks, 0, kargs)(
+    ck_tile::make_kernel<CK_TILE_MAX_THREAD_PER_BLOCK, kBlockPerCu>(k_{{}}, grids, blocks, 0, kargs)(
         ck_tile::stream_config{{s.stream_id_}});
 }}
 
@@ -790,6 +844,7 @@ class FmhaBwdConvertQGradKernel:
     F_hdim: int  # hdim
     F_dtype: str  # data type
     F_bm0: int  # tile size along q seqlen (block size)
+    F_bn0: int  # DCU移植: dq_dk_dv 的 k-seqlen tile, 供旧 convert problem 的 kN0 使用
     F_spad: str  # true/false
     F_dpad: str  #
     F_mode: str  # value from MODE_MAP
@@ -805,6 +860,7 @@ class FmhaBwdConvertQGradKernel:
             F_hdim=self.F_hdim,
             F_dtype=BWD_DTYPE_MAP[self.F_dtype],
             F_bm0=self.F_bm0,
+            F_bn0=self.F_bn0,
             F_spad=BOOL_MAP[self.F_spad],
             F_dpad=BOOL_MAP[self.F_dpad],
             F_mode=MODE_MAP[self.F_mode],
@@ -974,6 +1030,7 @@ class FmhaBwdApiTrait:
             F_hdim=self.hdim,
             F_dtype=self.dtype,
             F_bm0=M0_1D,
+            F_bn0=self.tile.F_bn0,
             F_spad=self.spad1d,
             F_dpad=F_dpad,
             F_mode=self.mode,
@@ -1152,6 +1209,20 @@ def get_bwd_blobs(
             if optdim_list != [-1]:
                 if hdim not in optdim_list:
                     continue
+            if not factory.supports_trait_combo(
+                dtype,
+                tr_load,
+                mode,
+                mask,
+                bias,
+                dbias,
+                dropout,
+                spad1d,
+                dpad,
+                dvpad,
+                deterministic,
+            ):
+                continue
             t = FmhaBwdApiTrait(
                 arch=factory.arch,
                 idx=0,

@@ -129,6 +129,7 @@ struct FmhaBwdDQDKDVKernel
         void* dq_acc_ptr;
         void* dk_ptr;
         void* dv_ptr;
+        void* debug_dump_ptr;
 
         ck_tile::index_t seqlen_q;
         ck_tile::index_t seqlen_k;
@@ -149,6 +150,7 @@ struct FmhaBwdDQDKDVKernel
         ck_tile::index_t stride_dq_acc;
         ck_tile::index_t stride_dk;
         ck_tile::index_t stride_dv;
+        ck_tile::index_t stride_debug_dump;
 
         ck_tile::index_t nhead_stride_q;
         ck_tile::index_t nhead_stride_k;
@@ -158,6 +160,9 @@ struct FmhaBwdDQDKDVKernel
         ck_tile::index_t nhead_stride_dq_acc;
         ck_tile::index_t nhead_stride_dk;
         ck_tile::index_t nhead_stride_dv;
+        ck_tile::index_t nhead_stride_debug_dump;
+        ck_tile::index_t batch_stride_debug_dump;
+        ck_tile::index_t debug_dump_mode = 0; // 0: off, 1: p_gemm -> dq_acc, 2: ds_gemm -> dq_acc
     };
 
     struct FmhaBwdCommonBiasKargs
@@ -361,7 +366,8 @@ struct FmhaBwdDQDKDVKernel
               ck_tile::index_t mask_type,
               float p_drop,
               std::variant<std::pair<uint64_t, uint64_t>, std::pair<const void*, const void*>>
-                  drop_seed_offset)
+                  drop_seed_offset,
+              ck_tile::index_t debug_dump_mode = 0)
     {
         Kargs kargs{{q_ptr,
                      k_ptr,
@@ -372,6 +378,7 @@ struct FmhaBwdDQDKDVKernel
                      dq_acc_ptr,
                      dk_ptr,
                      dv_ptr,
+                     dbias_ptr,
                      seqlen_q,
                      seqlen_k,
                      hdim_q,
@@ -387,6 +394,7 @@ struct FmhaBwdDQDKDVKernel
                      stride_dq_acc,
                      stride_dk,
                      stride_dv,
+                     stride_dbias,
                      nhead_stride_q,
                      nhead_stride_k,
                      nhead_stride_v,
@@ -394,7 +402,10 @@ struct FmhaBwdDQDKDVKernel
                      nhead_stride_lsed,
                      nhead_stride_dq_acc,
                      nhead_stride_dk,
-                     nhead_stride_dv}, // args for common karg
+                     nhead_stride_dv,
+                     nhead_stride_dbias,
+                     batch_stride_dbias,
+                     debug_dump_mode}, // args for common karg
                     {},                // placeholder for bias
                     {},                // placeholder for dbias
                     {},                // placeholder for mask
@@ -519,7 +530,8 @@ struct FmhaBwdDQDKDVKernel
               ck_tile::index_t mask_type,
               float p_drop,
               std::variant<std::pair<uint64_t, uint64_t>, std::pair<const void*, const void*>>
-                  drop_seed_offset)
+                  drop_seed_offset,
+              ck_tile::index_t debug_dump_mode = 0)
     {
         Kargs kargs{{q_ptr,
                      k_ptr,
@@ -530,6 +542,7 @@ struct FmhaBwdDQDKDVKernel
                      dq_acc_ptr,
                      dk_ptr,
                      dv_ptr,
+                     dbias_ptr,
                      -1, // seqlen will be updated by another pointer
                      -1, //
                      hdim_q,
@@ -545,6 +558,7 @@ struct FmhaBwdDQDKDVKernel
                      stride_dq_acc,
                      stride_dk,
                      stride_dv,
+                     stride_dbias,
                      nhead_stride_q,
                      nhead_stride_k,
                      nhead_stride_v,
@@ -552,7 +566,10 @@ struct FmhaBwdDQDKDVKernel
                      nhead_stride_lsed,
                      nhead_stride_dq_acc,
                      nhead_stride_dk,
-                     nhead_stride_dv}, // args for common karg
+                     nhead_stride_dv,
+                     nhead_stride_dbias,
+                     0,
+                     debug_dump_mode}, // args for common karg
                     {},                // placeholder for bias
                     {},                // placeholder for dbias
                     {},                // placeholder for mask
@@ -648,6 +665,11 @@ struct FmhaBwdDQDKDVKernel
 
         // divide problem
         const auto [i_tile_n, i_nhead, i_batch] = GetTileIndex();
+        // C++17 cannot capture structured binding names directly. Use ordinary
+        // local copies; maybe_unused keeps no-bias/no-dropout specializations quiet.
+        [[maybe_unused]] const auto i_tile_n_ = i_tile_n;
+        [[maybe_unused]] const auto i_nhead_  = i_nhead;
+        [[maybe_unused]] const auto i_batch_  = i_batch;
 
         const index_t i_n0 = __builtin_amdgcn_readfirstlane(i_tile_n * FmhaPipeline::kN0);
 
@@ -662,6 +684,7 @@ struct FmhaBwdDQDKDVKernel
         long_index_t batch_offset_dk      = 0;
         long_index_t batch_offset_dv      = 0;
         long_index_t batch_offset_dbias   = 0;
+        long_index_t batch_offset_debug_dump = 0;
 
         if constexpr(kIsGroupMode)
         {
@@ -677,6 +700,7 @@ struct FmhaBwdDQDKDVKernel
             batch_offset_dq_acc = query_start * kargs.stride_dq_acc;
             batch_offset_dk     = key_start * kargs.stride_dk;
             batch_offset_dv     = key_start * kargs.stride_dv;
+            batch_offset_debug_dump = query_start * kargs.stride_debug_dump;
             if constexpr(BiasEnum == BlockAttentionBiasEnum::ELEMENTWISE_BIAS)
             {
                 batch_offset_bias = query_start * kargs.stride_bias;
@@ -724,6 +748,8 @@ struct FmhaBwdDQDKDVKernel
             batch_offset_dq_acc = static_cast<long_index_t>(i_batch) * kargs.batch_stride_dq_acc;
             batch_offset_dk     = static_cast<long_index_t>(i_batch) * kargs.batch_stride_dk;
             batch_offset_dv     = static_cast<long_index_t>(i_batch) * kargs.batch_stride_dv;
+            batch_offset_debug_dump =
+                static_cast<long_index_t>(i_batch) * kargs.batch_stride_debug_dump;
             if constexpr(BiasEnum == BlockAttentionBiasEnum::ELEMENTWISE_BIAS)
             {
                 batch_offset_bias = static_cast<long_index_t>(i_batch) * kargs.batch_stride_bias;
@@ -848,7 +874,7 @@ struct FmhaBwdDQDKDVKernel
             make_tuple(number<FmhaPipeline::kM0>{}, number<FmhaPipeline::kVHeaddim>{}),
             {0, 0});
 
-        auto dq_dram_window = [&, i_tile_n_ = i_tile_n, i_nhead_ = i_nhead]() {
+        auto dq_dram_window = [&]() {
             if constexpr(kIsDeterministic)
             {
                 AccDataType* dq_acc_ptr =
@@ -916,7 +942,7 @@ struct FmhaBwdDQDKDVKernel
         /// following copy capture of the 'i_nhead' if in C++20
         constexpr auto bias_dram_window_lengths =
             make_tuple(number<FmhaPipeline::kM0>{}, number<FmhaPipeline::kN0>{});
-        const auto bias_dram_window = [&, i_nhead_ = i_nhead]() {
+        const auto bias_dram_window = [&]() {
             if constexpr(BiasEnum == BlockAttentionBiasEnum::ELEMENTWISE_BIAS)
             {
                 const BiasDataType* bias_ptr =
@@ -945,7 +971,7 @@ struct FmhaBwdDQDKDVKernel
             }
         }();
 
-        auto dbias_dram_window = [&, i_nhead_ = i_nhead]() {
+        auto dbias_dram_window = [&]() {
             if constexpr(kHasBiasGrad)
             {
                 BiasGradDataType* dbias_ptr =
@@ -975,8 +1001,29 @@ struct FmhaBwdDQDKDVKernel
             }
         }();
 
+        BiasGradDataType* debug_dump_ptr =
+            reinterpret_cast<BiasGradDataType*>(kargs.debug_dump_ptr) +
+            static_cast<long_index_t>(i_nhead_) * kargs.nhead_stride_debug_dump +
+            batch_offset_debug_dump;
+
+        const auto debug_dump_dram = [&]() {
+            const auto debug_dump_dram_naive = make_naive_tensor_view<address_space_enum::global>(
+                debug_dump_ptr,
+                make_tuple(kargs.seqlen_q, kargs.seqlen_k),
+                make_tuple(kargs.stride_debug_dump, 1),
+                number<FmhaPipeline::kAlignmentBias>{},
+                number<1>{});
+
+            return pad_tensor_view(debug_dump_dram_naive,
+                                   bias_dram_window_lengths,
+                                   sequence<kPadSeqLenQ, kPadSeqLenK>{});
+        }();
+
+        auto debug_dump_dram_window =
+            make_tile_window(debug_dump_dram, bias_dram_window_lengths, {0, i_n0});
+
         // WA i_batch capture structure binding before c++20
-        auto position_encoding = [&, i_batch_ = i_batch, i_nhead_ = i_nhead]() {
+        auto position_encoding = [&]() {
             if constexpr(BiasEnum == BlockAttentionBiasEnum::ALIBI)
             {
                 // data loading, shared by entire wg
@@ -1013,7 +1060,7 @@ struct FmhaBwdDQDKDVKernel
             rp_undrop       = kargs.rp_undrop;
             scale_rp_undrop = kargs.scale_rp_undrop;
         }
-        auto dropout = [&, i_nhead_ = i_nhead, i_batch_ = i_batch]() {
+        auto dropout = [&]() {
             if constexpr(kHasDropout)
             {
                 return FmhaDropout{i_batch_,
@@ -1032,7 +1079,7 @@ struct FmhaBwdDQDKDVKernel
             };
         }();
 
-        auto randval_dram_window = [&, i_nhead_ = i_nhead]() {
+        auto randval_dram_window = [&]() {
             constexpr auto randval_dram_window_lengths =
                 make_tuple(number<FmhaPipeline::kM0>{}, number<FmhaPipeline::kN0>{});
             if constexpr(kIsStoreRandval)
@@ -1086,6 +1133,7 @@ struct FmhaBwdDQDKDVKernel
                                                          d_dram_window,
                                                          dq_dram_window,
                                                          dbias_dram_window,
+                                                         debug_dump_dram_window,
                                                          mask,
                                                          position_encoding,
                                                          kargs.raw_scale,
@@ -1093,7 +1141,8 @@ struct FmhaBwdDQDKDVKernel
                                                          rp_undrop,
                                                          scale_rp_undrop,
                                                          smem_ptr,
-                                                         dropout);
+                                                         dropout,
+                                                         kargs.debug_dump_mode);
 
         auto dk_dram = [&]() {
             const auto dk_dram_naive = make_naive_tensor_view<address_space_enum::global>(

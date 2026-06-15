@@ -195,6 +195,70 @@ struct BlockGemmARegBRegCRegV1
         return c_block_tensor;
     }
 
+    template <typename CBlockTensor>
+    CK_TILE_DEVICE static constexpr auto MakeCOutputBlockTile(const CBlockTensor& c_block_tensor)
+    {
+        constexpr index_t MPerBlock = BlockGemmShape::kM;
+        constexpr index_t NPerBlock = BlockGemmShape::kN;
+
+        constexpr auto config = Policy::template GetWarpGemmMWarpNWarp<Problem>();
+
+        using WG = remove_cvref_t<decltype(config.template at<0>())>;
+
+        constexpr index_t MWarp = config.template at<1>();
+        constexpr index_t NWarp = config.template at<2>();
+
+        constexpr index_t MIterPerWarp = MPerBlock / (MWarp * WG::kM);
+        constexpr index_t NIterPerWarp = NPerBlock / (NWarp * WG::kN);
+
+        constexpr auto c_block_outer_dstr_encoding = tile_distribution_encoding<
+            sequence<>,
+            tuple<sequence<MIterPerWarp, MWarp>, sequence<NIterPerWarp, NWarp>>,
+            tuple<sequence<1, 2>>,
+            tuple<sequence<1, 1>>,
+            sequence<1, 2>,
+            sequence<0, 0>>{};
+
+        constexpr auto c_block_output_dstr_encode = detail::make_embed_tile_distribution_encoding(
+            c_block_outer_dstr_encoding, typename WG::CWarpOutputDstrEncoding{});
+        constexpr auto c_block_output_dstr =
+            make_static_tile_distribution(c_block_output_dstr_encode);
+        auto c_block_output_tensor =
+            make_static_distributed_tensor<CDataType>(c_block_output_dstr);
+
+        using CWarpDstr         = typename WG::CWarpDstr;
+        using CWarpOutputDstr   = typename WG::CWarpOutputDstr;
+        using CWarpTensor       = typename WG::CWarpTensor;
+        using CWarpOutputTensor = typename WG::CWarpOutputTensor;
+
+        constexpr auto c_warp_y_lengths =
+            to_sequence(CWarpDstr{}.get_ys_to_d_descriptor().get_lengths());
+        constexpr auto c_warp_y_index_zeros = uniform_sequence_gen_t<CWarpDstr::NDimY, 0>{};
+
+        constexpr auto c_warp_output_y_lengths =
+            to_sequence(CWarpOutputDstr{}.get_ys_to_d_descriptor().get_lengths());
+        constexpr auto c_warp_output_y_index_zeros =
+            uniform_sequence_gen_t<CWarpOutputDstr::NDimY, 0>{};
+
+        static_for<0, MIterPerWarp, 1>{}([&](auto mIter) {
+            static_for<0, NIterPerWarp, 1>{}([&](auto nIter) {
+                CWarpTensor c_warp_tensor;
+                c_warp_tensor.get_thread_buffer() = c_block_tensor.get_y_sliced_thread_data(
+                    merge_sequences(sequence<mIter, nIter>{}, c_warp_y_index_zeros),
+                    merge_sequences(sequence<1, 1>{}, c_warp_y_lengths));
+
+                CWarpOutputTensor c_warp_output_tensor = WG{}.MakeCOutputLayout(c_warp_tensor);
+
+                c_block_output_tensor.set_y_sliced_thread_data(
+                    merge_sequences(sequence<mIter, nIter>{}, c_warp_output_y_index_zeros),
+                    merge_sequences(sequence<1, 1>{}, c_warp_output_y_lengths),
+                    c_warp_output_tensor.get_thread_buffer());
+            });
+        });
+
+        return c_block_output_tensor;
+    }
+
     // C = A * B
     template <typename ABlockTensor, typename BBlockTensor>
     CK_TILE_DEVICE auto operator()(const ABlockTensor& a_block_tensor,

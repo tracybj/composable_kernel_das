@@ -8,10 +8,9 @@
 #include "utils.hpp"
 #include "ck_tile/utility/json_dump.hpp"
 
-#include "ck_tile/host/pinned_host_releaser.hpp"
-
 #include <array>
 #include <chrono>
+#include <cstdlib>
 #include <cstring>
 #include <functional>
 #include <memory>
@@ -29,6 +28,26 @@ enum class bwd_result
     invalid_args,
     no_instance,
 };
+
+namespace ck_tile {
+template <typename RandValOutputDataType>
+CK_TILE_HOST void reference_batched_dropout_randval(HostTensor<RandValOutputDataType>& randval_b_m_n,
+                                                    ck_tile::index_t batch,
+                                                    uint64_t drop_seed,
+                                                    uint64_t drop_offset)
+{
+    // DCU移植: fallback only to keep the upstream runner compiling. HCU BWD
+    // currently generates no-dropout instances, so this path is not exercised
+    // by the bring-up smoke tests.
+    randval_b_m_n.ForEach([&](auto& self, const auto& idx) {
+        const uint64_t x = drop_seed + drop_offset + static_cast<uint64_t>(batch) * 1315423911ULL +
+                           static_cast<uint64_t>(idx[0]) * 2654435761ULL +
+                           static_cast<uint64_t>(idx[1]) * 97531ULL +
+                           static_cast<uint64_t>(idx[2]);
+        self(idx) = static_cast<RandValOutputDataType>((x >> 8) & 0xff);
+    });
+}
+} // namespace ck_tile
 
 // different threshold for different dtype
 template <typename DataTypeConfig>
@@ -281,6 +300,34 @@ bwd_result fmha_bwd_run(mode_enum mode,
     ck_tile::HostTensor<RandValOutputDataType> randval_host(
         p_drop > 0 ? get_lengths(true, shape_batch, nhead, shape_seqlen_q, max_seqlen_k)
                    : std::array<ck_tile::index_t, 4>{1, 1, 1, 1});
+    const char* debug_dump_env = std::getenv("CK_TILE_FMHA_BWD_DEBUG_DUMP");
+    const ck_tile::index_t debug_dump_mode = [&]() {
+        if(debug_dump_env == nullptr) return 0;
+        if(std::strcmp(debug_dump_env, "p") == 0) return 1;
+        if(std::strcmp(debug_dump_env, "ds") == 0) return 2;
+        if(std::strcmp(debug_dump_env, "s") == 0) return 3;
+        if(std::strcmp(debug_dump_env, "dp") == 0) return 4;
+        if(std::strcmp(debug_dump_env, "do") == 0) return 5;
+        if(std::strcmp(debug_dump_env, "v") == 0) return 6;
+        if(std::strcmp(debug_dump_env, "dpout") == 0) return 7;
+        if(std::strcmp(debug_dump_env, "pout") == 0) return 8;
+        if(std::strcmp(debug_dump_env, "dsout") == 0) return 9;
+        if(std::strcmp(debug_dump_env, "dout") == 0) return 10;
+        if(std::strcmp(debug_dump_env, "poutq") == 0) return 11;
+        if(std::strcmp(debug_dump_env, "dsoutq") == 0) return 12;
+        if(std::strcmp(debug_dump_env, "sout") == 0) return 13;
+        if(std::strcmp(debug_dump_env, "q") == 0) return 14;
+        if(std::strcmp(debug_dump_env, "k") == 0) return 15;
+        if(std::strcmp(debug_dump_env, "pt") == 0) return 16;
+        if(std::strcmp(debug_dump_env, "dst") == 0) return 17;
+        if(std::strcmp(debug_dump_env, "dvacc") == 0) return 18;
+        if(std::strcmp(debug_dump_env, "dkacc") == 0) return 19;
+        if(std::strcmp(debug_dump_env, "dqacc") == 0) return 20;
+        if(std::strcmp(debug_dump_env, "dvout") == 0) return 21;
+        if(std::strcmp(debug_dump_env, "dkout") == 0) return 22;
+        if(std::strcmp(debug_dump_env, "dqout") == 0) return 23;
+        return 0;
+    }();
     ck_tile::HostTensor<QGradDataType> dq_host(
         get_lengths(i_perm, shape_batch, nhead, shape_seqlen_q, hdim_q));
     ck_tile::HostTensor<KGradDataType> dk_host(
@@ -290,7 +337,7 @@ bwd_result fmha_bwd_run(mode_enum mode,
     ck_tile::HostTensor<OGradDataType> do_host(
         get_lengths(o_perm, shape_batch, nhead, shape_seqlen_q, hdim_v));
     ck_tile::HostTensor<BiasGradDataType> dbias_host(
-        use_dbias
+        (use_dbias || debug_dump_mode != 0)
             ? get_lengths(i_perm, shape_batch, nhead, shape_seqlen_q, max_seqlen_k)
             : std::array<ck_tile::index_t, 4>{1, 1, 1, 1} /* dummy shape for simplifying code */);
     ck_tile::HostTensor<LSEDataType> d_sink_host(sink_grad ? std::array<ck_tile::index_t, 1>{nhead}
@@ -405,16 +452,13 @@ bwd_result fmha_bwd_run(mode_enum mode,
     seqstart_q.ToDevice(seqstart_q_host.data());
     seqstart_k.ToDevice(seqstart_k_host.data());
 
-    // Pinned host allocator for the launcher's async prepare pipeline. The
-    // shared_ptr deleter MUST NOT call any HIP API: it runs from the launcher's
-    // tail hipLaunchHostFunc on the driver helper thread, which holds HIP
-    // runtime locks. Deleter enqueues to a worker thread that hipHostFrees off
-    // the callback path.
+    // DCU移植: DCU tree does not carry upstream pinned_host_releaser. For the
+    // current old-kernel workspace path prepare_workspace_async is synchronous
+    // enough for this example, so release pinned staging memory directly.
     auto pinned_host_alloc = [](size_t bytes) -> std::shared_ptr<void> {
         void* p = nullptr;
         HIP_CHECK_ERROR(hipHostMalloc(&p, bytes, hipHostMallocDefault));
-        return std::shared_ptr<void>(
-            p, [](void* q) { ck_tile::pinned_host_releaser::instance().enqueue(q); });
+        return std::shared_ptr<void>(p, [](void* q) { HIP_CHECK_ERROR(hipHostFree(q)); });
     };
 
     ck_tile::gpu_timer prepare_ws_timer;
@@ -604,7 +648,8 @@ bwd_result fmha_bwd_run(mode_enum mode,
                              static_cast<ck_tile::index_t>(mask.type),
                              p_drop,
                              p_undrop,
-                             drop_seed_offset};
+                             drop_seed_offset,
+                             debug_dump_mode};
     }();
 
     const float ave_time = launcher(fmha_args, stream_config);
@@ -635,6 +680,7 @@ bwd_result fmha_bwd_run(mode_enum mode,
         std::vector<ck_tile::HostTensor<VDataType>> v_host_refs;
         std::vector<ck_tile::HostTensor<ODataType>> o_host_refs;
         std::vector<ck_tile::HostTensor<RandValOutputDataType>> randval_host_refs;
+        std::vector<ck_tile::HostTensor<AccDataType>> s_hp_host_refs;
         std::vector<ck_tile::HostTensor<AccDataType>> p_hp_host_refs;
         std::vector<ck_tile::HostTensor<GemmDataType>> p_lp_host_refs;
         std::vector<ck_tile::HostTensor<AccDataType>> p_sink_host_refs;
@@ -910,6 +956,7 @@ bwd_result fmha_bwd_run(mode_enum mode,
             k_host_refs.push_back(k_host_ref);
             v_host_refs.push_back(v_host_ref);
             o_host_refs.push_back(o_host_ref);
+            s_hp_host_refs.push_back(s_host_ref);
             p_hp_host_refs.push_back(p_hp_host_ref);
             p_lp_host_refs.push_back(p_lp_host_ref);
             p_sink_host_refs.push_back(p_sink_host_ref);
@@ -945,6 +992,9 @@ bwd_result fmha_bwd_run(mode_enum mode,
             pinned_host_alloc);
         launcher(fmha_args, stream_config_v);
 
+        const bool debug_d = std::getenv("CK_TILE_FMHA_BWD_DEBUG_D") != nullptr;
+        if(debug_d)
+            d_buf.FromDevice(d_host.data());
         dq_buf.FromDevice(dq_host.data());
         dk_buf.FromDevice(dk_host.data());
         dv_buf.FromDevice(dv_host.data());
@@ -1005,6 +1055,39 @@ bwd_result fmha_bwd_run(mode_enum mode,
             if(o_perm) do_host_ref.ForEach([&](auto& self, auto i) { self(i) = do_host(b, i[0], i[1] + query_offset, i[2]); });
             else       do_host_ref.ForEach([&](auto& self, auto i) { self(i) = do_host(b, i[1] + query_offset, i[0], i[2]); });
             // clang-format on
+
+            if(debug_d)
+            {
+                ck_tile::HostTensor<DDataType> d_host_ref({nhead, real_seqlen_q});
+                ck_tile::HostTensor<DDataType> d_host_result({nhead, real_seqlen_q});
+
+                d_host_ref.ForEach([&](auto& self, auto idx) {
+                    AccDataType do_dot_o = 0;
+                    for(int o = 0; o < hdim_v; o++)
+                    {
+                        do_dot_o += ck_tile::type_convert<AccDataType>(
+                                        do_host_ref(idx[0], idx[1], o)) *
+                                    ck_tile::type_convert<AccDataType>(
+                                        o_host_refs[ref_idx](idx[0], idx[1], o));
+                    }
+                    self(idx) = ck_tile::type_convert<DDataType>(do_dot_o * p_undrop);
+                });
+                d_host_result.ForEach([&](auto& self, auto idx) {
+                    self(idx) = d_host(b, idx[0], idx[1] + query_offset);
+                });
+
+                auto [d_rtol, d_atol] = get_elimit<DataTypeConfig>(hdim_q, hdim_v);
+                const bool d_cur_pass = ck_tile::check_err(
+                    d_host_result, d_host_ref, std::string("Error: D Incorrect results!"), d_rtol, d_atol);
+                pass &= d_cur_pass;
+                if(!d_cur_pass)
+                {
+                    std::cerr << "D mismatch found at batch: " << wb << std::endl
+                              << "\tseqlen_q: " << real_seqlen_q << std::endl
+                              << "\tseqstart_q: " << seqstart_q_host << std::endl;
+                    break;
+                }
+            }
 
             // dP = dO@V x Z w/  dropout
             // dP = dO@V     w/o dropout
@@ -1123,7 +1206,7 @@ bwd_result fmha_bwd_run(mode_enum mode,
             if(i_perm) dv_host_result.ForEach([&](auto& self, auto idx) {self(idx) = dv_host(b, idx[0], idx[1] + key_offset, idx[2]); });
             else       dv_host_result.ForEach([&](auto& self, auto idx) {self(idx) = dv_host(b, idx[1] + key_offset, idx[0], idx[2]); });
 
-            if(use_dbias)
+            if(use_dbias || debug_dump_mode != 0)
             {
                 if(i_perm) dbias_host_result.ForEach([&](auto& self, auto idx) {self(idx) = dbias_host(b, idx[0], idx[1] + query_offset, idx[2]); });
                 else       dbias_host_result.ForEach([&](auto& self, auto idx) {self(idx) = dbias_host(b, idx[1] + query_offset, idx[0], idx[2]); });
@@ -1131,6 +1214,170 @@ bwd_result fmha_bwd_run(mode_enum mode,
             // clang-format on
 
             auto [rtol, atol] = get_elimit<DataTypeConfig>(hdim_q, hdim_v);
+            if(debug_dump_mode != 0)
+            {
+                ck_tile::HostTensor<BiasGradDataType> debug_host_ref(
+                    {nhead, real_seqlen_q, real_seqlen_k});
+                debug_host_ref.ForEach([&](auto& self, auto idx) {
+                    if(debug_dump_mode == 1 || debug_dump_mode == 8 || debug_dump_mode == 11)
+                    {
+                        self(idx) = ck_tile::type_convert<BiasGradDataType>(
+                            p_lp_host_refs[ref_idx](idx[0], idx[1], idx[2]));
+                    }
+                    else if(debug_dump_mode == 14)
+                    {
+                        const ck_tile::index_t i_k = static_cast<ck_tile::index_t>(idx[2]);
+                        self(idx) = i_k < hdim_q
+                                        ? ck_tile::type_convert<BiasGradDataType>(
+                                              q_host_refs[ref_idx](idx[0], idx[1], i_k))
+                                        : BiasGradDataType{0};
+                    }
+                    else if(debug_dump_mode == 15)
+                    {
+                        const ck_tile::index_t i_k = static_cast<ck_tile::index_t>(idx[2]);
+                        self(idx) = i_k < hdim_q
+                                        ? ck_tile::type_convert<BiasGradDataType>(
+                                              k_host_refs[ref_idx](idx[0], idx[1], i_k))
+                                        : BiasGradDataType{0};
+                    }
+                    else if(debug_dump_mode == 16)
+                    {
+                        self(idx) = ck_tile::type_convert<BiasGradDataType>(
+                            p_lp_host_refs[ref_idx](idx[0], idx[2], idx[1]));
+                    }
+                    else if(debug_dump_mode == 17)
+                    {
+                        self(idx) = ck_tile::type_convert<BiasGradDataType>(
+                            ds_lp_host_ref(idx[0], idx[2], idx[1]));
+                    }
+                    else if(debug_dump_mode == 18 || debug_dump_mode == 21)
+                    {
+                        const ck_tile::index_t i_o = static_cast<ck_tile::index_t>(idx[2]);
+                        self(idx) = i_o < hdim_v
+                                        ? ck_tile::type_convert<BiasGradDataType>(
+                                              dv_host_ref(idx[0], idx[1], i_o))
+                                        : BiasGradDataType{0};
+                    }
+                    else if(debug_dump_mode == 19 || debug_dump_mode == 22)
+                    {
+                        const ck_tile::index_t i_k = static_cast<ck_tile::index_t>(idx[2]);
+                        self(idx) = i_k < hdim_q
+                                        ? ck_tile::type_convert<BiasGradDataType>(
+                                              dk_host_ref(idx[0], idx[1], i_k))
+                                        : BiasGradDataType{0};
+                    }
+                    else if(debug_dump_mode == 20 || debug_dump_mode == 23)
+                    {
+                        const ck_tile::index_t i_k = static_cast<ck_tile::index_t>(idx[2]);
+                        self(idx) = i_k < hdim_q
+                                        ? ck_tile::type_convert<BiasGradDataType>(
+                                              dq_host_ref(idx[0], idx[1], i_k))
+                                        : BiasGradDataType{0};
+                    }
+                    else if(debug_dump_mode == 3 || debug_dump_mode == 13)
+                    {
+                        self(idx) = ck_tile::type_convert<BiasGradDataType>(
+                            s_hp_host_refs[ref_idx](idx[0], idx[1], idx[2]));
+                    }
+                    else if(debug_dump_mode == 4 || debug_dump_mode == 7)
+                    {
+                        self(idx) = ck_tile::type_convert<BiasGradDataType>(
+                            dp_hp_host_ref(idx[0], idx[1], idx[2]));
+                    }
+                    else if(debug_dump_mode == 5)
+                    {
+                        const ck_tile::index_t i_o = static_cast<ck_tile::index_t>(idx[2]);
+                        self(idx) = i_o < hdim_v
+                                        ? ck_tile::type_convert<BiasGradDataType>(
+                                              do_host_ref(idx[0], idx[1], idx[2]))
+                                        : BiasGradDataType{0};
+                    }
+                    else if(debug_dump_mode == 6)
+                    {
+                        const ck_tile::index_t i_o = static_cast<ck_tile::index_t>(idx[2]);
+                        self(idx) = i_o < hdim_v
+                                        ? ck_tile::type_convert<BiasGradDataType>(
+                                              v_host_refs[ref_idx](idx[0], idx[2], idx[1]))
+                                        : BiasGradDataType{0};
+                    }
+                    else if(debug_dump_mode == 10)
+                    {
+                        AccDataType do_dot_o = 0;
+                        for(int o = 0; o < hdim_v; o++)
+                        {
+                            do_dot_o += ck_tile::type_convert<AccDataType>(
+                                            do_host_ref(idx[0], idx[1], o)) *
+                                        ck_tile::type_convert<AccDataType>(
+                                            o_host_refs[ref_idx](idx[0], idx[1], o));
+                        }
+                        self(idx) =
+                            ck_tile::type_convert<BiasGradDataType>(do_dot_o * p_undrop);
+                    }
+                    else
+                    {
+                        self(idx) = ck_tile::type_convert<BiasGradDataType>(
+                            ds_lp_host_ref(idx[0], idx[1], idx[2]));
+                    }
+                });
+                auto debug_dump_error = [&]() {
+                    if(debug_dump_mode == 1) return std::string("Error: P dump Incorrect results!");
+                    if(debug_dump_mode == 3) return std::string("Error: S dump Incorrect results!");
+                    if(debug_dump_mode == 4) return std::string("Error: dP dump Incorrect results!");
+                    if(debug_dump_mode == 5) return std::string("Error: dO dump Incorrect results!");
+                    if(debug_dump_mode == 6) return std::string("Error: V dump Incorrect results!");
+                    if(debug_dump_mode == 7)
+                        return std::string("Error: dP output-layout dump Incorrect results!");
+                    if(debug_dump_mode == 8)
+                        return std::string("Error: P output-layout dump Incorrect results!");
+                    if(debug_dump_mode == 9)
+                        return std::string("Error: dS output-layout dump Incorrect results!");
+                    if(debug_dump_mode == 10)
+                        return std::string("Error: D output-layout broadcast dump Incorrect results!");
+                    if(debug_dump_mode == 11)
+                        return std::string("Error: quantized P output-layout dump Incorrect results!");
+                    if(debug_dump_mode == 12)
+                        return std::string("Error: quantized dS output-layout dump Incorrect results!");
+                    if(debug_dump_mode == 13)
+                        return std::string("Error: S output-layout dump Incorrect results!");
+                    if(debug_dump_mode == 14)
+                        return std::string("Error: Q dump Incorrect results!");
+                    if(debug_dump_mode == 15)
+                        return std::string("Error: K dump Incorrect results!");
+                    if(debug_dump_mode == 16)
+                        return std::string("Error: P^T G1-input dump Incorrect results!");
+                    if(debug_dump_mode == 17)
+                        return std::string("Error: dS^T G3-input dump Incorrect results!");
+                    if(debug_dump_mode == 18)
+                        return std::string("Error: raw VGrad accumulator dump Incorrect results!");
+                    if(debug_dump_mode == 19)
+                        return std::string("Error: raw KGrad accumulator dump Incorrect results!");
+                    if(debug_dump_mode == 20)
+                        return std::string("Error: raw QGrad accumulator dump Incorrect results!");
+                    if(debug_dump_mode == 21)
+                        return std::string("Error: VGrad output-layout dump Incorrect results!");
+                    if(debug_dump_mode == 22)
+                        return std::string("Error: KGrad output-layout dump Incorrect results!");
+                    if(debug_dump_mode == 23)
+                        return std::string("Error: QGrad output-layout dump Incorrect results!");
+                    return std::string("Error: dS dump Incorrect results!");
+                };
+                bool debug_cur_pass = ck_tile::check_err(
+                    dbias_host_result, debug_host_ref, debug_dump_error(), rtol, atol);
+                pass &= debug_cur_pass;
+                if(!debug_cur_pass)
+                {
+                    std::cerr << "mismatch found at batch: " << wb << std::endl
+                              << "\tseqlen_q: " << real_seqlen_q << std::endl
+                              << "\tseqlen_k: " << real_seqlen_k << std::endl
+                              << "\tseqstart_q: " << seqstart_q_host << std::endl
+                              << "\tseqstart_k: " << seqstart_k_host << std::endl;
+
+                    break;
+                }
+                ref_idx++;
+                continue;
+            }
+
             bool dq_cur_pass  = ck_tile::check_err(dq_host_result,
                                                   dq_host_ref,
                                                   std::string("Error: QGrad Incorrect results!"),

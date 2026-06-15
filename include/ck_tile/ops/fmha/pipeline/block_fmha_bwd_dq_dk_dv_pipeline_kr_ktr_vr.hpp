@@ -92,6 +92,7 @@ struct BlockFmhaBwdDQDKDVPipelineKRKTRVR
               typename DDramBlockWindowTmp,
               typename QGradDramBlockWindowTmp,
               typename BiasGradDramBlockWindowTmp,
+              typename DebugDumpDramBlockWindowTmp,
               typename PositionEncoding>
     CK_TILE_HOST_DEVICE auto
     operator()(const QDramBlockWindowTmp& q_dram_block_window_tmp,
@@ -104,6 +105,7 @@ struct BlockFmhaBwdDQDKDVPipelineKRKTRVR
                const DDramBlockWindowTmp& d_dram_block_window_tmp,
                const QGradDramBlockWindowTmp& dq_dram_block_window_tmp,
                const BiasGradDramBlockWindowTmp& dbias_dram_block_window_tmp,
+               const DebugDumpDramBlockWindowTmp& debug_dump_dram_block_window_tmp,
                FmhaMask mask,
                PositionEncoding position_encoding,
                float raw_scale,
@@ -111,7 +113,8 @@ struct BlockFmhaBwdDQDKDVPipelineKRKTRVR
                float rp_undrop,
                float scale_rp_undrop,
                void* smem_ptr,
-               FmhaDropout& dropout) const
+               FmhaDropout& dropout,
+               ck_tile::index_t debug_dump_mode = 0) const
     {
         static_assert(
             std::is_same_v<QDataType, remove_cvref_t<typename QDramBlockWindowTmp::DataType>> &&
@@ -169,7 +172,8 @@ struct BlockFmhaBwdDQDKDVPipelineKRKTRVR
             {
                 // Note: here dk_acc&dv_acc are all cleard, return it
                 // Note: v loaded but no fence, ignore it.
-                return make_tuple(dk_acc, dv_acc);
+                return make_tuple(gemm_3.MakeCOutputBlockTile(dk_acc),
+                                  gemm_1.MakeCOutputBlockTile(dv_acc));
             }
         }
         KDataType* k_lds_ptr =
@@ -369,6 +373,27 @@ struct BlockFmhaBwdDQDKDVPipelineKRKTRVR
                              ds_lds_window.get_window_origin(),
                              Policy::template MakeSGradRegSliceBlockDescriptor<Problem>());
 
+        auto dst_lds_read = make_tensor_view<address_space_enum::lds>(
+            ds_lds_ptr,
+            transform_tensor_descriptor(
+                Policy::template MakeSGradLdsBlockDescriptor<Problem>(),
+                make_tuple(make_pass_through_transform(number<kN0>{}),
+                           make_pass_through_transform(number<kM0>{})),
+                make_tuple(sequence<1>{}, sequence<0>{}),
+                make_tuple(sequence<0>{}, sequence<1>{})));
+
+        auto pt_lds_read_window =
+            make_tile_window(dst_lds_read,
+                             make_tuple(number<kN0>{}, number<kK1>{}),
+                             {0, 0},
+                             Policy::template MakePTRegSliceBlockDescriptor<Problem>());
+
+        auto dst_lds_read_window =
+            make_tile_window(dst_lds_read,
+                             make_tuple(number<kN0>{}, number<kK3>{}),
+                             {0, 0},
+                             Policy::template MakeSGradTRegSliceBlockDescriptor<Problem>());
+
         auto dst_reg_tensor = make_static_distributed_tensor<GemmDataType>(
             Policy::template MakeSGradTRegSliceBlockDescriptor<Problem>());
         // Bias: HBM ->Reg ->Reg ->LDS
@@ -444,12 +469,6 @@ struct BlockFmhaBwdDQDKDVPipelineKRKTRVR
 
         auto d_lds_write_window = make_tile_window(d_lds, make_tuple(number<kM0>{}), {0});
 
-        auto d_lds_read_window = make_tile_window(
-            d_lds,
-            make_tuple(number<kM0>{}),
-            {0},
-            Policy::template MakeLSEDLdsReadBlockDescriptor<Problem, decltype(gemm_0)>());
-
         // RandVal: HBM ->Reg
         auto randval_dram_window = dropout.template MakeRandvalDramWindow<decltype(gemm_0), false>(
             randval_dram_block_window_tmp, seqlen_q_start);
@@ -461,6 +480,11 @@ struct BlockFmhaBwdDQDKDVPipelineKRKTRVR
         auto dbias_dram_window =
             make_tile_window(dbias_dram_block_window_tmp.get_bottom_tensor_view(),
                              dbias_dram_block_window_tmp.get_window_lengths(),
+                             {seqlen_q_start, dbias_origin.at(number<1>{})}); // M/N
+
+        auto debug_dump_dram_window =
+            make_tile_window(debug_dump_dram_block_window_tmp.get_bottom_tensor_view(),
+                             debug_dump_dram_block_window_tmp.get_window_lengths(),
                              {seqlen_q_start, dbias_origin.at(number<1>{})}); // M/N
 
         auto dbias_lds_read_window =
@@ -489,6 +513,28 @@ struct BlockFmhaBwdDQDKDVPipelineKRKTRVR
         clear_tile(dv_acc);
         clear_tile(dk_acc);
 
+        if(debug_dump_mode == 6)
+        {
+            auto debug_dump_v_dram_window =
+                make_tile_window(debug_dump_dram_block_window_tmp.get_bottom_tensor_view(),
+                                 make_tuple(number<kN0>{}, number<kK2>{}),
+                                 {dbias_origin.at(number<1>{}), 0});
+            store_tile(debug_dump_v_dram_window, cast_tile<BiasGradDataType>(v_reg_tensor));
+            return make_tuple(gemm_3.MakeCOutputBlockTile(dk_acc),
+                              gemm_1.MakeCOutputBlockTile(dv_acc));
+        }
+
+        if(debug_dump_mode == 15)
+        {
+            auto debug_dump_k_dram_window =
+                make_tile_window(debug_dump_dram_block_window_tmp.get_bottom_tensor_view(),
+                                 make_tuple(number<kN0>{}, number<kK0>{}),
+                                 {dbias_origin.at(number<1>{}), 0});
+            store_tile(debug_dump_k_dram_window, cast_tile<BiasGradDataType>(k_reg_tensor));
+            return make_tuple(gemm_3.MakeCOutputBlockTile(dk_acc),
+                              gemm_1.MakeCOutputBlockTile(dv_acc));
+        }
+
         __builtin_amdgcn_sched_barrier(0);
         // Hot loop
         while(i_total_loops < num_total_loop)
@@ -512,10 +558,23 @@ struct BlockFmhaBwdDQDKDVPipelineKRKTRVR
 
             block_sync_lds();
 
+            if(debug_dump_mode == 14)
+            {
+                auto debug_dump_q_dram_window =
+                    make_tile_window(debug_dump_dram_block_window_tmp.get_bottom_tensor_view(),
+                                     make_tuple(number<kM0>{}, number<kK0>{}),
+                                     {seqlen_q_step, 0});
+                store_tile(debug_dump_q_dram_window, cast_tile<BiasGradDataType>(q_reg_tensor));
+                i_total_loops += 1;
+                seqlen_q_step += kM0;
+                continue;
+            }
+
             // STAGE 1, Q@K Gemm0
             auto s_acc = SPBlockTileType{};
 
-            s_acc = gemm_0(q_reg_tensor, k_reg_tensor);
+            clear_tile(s_acc);
+            gemm_0(s_acc, q_reg_tensor, k_reg_tensor);
 
             // STAGE 2, Scale, Add bias, Mask, Softmax, Dropout
             if constexpr(BiasEnum == BlockAttentionBiasEnum::ELEMENTWISE_BIAS)
@@ -566,6 +625,20 @@ struct BlockFmhaBwdDQDKDVPipelineKRKTRVR
                         return mask.IsOutOfBound(row, col);
                     });
                 }
+            }
+
+            if(debug_dump_mode == 3)
+            {
+                const auto debug_tile = tile_elementwise_in(
+                    [&raw_scale](const auto& x) {
+                        return ck_tile::type_convert<BiasGradDataType>(raw_scale * x);
+                    },
+                    s_acc);
+                store_tile(debug_dump_dram_window, debug_tile);
+                move_tile_window(debug_dump_dram_window, {kM0, 0});
+                i_total_loops += 1;
+                seqlen_q_step += kM0;
+                continue;
             }
 
             static const auto get_validated_lse = [](LSEDataType raw_lse) {
@@ -621,6 +694,97 @@ struct BlockFmhaBwdDQDKDVPipelineKRKTRVR
                 }
             }();
 
+            const auto s_out_main = gemm_0.MakeCOutputBlockTile(s_acc);
+            auto lse_bcast_lds_main = make_tensor_view<address_space_enum::lds>(
+                lse_lds_ptr,
+                make_naive_tensor_descriptor(make_tuple(number<kM0>{}, number<kN0>{}),
+                                             make_tuple(number<1>{}, number<0>{}),
+                                             number<1>{},
+                                             number<1>{}));
+            auto lse_bcast_lds_window_main =
+                make_tile_window(lse_bcast_lds_main,
+                                 make_tuple(number<kM0>{}, number<kN0>{}),
+                                 {0, 0},
+                                 s_out_main.get_tile_distribution());
+            const auto lse_bcast_main = load_tile(lse_bcast_lds_window_main);
+            auto p_out_main           = decltype(s_out_main){};
+            constexpr auto p_out_main_spans = decltype(p_out_main)::get_distributed_spans();
+            sweep_tile_span(p_out_main_spans[number<0>{}], [&](auto idx0) {
+                sweep_tile_span(p_out_main_spans[number<1>{}], [&](auto idx1) {
+                    constexpr auto i_j_idx = make_tuple(idx0, idx1);
+                    const auto row_lse =
+                        log2e_v<LSEDataType> * get_validated_lse(lse_bcast_main[i_j_idx]);
+                    p_out_main(i_j_idx) = exp2(scale * s_out_main[i_j_idx] - row_lse);
+                });
+            });
+            const auto p_out_gemm_main = cast_tile<GemmDataType>(p_out_main);
+
+            if(debug_dump_mode == 1)
+            {
+                store_tile(debug_dump_dram_window, cast_tile<BiasGradDataType>(p_gemm));
+                move_tile_window(debug_dump_dram_window, {kM0, 0});
+                i_total_loops += 1;
+                seqlen_q_step += kM0;
+                continue;
+            }
+
+            if(debug_dump_mode == 13)
+            {
+                const auto s_out = gemm_0.MakeCOutputBlockTile(s_acc);
+                const auto debug_tile = tile_elementwise_in(
+                    [&raw_scale](const auto& x) {
+                        return ck_tile::type_convert<BiasGradDataType>(raw_scale * x);
+                    },
+                    s_out);
+                store_tile(debug_dump_dram_window, debug_tile);
+                move_tile_window(debug_dump_dram_window, {kM0, 0});
+                i_total_loops += 1;
+                seqlen_q_step += kM0;
+                continue;
+            }
+
+            if(debug_dump_mode == 8)
+            {
+                const auto s_out = gemm_0.MakeCOutputBlockTile(s_acc);
+                auto lse_bcast_lds = make_tensor_view<address_space_enum::lds>(
+                    lse_lds_ptr,
+                    make_naive_tensor_descriptor(make_tuple(number<kM0>{}, number<kN0>{}),
+                                                 make_tuple(number<1>{}, number<0>{}),
+                                                 number<1>{},
+                                                 number<1>{}));
+                auto lse_bcast_lds_window =
+                    make_tile_window(lse_bcast_lds,
+                                     make_tuple(number<kM0>{}, number<kN0>{}),
+                                     {0, 0},
+                                     s_out.get_tile_distribution());
+                const auto lse_bcast = load_tile(lse_bcast_lds_window);
+                auto p_out           = decltype(s_out){};
+                constexpr auto p_out_spans = decltype(p_out)::get_distributed_spans();
+                sweep_tile_span(p_out_spans[number<0>{}], [&](auto idx0) {
+                    sweep_tile_span(p_out_spans[number<1>{}], [&](auto idx1) {
+                        constexpr auto i_j_idx = make_tuple(idx0, idx1);
+                        const auto row_lse =
+                            log2e_v<LSEDataType> * get_validated_lse(lse_bcast[i_j_idx]);
+                        p_out(i_j_idx) = exp2(scale * s_out[i_j_idx] - row_lse);
+                    });
+                });
+                store_tile(debug_dump_dram_window, cast_tile<BiasGradDataType>(p_out));
+                move_tile_window(debug_dump_dram_window, {kM0, 0});
+                i_total_loops += 1;
+                seqlen_q_step += kM0;
+                continue;
+            }
+
+            if(debug_dump_mode == 11)
+            {
+                const auto p_out = gemm_0.MakeCOutputBlockTile(cast_tile<AccDataType>(p_gemm));
+                store_tile(debug_dump_dram_window, cast_tile<BiasGradDataType>(p_out));
+                move_tile_window(debug_dump_dram_window, {kM0, 0});
+                i_total_loops += 1;
+                seqlen_q_step += kM0;
+                continue;
+            }
+
             // STAGE 3, P^T@OGrad^T Gemm1
             auto do_block_tile = load_tile(do_dram_window);
             move_tile_window(do_dram_window, {kM0, 0});
@@ -640,31 +804,204 @@ struct BlockFmhaBwdDQDKDVPipelineKRKTRVR
 
             block_sync_lds();
 
-            Policy::template PTFromGemm0CToGemm1A<Problem,
-                                                  decltype(pt_reg_tensor),
-                                                  decltype(p_gemm)>(pt_reg_tensor, p_gemm);
+            store_tile(ds_lds_window, p_out_gemm_main);
+            block_sync_lds();
+            pt_reg_tensor = load_tile(pt_lds_read_window);
+            block_sync_lds();
+
+            if(debug_dump_mode == 16)
+            {
+                auto debug_dump_pt_dram_window =
+                    make_tile_window(debug_dump_dram_block_window_tmp.get_bottom_tensor_view(),
+                                     make_tuple(number<kN0>{}, number<kK1>{}),
+                                     {dbias_origin.at(number<1>{}), seqlen_q_step});
+                store_tile(debug_dump_pt_dram_window, cast_tile<BiasGradDataType>(pt_reg_tensor));
+                i_total_loops += 1;
+                seqlen_q_step += kM0;
+                continue;
+            }
+
             gemm_1(dv_acc, pt_reg_tensor, dot_reg_tensor);
 
             // STAGE 4, OGrad@V Gemm2
             auto do_reg_tensor = load_tile(do_lds_read_window);
-            auto d             = load_tile(d_lds_read_window);
             block_sync_lds();
+
+            if(debug_dump_mode == 5)
+            {
+                auto debug_dump_do_dram_window =
+                    make_tile_window(debug_dump_dram_block_window_tmp.get_bottom_tensor_view(),
+                                     make_tuple(number<kM0>{}, number<kK2>{}),
+                                     {seqlen_q_step, 0});
+                store_tile(debug_dump_do_dram_window,
+                           cast_tile<BiasGradDataType>(do_reg_tensor));
+                i_total_loops += 1;
+                seqlen_q_step += kM0;
+                continue;
+            }
 
             auto dp_acc = SPGradBlockTileType{};
 
             dp_acc = gemm_2(do_reg_tensor, v_reg_tensor);
 
+            if(debug_dump_mode == 4)
+            {
+                store_tile(debug_dump_dram_window, cast_tile<BiasGradDataType>(dp_acc));
+                move_tile_window(debug_dump_dram_window, {kM0, 0});
+                i_total_loops += 1;
+                seqlen_q_step += kM0;
+                continue;
+            }
+
+            if(debug_dump_mode == 7)
+            {
+                const auto dp_out = gemm_2.MakeCOutputBlockTile(dp_acc);
+                store_tile(debug_dump_dram_window, cast_tile<BiasGradDataType>(dp_out));
+                move_tile_window(debug_dump_dram_window, {kM0, 0});
+                i_total_loops += 1;
+                seqlen_q_step += kM0;
+                continue;
+            }
+
+            if(debug_dump_mode == 9)
+            {
+                const auto s_out = gemm_0.MakeCOutputBlockTile(s_acc);
+                auto lse_bcast_lds = make_tensor_view<address_space_enum::lds>(
+                    lse_lds_ptr,
+                    make_naive_tensor_descriptor(make_tuple(number<kM0>{}, number<kN0>{}),
+                                                 make_tuple(number<1>{}, number<0>{}),
+                                                 number<1>{},
+                                                 number<1>{}));
+                auto lse_bcast_lds_window =
+                    make_tile_window(lse_bcast_lds,
+                                     make_tuple(number<kM0>{}, number<kN0>{}),
+                                     {0, 0},
+                                     s_out.get_tile_distribution());
+                const auto lse_bcast = load_tile(lse_bcast_lds_window);
+                auto p_out           = decltype(s_out){};
+                constexpr auto p_out_spans = decltype(p_out)::get_distributed_spans();
+                sweep_tile_span(p_out_spans[number<0>{}], [&](auto idx0) {
+                    sweep_tile_span(p_out_spans[number<1>{}], [&](auto idx1) {
+                        constexpr auto i_j_idx = make_tuple(idx0, idx1);
+                        const auto row_lse =
+                            log2e_v<LSEDataType> * get_validated_lse(lse_bcast[i_j_idx]);
+                        p_out(i_j_idx) = exp2(scale * s_out[i_j_idx] - row_lse);
+                    });
+                });
+                const auto dp_out = gemm_2.MakeCOutputBlockTile(dp_acc);
+                auto d_bcast_lds  = make_tensor_view<address_space_enum::lds>(
+                    d_lds_ptr,
+                    make_naive_tensor_descriptor(make_tuple(number<kM0>{}, number<kN0>{}),
+                                                 make_tuple(number<1>{}, number<0>{}),
+                                                 number<1>{},
+                                                 number<1>{}));
+                auto d_bcast_lds_window =
+                    make_tile_window(d_bcast_lds,
+                                     make_tuple(number<kM0>{}, number<kN0>{}),
+                                     {0, 0},
+                                     dp_out.get_tile_distribution());
+                const auto d_bcast = load_tile(d_bcast_lds_window);
+                auto ds_out       = decltype(dp_out){};
+                constexpr auto ds_out_spans = decltype(ds_out)::get_distributed_spans();
+                sweep_tile_span(ds_out_spans[number<0>{}], [&](auto idx0) {
+                    sweep_tile_span(ds_out_spans[number<1>{}], [&](auto idx1) {
+                        constexpr auto i_j_idx = make_tuple(idx0, idx1);
+                        bool undrop_flag = p_out[i_j_idx] >= 0;
+                        ds_out(i_j_idx) =
+                            p_out[i_j_idx] * (!FmhaDropout::IsDropout || undrop_flag
+                                                  ? (dp_out[i_j_idx] - d_bcast[i_j_idx])
+                                                  : d_bcast[i_j_idx]);
+                    });
+                });
+                store_tile(debug_dump_dram_window, cast_tile<BiasGradDataType>(ds_out));
+                move_tile_window(debug_dump_dram_window, {kM0, 0});
+                i_total_loops += 1;
+                seqlen_q_step += kM0;
+                continue;
+            }
+
+            if(debug_dump_mode == 10)
+            {
+                const auto dp_out = gemm_2.MakeCOutputBlockTile(dp_acc);
+                auto d_bcast_lds  = make_tensor_view<address_space_enum::lds>(
+                    d_lds_ptr,
+                    make_naive_tensor_descriptor(make_tuple(number<kM0>{}, number<kN0>{}),
+                                                 make_tuple(number<1>{}, number<0>{}),
+                                                 number<1>{},
+                                                 number<1>{}));
+                auto d_bcast_lds_window =
+                    make_tile_window(d_bcast_lds,
+                                     make_tuple(number<kM0>{}, number<kN0>{}),
+                                     {0, 0},
+                                     dp_out.get_tile_distribution());
+                const auto d_out = load_tile(d_bcast_lds_window);
+                store_tile(debug_dump_dram_window, cast_tile<BiasGradDataType>(d_out));
+                move_tile_window(debug_dump_dram_window, {kM0, 0});
+                i_total_loops += 1;
+                seqlen_q_step += kM0;
+                continue;
+            }
+
+            if(debug_dump_mode == 12)
+            {
+                const auto p_out  = gemm_0.MakeCOutputBlockTile(cast_tile<AccDataType>(p_gemm));
+                const auto dp_out = gemm_2.MakeCOutputBlockTile(dp_acc);
+                auto d_bcast_lds  = make_tensor_view<address_space_enum::lds>(
+                    d_lds_ptr,
+                    make_naive_tensor_descriptor(make_tuple(number<kM0>{}, number<kN0>{}),
+                                                 make_tuple(number<1>{}, number<0>{}),
+                                                 number<1>{},
+                                                 number<1>{}));
+                auto d_bcast_lds_window =
+                    make_tile_window(d_bcast_lds,
+                                     make_tuple(number<kM0>{}, number<kN0>{}),
+                                     {0, 0},
+                                     dp_out.get_tile_distribution());
+                const auto d_bcast = load_tile(d_bcast_lds_window);
+                auto ds_out       = decltype(dp_out){};
+                constexpr auto ds_out_spans = decltype(ds_out)::get_distributed_spans();
+                sweep_tile_span(ds_out_spans[number<0>{}], [&](auto idx0) {
+                    sweep_tile_span(ds_out_spans[number<1>{}], [&](auto idx1) {
+                        constexpr auto i_j_idx = make_tuple(idx0, idx1);
+                        bool undrop_flag       = p_out[i_j_idx] >= 0;
+                        ds_out(i_j_idx) =
+                            p_out[i_j_idx] * (!FmhaDropout::IsDropout || undrop_flag
+                                                  ? (dp_out[i_j_idx] - d_bcast[i_j_idx])
+                                                  : d_bcast[i_j_idx]);
+                    });
+                });
+                store_tile(debug_dump_dram_window, cast_tile<BiasGradDataType>(ds_out));
+                move_tile_window(debug_dump_dram_window, {kM0, 0});
+                i_total_loops += 1;
+                seqlen_q_step += kM0;
+                continue;
+            }
+
             // STAGE 5, P^T(PGrad^T - D)
-            auto ds                 = SPGradBlockTileType{};
-            constexpr auto ds_spans = decltype(ds)::get_distributed_spans();
-            sweep_tile_span(ds_spans[number<0>{}], [&](auto idx0) {
-                constexpr auto i_idx = make_tuple(idx0);
-                sweep_tile_span(ds_spans[number<1>{}], [&](auto idx1) {
+            const auto dp_out = gemm_2.MakeCOutputBlockTile(dp_acc);
+            auto d_bcast_lds  = make_tensor_view<address_space_enum::lds>(
+                d_lds_ptr,
+                make_naive_tensor_descriptor(make_tuple(number<kM0>{}, number<kN0>{}),
+                                             make_tuple(number<1>{}, number<0>{}),
+                                             number<1>{},
+                                             number<1>{}));
+            auto d_bcast_lds_window =
+                make_tile_window(d_bcast_lds,
+                                 make_tuple(number<kM0>{}, number<kN0>{}),
+                                 {0, 0},
+                                 dp_out.get_tile_distribution());
+            const auto d_bcast = load_tile(d_bcast_lds_window);
+
+            auto ds_out       = decltype(dp_out){};
+            constexpr auto ds_out_spans = decltype(ds_out)::get_distributed_spans();
+            sweep_tile_span(ds_out_spans[number<0>{}], [&](auto idx0) {
+                sweep_tile_span(ds_out_spans[number<1>{}], [&](auto idx1) {
                     constexpr auto i_j_idx = make_tuple(idx0, idx1);
-                    bool undrop_flag       = p[i_j_idx] >= 0;
-                    ds(i_j_idx)            = p[i_j_idx] * (!FmhaDropout::IsDropout || undrop_flag
-                                                               ? (dp_acc[i_j_idx] - d[i_idx])
-                                                               : d[i_idx]);
+                    bool undrop_flag       = p_out_main[i_j_idx] >= 0;
+                    ds_out(i_j_idx) =
+                        p_out_main[i_j_idx] * (!FmhaDropout::IsDropout || undrop_flag
+                                                   ? (dp_out[i_j_idx] - d_bcast[i_j_idx])
+                                                   : d_bcast[i_j_idx]);
                 });
             });
 
@@ -677,11 +1014,11 @@ struct BlockFmhaBwdDQDKDVPipelineKRKTRVR
                             [&rp_undrop](const auto& x) {
                                 return type_convert<BiasGradDataType>(x * rp_undrop);
                             },
-                            ds);
+                            ds_out);
                     }
                     else
                     {
-                        return cast_tile<BiasGradDataType>(ds);
+                        return cast_tile<BiasGradDataType>(ds_out);
                     }
                 }();
                 store_tile(bias_lds_write_window, dbias);
@@ -699,17 +1036,36 @@ struct BlockFmhaBwdDQDKDVPipelineKRKTRVR
             auto qt_reg_tensor = load_tile(qt_lds_read_window);
             block_sync_lds();
 
-            const auto ds_gemm = cast_tile<GemmDataType>(ds);
+            const auto ds_gemm = cast_tile<GemmDataType>(ds_out);
 
-            Policy::template SGradTFromGemm2CToGemm3A<Problem,
-                                                      decltype(dst_reg_tensor),
-                                                      decltype(ds_gemm)>(dst_reg_tensor, ds_gemm);
-
-            gemm_3(dk_acc, dst_reg_tensor, qt_reg_tensor);
+            if(debug_dump_mode == 2)
+            {
+                store_tile(debug_dump_dram_window, cast_tile<BiasGradDataType>(ds_gemm));
+                move_tile_window(debug_dump_dram_window, {kM0, 0});
+                i_total_loops += 1;
+                seqlen_q_step += kM0;
+                continue;
+            }
 
             store_tile(ds_lds_window, ds_gemm);
-
             block_sync_lds();
+
+            dst_reg_tensor = load_tile(dst_lds_read_window);
+
+            if(debug_dump_mode == 17)
+            {
+                auto debug_dump_dst_dram_window =
+                    make_tile_window(debug_dump_dram_block_window_tmp.get_bottom_tensor_view(),
+                                     make_tuple(number<kN0>{}, number<kK3>{}),
+                                     {dbias_origin.at(number<1>{}), seqlen_q_step});
+                store_tile(debug_dump_dst_dram_window,
+                           cast_tile<BiasGradDataType>(dst_reg_tensor));
+                i_total_loops += 1;
+                seqlen_q_step += kM0;
+                continue;
+            }
+
+            gemm_3(dk_acc, dst_reg_tensor, qt_reg_tensor);
 
             auto ds_reg_tensor      = load_tile(ds_lds_read_window);
             auto ds_reg_tensor_next = decltype(ds_reg_tensor){};
@@ -746,13 +1102,38 @@ struct BlockFmhaBwdDQDKDVPipelineKRKTRVR
             {
                 tile_elementwise_inout([&raw_scale](auto& x) { x = x * raw_scale; }, dq_acc);
             }
+            if(debug_dump_mode == 20)
+            {
+                auto debug_dump_dq_dram_window =
+                    make_tile_window(debug_dump_dram_block_window_tmp.get_bottom_tensor_view(),
+                                     make_tuple(number<kM0>{}, number<kQKHeaddim>{}),
+                                     {seqlen_q_step, 0});
+                store_tile(debug_dump_dq_dram_window, cast_tile<BiasGradDataType>(dq_acc));
+                i_total_loops += 1;
+                seqlen_q_step += kM0;
+                continue;
+            }
+            if(debug_dump_mode == 23)
+            {
+                auto debug_dump_dq_dram_window =
+                    make_tile_window(debug_dump_dram_block_window_tmp.get_bottom_tensor_view(),
+                                     make_tuple(number<kM0>{}, number<kQKHeaddim>{}),
+                                     {seqlen_q_step, 0});
+                const auto dq_out = gemm_4.MakeCOutputBlockTile(dq_acc);
+                store_tile(debug_dump_dq_dram_window, cast_tile<BiasGradDataType>(dq_out));
+                i_total_loops += 1;
+                seqlen_q_step += kM0;
+                continue;
+            }
             if constexpr(kIsDeterministic)
             {
-                store_tile(dq_dram_window, dq_acc);
+                const auto dq_out = gemm_4.MakeCOutputBlockTile(dq_acc);
+                store_tile(dq_dram_window, dq_out);
             }
             else
             {
-                update_tile(dq_dram_window, dq_acc);
+                const auto dq_out = gemm_4.MakeCOutputBlockTile(dq_acc);
+                update_tile(dq_dram_window, dq_out);
             }
             move_tile_window(dq_dram_window, {kM0, 0});
 
@@ -772,7 +1153,42 @@ struct BlockFmhaBwdDQDKDVPipelineKRKTRVR
             tile_elementwise_inout([&raw_scale](auto& x) { x = x * raw_scale; }, dk_acc);
         }
 
-        return make_tuple(dk_acc, dv_acc);
+        if(debug_dump_mode == 18)
+        {
+            auto debug_dump_dv_dram_window =
+                make_tile_window(debug_dump_dram_block_window_tmp.get_bottom_tensor_view(),
+                                 make_tuple(number<kN0>{}, number<kVHeaddim>{}),
+                                 {dbias_origin.at(number<1>{}), 0});
+            store_tile(debug_dump_dv_dram_window, cast_tile<BiasGradDataType>(dv_acc));
+        }
+        if(debug_dump_mode == 19)
+        {
+            auto debug_dump_dk_dram_window =
+                make_tile_window(debug_dump_dram_block_window_tmp.get_bottom_tensor_view(),
+                                 make_tuple(number<kN0>{}, number<kQKHeaddim>{}),
+                                 {dbias_origin.at(number<1>{}), 0});
+            store_tile(debug_dump_dk_dram_window, cast_tile<BiasGradDataType>(dk_acc));
+        }
+        if(debug_dump_mode == 21)
+        {
+            auto debug_dump_dv_dram_window =
+                make_tile_window(debug_dump_dram_block_window_tmp.get_bottom_tensor_view(),
+                                 make_tuple(number<kN0>{}, number<kVHeaddim>{}),
+                                 {dbias_origin.at(number<1>{}), 0});
+            const auto dv_out = gemm_1.MakeCOutputBlockTile(dv_acc);
+            store_tile(debug_dump_dv_dram_window, cast_tile<BiasGradDataType>(dv_out));
+        }
+        if(debug_dump_mode == 22)
+        {
+            auto debug_dump_dk_dram_window =
+                make_tile_window(debug_dump_dram_block_window_tmp.get_bottom_tensor_view(),
+                                 make_tuple(number<kN0>{}, number<kQKHeaddim>{}),
+                                 {dbias_origin.at(number<1>{}), 0});
+            const auto dk_out = gemm_3.MakeCOutputBlockTile(dk_acc);
+            store_tile(debug_dump_dk_dram_window, cast_tile<BiasGradDataType>(dk_out));
+        }
+        return make_tuple(gemm_3.MakeCOutputBlockTile(dk_acc),
+                          gemm_1.MakeCOutputBlockTile(dv_acc));
     }
 };
 
