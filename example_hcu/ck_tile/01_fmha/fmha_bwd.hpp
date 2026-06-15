@@ -750,8 +750,12 @@ struct fmha_bwd_launcher
             return fmha_bwd_<T0, T1, T2, Arch>(s, a);
         };
         host_ws_size_         = fmha_bwd_dq_dk_dv_dq_ws_host_size_<T1, Arch>(t.batch);
-        // DCU移植: old BWD kernel may need only device dq_acc workspace while
-        // host metadata size is zero. Compute the device region unconditionally.
+        // [DCU移植] workspace 尺寸修复：上游代码仅在 host_ws_size_ > 0 时计算
+        // device_ws_size，导致旧内核（host_ws_size_=0，仅需要 device dq_acc）的
+        // device workspace 不被计算，进而 workspace_ptr=null，dq_dk_dv kernel
+        // VMFault。DCU 改为无条件计算 device_ws_size（使用
+        // fmha_bwd_dq_dk_dv_dq_ws_device_upper_bound_），即使 host_ws_size_=0 也能正确
+        // 分配 device dq_acc workspace。
         const ck_tile::index_t total_seqlen_q_padded =
             t.is_group_mode ? t.seqlen_q : t.batch * t.seqlen_q;
         size_t device_ws_size = fmha_bwd_dq_dk_dv_dq_ws_device_upper_bound_<T1, Arch>(

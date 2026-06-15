@@ -7,12 +7,16 @@
 #include "ck_tile/ops/common/tensor_layout.hpp"
 #include "ck_tile/ops/gemm/block/block_gemm_problem.hpp"
 #include "ck_tile/ops/gemm/pipeline/tile_gemm_shape.hpp"
+// [DCU移植] 上游使用 MFMA 的 warp_gemm.hpp + warp_gemm_dispatcher.hpp，DCU 改为
+// HCU MMAC 版本。原因：MFMA WarpGemmImpl 与 HCU MMAC WarpGemmImpl 同名，同时
+// include 会重定义冲突。BWD 全部 GEMM 都走 MMAC，不引入任何 MFMA 头。
 #include "ck_tile/ops/gemm/warp/warp_mmac_gemm.hpp"
 #include "ck_tile/ops/gemm/warp/warp_mmac_gemm_dispatcher.hpp"
-// BWD only constructs BlockGemmARegBRegCRegV1 (with an explicit custom policy). The
-// other block-gemm variants are unused here and some of them transitively pull in the
-// MFMA warp_gemm.hpp, which conflicts with the HCU MMAC WarpGemmImpl, so they are not
-// included.
+// [DCU移植] BWD 只使用 BlockGemmARegBRegCRegV1（搭配显式 custom policy），不使用
+// asmem_breg/asmem_bsmem/areg_bsmem 等 block gemm 变体。那些变体会间接拉入
+// MFMA warp_gemm.hpp，与 HCU MMAC WarpGemmImpl 重定义冲突，因此不 include。
+// 同时 block_gemm_areg_breg_creg_v1.hpp 的默认 policy 也改为前向声明（不再 include
+// 其 MFMA default policy 头），以彻底切断 BWD 编译单元对 MFMA 头的引入路径。
 #include "ck_tile/ops/gemm/block/block_gemm_areg_breg_creg_v1_custom_policy.hpp"
 #include "ck_tile/ops/gemm/block/block_gemm_areg_breg_creg_v1.hpp"
 
@@ -20,6 +24,10 @@ namespace ck_tile {
 
 struct BlockFmhaBwdPipelineDefaultPolicy
 {
+    // [DCU移植] G0: Q@K^T → S。上游用 WarpGemmMfmaDispatcher，DCU 改为
+    // WarpGemmMmacDispatcher（追加 MRepeat=NRepeat=MInterleave=NInterleave=1）。
+    // BWD 所有 GEMM 的 warp tile 均为 16x16(K=32或16)，对应 MMAC dispatcher
+    // 中新增的 16x16x32/16x16x16 basic（非 lit_lts）条目。
     template <typename Problem>
     CK_TILE_HOST_DEVICE static constexpr auto GetQKBlockGemm()
     {
@@ -54,6 +62,11 @@ struct BlockFmhaBwdPipelineDefaultPolicy
         return BlockGemmARegBRegCRegV1<GemmProblem, BlockGemmPolicy>{};
     }
 
+    // [DCU移植] G1: P^T@dO^T → dV。上游 TransposeC=true（MFMA 转置 C 分布），
+    // DCU 改为 TransposeC=false。原因：HCU MMAC 的 TransC C 寄存器布局与 MFMA
+    // 不同，直接使用 TransposeC=true 导致 dV 输出大面积错位（约 83% wrong）。
+    // 改为 false 后，P^T 转置通过 LDS 转置读视图实现（pipeline 中 pt_lds_read_window），
+    // 而非依赖 warp GEMM 的 TransC 机制。
     template <typename Problem>
     CK_TILE_HOST_DEVICE static constexpr auto GetPTOGradTBlockGemm()
     {
@@ -122,6 +135,9 @@ struct BlockFmhaBwdPipelineDefaultPolicy
         return BlockGemmARegBRegCRegV1<GemmProblem, BlockGemmPolicy>{};
     }
 
+    // [DCU移植] G3: dS^T@Q^T → dK。同 G1，上游 TransposeC=true，DCU 改为 false。
+    // 原因相同：HCU MMAC TransC 布局不兼容，dK 输出约 83% 错位。改为 false 后，
+    // dS^T 转置通过 LDS 转置读视图实现（pipeline 中 dst_lds_read_window）。
     template <typename Problem>
     CK_TILE_HOST_DEVICE static constexpr auto GetSGradTQTBlockGemm()
     {
@@ -1156,6 +1172,10 @@ struct BlockFmhaBwdPipelineDefaultPolicy
         return lsed_lds_block_desc;
     }
 
+    // [DCU移植] LSE/D 的 LDS 读分布描述符。需要引用 WarpGemm 的 C 寄存器 lane 内细分
+    // （kCM0PerLane/kCM1PerLane/kCNLane/kCNPerLane），这些字段在 FWD 时不存在，
+    // 是 BWD 移植时为 WarpGemmAttributeMmacImpl 新增的静态成员。
+    // basic（非转置）MMAC 布局：每 lane 1 个 M(kCM0PerLane=1)，4 个 N(kCNPerLane=4)。
     template <typename Problem, typename BlockGemm>
     CK_TILE_HOST_DEVICE static constexpr auto MakeLSEDLdsReadBlockDescriptor()
     {
@@ -1389,6 +1409,11 @@ struct BlockFmhaBwdPipelineDefaultPolicy
         return ds_block_dstr;
     }
 
+    // [DCU移植] G0 C → G1 A 的 P^T 桥接函数。上游在 MFMA 中直接消费 C 寄存器
+    // 转置得到 P^T。DCU/HCU MMAC 中此函数仍保留（G1 TransposeC=false 后 A/B
+    // 的 warp 分布不变），但 pipeline 主路径不再调用此函数；P^T 改为通过
+    // store p_out_gemm → ds_lds → pt_lds_read_window（LDS 转置读）获得。
+    // 此函数目前仅在 debug dump 分支中使用。
     template <typename Problem, typename PTOutTensor, typename PInTensor>
     CK_TILE_DEVICE static constexpr void PTFromGemm0CToGemm1A(PTOutTensor& pt_out,
                                                               const PInTensor& p_in)
@@ -1439,6 +1464,13 @@ struct BlockFmhaBwdPipelineDefaultPolicy
         }
     }
 
+    // [DCU移植] G2 C → G3 A 的 dS^T 桥接函数。与 PTFromGemm0CToGemm1A 同理：
+    // 上游在 MFMA 中直接消费 C 寄存器转置得到 dS^T。DCU pipeline 主路径不再
+    // 调用此函数；dS^T 改为通过 store ds_gemm → ds_lds → dst_lds_read_window
+    // （LDS 转置读）获得。此函数保留供 debug 分支使用。
+    // 注意：此前曾尝试直接把 G2 C alias 切换到 CRaw 布局，但会导致
+    // SGradTFromGemm2CToGemm3A 的 static_distributed_tensor 维度断言失败
+    // （9 == 8 一类错误），因此最终采用 LDS 桥接方案。
     template <typename Problem, typename SGradTOutTensor, typename SGradInTensor>
     CK_TILE_DEVICE static constexpr void SGradTFromGemm2CToGemm3A(SGradTOutTensor& dst_out,
                                                                   const SGradInTensor& ds_in)
@@ -1658,6 +1690,9 @@ struct BlockFmhaBwdPipelineDefaultPolicy
         return max(smem_size_stage0_0, smem_size_stage0_1, smem_size_stage1);
     }
 
+    // [DCU移植] HotLoopScheduler 仍使用 __builtin_amdgcn_sched_group_barrier 进行
+    // MFMA/MMAC 指令调度。HCU MMAC 的指令调度延迟与 MFMA 不同，但这些 hint
+    // 在 HCU 上会被忽略或做近似处理，暂不影响正确性。后续可针对 HCU 微调。
     template <typename Problem_>
     struct HotLoopScheduler
     {

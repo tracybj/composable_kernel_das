@@ -162,6 +162,11 @@ struct FmhaBwdDQDKDVKernel
         ck_tile::index_t nhead_stride_dv;
         ck_tile::index_t nhead_stride_debug_dump;
         ck_tile::index_t batch_stride_debug_dump;
+        // [DCU移植] debug_dump 模式：BWD 正确性 bring-up 阶段新增的诊断机制。
+        // 通过环境变量 CK_TILE_FMHA_BWD_DEBUG_DUMP=s|p|dp|ds|d|do|v|pt|dst|dpout|dsout|dout|pout|sout
+        // 选择需要 dump 的中间量，在 pipeline 对应位置写入 debug_dump_ptr（复用
+        // dbias_buf 或临时 buffer），runner 侧读出并与 CPU reference 对比验证。
+        // 模式含义见 fmha_bwd_runner.hpp 的解析逻辑。
         ck_tile::index_t debug_dump_mode = 0; // 0: off, 1: p_gemm -> dq_acc, 2: ds_gemm -> dq_acc
     };
 
@@ -665,8 +670,11 @@ struct FmhaBwdDQDKDVKernel
 
         // divide problem
         const auto [i_tile_n, i_nhead, i_batch] = GetTileIndex();
-        // C++17 cannot capture structured binding names directly. Use ordinary
-        // local copies; maybe_unused keeps no-bias/no-dropout specializations quiet.
+        // [DCU移植] C++17 structured binding 不能被 lambda 直接捕获。
+        // 上游在 C++20 环境下编译无警告，DCU 编译器报 -Wunused-lambda-capture。
+        // 修复：创建 maybe_unused 普通局部副本，lambda 改用 [&] 捕获。
+        // no-bias/no-dropout 等 specialization 中部分变量未使用，
+        // maybe_unused 抑制 -Wunused-variable 警告。
         [[maybe_unused]] const auto i_tile_n_ = i_tile_n;
         [[maybe_unused]] const auto i_nhead_  = i_nhead;
         [[maybe_unused]] const auto i_batch_  = i_batch;

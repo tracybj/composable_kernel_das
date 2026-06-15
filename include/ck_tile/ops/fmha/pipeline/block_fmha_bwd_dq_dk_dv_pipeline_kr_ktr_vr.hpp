@@ -11,6 +11,28 @@
 
 namespace ck_tile {
 
+// [DCU移植总述] BWD pipeline 在 HCU MMAC 上的核心改动：
+//
+// 1. output-layout 体系：HCU MMAC 的 C 寄存器 lane 布局与 AMD MFMA 不同，
+//    内部 C layout 不能被后续标量公式（softmax、dS=P*(dP-D)）直接当作逻辑
+//    [M,N] 消费。解决方案：对每个 GEMM 的 C accumulator 调用
+//    gemm_X.MakeCOutputBlockTile(c_acc)，将内部 C layout 转为逻辑 output-layout，
+//    在 output-layout 中完成 softmax、dS 计算等标量操作。
+//
+// 2. LSE/D 广播：LSE 和 D 是 1D 行向量，需要沿 N 维广播到 2D [M,N] tile。
+//    上游在内部 C layout 中用 lse[idx0]/d[idx0] 逐行广播，但 output-layout
+//    中 idx0 不再对应逻辑行。解决方案：用 stride-0 的 2D LDS naive descriptor
+//    （strides=(1,0)，即 (m,n) 都读 LDS[m]）构造广播视图，再以 output-layout
+//    的 tile distribution 做 load_tile，得到与 output-layout 同分布的广播 tile。
+//
+// 3. G1(P^T@dO) 和 G3(dS^T*Q^T) 转置：上游用 TransposeC=true 让 warp GEMM
+//    输出转置 C 分布，DCU 改为 TransposeC=false（HCU MMAC TransC 布局不兼容，
+//    导致 dV/dK 约 83% wrong）。转置改为通过 LDS 中转：
+//    - P^T：store p_out_gemm_main → ds_lds → pt_lds_read_window（转置读视图）
+//    - dS^T：store ds_gemm → ds_lds → dst_lds_read_window（转置读视图）
+//
+// 4. 最终梯度输出：dQ/dK/dV 的 C accumulator 均通过 MakeCOutputBlockTile 转为
+//    output-layout 后再 store/update_tile 到 DRAM。
 template <typename Problem, typename Policy = BlockFmhaBwdPipelineDefaultPolicy>
 struct BlockFmhaBwdDQDKDVPipelineKRKTRVR
 {
@@ -373,6 +395,11 @@ struct BlockFmhaBwdDQDKDVPipelineKRKTRVR
                              ds_lds_window.get_window_origin(),
                              Policy::template MakeSGradRegSliceBlockDescriptor<Problem>());
 
+        // [DCU移植] dS/dS^T/P^T 共享同一块 ds_lds 的转置读视图。
+        // dst_lds_read 是 ds_lds 的转置版本：(M,N) → (N,M)，用于：
+        // - pt_lds_read_window：G1 输入 P^T（从 p_out_gemm_main 写入 ds_lds 后转置读出）
+        // - dst_lds_read_window：G3 输入 dS^T（从 ds_gemm 写入 ds_lds 后转置读出）
+        // 这是 TransposeC=false 替代方案的核心：转置通过 LDS 物理转置而非 warp GEMM TransC。
         auto dst_lds_read = make_tensor_view<address_space_enum::lds>(
             ds_lds_ptr,
             transform_tensor_descriptor(
@@ -694,6 +721,12 @@ struct BlockFmhaBwdDQDKDVPipelineKRKTRVR
                 }
             }();
 
+            // [DCU移植] output-layout softmax：HCU MMAC 内部 C layout 不能直接做行规约，
+            // 因此在 output-layout 中重新计算 P（而非使用内部 layout 的 p/p_gemm）。
+            // 1. s_acc → s_out_main（output-layout）
+            // 2. LSE 通过 stride-0 2D LDS 视图广播到 s_out_main 分布
+            // 3. p_out_main = exp2(scale * s_out_main - log2e * lse_bcast_main)
+            // 4. p_out_gemm_main = cast_tile<GemmDataType>(p_out_main)，供后续 G1/dS 使用
             const auto s_out_main = gemm_0.MakeCOutputBlockTile(s_acc);
             auto lse_bcast_lds_main = make_tensor_view<address_space_enum::lds>(
                 lse_lds_ptr,
@@ -804,6 +837,11 @@ struct BlockFmhaBwdDQDKDVPipelineKRKTRVR
 
             block_sync_lds();
 
+            // [DCU移植] G1 输入桥：P^T 通过 LDS 转置读获得。
+            // 上游用 PTFromGemm0CToGemm1A 直接从 MFMA C 寄存器转置，
+            // DCU 改为 store p_out_gemm_main → ds_lds → pt_lds_read_window（转置读）。
+            // pt_lds_read_window 复用 dst_lds_read 转置视图，distribution 使用
+            // MakePTRegSliceBlockDescriptor，与 G1 的 A warp 分布一致。
             store_tile(ds_lds_window, p_out_gemm_main);
             block_sync_lds();
             pt_reg_tensor = load_tile(pt_lds_read_window);
@@ -977,7 +1015,15 @@ struct BlockFmhaBwdDQDKDVPipelineKRKTRVR
                 continue;
             }
 
-            // STAGE 5, P^T(PGrad^T - D)
+            // STAGE 5, dS = P * (dP - D) 在 output-layout 中计算
+            // [DCU移植] 核心改动：
+            // 1. dp_acc → dp_out：通过 MakeCOutputBlockTile 将 G2 C accumulator
+            //    从内部 C layout 转为逻辑 output-layout（已验证 dpout valid:y）
+            // 2. D 广播：用 stride-0 2D LDS 视图（strides=(1,0)），以 dp_out 的
+            //    tile distribution 做 load_tile 得到 d_bcast，与 dp_out 同分布
+            // 3. ds_out = p_out_main * (dp_out - d_bcast)：全部在 output-layout 中计算
+            // 注意：此前在内部 C layout 中直接用 d[idx0] 广播 D，idx0 在 output-layout
+            // 下不再对应逻辑行，导致 dS 约 93% wrong。stride-0 LDS 广播解决了此问题。
             const auto dp_out = gemm_2.MakeCOutputBlockTile(dp_acc);
             auto d_bcast_lds  = make_tensor_view<address_space_enum::lds>(
                 d_lds_ptr,
@@ -1032,7 +1078,10 @@ struct BlockFmhaBwdDQDKDVPipelineKRKTRVR
                 __builtin_amdgcn_sched_barrier(0);
             }
 
-            // STAGE 6, SGrad^T@Q^T Gemm3
+            // STAGE 6, dS^T@Q^T Gemm3
+            // [DCU移植] dS^T 输入桥：ds_gemm（output-layout ds_out 的半精度版本）
+            // 先 store 到 ds_lds，再通过 dst_lds_read_window（转置读视图）读出 dS^T。
+            // 这是 G3 TransposeC=false 替代方案的核心。
             auto qt_reg_tensor = load_tile(qt_lds_read_window);
             block_sync_lds();
 
@@ -1125,6 +1174,9 @@ struct BlockFmhaBwdDQDKDVPipelineKRKTRVR
                 seqlen_q_step += kM0;
                 continue;
             }
+            // [DCU移植] dQ 输出：dq_acc 通过 MakeCOutputBlockTile 转为 output-layout
+            // 后再 store/update_tile 到 DRAM。如果不做此转换，内部 C layout 的元素
+            // 位置与逻辑 [M,K] 不对应，直接 store 会导致 dQ 约 88% wrong。
             if constexpr(kIsDeterministic)
             {
                 const auto dq_out = gemm_4.MakeCOutputBlockTile(dq_acc);
@@ -1187,6 +1239,9 @@ struct BlockFmhaBwdDQDKDVPipelineKRKTRVR
             const auto dk_out = gemm_3.MakeCOutputBlockTile(dk_acc);
             store_tile(debug_dump_dk_dram_window, cast_tile<BiasGradDataType>(dk_out));
         }
+        // [DCU移植] dk_acc/dv_acc 通过 MakeCOutputBlockTile 转为 output-layout 后返回。
+        // dQ 已在主循环中直接 store/update_tile 到 DRAM（需要 split-accumulate，不在这里返回）。
+        // dK/dV 这里返回给 caller（在 fmha_bwd_kernel.hpp 中 scale 后最终写回）。
         return make_tuple(gemm_3.MakeCOutputBlockTile(dk_acc),
                           gemm_1.MakeCOutputBlockTile(dv_acc));
     }
