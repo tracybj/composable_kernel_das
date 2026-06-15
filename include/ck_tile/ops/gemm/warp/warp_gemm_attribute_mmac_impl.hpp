@@ -38,6 +38,10 @@ struct WarpGemmAttributeMmacImplF16F16F32M16N16K16
     static constexpr index_t kCN0PerLane = 4; // jump layout
     static constexpr index_t kCN1PerLane = 1;
     static constexpr index_t kCM1PerLane = kCMPerLane;
+    // [DCU移植] BWD default policy (MakeLSEDLdsReadBlockDescriptor 等) 需要 lane 内 M0/M1 细分与
+    //           N 每 lane 总数。basic(非转置) 布局每 lane 仅 1 个 M 元素(不再细分)，4 个 N 元素。
+    static constexpr index_t kCM0PerLane = kCMPerLane;                // M 每 lane 总数=1
+    static constexpr index_t kCNPerLane  = kCN0PerLane * kCN1PerLane; // N 每 lane 总数=4
 
     // c_vec += a_vec * b_vec
     CK_TILE_DEVICE void
@@ -375,6 +379,8 @@ struct WarpGemmAttributeMmacImplBf16Bf16F32M16N16K16
     static constexpr index_t kCN0PerLane = 4; // jump layout
     static constexpr index_t kCN1PerLane = 1;
     static constexpr index_t kCM1PerLane = kCMPerLane;
+    // [DCU移植] 同 F16 base：补 lane 内 M0 细分(=1)，供 BWD default policy 使用。
+    static constexpr index_t kCM0PerLane = kCMPerLane;
 
     // c_vec += a_vec * b_vec
     CK_TILE_DEVICE void

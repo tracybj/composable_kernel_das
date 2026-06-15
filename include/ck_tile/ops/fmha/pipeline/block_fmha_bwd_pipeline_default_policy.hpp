@@ -75,7 +75,7 @@ struct BlockFmhaBwdPipelineDefaultPolicy
                                    Problem::BlockFmhaShape::Gemm1WarpTile::at(number<0>{}),
                                    Problem::BlockFmhaShape::Gemm1WarpTile::at(number<1>{}),
                                    Problem::BlockFmhaShape::Gemm1WarpTile::at(number<2>{}),
-                                   true,
+                                   false,
                                    1, 1, 1, 1>;
 
         using BlockGemmPolicy =
@@ -143,7 +143,7 @@ struct BlockFmhaBwdPipelineDefaultPolicy
                                    Problem::BlockFmhaShape::Gemm3WarpTile::at(number<0>{}),
                                    Problem::BlockFmhaShape::Gemm3WarpTile::at(number<1>{}),
                                    Problem::BlockFmhaShape::Gemm3WarpTile::at(number<2>{}),
-                                   true,
+                                   false,
                                    1, 1, 1, 1>;
 
         using BlockGemmPolicy =
