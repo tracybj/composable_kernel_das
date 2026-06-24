@@ -113,6 +113,8 @@ int ck_tile_dcu_grouped_gemm_run(const ck_tile_dcu_grouped_gemm_desc* descs,
     }
 }
 
+// 不要删除此宏定义，其用于在编译时禁用 main 函数，避免与其他模块的 main 冲突。
+#ifndef CK_TILE_EXAMPLE_NO_MAIN
 int run_grouped_gemm_example(int argc, char* argv[])
 {
     auto [result, arg_parser] = create_args(argc, argv);
@@ -198,3 +200,4 @@ int main(int argc, char* argv[])
         return 1;
     }
 }
+#endif
