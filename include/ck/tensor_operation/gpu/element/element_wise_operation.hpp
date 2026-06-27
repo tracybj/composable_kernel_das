@@ -223,6 +223,52 @@ struct AddMultiply
     }
 };
 
+struct MultiplyMultiply
+{
+    static constexpr const char* name = "MultiplyMultiply";
+
+    template <typename E, typename C, typename D0, typename D1>
+    __host__ __device__ constexpr void
+    operator()(E& e, const C& c, const D0& d0, const D1& d1) const;
+
+    template <>
+    __host__ __device__ constexpr void operator()<ck::half_t, float, float, float>(
+        ck::half_t& e, const float& c, const float& d0, const float& d1) const
+    {
+        e = ck::type_convert<ck::half_t>(c * d0 * d1);
+    }
+
+    template <>
+    __host__ __device__ constexpr void operator()<ck::bhalf_t, float, float, float>(
+        ck::bhalf_t& e, const float& c, const float& d0, const float& d1) const
+    {
+        e = ck::type_convert<ck::bhalf_t>(c * d0 * d1);
+    }
+
+    template <>
+    __host__ __device__ constexpr void operator()<ck::half_t, int, ck::half_t, ck::half_t>(
+        ck::half_t& e, const int& c, const ck::half_t& d0, const ck::half_t& d1) const
+    {
+        const float y =
+            ck::type_convert<float>(c) * ck::type_convert<float>(d0) * ck::type_convert<float>(d1);
+        e = ck::type_convert<ck::half_t>(y);
+    }
+
+    template <>
+    __host__ __device__ constexpr void operator()<ck::half_t, int, float, float>(
+        ck::half_t& e, const int& c, const float& d0, const float& d1) const
+    {
+        e = ck::type_convert<ck::half_t>(ck::type_convert<float>(c) * d0 * d1);
+    }
+
+    template <>
+    __host__ __device__ constexpr void operator()<ck::bhalf_t, int, float, float>(
+        ck::bhalf_t& e, const int& c, const float& d0, const float& d1) const
+    {
+        e = ck::type_convert<ck::bhalf_t>(ck::type_convert<float>(c) * d0 * d1);
+    }
+};
+
 // E = FastGelu(C + D0 + D1)
 struct AddAddFastGelu
 {

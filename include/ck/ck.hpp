@@ -232,3 +232,5 @@ using index_t      = int32_t;
 using long_index_t = int64_t;
 
 } // namespace ck
+
+#include "ck/utility/data_type.hpp"
