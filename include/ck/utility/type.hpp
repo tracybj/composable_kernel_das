@@ -6,7 +6,12 @@
 #include <type_traits>
 #include <utility>
 
-#include "ck/ck.hpp"
+#include "ck/config.h"
+#ifndef CK_DONT_USE_HIP_RUNTIME_HEADERS
+#include "hip/hip_fp16.h"
+#include "hip/hip_runtime.h"
+#endif
+#include "ck/utility/bit_cast.hpp"
 #include "ck/utility/enable_if.hpp"
 #include "ck/utility/integral_constant.hpp"
 
@@ -307,26 +312,6 @@ constexpr T&& forward(typename remove_reference<T>::type&& t_) noexcept
     return static_cast<T&&>(t_);
 }
 #endif
-
-template <typename Y, typename X, typename enable_if<sizeof(X) == sizeof(Y), bool>::type = false>
-__host__ __device__ constexpr Y bit_cast(const X& x)
-{
-#if CK_EXPERIMENTAL_USE_MEMCPY_FOR_BIT_CAST
-    Y y;
-
-    __builtin_memcpy(&y, &x, sizeof(X));
-
-    return y;
-#else
-    union AsType
-    {
-        X x;
-        Y y;
-    };
-
-    return AsType{x}.y;
-#endif
-}
 
 #if defined(__HIPCC_RTC__) || defined(CK_CODE_GEN_RTC)
 #undef CK_BUILTIN_TYPE_TRAIT1

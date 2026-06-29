@@ -4,6 +4,7 @@
 #pragma once
 
 #include "ck/config.h"
+#include "ck/utility/index_type.hpp"
 
 #ifndef CK_DONT_USE_HIP_RUNTIME_HEADERS
 #include "hip/hip_runtime.h"
@@ -227,10 +228,7 @@ struct InMemoryDataOperationEnumSequence
     }
 };
 
-// index type
-using index_t      = int32_t;
-using long_index_t = int64_t;
-
 } // namespace ck
 
+#include "ck/utility/bit_cast.hpp"
 #include "ck/utility/data_type.hpp"

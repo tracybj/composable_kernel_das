@@ -32,7 +32,7 @@ cmake                                                                           
 -D CMAKE_CXX_FLAGS="-O3"                                                                          \
 -D CMAKE_BUILD_TYPE=Release                                                                       \
 -D BUILD_DEV=OFF                                                                                  \
--D GPU_TARGETS="gfx908;gfx90a;gfx940"                                                             \
+-D GPU_TARGETS="gfx936;gfx938"                                                                    \
 -D CMAKE_VERBOSE_MAKEFILE:BOOL=ON                                                                 \
 -D USE_BITINT_EXTENSION_INT4=OFF                                                                  \
 ${CK_EXTRA_CMAKE_ARGS}                                                                            \

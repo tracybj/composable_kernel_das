@@ -5,6 +5,7 @@
 #define CK_NUMBER_HPP
 
 #include "integral_constant.hpp"
+#include "index_type.hpp"
 
 namespace ck {
 

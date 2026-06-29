@@ -3,8 +3,8 @@
 
 #pragma once
 
-#include "ck/ck.hpp"
 #include "integral_constant.hpp"
+#include "index_type.hpp"
 #include "number.hpp"
 #include "type.hpp"
 #include "enable_if.hpp"
