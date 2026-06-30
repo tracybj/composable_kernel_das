@@ -68,7 +68,7 @@ struct WarpGemmMmacDispatcher<half_t,
                               true>
 {
     using Type = WarpGemmImpl<
-        WarpGemmAttributeMmacIterateKTransC<WarpGemmAttributeMmacImplF16F16F32M16N16K16TransC,
+        WarpGemmAttributeMmacIterateKTransC<WarpGemmAttributeMmacImplF16F16F32M16N16K16TransCLegacy,
                                             MmmacIter,
                                             NmmacIter,
                                             MmmacInterleave,

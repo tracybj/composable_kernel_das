@@ -42,12 +42,12 @@ struct WarpGemmMmacDispatcher<half_t,
                               true>
 {
     using Type = WarpGemmImpl<
-        WarpGemmAttributeMmacIterateKTransC_ds128<WarpGemmAttributeMmacImplF16F16F32M16N16K16TransC,
-                                            MmmacIter,
-                                            NmmacIter,
-                                            MmmacInterleave,
-                                            NmmacInterleave,
-                                            KIter>>;
+        WarpGemmAttributeMmacIterateKTransC_ds128<WarpGemmAttributeMmacImplF16F16F32M16N16K16TransCLegacy,
+                                                  MmmacIter,
+                                                  NmmacIter,
+                                                  MmmacInterleave,
+                                                  NmmacInterleave,
+                                                  KIter>>;
 };
 
 } // namespace impl

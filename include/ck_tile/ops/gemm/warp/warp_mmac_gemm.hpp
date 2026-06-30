@@ -105,10 +105,24 @@ using WarpGemmMmacF16F16F32_WT32x16x256_MR2NR1MI1NI1_TRANSC = WarpGemmImpl<
                                            1,
                                            1,
                                            16>>;
+using WarpGemmMmacF16F16F32_WT32x16x256_MR2NR1MI1NI1_TRANSC_LEGACY = WarpGemmImpl<
+    WarpGemmAttributeMmacIterateKTransC_v2<WarpGemmAttributeMmacImplF16F16F32M16N16K16TransCLegacy,
+                                           2,
+                                           1,
+                                           1,
+                                           1,
+                                           16>>;
 
 // moe matrix B loaded into none swizzled lds
 using WarpGemmMmacF16F16F32_WT16x16x128_MR1NR1MI1NI1_TRANSC = WarpGemmImpl<
     WarpGemmAttributeMmacIterateKTransC_v2<WarpGemmAttributeMmacImplF16F16F32M16N16K16TransC,
+                                           1,
+                                           1,
+                                           1,
+                                           1,
+                                           8>>;
+using WarpGemmMmacF16F16F32_WT16x16x128_MR1NR1MI1NI1_TRANSC_LEGACY = WarpGemmImpl<
+    WarpGemmAttributeMmacIterateKTransC_v2<WarpGemmAttributeMmacImplF16F16F32M16N16K16TransCLegacy,
                                            1,
                                            1,
                                            1,
@@ -123,6 +137,13 @@ using WarpGemmMmacF16F16F32_WT16x16x64_MR1NR1MI1NI1_TRANSC = WarpGemmImpl<
                                            1,
                                            1,
                                            4>>; 
+using WarpGemmMmacF16F16F32_WT16x16x64_MR1NR1MI1NI1_TRANSC_LEGACY = WarpGemmImpl<
+    WarpGemmAttributeMmacIterateKTransC_v3<WarpGemmAttributeMmacImplF16F16F32M16N16K16TransCLegacy,
+                                           1,
+                                           1,
+                                           1,
+                                           1,
+                                           4>>;
 
 // moe matrix B loaded into registers directly
 using WarpGemmMmacF16F16F32_WT16x32x128_MR1NR2MI1NI1_TRANSC = WarpGemmImpl<
@@ -132,9 +153,23 @@ using WarpGemmMmacF16F16F32_WT16x32x128_MR1NR2MI1NI1_TRANSC = WarpGemmImpl<
                                         1,
                                         1,
                                         8>>;
+using WarpGemmMmacF16F16F32_WT16x32x128_MR1NR2MI1NI1_TRANSC_LEGACY = WarpGemmImpl<
+    WarpGemmAttributeMmacIterateKTransC<WarpGemmAttributeMmacImplF16F16F32M16N16K16TransCLegacy,
+                                        1,
+                                        2,
+                                        1,
+                                        1,
+                                        8>>;
 
 using WarpGemmMmacF16F16F32_WT16x32x64_MR1NR2MI1NI1_TRANSC = WarpGemmImpl<
     WarpGemmAttributeMmacIterateKTransC<WarpGemmAttributeMmacImplF16F16F32M16N16K16TransC,
+                                        1,
+                                        2,
+                                        1,
+                                        1,
+                                        4>>;
+using WarpGemmMmacF16F16F32_WT16x32x64_MR1NR2MI1NI1_TRANSC_LEGACY = WarpGemmImpl<
+    WarpGemmAttributeMmacIterateKTransC<WarpGemmAttributeMmacImplF16F16F32M16N16K16TransCLegacy,
                                         1,
                                         2,
                                         1,
@@ -203,6 +238,14 @@ using WarpGemmMmacF16F16F32_WT16x32x128_MR1NR2MI1NI1_Preshuffle = WarpGemmImpl<
                                                 1,
                                                 1,
                                                 8>>;
+using WarpGemmMmacF16F16F32_WT16x32x128_MR1NR2MI1NI1_Preshuffle_LEGACY = WarpGemmImpl<
+    WarpGemmAttributeMmacIterateKTransC_Shuffle<
+        WarpGemmAttributeMmacImplF16F16F32M16N16K16TransCLegacy,
+        1,
+        2,
+        1,
+        1,
+        8>>;
 
 //int8
 using WarpGemmMmacI8I8I32_WT16x16x32_MR1NR1MI1NI1 = WarpInt8GemmImpl<WarpGemmAttributeInt8MmacIterateK<WarpGemmAttributeMmacImplI8I8I32M16N16K32, 1, 1, 1, 1, 1>>;

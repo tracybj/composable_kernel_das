@@ -150,6 +150,42 @@ struct WarpGemmAttributeMmacImplF16F16F32M16N16K16TransC
     }
 };
 
+// Fused-conv WASP kernels use conv/fused_conv TransC iterators whose C distribution
+// matches the legacy operand-swap MMAC result. Keep that behavior separate from the
+// gfx938/gfx946 lit_lts TransC path used by newer FMHA code.
+struct WarpGemmAttributeMmacImplF16F16F32M16N16K16TransCLegacy
+    : public WarpGemmAttributeMmacImplF16F16F32M16N16K16TransC
+{
+    using Base = WarpGemmAttributeMmacImplF16F16F32M16N16K16TransC;
+
+    using AVecType = typename Base::AVecType;
+    using BVecType = typename Base::BVecType;
+    using CVecType = typename Base::CVecType;
+
+    CK_TILE_DEVICE void
+    operator()(CVecType& c_vec, const AVecType& a_vec, const BVecType& b_vec) const
+    {
+#if defined(__gfx928__) || defined(__gfx936__) || defined(__gfx938__) || defined(__gfx92a__) || \
+    defined(__gfx946__)
+        c_vec = __builtin_hcu_mmac_f32_16x16x16_f16(b_vec, a_vec, c_vec);
+#else
+        detail::swallow{a_vec, b_vec, c_vec};
+#endif
+    }
+
+    CK_TILE_DEVICE CVecType operator()(const AVecType& a_vec, const BVecType& b_vec) const
+    {
+#if defined(__gfx928__) || defined(__gfx936__) || defined(__gfx938__) || defined(__gfx92a__) || \
+    defined(__gfx946__)
+        return bit_cast<CVecType>(
+            __builtin_hcu_mmac_f32_16x16x16_f16(b_vec, a_vec, fp32x4_t{0.f}));
+#else
+        detail::swallow{a_vec, b_vec};
+        return CVecType{0.f};
+#endif
+    }
+};
+
 // FP16 LIT
 // LIT: Won't change Lane distribution, but change distribution in lane
 struct WarpGemmAttributeMmacImplF16F16F32M16N16K16Lit

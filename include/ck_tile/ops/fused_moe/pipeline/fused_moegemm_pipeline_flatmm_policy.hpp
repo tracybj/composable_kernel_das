@@ -745,7 +745,7 @@ struct FusedMoeGemmPipelineFlatmmPolicy
                      std::is_same_v<typename Problem::GDataType, ck_tile::half_t> &&
                      S_::Warp_M1 == 32 && S_::Warp_N1 == 16 && S_::Warp_K1 == 256)
         {
-            return WarpGemmMmacF16F16F32_WT32x16x256_MR2NR1MI1NI1_TRANSC{};
+            return WarpGemmMmacF16F16F32_WT32x16x256_MR2NR1MI1NI1_TRANSC_LEGACY{};
         }
     }
 

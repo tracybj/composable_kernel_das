@@ -893,7 +893,7 @@ struct FusedMoeGemmPipelineFlatmmWWtShufflePolicy
                      std::is_same_v<typename Problem::GDataType, ck_tile::half_t> &&
                      S_::Warp_M1 == 32 && S_::Warp_N1 == 16 && S_::Warp_K1 == 256)
         {
-            return WarpGemmMmacF16F16F32_WT32x16x256_MR2NR1MI1NI1_TRANSC{};
+            return WarpGemmMmacF16F16F32_WT32x16x256_MR2NR1MI1NI1_TRANSC_LEGACY{};
         }
         else if constexpr(std::is_same_v<typename Problem::ADataType, ck_tile::half_t> &&
                           std::is_same_v<typename Problem::GDataType, ck_tile::half_t> &&
@@ -901,11 +901,11 @@ struct FusedMoeGemmPipelineFlatmmWWtShufflePolicy
         {
             if constexpr(Problem::IsSwizzled)
             {
-                return WarpGemmMmacF16F16F32_WT16x16x64_MR1NR1MI1NI1_TRANSC{};
+                return WarpGemmMmacF16F16F32_WT16x16x64_MR1NR1MI1NI1_TRANSC_LEGACY{};
             }
             else
             {
-                return WarpGemmMmacF16F16F32_WT16x16x128_MR1NR1MI1NI1_TRANSC{};
+                return WarpGemmMmacF16F16F32_WT16x16x128_MR1NR1MI1NI1_TRANSC_LEGACY{};
             }
         }
         else if constexpr(std::is_same_v<typename Problem::ADataType, ck_tile::half_t> &&
@@ -913,14 +913,14 @@ struct FusedMoeGemmPipelineFlatmmWWtShufflePolicy
                           S_::Warp_M1 == 16 && S_::Warp_N1 == 32 && S_::Warp_K1 == 128 &&
                         Problem::Traits::PermuteEnum == FusedMoeGemmWeightPermuteEnum::no_permute)
         {
-            return WarpGemmMmacF16F16F32_WT16x32x128_MR1NR2MI1NI1_TRANSC{};
+            return WarpGemmMmacF16F16F32_WT16x32x128_MR1NR2MI1NI1_TRANSC_LEGACY{};
         }
         else if constexpr(std::is_same_v<typename Problem::ADataType, ck_tile::half_t> &&
             std::is_same_v<typename Problem::GDataType, ck_tile::half_t> &&
             S_::Warp_M1 == 16 && S_::Warp_N1 == 32 && S_::Warp_K1 == 128 && 
             Problem::Traits::PermuteEnum == FusedMoeGemmWeightPermuteEnum::permute_bd)
         {
-            return WarpGemmMmacF16F16F32_WT16x32x128_MR1NR2MI1NI1_Preshuffle{};
+            return WarpGemmMmacF16F16F32_WT16x32x128_MR1NR2MI1NI1_Preshuffle_LEGACY{};
         }
     }
 
