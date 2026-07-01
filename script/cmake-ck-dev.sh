@@ -40,7 +40,7 @@ cmake                                                                           
 ${CK_EXTRA_CXX_FLAGS}"                                                                            \
 -D CMAKE_BUILD_TYPE=Release                                                                       \
 -D BUILD_DEV=ON                                                                                   \
--D GPU_TARGETS="gfx936"                                                                           \
+-D GPU_TARGETS="gfx938"                                                                           \
 -D BUILD_EXAMPLE=ON                                                                               \
 -D USE_BITINT_EXTENSION=ON                                                                        \
 -D CMAKE_VERBOSE_MAKEFILE:BOOL=${CK_VERBOSE_MAKEFILE}                                             \

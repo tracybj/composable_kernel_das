@@ -55,7 +55,7 @@ struct DppLanegroupGemm
             static_for<0, KPerThread / datatypes_conf::k_per_instr, 1>{}([&](auto k_chunk) {
                 const auto a_k_vec = a_vector.template AsType<AVecDataType>()[k_chunk];
                 const auto b_k_vec = b_vector.template AsType<BVecDataType>()[k_chunk];
-#if defined(__gfx928__) || defined(__gfx936__) || defined(__gfx938__) || defined(__gfx92a__) || \
+#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__) || \
     defined(__gfx946__)
                 // DCU: DPP8 unavailable, use regular inner_product (source_lane ignored)
                 inner_product(a_k_vec, b_k_vec, c);

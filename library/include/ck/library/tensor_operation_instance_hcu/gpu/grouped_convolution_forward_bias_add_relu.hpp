@@ -316,7 +316,7 @@ struct DeviceOperationInstanceFactory<DeviceGroupedConvFwdBiasAddActivation<NumD
                             op_ptrs);
                     }
 
-                    if(hcu_target_enum >= HCUTargetEnum::HCU_TARGET_GFX936)
+                    if(ck::is_gfx936_family(hcu_target_enum))
                     {
                         // add_device_grouped_conv2d_fwd_bias_add_relu_mmac_v2_nhwgc_gkyxc_nhwgk_f16_f16_f16_f16_gfx936_default_cshuffle_instances(
                         //     op_ptrs);
@@ -344,7 +344,7 @@ struct DeviceOperationInstanceFactory<DeviceGroupedConvFwdBiasAddActivation<NumD
                     }
 
 #if 0
-                    if(hcu_target_enum >= HCUTargetEnum::HCU_TARGET_GFX92A)
+                    if(ck::is_gfx92a_family(hcu_target_enum))
                     {
                         add_fused_tls_conv2d_v1_cbra_nhwgc_gkyxc_nhwgk_f16_f16_f16_f16_gfx92a_f1x1s1p0_instances(
                             op_ptrs);

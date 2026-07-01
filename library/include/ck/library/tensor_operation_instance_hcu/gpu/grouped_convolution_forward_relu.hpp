@@ -188,7 +188,7 @@ struct DeviceOperationInstanceFactory<DeviceGroupedConvFwd<NumDimSpatial,
                 if constexpr(is_same_v<InDataType, F16> && is_same_v<WeiDataType, F16> &&
                              is_same_v<OutDataType, F16>)
                 {
-                    if(hcu_target_enum >= HCUTargetEnum::HCU_TARGET_GFX936)
+                    if(ck::is_gfx936_family(hcu_target_enum))
                     {
                         add_device_grouped_conv2d_fwd_relu_mmac_v2_nhwgc_gkyxc_nhwgk_f16_f16_f16_gfx936_default_cshuffle_instances(
                             op_ptrs);
@@ -205,7 +205,7 @@ struct DeviceOperationInstanceFactory<DeviceGroupedConvFwd<NumDimSpatial,
                 if constexpr(is_same_v<InDataType, F16> && is_same_v<WeiDataType, F16> &&
                              is_same_v<OutDataType, F16>)
                 {
-                    if(hcu_target_enum >= HCUTargetEnum::HCU_TARGET_GFX936)
+                    if(ck::is_gfx936_family(hcu_target_enum))
                     {
                         add_device_grouped_conv2d_fwd_relu_mmac_v2_ngchwc32_gkcyxc32_ngkhwk32_f16_f16_f16_gfx936_default_cshuffle_instances(
                             op_ptrs);
@@ -222,7 +222,7 @@ struct DeviceOperationInstanceFactory<DeviceGroupedConvFwd<NumDimSpatial,
                 if constexpr(is_same_v<InDataType, F16> && is_same_v<WeiDataType, F16> &&
                              is_same_v<OutDataType, F16>)
                 {
-                    if(hcu_target_enum >= HCUTargetEnum::HCU_TARGET_GFX936)
+                    if(ck::is_gfx936_family(hcu_target_enum))
                     {
                         add_device_grouped_conv2d_fwd_relu_mmac_v2_ngchwc32_gkcyxc32_ngkhw_f16_f16_f16_gfx936_default_cshuffle_instances(
                             op_ptrs);
@@ -239,7 +239,7 @@ struct DeviceOperationInstanceFactory<DeviceGroupedConvFwd<NumDimSpatial,
                 if constexpr(is_same_v<InDataType, F16> && is_same_v<WeiDataType, F16> &&
                              is_same_v<OutDataType, F16>)
                 {
-                    if(hcu_target_enum >= HCUTargetEnum::HCU_TARGET_GFX936)
+                    if(ck::is_gfx936_family(hcu_target_enum))
                     {
                         add_device_grouped_conv2d_fwd_relu_mmac_v2_ngchw_gkcyx_ngkhw_f16_f16_f16_gfx936_f1x1s1p0_cshuffle_instances(
                             op_ptrs);

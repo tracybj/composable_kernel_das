@@ -47,7 +47,7 @@ struct WarpGemmAttributeMmacImplF16F16F32M16N16K16
     CK_TILE_DEVICE void
     operator()(CVecType& c_vec, const AVecType& a_vec, const BVecType& b_vec) const
     {
-#if defined(__gfx928__) || defined(__gfx936__) || defined(__gfx938__) || defined(__gfx92a__) || \
+#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__) || \
     defined(__gfx946__)
         c_vec = __builtin_hcu_mmac_f32_16x16x16_f16(a_vec, b_vec, c_vec);
 #else
@@ -60,7 +60,7 @@ struct WarpGemmAttributeMmacImplF16F16F32M16N16K16
     // c_vec = a_vec * b_vec
     CK_TILE_DEVICE CVecType operator()(const AVecType& a_vec, const BVecType& b_vec) const
     {
-#if defined(__gfx928__) || defined(__gfx936__) || defined(__gfx938__) || defined(__gfx92a__) || \
+#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__) || \
     defined(__gfx946__)
         return bit_cast<CVecType>(
             __builtin_hcu_mmac_f32_16x16x16_f16(a_vec, b_vec, fp32x4_t{0.f}));
@@ -165,7 +165,7 @@ struct WarpGemmAttributeMmacImplF16F16F32M16N16K16TransCLegacy
     CK_TILE_DEVICE void
     operator()(CVecType& c_vec, const AVecType& a_vec, const BVecType& b_vec) const
     {
-#if defined(__gfx928__) || defined(__gfx936__) || defined(__gfx938__) || defined(__gfx92a__) || \
+#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__) || \
     defined(__gfx946__)
         c_vec = __builtin_hcu_mmac_f32_16x16x16_f16(b_vec, a_vec, c_vec);
 #else
@@ -175,7 +175,7 @@ struct WarpGemmAttributeMmacImplF16F16F32M16N16K16TransCLegacy
 
     CK_TILE_DEVICE CVecType operator()(const AVecType& a_vec, const BVecType& b_vec) const
     {
-#if defined(__gfx928__) || defined(__gfx936__) || defined(__gfx938__) || defined(__gfx92a__) || \
+#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__) || \
     defined(__gfx946__)
         return bit_cast<CVecType>(
             __builtin_hcu_mmac_f32_16x16x16_f16(b_vec, a_vec, fp32x4_t{0.f}));
@@ -422,7 +422,7 @@ struct WarpGemmAttributeMmacImplBf16Bf16F32M16N16K16
     CK_TILE_DEVICE void
     operator()(CVecType& c_vec, const AVecType& a_vec, const BVecType& b_vec) const
     {
-#if defined(__gfx928__) || defined(__gfx936__) || defined(__gfx938__) || defined(__gfx92a__) || \
+#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__) || \
     defined(__gfx946__)
         c_vec = __builtin_hcu_mmac_f32_16x16x16_bf16(a_vec, b_vec, c_vec);
 #else
@@ -435,7 +435,7 @@ struct WarpGemmAttributeMmacImplBf16Bf16F32M16N16K16
     // c_vec = a_vec * b_vec
     CK_TILE_DEVICE CVecType operator()(const AVecType& a_vec, const BVecType& b_vec) const
     {
-#if defined(__gfx928__) || defined(__gfx936__) || defined(__gfx938__) || defined(__gfx92a__) || \
+#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__) || \
     defined(__gfx946__)
         return bit_cast<CVecType>(
             __builtin_hcu_mmac_f32_16x16x16_bf16(a_vec, b_vec, fp32x4_t{0.f}));
@@ -490,7 +490,7 @@ struct WarpGemmAttributeMmacImplBF16BF16F32M16N16K16TransC
     CK_TILE_DEVICE void
     operator()(CVecType& c_vec, const AVecType& a_vec, const BVecType& b_vec) const
     {
-#if defined(__gfx928__) || defined(__gfx936__) || defined(__gfx938__) || defined(__gfx92a__) || \
+#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__) || \
     defined(__gfx946__)
         c_vec = __builtin_hcu_mmac_f32_16x16x16_bf16(b_vec, a_vec, c_vec);
 #else
@@ -501,7 +501,7 @@ struct WarpGemmAttributeMmacImplBF16BF16F32M16N16K16TransC
     // c_vec = b_vec * a_vec
     CK_TILE_DEVICE CVecType operator()(const AVecType& a_vec, const BVecType& b_vec) const
     {
-#if defined(__gfx928__) || defined(__gfx936__) || defined(__gfx938__) || defined(__gfx92a__) || \
+#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__) || \
     defined(__gfx946__)
         return bit_cast<CVecType>(
             __builtin_hcu_mmac_f32_16x16x16_bf16(b_vec, a_vec, fp32x4_t{0.f}));
@@ -749,7 +749,7 @@ struct WarpGemmAttributeMmacImplI8I8I32M16N16K32
     CK_TILE_DEVICE void
     operator()(CVecType& c_vec, const AVecType& a_vec, const BVecType& b_vec) const
     {
-#if defined(__gfx928__) || defined(__gfx936__) || defined(__gfx938__)
+#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__)
         //c_vec = __builtin_hcu_mmac_f32_16x16x16_f16(a_vec, b_vec, c_vec);
         c_vec = __builtin_hcu_mmac_i32_16x16x32_i8(a_vec, b_vec, c_vec);
 #else
@@ -762,7 +762,7 @@ struct WarpGemmAttributeMmacImplI8I8I32M16N16K32
     // c_vec = a_vec * b_vec
     CK_TILE_DEVICE CVecType operator()(const AVecType& a_vec, const BVecType& b_vec) const
     {
-#if defined(__gfx928__) || defined(__gfx936__) || defined(__gfx938__)
+#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__)
         return bit_cast<CVecType>(
             //__builtin_hcu_mmac_f32_16x16x16_f16(a_vec, b_vec, fp32x4_t{0.f}));
             __builtin_hcu_mmac_i32_16x16x32_i8(a_vec, b_vec, int32x4_t{0}));
@@ -823,7 +823,7 @@ struct WarpGemmAttributeMmacImplI8I8I32M16N16K32TransC
     CK_TILE_DEVICE void
     operator()(CVecType& c_vec, const AVecType& a_vec, const BVecType& b_vec) const
     {
-#if defined(__gfx928__) || defined(__gfx936__) || defined(__gfx938__)
+#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__)
         //c_vec = __builtin_hcu_mmac_f32_16x16x16_f16(a_vec, b_vec, c_vec);
         c_vec = __builtin_hcu_mmac_i32_16x16x32_i8(b_vec, a_vec, c_vec);
 #else
@@ -836,7 +836,7 @@ struct WarpGemmAttributeMmacImplI8I8I32M16N16K32TransC
     // c_vec = a_vec * b_vec
     CK_TILE_DEVICE CVecType operator()(const AVecType& a_vec, const BVecType& b_vec) const
     {
-#if defined(__gfx928__) || defined(__gfx936__) || defined(__gfx938__)
+#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__)
         return bit_cast<CVecType>(
             //__builtin_hcu_mmac_f32_16x16x16_f16(a_vec, b_vec, fp32x4_t{0.f}));
             __builtin_hcu_mmac_i32_16x16x32_i8(b_vec, a_vec, int32x4_t{0}));
@@ -897,7 +897,7 @@ struct WarpGemmAttributeMmacImplI8I8F32M16N16K32Scale
                                    const AScaleType& a_scale,
                                    const BScaleType& b_scale) const
     {
-#if defined(__gfx928__) || defined(__gfx936__) || defined(__gfx938__)
+#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__)
         auto acc = CInt32VecType{0, 0, 0, 0};
         acc      = __builtin_hcu_mmac_i32_16x16x32_i8(a_vec, b_vec, acc);
         const float scale = a_scale * b_scale;
@@ -918,7 +918,7 @@ struct WarpGemmAttributeMmacImplI8I8F32M16N16K32Scale
     // c_vec = a_vec * b_vec
     CK_TILE_DEVICE CVecType operator()(const AVecType& a_vec, const BVecType& b_vec) const
     {
-#if defined(__gfx928__) || defined(__gfx936__) || defined(__gfx938__)
+#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__)
         return bit_cast<CVecType>(
             //__builtin_hcu_mmac_f32_16x16x16_f16(a_vec, b_vec, fp32x4_t{0.f}));
             __builtin_hcu_mmac_i32_16x16x32_i8(a_vec, b_vec, int32x4_t{0}));
@@ -1039,7 +1039,7 @@ struct WarpGemmAttributeMmacImpl_f32_16x16x32_f8_base
                                    const AScaleType& a_scale,
                                    const BScaleType& b_scale) const
     {
-#if defined(__gfx938__) || defined(__gfx946__)
+#if defined(__gfx92a__) || defined(__gfx938__) || defined(__gfx946__)
     auto acc = CVecType{0, 0, 0, 0};
     const float scale = a_scale * b_scale;
 
@@ -1069,7 +1069,7 @@ struct WarpGemmAttributeMmacImpl_f32_16x16x32_f8_base
     CK_TILE_DEVICE void
     operator()(CVecType& c_vec, const AVecType& a_vec, const BVecType& b_vec) const
     {
-#if defined(__gfx938__) || defined(__gfx946__)
+#if defined(__gfx92a__) || defined(__gfx938__) || defined(__gfx946__)
     if constexpr(std::is_same_v<ADataType, fp8_t> && std::is_same_v<BDataType, fp8_t>)
         c_vec = __builtin_hcu_mmac_f32_16x16x32_fp8_fp8(a_vec, b_vec, c_vec);
     else if constexpr(std::is_same_v<ADataType, fp8_t> && std::is_same_v<BDataType, bf8_t>)
@@ -1088,7 +1088,7 @@ struct WarpGemmAttributeMmacImpl_f32_16x16x32_f8_base
     // c_vec = a_vec * b_vec
     CK_TILE_DEVICE CVecType operator()(const AVecType& a_vec, const BVecType& b_vec) const
     {
-#if defined(__gfx938__) || defined(__gfx946__)
+#if defined(__gfx92a__) || defined(__gfx938__) || defined(__gfx946__)
         if constexpr(std::is_same_v<ADataType, fp8_t> && std::is_same_v<BDataType, fp8_t>)
             return bit_cast<CVecType>(__builtin_hcu_mmac_f32_16x16x32_fp8_fp8(
                 a_vec, b_vec, CVecType{0.f}));
@@ -1112,7 +1112,7 @@ struct WarpGemmAttributeMmacImpl_f32_16x16x32_f8_base
     CK_TILE_DEVICE void
     operator()(CVecType& c_vec, const AFp8Bf8VecType& a_vec, const BFp8Bf8VecType& b_vec) const
     {
-#if defined(__gfx938__) || defined(__gfx946__)
+#if defined(__gfx92a__) || defined(__gfx938__) || defined(__gfx946__)
         if constexpr(std::is_same_v<ADataType, fp8_t> && std::is_same_v<BDataType, fp8_t>)
             c_vec = __builtin_hcu_mmac_f32_16x16x32_fp8_fp8(
                 bit_cast<int32x2_t>(a_vec), bit_cast<int32x2_t>(b_vec), c_vec);
@@ -1135,7 +1135,7 @@ struct WarpGemmAttributeMmacImpl_f32_16x16x32_f8_base
     // c_vec = a_vec * b_vec
     CK_TILE_DEVICE CVecType operator()(const AFp8Bf8VecType& a_vec, const BFp8Bf8VecType& b_vec) const
     {
-#if defined(__gfx938__) || defined(__gfx946__)
+#if defined(__gfx92a__) || defined(__gfx938__) || defined(__gfx946__)
         if constexpr(std::is_same_v<ADataType, fp8_t> && std::is_same_v<BDataType, fp8_t>)
             return bit_cast<CVecType>(__builtin_hcu_mmac_f32_16x16x32_fp8_fp8(
                 bit_cast<int32x2_t>(a_vec), bit_cast<int32x2_t>(b_vec), CVecType{0.f}));

@@ -2264,7 +2264,7 @@ CK_TILE_DEVICE void amd_buffer_atomic_add_impl(const thread_buffer<T, N>& src_th
     }
     else if constexpr(std::is_same<T, fp16_t>::value)
     {
-#if defined(__gfx928__) || defined(__gfx936__)
+#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__)
         static_assert(false, "not support buffer_atomic_pk_add");
 #else
         if constexpr(N == 2)

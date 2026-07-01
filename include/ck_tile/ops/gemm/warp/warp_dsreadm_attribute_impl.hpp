@@ -45,7 +45,7 @@ struct WarpDsreadmAttributeImplF16MN32K16
 
     CK_TILE_DEVICE void operator()(const RawType* lds_ptr, RetType& ret) const
     {
-#if defined(__gfx928__) || defined(__gfx936__) || defined(__gfx938__) || defined(__gfx92a__) || \
+#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__) || \
     defined(__gfx946__)
         ret = __builtin_hcu_ds_read_m32x16_f16(lds_ptr);
 #else
@@ -85,7 +85,7 @@ struct WarpDsreadmAttributeImplF16MN32K16Alt
 
     CK_TILE_DEVICE void operator()(const RawType* lds_ptr, RetType& ret) const
     {
-#if defined(__gfx928__) || defined(__gfx936__) || defined(__gfx938__) || defined(__gfx92a__) || \
+#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__) || \
     defined(__gfx946__)
         ret = __builtin_hcu_ds_read_m32x16_f16_alt(lds_ptr);
 #else

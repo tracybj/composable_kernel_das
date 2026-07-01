@@ -1,5 +1,5 @@
 add_instance_library_with_arch(device_grouped_conv2d_fwd_bias_gfx928_instance
-  "gfx928;gfx936;gfx938"
+  "gfx928;gfx92a;gfx936;gfx938"
   # ngchw_gkcyx_ngkhw/device_grouped_conv2d_fwd_bias_mmac_v2_ngchw_gkcyx_ngkhw_f16_bias_f16_f1x1s1p0_cshuffle_instance.cpp
   # ngchwc32_gkcyxc32_ngkhw/device_grouped_conv2d_fwd_bias_mmac_v2_ngchwc32_gkcyxc32_ngkhw_f16_bias_f16_default_cshuffle_instance.cpp
   # ngchwc32_gkcyxc32_ngkhw/device_grouped_conv2d_fwd_bias_mmac_v2_ngchwc32_gkcyxc32_ngkhw_f16_bias_f16_f1x1p0_cshuffle_instance.cpp

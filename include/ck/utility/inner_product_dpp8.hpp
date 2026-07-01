@@ -123,7 +123,7 @@ __device__ void intrinsic_fdot2(const half2_t& a, const half2_t& b, float& c)
 template <typename TA, typename TB, typename TC, int SrcLaneIdx, bool ShareA>
 __device__ void inner_product_dpp(const TA& a, const TB& b, TC& c)
 {
-#if defined(__gfx928__) || defined(__gfx936__) || defined(__gfx938__) || defined(__gfx92a__) || \
+#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__) || \
     defined(__gfx946__)
     // DCU: DPP8 not available, use regular inner_product (no lane sharing optimization)
     inner_product(a, b, c);

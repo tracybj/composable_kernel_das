@@ -1,5 +1,5 @@
 add_instance_library_with_arch(device_grouped_conv2d_wrw_gfx936_instance
-  "gfx928;gfx936;gfx938"
+  "gfx928;gfx92a;gfx936;gfx938"
   ngkhwk32_ngchwc32_gkcyxc32/device_grouped_conv2d_wrw_mmac_v2_ngkhwk32_ngchwc32_gkcyxc32_f16_default_instance.cpp
   ngkhwk32_ngchwc32_gkcyxc32/device_grouped_conv2d_wrw_mmac_v2_ngkhwk32_ngchwc32_gkcyxc32_f16_f1x1p0_instance.cpp
   ngkhwk32_ngchwc32_gkcyxc32/device_grouped_conv2d_wrw_mmac_v2_ngkhwk32_ngchwc32_gkcyxc32_f16_f1x1s1p0_instance.cpp

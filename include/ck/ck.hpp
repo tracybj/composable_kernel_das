@@ -34,8 +34,8 @@
 #ifndef __HIP_DEVICE_COMPILE__ // for host code
 #define CK_BUFFER_RESOURCE_3RD_DWORD -1
 #elif defined(__gfx803__) || defined(__gfx900__) || defined(__gfx906__) || defined(__gfx916__) || \
-    defined(__gfx926__) || defined(__gfx928__) || defined(__gfx936__) || defined(__gfx938__) ||   \
-    defined(__gfx92a__) || defined(__gfx946__) || defined(__gfx908__) || defined(__gfx90a__) ||   \
+    defined(__gfx926__) || defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) ||   \
+    defined(__gfx938__) || defined(__gfx946__) || defined(__gfx908__) || defined(__gfx90a__) ||   \
     defined(__gfx940__) // for GPU code
 #define CK_BUFFER_RESOURCE_3RD_DWORD 0x00020000
 #elif defined(__gfx1030__) // for GPU code
@@ -49,8 +49,8 @@
 #elif defined(__gfx803__) || defined(__gfx900__) // for GPU code
 #define CK_USE_AMD_V_MAC_F32
 #elif defined(__gfx906__) || defined(__gfx916__) || defined(__gfx926__) || defined(__gfx928__) || \
-    defined(__gfx936__) || defined(__gfx938__) || defined(__gfx908__) || defined(__gfx90a__) ||   \
-    defined(__gfx1030__) || defined(__gfx940__) // for GPU code
+    defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__) || defined(__gfx908__) ||   \
+    defined(__gfx90a__) || defined(__gfx1030__) || defined(__gfx940__) // for GPU code
 #define CK_USE_AMD_V_FMAC_F32
 #define CK_USE_AMD_V_DOT2_F32_F16
 #define CK_USE_AMD_V_DOT4_I32_I8
@@ -90,7 +90,8 @@
 // buffer atomic add: floating point
 #ifndef __HIP_DEVICE_COMPILE__ // for host code
 #define CK_USE_AMD_BUFFER_ATOMIC_ADD_FLOAT 1
-#elif defined(__gfx908__) || defined(__gfx90a__) || defined(__gfx940__) || defined(__gfx928__) || defined(__gfx936__) // for GPU code
+#elif defined(__gfx908__) || defined(__gfx90a__) || defined(__gfx940__) || defined(__gfx928__) || \
+    defined(__gfx92a__) || defined(__gfx936__) // for GPU code
 #define CK_USE_AMD_BUFFER_ATOMIC_ADD_FLOAT 1
 #else // for GPU code
 #define CK_USE_AMD_BUFFER_ATOMIC_ADD_FLOAT 0
@@ -99,7 +100,7 @@
 // hcu buffer atomic add: float
 #ifndef __HIP_DEVICE_COMPILE__ // for host code
 #define CK_USE_HCU_BUFFER_ATOMIC_ADD_F32 1
-#elif defined(__gfx926__) || defined(__gfx928__) || defined(__gfx936__) || \
+#elif defined(__gfx926__) || defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || \
     defined(__gfx938__) // for GPU code
 #define CK_USE_HCU_BUFFER_ATOMIC_ADD_F32 1
 #else

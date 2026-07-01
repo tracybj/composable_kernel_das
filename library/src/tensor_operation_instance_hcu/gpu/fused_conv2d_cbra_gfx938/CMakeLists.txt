@@ -5,4 +5,6 @@ add_instance_library_with_arch(device_fused_conv2d_cbra_gfx938_instance
 )
 
 # avoid unexpected v_readfirstlane_b32
-target_compile_options(device_fused_conv2d_cbra_gfx938_instance PRIVATE "SHELL: -mllvm -disable-machine-licm")
+if(TARGET device_fused_conv2d_cbra_gfx938_instance)
+  target_compile_options(device_fused_conv2d_cbra_gfx938_instance PRIVATE "SHELL: -mllvm -disable-machine-licm")
+endif()

@@ -631,7 +631,7 @@ struct DeviceOperationInstanceFactory<DeviceGroupedConvBwdWeightV2<NumDimSpatial
                 if constexpr(is_same_v<OutDataType, F16> && is_same_v<InDataType, F16> &&
                              is_same_v<WeiDataType, F32>)
                 {
-                    if(hcu_target_enum >= HCUTargetEnum::HCU_TARGET_GFX936)
+                    if(ck::is_gfx936_family(hcu_target_enum))
                     {
                         add_device_grouped_conv3d_wrw_mmac_v2_ndhwgk_ndhwgc_gkzyxc_f16_f16_f32_gfx936_default_instances(
                             op_ptrs);

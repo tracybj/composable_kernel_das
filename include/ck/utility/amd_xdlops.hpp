@@ -227,7 +227,7 @@ struct intrin_mfma_f32_16x16x16bf16_1k<16, 16>
     template <class FloatC>
     __device__ static void Run(const bhalf4_t& reg_a, const bhalf4_t& reg_b, FloatC& reg_c)
     {
-#if defined(__gfx928__) || defined(__gfx936__) || defined(__gfx938__)
+#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__)
         intrin_mmac_f32_16x16x16bf16(
             bit_cast<int16x4_t>(reg_a), bit_cast<int16x4_t>(reg_b), reg_c);
 #else

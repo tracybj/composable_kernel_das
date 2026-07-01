@@ -829,6 +829,24 @@ struct DeviceOperationInstanceFactory<DeviceGroupedConvFwd<NumDimSpatial,
                         add_ck_tile_conv2d_v2r1_nhwgc_gkyxc_nhwgk_f16_f16_f16_gfx936_f3x3_instances(
                             op_ptrs);
                     }
+
+                    if(hcu_target_enum == HCUTargetEnum::HCU_TARGET_GFX92A)
+                    {
+                        add_device_grouped_conv2d_fwd_mmac_nhwgc_gkyxc_nhwgk_f16_default_instances(
+                            op_ptrs);
+                        add_device_grouped_conv2d_fwd_mmac_nhwgc_gkyxc_nhwgk_f16_oddc_instances(
+                            op_ptrs);
+                        add_device_grouped_conv2d_fwd_mmac_nhwgc_gkyxc_nhwgk_f16_f1x1p0_instances(
+                            op_ptrs);
+                        add_device_grouped_conv2d_fwd_mmac_nhwgc_gkyxc_nhwgk_f16_f1x1s1p0_instances(
+                            op_ptrs);
+                        add_ck_tile_conv2d_v1_nhwgc_gkyxc_nhwgk_f16_f16_f16_f16_gfx928_f1x1p0_instances(
+                            op_ptrs);
+                        add_ck_tile_conv2d_v1_nhwgc_gkyxc_nhwgk_f16_f16_f16_f16_gfx928_f1x1s1p0_instances(
+                            op_ptrs);
+                        add_ck_tile_conv2d_v1_nhwgc_gkyxc_nhwgk_f16_f16_f16_f16_gfx928_f3x3_instances(
+                            op_ptrs);
+                    }
 #else
                     if(hcu_target_enum >= HCUTargetEnum::HCU_TARGET_GFX928)
                     {

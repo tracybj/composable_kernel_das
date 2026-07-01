@@ -18,9 +18,9 @@ enum struct hcu_target_enum
 {
     unk = 0,
     gfx928,
+    gfx92a,
     gfx936,
     gfx938,
-    gfx92a,
     gfx946,
 };
 

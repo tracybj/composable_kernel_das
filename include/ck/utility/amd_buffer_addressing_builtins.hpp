@@ -60,7 +60,7 @@ __device__ __amdgpu_buffer_rsrc_t make_wave_buffer_resource_new(T* p_wave,
     int32_t num    = static_cast<int32_t>(element_space_size * sizeof(T));
     auto flags     = CK_BUFFER_RESOURCE_3RD_DWORD;
 
-#if defined(__gfx928__) || defined(__gfx936__) || defined(__gfx938__) || defined(__gfx92a__) || \
+#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__) || \
     defined(__gfx946__)
     return __builtin_hcu_make_buffer_rsrc(p, static_cast<short>(0), num, flags);
 #else
@@ -75,7 +75,7 @@ __device__ __amdgpu_buffer_rsrc_t make_wave_buffer_resource_with_default_range_n
     int32_t num    = 0xffffffff;
     auto flags     = CK_BUFFER_RESOURCE_3RD_DWORD;
 
-#if defined(__gfx928__) || defined(__gfx936__) || defined(__gfx938__) || defined(__gfx92a__) || \
+#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__) || \
     defined(__gfx946__)
     return __builtin_hcu_make_buffer_rsrc(p, static_cast<short>(0), num, flags);
 #else

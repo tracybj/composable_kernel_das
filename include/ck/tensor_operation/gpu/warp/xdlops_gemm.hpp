@@ -282,13 +282,13 @@ template <>
 struct mfma_type<MfmaInstr::mfma_f32_16x16x16bf16_1k>
 {
     static constexpr index_t group_size =
-#if defined(__gfx928__) || defined(__gfx936__) || defined(__gfx938__)
+#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__)
         1;
 #else
         4;
 #endif
     static constexpr index_t num_groups_per_blk =
-#if defined(__gfx928__) || defined(__gfx936__) || defined(__gfx938__)
+#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__)
         4;
 #else
         1;
@@ -573,7 +573,7 @@ struct MfmaSelector
     template <>
     static constexpr auto GetMfma<bhalf_t, 16, 16>()
     {
-#if defined(CK_USE_AMD_MFMA_BF16_1K_OP) || defined(__gfx928__) || defined(__gfx936__) ||         \
+#if defined(CK_USE_AMD_MFMA_BF16_1K_OP) || defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) ||         \
     defined(__gfx938__)
         return MfmaInstr::mfma_f32_16x16x16bf16_1k;
 #else
@@ -927,7 +927,7 @@ struct XdlopsGemm
     static constexpr auto mfma_instr = mfma.selected_mfma;
 
     static constexpr bool use_hcu_bf16_mmac_c_layout =
-#if defined(__gfx928__) || defined(__gfx936__) || defined(__gfx938__)
+#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__)
         is_same<base_type, bhalf_t>::value && MPerXdlops == 16 && NPerXdlops == 16;
 #else
         false;

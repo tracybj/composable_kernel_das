@@ -12,13 +12,17 @@
 
 namespace ck {
 
+// HCUTargetEnum identifies ISA families, not a total feature order.
+// gfx92a belongs to the gfx928 family with extra fp8/TLS support, while
+// gfx938 belongs to the gfx936 family. Use the family helpers below for
+// runtime architecture gating instead of relying on >= comparisons.
 enum struct HCUTargetEnum
 {
     HCU_TARGET_UNKNOWN = 0,
     HCU_TARGET_GFX928,
+    HCU_TARGET_GFX92A,
     HCU_TARGET_GFX936,
     HCU_TARGET_GFX938,
-    HCU_TARGET_GFX92A,
     HCU_TARGET_GFX946,
 };
 
@@ -77,13 +81,34 @@ inline bool is_hcu_supported()
     return get_hcu_target_enum() != HCUTargetEnum::HCU_TARGET_UNKNOWN;
 }
 
+inline bool is_gfx928_family(HCUTargetEnum target)
+{
+    return target == HCUTargetEnum::HCU_TARGET_GFX928 ||
+           target == HCUTargetEnum::HCU_TARGET_GFX92A ||
+           target == HCUTargetEnum::HCU_TARGET_GFX946;
+}
+
+inline bool is_gfx92a_family(HCUTargetEnum target)
+{
+    return target == HCUTargetEnum::HCU_TARGET_GFX92A ||
+           target == HCUTargetEnum::HCU_TARGET_GFX946;
+}
+
+inline bool is_gfx936_family(HCUTargetEnum target)
+{
+    return target == HCUTargetEnum::HCU_TARGET_GFX936 ||
+           target == HCUTargetEnum::HCU_TARGET_GFX938 ||
+           target == HCUTargetEnum::HCU_TARGET_GFX946;
+}
+
+inline bool is_any_mmac_arch(HCUTargetEnum target)
+{
+    return target != HCUTargetEnum::HCU_TARGET_UNKNOWN;
+}
+
 inline bool is_hcu_xdl_supported()
 {
-    const auto target = get_hcu_target_enum();
-    return target == HCUTargetEnum::HCU_TARGET_GFX928 ||
-           target == HCUTargetEnum::HCU_TARGET_GFX936 ||
-           target == HCUTargetEnum::HCU_TARGET_GFX938 ||
-           target == HCUTargetEnum::HCU_TARGET_GFX92A;
+    return is_any_mmac_arch(get_hcu_target_enum());
 }
 
 inline bool is_gfx90a() { return ck::get_device_name() == "gfx90a"; }

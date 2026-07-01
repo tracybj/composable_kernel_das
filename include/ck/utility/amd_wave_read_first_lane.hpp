@@ -104,7 +104,7 @@ using get_carrier_t = typename get_carrier<SizeInBytes>::type;
 
 __device__ inline uint32_t amd_wave_read_first_lane(uint32_t value)
 {
-#if defined(__gfx928__) || defined(__gfx936__) || defined(__gfx938__) || defined(__gfx92a__) || \
+#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__) || \
     defined(__gfx946__)
     return __builtin_amdgcn_readfirstlane(value);
 #else
@@ -114,7 +114,7 @@ __device__ inline uint32_t amd_wave_read_first_lane(uint32_t value)
 
 __device__ inline int32_t amd_wave_read_first_lane(int32_t value)
 {
-#if defined(__gfx928__) || defined(__gfx936__) || defined(__gfx938__) || defined(__gfx92a__) || \
+#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__) || \
     defined(__gfx946__)
     return __builtin_amdgcn_readfirstlane(value);
 #else

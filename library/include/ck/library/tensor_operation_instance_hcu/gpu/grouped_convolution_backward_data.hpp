@@ -453,7 +453,7 @@ struct DeviceOperationInstanceFactory<DeviceGroupedConvBwdData<NumDimSpatial,
                             op_ptrs);
                     }
 
-                    if(hcu_target_enum >= HCUTargetEnum::HCU_TARGET_GFX936)
+                    if(ck::is_gfx936_family(hcu_target_enum))
                     {
                         add_device_grouped_conv2d_bwd_mmac_v2_nhwgk_gkyxc_nhwgc_f16_f16_f16_gfx936_default_cshuffle_instances(
                             op_ptrs);
@@ -613,7 +613,7 @@ struct DeviceOperationInstanceFactory<DeviceGroupedConvBwdData<NumDimSpatial,
                 if constexpr(is_same_v<OutDataType, F16> && is_same_v<WeiDataType, F16> &&
                              is_same_v<InDataType, F16>)
                 {
-                    if(hcu_target_enum >= HCUTargetEnum::HCU_TARGET_GFX936)
+                    if(ck::is_gfx936_family(hcu_target_enum))
                     {
                         add_device_grouped_conv3d_bwd_mmac_v2_ndhwgk_gkzyxc_ndhwgc_f16_f16_f16_gfx936_default_cshuffle_instances(
                             op_ptrs);

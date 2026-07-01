@@ -45,7 +45,7 @@ __launch_bounds__(CK_MAX_THREAD_PER_BLOCK, CK_MIN_BLOCK_PER_CU)
         const CElementwiseOperation c_element_op,
         const Block2CTileMap block_2_ctile_map)
 {
-#if(!defined(__HIP_DEVICE_COMPILE__) || defined(__gfx926__) || defined(__gfx928__) || \
+#if(!defined(__HIP_DEVICE_COMPILE__) || defined(__gfx926__) || defined(__gfx928__) || defined(__gfx92a__) || \
     defined(__gfx936__) || defined(__gfx938__))
     __shared__ char p_shared[GridwiseGemm::GetSharedMemoryNumberOfByte()];
 
@@ -71,7 +71,7 @@ __launch_bounds__(CK_MAX_THREAD_PER_BLOCK, CK_MIN_BLOCK_PER_CU)
     ignore = b_element_op;
     ignore = c_element_op;
     ignore = block_2_ctile_map;
-#endif // end of if (defined(__gfx926__) || defined(__gfx928__) || defined(__gfx936__) ||
+#endif // end of if (defined(__gfx926__) || defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) ||
        // defined(__gfx938__))
 }
 
