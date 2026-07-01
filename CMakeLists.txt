@@ -51,7 +51,17 @@ else()
 endif()
 
 set(ROCM_SYMLINK_LIBS OFF)
-find_package(ROCM REQUIRED PATHS /opt/rocm)
+set(CK_TOOLCHAIN_PREFIXES
+    ${CMAKE_PREFIX_PATH}
+    /opt/dtk
+    /opt/dtk/llvm
+    /opt/dtk/hip
+    /opt/rocm
+    /opt/rocm/llvm
+    /opt/rocm/hip
+)
+list(REMOVE_DUPLICATES CK_TOOLCHAIN_PREFIXES)
+find_package(ROCM REQUIRED PATHS ${CK_TOOLCHAIN_PREFIXES})
 
 include(ROCMInstallTargets)
 include(ROCMPackageConfigHelpers)
@@ -62,7 +72,13 @@ include(CheckCXXCompilerFlag)
 
 rocm_setup_version(VERSION 0.2.0)
 include(TargetFlags)
-list(APPEND CMAKE_PREFIX_PATH ${CMAKE_INSTALL_PREFIX} ${CMAKE_INSTALL_PREFIX}/llvm ${CMAKE_INSTALL_PREFIX}/hip /opt/rocm /opt/rocm/llvm /opt/rocm/hip)
+list(APPEND CMAKE_PREFIX_PATH
+    ${CMAKE_INSTALL_PREFIX}
+    ${CMAKE_INSTALL_PREFIX}/llvm
+    ${CMAKE_INSTALL_PREFIX}/hip
+    ${CK_TOOLCHAIN_PREFIXES}
+)
+list(REMOVE_DUPLICATES CMAKE_PREFIX_PATH)
 
 # CK version file records the release version and git commit hash identifying
 # the DCU CK source tree. Degrade gracefully for release tarballs without .git.
@@ -405,6 +421,9 @@ rocm_install(FILES
 
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
 set(CPACK_RPM_PACKAGE_LICENSE "MIT")
+if(DEFINED CPACK_PACKAGING_INSTALL_PREFIX AND NOT "${CPACK_PACKAGING_INSTALL_PREFIX}" STREQUAL "")
+    set(CPACK_SET_DESTDIR OFF CACHE BOOL "Use CPACK_PACKAGING_INSTALL_PREFIX for package layout" FORCE)
+endif()
 
 rocm_create_package(
     NAME composablekernel

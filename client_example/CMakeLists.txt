@@ -3,7 +3,7 @@ project(ck_app)
 add_compile_options(-std=c++17)
 
 find_package(composable_kernel 1.0.0 COMPONENTS device_operations)
-find_package(hip REQUIRED PATHS /opt/rocm)
+find_package(hip REQUIRED PATHS /opt/dtk /opt/dtk/hip /opt/rocm /opt/rocm/hip)
 message(STATUS "Build with HIP ${hip_VERSION}")
 
 # add all example subdir
