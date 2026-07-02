@@ -39,6 +39,8 @@ cmake                                                                           
 -D CMAKE_CXX_FLAGS="-std=c++17 -O3 -ftemplate-backtrace-limit=0  -fPIE  -Wno-gnu-line-marker      \
 ${CK_EXTRA_CXX_FLAGS}"                                                                            \
 -D CMAKE_BUILD_TYPE=Release                                                                       \
+-D CPACK_PACKAGING_INSTALL_PREFIX=${CK_CMAKE_PREFIX_PATH}                                         \
+-D CPACK_SET_DESTDIR=OFF                                                                          \
 -D BUILD_DEV=ON                                                                                   \
 -D GPU_TARGETS="gfx938"                                                                           \
 -D BUILD_EXAMPLE=ON                                                                               \

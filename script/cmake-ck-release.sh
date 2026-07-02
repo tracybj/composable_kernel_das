@@ -31,6 +31,8 @@ cmake                                                                           
 -D CMAKE_CXX_COMPILER=${CK_CMAKE_CXX_COMPILER}                                                    \
 -D CMAKE_CXX_FLAGS="-O3"                                                                          \
 -D CMAKE_BUILD_TYPE=Release                                                                       \
+-D CPACK_PACKAGING_INSTALL_PREFIX=${CK_CMAKE_PREFIX_PATH}                                         \
+-D CPACK_SET_DESTDIR=OFF                                                                          \
 -D BUILD_DEV=OFF                                                                                  \
 -D GPU_TARGETS="gfx936;gfx938"                                                                    \
 -D CMAKE_VERBOSE_MAKEFILE:BOOL=ON                                                                 \
