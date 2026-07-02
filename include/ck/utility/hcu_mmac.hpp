@@ -22,7 +22,7 @@ __device__ void intrin_mmac_f32_16x16x4f32(const float& reg_a, const float& reg_
 template <typename C>
 __device__ void intrin_mmac_f32_16x16x8f32(const float2_t& reg_a, const float2_t& reg_b, C& reg_c)
 {
-#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__)
+#if defined(__gfx928__) || defined(__gfx936__) || defined(__gfx938__)
     reg_c.template AsType<float4_t>()(Number<0>{}) = __builtin_hcu_mmac_16x16x8_f32(
         reg_a, reg_b, reg_c.template AsType<float4_t>()[Number<0>{}]);
 #else

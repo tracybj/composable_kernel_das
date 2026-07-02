@@ -190,6 +190,18 @@ message(STATUS "Build with HIP ${HIP_VERSION}")
 link_libraries(hip::device)
 add_compile_definitions(__HIP_PLATFORM_HCC__=1)
 
+if(NOT DEFINED GPU_TARGETS OR "${GPU_TARGETS}" STREQUAL "")
+    add_compile_definitions(CK_ENABLE_HCU_GFX936_INSTANCES=1)
+    add_compile_definitions(CK_ENABLE_HCU_GFX938_INSTANCES=1)
+else()
+    if("gfx936" IN_LIST GPU_TARGETS OR "gfx938" IN_LIST GPU_TARGETS)
+        add_compile_definitions(CK_ENABLE_HCU_GFX936_INSTANCES=1)
+    endif()
+    if("gfx938" IN_LIST GPU_TARGETS)
+        add_compile_definitions(CK_ENABLE_HCU_GFX938_INSTANCES=1)
+    endif()
+endif()
+
 # CK config file to record supported datatypes and optional kernel families.
 configure_file(include/ck/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/include/ck/config.h)
 

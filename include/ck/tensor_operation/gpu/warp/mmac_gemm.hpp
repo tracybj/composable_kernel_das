@@ -333,7 +333,7 @@ struct MmacSelector
               index_t KPerBlock_>
     struct MmacTraits;
 
-#if defined(__gfx926__)
+#if defined(__gfx926__) || defined(__gfx92a__)
     template <index_t KPerBlock_>
     struct MmacTraits<float, float, 16, 16, KPerBlock_>
     {

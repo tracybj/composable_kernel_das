@@ -652,6 +652,40 @@ void add_fused_conv2d_v3_cba_nhwgc_gkyxc_nhwgk_f16_f16_f16_f16_gfx936_f1x1s1p0_i
                                                                    PassThrough,
                                                                    AddRelu>>>& instances);
 
+#if !defined(CK_ENABLE_HCU_GFX936_INSTANCES)
+#define add_device_grouped_conv2d_fwd_bias_relu_mmac_v2_ngchw_gkcyx_ngkhw_f16_f16_f16_f16_gfx936_f1x1s1p0_cshuffle_instances(...) \
+    static_cast<void>(0)
+#define add_device_grouped_conv2d_fwd_bias_relu_mmac_v2_ngchwc32_gkcyxc32_ngkhw_f16_f16_f16_f16_gfx936_default_cshuffle_instances(...) \
+    static_cast<void>(0)
+#define add_device_grouped_conv2d_fwd_bias_relu_mmac_v2_ngchwc32_gkcyxc32_ngkhw_f16_f16_f16_f16_gfx936_f1x1p0_cshuffle_instances(...) \
+    static_cast<void>(0)
+#define add_device_grouped_conv2d_fwd_bias_relu_mmac_v2_ngchwc32_gkcyxc32_ngkhw_f16_f16_f16_f16_gfx936_f1x1s1p0_cshuffle_instances(...) \
+    static_cast<void>(0)
+#define add_device_grouped_conv2d_fwd_bias_relu_mmac_v2_ngchwc32_gkcyxc32_ngkhwk32_f16_f16_f16_f16_gfx936_default_cshuffle_instances(...) \
+    static_cast<void>(0)
+#define add_device_grouped_conv2d_fwd_bias_relu_mmac_v2_ngchwc32_gkcyxc32_ngkhwk32_f16_f16_f16_f16_gfx936_f1x1p0_cshuffle_instances(...) \
+    static_cast<void>(0)
+#define add_device_grouped_conv2d_fwd_bias_relu_mmac_v2_ngchwc32_gkcyxc32_ngkhwk32_f16_f16_f16_f16_gfx936_f1x1s1p0_cshuffle_instances(...) \
+    static_cast<void>(0)
+#define add_fused_conv2d_v2r1_cba_nhwgc_gkyxc_nhwgk_f16_f16_f16_f16_gfx936_f1x1p0_instances(...) \
+    static_cast<void>(0)
+#define add_fused_conv2d_v2r1_cba_nhwgc_gkyxc_nhwgk_f16_f16_f16_f16_gfx936_f1x1s1p0_instances(...) \
+    static_cast<void>(0)
+#define add_fused_conv2d_v2r1_cba_nhwgc_gkyxc_nhwgk_f16_f16_f16_f16_gfx936_f3x3_instances(...) \
+    static_cast<void>(0)
+#define add_fused_conv2d_v3_cba_nhwgc_gkyxc_nhwgk_f16_f16_f16_f16_gfx936_f1x1s1p0_instances(...) \
+    static_cast<void>(0)
+#define add_fused_conv2d_v3_cba_nhwgc_gkyxc_nhwgk_f16_f16_f16_f16_gfx936_f1x1s2p0_instances(...) \
+    static_cast<void>(0)
+#endif
+
+#if !defined(CK_ENABLE_HCU_GFX938_INSTANCES)
+#define add_fused_mls_conv2d_v1_cba_nhwgc_gkyxc_nhwgk_f16_f16_f16_f16_gfx938_f1x1s1p0_instances(...) \
+    static_cast<void>(0)
+#define add_fused_mls_persistant_conv2d_v1_cba_nhwgc_gkyxc_nhwgk_f16_f16_f16_f16_gfx938_f1x1s1p0_instances(...) \
+    static_cast<void>(0)
+#endif
+
 template <ck::index_t NumDimSpatial,
           typename InLayout,
           typename WeiLayout,
@@ -871,6 +905,26 @@ struct DeviceOperationInstanceFactory<DeviceGroupedConvFwdBiasActivation<NumDimS
         return op_ptrs;
     }
 };
+
+#if !defined(CK_ENABLE_HCU_GFX936_INSTANCES)
+#undef add_device_grouped_conv2d_fwd_bias_relu_mmac_v2_ngchw_gkcyx_ngkhw_f16_f16_f16_f16_gfx936_f1x1s1p0_cshuffle_instances
+#undef add_device_grouped_conv2d_fwd_bias_relu_mmac_v2_ngchwc32_gkcyxc32_ngkhw_f16_f16_f16_f16_gfx936_default_cshuffle_instances
+#undef add_device_grouped_conv2d_fwd_bias_relu_mmac_v2_ngchwc32_gkcyxc32_ngkhw_f16_f16_f16_f16_gfx936_f1x1p0_cshuffle_instances
+#undef add_device_grouped_conv2d_fwd_bias_relu_mmac_v2_ngchwc32_gkcyxc32_ngkhw_f16_f16_f16_f16_gfx936_f1x1s1p0_cshuffle_instances
+#undef add_device_grouped_conv2d_fwd_bias_relu_mmac_v2_ngchwc32_gkcyxc32_ngkhwk32_f16_f16_f16_f16_gfx936_default_cshuffle_instances
+#undef add_device_grouped_conv2d_fwd_bias_relu_mmac_v2_ngchwc32_gkcyxc32_ngkhwk32_f16_f16_f16_f16_gfx936_f1x1p0_cshuffle_instances
+#undef add_device_grouped_conv2d_fwd_bias_relu_mmac_v2_ngchwc32_gkcyxc32_ngkhwk32_f16_f16_f16_f16_gfx936_f1x1s1p0_cshuffle_instances
+#undef add_fused_conv2d_v2r1_cba_nhwgc_gkyxc_nhwgk_f16_f16_f16_f16_gfx936_f1x1p0_instances
+#undef add_fused_conv2d_v2r1_cba_nhwgc_gkyxc_nhwgk_f16_f16_f16_f16_gfx936_f1x1s1p0_instances
+#undef add_fused_conv2d_v2r1_cba_nhwgc_gkyxc_nhwgk_f16_f16_f16_f16_gfx936_f3x3_instances
+#undef add_fused_conv2d_v3_cba_nhwgc_gkyxc_nhwgk_f16_f16_f16_f16_gfx936_f1x1s1p0_instances
+#undef add_fused_conv2d_v3_cba_nhwgc_gkyxc_nhwgk_f16_f16_f16_f16_gfx936_f1x1s2p0_instances
+#endif
+
+#if !defined(CK_ENABLE_HCU_GFX938_INSTANCES)
+#undef add_fused_mls_conv2d_v1_cba_nhwgc_gkyxc_nhwgk_f16_f16_f16_f16_gfx938_f1x1s1p0_instances
+#undef add_fused_mls_persistant_conv2d_v1_cba_nhwgc_gkyxc_nhwgk_f16_f16_f16_f16_gfx938_f1x1s1p0_instances
+#endif
 
 } // namespace instance
 } // namespace device

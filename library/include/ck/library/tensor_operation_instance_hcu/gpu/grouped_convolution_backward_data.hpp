@@ -390,6 +390,37 @@ void add_device_grouped_conv3d_bwd_mmac_v2_ndhwgk_gkzyxc_ndhwgc_f16_f16_f16_gfx9
                                                          PassThrough,
                                                          PassThrough>>>& instances);
 
+#if !defined(CK_ENABLE_HCU_GFX936_INSTANCES)
+#define add_device_grouped_conv2d_bwd_mmac_v2_ngkhw_gkcyx_ngchw_f16_f16_f16_gfx936_f1x1s1p0_cshuffle_8wave_instances(...) \
+    static_cast<void>(0)
+#define add_device_grouped_conv2d_bwd_mmac_v2_ngkhw_gkcyx_ngchw_f16_f16_f16_gfx936_f1x1s1p0_cshuffle_instances(...) \
+    static_cast<void>(0)
+#define add_device_grouped_conv2d_bwd_mmac_v2_ngkhwk16_gkcyxc16_ngchw_f16_f16_f16_gfx936_default_cshuffle_instances(...) \
+    static_cast<void>(0)
+#define add_device_grouped_conv2d_bwd_mmac_v2_ngkhwk16_gkcyxc16_ngchw_f16_f16_f16_gfx936_f1x1s1p0_cshuffle_instances(...) \
+    static_cast<void>(0)
+#define add_device_grouped_conv2d_bwd_mmac_v2_ngkhwk16_gkcyxc16_ngchwc16_f16_f16_f16_gfx936_default_cshuffle_instances(...) \
+    static_cast<void>(0)
+#define add_device_grouped_conv2d_bwd_mmac_v2_ngkhwk16_gkcyxc16_ngchwc16_f16_f16_f16_gfx936_f1x1s1p0_cshuffle_instances(...) \
+    static_cast<void>(0)
+#define add_device_grouped_conv2d_bwd_mmac_v2_ngkhwk32_gkcyxc32_ngchw_f16_f16_f16_gfx936_default_cshuffle_instances(...) \
+    static_cast<void>(0)
+#define add_device_grouped_conv2d_bwd_mmac_v2_ngkhwk32_gkcyxc32_ngchw_f16_f16_f16_gfx936_f1x1s1p0_cshuffle_instances(...) \
+    static_cast<void>(0)
+#define add_device_grouped_conv2d_bwd_mmac_v2_ngkhwk32_gkcyxc32_ngchwc32_f16_f16_f16_gfx936_default_cshuffle_instances(...) \
+    static_cast<void>(0)
+#define add_device_grouped_conv2d_bwd_mmac_v2_ngkhwk32_gkcyxc32_ngchwc32_f16_f16_f16_gfx936_f1x1s1p0_cshuffle_instances(...) \
+    static_cast<void>(0)
+#define add_device_grouped_conv2d_bwd_mmac_v2_nhwgk_gkyxc_nhwgc_f16_f16_f16_gfx936_default_cshuffle_instances(...) \
+    static_cast<void>(0)
+#define add_device_grouped_conv2d_bwd_mmac_v2_nhwgk_gkyxc_nhwgc_f16_f16_f16_gfx936_f1x1s1p0_cshuffle_instances(...) \
+    static_cast<void>(0)
+#define add_device_grouped_conv3d_bwd_mmac_v2_ndhwgk_gkzyxc_ndhwgc_f16_f16_f16_gfx936_default_cshuffle_instances(...) \
+    static_cast<void>(0)
+#define add_device_grouped_conv3d_bwd_mmac_v2_ndhwgk_gkzyxc_ndhwgc_f16_f16_f16_gfx936_f1x1s1p0_cshuffle_instances(...) \
+    static_cast<void>(0)
+#endif
+
 template <ck::index_t NumDimSpatial,
           typename OutLayout,
           typename WeiLayout,
@@ -627,6 +658,23 @@ struct DeviceOperationInstanceFactory<DeviceGroupedConvBwdData<NumDimSpatial,
         return op_ptrs;
     }
 };
+
+#if !defined(CK_ENABLE_HCU_GFX936_INSTANCES)
+#undef add_device_grouped_conv2d_bwd_mmac_v2_ngkhw_gkcyx_ngchw_f16_f16_f16_gfx936_f1x1s1p0_cshuffle_8wave_instances
+#undef add_device_grouped_conv2d_bwd_mmac_v2_ngkhw_gkcyx_ngchw_f16_f16_f16_gfx936_f1x1s1p0_cshuffle_instances
+#undef add_device_grouped_conv2d_bwd_mmac_v2_ngkhwk16_gkcyxc16_ngchw_f16_f16_f16_gfx936_default_cshuffle_instances
+#undef add_device_grouped_conv2d_bwd_mmac_v2_ngkhwk16_gkcyxc16_ngchw_f16_f16_f16_gfx936_f1x1s1p0_cshuffle_instances
+#undef add_device_grouped_conv2d_bwd_mmac_v2_ngkhwk16_gkcyxc16_ngchwc16_f16_f16_f16_gfx936_default_cshuffle_instances
+#undef add_device_grouped_conv2d_bwd_mmac_v2_ngkhwk16_gkcyxc16_ngchwc16_f16_f16_f16_gfx936_f1x1s1p0_cshuffle_instances
+#undef add_device_grouped_conv2d_bwd_mmac_v2_ngkhwk32_gkcyxc32_ngchw_f16_f16_f16_gfx936_default_cshuffle_instances
+#undef add_device_grouped_conv2d_bwd_mmac_v2_ngkhwk32_gkcyxc32_ngchw_f16_f16_f16_gfx936_f1x1s1p0_cshuffle_instances
+#undef add_device_grouped_conv2d_bwd_mmac_v2_ngkhwk32_gkcyxc32_ngchwc32_f16_f16_f16_gfx936_default_cshuffle_instances
+#undef add_device_grouped_conv2d_bwd_mmac_v2_ngkhwk32_gkcyxc32_ngchwc32_f16_f16_f16_gfx936_f1x1s1p0_cshuffle_instances
+#undef add_device_grouped_conv2d_bwd_mmac_v2_nhwgk_gkyxc_nhwgc_f16_f16_f16_gfx936_default_cshuffle_instances
+#undef add_device_grouped_conv2d_bwd_mmac_v2_nhwgk_gkyxc_nhwgc_f16_f16_f16_gfx936_f1x1s1p0_cshuffle_instances
+#undef add_device_grouped_conv3d_bwd_mmac_v2_ndhwgk_gkzyxc_ndhwgc_f16_f16_f16_gfx936_default_cshuffle_instances
+#undef add_device_grouped_conv3d_bwd_mmac_v2_ndhwgk_gkzyxc_ndhwgc_f16_f16_f16_gfx936_f1x1s1p0_cshuffle_instances
+#endif
 
 } // namespace instance
 } // namespace device

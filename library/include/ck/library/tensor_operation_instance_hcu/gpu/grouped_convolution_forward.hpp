@@ -736,6 +736,49 @@ void add_conv3d_fwd_v1_ndhwgc_gkzyxc_ndhwgk_bf16_bf16_bf16_gfx928_f1x1x1s1p0_ins
                                                      PassThrough,
                                                      PassThrough>>>& instances);
 
+#if !defined(CK_ENABLE_HCU_GFX936_INSTANCES)
+#define add_ck_tile_conv2d_v2r1_nhwgc_gkyxc_nhwgk_f16_f16_f16_gfx936_f1x1p0_instances(...) \
+    static_cast<void>(0)
+#define add_ck_tile_conv2d_v2r1_nhwgc_gkyxc_nhwgk_f16_f16_f16_gfx936_f1x1s1p0_instances(...) \
+    static_cast<void>(0)
+#define add_ck_tile_conv2d_v2r1_nhwgc_gkyxc_nhwgk_f16_f16_f16_gfx936_f3x3_instances(...) \
+    static_cast<void>(0)
+#define add_device_grouped_conv2d_fwd_mmac_v2_ngchw_gkcyx_ngkhw_f16_f16_f16_gfx936_f1x1s1p0_cshuffle_8wave_instances(...) \
+    static_cast<void>(0)
+#define add_device_grouped_conv2d_fwd_mmac_v2_ngchw_gkcyx_ngkhw_f16_f16_f16_gfx936_f1x1s1p0_cshuffle_instances(...) \
+    static_cast<void>(0)
+#define add_device_grouped_conv2d_fwd_mmac_v2_ngchwc16_gkcyxc16_ngkhw_f16_f16_f16_gfx936_default_cshuffle_instances(...) \
+    static_cast<void>(0)
+#define add_device_grouped_conv2d_fwd_mmac_v2_ngchwc16_gkcyxc16_ngkhw_f16_f16_f16_gfx936_f1x1p0_cshuffle_instances(...) \
+    static_cast<void>(0)
+#define add_device_grouped_conv2d_fwd_mmac_v2_ngchwc16_gkcyxc16_ngkhw_f16_f16_f16_gfx936_f1x1s1p0_cshuffle_instances(...) \
+    static_cast<void>(0)
+#define add_device_grouped_conv2d_fwd_mmac_v2_ngchwc16_gkcyxc16_ngkhwk16_f16_f16_f16_gfx936_default_cshuffle_instances(...) \
+    static_cast<void>(0)
+#define add_device_grouped_conv2d_fwd_mmac_v2_ngchwc16_gkcyxc16_ngkhwk16_f16_f16_f16_gfx936_f1x1p0_cshuffle_instances(...) \
+    static_cast<void>(0)
+#define add_device_grouped_conv2d_fwd_mmac_v2_ngchwc16_gkcyxc16_ngkhwk16_f16_f16_f16_gfx936_f1x1s1p0_cshuffle_instances(...) \
+    static_cast<void>(0)
+#define add_device_grouped_conv2d_fwd_mmac_v2_ngchwc32_gkcyxc32_ngkhw_f16_f16_f16_gfx936_default_cshuffle_instances(...) \
+    static_cast<void>(0)
+#define add_device_grouped_conv2d_fwd_mmac_v2_ngchwc32_gkcyxc32_ngkhw_f16_f16_f16_gfx936_f1x1p0_cshuffle_instances(...) \
+    static_cast<void>(0)
+#define add_device_grouped_conv2d_fwd_mmac_v2_ngchwc32_gkcyxc32_ngkhw_f16_f16_f16_gfx936_f1x1s1p0_cshuffle_instances(...) \
+    static_cast<void>(0)
+#define add_device_grouped_conv2d_fwd_mmac_v2_ngchwc32_gkcyxc32_ngkhwk32_f16_f16_f16_gfx936_default_cshuffle_instances(...) \
+    static_cast<void>(0)
+#define add_device_grouped_conv2d_fwd_mmac_v2_ngchwc32_gkcyxc32_ngkhwk32_f16_f16_f16_gfx936_f1x1p0_cshuffle_instances(...) \
+    static_cast<void>(0)
+#define add_device_grouped_conv2d_fwd_mmac_v2_ngchwc32_gkcyxc32_ngkhwk32_f16_f16_f16_gfx936_f1x1s1p0_cshuffle_instances(...) \
+    static_cast<void>(0)
+#define add_device_grouped_conv2d_fwd_mmac_v2_nhwgc_gkyxc_nhwgk_f16_f16_f16_gfx936_default_cshuffle_instances(...) \
+    static_cast<void>(0)
+#define add_device_grouped_conv2d_fwd_mmac_v2_nhwgc_gkyxc_nhwgk_f16_f16_f16_gfx936_f1x1p0_cshuffle_instances(...) \
+    static_cast<void>(0)
+#define add_device_grouped_conv2d_fwd_mmac_v2_nhwgc_gkyxc_nhwgk_f16_f16_f16_gfx936_f1x1s1p0_cshuffle_instances(...) \
+    static_cast<void>(0)
+#endif
+
 template <ck::index_t NumDimSpatial,
           typename InLayout,
           typename WeiLayout,
@@ -1070,6 +1113,29 @@ struct DeviceOperationInstanceFactory<DeviceGroupedConvFwd<NumDimSpatial,
         return op_ptrs;
     }
 };
+
+#if !defined(CK_ENABLE_HCU_GFX936_INSTANCES)
+#undef add_ck_tile_conv2d_v2r1_nhwgc_gkyxc_nhwgk_f16_f16_f16_gfx936_f1x1p0_instances
+#undef add_ck_tile_conv2d_v2r1_nhwgc_gkyxc_nhwgk_f16_f16_f16_gfx936_f1x1s1p0_instances
+#undef add_ck_tile_conv2d_v2r1_nhwgc_gkyxc_nhwgk_f16_f16_f16_gfx936_f3x3_instances
+#undef add_device_grouped_conv2d_fwd_mmac_v2_ngchw_gkcyx_ngkhw_f16_f16_f16_gfx936_f1x1s1p0_cshuffle_8wave_instances
+#undef add_device_grouped_conv2d_fwd_mmac_v2_ngchw_gkcyx_ngkhw_f16_f16_f16_gfx936_f1x1s1p0_cshuffle_instances
+#undef add_device_grouped_conv2d_fwd_mmac_v2_ngchwc16_gkcyxc16_ngkhw_f16_f16_f16_gfx936_default_cshuffle_instances
+#undef add_device_grouped_conv2d_fwd_mmac_v2_ngchwc16_gkcyxc16_ngkhw_f16_f16_f16_gfx936_f1x1p0_cshuffle_instances
+#undef add_device_grouped_conv2d_fwd_mmac_v2_ngchwc16_gkcyxc16_ngkhw_f16_f16_f16_gfx936_f1x1s1p0_cshuffle_instances
+#undef add_device_grouped_conv2d_fwd_mmac_v2_ngchwc16_gkcyxc16_ngkhwk16_f16_f16_f16_gfx936_default_cshuffle_instances
+#undef add_device_grouped_conv2d_fwd_mmac_v2_ngchwc16_gkcyxc16_ngkhwk16_f16_f16_f16_gfx936_f1x1p0_cshuffle_instances
+#undef add_device_grouped_conv2d_fwd_mmac_v2_ngchwc16_gkcyxc16_ngkhwk16_f16_f16_f16_gfx936_f1x1s1p0_cshuffle_instances
+#undef add_device_grouped_conv2d_fwd_mmac_v2_ngchwc32_gkcyxc32_ngkhw_f16_f16_f16_gfx936_default_cshuffle_instances
+#undef add_device_grouped_conv2d_fwd_mmac_v2_ngchwc32_gkcyxc32_ngkhw_f16_f16_f16_gfx936_f1x1p0_cshuffle_instances
+#undef add_device_grouped_conv2d_fwd_mmac_v2_ngchwc32_gkcyxc32_ngkhw_f16_f16_f16_gfx936_f1x1s1p0_cshuffle_instances
+#undef add_device_grouped_conv2d_fwd_mmac_v2_ngchwc32_gkcyxc32_ngkhwk32_f16_f16_f16_gfx936_default_cshuffle_instances
+#undef add_device_grouped_conv2d_fwd_mmac_v2_ngchwc32_gkcyxc32_ngkhwk32_f16_f16_f16_gfx936_f1x1p0_cshuffle_instances
+#undef add_device_grouped_conv2d_fwd_mmac_v2_ngchwc32_gkcyxc32_ngkhwk32_f16_f16_f16_gfx936_f1x1s1p0_cshuffle_instances
+#undef add_device_grouped_conv2d_fwd_mmac_v2_nhwgc_gkyxc_nhwgk_f16_f16_f16_gfx936_default_cshuffle_instances
+#undef add_device_grouped_conv2d_fwd_mmac_v2_nhwgc_gkyxc_nhwgk_f16_f16_f16_gfx936_f1x1p0_cshuffle_instances
+#undef add_device_grouped_conv2d_fwd_mmac_v2_nhwgc_gkyxc_nhwgk_f16_f16_f16_gfx936_f1x1s1p0_cshuffle_instances
+#endif
 
 } // namespace instance
 } // namespace device
