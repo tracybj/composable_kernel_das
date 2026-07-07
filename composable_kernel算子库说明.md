@@ -119,25 +119,25 @@ cd build_dev/bin
 
 下表只列入`example_hcu` 示例接口：
 
-| 序号 | 算子/接口 | 示例 target | 来源路径 | 状态 |
-| --- | --- | --- | --- | --- |
-| 1 | GEMM MMAC | `example_gemm_mmac_nt_fp16` | `example_hcu/05_gemm` | 本次远端通过 |
-| 2 | GEMM XDL v3 | `example_hcu_gemm_xdl_bf16_v3`、`example_hcu_gemm_multi_d_xdl_bf16_v3` | `example_hcu/25_gemm_xdl_v3` | 用户已确认 |
-| 3 | Batched GEMM XDL v3 | `example_hcu_batched_gemm_xdl_bf16_v3` | `example_hcu/24_batched_gemm` | 用户已确认 |
-| 4 | CK Tile GEMM | `tile_example_gemm_basic` | `example_hcu/ck_tile/03_gemm` | 用户已确认 |
-| 5 | Grouped GEMM | `tile_example_grouped_gemm` 及 fast 变体 | `example_hcu/ck_tile/19_grouped_gemm` | 用户已确认 |
-| 6 | FMHA | `tile_example_fmha_fwd`、`tile_example_fmha_bwd` | `example_hcu/ck_tile/01_fmha` | 用户已确认 |
-| 7 | MoE Sorting | `tile_example_moe_sorting` | `example_hcu/ck_tile/13_moe_sorting` | 用户已确认 |
-| 8 | Fused MoE | `tile_example_fused_moe` | `example_hcu/ck_tile/17_fused_moe` | 用户已确认 |
-| 9 | MoE Quant | `tile_example_moe_quant` | `example_hcu/ck_tile/18_moe_quant` | 本次远端通过 |
-| 10 | Grouped Conv Bwd Data | `example_grouped_conv_bwd_data_mmac_nhwc_v2_fp16_cshuffle` | `example_hcu/02_grouped_conv_bwd_data_mmac` | 本次远端通过 |
-| 11 | Tensor Layout Transform | `example_tensor_layout_transform_ngchw_ngchwc32_fp16` | `example_hcu/04_tensor_layout_transform` | 本次远端通过 |
-| 12 | BatchNorm Forward/Backward | `example_batchnorm_forward_training`、`example_batchnorm_backward` | `example_hcu/08_batchnorm` | 本次远端通过 |
-| 13 | LayerNorm2D | `tile_example_layernorm2d_fwd` | `example_hcu/ck_tile/02_layernorm2d` | 用户已确认 |
-| 14 | RMSNorm2D | `tile_example_rmsnorm2d_fwd` | `example_hcu/ck_tile/10_rmsnorm2d` | 本次远端通过 |
-| 15 | Add + RMSNorm2D + RdQuant | `tile_example_add_rmsnorm2d_rdquant_fwd` | `example_hcu/ck_tile/11_add_rmsnorm2d_rdquant` | 本次远端通过 |
-| 16 | CK Tile Conv Fwd | `tile_example_conv_fwd` | `example_hcu/ck_tile/14_conv` | nmz-1 验证通过 |
-| 17 | CK Tile Conv3D Fwd | `tile_example_conv3d_fwd` | `example_hcu/ck_tile/16_conv3d_fwd` | nmz-1 验证通过 |
+| 序号 | 算子/接口 | 示例 target | 来源路径 |
+| --- | --- | --- | --- |
+| 1 | GEMM MMAC | `example_gemm_mmac_nt_fp16` | `example_hcu/05_gemm` |
+| 2 | GEMM XDL v3 | `example_hcu_gemm_xdl_bf16_v3`、`example_hcu_gemm_multi_d_xdl_bf16_v3` | `example_hcu/25_gemm_xdl_v3` |
+| 3 | Batched GEMM XDL v3 | `example_hcu_batched_gemm_xdl_bf16_v3` | `example_hcu/24_batched_gemm` |
+| 4 | CK Tile GEMM | `tile_example_gemm_basic` | `example_hcu/ck_tile/03_gemm` |
+| 5 | Grouped GEMM | `tile_example_grouped_gemm` 及 fast 变体 | `example_hcu/ck_tile/19_grouped_gemm` |
+| 6 | FMHA | `tile_example_fmha_fwd`、`tile_example_fmha_bwd` | `example_hcu/ck_tile/01_fmha` |
+| 7 | MoE Sorting | `tile_example_moe_sorting` | `example_hcu/ck_tile/13_moe_sorting` |
+| 8 | Fused MoE | `tile_example_fused_moe` | `example_hcu/ck_tile/17_fused_moe` |
+| 9 | MoE Quant | `tile_example_moe_quant` | `example_hcu/ck_tile/18_moe_quant` |
+| 10 | Grouped Conv Bwd Data | `example_grouped_conv_bwd_data_mmac_nhwc_v2_fp16_cshuffle` | `example_hcu/02_grouped_conv_bwd_data_mmac` |
+| 11 | Tensor Layout Transform | `example_tensor_layout_transform_ngchw_ngchwc32_fp16` | `example_hcu/04_tensor_layout_transform` |
+| 12 | BatchNorm Forward/Backward | `example_batchnorm_forward_training`、`example_batchnorm_backward` | `example_hcu/08_batchnorm` |
+| 13 | LayerNorm2D | `tile_example_layernorm2d_fwd` | `example_hcu/ck_tile/02_layernorm2d` |
+| 14 | RMSNorm2D | `tile_example_rmsnorm2d_fwd` | `example_hcu/ck_tile/10_rmsnorm2d` |
+| 15 | Add + RMSNorm2D + RdQuant | `tile_example_add_rmsnorm2d_rdquant_fwd` | `example_hcu/ck_tile/11_add_rmsnorm2d_rdquant` |
+| 16 | CK Tile Conv Fwd | `tile_example_conv_fwd` | `example_hcu/ck_tile/14_conv` |
+| 17 | CK Tile Conv3D Fwd | `tile_example_conv3d_fwd` | `example_hcu/ck_tile/16_conv3d_fwd` |
 
 # 3. 主要算子接口
 
@@ -1698,7 +1698,6 @@ LayerNorm2D 示例实现二维 LayerNorm forward，输入形状按 `m x n` 组�
 ./tile_example_layernorm2d_fwd -prec_i=fp16 -prec_o=fp16 -m=3328 -n=4096
 ```
 
-默认参数已在 `nmz-1` 上由用户确认运行成功，输出 `valid:y`。
 
 ## 4.14 RMSNorm2D
 
@@ -1812,9 +1811,8 @@ RMSNorm2D 示例实现二维 RMSNorm forward，输入形状按 `m x n` 组织。
 
 ### 返回值说明
 
-该示例原先在默认运行无错误输出时仍返回 `1`，原因是 `run_conv3d_fwd_example` 正常路径返回 `0`，而 `main` 使用 `run_conv3d_fwd_example(...) ? 0 : 1` 转换返回码。修正后示例会传播 `run_conv3d_fwd` 的校验结果：校验通过返回 `0`，校验失败返回 `1`。
+校验通过返回 `0`，校验失败返回 `1`。
 
-修正后已在 `nmz-1` 容器默认参数下重编运行通过，输出 Perf 且进程返回码为 `0`。
 
 ## 4.18 暂未处理的示例接口
 
