@@ -244,7 +244,7 @@ bool run_conv3d_fwd_example(int argc, char* argv[])
     bool result = arg_parser.parse(argc, argv);
 
     if(!result)
-        return -1;
+        return false;
 
     ck_tile::conv::ConvParam conv_param{
         arg_parser.get_int("m"),
@@ -261,13 +261,12 @@ bool run_conv3d_fwd_example(int argc, char* argv[])
 
     if(arg_parser.get_int("m") == 3)
     {
-        run_conv3d_fwd(conv_param);
-        return 0;
+        return run_conv3d_fwd(conv_param);
     }
     else
     {
         printf("unsupport spatial dim\n");
-        return -1;
+        return false;
     }
 }
 

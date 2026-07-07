@@ -68,7 +68,7 @@ using TilePartitioner = ck_tile::ConvIgemmTilePartitioner<TileShape>;
 static constexpr auto ConvSpec = ck_tile::ConvFwdSpec::Default;
 
 template <ck_tile::index_t NDimSpatial>
-bool run_grouped_conv_fwd(const ck_tile::conv::ConvParam& conv_param)
+bool run_grouped_conv_fwd(const ck_tile::conv::ConvParam& conv_param, double rtol, double atol)
 {
     static constexpr ck_tile::index_t NDim = NDimSpatial + 3;
 
@@ -215,9 +215,7 @@ bool run_grouped_conv_fwd(const ck_tile::conv::ConvParam& conv_param)
 
     out_device_buf.FromDevice(out_device.data());
 
-    return ck_tile::check_err(out_device, out_host, "Error: incorrect results!", 1e-5f, 1e-4f);
-
-    return true;
+    return ck_tile::check_err(out_device, out_host, "Error: incorrect results!", rtol, atol);
 }
 
 bool run_grouped_conv_fwd_example(int argc, char* argv[])
@@ -237,12 +235,14 @@ bool run_grouped_conv_fwd_example(int argc, char* argv[])
         .insert("l", "1", "dilation h")
         .insert("j", "1", "dilation w")
         .insert("p", "1", "pad h")
-        .insert("q", "1", "pad w");
+        .insert("q", "1", "pad w")
+        .insert("rtol", "1e-3", "relative validation tolerance")
+        .insert("atol", "1e-3", "absolute validation tolerance");
 
     bool result = arg_parser.parse(argc, argv);
 
     if(!result)
-        return -1;
+        return false;
 
     ck_tile::conv::ConvParam conv_param{arg_parser.get_int("m"),
                                         arg_parser.get_int("g"),
@@ -258,13 +258,13 @@ bool run_grouped_conv_fwd_example(int argc, char* argv[])
 
     if(arg_parser.get_int("m") == 2)
     {
-        run_grouped_conv_fwd<2>(conv_param);
-        return 0;
+        return run_grouped_conv_fwd<2>(
+            conv_param, arg_parser.get_double("rtol"), arg_parser.get_double("atol"));
     }
     else
     {
         printf("unsupport spatial dim\n");
-        return -1;
+        return false;
     }
 }
 
