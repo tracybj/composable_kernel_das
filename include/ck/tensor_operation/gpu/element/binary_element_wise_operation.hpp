@@ -70,6 +70,15 @@ struct Add
 
     template <>
     __host__ __device__ constexpr void
+    operator()<bhalf_t>(bhalf_t& y, const float& x0, const bhalf_t& x1) const
+    {
+        const float x2_tmp = ck::type_convert<float>(x1);
+        const float y_tmp  = x0 + x2_tmp;
+        y                  = ck::type_convert<bhalf_t>(y_tmp);
+    }
+
+    template <>
+    __host__ __device__ constexpr void
     operator()<int8_t>(int8_t& y, const int8_t& x0, const int8_t& x1) const
     {
         y = x0 + x1;
@@ -226,6 +235,26 @@ struct AddRelu
     {
         const float a = x0 + type_convert<float>(x1);
         y             = a > 0.0f ? a : 0.0f;
+    };
+
+    template <>
+    __host__ __device__ constexpr void
+    operator()<bhalf_t, float, bhalf_t>(bhalf_t& y, const float& x0, const bhalf_t& x1) const
+    {
+        const float a = x0 + type_convert<float>(x1);
+        const float b = a > 0.0f ? a : 0.0f;
+        y             = type_convert<bhalf_t>(b);
+    };
+
+    template <>
+    __host__ __device__ constexpr void
+    operator()<bhalf_t, bhalf_t, bhalf_t>(bhalf_t& y,
+                                          const bhalf_t& x0,
+                                          const bhalf_t& x1) const
+    {
+        const float a = type_convert<float>(x0) + type_convert<float>(x1);
+        const float b = a > 0.0f ? a : 0.0f;
+        y             = type_convert<bhalf_t>(b);
     };
 
     template <>

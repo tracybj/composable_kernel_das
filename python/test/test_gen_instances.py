@@ -26,6 +26,22 @@ from ck4inductor.hcu_grouped_conv_fwd.gen_instances import (
 )
 from ck4inductor.ck_tile_universal_gemm.gen_instances import ops as gen_ck_tile_gemm_ops
 
+try:
+    import tomllib
+except ModuleNotFoundError:
+    try:
+        import tomli as tomllib
+    except ModuleNotFoundError:
+        tomllib = None
+
+
+def _load_pyproject():
+    if tomllib is None:
+        raise unittest.SkipTest("tomllib is unavailable")
+    pyproject_path = Path(__file__).resolve().parents[2] / "pyproject.toml"
+    return tomllib.loads(pyproject_path.read_text(encoding="utf-8"))
+
+
 class TestPackageSkeleton(unittest.TestCase):
     def test_ck4inductor_importable(self):
         self.assertTrue(ck4inductor.__version__())
@@ -34,6 +50,31 @@ class TestPackageSkeleton(unittest.TestCase):
         path = Path(library_path())
         self.assertTrue(path.is_dir())
         self.assertTrue((path / "src" / "tensor_operation_instance_hcu" / "gpu").is_dir())
+
+    def test_package_data_covers_hcu_instance_paths(self):
+        package_data = _load_pyproject()["tool"]["setuptools"]["package-data"]
+        library_patterns = package_data["ck4inductor.library"]
+        library_root = Path(__file__).resolve().parents[2] / "library"
+        covered_paths = {
+            path.relative_to(library_root).as_posix()
+            for pattern in library_patterns
+            for path in library_root.glob(pattern)
+            if path.is_file()
+        }
+        required_paths = {
+            "src/tensor_operation_instance_hcu/gpu/gemm_universal/"
+            "device_gemm_xdl_universal_bf16_bf16_bf16.hpp",
+            "src/tensor_operation_instance_hcu/gpu/gemm_universal_batched/"
+            "device_batched_gemm_xdl_universal_bf16_bf16_bf16.hpp",
+            "src/tensor_operation_instance_hcu/gpu/grouped_conv2d_fwd_gfx928/"
+            "nhwgc_gkyxc_nhwgk/"
+            "device_grouped_conv2d_fwd_mmac_v2_nhwgc_gkyxc_nhwgk_f16_default_cshuffle_instance.cpp",
+            "src/tensor_operation_instance_hcu/gpu/grouped_conv2d_fwd_gfx928/"
+            "nhwgc_gkyxc_nhwgk/device_grouped_conv2d_fwd_common.hpp",
+            "src/tensor_operation_instance_hcu/gpu/grouped_conv2d_fwd_gfx936/"
+            "nhwgc_gkyxc_nhwgk/ck_tile/ck_tile_conv2d_v2r1_f16_f16_f1x1p0_instance.cpp",
+        }
+        self.assertLessEqual(required_paths, covered_paths)
 
 
 class TestTemplateParser(unittest.TestCase):
