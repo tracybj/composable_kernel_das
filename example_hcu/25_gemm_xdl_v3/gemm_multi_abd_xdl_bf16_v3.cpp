@@ -63,20 +63,20 @@ using CShuffleDataType = BF16;
 using DDataType        = BF16;
 using EDataType        = BF16;
 
-using AsDataType = ck::Tuple<ADataType>;
-using BsDataType = ck::Tuple<BDataType>;
+using AsDataType = ck::Tuple<ADataType, ADataType>;
+using BsDataType = ck::Tuple<BDataType, BDataType>;
 using DsDataType = ck::Tuple<DDataType>;
 
 using ALayout  = Row;
 using BLayout  = Col;
 using DLayout  = Row;
 using ELayout  = Row;
-using AsLayout = ck::Tuple<ALayout>;
-using BsLayout = ck::Tuple<BLayout>;
+using AsLayout = ck::Tuple<ALayout, ALayout>;
+using BsLayout = ck::Tuple<BLayout, BLayout>;
 using DsLayout = ck::Tuple<DLayout>;
 
-using AElementOp   = PassThrough;
-using BElementOp   = PassThrough;
+using AElementOp   = Add;
+using BElementOp   = Add;
 using CDEElementOp = Add;
 
 static constexpr auto GemmDefault = ck::tensor_operation::device::GemmSpecialization::Default;
@@ -132,8 +132,8 @@ using ReferenceGemmInstance =
                                               BDataType,
                                               CShuffleDataType,
                                               AccDataType,
-                                              AElementOp,
-                                              BElementOp,
+                                              PassThrough,
+                                              PassThrough,
                                               PassThrough>;
 
 static bool parse_cmd_args(int argc, char* argv[], ProblemSize& problem_size, ExecutionConfig& cfg)
@@ -186,8 +186,16 @@ static bool run_gemm(const ProblemSize& problem_size, const ExecutionConfig& cfg
         }
     };
 
+    Tensor<ADataType> a0_m_k(
+        make_desc(problem_size.M, problem_size.K, problem_size.StrideA, ALayout{}));
+    Tensor<ADataType> a1_m_k(
+        make_desc(problem_size.M, problem_size.K, problem_size.StrideA, ALayout{}));
     Tensor<ADataType> a_m_k(
         make_desc(problem_size.M, problem_size.K, problem_size.StrideA, ALayout{}));
+    Tensor<BDataType> b0_k_n(
+        make_desc(problem_size.K, problem_size.N, problem_size.StrideB, BLayout{}));
+    Tensor<BDataType> b1_k_n(
+        make_desc(problem_size.K, problem_size.N, problem_size.StrideB, BLayout{}));
     Tensor<BDataType> b_k_n(
         make_desc(problem_size.K, problem_size.N, problem_size.StrideB, BLayout{}));
     Tensor<DDataType> d_m_n(
@@ -201,37 +209,47 @@ static bool run_gemm(const ProblemSize& problem_size, const ExecutionConfig& cfg
     {
     case 0: break;
     case 1:
-        a_m_k.GenerateTensorValue(GeneratorTensor_2<ADataType>{-2, 2});
-        b_k_n.GenerateTensorValue(GeneratorTensor_2<BDataType>{0, 2});
+        a0_m_k.GenerateTensorValue(GeneratorTensor_2<ADataType>{-2, 2});
+        a1_m_k.GenerateTensorValue(GeneratorTensor_2<ADataType>{-1, 1});
+        b0_k_n.GenerateTensorValue(GeneratorTensor_2<BDataType>{0, 2});
+        b1_k_n.GenerateTensorValue(GeneratorTensor_2<BDataType>{-1, 1});
         d_m_n.GenerateTensorValue(GeneratorTensor_2<DDataType>{-2, 2});
         break;
     default:
-        a_m_k.GenerateTensorValue(GeneratorTensor_3<ADataType>{0.0, 1.0});
-        b_k_n.GenerateTensorValue(GeneratorTensor_3<BDataType>{-0.5, 0.5});
+        a0_m_k.GenerateTensorValue(GeneratorTensor_3<ADataType>{0.0, 1.0});
+        a1_m_k.GenerateTensorValue(GeneratorTensor_3<ADataType>{-0.5, 0.5});
+        b0_k_n.GenerateTensorValue(GeneratorTensor_3<BDataType>{-0.5, 0.5});
+        b1_k_n.GenerateTensorValue(GeneratorTensor_3<BDataType>{0.0, 1.0});
         d_m_n.GenerateTensorValue(GeneratorTensor_3<DDataType>{-0.5, 0.5});
         break;
     }
 
-    DeviceMem a_device_buf(sizeof(ADataType) * a_m_k.mDesc.GetElementSpaceSize());
-    DeviceMem b_device_buf(sizeof(BDataType) * b_k_n.mDesc.GetElementSpaceSize());
+    DeviceMem a0_device_buf(sizeof(ADataType) * a0_m_k.mDesc.GetElementSpaceSize());
+    DeviceMem a1_device_buf(sizeof(ADataType) * a1_m_k.mDesc.GetElementSpaceSize());
+    DeviceMem b0_device_buf(sizeof(BDataType) * b0_k_n.mDesc.GetElementSpaceSize());
+    DeviceMem b1_device_buf(sizeof(BDataType) * b1_k_n.mDesc.GetElementSpaceSize());
     DeviceMem d_device_buf(sizeof(DDataType) * d_m_n.mDesc.GetElementSpaceSize());
     DeviceMem e_device_buf(sizeof(EDataType) * e_m_n_device_result.mDesc.GetElementSpaceSize());
 
-    a_device_buf.ToDevice(a_m_k.mData.data());
-    b_device_buf.ToDevice(b_k_n.mData.data());
+    a0_device_buf.ToDevice(a0_m_k.mData.data());
+    a1_device_buf.ToDevice(a1_m_k.mData.data());
+    b0_device_buf.ToDevice(b0_k_n.mData.data());
+    b1_device_buf.ToDevice(b1_k_n.mData.data());
     d_device_buf.ToDevice(d_m_n.mData.data());
 
     auto device_op = DeviceGemmInstance{};
     auto invoker   = device_op.MakeInvoker();
-    auto argument  = device_op.MakeArgument({a_device_buf.GetDeviceBuffer()},
-                                           {b_device_buf.GetDeviceBuffer()},
+    auto argument  = device_op.MakeArgument({a0_device_buf.GetDeviceBuffer(),
+                                             a1_device_buf.GetDeviceBuffer()},
+                                           {b0_device_buf.GetDeviceBuffer(),
+                                            b1_device_buf.GetDeviceBuffer()},
                                            {d_device_buf.GetDeviceBuffer()},
                                            e_device_buf.GetDeviceBuffer(),
                                            problem_size.M,
                                            problem_size.N,
                                            problem_size.K,
-                                           {problem_size.StrideA},
-                                           {problem_size.StrideB},
+                                           {problem_size.StrideA, problem_size.StrideA},
+                                           {problem_size.StrideB, problem_size.StrideB},
                                            {problem_size.StrideD},
                                            problem_size.StrideE,
                                            problem_size.KBatch,
@@ -256,10 +274,25 @@ static bool run_gemm(const ProblemSize& problem_size, const ExecutionConfig& cfg
     Tensor<CShuffleDataType> c_m_n_host_result(
         make_desc(problem_size.M, problem_size.N, problem_size.StrideE, ELayout{}));
 
+    for(ck::index_t m = 0; m < problem_size.M; ++m)
+    {
+        for(ck::index_t k = 0; k < problem_size.K; ++k)
+        {
+            AElementOp{}(a_m_k(m, k), a0_m_k(m, k), a1_m_k(m, k));
+        }
+    }
+    for(ck::index_t k = 0; k < problem_size.K; ++k)
+    {
+        for(ck::index_t n = 0; n < problem_size.N; ++n)
+        {
+            BElementOp{}(b_k_n(k, n), b0_k_n(k, n), b1_k_n(k, n));
+        }
+    }
+
     auto ref_gemm     = ReferenceGemmInstance{};
     auto ref_invoker  = ref_gemm.MakeInvoker();
     auto ref_argument = ref_gemm.MakeArgument(
-        a_m_k, b_k_n, c_m_n_host_result, AElementOp{}, BElementOp{}, PassThrough{});
+        a_m_k, b_k_n, c_m_n_host_result, PassThrough{}, PassThrough{}, PassThrough{});
 
     ref_invoker.Run(ref_argument);
 
