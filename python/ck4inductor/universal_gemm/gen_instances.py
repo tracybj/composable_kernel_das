@@ -7,14 +7,16 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Iterable, List
 
-from .._template_parser import TemplateInstance, find_template_instances
+from .._template_parser import TemplateInstance, find_template_instances, split_template_args
 from ..util import library_path
 from .op import CKGemmOperation
 
 log = logging.getLogger(__name__)
 
 _TEMPLATE_NAME = "DeviceGemm_Xdl_CShuffleV3"
+_MULTI_D_TEMPLATE_NAME = "DeviceGemmMultiD_Xdl_CShuffle_V3"
 _EXPECTED_ARGS_WITH_EXPLICIT_TAIL = 42
+_EXPECTED_MULTI_D_ARGS = 44
 _CONCRETE_DTYPES = {"F16", "BF16", "F32", "F64", "I8", "int8_t"}
 _SCHEDULERS = [
     "BlockGemmPipelineScheduler::Intrawave",
@@ -52,10 +54,22 @@ def _iter_xdl_cshuffle_v3_instances(root: Path) -> Iterable[TemplateInstance]:
             yield instance
 
 
+def _iter_multid_xdl_cshuffle_v3_instances(root: Path) -> Iterable[TemplateInstance]:
+    for instance in find_template_instances(root, _MULTI_D_TEMPLATE_NAME, suffixes=(".hpp", ".cpp")):
+        if instance.path.name.startswith("device_gemm_xdl_universal_"):
+            yield instance
+
+
 def _convert_token(token: str):
     token = token.strip()
-    if token in {"Tuple<>", "ck::Tuple<>"}:
-        return tuple()
+    if token.startswith(("Tuple<", "ck::Tuple<")) and token.endswith(">"):
+        if token.startswith("ck::"):
+            inner = token[len("ck::Tuple<") : -1].strip()
+        else:
+            inner = token[len("Tuple<") : -1].strip()
+        if not inner:
+            return tuple()
+        return tuple(_convert_token(part) for part in split_template_args(inner))
     if token.startswith("S<") and token.endswith(">"):
         inner = token[2:-1].strip()
         if not inner:
@@ -82,11 +96,13 @@ def _bool_token(token: str):
 
 def _op_from_instance(instance: TemplateInstance) -> CKGemmOperation:
     args = list(instance.args)
+    if instance.template_name == _MULTI_D_TEMPLATE_NAME:
+        return _op_from_multid_instance(instance)
+
     if len(args) != _EXPECTED_ARGS_WITH_EXPLICIT_TAIL:
         raise ValueError(
             f"{instance.path}: expected {_EXPECTED_ARGS_WITH_EXPLICIT_TAIL} args for {_TEMPLATE_NAME}, got {len(args)}"
         )
-
     if any(args[index] not in _CONCRETE_DTYPES for index in (3, 4, 5)):
         raise ValueError(f"{instance.path}: skipping non-concrete dtype args {args[3:6]}")
     values = [_convert_token(arg) for arg in args]
@@ -94,6 +110,20 @@ def _op_from_instance(instance: TemplateInstance) -> CKGemmOperation:
     values.insert(6, tuple())
     values[30] = _bool_token(args[28])
     values[37] = _bool_token(args[35])
+    return CKGemmOperation(*values)
+
+
+def _op_from_multid_instance(instance: TemplateInstance) -> CKGemmOperation:
+    args = list(instance.args)
+    if len(args) != _EXPECTED_MULTI_D_ARGS:
+        raise ValueError(
+            f"{instance.path}: expected {_EXPECTED_MULTI_D_ARGS} args for {_MULTI_D_TEMPLATE_NAME}, got {len(args)}"
+        )
+    if any(args[index] not in _CONCRETE_DTYPES for index in (4, 5, 7)):
+        raise ValueError(f"{instance.path}: skipping non-concrete dtype args {(args[4], args[5], args[7])}")
+    values = [_convert_token(arg) for arg in args]
+    values[30] = _bool_token(args[30])
+    values[37] = _bool_token(args[37])
     return CKGemmOperation(*values)
 
 
@@ -112,7 +142,10 @@ def gen_ops_library() -> List[CKGemmOperation]:
     ck_library_dir = _ck_library_dir()
     if not ck_library_dir:
         return []
-    op_instances = parse_instances(_iter_xdl_cshuffle_v3_instances(ck_library_dir))
+    op_instances = parse_instances(
+        list(_iter_xdl_cshuffle_v3_instances(ck_library_dir))
+        + list(_iter_multid_xdl_cshuffle_v3_instances(ck_library_dir))
+    )
     log.debug("ck gemm instances from library: %d", len(op_instances))
     substitute_instances = []
     for instance in op_instances:

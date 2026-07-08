@@ -64,6 +64,10 @@ class TestPackageSkeleton(unittest.TestCase):
         required_paths = {
             "src/tensor_operation_instance_hcu/gpu/gemm_universal/"
             "device_gemm_xdl_universal_bf16_bf16_bf16.hpp",
+            "src/tensor_operation_instance_hcu/gpu/gemm_universal/"
+            "device_gemm_xdl_universal_bf16_bf16_bf16_add.hpp",
+            "src/tensor_operation_instance_hcu/gpu/gemm_universal/"
+            "device_gemm_xdl_universal_bf16_bf16_bf16_add_relu.hpp",
             "src/tensor_operation_instance_hcu/gpu/gemm_universal_batched/"
             "device_batched_gemm_xdl_universal_bf16_bf16_bf16.hpp",
             "src/tensor_operation_instance_hcu/gpu/grouped_conv2d_fwd_gfx928/"
@@ -104,6 +108,18 @@ class TestTemplateParser(unittest.TestCase):
         self.assertEqual(len(first.args), 42)
         self.assertEqual(first.args[:3], ("Row", "Col", "Row"))
         self.assertEqual(first.args[22], "S<4, 64, 1>")
+        self.assertEqual(first.args[-2:], ("BlockGemmPipelineScheduler::Intrawave", "BlockGemmPipelineVersion::v3"))
+
+    def test_parse_gemm_multid_epilogue_hpp_instance(self):
+        path = self.library / "src" / "tensor_operation_instance_hcu" / "gpu" / "gemm_universal" / "device_gemm_xdl_universal_bf16_bf16_bf16_add.hpp"
+        instances = parse_template_instances_from_file(path, "DeviceGemmMultiD_Xdl_CShuffle_V3")
+        self.assertTrue(instances)
+        first = instances[0]
+        self.assertEqual(len(first.args), 44)
+        self.assertEqual(first.args[:4], ("Row", "Col", "Tuple<Row>", "Row"))
+        self.assertEqual(first.args[4:8], ("BF16", "BF16", "Tuple<BF16>", "BF16"))
+        self.assertEqual(first.args[12], "Add")
+        self.assertEqual(first.args[41], "S<4>")
         self.assertEqual(first.args[-2:], ("BlockGemmPipelineScheduler::Intrawave", "BlockGemmPipelineVersion::v3"))
 
     def test_parse_batched_gemm_cpp_instance(self):
@@ -173,6 +189,19 @@ class TestUniversalGemmGenerator(unittest.TestCase):
         dtypes = {op.a_element_dtype for op in self.instances}
         self.assertIn("BF16", dtypes)
         self.assertTrue(any(op.block_gemm_pipeline_version == "BlockGemmPipelineVersion::v3" for op in self.instances))
+
+    def test_gemm_instances_cover_hcu_bf16_epilogues(self):
+        epilogue_ops = {
+            op.c_elementwise_op: op
+            for op in self.instances
+            if op.ds_layouts == ("Row",) and op.ds_element_dtypes == ("BF16",)
+        }
+        self.assertLessEqual({"Add", "AddRelu"}, set(epilogue_ops))
+        for op in (epilogue_ops["Add"], epilogue_ops["AddRelu"]):
+            self.assertEqual((op.a_layout, op.b_layout, op.c_layout), ("Row", "Col", "Row"))
+            self.assertEqual((op.a_element_dtype, op.b_element_dtype, op.c_element_dtype), ("BF16", "BF16", "BF16"))
+            self.assertEqual(op.acc_dtype, "F32")
+            self.assertEqual(op.c_shuffle_block_transfer_scalar_per_vector_n_per_block, (4,))
 
     def test_preselected_gemm_is_disabled_until_dcu_benchmark(self):
         self.assertEqual(gen_gemm_ops_preselected(), [])

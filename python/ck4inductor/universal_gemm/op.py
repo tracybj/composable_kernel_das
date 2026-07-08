@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 
 from dataclasses import asdict, dataclass
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Union
 
 
 @dataclass
@@ -50,7 +50,7 @@ class CKGemmOperation:
     c_shuffle_m_xdl_per_wave_per_shuffle: int
     c_shuffle_n_xdl_per_wave_per_shuffle: int
     c_shuffle_block_transfer_cluster_lengths_m_block_m_per_block_n_block_n_per_block: Tuple[int, ...]
-    c_shuffle_block_transfer_scalar_per_vector_n_per_block: int
+    c_shuffle_block_transfer_scalar_per_vector_n_per_block: Union[int, Tuple[int, ...]]
     block_gemm_pipeline_scheduler: str
     block_gemm_pipeline_version: str
     a_compute_dtype: Optional[str] = None
