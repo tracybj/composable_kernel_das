@@ -41,8 +41,8 @@ ctest -R 'tile_example_grouped_gemm_.*_fast_smoke' --output-on-failure
   当前要求 `num_loop = K / K_Tile >= 2`。
 - FP16/BF16 的 `K_Tile=64`，因此当前 fast example 的 K 维 baseline
   应满足 `K>=128`。
-- 若要覆盖 `num_loop < 2` 的小 K shape，需要补充 small-K fallback 或在
-  launch/support check 中显式拒绝。
+- `num_loop < 2` 的小 K shape 已在 host-side launch/support check 中显式
+  拒绝；若要真正支持，需要补充 small-K fallback。
 - 本目标不注册 standard grouped GEMM factory/profiler instance，也不覆盖
   grouped GEMM MultiABD。
 
@@ -66,6 +66,6 @@ num_loop = K / K_Tile >= 2
 K >= 2 * 64 = 128
 ```
 
-因此 README 中的 correctness smoke 只选用 `K>=128` 的 shape。后续如果要把
-`K<128` 纳入支持范围，应先增加专门的小 K 路径，或在现有 fast path 的
-support check 中明确报告 unsupported。
+因此 README 中的 correctness smoke 只选用 `K>=128` 的 shape。当前 fast path
+会在 host 侧拒绝 `num_loop < 2` 的 group；后续如果要把 `K<128` 纳入支持范围，
+应先增加专门的小 K 路径。

@@ -485,6 +485,10 @@ float invoke_gemm(int n_warmup,
         std::vector<ck_tile::GemmTransKernelArg> kargs;
         void* kargs_ptr   = gemm_workspace.GetDeviceBuffer();
         const bool splitk = args[0].k_batch > 1;
+        if(!grouped_gemm_all_groups_have_min_two_k_loops<GemmConfig, ADataType>(args))
+        {
+            grouped_gemm_throw_min_two_k_loop_error();
+        }
         for(const auto& arg : args)
         {
             kargs.emplace_back(ck_tile::UniversalGemmKernelArgs<>{{arg.a_ptr},

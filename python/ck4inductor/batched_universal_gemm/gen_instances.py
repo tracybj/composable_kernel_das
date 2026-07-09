@@ -7,7 +7,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Iterable, List
 
-from .._template_parser import TemplateInstance, find_template_instances
+from .._template_parser import TemplateInstance, find_template_instances, split_template_args
 from ..util import library_path
 from .op import CKBatchedGemmOperation
 
@@ -54,8 +54,14 @@ def _iter_batched_xdl_cshuffle_v3_instances(root: Path) -> Iterable[TemplateInst
 
 def _convert_token(token: str):
     token = token.strip()
-    if token in {"Tuple<>", "ck::Tuple<>"}:
-        return tuple()
+    if token.startswith(("Tuple<", "ck::Tuple<")) and token.endswith(">"):
+        if token.startswith("ck::"):
+            inner = token[len("ck::Tuple<") : -1].strip()
+        else:
+            inner = token[len("Tuple<") : -1].strip()
+        if not inner:
+            return tuple()
+        return tuple(_convert_token(part) for part in split_template_args(inner))
     if token.startswith("S<") and token.endswith(">"):
         inner = token[2:-1].strip()
         if not inner:

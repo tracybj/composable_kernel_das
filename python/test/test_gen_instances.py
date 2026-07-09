@@ -146,6 +146,17 @@ class TestTemplateParser(unittest.TestCase):
         self.assertEqual(first.args[4:8], ("BF16", "BF16", "Tuple<>", "BF16"))
         self.assertEqual(first.args[-2:], ("BlockGemmPipelineScheduler::Intrawave", "BlockGemmPipelineVersion::v3"))
 
+    def test_parse_batched_gemm_multi_d_add_hpp_instance(self):
+        path = self.library / "src" / "tensor_operation_instance_hcu" / "gpu" / "gemm_universal_batched" / "device_batched_gemm_xdl_universal_bf16_bf16_bf16_add.hpp"
+        instances = parse_template_instances_from_file(path, "DeviceBatchedGemmMultiD_Xdl_CShuffle_V3")
+        self.assertTrue(instances)
+        first = instances[0]
+        self.assertEqual(len(first.args), 44)
+        self.assertEqual(first.args[:4], ("Row", "Col", "Tuple<Row>", "Row"))
+        self.assertEqual(first.args[4:8], ("BF16", "BF16", "Tuple<BF16>", "BF16"))
+        self.assertEqual(first.args[10:13], ("PassThrough", "PassThrough", "Add"))
+        self.assertEqual(first.args[-2:], ("BlockGemmPipelineScheduler::Intrawave", "BlockGemmPipelineVersion::v3"))
+
     def test_parse_grouped_conv_hpp_instance(self):
         path = self.library / "src" / "tensor_operation_instance" / "gpu" / "grouped_conv2d_fwd" / "device_grouped_conv2d_fwd_xdl_instance.hpp"
         instances = parse_template_instances_from_file(path, "DeviceGroupedConvFwdMultipleD_Xdl_CShuffle")
@@ -228,21 +239,35 @@ class TestBatchedUniversalGemmGenerator(unittest.TestCase):
 
     def test_gen_batched_gemm_instances(self):
         self.assertTrue(self.instances)
-        first = self.instances[0]
-        lowered = first.name().lower()
+        base = next(op for op in self.instances if op.ds_layouts == tuple())
+        lowered = base.name().lower()
         self.assertIn("shuffle_v3", lowered)
         self.assertIn("multi_d", lowered)
         self.assertIn("c_shuffle_v3", lowered)
-        self.assertTrue(first.name().startswith("ck_device_batched_gemm_multi_d_xdl_c_shuffle_v3_"))
-        self.assertEqual(first.ds_layouts, tuple())
-        self.assertEqual(first.ds_element_dtypes, tuple())
-        self.assertEqual(first.c_shuffle_dtype, "BF16")
+        self.assertTrue(base.name().startswith("ck_device_batched_gemm_multi_d_xdl_c_shuffle_v3_"))
+        self.assertEqual(base.ds_layouts, tuple())
+        self.assertEqual(base.ds_element_dtypes, tuple())
+        self.assertEqual(base.c_shuffle_dtype, "BF16")
 
     def test_batched_gemm_instances_cover_hcu_bf16_rcr_layout(self):
         layouts = {(op.a_layout, op.b_layout, op.c_layout) for op in self.instances}
         self.assertIn(("Row", "Col", "Row"), layouts)
         self.assertTrue(any(op.a_element_dtype == "BF16" for op in self.instances))
         self.assertNotIn("AData", {op.a_element_dtype for op in self.instances})
+
+    def test_batched_gemm_instances_cover_hcu_bf16_add_epilogue(self):
+        add_ops = [
+            op
+            for op in self.instances
+            if op.ds_layouts == ("Row",)
+            and op.ds_element_dtypes == ("BF16",)
+            and op.c_elementwise_op == "Add"
+        ]
+        self.assertTrue(add_ops)
+        op = add_ops[0]
+        self.assertEqual((op.a_layout, op.b_layout, op.c_layout), ("Row", "Col", "Row"))
+        self.assertEqual((op.a_element_dtype, op.b_element_dtype, op.c_element_dtype), ("BF16", "BF16", "BF16"))
+        self.assertEqual(op.c_shuffle_dtype, "BF16")
 
 class TestGroupedConvFwdGenerator(unittest.TestCase):
     @classmethod
