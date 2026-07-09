@@ -41,3 +41,50 @@ add_grouped_gemm_fast_target(tile_example_grouped_gemm_bf8_fast  CK_TILE_GROUPED
 add_grouped_gemm_fast_target(tile_example_grouped_gemm_int8_fast CK_TILE_GROUPED_GEMM_FAST_INT8 grouped_gemm_int8.cpp)
 add_grouped_gemm_fast_target(tile_example_grouped_gemm_int4_fast CK_TILE_GROUPED_GEMM_FAST_INT4 grouped_gemm_int4.cpp)
 
+set(GROUPED_GEMM_FAST_SMOKE_ARGS
+    -a_layout=R
+    -b_layout=C
+    -group_count=2
+    -Ms=128,256
+    -Ns=128,128
+    -Ks=128,128
+    -stride_As=128,128
+    -stride_Bs=128,128
+    -stride_Cs=128,128
+    -validate=1
+    -warmup=1
+    -repeat=1
+)
+
+add_custom_target(tile_example_grouped_gemm_fp16_bf16_fast_smoke
+    COMMAND $<TARGET_FILE:tile_example_grouped_gemm_fp16_fast>
+            -prec=fp16
+            ${GROUPED_GEMM_FAST_SMOKE_ARGS}
+    COMMAND $<TARGET_FILE:tile_example_grouped_gemm_bf16_fast>
+            -prec=bf16
+            ${GROUPED_GEMM_FAST_SMOKE_ARGS}
+    DEPENDS
+            tile_example_grouped_gemm_fp16_fast
+            tile_example_grouped_gemm_bf16_fast
+    COMMENT "Running HCU ck_tile grouped GEMM FP16/BF16 fast smoke tests"
+    VERBATIM
+)
+
+add_test(NAME tile_example_grouped_gemm_fp16_fast_smoke
+    COMMAND $<TARGET_FILE:tile_example_grouped_gemm_fp16_fast>
+            -prec=fp16
+            ${GROUPED_GEMM_FAST_SMOKE_ARGS}
+)
+set_tests_properties(tile_example_grouped_gemm_fp16_fast_smoke
+    PROPERTIES LABELS "hcu;ck_tile;grouped_gemm;smoke"
+)
+
+add_test(NAME tile_example_grouped_gemm_bf16_fast_smoke
+    COMMAND $<TARGET_FILE:tile_example_grouped_gemm_bf16_fast>
+            -prec=bf16
+            ${GROUPED_GEMM_FAST_SMOKE_ARGS}
+)
+set_tests_properties(tile_example_grouped_gemm_bf16_fast_smoke
+    PROPERTIES LABELS "hcu;ck_tile;grouped_gemm;smoke"
+)
+
