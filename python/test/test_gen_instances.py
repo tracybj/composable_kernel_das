@@ -68,6 +68,8 @@ class TestPackageSkeleton(unittest.TestCase):
             "device_gemm_xdl_universal_bf16_bf16_bf16_add.hpp",
             "src/tensor_operation_instance_hcu/gpu/gemm_universal/"
             "device_gemm_xdl_universal_bf16_bf16_bf16_add_relu.hpp",
+            "src/tensor_operation_instance_hcu/gpu/gemm_multi_abd/"
+            "device_gemm_multi_abd_xdl_bf16_bf16_bf16_add_add_add.hpp",
             "src/tensor_operation_instance_hcu/gpu/gemm_universal_batched/"
             "device_batched_gemm_xdl_universal_bf16_bf16_bf16.hpp",
             "src/tensor_operation_instance_hcu/gpu/grouped_conv2d_fwd_gfx928/"
@@ -119,6 +121,18 @@ class TestTemplateParser(unittest.TestCase):
         self.assertEqual(first.args[:4], ("Row", "Col", "Tuple<Row>", "Row"))
         self.assertEqual(first.args[4:8], ("BF16", "BF16", "Tuple<BF16>", "BF16"))
         self.assertEqual(first.args[12], "Add")
+        self.assertEqual(first.args[41], "S<4>")
+        self.assertEqual(first.args[-2:], ("BlockGemmPipelineScheduler::Intrawave", "BlockGemmPipelineVersion::v3"))
+
+    def test_parse_gemm_multi_abd_hpp_instance(self):
+        path = self.library / "src" / "tensor_operation_instance_hcu" / "gpu" / "gemm_multi_abd" / "device_gemm_multi_abd_xdl_bf16_bf16_bf16_add_add_add.hpp"
+        instances = parse_template_instances_from_file(path, "DeviceGemmMultiABD_Xdl_CShuffle_V3")
+        self.assertTrue(instances)
+        first = instances[0]
+        self.assertEqual(len(first.args), 44)
+        self.assertEqual(first.args[:4], ("Tuple<Row, Row>", "Tuple<Col, Col>", "Tuple<Row>", "Row"))
+        self.assertEqual(first.args[4:8], ("Tuple<BF16, BF16>", "Tuple<BF16, BF16>", "Tuple<BF16>", "BF16"))
+        self.assertEqual(first.args[10:13], ("Add", "Add", "Add"))
         self.assertEqual(first.args[41], "S<4>")
         self.assertEqual(first.args[-2:], ("BlockGemmPipelineScheduler::Intrawave", "BlockGemmPipelineVersion::v3"))
 
