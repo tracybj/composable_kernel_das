@@ -224,7 +224,10 @@ float time_ms = gemm_calc(args, ck_tile::stream_config{stream, true});
 
 ## 3.2 Grouped GEMM C ABI: `ck_tile_dcu_grouped_gemm_run`
 
-来源路径：`example_hcu/ck_tile/19_grouped_gemm/grouped_gemm.hpp`、`example_hcu/ck_tile/19_grouped_gemm/grouped_gemm.cpp`。
+声明路径：`example_hcu/ck_tile/19_grouped_gemm/grouped_gemm.hpp`。实现路径：
+`example_hcu/ck_tile/19_grouped_gemm/grouped_gemm.cpp` 与 `instances/`。aiter
+等现有消费者通过把该 example 目录加入 include path 来复用接口，本次不新增
+另一个 C ABI 头文件。
 
 功能：一次调用提交多组 GEMM descriptor，每组可以有不同的 `M/N/K/stride`。该接口是 `extern "C"` ABI，适合被 Python extension、推理框架 runtime 或其他 C/C++ 客户端动态加载。
 
@@ -325,10 +328,16 @@ int rc = ck_tile_dcu_grouped_gemm_run(descs.data(),
                                       group_count,
                                       CK_TILE_DCU_GROUPED_GEMM_FP16,
                                       'R',
-                                      'C',
+                                      'R',
                                       ws_dev,
                                       stream);
 ```
+
+上例的 `'R','R'` 是 NN layout。variable-K 不需要另一个 API：为每个
+descriptor 分别填写 `K`、`stride_A` 和 `stride_B` 即可。例如三组 NN 可用
+`K={128,192,256}`、`stride_A=K`、`stride_B=N`；当前 FP16/BF16 CompV4
+contract 要求 `k_batch=1`、每组 `K>=128` 且按 64 对齐。可直接运行
+`tile_example_grouped_gemm_c_api_smoke` 验证该框架入口。
 
 ## 3.3 FMHA: `fmha_fwd` / `fmha_bwd`
 

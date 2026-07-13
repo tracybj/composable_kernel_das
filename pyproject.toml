@@ -30,6 +30,7 @@ packages = [
     "ck4inductor.grouped_conv_fwd",
     "ck4inductor.hcu_grouped_conv_fwd",
     "ck4inductor.ck_tile_universal_gemm",
+    "ck4inductor.ck_tile_grouped_gemm",
 ]
 
 [tool.setuptools.package-dir]
@@ -39,6 +40,7 @@ ck4inductor = "python/ck4inductor"
 "ck4inductor.grouped_conv_fwd" = "python/ck4inductor/grouped_conv_fwd"
 "ck4inductor.hcu_grouped_conv_fwd" = "python/ck4inductor/hcu_grouped_conv_fwd"
 "ck4inductor.ck_tile_universal_gemm" = "python/ck4inductor/ck_tile_universal_gemm"
+"ck4inductor.ck_tile_grouped_gemm" = "python/ck4inductor/ck_tile_grouped_gemm"
 "ck4inductor.include" = "include"
 "ck4inductor.library" = "library"
 

@@ -25,6 +25,9 @@ from ck4inductor.hcu_grouped_conv_fwd.gen_instances import (
     gen_conv_ops_library as gen_hcu_grouped_conv_ops_library,
 )
 from ck4inductor.ck_tile_universal_gemm.gen_instances import ops as gen_ck_tile_gemm_ops
+from ck4inductor.ck_tile_grouped_gemm.gen_instances import (
+    ops as gen_ck_tile_grouped_gemm_ops,
+)
 
 try:
     import tomllib
@@ -346,6 +349,49 @@ class TestCKTileUniversalGemmGenerator(unittest.TestCase):
         self.assertEqual(first.name(), first.name())
         self.assertTrue(first.name().startswith("ck_tile_gemm_universal_"))
         self.assertIn(first.pipeline, first.name())
+
+
+class TestCKTileGroupedGemmGenerator(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.instances = gen_ck_tile_grouped_gemm_ops()
+
+    def test_fp16_bf16_nt_nn_are_exposed(self):
+        self.assertEqual(len(self.instances), 4)
+        layouts = {(op.layout_a, op.layout_b, op.layout_c) for op in self.instances}
+        self.assertEqual(layouts, {("Row", "Col", "Row"), ("Row", "Row", "Row")})
+        self.assertEqual({op.datatype_a for op in self.instances}, {"FP16", "BF16"})
+        self.assertEqual({op.pipeline for op in self.instances}, {"CompV4"})
+
+    def test_variable_k_and_public_api_contract(self):
+        for op in self.instances:
+            self.assertTrue(op.supports_variable_k)
+            self.assertEqual(
+                op.public_api_header,
+                "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm.hpp",
+            )
+            self.assertEqual(op.run_symbol, "ck_tile_dcu_grouped_gemm_run")
+            self.assertEqual(op.cmake_target, "ck_tile_dcu_grouped_gemm")
+            self.assertTrue(op.supports_problem([128, 192, 256]))
+            self.assertFalse(op.supports_problem([128, 64, 256]))
+            self.assertFalse(op.supports_problem([128, 192], k_batch=2))
+
+    def test_declared_api_header_keeps_aiter_contract(self):
+        repo_root = Path(__file__).resolve().parents[2]
+        api_header = repo_root / self.instances[0].public_api_header
+        self.assertTrue(api_header.is_file())
+        header_text = api_header.read_text(encoding="utf-8")
+        self.assertIn("CK_GROUPED_GEMM_ABI_DEFINED", header_text)
+        self.assertIn("struct ck_tile_dcu_grouped_gemm_desc", header_text)
+        self.assertIn("ck_tile_dcu_grouped_gemm_workspace_size", header_text)
+        self.assertIn("ck_tile_dcu_grouped_gemm_run", header_text)
+
+    def test_names_are_stable_and_distinguish_layout(self):
+        names = {op.name() for op in self.instances}
+        self.assertEqual(len(names), len(self.instances))
+        self.assertTrue(all(name.startswith("ck_tile_grouped_gemm_") for name in names))
+        self.assertTrue(any("_RRR_" in name for name in names))
+        self.assertTrue(any("_RCR_" in name for name in names))
 
 if __name__ == "__main__":
     unittest.main()

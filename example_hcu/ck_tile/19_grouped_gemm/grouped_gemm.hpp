@@ -145,6 +145,7 @@ struct GemmConfigBase
     static constexpr bool Preshuffle                = false;
     static constexpr bool Persistent                = true;
     static constexpr bool DoubleSmemBuffer          = false;
+    static constexpr bool SupportsFastRowMajorB     = false;
 };
 
 template <typename PrecType>
@@ -190,6 +191,7 @@ struct GemmConfigComputeV4 : public GemmConfigBase
     static constexpr ck_tile::index_t Pipeline = CK_TILE_PIPELINE_COMPUTE_V4;
 
     static constexpr int kBlockPerCu = 1;
+    static constexpr bool SupportsFastRowMajorB = true;
 };
 
 // V4 variant with kPadM=true for MOE dynamic-M (fixed N/K).
@@ -508,6 +510,9 @@ struct GemmConfigComputeInt4 : public GemmConfigBase
 
 using grouped_gemm_kargs = ck_tile::GroupedGemmHostArgs;
 
+#ifndef CK_GROUPED_GEMM_ABI_DEFINED
+#define CK_GROUPED_GEMM_ABI_DEFINED
+
 extern "C" {
 
 enum ck_tile_dcu_grouped_gemm_dtype
@@ -548,6 +553,8 @@ int ck_tile_dcu_grouped_gemm_run(const ck_tile_dcu_grouped_gemm_desc* descs,
                                  hipStream_t stream);
 
 } // extern "C"
+
+#endif // CK_GROUPED_GEMM_ABI_DEFINED
 
 // Per-dtype C ABI dispatch wrappers (non-template, defined in instances/)
 int grouped_gemm_c_run_fp16(const ck_tile_dcu_grouped_gemm_desc* descs,

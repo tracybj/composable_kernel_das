@@ -358,6 +358,20 @@ struct GemmPipelineAgBgCrCompV4 : public BaseGemmPipelineAgBgCrCompV4<Problem>
             ABlockTile a_global_load_tile;
             BBlockTile b_global_load_tile;
 
+            const auto local_prefill_b = [&](auto& b_lds_window) {
+                if constexpr(is_b_row_major && !is_b_load_tr_v())
+                {
+                    auto b_shuffle_tmp = make_static_distributed_tensor<BDataType>(
+                        Policy::template MakeShuffledBRegTileDistribution<Problem>());
+                    transpose_tile2d(b_shuffle_tmp, b_global_load_tile);
+                    Base::LocalPrefill(b_lds_window, b_shuffle_tmp, b_element_func);
+                }
+                else
+                {
+                    Base::LocalPrefill(b_lds_window, b_global_load_tile, b_element_func);
+                }
+            };
+
             using ADramTileWindowStep = typename ADramBlockWindowTmp::BottomTensorIndex;
             using BDramTileWindowStep = typename BDramBlockWindowTmp::BottomTensorIndex;
 
@@ -406,7 +420,7 @@ struct GemmPipelineAgBgCrCompV4 : public BaseGemmPipelineAgBgCrCompV4<Problem>
 
             // LDS write 0
             Base::LocalPrefill(a_copy_lds_window0, a_global_load_tile, a_element_func);
-            Base::LocalPrefill(b_copy_lds_window0, b_global_load_tile, b_element_func);
+            local_prefill_b(b_copy_lds_window0);
 
             // global read 1
             Base::GlobalPrefetch(a_global_load_tile, a_copy_dram_window, a_dram_tile_window_step);
@@ -445,7 +459,7 @@ struct GemmPipelineAgBgCrCompV4 : public BaseGemmPipelineAgBgCrCompV4<Problem>
             Base::LocalPrefetch(b_block_tile0, b_lds_ld_window0, is_b_load_tr_v);
 
             Base::LocalPrefill(a_copy_lds_window1, a_global_load_tile, a_element_func);
-            Base::LocalPrefill(b_copy_lds_window1, b_global_load_tile, b_element_func);
+            local_prefill_b(b_copy_lds_window1);
 
             Base::GlobalPrefetch(a_global_load_tile, a_copy_dram_window, a_dram_tile_window_step);
             Base::GlobalPrefetch(b_global_load_tile, b_copy_dram_window, b_dram_tile_window_step);
@@ -463,7 +477,7 @@ struct GemmPipelineAgBgCrCompV4 : public BaseGemmPipelineAgBgCrCompV4<Problem>
                         Base::LocalPrefetch(b_block_tile1, b_lds_ld_window1, is_b_load_tr_v);
 
                         Base::LocalPrefill(a_copy_lds_window0, a_global_load_tile, a_element_func);
-                        Base::LocalPrefill(b_copy_lds_window0, b_global_load_tile, b_element_func);
+                        local_prefill_b(b_copy_lds_window0);
 
                         Base::GlobalPrefetch(a_global_load_tile, a_copy_dram_window, a_dram_tile_window_step);
                         Base::GlobalPrefetch(b_global_load_tile, b_copy_dram_window, b_dram_tile_window_step);
@@ -481,7 +495,7 @@ struct GemmPipelineAgBgCrCompV4 : public BaseGemmPipelineAgBgCrCompV4<Problem>
 
 
                         Base::LocalPrefill(a_copy_lds_window1, a_global_load_tile, a_element_func);
-                        Base::LocalPrefill(b_copy_lds_window1, b_global_load_tile, b_element_func);
+                        local_prefill_b(b_copy_lds_window1);
                         block_sync_lds();
 
                         Base::GlobalPrefetch(a_global_load_tile, a_copy_dram_window, a_dram_tile_window_step);
@@ -506,7 +520,7 @@ struct GemmPipelineAgBgCrCompV4 : public BaseGemmPipelineAgBgCrCompV4<Problem>
                     Base::LocalPrefetch(b_block_tile1, b_lds_ld_window1, is_b_load_tr_v);
 
                     Base::LocalPrefill(a_copy_lds_window0, a_global_load_tile, a_element_func);
-                    Base::LocalPrefill(b_copy_lds_window0, b_global_load_tile, b_element_func);
+                    local_prefill_b(b_copy_lds_window0);
                     block_gemm(c_block_tile, a_block_tile0, b_block_tile0);
                 }
                 // 2

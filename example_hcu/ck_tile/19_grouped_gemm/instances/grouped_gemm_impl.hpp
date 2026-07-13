@@ -812,7 +812,27 @@ int run_gemm_example_prec_type(std::string a_layout, std::string b_layout, int a
                                                      CDataType,
                                                      AccDataType>(argc, argv, Row{}, Col{}, Row{});
     }
-    throw std::runtime_error("Fast grouped_gemm target only supports A row-major and B column-major.");
+    if constexpr(GemmConfig::SupportsFastRowMajorB)
+    {
+        if(a_layout == "R" && b_layout == "R")
+        {
+            if(bias || multiple_d)
+            {
+                throw std::runtime_error(
+                    "bias/multiple-D currently supports A row-major and B column-major.");
+            }
+            return run_grouped_gemm_example_with_layouts<GemmConfig,
+                                                         ADataType,
+                                                         BDataType,
+                                                         CDataType,
+                                                         AccDataType>(
+                argc, argv, Row{}, Row{}, Row{});
+        }
+    }
+    throw std::runtime_error(
+        GemmConfig::SupportsFastRowMajorB
+            ? "Fast grouped_gemm target only supports A row-major with B row-major or column-major."
+            : "Fast grouped_gemm target only supports A row-major and B column-major.");
 #else
 
     if(a_layout == "R" && b_layout == "C")

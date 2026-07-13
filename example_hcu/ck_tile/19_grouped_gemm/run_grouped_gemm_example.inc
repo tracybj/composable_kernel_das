@@ -542,7 +542,8 @@ int run_grouped_gemm_example_with_layouts(int argc,
     auto [result, arg_parser] = create_args(argc, argv);
 
     auto valid_input_data = [&](int group_count, const auto&... args) {
-        return !(args.empty() || ...) && group_count == (args.size() == ...);
+        return group_count != 0 &&
+               ((args.size() == static_cast<std::size_t>(group_count)) && ...);
     };
 
     const int group_count = arg_parser.get_int("group_count");
@@ -576,6 +577,12 @@ int run_grouped_gemm_example_with_layouts(int argc,
         std::cout << "Default values: Ms (256, 512, 768, 1024..), Ns (256, 768, 1280..), Ks (512, "
                      "896, 1280..)"
                   << std::endl;
+        Ms.clear();
+        Ns.clear();
+        Ks.clear();
+        stride_As.clear();
+        stride_Bs.clear();
+        stride_Cs.clear();
         for(int i = 0; i < group_count; i++)
         {
             //Non Persitent kernel模式：必须保证所有组的 K % K_Tile % 2 的 tailNumber 一致，因为目前所有group
@@ -586,9 +593,9 @@ int run_grouped_gemm_example_with_layouts(int argc,
             Ns.push_back(256 + 128 * i);
             Ks.push_back(640 + 256 * i);
 
-            stride_As.push_back(Ks[i]);
-            stride_Bs.push_back(Ks[i]);
-            stride_Cs.push_back(Ns[i]);
+            stride_As.push_back(0);
+            stride_Bs.push_back(0);
+            stride_Cs.push_back(0);
         }
     }
 
@@ -1068,7 +1075,8 @@ int run_grouped_gemm_multiple_d_example_with_layouts(
     auto [result, arg_parser] = create_args(argc, argv);
 
     auto valid_input_data = [&](int group_count, const auto&... args) {
-        return !(args.empty() || ...) && group_count == (args.size() == ...);
+        return group_count != 0 &&
+               ((args.size() == static_cast<std::size_t>(group_count)) && ...);
     };
 
     const int group_count = arg_parser.get_int("group_count");
@@ -1093,14 +1101,20 @@ int run_grouped_gemm_multiple_d_example_with_layouts(
     if(!valid_input_data(group_count, Ms, Ns, Ks, stride_As, stride_Bs, stride_Cs))
     {
         std::cout << "Please check the input data. Default values will be used." << std::endl;
+        Ms.clear();
+        Ns.clear();
+        Ks.clear();
+        stride_As.clear();
+        stride_Bs.clear();
+        stride_Cs.clear();
         for(int i = 0; i < group_count; i++)
         {
             Ms.push_back(256 + 256 * i);
             Ns.push_back(256 + 128 * i);
             Ks.push_back(640 + 256 * i);
-            stride_As.push_back(Ks[i]);
-            stride_Bs.push_back(Ks[i]);
-            stride_Cs.push_back(Ns[i]);
+            stride_As.push_back(0);
+            stride_Bs.push_back(0);
+            stride_Cs.push_back(0);
         }
     }
 
@@ -1394,7 +1408,8 @@ int run_grouped_gemm_bias_example_with_layouts(
     auto [result, arg_parser] = create_args(argc, argv);
 
     auto valid_input_data = [&](int group_count, const auto&... args) {
-        return !(args.empty() || ...) && group_count == (args.size() == ...);
+        return group_count != 0 &&
+               ((args.size() == static_cast<std::size_t>(group_count)) && ...);
     };
 
     const int group_count = arg_parser.get_int("group_count");
@@ -1419,14 +1434,20 @@ int run_grouped_gemm_bias_example_with_layouts(
     if(!valid_input_data(group_count, Ms, Ns, Ks, stride_As, stride_Bs, stride_Cs))
     {
         std::cout << "Please check the input data. Default values will be used." << std::endl;
+        Ms.clear();
+        Ns.clear();
+        Ks.clear();
+        stride_As.clear();
+        stride_Bs.clear();
+        stride_Cs.clear();
         for(int i = 0; i < group_count; i++)
         {
             Ms.push_back(256 + 256 * i);
             Ns.push_back(256 + 128 * i);
             Ks.push_back(640 + 256 * i);
-            stride_As.push_back(Ks[i]);
-            stride_Bs.push_back(Ks[i]);
-            stride_Cs.push_back(Ns[i]);
+            stride_As.push_back(0);
+            stride_Bs.push_back(0);
+            stride_Cs.push_back(0);
         }
     }
 

@@ -13,8 +13,9 @@ cmake --build . --target tile_example_grouped_gemm_fp16_fast -j 16
 cmake --build . --target tile_example_grouped_gemm_bf16_fast -j 16
 ```
 
-显式 smoke target 会构建上述两个 target，并运行一个 2 组 grouped GEMM
-correctness 检查：
+显式 smoke target 会构建上述两个 target，并运行 FP16/BF16 的 NT/NN、
+fixed-K/variable-K correctness 检查；最后还会运行一个绕过 example CLI、
+直接链接现有 C ABI 的 NN variable-K consumer：
 
 ```bash
 cmake --build . --target tile_example_grouped_gemm_fp16_bf16_fast_smoke -j 16
@@ -24,18 +25,60 @@ cmake --build . --target tile_example_grouped_gemm_fp16_bf16_fast_smoke -j 16
 
 ```bash
 ./bin/tile_example_grouped_gemm_fp16_fast -prec=fp16 -a_layout=R -b_layout=C -group_count=2 -Ms=128,256 -Ns=128,128 -Ks=128,128 -stride_As=128,128 -stride_Bs=128,128 -stride_Cs=128,128 -validate=1 -warmup=1 -repeat=1
-./bin/tile_example_grouped_gemm_bf16_fast -prec=bf16 -a_layout=R -b_layout=C -group_count=2 -Ms=128,256 -Ns=128,128 -Ks=128,128 -stride_As=128,128 -stride_Bs=128,128 -stride_Cs=128,128 -validate=1 -warmup=1 -repeat=1
+./bin/tile_example_grouped_gemm_fp16_fast -prec=fp16 -a_layout=R -b_layout=R -group_count=2 -Ms=128,256 -Ns=128,128 -Ks=128,128 -stride_As=128,128 -stride_Bs=128,128 -stride_Cs=128,128 -validate=1 -warmup=1 -repeat=1
+./bin/tile_example_grouped_gemm_bf16_fast -prec=bf16 -a_layout=R -b_layout=C -group_count=3 -Ms=128,256,192 -Ns=128,128,256 -Ks=128,192,256 -stride_As=128,192,256 -stride_Bs=128,192,256 -stride_Cs=128,128,256 -validate=1 -warmup=1 -repeat=1
+./bin/tile_example_grouped_gemm_bf16_fast -prec=bf16 -a_layout=R -b_layout=R -group_count=3 -Ms=128,256,192 -Ns=128,128,256 -Ks=128,192,256 -stride_As=128,192,256 -stride_Bs=128,128,256 -stride_Cs=128,128,256 -validate=1 -warmup=1 -repeat=1
 ```
 
-也可以通过 CTest 单独运行这两条 smoke：
+也可以通过 CTest 运行这组 8 项 smoke：
 
 ```bash
 ctest -R 'tile_example_grouped_gemm_.*_fast_smoke' --output-on-failure
 ```
 
+## 现有 C ABI（框架入口）
+
+现有框架（包括 aiter）继续从本 example 目录包含原有 header：
+
+```cpp
+#include "grouped_gemm.hpp"
+```
+
+`grouped_gemm.hpp` 保留 dtype 枚举、descriptor、workspace 与 run 声明；
+`CK_GROUPED_GEMM_ABI_DEFINED` guard 用于和 aiter 的纯 C ABI 声明共存。
+本次不新增另一个 C ABI 接口头文件。
+
+FP16/BF16 实现可通过以下 target 构建为位置无关的静态库：
+
+```bash
+cmake --build . --target ck_tile_dcu_grouped_gemm -j 32
+```
+
+独立 C ABI correctness consumer 的构建与运行命令为：
+
+```bash
+cmake --build . --target tile_example_grouped_gemm_c_api_smoke -j 32
+./bin/tile_example_grouped_gemm_c_api_smoke
+```
+
+该程序不调用 `run_grouped_gemm_example`，而是构造三组
+`K={128,192,256}` descriptor，令 `a_layout='R'`、`b_layout='R'`，直接调用
+`ck_tile_dcu_grouped_gemm_run` 并验证 FP16/BF16 输出。因此 NN 与 variable-K
+能力不依赖 `CK_TILE_GROUPED_GEMM_FAST_RR_ENABLED`；该宏已被删除，fast CLI
+是否开放 RowMajor B 现在由 `GemmConfig::SupportsFastRowMajorB` 声明。
+
+ck4inductor 的 `ck_tile_grouped_gemm` 模块枚举 FP16/BF16 × NT/NN 四个
+consumer contract，并提供 variable-K、K 对齐、最小 K、现有 ABI 符号和 CMake
+target 信息。它是 ROCm/DCU Torch backend 的接入材料；未修改的 PyTorch
+TorchInductor 仍需要 grouped lowering/template 才会自动把 `aten._grouped_mm`
+调度到该 C ABI。
+
 ## 当前边界
 
-- 最小已验证 layout 是 A 行主序、B 列主序、C 行主序。
+- FP16/BF16 fast target 覆盖 A 行主序、C 行主序，以及 B 列主序（NT）或
+  B 行主序（NN）。其他 fast dtype 仍保持原有 RC-only 限制。
+- variable-K 表示同一次 grouped launch 中每个 descriptor 的 K 可以不同；
+  它不等同于 split-K，且当前所有 group 仍使用同一个 `kbatch`。
 - smoke 有意使用从 M/N/K 128 起步的对齐 shape。
 - 现有 FP16/BF16 fast target 使用 CompV4 persistent double-buffer 路径；
   当前要求 `num_loop = K / K_Tile >= 2`。
