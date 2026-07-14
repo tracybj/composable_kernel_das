@@ -11,7 +11,7 @@
 namespace ck {
 namespace tensor_operation {
 namespace element_wise {
-
+#define CK_WORKAROUND_SWDEV_383542 1
 #if CK_WORKAROUND_SWDEV_383542
 extern "C" __device__ float __ocml_native_recip_f32(float);
 #endif
@@ -138,10 +138,27 @@ struct UnaryConvert
 
 struct Scale
 {
-    __host__ __device__ Scale(float scale) : scale_(scale) {}
+    __host__ __device__ Scale(float scale = 1.f) : scale_(scale) {}
 
     template <typename Y, typename X>
-    __host__ __device__ void operator()(Y& y, const X& x) const;
+    __host__ __device__ void operator()(Y& y, const X& x) const
+    {
+        y = type_convert<Y>(type_convert<float>(x) * scale_);
+    }
+
+    template <>
+    __host__ __device__ void operator()<half_t, half_t>(half_t& y, const half_t& x) const
+    {
+        y = type_convert<half_t>(scale_) * x;
+    }
+
+    template <>
+    __host__ __device__ void operator()<bhalf_t, bhalf_t>(bhalf_t& y, const bhalf_t& x) const
+    {
+        const float x_tmp = type_convert<float>(x);
+        const float y_tmp = scale_ * x_tmp;
+        y                 = type_convert<bhalf_t>(y_tmp);
+    }
 
     template <>
     __host__ __device__ void operator()<float, float>(float& y, const float& x) const
@@ -155,6 +172,12 @@ struct Scale
         y = scale_ * x;
     };
 
+    template <>
+    __host__ __device__ void operator()<int8_t, int8_t>(int8_t& y, const int8_t& x) const
+    {
+        y = type_convert<int8_t>(scale_ * type_convert<float>(x));
+    };
+    
     float scale_;
 };
 

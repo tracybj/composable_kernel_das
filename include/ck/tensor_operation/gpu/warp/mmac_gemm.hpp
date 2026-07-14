@@ -24,10 +24,33 @@ enum struct MmacInstr
     mmac_i32_16x16x32u8,
     mmac_i32_16x16x64i4,
     mmac_i32_16x16x64u4,
+    mmac_16x16x4f64,
 };
 
 template <MmacInstr instr>
 struct mmac_type;
+
+template<>
+struct mmac_type<MmacInstr::mmac_16x16x4f64>
+{
+    static constexpr index_t group_size          = 1;
+    static constexpr index_t num_groups_per_blk  = 4;
+    static constexpr index_t num_regs_per_blk    = 4;
+    static constexpr index_t num_threads_per_blk = 16;
+    static constexpr index_t wave_size           = 64;
+    static constexpr index_t num_input_blks      = 4;
+    static constexpr index_t num_output_blks     = 1;
+    static constexpr index_t m_per_blk           = 16;
+    static constexpr index_t n_per_blk           = 16;
+    static constexpr index_t k_per_blk           = 1;
+    static constexpr bool is_k_reduction         = true;
+
+    template <typename A, typename B, typename C>
+    __device__ void run (const A& a, const B& b, C& reg_c) const
+    {
+        intrin_mmac_16x16x4f64(bit_cast<double>(a), bit_cast<double>(b), reg_c);
+    }
+};
 
 template <>
 struct mmac_type<MmacInstr::mmac_f32_16x16x4f32>
@@ -332,6 +355,12 @@ struct MmacSelector
               index_t NPerMMAC_,
               index_t KPerBlock_>
     struct MmacTraits;
+
+    template <index_t KPerBlock_>
+    struct MmacTraits<double, double, 16, 16, KPerBlock_>
+    {
+        static constexpr auto value = MmacInstr::mmac_16x16x4f64;
+    };
 
 #if defined(__gfx926__) || defined(__gfx92a__)
     template <index_t KPerBlock_>

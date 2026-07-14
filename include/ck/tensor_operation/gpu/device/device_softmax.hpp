@@ -18,7 +18,8 @@ template <typename InDataType,
           typename OutDataType,
           typename InElementwiseOp,
           typename AccElementwiseOp,
-          index_t Rank>
+          index_t Rank,
+          index_t NumReduceDim>
 struct DeviceSoftmax : public BaseOperator
 {
     //
@@ -58,9 +59,10 @@ template <typename InDataType,
           typename OutDataType,
           typename InElementwiseOp,
           typename AccElementwiseOp,
-          index_t Rank>
+          index_t Rank,
+          index_t NumReduceDim>
 using DeviceSoftmaxPtr = std::unique_ptr<
-    DeviceSoftmax<InDataType, AccDataType, OutDataType, InElementwiseOp, AccElementwiseOp, Rank>>;
+    DeviceSoftmax<InDataType, AccDataType, OutDataType, InElementwiseOp, AccElementwiseOp, Rank, NumReduceDim>>;
 
 } // namespace device
 } // namespace tensor_operation

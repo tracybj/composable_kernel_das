@@ -38,7 +38,8 @@ struct DeviceSoftmaxImpl : public DeviceSoftmax<InDataType,
                                                 OutDataType,
                                                 InElementwiseOp,
                                                 AccElementwiseOp,
-                                                Rank>
+                                                Rank,
+                                                NumReduceDim>
 {
     static constexpr index_t kRank            = Rank;
     static constexpr index_t kNumReduceDim    = NumReduceDim;

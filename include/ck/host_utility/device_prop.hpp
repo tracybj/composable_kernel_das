@@ -196,4 +196,29 @@ inline int __host__ get_lds_size()
     return 64 * 1024;
 }
 
+template <typename ADataType,
+          typename BDataType,
+          index_t MPerXDL64,
+          index_t NPerXDL64,
+          index_t MPerXDL32 = MPerXDL64,
+          index_t NPerXDL32 = NPerXDL64>
+bool is_xdl_mmac_supported()
+{
+    if(ck::get_device_name() == "gfx936")
+    {
+        if constexpr((MPerXDL32 != 16) || (NPerXDL32 != 16))
+        {
+            return false;
+        }
+
+        (void)sizeof(ADataType);
+        (void)sizeof(BDataType);
+        (void)MPerXDL64;
+        (void)NPerXDL64;
+        return true;
+    }
+
+    return false;
+}
+
 } // namespace ck

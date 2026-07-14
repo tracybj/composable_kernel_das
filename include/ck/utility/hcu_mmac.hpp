@@ -8,6 +8,17 @@
 
 namespace ck {
 
+template<typename C>
+__device__ void intrin_mmac_16x16x4f64(const double& reg_a, const double& reg_b, C& reg_c)
+{
+#if defined(__gfx936__)
+    reg_c.template AsType<double4_t>()(Number<0>{}) = __builtin_hcu_mmac_16x16x4_f64(
+        reg_a, reg_b, reg_c.template AsType<double4_t>()[Number<0>{}], 0);
+#else
+    swallow(reg_a, reg_b, reg_c);
+#endif
+};
+
 template <typename C>
 __device__ void intrin_mmac_f32_16x16x4f32(const float& reg_a, const float& reg_b, C& reg_c)
 {

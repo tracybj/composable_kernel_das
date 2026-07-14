@@ -33,6 +33,13 @@ using device_softmax_f16_f16_instances = std::tuple<
     // clang-format on
     >;
 
+template <index_t Rank, index_t Reduce>
+using device_softmax_f16_f16_generic_instance = std::tuple<
+    // clang-format off
+    DeviceSoftmaxImpl<       F16,         F32,         F16,     PassThrough,      PassThrough, Rank,       Reduce,        64,                  8,                  8,                1,                1,              1,               1,              1>
+    // clang-format on
+    >;
+
 } // namespace instance
 } // namespace device
 } // namespace tensor_operation
