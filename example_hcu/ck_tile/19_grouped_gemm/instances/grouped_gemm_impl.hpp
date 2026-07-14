@@ -437,31 +437,39 @@ int dispatch_grouped_gemm_c_layout(const ck_tile_dcu_grouped_gemm_desc* descs,
     }
     if(a_layout == 'R' && b_layout == 'R')
     {
-        return run_grouped_gemm_c_impl<GemmConfig,
-                                       Row,
-                                       Row,
-                                       Row,
-                                       ADataType,
-                                       BDataType,
-                                       AccDataType,
-                                       CDataType>(descs,
-                                                  group_count,
-                                                  workspace,
-                                                  stream);
+        if constexpr(GemmConfig::SupportsFastRowMajorB)
+        {
+            return run_grouped_gemm_c_impl<GemmConfig,
+                                           Row,
+                                           Row,
+                                           Row,
+                                           ADataType,
+                                           BDataType,
+                                           AccDataType,
+                                           CDataType>(descs,
+                                                      group_count,
+                                                      workspace,
+                                                      stream);
+        }
+        return -4;
     }
     if(a_layout == 'C' && b_layout == 'R')
     {
-        return run_grouped_gemm_c_impl<GemmConfig,
-                                       Col,
-                                       Row,
-                                       Row,
-                                       ADataType,
-                                       BDataType,
-                                       AccDataType,
-                                       CDataType>(descs,
-                                                  group_count,
-                                                  workspace,
-                                                  stream);
+        if constexpr(GemmConfig::SupportsFastRowMajorB)
+        {
+            return run_grouped_gemm_c_impl<GemmConfig,
+                                           Col,
+                                           Row,
+                                           Row,
+                                           ADataType,
+                                           BDataType,
+                                           AccDataType,
+                                           CDataType>(descs,
+                                                      group_count,
+                                                      workspace,
+                                                      stream);
+        }
+        return -4;
     }
     if(a_layout == 'C' && b_layout == 'C')
     {
@@ -518,7 +526,13 @@ float grouped_gemm(const std::vector<ck_tile::GroupedGemmHostArgsImpl<DsDataType
                                                                  ALayout,
                                                                  BLayout,
                                                                  CLayout,
-                                                                 GemmConfig::TransposeC>;
+                                                                 GemmConfig::TransposeC,
+                                                                 false,
+                                                                 false,
+                                                                 1,
+                                                                 false,
+                                                                 false,
+                                                                 GemmConfig::SupportsFastRowMajorB>;
 
     using GemmPipelineProblem =
         ck_tile::GemmPipelineProblem<ADataType, BDataType, AccDataType, GemmShape, GemmUniversalTraits>;
@@ -660,7 +674,9 @@ float grouped_gemm_tileloop(const ck_tile::stream_config& s,
                                CLayout,
                                false,
                                false,
-                               false>;
+                               false,
+                               true,
+                               GemmConfig::SupportsFastRowMajorB>;
 
     float ave_time{0};
 
@@ -853,27 +869,39 @@ int run_gemm_example_prec_type(std::string a_layout, std::string b_layout, int a
     }
     else if(a_layout == "R" && b_layout == "R")
     {
-        if(bias || multiple_d)
+        if constexpr(GemmConfig::SupportsFastRowMajorB)
         {
-            throw std::runtime_error("bias/multiple-D currently supports A row-major and B column-major.");
+            if(bias || multiple_d)
+            {
+                throw std::runtime_error(
+                    "bias/multiple-D currently supports A row-major and B column-major.");
+            }
+            return run_grouped_gemm_example_with_layouts<GemmConfig,
+                                                         ADataType,
+                                                         BDataType,
+                                                         CDataType,
+                                                         AccDataType>(
+                argc, argv, Row{}, Row{}, Row{});
         }
-        return run_grouped_gemm_example_with_layouts<GemmConfig,
-                                                     ADataType,
-                                                     BDataType,
-                                                     CDataType,
-                                                     AccDataType>(argc, argv, Row{}, Row{}, Row{});
+        throw std::runtime_error("B row-major is not supported for this grouped_gemm config.");
     }
     else if(a_layout == "C" && b_layout == "R")
     {
-        if(bias || multiple_d)
+        if constexpr(GemmConfig::SupportsFastRowMajorB)
         {
-            throw std::runtime_error("bias/multiple-D currently supports A row-major and B column-major.");
+            if(bias || multiple_d)
+            {
+                throw std::runtime_error(
+                    "bias/multiple-D currently supports A row-major and B column-major.");
+            }
+            return run_grouped_gemm_example_with_layouts<GemmConfig,
+                                                         ADataType,
+                                                         BDataType,
+                                                         CDataType,
+                                                         AccDataType>(
+                argc, argv, Col{}, Row{}, Row{});
         }
-        return run_grouped_gemm_example_with_layouts<GemmConfig,
-                                                     ADataType,
-                                                     BDataType,
-                                                     CDataType,
-                                                     AccDataType>(argc, argv, Col{}, Row{}, Row{});
+        throw std::runtime_error("B row-major is not supported for this grouped_gemm config.");
     }
     else if(a_layout == "C" && b_layout == "C")
     {

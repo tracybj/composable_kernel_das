@@ -121,7 +121,8 @@ struct UniversalGemmBasePolicy
                 number<1>{});
             return b_lds_block_desc_0;
         }
-        else if constexpr(std::is_same_v<BLayout, tensor_layout::gemm::RowMajor>)
+        else if constexpr(Problem::Traits::SupportBRowMajor &&
+                          std::is_same_v<BLayout, tensor_layout::gemm::RowMajor>)
         {
             // B is loaded as a logical K x N tile. Keep that logical order in LDS while
             // applying the Wave64 XOR swizzle used by the upstream grouped GEMM policy.

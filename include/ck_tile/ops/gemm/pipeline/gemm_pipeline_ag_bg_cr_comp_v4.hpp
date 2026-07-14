@@ -359,7 +359,8 @@ struct GemmPipelineAgBgCrCompV4 : public BaseGemmPipelineAgBgCrCompV4<Problem>
             BBlockTile b_global_load_tile;
 
             const auto local_prefill_b = [&](auto& b_lds_window) {
-                if constexpr(is_b_row_major && !is_b_load_tr_v())
+                if constexpr(Problem::Traits::SupportBRowMajor && is_b_row_major &&
+                             !is_b_load_tr_v())
                 {
                     auto b_shuffle_tmp = make_static_distributed_tensor<BDataType>(
                         Policy::template MakeShuffledBRegTileDistribution<Problem>());

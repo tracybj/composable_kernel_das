@@ -89,13 +89,11 @@ int grouped_gemm_c_run_int4(const ck_tile_dcu_grouped_gemm_desc* descs,
     }
     if(a_layout == 'R' && b_layout == 'R')
     {
-        return grouped_gemm_c_run_int4_impl<Config, Row, Row, Row>(
-            descs, group_count, workspace, stream);
+        return -4;
     }
     if(a_layout == 'C' && b_layout == 'R')
     {
-        return grouped_gemm_c_run_int4_impl<Config, Col, Row, Row>(
-            descs, group_count, workspace, stream);
+        return -4;
     }
     if(a_layout == 'C' && b_layout == 'C')
     {
