@@ -1,3 +1,6 @@
+# Copyright (c) 2026 Hygon Info Technologies Ltd.
+# SPDX-License-Identifier: MIT
+
 add_instance_library(device_normalization_instance
     device_layernorm2d_f16_instance.cpp
     device_layernorm2d_f32_instance.cpp

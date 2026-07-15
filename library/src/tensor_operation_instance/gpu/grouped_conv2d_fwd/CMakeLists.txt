@@ -1,3 +1,6 @@
+# Copyright (c) Advanced Micro Devices, Inc., or its affiliates.
+# SPDX-License-Identifier: MIT
+
 add_instance_library(device_grouped_conv2d_fwd_instance
    # GNHWC, GKYXC, GNHWK
    device_grouped_conv2d_fwd_xdl_gnhwc_gkyxc_gnhwk_bf16_instance.cpp

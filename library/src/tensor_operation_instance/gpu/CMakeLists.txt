@@ -1,3 +1,6 @@
+# Copyright (c) Advanced Micro Devices, Inc., or its affiliates.
+# SPDX-License-Identifier: MIT
+
 function(add_instance_library INSTANCE_NAME)
     message("adding instance ${INSTANCE_NAME}")
     add_library(${INSTANCE_NAME} OBJECT ${ARGN})

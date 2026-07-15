@@ -1,3 +1,6 @@
+# Copyright (c) 2026 Hygon Info Technologies Ltd.
+# SPDX-License-Identifier: MIT
+
 add_instance_library_with_arch(device_grouped_conv2d_fwd_bias_relu_gfx928_instance
   "gfx928;gfx92a;gfx936;gfx938"
   # ngchw_gkcyx_ngkhw/device_grouped_conv2d_fwd_bias_relu_mmac_v2_ngchw_gkcyx_ngkhw_f16_bias_f16_f1x1s1p0_cshuffle_instance.cpp

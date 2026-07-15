@@ -1,3 +1,6 @@
+# Copyright (c) 2026 Hygon Info Technologies Ltd.
+# SPDX-License-Identifier: MIT
+
 add_instance_library_with_arch(device_grouped_conv2d_bwd_gfx936_instance
   "gfx928;gfx92a;gfx936;gfx938"
   ngkhwk32_gkcyxc32_ngchwc32/device_grouped_conv2d_bwd_mmac_v2_ngkhwk32_gkcyxc32_ngchwc32_f16_default_cshuffle_instance.cpp

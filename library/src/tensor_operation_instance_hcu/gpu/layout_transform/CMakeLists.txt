@@ -1,3 +1,6 @@
+# Copyright (c) 2026 Hygon Info Technologies Ltd.
+# SPDX-License-Identifier: MIT
+
 add_instance_library_with_arch(device_layout_transform_instance
     "gfx928;gfx92a;gfx936;gfx938"
     device_layout_transform_ngchw_to_ngchwc32_f16_f16_instance.cpp

@@ -1,3 +1,6 @@
+# Copyright (c) Advanced Micro Devices, Inc., or its affiliates.
+# SPDX-License-Identifier: MIT
+
 add_instance_library_with_arch(device_permute_scale_gfx936_instance
 	"gfx936"
 	device_permute_scale_1d_fp16_instances.cpp

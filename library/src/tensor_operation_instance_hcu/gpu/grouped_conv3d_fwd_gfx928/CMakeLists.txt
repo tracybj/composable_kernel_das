@@ -1,3 +1,6 @@
+# Copyright (c) 2026 Hygon Info Technologies Ltd.
+# SPDX-License-Identifier: MIT
+
 add_instance_library_with_arch(device_grouped_conv3d_fwd_gfx928_instance
   "gfx928;gfx92a;gfx936;gfx938"
   ndhwgc_gkzyxc_ndhwgk/conv3d_fwd_v1_f16_default_instance.cpp

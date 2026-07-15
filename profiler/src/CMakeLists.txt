@@ -1,3 +1,6 @@
+# Copyright (c) Advanced Micro Devices, Inc., or its affiliates.
+# SPDX-License-Identifier: MIT
+
 # ckProfiler
 set(PROFILER_SOURCES
     profiler.cpp

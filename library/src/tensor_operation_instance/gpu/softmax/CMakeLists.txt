@@ -1,3 +1,6 @@
+# Copyright (c) Advanced Micro Devices, Inc., or its affiliates.
+# SPDX-License-Identifier: MIT
+
 add_instance_library(device_softmax_instance
     device_softmax_i8_i8_instance.cpp
     device_softmax_i8_i8_instance_rank3_reduce1.cpp

@@ -1,3 +1,6 @@
+# Copyright (c) 2026 Hygon Info Technologies Ltd.
+# SPDX-License-Identifier: MIT
+
 add_custom_target(test_normalization)
 
 add_gtest_executable(test_layernorm2d_fp32 test_layernorm2d_fp32.cpp)

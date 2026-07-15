@@ -1,3 +1,6 @@
+# Copyright (c) Advanced Micro Devices, Inc., or its affiliates.
+# SPDX-License-Identifier: MIT
+
 add_instance_library_with_arch(device_batchnorm_instance
     "gfx928;gfx92a;gfx936;gfx938"
     device_batchnorm_forward_f16_instance.cpp

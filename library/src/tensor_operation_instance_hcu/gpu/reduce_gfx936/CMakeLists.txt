@@ -1,3 +1,6 @@
+# Copyright (c) Advanced Micro Devices, Inc., or its affiliates.
+# SPDX-License-Identifier: MIT
+
 add_instance_library_with_arch(device_reduce_gfx936_instance
     "gfx936"
    device_reduce_instance_blockwise_f16_f16_f16_min.cpp

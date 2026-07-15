@@ -1,4 +1,7 @@
 #!/bin/bash
+# Copyright (c) 2026 Hygon Info Technologies Ltd.
+# SPDX-License-Identifier: MIT
+
 rm -f CMakeCache.txt
 rm -f *.cmake
 rm -rf CMakeFiles
