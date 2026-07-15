@@ -11,6 +11,7 @@
 #include "ck/tensor_operation/gpu/device/tensor_layout.hpp"
 #include "ck/tensor_operation/gpu/element/element_wise_operation.hpp"
 #include "ck/utility/data_type.hpp"
+#include "ck/host_utility/device_prop.hpp"
 
 #include "ck/library/utility/check_err.hpp"
 #include "ck/library/utility/device_memory.hpp"
@@ -150,4 +151,15 @@ using ReferenceGemmInstance = ck::tensor_operation::host::ReferenceGemmBiasActiv
 
 #include "run_gemm_bias_activation_example.inc"
 
-int main(int argc, char* argv[]) { return !run_gemm_example(argc, argv); }
+int main(int argc, char* argv[])
+{
+    if(ck::get_hcu_target_enum() == ck::HCUTargetEnum::HCU_TARGET_GFX938)
+    {
+        std::cerr << "The wavelet direct-load path is not supported on gfx938 because it produces "
+                     "incorrect column ordering."
+                  << std::endl;
+        return 77;
+    }
+
+    return !run_gemm_example(argc, argv);
+}

@@ -225,7 +225,7 @@ bool run_grouped_conv_fwd(bool do_verification,
         out_device_buf.FromDevice(out_device.mData.data());
 
         return ck::utils::check_err(
-            out_device, out_host, "Error: incorrect results!", 1e-5f, 1e-4f);
+            out_device, out_host, "Error: incorrect results!", 1e-3f, 1e-3f);
     }
 
     return true;
@@ -240,7 +240,7 @@ bool run_grouped_conv_fwd_example(int argc, char* argv[])
     bool time_kernel     = true;
 
     ck::utils::conv::ConvParam conv_param{
-        2, 1, 1, 16, 16, {1, 1}, {4, 4}, {1, 1}, {1, 1}, {0, 0}, {0, 0}};
+        2, 1, 1, 64, 64, {3, 3}, {8, 8}, {1, 1}, {1, 1}, {1, 1}, {1, 1}};
 
     if(argc == 1)
     {

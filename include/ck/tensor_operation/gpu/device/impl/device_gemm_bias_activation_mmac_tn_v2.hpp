@@ -151,7 +151,8 @@ struct DeviceGemmBiasActivation_mmac_tn_mk_nk_mn_v2
                                            BBlockTransferSrcVectorDim,
                                            BBlockTransferSrcScalarPerVector,
                                            CThreadTransferDstScalarPerVector,
-                                           NumGemmKPrefetchStage>;
+                                           NumGemmKPrefetchStage,
+                                           false>;
 
     struct Argument : public BaseArgument
     {

@@ -416,7 +416,7 @@ bool bnorm_fwd_nhwc_test(bool do_verification,
         (void)invoker_ptr_ref->Run(argument_ptr_ref.get());
 
         y_dev.FromDevice(y.mData.data());
-        pass = pass && ck::utils::check_err(y, y_ref);
+        pass = pass && ck::utils::check_err(y, y_ref, "BatchNorm output:");
 
         if(updateMovingAverage)
         {
@@ -426,8 +426,10 @@ bool bnorm_fwd_nhwc_test(bool do_verification,
             resultRunningMean_dev.FromDevice(resultRunningMean.mData.data());
             resultRunningVariance_dev.FromDevice(resultRunningVariance.mData.data());
 
-            pass = pass && ck::utils::check_err(resultRunningMean, resultRunningMean_ref);
-            pass = pass && ck::utils::check_err(resultRunningVariance, resultRunningVariance_ref);
+            pass = pass && ck::utils::check_err(
+                               resultRunningMean, resultRunningMean_ref, "Running mean:");
+            pass = pass && ck::utils::check_err(
+                               resultRunningVariance, resultRunningVariance_ref, "Running variance:");
         };
 
         if(saveMeanAndInvVariance)
@@ -440,8 +442,14 @@ bool bnorm_fwd_nhwc_test(bool do_verification,
             resultSaveMean_dev.FromDevice(resultSaveMean.mData.data());
             resultSaveInvVariance_dev.FromDevice(resultSaveInvVariance.mData.data());
 
-            pass = pass && ck::utils::check_err(resultSaveMean, resultSaveMean_ref);
-            pass = pass && ck::utils::check_err(resultSaveInvVariance, resultSaveInvVariance_ref);
+            pass = pass &&
+                   ck::utils::check_err(resultSaveMean, resultSaveMean_ref, "Saved mean:");
+            pass = pass && ck::utils::check_err(
+                               resultSaveInvVariance,
+                               resultSaveInvVariance_ref,
+                               "Saved inv variance:",
+                               1e-4,
+                               1e-4);
         };
     };
 

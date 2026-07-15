@@ -12,6 +12,7 @@
 #include "ck/tensor_operation/gpu/grid/multistage_gemm_pipeline_v1.hpp"
 #include "ck/tensor_operation/gpu/block/blockwise_gemm_mmac_tn_v2.hpp"
 #include "ck/tensor_operation/gpu/block/thread_group_tensor_slice_transfer_lds_direct_load.hpp"
+#include "ck/tensor_operation/gpu/block/thread_group_tensor_slice_transfer_lds_swizzle.hpp"
 #include "ck/tensor_operation/gpu/thread/threadwise_tensor_slice_transfer_v1r4.hpp"
 #include "ck/tensor_operation/gpu/element/element_wise_operation.hpp"
 
@@ -117,7 +118,8 @@ template <index_t BlockSize,
           index_t BBlockTransferSrcVectorDim,
           index_t BBlockTransferSrcScalarPerVector,
           index_t CThreadTransferDstScalarPerVector,
-          index_t NumGemmKPrefetchStage>
+          index_t NumGemmKPrefetchStage,
+          bool UseLdsDirectLoad = true>
 struct GridwiseGemm_mmac_tn_mk_nk_mn_v2r1
 {
     // A/B elementwise operation not supported
@@ -141,8 +143,10 @@ struct GridwiseGemm_mmac_tn_mk_nk_mn_v2r1
 
     using ThisThreadBlock = ThisThreadBlock<BlockSize>;
 
-    using MultiStageGemmPipeline =
-        remove_cvref_t<decltype(MultiStageGemmPipeline_v1<NumGemmKPrefetchStage>())>;
+    using MultiStageGemmPipeline = remove_cvref_t<decltype(MultiStageGemmPipeline_v1<
+        NumGemmKPrefetchStage,
+        UseLdsDirectLoad,
+        UseLdsDirectLoad>())>;
 
     using AStorageType = typename storage_type<ADataType>::type;
     using BStorageType = typename storage_type<BDataType>::type;
@@ -384,40 +388,86 @@ struct GridwiseGemm_mmac_tn_mk_nk_mn_v2r1
         constexpr auto b_block_desc_b_n_k = GetBBlockDescriptor_B_NPerBlock_KPerBlock();
 
         // A matrix blockwise copy
-        auto a_blockwise_copy =
-            ThreadGroupTensorSliceTransfer_DirectLoad<ThisThreadBlock,
-                                                      Sequence<1, MPerBlock, KPerBlock>,
-                                                      ABlockTransferThreadClusterLengths_B_M_K,
-                                                      ADataType,
-                                                      ADataType,
-                                                      decltype(a_grid_desc_b_m_k),
-                                                      decltype(a_block_desc_b_m_k),
-                                                      ABlockTransferSrcVectorDim,
-                                                      ABlockTransferSrcVectorDim,
-                                                      ABlockTransferSrcScalarPerVector,
-                                                      true>(
-                a_grid_desc_b_m_k,
-                make_multi_index(k_batch_id, m_block_data_idx_on_grid, 0),
-                a_block_desc_b_m_k,
-                make_multi_index(0, 0, 0));
+        auto a_blockwise_copy = [&]() {
+            if constexpr(UseLdsDirectLoad)
+            {
+                return ThreadGroupTensorSliceTransfer_DirectLoad<
+                    ThisThreadBlock,
+                    Sequence<1, MPerBlock, KPerBlock>,
+                    ABlockTransferThreadClusterLengths_B_M_K,
+                    ADataType,
+                    ADataType,
+                    decltype(a_grid_desc_b_m_k),
+                    decltype(a_block_desc_b_m_k),
+                    ABlockTransferSrcVectorDim,
+                    ABlockTransferSrcVectorDim,
+                    ABlockTransferSrcScalarPerVector,
+                    true>(a_grid_desc_b_m_k,
+                          make_multi_index(k_batch_id, m_block_data_idx_on_grid, 0),
+                          a_block_desc_b_m_k,
+                          make_multi_index(0, 0, 0));
+            }
+            else
+            {
+                return ThreadGroupTensorSliceTransfer_LdsSwizzle<
+                    ThisThreadBlock,
+                    Sequence<1, MPerBlock, KPerBlock>,
+                    ABlockTransferThreadClusterLengths_B_M_K,
+                    ADataType,
+                    ADataType,
+                    decltype(a_grid_desc_b_m_k),
+                    decltype(a_block_desc_b_m_k),
+                    ABlockTransferSrcVectorDim,
+                    ABlockTransferSrcScalarPerVector,
+                    KPack,
+                    NumGemmKPrefetchStage>(
+                    a_grid_desc_b_m_k,
+                    make_multi_index(k_batch_id, m_block_data_idx_on_grid, 0),
+                    a_block_desc_b_m_k,
+                    make_multi_index(0, 0, 0));
+            }
+        }();
 
         // B matrix blockwise copy
-        auto b_blockwise_copy =
-            ThreadGroupTensorSliceTransfer_DirectLoad<ThisThreadBlock,
-                                                      Sequence<1, NPerBlock, KPerBlock>,
-                                                      BBlockTransferThreadClusterLengths_B_N_K,
-                                                      BDataType,
-                                                      BDataType,
-                                                      decltype(b_grid_desc_b_n_k),
-                                                      decltype(b_block_desc_b_n_k),
-                                                      BBlockTransferSrcVectorDim,
-                                                      BBlockTransferSrcVectorDim,
-                                                      BBlockTransferSrcScalarPerVector,
-                                                      true>(
-                b_grid_desc_b_n_k,
-                make_multi_index(k_batch_id, n_block_data_idx_on_grid, 0),
-                b_block_desc_b_n_k,
-                make_multi_index(0, 0, 0));
+        auto b_blockwise_copy = [&]() {
+            if constexpr(UseLdsDirectLoad)
+            {
+                return ThreadGroupTensorSliceTransfer_DirectLoad<
+                    ThisThreadBlock,
+                    Sequence<1, NPerBlock, KPerBlock>,
+                    BBlockTransferThreadClusterLengths_B_N_K,
+                    BDataType,
+                    BDataType,
+                    decltype(b_grid_desc_b_n_k),
+                    decltype(b_block_desc_b_n_k),
+                    BBlockTransferSrcVectorDim,
+                    BBlockTransferSrcVectorDim,
+                    BBlockTransferSrcScalarPerVector,
+                    true>(b_grid_desc_b_n_k,
+                          make_multi_index(k_batch_id, n_block_data_idx_on_grid, 0),
+                          b_block_desc_b_n_k,
+                          make_multi_index(0, 0, 0));
+            }
+            else
+            {
+                return ThreadGroupTensorSliceTransfer_LdsSwizzle<
+                    ThisThreadBlock,
+                    Sequence<1, NPerBlock, KPerBlock>,
+                    BBlockTransferThreadClusterLengths_B_N_K,
+                    BDataType,
+                    BDataType,
+                    decltype(b_grid_desc_b_n_k),
+                    decltype(b_block_desc_b_n_k),
+                    BBlockTransferSrcVectorDim,
+                    BBlockTransferSrcScalarPerVector,
+                    KPack,
+                    NumGemmKPrefetchStage>(
+                    b_grid_desc_b_n_k,
+                    make_multi_index(k_batch_id, n_block_data_idx_on_grid, 0),
+                    b_block_desc_b_n_k,
+                    make_multi_index(0, 0, 0));
+            }
+        }();
 
         auto blockwise_gemm = BlockwiseGemmASmemBSmemCReg_mmac_tn_mk_nk_mn_v2<
             BlockSize,

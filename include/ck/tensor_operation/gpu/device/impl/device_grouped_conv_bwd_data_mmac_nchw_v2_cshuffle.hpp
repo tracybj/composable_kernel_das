@@ -676,6 +676,14 @@ struct DeviceGroupedConvBwdData_mmac_nchw_v2_cshuffle
             return false;
         }
 
+        // This NCHW transform maps only one image into the GEMM M dimension. For N > 1 the
+        // batch stride is not represented by the generated descriptors and the kernel silently
+        // mixes images, so reject that unsupported case instead of returning incorrect data.
+        if(arg.a_g_n_k_wos_lengths_[1] != 1 || arg.c_g_n_c_wis_lengths_[1] != 1)
+        {
+            return false;
+        }
+
         // Specifialization
         if constexpr(ConvBwdDataSpecialization ==
                      ConvolutionBackwardDataSpecialization::Filter1x1Stride1Pad0)

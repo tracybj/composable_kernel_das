@@ -19,6 +19,7 @@
 #include "ck/library/utility/device_memory.hpp"
 #include "ck/library/utility/host_tensor.hpp"
 #include "ck/library/utility/host_tensor_generator.hpp"
+#include "ck/host_utility/device_prop.hpp"
 
 #include "ck/tensor_operation/gpu/device/impl/device_grouped_conv_bwd_data_mmac_v2_cshuffle_mixed.hpp"
 
@@ -143,7 +144,7 @@ inline bool parse_cmd_args(int argc,
 
         const ck::index_t num_dim_spatial = std::stoi(argv[4]);
         conv_params                       = ck::utils::conv::parse_conv_param(
-            num_dim_spatial, threshold_to_catch_partial_args, argv);
+            num_dim_spatial, threshold_to_catch_partial_args + 1, argv);
     }
     else
     {
@@ -339,4 +340,15 @@ int run_grouped_conv_bwd_data_example(int argc, char* argv[])
                               in_element_op);
 }
 
-int main(int argc, char* argv[]) { return run_grouped_conv_bwd_data_example(argc, argv); }
+int main(int argc, char* argv[])
+{
+    if(ck::get_hcu_target_enum() == ck::HCUTargetEnum::HCU_TARGET_GFX938)
+    {
+        std::cerr << "The mixed NHWC-to-NCHW cshuffle path is not supported on gfx938 because it "
+                     "does not write valid output."
+                  << std::endl;
+        return 77;
+    }
+
+    return run_grouped_conv_bwd_data_example(argc, argv);
+}

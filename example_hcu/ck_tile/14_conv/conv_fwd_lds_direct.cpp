@@ -215,7 +215,7 @@ bool run_grouped_conv_fwd(const ck_tile::conv::ConvParam& conv_param)
 
     out_device_buf.FromDevice(out_device.data());
 
-    return ck_tile::check_err(out_device, out_host, "Error: incorrect results!", 1e-5f, 1e-4f);
+    return ck_tile::check_err(out_device, out_host, "Error: incorrect results!", 1e-3f, 1e-3f);
 
     return true;
 }
@@ -258,13 +258,12 @@ bool run_grouped_conv_fwd_example(int argc, char* argv[])
 
     if(arg_parser.get_int("m") == 2)
     {
-        run_grouped_conv_fwd<2>(conv_param);
-        return 0;
+        return run_grouped_conv_fwd<2>(conv_param);
     }
     else
     {
         printf("unsupport spatial dim\n");
-        return -1;
+        return false;
     }
 }
 

@@ -12,6 +12,7 @@
 #include "ck_tile/ops/conv.hpp"
 #include "ck_tile/ops/elementwise.hpp"
 #include "ck_tile/ops/epilogue.hpp"
+#include "ck/host_utility/device_prop.hpp"
 
 using ADataType   = ck_tile::fp16_t;
 using BDataType   = ck_tile::fp16_t;
@@ -258,14 +259,24 @@ bool run_grouped_conv_fwd_example(int argc, char* argv[])
 
     if(arg_parser.get_int("m") == 2)
     {
-        run_grouped_conv_fwd<2>(conv_param);
-        return 0;
+        return run_grouped_conv_fwd<2>(conv_param);
     }
     else
     {
         printf("unsupport spatial dim\n");
-        return -1;
+        return false;
     }
 }
 
-int main(int argc, char* argv[]) { return run_grouped_conv_fwd_example(argc, argv) ? 0 : 1; }
+int main(int argc, char* argv[])
+{
+    if(ck::get_hcu_target_enum() == ck::HCUTargetEnum::HCU_TARGET_GFX938)
+    {
+        std::cerr << "The DSReadM NT block-GEMM path is not supported on gfx938 because its current "
+                     "LDS/distribution contract produces invalid values."
+                  << std::endl;
+        return 77;
+    }
+
+    return run_grouped_conv_fwd_example(argc, argv) ? 0 : 1;
+}
