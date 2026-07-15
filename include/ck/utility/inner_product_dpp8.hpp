@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: MIT
-// Copyright (c) 2018-2025, , Inc. All rights reserved.
 // Copyright (c) Advanced Micro Devices, Inc., or its affiliates.
 //
 // Adapted for Hygon DCU: DPP8 instructions (v_dot2c_f32_f16_dpp, __builtin_amdgcn_mov_dpp8)

@@ -1,3 +1,6 @@
+# Copyright (c) 2026 Hygon Info Technologies Ltd.
+# SPDX-License-Identifier: MIT
+
 # add_compile_options("SHELL: -mllvm -support-512-vgprs=true -mllvm -stream-unfolded-args-in-metadata -Rpass-analysis=kernel-resource-usage")
 ck_add_arch_vgpr_compile_options()
 add_compile_options("SHELL: -mllvm -disable-machine-licm -mllvm -stream-unfolded-args-in-metadata -Rpass-analysis=kernel-resource-usage")

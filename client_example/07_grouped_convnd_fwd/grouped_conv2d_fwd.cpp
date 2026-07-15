@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
-// Copyright (c) 2018-2022, , Inc. All rights reserved.
+// Copyright (c) 2018-2022, Advanced Micro Devices, Inc. All rights reserved.
+// Copyright (c) 2026 Hygon Info Technologies Ltd.
 
 #include <cstdlib>
 #include <iomanip>

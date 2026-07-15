@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Copyright (c) 2018-2025, , Inc. All rights reserved.
+// Copyright (c) 2018-2025, Advanced Micro Devices, Inc. All rights reserved.
 //
 // Adapted for Hygon DCU: gemm_universal factory header.
 // Wraps existing DCU V1 DeviceGemm instances into the DeviceGemmV2 interface

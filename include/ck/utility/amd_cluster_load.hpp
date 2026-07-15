@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Copyright (c) 2018-2025, , Inc. All rights reserved.
+// Copyright (c) 2018-2025, Advanced Micro Devices, Inc. All rights reserved.
 //
 // Hygon DCU: cluster_multicast_load is NOT available.
 // Upstream uses __builtin_amdgcn_cluster_load_b32/b64/b128 (gfx1250+ only).

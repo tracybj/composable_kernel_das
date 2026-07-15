@@ -1,4 +1,7 @@
 #!/bin/bash
+# Copyright (c) 2026 Hygon Info Technologies Ltd.
+# SPDX-License-Identifier: MIT
+
 
 SRC_DIR=$(realpath $(dirname $0))
 BUILD_DIR=$SRC_DIR/build

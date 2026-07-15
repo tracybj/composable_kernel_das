@@ -1,3 +1,6 @@
+# Copyright (c) 2026 Hygon Info Technologies Ltd.
+# SPDX-License-Identifier: MIT
+
 # add_example_executable(example_batchnorm_forward_training batchnorm_forward_training_nhwc.cpp)
 # add_example_executable(example_batchnorm_forward_inferring batchnorm_forward_inferring_nhwc.cpp)
 # add_example_executable(example_batchnorm_backward batchnorm_backward_nhwc.cpp)

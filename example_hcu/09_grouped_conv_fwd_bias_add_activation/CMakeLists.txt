@@ -1,3 +1,6 @@
+# Copyright (c) 2026 Hygon Info Technologies Ltd.
+# SPDX-License-Identifier: MIT
+
 add_custom_target(example_grouped_conv_fwd_bias_add_activation_mmac)
 
 ck_add_arch_vgpr_compile_options()

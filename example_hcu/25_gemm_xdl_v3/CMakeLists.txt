@@ -1,3 +1,6 @@
+# Copyright (c) 2026 Hygon Info Technologies Ltd.
+# SPDX-License-Identifier: MIT
+
 # hcu GEMM XDL CShuffle v3 examples
 add_custom_target(example_hcu_gemm_xdl_v3)
 

@@ -1,3 +1,6 @@
+# Copyright (c) 2026 Hygon Info Technologies Ltd.
+# SPDX-License-Identifier: MIT
+
 # hcu examples
 add_custom_target(example_gemm_mmac_bias_activation)
 

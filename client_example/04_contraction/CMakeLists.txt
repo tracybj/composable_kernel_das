@@ -1,3 +1,6 @@
+# Copyright (c) Advanced Micro Devices, Inc., or its affiliates.
+# SPDX-License-Identifier: MIT
+
 add_executable(client_contraction_scale_fp32 contraction_scale_fp32.cpp)
 target_link_libraries(client_contraction_scale_fp32 PRIVATE composable_kernel::device_operations)
 

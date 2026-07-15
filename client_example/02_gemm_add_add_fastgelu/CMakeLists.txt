@@ -1,3 +1,6 @@
+# Copyright (c) Advanced Micro Devices, Inc., or its affiliates.
+# SPDX-License-Identifier: MIT
+
 add_custom_target(client_gemm_fastgelu_examples)
 
 add_executable(client_gemm_add_add_fastgelu gemm_add_add_fastgelu.cpp)

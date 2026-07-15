@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Copyright (c) 2018-2025, , Inc. All rights reserved.
+// Copyright (c) 2018-2025, Advanced Micro Devices, Inc. All rights reserved.
 //
 // Adapted for Hygon DCU: gemm_universal_streamk stub.
 // Upstream this depends on DeviceGemm_Streamk_V2 + device_gemm_xdl_cshuffle_streamk_v3.hpp

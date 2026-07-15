@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Copyright (c) 2018-2025, , Inc. All rights reserved.
+// Copyright (c) 2018-2025, Advanced Micro Devices, Inc. All rights reserved.
 //
 // Hygon DCU: data_cache_prefetch is NOT available.
 // Upstream uses __builtin_amdgcn_global_prefetch (gfx1250 only).

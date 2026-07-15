@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
-// Copyright (c) 2018-2025, , Inc. All rights reserved.
 // Copyright (c) Advanced Micro Devices, Inc., or its affiliates.
+// Copyright (c) 2026 Hygon Info Technologies Ltd.
 //
 // Adapted for Hygon DCU: uses __builtin_hcu_raw_buffer_load*/store* and
 // __builtin_hcu_make_buffer_rsrc instead of AMD builtins.

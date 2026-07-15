@@ -11,7 +11,7 @@ OPS_COMMON = 'common' # common header will be duplicated into ops/* other module
 
 current_year = datetime.datetime.now().year
 HEADER_COMMON = """// SPDX-License-Identifier: MIT
-// Copyright (c) 2018-{year}, , Inc. All rights reserved.\n
+// Copyright (c) 2018-{year}, Advanced Micro Devices, Inc. All rights reserved.\n
 """.format(year=current_year)
 
 # aa/bb/cc/file.hpp -> (aa, bb, cc, file.hpp)

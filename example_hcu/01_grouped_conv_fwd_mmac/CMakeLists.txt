@@ -1,3 +1,6 @@
+# Copyright (c) 2026 Hygon Info Technologies Ltd.
+# SPDX-License-Identifier: MIT
+
 add_custom_target(example_grouped_conv_fwd_mmac)
 
 # add_example_executable(example_grouped_conv_fwd_mmac_nchw_fp32 grouped_conv_fwd_mmac_nchw_fp32.cpp)

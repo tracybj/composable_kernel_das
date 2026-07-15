@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Copyright (c) 2025, , Inc. All rights reserved.
+// Copyright (c) 2025, Advanced Micro Devices, Inc. All rights reserved.
 #include "grouped_gemm_impl.hpp"
 
 int grouped_gemm_c_run_fp8(const ck_tile_dcu_grouped_gemm_desc* descs,

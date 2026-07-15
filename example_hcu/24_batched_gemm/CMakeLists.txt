@@ -1,3 +1,6 @@
+# Copyright (c) 2026 Hygon Info Technologies Ltd.
+# SPDX-License-Identifier: MIT
+
 # hcu batched gemm examples
 add_custom_target(example_hcu_batched_gemm_xdl)
 

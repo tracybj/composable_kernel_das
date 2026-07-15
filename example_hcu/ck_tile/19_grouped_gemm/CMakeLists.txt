@@ -1,3 +1,6 @@
+# Copyright (c) 2026 Hygon Info Technologies Ltd.
+# SPDX-License-Identifier: MIT
+
 set(TILE_EXAMPLE_GROUPED_GEMM "tile_example_grouped_gemm")
 message("adding ${TILE_EXAMPLE_GROUPED_GEMM}")
 

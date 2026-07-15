@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: MIT
-// Copyright (c) 2018-2025, , Inc. All rights reserved.
 // Copyright (c) Advanced Micro Devices, Inc., or its affiliates.
 //
 // Adapted for Hygon DCU: DPP8 lane-group gemm is NOT available.
