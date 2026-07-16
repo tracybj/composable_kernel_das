@@ -37,6 +37,7 @@ struct UniversalGemmBasePolicy
     CK_TILE_HOST_DEVICE static constexpr auto MakeALdsBlockDescriptor()
     {
 
+        using ALayout               = remove_cvref_t<typename Problem::ALayout>;
         using ADataType             = remove_cvref_t<typename Problem::ADataType>;
         constexpr index_t MPerBlock = Problem::BlockGemmShape::kM;  //128
         constexpr index_t KPerBlock = Problem::BlockGemmShape::kK;  //64
@@ -50,6 +51,112 @@ struct UniversalGemmBasePolicy
                 number<MPerBlock>{},
                 number<1>{});
             return a_lds_block_desc_0;
+        }
+        else if constexpr(Problem::Traits::SupportAColumnMajor &&
+                          std::is_same_v<ALayout, tensor_layout::gemm::ColumnMajor>)
+        {
+            // A is loaded as a logical K x M tile. Transpose its register distribution before
+            // storing to this Wave64 XOR-swizzled LDS descriptor so block GEMM sees M x K.
+            constexpr index_t BlockSize   = Problem::kBlockSize;
+            constexpr index_t VecLoadSize =
+                Problem::FixedVectorSize ? Problem::VectorSizeA : GetVectorSizeA<Problem>();
+            using TileEncodingPattern = tile_distribution_encoding_pattern_2d<BlockSize,
+                                                                              KPerBlock,
+                                                                              MPerBlock,
+                                                                              VecLoadSize,
+                                                                              ATileAccessPattern>;
+
+            constexpr auto AK1 = number<TileEncodingPattern::Y2>{};
+            constexpr auto AK0 = number<KPerBlock / AK1>{};
+            constexpr auto M0  = TileEncodingPattern::X0;
+            constexpr auto M1  = number<MPerBlock / M0>{};
+
+            using WarpTile         = typename Problem::BlockGemmShape::WarpTile;
+            constexpr auto MPerXdl = number<WarpTile::at(I0)>{};
+
+            constexpr auto KThreadWrite =
+                TileEncodingPattern::Y0 * TileEncodingPattern::Y1;
+            constexpr auto K0PerThreadWrite = AK0 / KThreadWrite;
+            constexpr auto KThreadRead      = get_warp_size() / MPerXdl;
+            constexpr auto K0PerThreadRead  = AK0 / KThreadRead;
+
+            constexpr auto LdsBanksWidth = 32 * 4;
+            constexpr auto kfold = (AK1 * M0 * sizeof(ADataType) > LdsBanksWidth)
+                                       ? 1
+                                       : LdsBanksWidth / (AK1 * M0 * sizeof(ADataType));
+            constexpr auto KThreadReadPerm =
+                (kfold * K0PerThreadWrite / K0PerThreadRead) > 1
+                    ? KThreadRead / (kfold * K0PerThreadWrite / K0PerThreadRead)
+                    : KThreadRead;
+
+            constexpr auto mpair =
+                (AK1 * MPerXdl * sizeof(ADataType) > LdsBanksWidth)
+                    ? 1
+                    : ((LdsBanksWidth / (AK1 * MPerXdl * sizeof(ADataType))) > M0
+                           ? M0
+                           : LdsBanksWidth / (AK1 * MPerXdl * sizeof(ADataType)));
+
+            constexpr auto a_lds_block_desc = make_naive_tensor_descriptor_packed(
+                make_tuple(number<KThreadWrite / kfold / KThreadReadPerm>{},
+                           number<K0PerThreadWrite>{},
+                           number<KThreadReadPerm * M1>{},
+                           number<kfold * M0 / mpair>{},
+                           number<mpair>{},
+                           AK1),
+                AK1);
+
+            constexpr auto a_lds_block_desc_permuted = transform_tensor_descriptor(
+                a_lds_block_desc,
+                make_tuple(
+                    make_pass_through_transform(
+                        number<KThreadWrite / kfold / KThreadReadPerm>{}),
+                    make_pass_through_transform(number<K0PerThreadWrite>{}),
+                    make_xor_transform(
+                        make_tuple(number<KThreadReadPerm * M1>{}, number<kfold * M0 / mpair>{})),
+                    make_pass_through_transform(number<mpair>{}),
+                    make_pass_through_transform(AK1)),
+                make_tuple(
+                    sequence<0>{}, sequence<1>{}, sequence<2, 3>{}, sequence<4>{}, sequence<5>{}),
+                make_tuple(
+                    sequence<0>{}, sequence<1>{}, sequence<2, 3>{}, sequence<4>{}, sequence<5>{}));
+
+            constexpr auto a_lds_block_desc_unmerged = transform_tensor_descriptor(
+                a_lds_block_desc_permuted,
+                make_tuple(
+                    make_pass_through_transform(
+                        number<KThreadWrite / kfold / KThreadReadPerm>{}),
+                    make_pass_through_transform(number<K0PerThreadWrite>{}),
+                    make_unmerge_transform(make_tuple(number<KThreadReadPerm>{}, number<M1>{})),
+                    make_unmerge_transform(make_tuple(number<kfold>{}, number<M0 / mpair>{})),
+                    make_pass_through_transform(number<mpair>{}),
+                    make_pass_through_transform(AK1)),
+                make_tuple(sequence<0>{},
+                           sequence<1>{},
+                           sequence<2>{},
+                           sequence<3>{},
+                           sequence<4>{},
+                           sequence<5>{}),
+                make_tuple(sequence<1>{},
+                           sequence<2>{},
+                           sequence<0, 3>{},
+                           sequence<4, 5>{},
+                           sequence<6>{},
+                           sequence<7>{}));
+
+            constexpr auto a_lds_block_desc_mk = transform_tensor_descriptor(
+                a_lds_block_desc_unmerged,
+                make_tuple(make_merge_transform_v3_division_mod(
+                               make_tuple(number<KThreadReadPerm>{},
+                                          number<KThreadWrite / kfold / KThreadReadPerm>{},
+                                          number<kfold>{},
+                                          number<K0PerThreadWrite>{},
+                                          AK1)),
+                           make_merge_transform_v3_division_mod(
+                               make_tuple(number<M0 / mpair>{}, number<mpair>{}, number<M1>{}))),
+                make_tuple(sequence<0, 1, 4, 2, 7>{}, sequence<5, 6, 3>{}),
+                make_tuple(sequence<1>{}, sequence<0>{}));
+
+            return a_lds_block_desc_mk;
         }
         else
         {
@@ -128,7 +235,8 @@ struct UniversalGemmBasePolicy
             // B is loaded as a logical K x N tile. Keep that logical order in LDS while
             // applying the Wave64 XOR swizzle used by the upstream grouped GEMM policy.
             constexpr index_t BlockSize   = Problem::kBlockSize;
-            constexpr index_t VecLoadSize = GetVectorSizeB<Problem>();
+            constexpr index_t VecLoadSize =
+                Problem::FixedVectorSize ? Problem::VectorSizeB : GetVectorSizeB<Problem>();
             using TileEncodingPattern = tile_distribution_encoding_pattern_2d<BlockSize,
                                                                               KPerBlock,
                                                                               NPerBlock,
@@ -533,7 +641,8 @@ struct UniversalGemmBasePolicy
         constexpr index_t BlockSize     = Problem::kBlockSize;
         constexpr index_t MPerBlock     = Problem::BlockGemmShape::kM;
         constexpr index_t KPerBlock     = Problem::BlockGemmShape::kK;
-        constexpr index_t VecLoadSize   = GetVectorSizeA<Problem>();
+        constexpr index_t VecLoadSize =
+            Problem::FixedVectorSize ? Problem::VectorSizeA : GetVectorSizeA<Problem>();
         constexpr index_t NumWaveGroups = Problem::NumWaveGroups;
 
         using TileEncodingPattern = tile_distribution_encoding_pattern_2d<BlockSize,
@@ -553,7 +662,8 @@ struct UniversalGemmBasePolicy
         constexpr index_t BlockSize     = Problem::kBlockSize;
         constexpr index_t NPerBlock     = Problem::BlockGemmShape::kN;
         constexpr index_t KPerBlock     = Problem::BlockGemmShape::kK;
-        constexpr index_t VecLoadSize   = GetVectorSizeB<Problem>();
+        constexpr index_t VecLoadSize =
+            Problem::FixedVectorSize ? Problem::VectorSizeB : GetVectorSizeB<Problem>();
         constexpr index_t NumWaveGroups = Problem::NumWaveGroups;
 
         using TileEncodingPattern = tile_distribution_encoding_pattern_2d<BlockSize,

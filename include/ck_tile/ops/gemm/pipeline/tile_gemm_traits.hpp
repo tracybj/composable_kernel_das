@@ -30,6 +30,7 @@ struct TileGemmTraits
     static constexpr bool UseStructuredSparsity = false;
     static constexpr index_t NumWaveGroups      = NumWaveGroups_;
     static constexpr bool SupportBRowMajor      = false;
+    static constexpr bool SupportAColumnMajor   = false;
 };
 
 //Note: Here won't use mmacrepeat anymore cause that dimension make layout more complex.
@@ -66,7 +67,8 @@ template <bool kPadM_,
           index_t NumWaveGroups_      = 1,
           bool Preshuffle_            = false,
           bool UseABScale_            = false,
-          bool SupportBRowMajor_      = false>
+          bool SupportBRowMajor_      = false,
+          bool SupportAColumnMajor_   = false>
 struct TileGemmUniversalTraits
 {
     static constexpr bool kPadM            = kPadM_;
@@ -86,6 +88,7 @@ struct TileGemmUniversalTraits
     static constexpr bool Preshuffle            = Preshuffle_;
     static constexpr bool UseABScale            = UseABScale_;
     static constexpr bool SupportBRowMajor      = SupportBRowMajor_;
+    static constexpr bool SupportAColumnMajor   = SupportAColumnMajor_;
 };
 
 template <bool kPadM_,
@@ -99,7 +102,8 @@ template <bool kPadM_,
           bool UseStructuredSparsity_ = false,
           bool UseABScale_            = false,
           bool UsePersistentKernel_   = true,
-          bool SupportBRowMajor_      = false>
+          bool SupportBRowMajor_      = false,
+          bool SupportAColumnMajor_   = false>
 using PersistentTileGemmUniversalTraits = TileGemmUniversalTraits<kPadM_,
                                                                   kPadN_,
                                                                   kPadK_,
@@ -113,6 +117,7 @@ using PersistentTileGemmUniversalTraits = TileGemmUniversalTraits<kPadM_,
                                                                   1,
                                                                   false,
                                                                   UseABScale_,
-                                                                  SupportBRowMajor_>;
+                                                                  SupportBRowMajor_,
+                                                                  SupportAColumnMajor_>;
 
 } // namespace ck_tile

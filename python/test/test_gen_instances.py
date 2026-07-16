@@ -357,10 +357,17 @@ class TestCKTileGroupedGemmGenerator(unittest.TestCase):
     def setUpClass(cls):
         cls.instances = gen_ck_tile_grouped_gemm_ops()
 
-    def test_fp16_bf16_nt_nn_are_exposed(self):
-        self.assertEqual(len(self.instances), 4)
+    def test_fp16_bf16_nt_nn_tn_are_exposed(self):
+        self.assertEqual(len(self.instances), 6)
         layouts = {(op.layout_a, op.layout_b, op.layout_c) for op in self.instances}
-        self.assertEqual(layouts, {("Row", "Col", "Row"), ("Row", "Row", "Row")})
+        self.assertEqual(
+            layouts,
+            {
+                ("Row", "Col", "Row"),
+                ("Row", "Row", "Row"),
+                ("Col", "Row", "Row"),
+            },
+        )
         self.assertEqual({op.datatype_a for op in self.instances}, {"FP16", "BF16"})
         self.assertEqual({op.pipeline for op in self.instances}, {"CompV4"})
 
@@ -374,6 +381,7 @@ class TestCKTileGroupedGemmGenerator(unittest.TestCase):
             self.assertEqual(op.run_symbol, "ck_tile_dcu_grouped_gemm_run")
             self.assertEqual(op.cmake_target, "ck_tile_dcu_grouped_gemm")
             self.assertTrue(op.supports_problem([128, 192, 256]))
+            self.assertTrue(op.supports_problem([129, 193, 255]))
             self.assertFalse(op.supports_problem([128, 64, 256]))
             self.assertFalse(op.supports_problem([128, 192], k_batch=2))
 
@@ -393,6 +401,7 @@ class TestCKTileGroupedGemmGenerator(unittest.TestCase):
         self.assertTrue(all(name.startswith("ck_tile_grouped_gemm_") for name in names))
         self.assertTrue(any("_RRR_" in name for name in names))
         self.assertTrue(any("_RCR_" in name for name in names))
+        self.assertTrue(any("_CRR_" in name for name in names))
 
 if __name__ == "__main__":
     unittest.main()

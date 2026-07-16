@@ -13,11 +13,13 @@
 #include "grouped_gemm.hpp"
 
 template <typename DataType>
-bool run_nn_variable_k_c_api_smoke(int dtype)
+bool run_c_api_smoke(int dtype,
+                     char a_layout,
+                     char b_layout,
+                     const std::vector<int>& ms,
+                     const std::vector<int>& ns,
+                     const std::vector<int>& ks)
 {
-    const std::vector<int> ms{128, 256, 192};
-    const std::vector<int> ns{128, 128, 256};
-    const std::vector<int> ks{128, 192, 256};
     const int group_count = static_cast<int>(ms.size());
 
     std::vector<std::vector<DataType>> host_as(group_count);
@@ -58,8 +60,8 @@ bool run_nn_variable_k_c_api_smoke(int dtype)
                          ms[i],
                          ns[i],
                          ks[i],
-                         ks[i],
-                         ns[i],
+                         a_layout == 'R' ? ks[i] : ms[i],
+                         b_layout == 'R' ? ns[i] : ks[i],
                          ns[i],
                          0,
                          nullptr,
@@ -71,13 +73,14 @@ bool run_nn_variable_k_c_api_smoke(int dtype)
     const int rc = ck_tile_dcu_grouped_gemm_run(descs.data(),
                                                  group_count,
                                                  dtype,
-                                                 'R',
-                                                 'R',
+                                                 a_layout,
+                                                 b_layout,
                                                  workspace.GetDeviceBuffer(),
                                                  nullptr);
     if(rc != 0)
     {
-        std::cerr << "ck_tile_dcu_grouped_gemm_run returned " << rc << std::endl;
+        std::cerr << "ck_tile_dcu_grouped_gemm_run(" << a_layout << b_layout
+                  << ") returned " << rc << std::endl;
         return false;
     }
 
@@ -109,14 +112,44 @@ bool run_nn_variable_k_c_api_smoke(int dtype)
 
 int main()
 {
+    const std::vector<int> aligned_ms{128, 256, 192};
+    const std::vector<int> aligned_ns{128, 128, 256};
+    const std::vector<int> aligned_ks{128, 192, 256};
+    const std::vector<int> padded_ms{65, 129, 191};
+    const std::vector<int> padded_ns{129, 130, 257};
+    const std::vector<int> padded_ks{129, 193, 255};
+
     const bool fp16_ok =
-        run_nn_variable_k_c_api_smoke<ck_tile::half_t>(CK_TILE_DCU_GROUPED_GEMM_FP16);
+        run_c_api_smoke<ck_tile::half_t>(CK_TILE_DCU_GROUPED_GEMM_FP16,
+                                         'R',
+                                         'R',
+                                         aligned_ms,
+                                         aligned_ns,
+                                         aligned_ks) &&
+        run_c_api_smoke<ck_tile::half_t>(CK_TILE_DCU_GROUPED_GEMM_FP16,
+                                         'C',
+                                         'R',
+                                         padded_ms,
+                                         padded_ns,
+                                         padded_ks);
     const bool bf16_ok =
-        run_nn_variable_k_c_api_smoke<ck_tile::bf16_t>(CK_TILE_DCU_GROUPED_GEMM_BF16);
+        run_c_api_smoke<ck_tile::bf16_t>(CK_TILE_DCU_GROUPED_GEMM_BF16,
+                                         'R',
+                                         'R',
+                                         aligned_ms,
+                                         aligned_ns,
+                                         aligned_ks) &&
+        run_c_api_smoke<ck_tile::bf16_t>(CK_TILE_DCU_GROUPED_GEMM_BF16,
+                                         'C',
+                                         'R',
+                                         padded_ms,
+                                         padded_ns,
+                                         padded_ks);
 
     if(fp16_ok && bf16_ok)
     {
-        std::cout << "FP16/BF16 grouped GEMM C ABI NN variable-K smoke: PASS" << std::endl;
+        std::cout << "FP16/BF16 grouped GEMM C ABI NN variable-K and TN full-padding smoke: PASS"
+                  << std::endl;
         return 0;
     }
     return 1;

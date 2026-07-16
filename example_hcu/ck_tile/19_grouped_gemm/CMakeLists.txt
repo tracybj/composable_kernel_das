@@ -97,6 +97,54 @@ set(GROUPED_GEMM_FAST_NN_VARIABLE_K_SHAPE_ARGS
 list(REMOVE_ITEM GROUPED_GEMM_FAST_NN_VARIABLE_K_SHAPE_ARGS -stride_Bs=128,192,256)
 list(APPEND GROUPED_GEMM_FAST_NN_VARIABLE_K_SHAPE_ARGS -stride_Bs=128,128,256)
 
+# TN 布局的对齐 variable-K 测试参数：A 为 ColumnMajor，B/C 为 RowMajor。
+# ColumnMajor A 的 leading stride 是 M，所以 stride_As 与各组 Ms 相同。
+set(GROUPED_GEMM_FAST_TN_VARIABLE_K_SHAPE_ARGS
+    -group_count=3
+    -Ms=128,256,192
+    -Ns=128,128,256
+    -Ks=128,192,256
+    -stride_As=128,256,192
+    -stride_Bs=128,128,256
+    -stride_Cs=128,128,256
+    -validate=1
+    -warmup=1
+    -repeat=1
+)
+
+# 全维 padding 测试故意选用 M/N/K 都不满足 tile 对齐的 shape，用于验证
+# kPadM=true、kPadN=true、kPadK=true 时的边界 load/store 正确性。
+set(GROUPED_GEMM_FAST_PADDED_COMMON_SHAPE_ARGS
+    -group_count=3
+    -Ms=65,129,191
+    -Ns=129,130,257
+    -Ks=129,193,255
+    -stride_Cs=129,130,257
+    -validate=1
+    -warmup=1
+    -repeat=1
+)
+
+# 按 NT、NN、TN 的物理布局分别设置 A/B 的 leading stride；调用方仍只分配
+# 逻辑尺寸的 A/B/C buffer，不需要为 padded shape 额外申请显存。
+set(GROUPED_GEMM_FAST_PADDED_NT_SHAPE_ARGS
+    ${GROUPED_GEMM_FAST_PADDED_COMMON_SHAPE_ARGS}
+    -stride_As=129,193,255
+    -stride_Bs=129,193,255
+)
+set(GROUPED_GEMM_FAST_PADDED_NN_SHAPE_ARGS
+    ${GROUPED_GEMM_FAST_PADDED_COMMON_SHAPE_ARGS}
+    -stride_As=129,193,255
+    -stride_Bs=129,130,257
+)
+set(GROUPED_GEMM_FAST_PADDED_TN_SHAPE_ARGS
+    ${GROUPED_GEMM_FAST_PADDED_COMMON_SHAPE_ARGS}
+    -stride_As=65,129,191
+    -stride_Bs=129,130,257
+)
+
+# 聚合 smoke target：构建后顺序运行 FP16/BF16 的 NT/NN/TN、variable-K、
+# 全维 padding 以及 C ABI 正确性用例。它属于 example 测试，不是 ck4inductor 测试。
 add_custom_target(tile_example_grouped_gemm_fp16_bf16_fast_smoke
     COMMAND $<TARGET_FILE:tile_example_grouped_gemm_fp16_fast>
             -prec=fp16
@@ -130,6 +178,38 @@ add_custom_target(tile_example_grouped_gemm_fp16_bf16_fast_smoke
             -prec=bf16
             -a_layout=R -b_layout=R
             ${GROUPED_GEMM_FAST_NN_VARIABLE_K_SHAPE_ARGS}
+    COMMAND $<TARGET_FILE:tile_example_grouped_gemm_fp16_fast>
+            -prec=fp16
+            -a_layout=C -b_layout=R
+            ${GROUPED_GEMM_FAST_TN_VARIABLE_K_SHAPE_ARGS}
+    COMMAND $<TARGET_FILE:tile_example_grouped_gemm_bf16_fast>
+            -prec=bf16
+            -a_layout=C -b_layout=R
+            ${GROUPED_GEMM_FAST_TN_VARIABLE_K_SHAPE_ARGS}
+    COMMAND $<TARGET_FILE:tile_example_grouped_gemm_fp16_fast>
+            -prec=fp16
+            -a_layout=R -b_layout=C
+            ${GROUPED_GEMM_FAST_PADDED_NT_SHAPE_ARGS}
+    COMMAND $<TARGET_FILE:tile_example_grouped_gemm_fp16_fast>
+            -prec=fp16
+            -a_layout=R -b_layout=R
+            ${GROUPED_GEMM_FAST_PADDED_NN_SHAPE_ARGS}
+    COMMAND $<TARGET_FILE:tile_example_grouped_gemm_fp16_fast>
+            -prec=fp16
+            -a_layout=C -b_layout=R
+            ${GROUPED_GEMM_FAST_PADDED_TN_SHAPE_ARGS}
+    COMMAND $<TARGET_FILE:tile_example_grouped_gemm_bf16_fast>
+            -prec=bf16
+            -a_layout=R -b_layout=C
+            ${GROUPED_GEMM_FAST_PADDED_NT_SHAPE_ARGS}
+    COMMAND $<TARGET_FILE:tile_example_grouped_gemm_bf16_fast>
+            -prec=bf16
+            -a_layout=R -b_layout=R
+            ${GROUPED_GEMM_FAST_PADDED_NN_SHAPE_ARGS}
+    COMMAND $<TARGET_FILE:tile_example_grouped_gemm_bf16_fast>
+            -prec=bf16
+            -a_layout=C -b_layout=R
+            ${GROUPED_GEMM_FAST_PADDED_TN_SHAPE_ARGS}
     COMMAND $<TARGET_FILE:tile_example_grouped_gemm_c_api_smoke>
     DEPENDS
             tile_example_grouped_gemm_fp16_fast
@@ -159,11 +239,13 @@ set_tests_properties(tile_example_grouped_gemm_bf16_fast_smoke
     PROPERTIES LABELS "hcu;ck_tile;grouped_gemm;smoke"
 )
 
-function(add_grouped_gemm_fast_smoke_test test_name target_name precision b_layout shape_args)
+# 将一个 example 命令注册成独立 CTest，便于通过 ctest -R 精确执行。
+# a_layout/b_layout 使用 R/C 表示 RowMajor/ColumnMajor。
+function(add_grouped_gemm_fast_smoke_test test_name target_name precision a_layout b_layout shape_args)
     add_test(NAME ${test_name}
         COMMAND $<TARGET_FILE:${target_name}>
                 -prec=${precision}
-                -a_layout=R
+                -a_layout=${a_layout}
                 -b_layout=${b_layout}
                 ${${shape_args}}
     )
@@ -173,22 +255,43 @@ function(add_grouped_gemm_fast_smoke_test test_name target_name precision b_layo
 endfunction()
 
 add_grouped_gemm_fast_smoke_test(tile_example_grouped_gemm_fp16_nn_fast_smoke
-    tile_example_grouped_gemm_fp16_fast fp16 R GROUPED_GEMM_FAST_FIXED_SHAPE_ARGS)
+    tile_example_grouped_gemm_fp16_fast fp16 R R GROUPED_GEMM_FAST_FIXED_SHAPE_ARGS)
 add_grouped_gemm_fast_smoke_test(tile_example_grouped_gemm_bf16_nn_fast_smoke
-    tile_example_grouped_gemm_bf16_fast bf16 R GROUPED_GEMM_FAST_FIXED_SHAPE_ARGS)
+    tile_example_grouped_gemm_bf16_fast bf16 R R GROUPED_GEMM_FAST_FIXED_SHAPE_ARGS)
 add_grouped_gemm_fast_smoke_test(tile_example_grouped_gemm_fp16_nt_variable_k_fast_smoke
-    tile_example_grouped_gemm_fp16_fast fp16 C GROUPED_GEMM_FAST_NT_VARIABLE_K_SHAPE_ARGS)
+    tile_example_grouped_gemm_fp16_fast fp16 R C GROUPED_GEMM_FAST_NT_VARIABLE_K_SHAPE_ARGS)
 add_grouped_gemm_fast_smoke_test(tile_example_grouped_gemm_bf16_nt_variable_k_fast_smoke
-    tile_example_grouped_gemm_bf16_fast bf16 C GROUPED_GEMM_FAST_NT_VARIABLE_K_SHAPE_ARGS)
+    tile_example_grouped_gemm_bf16_fast bf16 R C GROUPED_GEMM_FAST_NT_VARIABLE_K_SHAPE_ARGS)
 add_grouped_gemm_fast_smoke_test(tile_example_grouped_gemm_fp16_nn_variable_k_fast_smoke
-    tile_example_grouped_gemm_fp16_fast fp16 R GROUPED_GEMM_FAST_NN_VARIABLE_K_SHAPE_ARGS)
+    tile_example_grouped_gemm_fp16_fast fp16 R R GROUPED_GEMM_FAST_NN_VARIABLE_K_SHAPE_ARGS)
 add_grouped_gemm_fast_smoke_test(tile_example_grouped_gemm_bf16_nn_variable_k_fast_smoke
-    tile_example_grouped_gemm_bf16_fast bf16 R GROUPED_GEMM_FAST_NN_VARIABLE_K_SHAPE_ARGS)
+    tile_example_grouped_gemm_bf16_fast bf16 R R GROUPED_GEMM_FAST_NN_VARIABLE_K_SHAPE_ARGS)
 
-add_test(NAME tile_example_grouped_gemm_c_api_nn_variable_k_smoke
+# TN variable-K：验证新增加的 ColumnMajor-A + RowMajor-B layout。
+add_grouped_gemm_fast_smoke_test(tile_example_grouped_gemm_fp16_tn_variable_k_fast_smoke
+    tile_example_grouped_gemm_fp16_fast fp16 C R GROUPED_GEMM_FAST_TN_VARIABLE_K_SHAPE_ARGS)
+add_grouped_gemm_fast_smoke_test(tile_example_grouped_gemm_bf16_tn_variable_k_fast_smoke
+    tile_example_grouped_gemm_bf16_fast bf16 C R GROUPED_GEMM_FAST_TN_VARIABLE_K_SHAPE_ARGS)
+
+# NT/NN/TN 全维 padding：分别覆盖 FP16 和 BF16 的非对齐 M/N/K。
+add_grouped_gemm_fast_smoke_test(tile_example_grouped_gemm_fp16_nt_padded_fast_smoke
+    tile_example_grouped_gemm_fp16_fast fp16 R C GROUPED_GEMM_FAST_PADDED_NT_SHAPE_ARGS)
+add_grouped_gemm_fast_smoke_test(tile_example_grouped_gemm_bf16_nt_padded_fast_smoke
+    tile_example_grouped_gemm_bf16_fast bf16 R C GROUPED_GEMM_FAST_PADDED_NT_SHAPE_ARGS)
+add_grouped_gemm_fast_smoke_test(tile_example_grouped_gemm_fp16_nn_padded_fast_smoke
+    tile_example_grouped_gemm_fp16_fast fp16 R R GROUPED_GEMM_FAST_PADDED_NN_SHAPE_ARGS)
+add_grouped_gemm_fast_smoke_test(tile_example_grouped_gemm_bf16_nn_padded_fast_smoke
+    tile_example_grouped_gemm_bf16_fast bf16 R R GROUPED_GEMM_FAST_PADDED_NN_SHAPE_ARGS)
+add_grouped_gemm_fast_smoke_test(tile_example_grouped_gemm_fp16_tn_padded_fast_smoke
+    tile_example_grouped_gemm_fp16_fast fp16 C R GROUPED_GEMM_FAST_PADDED_TN_SHAPE_ARGS)
+add_grouped_gemm_fast_smoke_test(tile_example_grouped_gemm_bf16_tn_padded_fast_smoke
+    tile_example_grouped_gemm_bf16_fast bf16 C R GROUPED_GEMM_FAST_PADDED_TN_SHAPE_ARGS)
+
+# C ABI smoke 绕过 example CLI，直接验证公开 grouped GEMM C 接口的 layout/padding。
+add_test(NAME tile_example_grouped_gemm_c_api_layout_padding_smoke
     COMMAND $<TARGET_FILE:tile_example_grouped_gemm_c_api_smoke>
 )
-set_tests_properties(tile_example_grouped_gemm_c_api_nn_variable_k_smoke
+set_tests_properties(tile_example_grouped_gemm_c_api_layout_padding_smoke
     PROPERTIES LABELS "hcu;ck_tile;grouped_gemm;c_api;smoke"
 )
 

@@ -26,6 +26,14 @@ int grouped_gemm_c_run_fp16_mpad(const ck_tile_dcu_grouped_gemm_desc* descs,
 
 int grouped_gemm_example_run_fp16(std::string a_layout, std::string b_layout, int argc, char* argv[])
 {
+    if(grouped_gemm_example_needs_padding<GemmConfigComputeV4<ck_tile::half_t>>(argc, argv))
+    {
+        return run_gemm_example_prec_type<GemmConfigComputeV4Mpad<ck_tile::half_t>,
+                                          ck_tile::half_t>(a_layout,
+                                                           b_layout,
+                                                           argc,
+                                                           argv);
+    }
     return run_gemm_example_prec_type<GemmConfigComputeV4<ck_tile::half_t>, ck_tile::half_t>(
         a_layout, b_layout, argc, argv);
 }

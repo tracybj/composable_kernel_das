@@ -146,6 +146,7 @@ struct GemmConfigBase
     static constexpr bool Persistent                = true;
     static constexpr bool DoubleSmemBuffer          = false;
     static constexpr bool SupportsFastRowMajorB     = false;
+    static constexpr bool SupportsFastColumnMajorA  = false;
 };
 
 template <typename PrecType>
@@ -192,14 +193,17 @@ struct GemmConfigComputeV4 : public GemmConfigBase
 
     static constexpr int kBlockPerCu = 1;
     static constexpr bool SupportsFastRowMajorB = true;
+    static constexpr bool SupportsFastColumnMajorA = true;
 };
 
-// V4 variant with kPadM=true for MOE dynamic-M (fixed N/K).
-// Inherits all V4 tile config (64x128x64/K_Tile persistent); only M padding differs.
+// Legacy-named V4 padded variant. Keep the type name for source compatibility, but pad all
+// logical GEMM dimensions so dynamic grouped problems can use arbitrary M/N/K tile tails.
 template <typename PrecType>
 struct GemmConfigComputeV4Mpad : public GemmConfigComputeV4<PrecType>
 {
     static constexpr bool kPadM = true;
+    static constexpr bool kPadN = true;
+    static constexpr bool kPadK = true;
 };
 
 template <typename PrecType>
@@ -652,6 +656,40 @@ inline std::pair<bool, ck_tile::ArgParser> create_args(int argc, char* argv[])
 
     bool result = arg_parser.parse(argc, argv);
     return std::make_pair(result, arg_parser);
+}
+
+template <typename GemmConfig>
+inline bool grouped_gemm_example_needs_padding(int argc, char* argv[])
+{
+    auto [result, arg_parser] = create_args(argc, argv);
+    if(!result)
+        return false;
+
+    const int group_count = arg_parser.get_int("group_count");
+    const int kbatch      = arg_parser.get_int("kbatch");
+    const auto Ms         = arg_parser.get_int_vec("Ms");
+    const auto Ns         = arg_parser.get_int_vec("Ns");
+    const auto Ks         = arg_parser.get_int_vec("Ks");
+
+    if(group_count <= 0 || Ms.size() != static_cast<std::size_t>(group_count) ||
+       Ns.size() != static_cast<std::size_t>(group_count) ||
+       Ks.size() != static_cast<std::size_t>(group_count))
+    {
+        // The runner will replace incomplete input vectors with its aligned defaults.
+        return false;
+    }
+
+    const ck_tile::index_t k_alignment =
+        GemmConfig::K_Tile * static_cast<ck_tile::index_t>(kbatch > 0 ? kbatch : 1);
+    for(int i = 0; i < group_count; ++i)
+    {
+        if(Ms[i] % GemmConfig::M_Tile != 0 || Ns[i] % GemmConfig::N_Tile != 0 ||
+           Ks[i] % k_alignment != 0)
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 inline std::size_t get_workspace_size(const std::vector<grouped_gemm_kargs>& gemm_descs)

@@ -592,6 +592,8 @@ struct UniversalGemmKernel
                         const SplitKBatchOffset& splitk_batch_offset)
     {
         static_assert(!TilePartitioner::BlockGemmShape::PermuteA, "Not implemented!");
+        constexpr bool has_padding =
+            GemmPipeline::kPadM || GemmPipeline::kPadN || GemmPipeline::kPadK;
 
         const auto& as_tensor_view = generate_tuple(
             [&](auto i) {
@@ -603,7 +605,7 @@ struct UniversalGemmKernel
                         static_cast<const AiDataType*>(as_ptr[i]),
                         make_tuple(kargs.M, splitk_batch_offset.splitted_k),
                         make_tuple(kargs.stride_As[i], 1),
-                        number<GemmPipeline::GetVectorSizeA()>{},
+                        number<has_padding ? 1 : GemmPipeline::GetVectorSizeA()>{},
                         number<1>{});
                 }
                 else
@@ -612,7 +614,7 @@ struct UniversalGemmKernel
                         static_cast<const AiDataType*>(as_ptr[i]),
                         make_tuple(splitk_batch_offset.splitted_k, kargs.M),
                         make_tuple(kargs.stride_As[i], 1),
-                        number<GemmPipeline::GetVectorSizeA()>{},
+                        number<has_padding ? 1 : GemmPipeline::GetVectorSizeA()>{},
                         number<1>{});
                 }
             },
@@ -650,7 +652,7 @@ struct UniversalGemmKernel
                             bs_ptr[i],
                             make_tuple(splitk_batch_offset.splitted_k, kargs.N),
                             make_tuple(kargs.stride_Bs[i], 1),
-                            number<GemmPipeline::GetVectorSizeB()>{},
+                            number<has_padding ? 1 : GemmPipeline::GetVectorSizeB()>{},
                             number<1>{});
                     }
                 }
@@ -690,7 +692,7 @@ struct UniversalGemmKernel
                                 bs_ptr[i],
                                 make_tuple(kFlatN, kFlatK),
                                 make_tuple(kFlatK, 1),
-                                number<GemmPipeline::GetVectorSizeB()>{},
+                                number<has_padding ? 1 : GemmPipeline::GetVectorSizeB()>{},
                                 number<1>{});
                         }
                         else
@@ -699,7 +701,7 @@ struct UniversalGemmKernel
                                 bs_ptr[i],
                                 make_tuple(kargs.N, splitk_batch_offset.splitted_k),
                                 make_tuple(kargs.stride_Bs[i], 1),
-                                number<GemmPipeline::GetVectorSizeB()>{},
+                                number<has_padding ? 1 : GemmPipeline::GetVectorSizeB()>{},
                                 number<1>{});
                         }
                     }
@@ -717,7 +719,7 @@ struct UniversalGemmKernel
                         static_cast<const DDataType_*>(ds_ptr[i]),
                         make_tuple(kargs.M, kargs.N),
                         make_tuple(kargs.stride_Ds[i], 1),
-                        number<EpiloguePipeline::GetVectorSizeD(i)>{},
+                        number<has_padding ? 1 : EpiloguePipeline::GetVectorSizeD(i)>{},
                         number<1>{});
                 }
                 else
@@ -726,7 +728,7 @@ struct UniversalGemmKernel
                         static_cast<const DDataType_*>(ds_ptr[i]),
                         make_tuple(kargs.N, kargs.M),
                         make_tuple(kargs.stride_Ds[i], 1),
-                        number<EpiloguePipeline::GetVectorSizeD(i)>{},
+                        number<has_padding ? 1 : EpiloguePipeline::GetVectorSizeD(i)>{},
                         number<1>{});
                 }
             },
@@ -740,7 +742,7 @@ struct UniversalGemmKernel
                     e_ptr,
                     make_tuple(kargs.M, kargs.N), // arguments not matching with flatmm.
                     make_tuple(kargs.stride_E, 1),
-                    number<EpiloguePipeline::GetVectorSizeC()>{},
+                    number<has_padding ? 1 : EpiloguePipeline::GetVectorSizeC()>{},
                     number<1>{});
             }
             else
@@ -776,7 +778,7 @@ struct UniversalGemmKernel
                     return pad_tensor_view(a_tensor_view[i],
                                            make_tuple(number<TilePartitioner::KPerBlock>{},
                                                       number<TilePartitioner::MPerBlock>{}),
-                                           sequence<false, GemmPipeline::kPadM>{});
+                                           sequence<GemmPipeline::kPadK, GemmPipeline::kPadM>{});
                 }
             },
             number<NumATensor>{});
@@ -792,14 +794,14 @@ struct UniversalGemmKernel
                     return pad_tensor_view(b_tensor_view[i],
                                            make_tuple(number<TilePartitioner::NPerBlock>{},
                                                       number<TilePartitioner::KPerBlock>{}),
-                                           sequence<false, GemmPipeline::kPadK>{});
+                                           sequence<GemmPipeline::kPadN, GemmPipeline::kPadK>{});
                 }
                 else
                 {
                     return pad_tensor_view(b_tensor_view[i],
                                            make_tuple(number<TilePartitioner::KPerBlock>{},
                                                       number<TilePartitioner::NPerBlock>{}),
-                                           sequence<false, GemmPipeline::kPadN>{});
+                                           sequence<GemmPipeline::kPadK, GemmPipeline::kPadN>{});
                 }
             },
             number<NumBTensor>{});
@@ -813,14 +815,14 @@ struct UniversalGemmKernel
                     return pad_tensor_view(d_tensor_view[i],
                                            make_tuple(number<TilePartitioner::MPerBlock>{},
                                                       number<TilePartitioner::NPerBlock>{}),
-                                           sequence<false, GemmPipeline::kPadN>{});
+                                           sequence<GemmPipeline::kPadM, GemmPipeline::kPadN>{});
                 }
                 else
                 {
                     return pad_tensor_view(d_tensor_view[i],
                                            make_tuple(number<TilePartitioner::NPerBlock>{},
                                                       number<TilePartitioner::MPerBlock>{}),
-                                           sequence<false, GemmPipeline::kPadM>{});
+                                           sequence<GemmPipeline::kPadN, GemmPipeline::kPadM>{});
                 }
             },
             number<NumDTensor>{});
@@ -840,7 +842,7 @@ struct UniversalGemmKernel
                 return pad_tensor_view(e_tensor_view,
                                        make_tuple(number<TilePartitioner::MPerBlock>{},
                                                   number<TilePartitioner::NPerBlock>{}),
-                                       sequence<GemmPipeline::kPadM, false>{});
+                                       sequence<GemmPipeline::kPadM, GemmPipeline::kPadN>{});
             }
         }();
 

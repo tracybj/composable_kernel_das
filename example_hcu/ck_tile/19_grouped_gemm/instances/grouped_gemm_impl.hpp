@@ -455,7 +455,8 @@ int dispatch_grouped_gemm_c_layout(const ck_tile_dcu_grouped_gemm_desc* descs,
     }
     if(a_layout == 'C' && b_layout == 'R')
     {
-        if constexpr(GemmConfig::SupportsFastRowMajorB)
+        if constexpr(GemmConfig::SupportsFastColumnMajorA &&
+                     GemmConfig::SupportsFastRowMajorB)
         {
             return run_grouped_gemm_c_impl<GemmConfig,
                                            Col,
@@ -473,17 +474,21 @@ int dispatch_grouped_gemm_c_layout(const ck_tile_dcu_grouped_gemm_desc* descs,
     }
     if(a_layout == 'C' && b_layout == 'C')
     {
-        return run_grouped_gemm_c_impl<GemmConfig,
-                                       Col,
-                                       Col,
-                                       Row,
-                                       ADataType,
-                                       BDataType,
-                                       AccDataType,
-                                       CDataType>(descs,
-                                                  group_count,
-                                                  workspace,
-                                                  stream);
+        if constexpr(GemmConfig::SupportsFastColumnMajorA)
+        {
+            return run_grouped_gemm_c_impl<GemmConfig,
+                                           Col,
+                                           Col,
+                                           Row,
+                                           ADataType,
+                                           BDataType,
+                                           AccDataType,
+                                           CDataType>(descs,
+                                                      group_count,
+                                                      workspace,
+                                                      stream);
+        }
+        return -4;
     }
     return -4;
 }
@@ -532,10 +537,22 @@ float grouped_gemm(const std::vector<ck_tile::GroupedGemmHostArgsImpl<DsDataType
                                                                  1,
                                                                  false,
                                                                  false,
-                                                                 GemmConfig::SupportsFastRowMajorB>;
+                                                                 GemmConfig::SupportsFastRowMajorB,
+                                                                 GemmConfig::SupportsFastColumnMajorA>;
 
-    using GemmPipelineProblem =
-        ck_tile::GemmPipelineProblem<ADataType, BDataType, AccDataType, GemmShape, GemmUniversalTraits>;
+    constexpr bool use_fixed_padding_vectors =
+        GemmConfig::kPadM || GemmConfig::kPadN || GemmConfig::kPadK;
+    constexpr ck_tile::index_t padding_vector_size = 2;
+
+    using GemmPipelineProblem = ck_tile::GemmPipelineProblem<ADataType,
+                                                              BDataType,
+                                                              AccDataType,
+                                                              GemmShape,
+                                                              GemmUniversalTraits,
+                                                              ADataType,
+                                                              use_fixed_padding_vectors,
+                                                              padding_vector_size,
+                                                              padding_vector_size>;
 
     using BaseGemmPipeline = typename PipelineTypeTraits<
         GemmConfig::Pipeline>::template UniversalGemmPipeline<GemmPipelineProblem>;
@@ -564,7 +581,12 @@ float grouped_gemm(const std::vector<ck_tile::GroupedGemmHostArgsImpl<DsDataType
                                                                            GemmUniversalTraits,
                                                                            scheduler,
                                                                            has_hot_loop_v,
-                                                                           tail_number_v>;
+                                                                           tail_number_v,
+                                                                           ck_tile::null_type,
+                                                                           ck_tile::null_type,
+                                                                           use_fixed_padding_vectors,
+                                                                           padding_vector_size,
+                                                                           padding_vector_size>;
 
 
         using GemmPipeline = typename PipelineTypeTraits<
@@ -586,7 +608,10 @@ float grouped_gemm(const std::vector<ck_tile::GroupedGemmHostArgsImpl<DsDataType
                                              GemmConfig::N_Warp_Tile,
                                              GemmConfig::K_Warp_Tile,
                                              UniversalGemmProblem::TransposeC,
-                                             memory_operation>>;
+                                             memory_operation,
+                                             1,
+                                             use_fixed_padding_vectors,
+                                             padding_vector_size>>;
 
         using Kernel = ck_tile::GroupedGemmKernel<TilePartitioner, GemmPipeline, GemmEpilogue>;
         auto kargs   = Kernel::MakeKargs(gemm_descs);(void)kargs;
@@ -676,7 +701,12 @@ float grouped_gemm_tileloop(const ck_tile::stream_config& s,
                                false,
                                false,
                                true,
-                               GemmConfig::SupportsFastRowMajorB>;
+                               GemmConfig::SupportsFastRowMajorB,
+                               GemmConfig::SupportsFastColumnMajorA>;
+
+    constexpr bool use_fixed_padding_vectors =
+        GemmConfig::kPadM || GemmConfig::kPadN || GemmConfig::kPadK;
+    constexpr ck_tile::index_t padding_vector_size = 2;
 
     float ave_time{0};
 
@@ -689,7 +719,14 @@ float grouped_gemm_tileloop(const ck_tile::stream_config& s,
                                                                            AccDataType,
                                                                            GemmShape,
                                                                            GemmUniversalTraits,
-                                                                           scheduler>;
+                                                                           scheduler,
+                                                                           true,
+                                                                           ck_tile::TailNumber::Full,
+                                                                           ck_tile::null_type,
+                                                                           ck_tile::null_type,
+                                                                           use_fixed_padding_vectors,
+                                                                           padding_vector_size,
+                                                                           padding_vector_size>;
 
         using GemmPipeline = typename PipelineTypeTraits<
             GemmConfig::Pipeline>::template GemmPipeline<UniversalGemmProblem>;
@@ -710,7 +747,10 @@ float grouped_gemm_tileloop(const ck_tile::stream_config& s,
                                              GemmConfig::N_Warp_Tile,
                                              GemmConfig::K_Warp_Tile,
                                              UniversalGemmProblem::TransposeC,
-                                             memory_operation>>;
+                                             memory_operation,
+                                             1,
+                                             use_fixed_padding_vectors,
+                                             padding_vector_size>>;
         using Kernel      = ck_tile::GroupedGemmKernel<TilePartitioner, GemmPipeline, GemmEpilogue>;
         constexpr dim3 blocks = Kernel::BlockSize();
         const dim3 grids  = Kernel::MaxOccupancyGridSize(s);
@@ -845,10 +885,30 @@ int run_gemm_example_prec_type(std::string a_layout, std::string b_layout, int a
                 argc, argv, Row{}, Row{}, Row{});
         }
     }
+    if constexpr(GemmConfig::SupportsFastColumnMajorA &&
+                 GemmConfig::SupportsFastRowMajorB)
+    {
+        if(a_layout == "C" && b_layout == "R")
+        {
+            if(bias || multiple_d)
+            {
+                throw std::runtime_error(
+                    "bias/multiple-D currently supports A row-major and B column-major.");
+            }
+            return run_grouped_gemm_example_with_layouts<GemmConfig,
+                                                         ADataType,
+                                                         BDataType,
+                                                         CDataType,
+                                                         AccDataType>(
+                argc, argv, Col{}, Row{}, Row{});
+        }
+    }
     throw std::runtime_error(
-        GemmConfig::SupportsFastRowMajorB
-            ? "Fast grouped_gemm target only supports A row-major with B row-major or column-major."
-            : "Fast grouped_gemm target only supports A row-major and B column-major.");
+        GemmConfig::SupportsFastColumnMajorA
+            ? "Fast grouped_gemm target supports NT, NN, and TN layouts only."
+            : GemmConfig::SupportsFastRowMajorB
+                  ? "Fast grouped_gemm target only supports A row-major with B row-major or column-major."
+                  : "Fast grouped_gemm target only supports A row-major and B column-major.");
 #else
 
     if(a_layout == "R" && b_layout == "C")
@@ -887,7 +947,8 @@ int run_gemm_example_prec_type(std::string a_layout, std::string b_layout, int a
     }
     else if(a_layout == "C" && b_layout == "R")
     {
-        if constexpr(GemmConfig::SupportsFastRowMajorB)
+        if constexpr(GemmConfig::SupportsFastColumnMajorA &&
+                     GemmConfig::SupportsFastRowMajorB)
         {
             if(bias || multiple_d)
             {
@@ -905,15 +966,24 @@ int run_gemm_example_prec_type(std::string a_layout, std::string b_layout, int a
     }
     else if(a_layout == "C" && b_layout == "C")
     {
-        if(bias || multiple_d)
+        if constexpr(GemmConfig::SupportsFastColumnMajorA)
         {
-            throw std::runtime_error("bias/multiple-D currently supports A row-major and B column-major.");
+            if(bias || multiple_d)
+            {
+                throw std::runtime_error(
+                    "bias/multiple-D currently supports A row-major and B column-major.");
+            }
+            return run_grouped_gemm_example_with_layouts<GemmConfig,
+                                                         ADataType,
+                                                         BDataType,
+                                                         CDataType,
+                                                         AccDataType>(argc,
+                                                                      argv,
+                                                                      Col{},
+                                                                      Col{},
+                                                                      Row{});
         }
-        return run_grouped_gemm_example_with_layouts<GemmConfig,
-                                                     ADataType,
-                                                     BDataType,
-                                                     CDataType,
-                                                     AccDataType>(argc, argv, Col{}, Col{}, Row{});
+        throw std::runtime_error("A column-major is not supported for this grouped_gemm config.");
     }
     else
     {

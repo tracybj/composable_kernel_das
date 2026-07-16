@@ -198,16 +198,19 @@ template <typename ADataType_,
           bool HasHotLoop_                 = true,
           TailNumber TailNum_              = TailNumber::Full,
           typename AScaleDataType_         = ck_tile::null_type,
-          typename BScaleDataType_         = ck_tile::null_type>
+          typename BScaleDataType_         = ck_tile::null_type,
+          bool FixedVectorSize_            = false,
+          index_t VectorSizeA_             = 1,
+          index_t VectorSizeB_             = 1>
 struct UniversalGemmPipelineProblem : public GemmPipelineProblemBase<ADataType_,
                                                                      BDataType_,
                                                                      CDataType_,
                                                                      BlockGemmShape_,
                                                                      TileGemmTraits_,
                                                                      ADataType_,
-                                                                     false,
-                                                                     1,
-                                                                     1,
+                                                                     FixedVectorSize_,
+                                                                     VectorSizeA_,
+                                                                     VectorSizeB_,
                                                                      AScaleDataType_,
                                                                      BScaleDataType_>
 {

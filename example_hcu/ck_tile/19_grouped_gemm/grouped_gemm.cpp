@@ -39,6 +39,27 @@ namespace {
     return false;
 }
 
+// Keep aligned FP16/BF16 problems on the original vectorized fast config. Select the
+// all-dimension padded config only when a group has an M/N tile tail or a per-split K tail.
+[[maybe_unused]] bool grouped_gemm_need_v4_padding(
+    const ck_tile_dcu_grouped_gemm_desc* descs, int group_count)
+{
+    constexpr int align_m = 64;
+    constexpr int align_n = 128;
+    constexpr int align_k = 64;
+    for(int i = 0; i < group_count; ++i)
+    {
+        const int kbatch     = descs[i].k_batch > 0 ? descs[i].k_batch : 1;
+        const int k_alignment = align_k * kbatch;
+        if(descs[i].M % align_m != 0 || descs[i].N % align_n != 0 ||
+           descs[i].K % k_alignment != 0)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 } // namespace
 
 int ck_tile_dcu_grouped_gemm_run(const ck_tile_dcu_grouped_gemm_desc* descs,
@@ -54,7 +75,7 @@ int ck_tile_dcu_grouped_gemm_run(const ck_tile_dcu_grouped_gemm_desc* descs,
 #if !defined(CK_TILE_GROUPED_GEMM_FAST_BUILD) || defined(CK_TILE_GROUPED_GEMM_FAST_FP16)
         if(dtype == CK_TILE_DCU_GROUPED_GEMM_FP16)
         {
-            if(grouped_gemm_need_mpad(descs, group_count))
+            if(grouped_gemm_need_v4_padding(descs, group_count))
                 return grouped_gemm_c_run_fp16_mpad(descs, group_count,
                     a_layout, b_layout, workspace, stream);
             return grouped_gemm_c_run_fp16(descs, group_count,
@@ -74,7 +95,7 @@ int ck_tile_dcu_grouped_gemm_run(const ck_tile_dcu_grouped_gemm_desc* descs,
 #if !defined(CK_TILE_GROUPED_GEMM_FAST_BUILD) || defined(CK_TILE_GROUPED_GEMM_FAST_BF16)
         if(dtype == CK_TILE_DCU_GROUPED_GEMM_BF16)
         {
-            if(grouped_gemm_need_mpad(descs, group_count))
+            if(grouped_gemm_need_v4_padding(descs, group_count))
                 return grouped_gemm_c_run_bf16_mpad(descs, group_count,
                     a_layout, b_layout, workspace, stream);
             return grouped_gemm_c_run_bf16(descs, group_count,

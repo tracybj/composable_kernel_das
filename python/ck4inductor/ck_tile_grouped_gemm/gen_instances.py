@@ -8,12 +8,13 @@ from .op import CKTileGroupedGemmOperation
 
 @lru_cache(None)
 def ops():
-    """Return the validated FP16/BF16 NT/NN grouped-GEMM API families."""
+    """Return the validated FP16/BF16 NT/NN/TN grouped-GEMM API families."""
 
     instances = []
     for layout_a, layout_b, layout_c in [
         ("Row", "Col", "Row"),
         ("Row", "Row", "Row"),
+        ("Col", "Row", "Row"),
     ]:
         for datatype, dtype_enum in [
             ("FP16", "CK_TILE_DCU_GROUPED_GEMM_FP16"),
@@ -41,8 +42,8 @@ def ops():
                     scheduler="Intrawave",
                     supports_variable_k=True,
                     min_k=128,
-                    k_alignment=64,
-                    n_alignment=128,
+                    k_alignment=1,
+                    n_alignment=1,
                     k_batch=1,
                     m_padding="auto",
                     public_api_header="example_hcu/ck_tile/19_grouped_gemm/grouped_gemm.hpp",
