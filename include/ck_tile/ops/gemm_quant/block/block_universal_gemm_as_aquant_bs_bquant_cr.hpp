@@ -37,6 +37,16 @@ struct ABQuantBlockUniversalGemmAsBsCr : public BlockGemmQuantBase
         using BLayout         = remove_cvref_t<typename Problem::BLayout>;
         using BQLayout        = remove_cvref_t<typename Problem::BQLayout>;
         using ComputeDataType = remove_cvref_t<typename Problem::ComputeDataType>;
+        using AComputeDataType =
+            std::conditional_t<std::is_same_v<ADataType, fp8_t> ||
+                                   std::is_same_v<ADataType, bf8_t>,
+                               ADataType,
+                               ComputeDataType>;
+        using BComputeDataType =
+            std::conditional_t<std::is_same_v<BDataType, fp8_t> ||
+                                   std::is_same_v<BDataType, bf8_t>,
+                               BDataType,
+                               ComputeDataType>;
         using CDataType       = remove_cvref_t<typename Problem::CDataType>;
         using BlockGemmShape  = remove_cvref_t<typename Problem::BlockGemmShape>;
         using AQuantGroupSize = remove_cvref_t<typename Problem::AQuantGroupSize>;
@@ -152,11 +162,13 @@ struct ABQuantBlockUniversalGemmAsBsCr : public BlockGemmQuantBase
     using BDataType       = remove_cvref_t<typename Traits::BDataType>;
     using BQDataType      = remove_cvref_t<typename Traits::BQDataType>;
     using ComputeDataType = remove_cvref_t<typename Traits::ComputeDataType>;
+    using AComputeDataType = remove_cvref_t<typename Traits::AComputeDataType>;
+    using BComputeDataType = remove_cvref_t<typename Traits::BComputeDataType>;
     using CDataType       = remove_cvref_t<typename Traits::CDataType>;
 
     // A/B DataType get converted from PkInt4/PkFp4 during loading
-    using OverrideADataType = ComputeDataType;
-    using OverrideBDataType = ComputeDataType;
+    using OverrideADataType = AComputeDataType;
+    using OverrideBDataType = BComputeDataType;
 
     using Base     = BlockGemmQuantBase;
     using WarpGemm = remove_cvref_t<typename Traits::WarpGemm>;
@@ -269,8 +281,8 @@ struct ABQuantBlockUniversalGemmAsBsCr : public BlockGemmQuantBase
         static constexpr auto BLdsTileDistr =
             decltype(make_static_tile_distribution(MakeBBlockDistributionEncode())){};
 
-        using ALdsTile = decltype(make_static_distributed_tensor<ComputeDataType>(ALdsTileDistr));
-        using BLdsTile = decltype(make_static_distributed_tensor<ComputeDataType>(BLdsTileDistr));
+        using ALdsTile = decltype(make_static_distributed_tensor<AComputeDataType>(ALdsTileDistr));
+        using BLdsTile = decltype(make_static_distributed_tensor<BComputeDataType>(BLdsTileDistr));
 
         ALdsTile a_warp_tile_;
         BLdsTile b_warp_tile_;
@@ -310,9 +322,10 @@ struct ABQuantBlockUniversalGemmAsBsCr : public BlockGemmQuantBase
             static_ford<sequence<MIterPerWarp, NIterPerWarp>>{}([&](auto mn) {
                 constexpr auto mIter = number<mn[number<0>{}]>{};
                 constexpr auto nIter = number<mn[number<1>{}]>{};
-                CWarpTensor c_warp_tensor;
-
                 static_for<0, Traits::QScalesPerBlockRow, 1>{}([&](auto kQScale) {
+                    CWarpTensor c_warp_tensor;
+                    tile_elementwise_inout([](auto& c) { c = 0; }, c_warp_tensor);
+
                     static_for<0, Traits::KIterPerQScale, 1>{}([&](auto kIterInQScale) {
                         constexpr auto kIter = kQScale * Traits::KIterPerQScale + kIterInQScale;
 
@@ -326,14 +339,7 @@ struct ABQuantBlockUniversalGemmAsBsCr : public BlockGemmQuantBase
                             merge_sequences(sequence<nIter, kIter>{}, b_warp_y_index_zeros),
                             merge_sequences(sequence<1, 1>{}, b_warp_y_lengths));
 
-                        if constexpr(kIterInQScale == 0)
-                        {
-                            c_warp_tensor = WarpGemm{}(a_warp_tensor, b_warp_tensor);
-                        }
-                        else
-                        {
-                            WarpGemm{}(c_warp_tensor, a_warp_tensor, b_warp_tensor);
-                        }
+                        WarpGemm{}(c_warp_tensor, a_warp_tensor, b_warp_tensor);
                     });
 
                     constexpr auto c_block_y_index =
@@ -419,28 +425,54 @@ struct ABQuantBlockUniversalGemmAsBsCr : public BlockGemmQuantBase
                             [&](auto c_row) {
                                 if constexpr(Traits::DenseBQN &&
                                              WarpGemm::WarpGemmAttribute::Impl::kCMLane == 16 &&
-                                             WarpGemm::kN == 32 &&
+                                             (WarpGemm::kN == 32 || WarpGemm::kN == 64) &&
                                              Traits::KQPerBlock == 1)
                                 {
                                     constexpr index_t kNPerLaneGroup =
                                         WarpGemm::kN /
                                         (warp_size /
                                          WarpGemm::WarpGemmAttribute::Impl::kCMLane);
-                                    constexpr index_t c_n_in_group =
-                                        (c_row % kNPerLaneGroup) / 2 +
-                                        (c_row % 2) * (kNPerLaneGroup / 2);
-                                    const index_t c_n_base =
-                                        (get_lane_id() /
-                                         WarpGemm::WarpGemmAttribute::Impl::kCMLane) *
-                                        kNPerLaneGroup;
-                                    const index_t c_n = c_n_base + c_n_in_group;
-                                    // Dense BQ lanes follow the block tile distribution's 5-bit
-                                    // logical-N permutation. Gather from the inverse lane so each C
-                                    // column receives its matching B scale.
-                                    const index_t src_lane_idx =
-                                        ((c_n & 0x8) >> 3) | ((c_n & 0x10) >> 3) |
-                                        (c_n & 0x4) | ((c_n & 0x1) << 3) |
-                                        ((c_n & 0x2) << 3);
+                                    const index_t c_n = [&]() {
+                                        if constexpr(WarpGemm::kN == 64)
+                                        {
+                                            // Match the final HCU CShuffle logical-N order. The
+                                            // MMAC register groups and the 4x4 N sub-tile are
+                                            // transposed relative to the intermediate CWarp view.
+                                            constexpr index_t c_row_in_group = c_row % 16;
+                                            return (get_lane_id() / 16) +
+                                                   (c_row_in_group & 0x3) * 4 +
+                                                   (c_row_in_group >> 2) * 16;
+                                        }
+                                        else
+                                        {
+                                            constexpr index_t c_n_in_group =
+                                                (c_row % kNPerLaneGroup) / 2 +
+                                                (c_row % 2) *
+                                                    (kNPerLaneGroup / 2);
+                                            const index_t c_n_base =
+                                                (get_lane_id() /
+                                                 WarpGemm::WarpGemmAttribute::Impl::kCMLane) *
+                                                kNPerLaneGroup;
+                                            return c_n_base + c_n_in_group;
+                                        }
+                                    }();
+                                    const index_t src_lane_idx = [&]() {
+                                        if constexpr(WarpGemm::kN == 64)
+                                        {
+                                            // The dense BQ distribution assigns scale N directly
+                                            // to lane N for a 64-column HCU MMAC warp tile.
+                                            return c_n;
+                                        }
+                                        else
+                                        {
+                                            // The 32-column distribution uses a 5-bit logical-N
+                                            // permutation. Gather from its inverse lane.
+                                            return ((c_n & 0x8) >> 3) |
+                                                   ((c_n & 0x10) >> 3) | (c_n & 0x4) |
+                                                   ((c_n & 0x1) << 3) |
+                                                   ((c_n & 0x2) << 3);
+                                        }
+                                    }();
 
                                     auto& dense_scale_reg =
                                         bq_block_tensor.get_thread_buffer()[reg_offset];

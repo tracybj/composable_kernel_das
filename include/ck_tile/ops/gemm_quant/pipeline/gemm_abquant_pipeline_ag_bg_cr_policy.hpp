@@ -44,14 +44,26 @@ struct GemmABQuantPipelineAgBgCrDefaultPolicy
     {
         using BlockWarps = typename Problem::BlockGemmShape::BlockWarps;
         using WarpTile   = typename Problem::BlockGemmShape::WarpTile;
+        using ADataType  = remove_cvref_t<typename Problem::ADataType>;
+        using BDataType  = remove_cvref_t<typename Problem::BDataType>;
+        using AComputeDataType =
+            std::conditional_t<std::is_same_v<ADataType, fp8_t> ||
+                                   std::is_same_v<ADataType, bf8_t>,
+                               ADataType,
+                               typename Problem::ComputeDataType>;
+        using BComputeDataType =
+            std::conditional_t<std::is_same_v<BDataType, fp8_t> ||
+                                   std::is_same_v<BDataType, bf8_t>,
+                               BDataType,
+                               typename Problem::ComputeDataType>;
 
         static_assert(Problem::BQuantGroupSize::kK % WarpTile::at(I2) == 0,
                       "KPerWarpGemm must be a multiple of QuantGroupSize::kK!");
 
 #if CK_TILE_PRIMUS_TURBO_GFX938_TARGET
         using WarpGemm =
-            WarpGemmMmacDispatcher<typename Problem::ComputeDataType,
-                                   typename Problem::ComputeDataType,
+            WarpGemmMmacDispatcher<AComputeDataType,
+                                   BComputeDataType,
                                    typename Problem::CDataType,
                                    WarpTile::at(I0),
                                    WarpTile::at(I1),
@@ -62,16 +74,18 @@ struct GemmABQuantPipelineAgBgCrDefaultPolicy
                                    Problem::kMInterleave,
                                    Problem::kNInterleave>;
 #else
-        using WarpGemm = WarpGemmDispatcher<typename Problem::ComputeDataType,
-                                            typename Problem::ComputeDataType,
+        using WarpGemm = WarpGemmDispatcher<AComputeDataType,
+                                            BComputeDataType,
                                             typename Problem::CDataType,
                                             WarpTile::at(I0),
                                             WarpTile::at(I1),
                                             WarpTile::at(I2),
                                             Problem::TransposeC>;
 #endif
-        static_assert(std::is_same_v<typename Problem::ComputeDataType, fp8_t> ||
-                      std::is_same_v<typename Problem::ComputeDataType, bf8_t>);
+        static_assert(std::is_same_v<AComputeDataType, fp8_t> ||
+                      std::is_same_v<AComputeDataType, bf8_t>);
+        static_assert(std::is_same_v<BComputeDataType, fp8_t> ||
+                      std::is_same_v<BComputeDataType, bf8_t>);
         static_assert(std::is_same_v<typename Problem::CDataType, float>);
 
         using BlockGemmPolicy = BlockGemmASmemBSmemCRegV1CustomPolicy<typename Problem::ADataType,

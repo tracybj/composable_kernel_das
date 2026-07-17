@@ -1050,7 +1050,10 @@ struct WarpGemmAttributeMmacImpl_f32_16x16x32_f8_base
     static constexpr index_t kCN0PerLane = 4; // jump layout
     static constexpr index_t kCN1PerLane = 1;
 
-    // static constexpr index_t kCNPerLane = 4;
+    // MFMA-compatible aliases used by the quantized GEMM scale picker.
+    static constexpr index_t kCM0PerLane = kCMPerLane;
+    static constexpr index_t kCM1PerLane = 1;
+    static constexpr index_t kCNPerLane  = kCN0PerLane * kCN1PerLane;
 
 
     CK_TILE_DEVICE void operator()(CVecType& c_vec,
