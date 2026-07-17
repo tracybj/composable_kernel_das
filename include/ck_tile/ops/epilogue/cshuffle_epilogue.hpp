@@ -324,7 +324,7 @@ struct CShuffleEpilogue
         return MPerIterationShuffle * NPerIterationShuffle * sizeof(ODataType);
     }
 
-    template <auto iAccess, typename LdsTile, typename ScaleM, typename ScaleN>
+    template <index_t iAccess, typename LdsTile, typename ScaleM, typename ScaleN>
     CK_TILE_DEVICE void
     scale_tile(LdsTile& lds_tile, ScaleM& scale_m_window, ScaleN& scale_n_window)
     {
@@ -340,7 +340,7 @@ struct CShuffleEpilogue
         constexpr index_t num_access = SFC::get_num_of_access();
         if constexpr(iAccess != num_access - 1)
         {
-            constexpr auto step = SFC::get_forward_step(iAccess);
+            constexpr auto step = SFC::get_forward_step(number<iAccess>{});
 
             move_tile_window(scale_m_window, {step.at(number<0>{}), step.at(number<1>{})});
             move_tile_window(scale_n_window, {step.at(number<0>{}), step.at(number<1>{})});

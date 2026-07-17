@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: MIT
 
 #include <iostream>
+#include <type_traits>
+#include <vector>
 
 #include "ck_tile/core.hpp"
 #include "ck_tile/host.hpp"
@@ -14,17 +16,21 @@ namespace {
 using Row = ck_tile::tensor_layout::gemm::RowMajor;
 using Col = ck_tile::tensor_layout::gemm::ColumnMajor;
 
-template <typename ADataType, typename BDataType, typename CDataType>
-bool run_rowcol_quant_gemm(const char* case_name)
+template <typename ADataType,
+          typename BDataType,
+          typename CDataType,
+          typename ALayout = Row,
+          typename BLayout = Col,
+          bool PadM        = false,
+          bool PadN        = false,
+          bool PadK        = false>
+bool run_rowcol_quant_gemm(const char* case_name,
+                           ck_tile::index_t M = 128,
+                           ck_tile::index_t N = 128,
+                           ck_tile::index_t K = 128)
 {
     using AccDataType = float;
-    using ALayout     = Row;
-    using BLayout     = Col;
     using CLayout     = Row;
-
-    constexpr ck_tile::index_t M = 128;
-    constexpr ck_tile::index_t N = 128;
-    constexpr ck_tile::index_t K = 128;
 
     constexpr ck_tile::index_t MTile = 128;
     constexpr ck_tile::index_t NTile = 128;
@@ -43,9 +49,9 @@ bool run_rowcol_quant_gemm(const char* case_name)
     using TilePartitioner = ck_tile::GemmTile1DPartitioner<GemmShape>;
 
     using GemmTraits =
-        ck_tile::TileGemmQuantTraits<false,
-                                     false,
-                                     false,
+        ck_tile::TileGemmQuantTraits<PadM,
+                                     PadN,
+                                     PadK,
                                      false,
                                      false,
                                      false,
@@ -92,12 +98,16 @@ bool run_rowcol_quant_gemm(const char* case_name)
                                  Epilogue,
                                  ck_tile::QuantType::RowColQuant>;
 
-    const auto a_desc =
-        ck_tile::HostTensorDescriptor({std::size_t(M), std::size_t(K)},
-                                      {std::size_t(K), std::size_t(1)});
-    const auto b_desc =
-        ck_tile::HostTensorDescriptor({std::size_t(K), std::size_t(N)},
-                                      {std::size_t(1), std::size_t(K)});
+    const auto a_desc = ck_tile::HostTensorDescriptor(
+        std::vector<std::size_t>{std::size_t(M), std::size_t(K)},
+        std::is_same_v<ALayout, Row>
+            ? std::vector<std::size_t>{std::size_t(K), std::size_t(1)}
+            : std::vector<std::size_t>{std::size_t(1), std::size_t(M)});
+    const auto b_desc = ck_tile::HostTensorDescriptor(
+        std::vector<std::size_t>{std::size_t(K), std::size_t(N)},
+        std::is_same_v<BLayout, Row>
+            ? std::vector<std::size_t>{std::size_t(N), std::size_t(1)}
+            : std::vector<std::size_t>{std::size_t(1), std::size_t(K)});
     const auto c_desc =
         ck_tile::HostTensorDescriptor({std::size_t(M), std::size_t(N)},
                                       {std::size_t(N), std::size_t(1)});
@@ -164,8 +174,8 @@ bool run_rowcol_quant_gemm(const char* case_name)
         K,
         1,
         1,
-        K,
-        K,
+        std::is_same_v<ALayout, Row> ? K : M,
+        std::is_same_v<BLayout, Row> ? N : K,
         N,
         1,
         1};
@@ -201,8 +211,48 @@ int main()
     pass = run_rowcol_quant_gemm<ck_tile::fp8_t, ck_tile::fp8_t, ck_tile::half_t>(
                "rowcol FP8xFP8->FP16") &&
            pass;
+    pass = run_rowcol_quant_gemm<ck_tile::fp8_t, ck_tile::fp8_t, ck_tile::bf16_t>(
+               "rowcol FP8xFP8->BF16") &&
+           pass;
     pass = run_rowcol_quant_gemm<ck_tile::bf8_t, ck_tile::bf8_t, ck_tile::half_t>(
                "rowcol BF8xBF8->FP16") &&
+           pass;
+    pass = run_rowcol_quant_gemm<ck_tile::bf8_t, ck_tile::bf8_t, ck_tile::bf16_t>(
+               "rowcol BF8xBF8->BF16") &&
+           pass;
+    pass = run_rowcol_quant_gemm<ck_tile::fp8_t, ck_tile::bf8_t, ck_tile::half_t>(
+               "rowcol FP8xBF8->FP16") &&
+           pass;
+    pass = run_rowcol_quant_gemm<ck_tile::fp8_t, ck_tile::bf8_t, ck_tile::bf16_t>(
+               "rowcol FP8xBF8->BF16") &&
+           pass;
+    pass = run_rowcol_quant_gemm<ck_tile::bf8_t, ck_tile::fp8_t, ck_tile::half_t>(
+               "rowcol BF8xFP8->FP16") &&
+           pass;
+    pass = run_rowcol_quant_gemm<ck_tile::bf8_t, ck_tile::fp8_t, ck_tile::bf16_t>(
+               "rowcol BF8xFP8->BF16") &&
+           pass;
+    pass = run_rowcol_quant_gemm<ck_tile::fp8_t,
+                                 ck_tile::fp8_t,
+                                 ck_tile::half_t,
+                                 Row,
+                                 Row>("rowcol FP8xFP8->FP16 RRR") &&
+           pass;
+    pass = run_rowcol_quant_gemm<ck_tile::fp8_t,
+                                 ck_tile::fp8_t,
+                                 ck_tile::half_t,
+                                 Col,
+                                 Row>("rowcol FP8xFP8->FP16 CRR") &&
+           pass;
+    pass = run_rowcol_quant_gemm<ck_tile::fp8_t,
+                                 ck_tile::fp8_t,
+                                 ck_tile::half_t,
+                                 Row,
+                                 Col,
+                                 true,
+                                 true,
+                                 true>(
+               "rowcol FP8xFP8->FP16 RCR padded 160x192x80", 160, 192, 80) &&
            pass;
     return pass ? 0 : 1;
 }
