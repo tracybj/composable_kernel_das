@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "ck_tile/core/arch/primus_turbo_gfx938.hpp"
+#include "ck_tile/core/arch/hcu_quant_gemm_target.hpp"
 
 #if defined(__gfx906__) || defined(__gfx908__) || defined(__gfx90a__) || defined(__gfx940__) || \
     defined(__gfx941__) || defined(__gfx942__)
@@ -285,6 +285,12 @@
 #define CK_TILE_REFERENCE_MOE_SORTING_MOCK_EXPERT_ID 0
 #endif
 
+#if CK_TILE_ARCH_FORCE_OCP_FP8
+#ifdef CK_TILE_USE_OCP_FP8
+#undef CK_TILE_USE_OCP_FP8
+#endif
+#define CK_TILE_USE_OCP_FP8 1
+#elif !defined(CK_TILE_USE_OCP_FP8)
 #ifndef __HIP_DEVICE_COMPILE__ // for host code
 // #ifdef CK_TILE_USE_OCP_FP8
 #define CK_TILE_USE_OCP_FP8 1   // Use OCP not FNUZ
@@ -295,6 +301,7 @@
 #define CK_TILE_USE_OCP_FP8 1
 #else // for GPU code
 #define CK_TILE_USE_OCP_FP8 0
+#endif
 #endif
 
 #ifndef CK_TILE_WORKAROUND_AVOID_V_BFI_B32_INSTS

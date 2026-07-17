@@ -15,7 +15,7 @@
 #include "ck_tile/ops/gemm/warp/warp_mmac_gemm_dispatcher.hpp"
 #include "ck_tile/ops/gemm_quant/block/block_gemm_quant_common.hpp"
 #include "ck_tile/ops/gemm_quant/block/block_universal_gemm_as_aquant_bs_bquant_cr.hpp"
-#if !CK_TILE_PRIMUS_TURBO_GFX938_TARGET
+#if !CK_TILE_HCU_QUANT_GEMM_TARGET
 #include "ck_tile/ops/gemm_quant/block/block_universal_gemm_as_aquant_bs_cr.hpp"
 #include "ck_tile/ops/gemm_quant/block/block_universal_gemm_as_bs_bquant_cr.hpp"
 #endif
@@ -24,7 +24,7 @@
 #include "ck_tile/ops/gemm_quant/pipeline/gemm_abquant_pipeline_ag_bg_cr_base.hpp"
 #include "ck_tile/ops/gemm_quant/pipeline/gemm_abquant_pipeline_ag_bg_cr_policy.hpp"
 #include "ck_tile/ops/gemm_quant/pipeline/gemm_abquant_pipeline_ag_bg_cr_v3.hpp"
-#if !CK_TILE_PRIMUS_TURBO_GFX938_TARGET
+#if !CK_TILE_HCU_QUANT_GEMM_TARGET
 #include "ck_tile/ops/gemm_quant/pipeline/gemm_aquant_pipeline_ag_bg_cr_base.hpp"
 #include "ck_tile/ops/gemm_quant/pipeline/gemm_aquant_pipeline_ag_bg_cr_policy.hpp"
 #include "ck_tile/ops/gemm_quant/pipeline/gemm_aquant_pipeline_ag_bg_cr_v3.hpp"

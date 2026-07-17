@@ -60,7 +60,7 @@ struct GemmABQuantPipelineAgBgCrDefaultPolicy
         static_assert(Problem::BQuantGroupSize::kK % WarpTile::at(I2) == 0,
                       "KPerWarpGemm must be a multiple of QuantGroupSize::kK!");
 
-#if CK_TILE_PRIMUS_TURBO_GFX938_TARGET
+#if CK_TILE_HCU_QUANT_GEMM_TARGET
         using WarpGemm =
             WarpGemmMmacDispatcher<AComputeDataType,
                                    BComputeDataType,

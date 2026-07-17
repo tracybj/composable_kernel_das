@@ -39,7 +39,7 @@ struct GemmAQuantPipelineAgBgCrDefaultPolicy : public UniversalGemmPipelineAgBgC
         constexpr index_t VecLoadSize   = GetVectorSizeAQ<Problem>();
         constexpr bool APreshuffleQuant = Problem::Traits::APreshuffleQuant;
         using WarpTile                  = typename Problem::BlockGemmShape::WarpTile;
-#if CK_TILE_PRIMUS_TURBO_GFX938_TARGET
+#if CK_TILE_HCU_QUANT_GEMM_TARGET
         using WarpGemm =
             WarpGemmMmacDispatcher<typename Problem::ComputeDataType,
                                    typename Problem::ComputeDataType,
@@ -126,8 +126,9 @@ struct GemmAQuantPipelineAgBgCrDefaultPolicy : public UniversalGemmPipelineAgBgC
     template <typename Problem>
     CK_TILE_HOST_DEVICE static constexpr auto GetBlockGemm()
     {
-#if CK_TILE_PRIMUS_TURBO_GFX938_TARGET
-        static_assert(sizeof(Problem) == 0, "AQuant GetBlockGemm is not used by Primus-Turbo gfx938 CK builds.");
+#if CK_TILE_HCU_QUANT_GEMM_TARGET
+        static_assert(sizeof(Problem) == 0,
+                      "AQuant GetBlockGemm is not used by HCU gfx938/gfx946 quant GEMM builds.");
 #else
         using BlockWarps = typename Problem::BlockGemmShape::BlockWarps;
         using WarpTile   = typename Problem::BlockGemmShape::WarpTile;
