@@ -94,6 +94,8 @@ using WarpGemmMmacBF16BF16F32_WT16x16x16_MR1NR1MI1NI1_TRANSC = WarpGemmImpl<
 
 using WarpGemmMmacBF16BF16F32_WT16x64x32_MR1NR4MI1NI1 = WarpGemmImpl<
     WarpGemmAttributeMmacIterateK<WarpGemmAttributeMmacImplBf16Bf16F32M16N16K16, 1, 4, 1, 1, 2>>;
+using WarpGemmMmacBF16BF16F32_WT32x64x32_MR2NR4MI1NI1 = WarpGemmImpl<
+    WarpGemmAttributeMmacIterateK<WarpGemmAttributeMmacImplBf16Bf16F32M16N16K16, 2, 4, 1, 1, 2>>;
 using WarpGemmMmacBF16BF16F32_WT16x32x64_MR1NR2MI1NI1 = WarpGemmImpl<
     WarpGemmAttributeMmacIterateK<WarpGemmAttributeMmacImplBf16Bf16F32M16N16K16, 1, 2, 1, 1, 4>>;
 

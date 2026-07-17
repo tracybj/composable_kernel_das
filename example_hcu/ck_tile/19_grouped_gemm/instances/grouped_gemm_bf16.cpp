@@ -2,6 +2,23 @@
 // Copyright (c) 2025, Advanced Micro Devices, Inc. All rights reserved.
 #include "grouped_gemm_impl.hpp"
 
+#if defined(CK_TILE_GROUPED_GEMM_TUNE_SQUARE_WIDE)
+template <typename PrecType>
+using GroupedGemmBf16Config = GemmConfigComputeV4SquareWide<PrecType>;
+template <typename PrecType>
+using GroupedGemmBf16PaddedConfig = GemmConfigComputeV4SquareWideMpad<PrecType>;
+#elif defined(CK_TILE_GROUPED_GEMM_TUNE_SQUARE)
+template <typename PrecType>
+using GroupedGemmBf16Config = GemmConfigComputeV4Square<PrecType>;
+template <typename PrecType>
+using GroupedGemmBf16PaddedConfig = GemmConfigComputeV4SquareMpad<PrecType>;
+#else
+template <typename PrecType>
+using GroupedGemmBf16Config = GemmConfigComputeV4<PrecType>;
+template <typename PrecType>
+using GroupedGemmBf16PaddedConfig = GemmConfigComputeV4Mpad<PrecType>;
+#endif
+
 int grouped_gemm_c_run_bf16(const ck_tile_dcu_grouped_gemm_desc* descs,
                             int group_count,
                             char a_layout,
@@ -9,7 +26,19 @@ int grouped_gemm_c_run_bf16(const ck_tile_dcu_grouped_gemm_desc* descs,
                             void* workspace,
                             hipStream_t stream)
 {
-    return dispatch_grouped_gemm_c_layout<GemmConfigComputeV4<ck_tile::bf16_t>, ck_tile::bf16_t>(
+#if !defined(CK_TILE_GROUPED_GEMM_TUNE_SQUARE) && \
+    !defined(CK_TILE_GROUPED_GEMM_TUNE_SQUARE_WIDE) && \
+    !defined(CK_TILE_GROUPED_GEMM_FORCE_BASELINE)
+    if(grouped_gemm_prefers_large_config<GemmConfigComputeV4SquareWide<ck_tile::bf16_t>>(
+           descs, group_count))
+    {
+        return dispatch_grouped_gemm_c_layout<GemmConfigComputeV4SquareWide<ck_tile::bf16_t>,
+                                              ck_tile::bf16_t>(
+            descs, group_count, a_layout, b_layout, workspace, stream);
+    }
+#endif
+    return dispatch_grouped_gemm_c_layout<GroupedGemmBf16Config<ck_tile::bf16_t>,
+                                          ck_tile::bf16_t>(
         descs, group_count, a_layout, b_layout, workspace, stream);
 }
 
@@ -20,20 +49,32 @@ int grouped_gemm_c_run_bf16_mpad(const ck_tile_dcu_grouped_gemm_desc* descs,
                                   void* workspace,
                                   hipStream_t stream)
 {
-    return dispatch_grouped_gemm_c_layout<GemmConfigComputeV4Mpad<ck_tile::bf16_t>, ck_tile::bf16_t>(
+    return dispatch_grouped_gemm_c_layout<GroupedGemmBf16PaddedConfig<ck_tile::bf16_t>,
+                                          ck_tile::bf16_t>(
         descs, group_count, a_layout, b_layout, workspace, stream);
 }
 
 int grouped_gemm_example_run_bf16(std::string a_layout, std::string b_layout, int argc, char* argv[])
 {
-    if(grouped_gemm_example_needs_padding<GemmConfigComputeV4<ck_tile::bf16_t>>(argc, argv))
+    if(grouped_gemm_example_needs_padding<GroupedGemmBf16Config<ck_tile::bf16_t>>(argc, argv))
     {
-        return run_gemm_example_prec_type<GemmConfigComputeV4Mpad<ck_tile::bf16_t>,
+        return run_gemm_example_prec_type<GroupedGemmBf16PaddedConfig<ck_tile::bf16_t>,
                                           ck_tile::bf16_t>(a_layout,
                                                            b_layout,
                                                            argc,
                                                            argv);
     }
-    return run_gemm_example_prec_type<GemmConfigComputeV4<ck_tile::bf16_t>, ck_tile::bf16_t>(
+#if !defined(CK_TILE_GROUPED_GEMM_TUNE_SQUARE) && \
+    !defined(CK_TILE_GROUPED_GEMM_TUNE_SQUARE_WIDE) && \
+    !defined(CK_TILE_GROUPED_GEMM_FORCE_BASELINE)
+    if(grouped_gemm_example_prefers_large_config<GemmConfigComputeV4SquareWide<ck_tile::bf16_t>>(
+           argc, argv))
+    {
+        return run_gemm_example_prec_type<GemmConfigComputeV4SquareWide<ck_tile::bf16_t>,
+                                          ck_tile::bf16_t>(
+            a_layout, b_layout, argc, argv);
+    }
+#endif
+    return run_gemm_example_prec_type<GroupedGemmBf16Config<ck_tile::bf16_t>, ck_tile::bf16_t>(
         a_layout, b_layout, argc, argv);
 }

@@ -206,6 +206,58 @@ struct GemmConfigComputeV4Mpad : public GemmConfigComputeV4<PrecType>
     static constexpr bool kPadK = true;
 };
 
+// Tuning candidate for large, regular FP16/BF16 GEMMs. Keep it separate from the production
+// V4 config until same-session A/B measurements and all layout/padding regressions pass.
+//
+// The 128x128 block tile increases A/B reuse. FP16 uses the existing 32x64 MMAC warp dispatcher;
+// BF16 can use either the original 16x64 dispatcher or the 32x64 dispatcher added for the
+// square-wide candidate.
+template <typename PrecType>
+struct GemmConfigComputeV4Square : public GemmConfigBase
+{
+    static constexpr ck_tile::index_t M_Tile = 128;
+    static constexpr ck_tile::index_t N_Tile = 128;
+    static constexpr ck_tile::index_t K_Tile = 128 / sizeof(PrecType);
+
+    static constexpr ck_tile::index_t M_Warp = 2;
+    static constexpr ck_tile::index_t N_Warp = 2;
+    static constexpr ck_tile::index_t K_Warp = 1;
+
+    static constexpr ck_tile::index_t M_Warp_Tile =
+        std::is_same_v<PrecType, ck_tile::half_t> ? 32 : 16;
+    static constexpr ck_tile::index_t N_Warp_Tile = 64;
+    static constexpr ck_tile::index_t K_Warp_Tile = 32;
+
+    static constexpr bool DoubleSmemBuffer     = true;
+    static constexpr ck_tile::index_t Pipeline = CK_TILE_PIPELINE_COMPUTE_V4;
+
+    static constexpr int kBlockPerCu = 1;
+    static constexpr bool SupportsFastRowMajorB    = true;
+    static constexpr bool SupportsFastColumnMajorA = true;
+};
+
+template <typename PrecType>
+struct GemmConfigComputeV4SquareMpad : public GemmConfigComputeV4Square<PrecType>
+{
+    static constexpr bool kPadM = true;
+    static constexpr bool kPadN = true;
+    static constexpr bool kPadK = true;
+};
+
+template <typename PrecType>
+struct GemmConfigComputeV4SquareWide : public GemmConfigComputeV4Square<PrecType>
+{
+    static constexpr ck_tile::index_t M_Warp_Tile = 32;
+};
+
+template <typename PrecType>
+struct GemmConfigComputeV4SquareWideMpad : public GemmConfigComputeV4SquareWide<PrecType>
+{
+    static constexpr bool kPadM = true;
+    static constexpr bool kPadN = true;
+    static constexpr bool kPadK = true;
+};
+
 template <typename PrecType>
 struct GemmConfigComputeV5 : public GemmConfigBase
 {
@@ -611,6 +663,28 @@ int grouped_gemm_example_run_int8_32x32(std::string a_layout, std::string b_layo
 int grouped_gemm_example_run_int8(std::string a_layout, std::string b_layout, int argc, char* argv[]);
 int grouped_gemm_example_run_int4(std::string a_layout, std::string b_layout, int argc, char* argv[]);
 
+template <typename GemmConfig>
+inline bool grouped_gemm_prefers_large_config(const ck_tile_dcu_grouped_gemm_desc* descs,
+                                              int group_count,
+                                              int minimum_dimension = 512)
+{
+    if(descs == nullptr || group_count <= 0)
+        return false;
+
+    for(int i = 0; i < group_count; ++i)
+    {
+        const int kbatch = descs[i].k_batch > 0 ? descs[i].k_batch : 1;
+        const int k_alignment = GemmConfig::K_Tile * kbatch;
+        if(descs[i].M < minimum_dimension || descs[i].N < minimum_dimension ||
+           descs[i].K < minimum_dimension || descs[i].M % GemmConfig::M_Tile != 0 ||
+           descs[i].N % GemmConfig::N_Tile != 0 || descs[i].K % k_alignment != 0)
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
 inline std::pair<bool, ck_tile::ArgParser> create_args(int argc, char* argv[])
 {
     ck_tile::ArgParser arg_parser;
@@ -690,6 +764,42 @@ inline bool grouped_gemm_example_needs_padding(int argc, char* argv[])
         }
     }
     return false;
+}
+
+template <typename GemmConfig>
+inline bool grouped_gemm_example_prefers_large_config(int argc,
+                                                       char* argv[],
+                                                       int minimum_dimension = 512)
+{
+    auto [result, arg_parser] = create_args(argc, argv);
+    if(!result)
+        return false;
+
+    const int group_count = arg_parser.get_int("group_count");
+    const int kbatch      = arg_parser.get_int("kbatch");
+    const auto Ms         = arg_parser.get_int_vec("Ms");
+    const auto Ns         = arg_parser.get_int_vec("Ns");
+    const auto Ks         = arg_parser.get_int_vec("Ks");
+
+    if(group_count <= 0 || Ms.size() != static_cast<std::size_t>(group_count) ||
+       Ns.size() != static_cast<std::size_t>(group_count) ||
+       Ks.size() != static_cast<std::size_t>(group_count))
+    {
+        return false;
+    }
+
+    const ck_tile::index_t k_alignment =
+        GemmConfig::K_Tile * static_cast<ck_tile::index_t>(kbatch > 0 ? kbatch : 1);
+    for(int i = 0; i < group_count; ++i)
+    {
+        if(Ms[i] < minimum_dimension || Ns[i] < minimum_dimension ||
+           Ks[i] < minimum_dimension || Ms[i] % GemmConfig::M_Tile != 0 ||
+           Ns[i] % GemmConfig::N_Tile != 0 || Ks[i] % k_alignment != 0)
+        {
+            return false;
+        }
+    }
+    return true;
 }
 
 inline std::size_t get_workspace_size(const std::vector<grouped_gemm_kargs>& gemm_descs)

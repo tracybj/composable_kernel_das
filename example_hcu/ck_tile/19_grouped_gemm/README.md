@@ -79,8 +79,10 @@ TorchInductor 仍需要 grouped lowering/template 才会自动把 `aten._grouped
   TN（A 列主序、B 行主序），C 均为行主序。其他 fast dtype 保持原有限制。
 - variable-K 表示同一次 grouped launch 中每个 descriptor 的 K 可以不同；
   它不等同于 split-K，且当前所有 group 仍使用同一个 `kbatch`。
-- 对齐 shape 保持原 `GemmConfigComputeV4` fast 配置；任一 group 存在 M/N/K
-  尾块时，FP16/BF16 example 与 C ABI 自动改用 `kPadM/N/K=true` 配置。
+- FP16/BF16 对齐 workload 中，只有所有 group 均满足 `M/N/K>=512`、M/N 对齐
+  128、且每个 split 的 K 对齐 64 时，才切换到 `128x128x64` square 配置；
+  其他对齐 shape 保持原 `64x128x64` `GemmConfigComputeV4`。任一 group 存在
+  M/N/K 尾块时，example 与 C ABI 仍自动改用原 `kPadM/N/K=true` 配置。
 - padding 是 tensor descriptor 的逻辑 right-pad，不要求调用方申请物理 padded
   A/B/C 显存；调用方仍按逻辑 M/N/K 和 stride 分配。workspace 仍只存每组
   `TransKernelArg`，大小不随 padded M/N/K 增长。

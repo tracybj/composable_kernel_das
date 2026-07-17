@@ -115,6 +115,7 @@ int main()
     const std::vector<int> aligned_ms{128, 256, 192};
     const std::vector<int> aligned_ns{128, 128, 256};
     const std::vector<int> aligned_ks{128, 192, 256};
+    const std::vector<int> large_aligned_dims{512, 512, 512};
     const std::vector<int> padded_ms{65, 129, 191};
     const std::vector<int> padded_ns{129, 130, 257};
     const std::vector<int> padded_ks{129, 193, 255};
@@ -126,6 +127,12 @@ int main()
                                          aligned_ms,
                                          aligned_ns,
                                          aligned_ks) &&
+        run_c_api_smoke<ck_tile::half_t>(CK_TILE_DCU_GROUPED_GEMM_FP16,
+                                         'R',
+                                         'C',
+                                         large_aligned_dims,
+                                         large_aligned_dims,
+                                         large_aligned_dims) &&
         run_c_api_smoke<ck_tile::half_t>(CK_TILE_DCU_GROUPED_GEMM_FP16,
                                          'C',
                                          'R',
@@ -140,6 +147,12 @@ int main()
                                          aligned_ns,
                                          aligned_ks) &&
         run_c_api_smoke<ck_tile::bf16_t>(CK_TILE_DCU_GROUPED_GEMM_BF16,
+                                         'R',
+                                         'C',
+                                         large_aligned_dims,
+                                         large_aligned_dims,
+                                         large_aligned_dims) &&
+        run_c_api_smoke<ck_tile::bf16_t>(CK_TILE_DCU_GROUPED_GEMM_BF16,
                                          'C',
                                          'R',
                                          padded_ms,
@@ -148,8 +161,9 @@ int main()
 
     if(fp16_ok && bf16_ok)
     {
-        std::cout << "FP16/BF16 grouped GEMM C ABI NN variable-K and TN full-padding smoke: PASS"
-                  << std::endl;
+        std::cout
+            << "FP16/BF16 grouped GEMM C ABI NN variable-K, large NT and TN full-padding smoke: PASS"
+            << std::endl;
         return 0;
     }
     return 1;
