@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2018-2023, Advanced Micro Devices, Inc. All rights reserved.
+// Copyright (c) 2026 Hygon Info Technologies Ltd.
 
 #pragma once
 
@@ -9,8 +10,21 @@
 #include "ck_tile/host/timer.hpp"
 #include <hip/hip_runtime.h>
 #include <cstddef>
+#include <type_traits>
 
 namespace ck_tile {
+template <typename Kernel, typename = void>
+struct uses_min_block_per_cu_launch_api : std::false_type
+{
+};
+
+template <typename Kernel>
+struct uses_min_block_per_cu_launch_api<
+    Kernel,
+    std::void_t<decltype(Kernel::kUsesMinBlockPerCuLaunchApi)>> : std::true_type
+{
+};
+
 template <int MaxThreadPerBlock, int MinBlockPerCu, typename Kernel, typename... Args>
 #if CK_TILE_USE_LAUNCH_BOUNDS
 __launch_bounds__(MaxThreadPerBlock, MinBlockPerCu)
@@ -34,7 +48,20 @@ template <int MaxThreadPerBlock = CK_TILE_MAX_THREAD_PER_BLOCK,
 CK_TILE_HOST auto
 make_kernel(KernelImpl /*f*/, dim3 grid_dim, dim3 block_dim, std::size_t lds_byte, Args... args)
 {
-    const auto kernel = kentry<MaxThreadPerBlock, MinBlockPerCu, KernelImpl, Args...>;
+    // Newer upstream CK call sites pass MinBlockPerCu as the first template
+    // argument. Keep the current-main launch API unchanged for existing kernels,
+    // and opt imported kernels into the upstream convention explicitly.
+    constexpr bool uses_upstream_api =
+        uses_min_block_per_cu_launch_api<KernelImpl>::value;
+    constexpr int actual_max_threads = []() {
+        if constexpr(uses_min_block_per_cu_launch_api<KernelImpl>::value)
+            return static_cast<int>(KernelImpl::kBlockSize);
+        else
+            return MaxThreadPerBlock;
+    }();
+    constexpr int actual_min_blocks = uses_upstream_api ? MaxThreadPerBlock : MinBlockPerCu;
+    const auto kernel =
+        kentry<actual_max_threads, actual_min_blocks, KernelImpl, Args...>;
 
     return [=](const stream_config& s) {
         kernel<<<grid_dim, block_dim, lds_byte, s.stream_id_>>>(args...);

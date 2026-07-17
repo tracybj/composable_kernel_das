@@ -323,9 +323,11 @@ using WarpScaleGemmMmacfp8fp8f32_WT16x32x128_MR1NR2MI1NI1 = WarpFp8Bf8ScaleChann
 
 //fp8 bf8
 using WarpGemmMmacfp8bf8f32_WT32x64x32_MR2NR1MI1NI4 = WarpFp8Bf8GemmImpl<WarpGemmAttributeFp8Bf8MmacIterateK<WarpGemmAttributeMmacImpl_f32_16x16x32_fp8_bf8, 2, 1, 1, 4, 1>>;
+using WarpGemmMmacfp8bf8f32_WT32x64x32_MR2NR4MI1NI1 = WarpFp8Bf8GemmImpl<WarpGemmAttributeFp8Bf8MmacIterateK<WarpGemmAttributeMmacImpl_f32_16x16x32_fp8_bf8, 2, 4, 1, 1, 1>>;
 
 //bf8 fp8
 using WarpGemmMmacbf8fp8f32_WT32x64x32_MR2NR1MI1NI4 = WarpFp8Bf8GemmImpl<WarpGemmAttributeFp8Bf8MmacIterateK<WarpGemmAttributeMmacImpl_f32_16x16x32_bf8_fp8, 2, 1, 1, 4, 1>>;
+using WarpGemmMmacbf8fp8f32_WT32x64x32_MR2NR4MI1NI1 = WarpFp8Bf8GemmImpl<WarpGemmAttributeFp8Bf8MmacIterateK<WarpGemmAttributeMmacImpl_f32_16x16x32_bf8_fp8, 2, 4, 1, 1, 1>>;
 
 //bf8 bf8
 using WarpGemmMmacbf8bf8f32_WT32x64x32_MR2NR1MI1NI4 = WarpFp8Bf8GemmImpl<WarpGemmAttributeFp8Bf8MmacIterateK<WarpGemmAttributeMmacImpl_f32_16x16x32_bf8_bf8, 2, 1, 1, 4, 1>>;

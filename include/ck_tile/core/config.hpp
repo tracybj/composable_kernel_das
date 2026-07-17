@@ -3,6 +3,8 @@
 
 #pragma once
 
+#include "ck_tile/core/arch/primus_turbo_gfx938.hpp"
+
 #if defined(__gfx906__) || defined(__gfx908__) || defined(__gfx90a__) || defined(__gfx940__) || \
     defined(__gfx941__) || defined(__gfx942__)
 #define __gfx9__

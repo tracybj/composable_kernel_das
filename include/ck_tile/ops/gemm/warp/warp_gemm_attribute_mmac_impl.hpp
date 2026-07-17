@@ -5,6 +5,26 @@
 
 #include "ck_tile/core.hpp"
 
+#if defined(__gfx938__)
+// gfx938 exposes the FP8/BF8 MMAC encodings through the lit/lts builtin family.
+// Keep the legacy CK spellings used by the generic warp GEMM implementation,
+// but select the plain (lit=false, lts=false) register layout.
+#define __builtin_hcu_mmac_f32_16x16x32_fp8_fp8(a, b, c)                                           \
+    __builtin_hcu_mmac_f32_16x16x32_fp8_fp8_lit_lts((a), (b), (c), false, false)
+#define __builtin_hcu_mmac_f32_16x16x32_fp8_bf8(a, b, c)                                           \
+    __builtin_hcu_mmac_f32_16x16x32_fp8_bf8_lit_lts((a), (b), (c), false, false)
+#define __builtin_hcu_mmac_f32_16x16x32_bf8_fp8(a, b, c)                                           \
+    __builtin_hcu_mmac_f32_16x16x32_bf8_fp8_lit_lts((a), (b), (c), false, false)
+#define __builtin_hcu_mmac_f32_16x16x32_bf8_bf8(a, b, c)                                           \
+    __builtin_hcu_mmac_f32_16x16x32_bf8_bf8_lit_lts((a), (b), (c), false, false)
+#define __builtin_hcu_mmac_16x16x32_fp8_bf8(a, b, c)                                               \
+    __builtin_hcu_mmac_f32_16x16x32_fp8_bf8_lit_lts((a), (b), (c), false, false)
+#define __builtin_hcu_mmac_16x16x32_bf8_fp8(a, b, c)                                               \
+    __builtin_hcu_mmac_f32_16x16x32_bf8_fp8_lit_lts((a), (b), (c), false, false)
+#define __builtin_hcu_mmac_16x16x32_bf8_bf8(a, b, c)                                               \
+    __builtin_hcu_mmac_f32_16x16x32_bf8_bf8_lit_lts((a), (b), (c), false, false)
+#endif
+
 namespace ck_tile {
 
 // FP16

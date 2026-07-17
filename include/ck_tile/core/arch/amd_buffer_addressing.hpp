@@ -15,6 +15,65 @@
 
 namespace ck_tile {
 
+CK_TILE_DEVICE uint32_t amd_wave_read_first_lane(uint16_t value)
+{
+    return __builtin_amdgcn_readfirstlane(static_cast<uint32_t>(value));
+}
+
+CK_TILE_DEVICE uint32_t amd_wave_read_first_lane(uint8_t value)
+{
+    return __builtin_amdgcn_readfirstlane(static_cast<uint32_t>(value));
+}
+
+CK_TILE_DEVICE uint32_t amd_wave_read_first_lane(uint32_t value)
+{
+    return __builtin_amdgcn_readfirstlane(value);
+}
+
+CK_TILE_DEVICE int32_t amd_wave_read_first_lane(int32_t value)
+{
+    return __builtin_amdgcn_readfirstlane(value);
+}
+
+template <typename Object, std::enable_if_t<std::is_trivially_copyable_v<Object>, int> = 0>
+CK_TILE_DEVICE auto amd_wave_read_first_lane(const Object& object)
+{
+    constexpr size_t object_size = sizeof(Object);
+    constexpr size_t sgpr_size   = 4;
+    constexpr size_t num_full    = object_size / sgpr_size;
+    constexpr size_t tail        = object_size % sgpr_size;
+
+    const auto* source = reinterpret_cast<const unsigned char*>(&object);
+    alignas(Object) unsigned char destination[object_size];
+
+    static_for<0, num_full, 1>{}([&](auto i) {
+        constexpr size_t offset = i * sgpr_size;
+        uint32_t value;
+        __builtin_memcpy(&value, source + offset, sgpr_size);
+        value = __builtin_amdgcn_readfirstlane(value);
+        __builtin_memcpy(destination + offset, &value, sgpr_size);
+    });
+
+    if constexpr(tail != 0)
+    {
+        constexpr size_t offset = num_full * sgpr_size;
+        uint32_t value          = 0;
+        __builtin_memcpy(&value, source + offset, tail);
+        value = __builtin_amdgcn_readfirstlane(value);
+        __builtin_memcpy(destination + offset, &value, tail);
+    }
+
+    Object result;
+    __builtin_memcpy(&result, destination, object_size);
+    return result;
+}
+
+template <typename T>
+CK_TILE_HOST T amd_wave_read_first_lane(T value)
+{
+    return value;
+}
+
 // 128 bit SGPRs to supply buffer resource in buffer instructions
 // https://rocm-documentation.readthedocs.io/en/latest/GCN_ISA_Manuals/testdocbook.html#vector-memory-buffer-instructions
 struct __attribute__((packed)) buffer_resource

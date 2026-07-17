@@ -5,6 +5,7 @@
 #pragma once
 
 #include "ck_tile/core.hpp"
+#include "ck_tile/ops/gemm/pipeline/mmac_gemm_universal_pipeline_ag_bg_cr_policy.hpp"
 // #include "ck_tile/ops/gemm/warp/warp_gemm_dispatcher.hpp"
 
 namespace ck_tile {
@@ -716,6 +717,21 @@ struct UniversalGemmBasePolicy
         constexpr index_t smem_size_b = GetSmemSizeB<Problem>();
 
         return smem_size_a + smem_size_b;
+    }
+};
+
+// Compatibility policy used by the V3 quant pipeline. Keep the current main
+// memory-transfer policy, but select the block GEMM through the HCU MMAC
+// dispatcher.
+struct UniversalGemmPipelineAgBgCrPolicy
+    : public UniversalGemmBasePolicy<UniversalGemmPipelineAgBgCrPolicy>
+{
+    using Base = UniversalGemmBasePolicy<UniversalGemmPipelineAgBgCrPolicy>;
+
+    template <typename Problem>
+    CK_TILE_HOST_DEVICE static constexpr auto GetBlockGemm()
+    {
+        return MmacUniversalGemmPipelineAgBgCrPolicy::template GetBlockGemm<Problem>();
     }
 };
 

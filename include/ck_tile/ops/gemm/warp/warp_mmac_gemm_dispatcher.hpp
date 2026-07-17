@@ -95,9 +95,11 @@ template<> struct WarpGemmMmacDispatcher<fp8_t, fp8_t, float, 16, 32, 128, false
 
 // fp8 bf8
 template<> struct WarpGemmMmacDispatcher<fp8_t, bf8_t, float, 32, 64, 32, false, 2, 1, 1, 4> { using Type = WarpGemmMmacfp8bf8f32_WT32x64x32_MR2NR1MI1NI4; };
+template<> struct WarpGemmMmacDispatcher<fp8_t, bf8_t, float, 32, 64, 32, false, 2, 4, 1, 1> { using Type = WarpGemmMmacfp8bf8f32_WT32x64x32_MR2NR4MI1NI1; };
 
 // bf8 fp8
 template<> struct WarpGemmMmacDispatcher<bf8_t, fp8_t, float, 32, 64, 32, false, 2, 1, 1, 4> { using Type = WarpGemmMmacbf8fp8f32_WT32x64x32_MR2NR1MI1NI4; };
+template<> struct WarpGemmMmacDispatcher<bf8_t, fp8_t, float, 32, 64, 32, false, 2, 4, 1, 1> { using Type = WarpGemmMmacbf8fp8f32_WT32x64x32_MR2NR4MI1NI1; };
 
 // bf8 bf8
 template<> struct WarpGemmMmacDispatcher<bf8_t, bf8_t, float, 32, 64, 32, false, 2, 1, 1, 4> { using Type = WarpGemmMmacbf8bf8f32_WT32x64x32_MR2NR1MI1NI4; };

@@ -96,6 +96,7 @@
 #include "ck_tile/core/utility/lds_utils.hpp"
 #include "ck_tile/core/utility/literals.hpp"
 #include "ck_tile/core/utility/magic_div.hpp"
+#include "ck_tile/core/utility/mixed_prec_compute_type.hpp"
 #include "ck_tile/core/utility/philox_rand.hpp"
 #include "ck_tile/core/utility/random.hpp"
 #include "ck_tile/core/utility/reduce_operator.hpp"

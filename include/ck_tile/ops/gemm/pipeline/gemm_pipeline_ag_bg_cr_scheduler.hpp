@@ -9,6 +9,12 @@
 
 namespace ck_tile {
 
+enum struct CastPolicy
+{
+    BeforeLDSWrite,
+    AfterLDSRead,
+};
+
 enum struct GemmPipelineScheduler
 {
     Default,
