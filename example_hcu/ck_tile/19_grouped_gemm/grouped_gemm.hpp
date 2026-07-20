@@ -244,6 +244,25 @@ struct GemmConfigComputeV4SquareMpad : public GemmConfigComputeV4Square<PrecType
     static constexpr bool kPadK = true;
 };
 
+// gfx936 spill-reduction config for the 128x128 FP16/BF16 square path.
+// Split M across four waves instead of doing two M iterations in each of two waves.
+// This keeps the block tile, K tile, LDS buffering and per-wave MMAC primitive unchanged,
+// while halving each wave's C accumulator footprint.
+template <typename PrecType>
+struct GemmConfigComputeV4SquareM4 : public GemmConfigComputeV4Square<PrecType>
+{
+    static constexpr ck_tile::index_t M_Warp      = 4;
+    static constexpr ck_tile::index_t M_Warp_Tile = 32;
+};
+
+template <typename PrecType>
+struct GemmConfigComputeV4SquareM4Mpad : public GemmConfigComputeV4SquareM4<PrecType>
+{
+    static constexpr bool kPadM = true;
+    static constexpr bool kPadN = true;
+    static constexpr bool kPadK = true;
+};
+
 template <typename PrecType>
 struct GemmConfigComputeV4SquareWide : public GemmConfigComputeV4Square<PrecType>
 {

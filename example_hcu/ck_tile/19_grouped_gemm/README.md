@@ -262,7 +262,9 @@ TorchInductor 仍需要 grouped lowering/template 才会自动把 `aten._grouped
 - variable-K 表示同一次 grouped launch 中每个 descriptor 的 K 可以不同；
   它不等同于 split-K，且当前所有 group 仍使用同一个 `kbatch`。
 - FP16/BF16 对齐 workload 中，只有所有 group 均满足 `M/N/K>=512`、M/N 对齐
-  128、且每个 split 的 K 对齐 64 时，才切换到 `128x128x64` square 配置；
+  128、且每个 split 的 K 对齐 64 时，才切换到 `128x128x64` square 配置。
+  gfx936 使用 4×2 waves、512 threads 的 spill-reduction 版本；其他架构继续使用
+  原 2×2 waves、256 threads 的 square/square-wide 版本；
   其他对齐 shape 保持原 `64x128x64` `GemmConfigComputeV4`。任一 group 存在
   M/N/K 尾块时，example 与 C ABI 仍自动改用原 `kPadM/N/K=true` 配置。
 - padding 是 tensor descriptor 的逻辑 right-pad，不要求调用方申请物理 padded
