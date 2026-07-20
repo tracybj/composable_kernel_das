@@ -50,6 +50,51 @@ add_grouped_gemm_fast_target(tile_example_grouped_gemm_bf8_fast  CK_TILE_GROUPED
 add_grouped_gemm_fast_target(tile_example_grouped_gemm_int8_fast CK_TILE_GROUPED_GEMM_FAST_INT8 grouped_gemm_int8.cpp)
 add_grouped_gemm_fast_target(tile_example_grouped_gemm_int4_fast CK_TILE_GROUPED_GEMM_FAST_INT4 grouped_gemm_int4.cpp)
 
+if(GPU_TARGETS MATCHES "gfx938|gfx946")
+    set(HCU_QUANT_GROUPED_GEMM_ARCH_DEFINITIONS)
+    if(GPU_TARGETS MATCHES "gfx938")
+        list(APPEND HCU_QUANT_GROUPED_GEMM_ARCH_DEFINITIONS
+             CK_TILE_HCU_QUANT_GEMM_GFX938=1)
+    endif()
+    if(GPU_TARGETS MATCHES "gfx946")
+        list(APPEND HCU_QUANT_GROUPED_GEMM_ARCH_DEFINITIONS
+             CK_TILE_HCU_QUANT_GEMM_GFX946=1)
+    endif()
+
+    add_executable(tile_example_grouped_gemm_quant_tensor EXCLUDE_FROM_ALL
+        quant_grouped_gemm_tensor.cpp)
+    target_compile_definitions(tile_example_grouped_gemm_quant_tensor
+        PRIVATE ${HCU_QUANT_GROUPED_GEMM_ARCH_DEFINITIONS})
+
+    add_executable(tile_example_grouped_gemm_quant_rowcol EXCLUDE_FROM_ALL
+        quant_grouped_gemm_rowcol.cpp)
+    target_compile_definitions(tile_example_grouped_gemm_quant_rowcol
+        PRIVATE ${HCU_QUANT_GROUPED_GEMM_ARCH_DEFINITIONS})
+
+    add_executable(tile_example_grouped_gemm_quant_blockwise EXCLUDE_FROM_ALL
+        quant_grouped_gemm_blockwise.cpp)
+    target_compile_definitions(tile_example_grouped_gemm_quant_blockwise
+        PRIVATE ${HCU_QUANT_GROUPED_GEMM_ARCH_DEFINITIONS})
+
+    add_custom_target(tile_example_grouped_gemm_quant_smoke
+        COMMAND $<TARGET_FILE:tile_example_grouped_gemm_quant_tensor>
+        COMMAND $<TARGET_FILE:tile_example_grouped_gemm_quant_rowcol>
+        COMMAND $<TARGET_FILE:tile_example_grouped_gemm_quant_blockwise>
+        DEPENDS
+            tile_example_grouped_gemm_quant_tensor
+            tile_example_grouped_gemm_quant_rowcol
+            tile_example_grouped_gemm_quant_blockwise
+        COMMENT "Running HCU ck_tile FP8/BF8 quant grouped GEMM smoke tests"
+        VERBATIM)
+
+    foreach(quant_mode tensor rowcol blockwise)
+        add_test(NAME tile_example_grouped_gemm_quant_${quant_mode}_smoke
+            COMMAND $<TARGET_FILE:tile_example_grouped_gemm_quant_${quant_mode}>)
+        set_tests_properties(tile_example_grouped_gemm_quant_${quant_mode}_smoke
+            PROPERTIES LABELS "hcu;ck_tile;grouped_gemm;quant;smoke")
+    endforeach()
+endif()
+
 add_library(ck_tile_dcu_grouped_gemm STATIC EXCLUDE_FROM_ALL
     grouped_gemm.cpp
     instances/grouped_gemm_fp16.cpp

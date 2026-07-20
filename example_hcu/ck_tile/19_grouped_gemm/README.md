@@ -36,6 +36,188 @@ cmake --build . --target tile_example_grouped_gemm_fp16_bf16_fast_smoke -j 16
 ctest -R 'tile_example_grouped_gemm_.*_fast_smoke' --output-on-failure
 ```
 
+## FP8/BF8 Quant Grouped GEMM
+
+gfx938（以及预留的 gfx946 host gate）提供三种 quant grouped GEMM 示例：
+
+```bash
+cmake --build . --target tile_example_grouped_gemm_quant_smoke -j 16
+```
+
+也可以分别构建、运行或交给 CTest：
+
+```bash
+cmake --build . --target tile_example_grouped_gemm_quant_tensor -j 16
+cmake --build . --target tile_example_grouped_gemm_quant_rowcol -j 16
+cmake --build . --target tile_example_grouped_gemm_quant_blockwise -j 16
+
+./bin/tile_example_grouped_gemm_quant_tensor
+./bin/tile_example_grouped_gemm_quant_rowcol
+./bin/tile_example_grouped_gemm_quant_blockwise
+
+ctest -R 'tile_example_grouped_gemm_quant_.*_smoke' --output-on-failure
+```
+
+每个程序均构造三个独立 group，并用逐 group CPU reference 验证 25 项用例；
+三种 quant mode 合计 75 项。覆盖范围为：
+
+- 输入：FP8×FP8、BF8×BF8、FP8×BF8、BF8×FP8；
+- 输出：FP16、BF16；
+- 前向固定 K：NN（Row/Row/Row）和 NT（Row/Column/Row）；
+- 反向 variable-K：TN（Column/Row/Row），同一次 launch 中每组 K 不同；
+- M/N/K 非 block tile 整数倍的 padding shape。
+
+四种输入组合与两种输出在 NN、NT、TN 三种 layout 上均实际实例化并运行，
+不是只验证一个 layout 后依赖模板推断。
+
+三种 scale 合同为：
+
+- TensorQuant：每个 group 的 A、B 各一个 scale；
+- RowColQuant：AQ shape 为 `[M,1]`，BQ shape 为 `[1,N]`；
+- ABQuantGrouped：AQ shape 为 `[M,ceil(K/128)]`；NN/NT 的 BQ 每 128 列、
+  每 128 个 K 共享，TN 使用 dense-BQ，N 方向不共享 scale。
+
+padding 是逻辑 tensor descriptor 的 tile right-pad，不要求额外分配物理 padded
+显存；但 RowMajor C 等连续维仍必须满足对应向量 load/store 的对齐要求。因此
+示例中的非 tile 对齐 N 选用 `192/120/136`，而不是宣称支持任意整数 N。
+
+### 为什么示例不再按 FP8/BF8 拆分源文件
+
+上游 `example/ck_tile/17_grouped_gemm` 中的
+`quant_grouped_gemm_fp8_*.cpp` 和 `quant_grouped_gemm_bf8_*.cpp` 是同一个
+`tile_example_quant_grouped_gemm` 可执行文件的显式模板实例化单元。例如
+tensorwise 两个文件的核心区别只是分别实例化 `ck_tile::fp8_t` 和
+`ck_tile::bf8_t`，不是两套不同的 kernel API。
+
+HCU 示例按 quant mode 分为 tensorwise、rowwise 和 blockwise 三个可执行文件，
+每个文件内部用独立的 A/B/C 模板参数实例化
+FP8×FP8、BF8×BF8、FP8×BF8、BF8×FP8，以及 FP16/BF16 输出。这样能直接表达
+混合输入类型；如果仍只按“FP8 文件/BF8 文件”拆分，FP8×BF8 和 BF8×FP8
+还需要额外的组合文件。代价是当前三个示例源文件的模板实例较多，编译时间和
+编译内存会高于细粒度显式实例化。后续若建设生产 instance library，建议再按
+quant mode、A/B/C dtype、layout 和 tile config 拆分显式实例化目标。
+
+### 第三方框架接入
+
+第三方不应调用这三个 example 的 `main()`，而应在自己的 C++/HIP runner 中
+实例化并启动 `ck_tile::QuantGroupedGemmKernel`。需要包含：
+
+```cpp
+#include "ck_tile/core.hpp"
+#include "ck_tile/host.hpp"
+#include "ck_tile/ops/epilogue.hpp"
+#include "ck_tile/ops/gemm.hpp"
+#include "ck_tile/ops/gemm_quant.hpp"
+```
+
+`Kernel` 的模板组成和参考文件如下：
+
+| quant mode | Problem / Pipeline | `QuantType` | 完整类型参考 |
+| --- | --- | --- | --- |
+| tensorwise | `GemmRowColTensorQuantPipelineProblem` / `GemmPipelineAgBgCrCompV3` | `TensorQuant` | `quant_grouped_gemm_tensor.cpp` |
+| rowwise | `GemmRowColTensorQuantPipelineProblem` / `GemmPipelineAgBgCrCompV3` | `RowColQuant` | `quant_grouped_gemm_rowcol.cpp` |
+| blockwise | `GemmABQuantPipelineProblem` / `ABQuantGemmPipelineAgBgCrCompV3` | `ABQuantGrouped` | `quant_grouped_gemm_blockwise.cpp` |
+
+三个模式最终都使用：
+
+```cpp
+using Kernel =
+    ck_tile::QuantGroupedGemmKernel<TilePartitioner, Pipeline, Epilogue, QuantMode>;
+```
+
+调用方为每个 group 构造一个 `ck_tile::QuantGroupedGemmHostArgs`。其构造参数
+顺序为：
+
+```cpp
+ck_tile::QuantGroupedGemmHostArgs{
+    a_ptr, b_ptr, c_ptr, aq_ptr, bq_ptr,
+    k_batch,
+    M, N, K,
+    QK_A, QK_B,
+    stride_A, stride_B, stride_C,
+    stride_AQ, stride_BQ};
+```
+
+其中 stride 均以元素为单位。当前验证路径使用 `k_batch=1`。scale descriptor
+约定为：
+
+| quant mode | `QK_A/QK_B` | AQ | BQ |
+| --- | --- | --- | --- |
+| tensorwise | `1/1` | 单个 FP32 scale，`stride_AQ=1` | 单个 FP32 scale，`stride_BQ=1` |
+| rowwise | `1/1` | `[M,1]`，`stride_AQ=1` | `[1,N]`，`stride_BQ=1` |
+| blockwise | `ceil(K/128)` | RowMajor `[M,QK_A]`，`stride_AQ>=QK_A` | ColumnMajor `[QK_B,BQN]`，`stride_BQ>=QK_B` |
+
+blockwise 的 NN/NT 使用 `BQN=ceil(N/128)`；TN 使用 dense-BQ，
+`BQN=N`。A、B、AQ、BQ、C 指针可以在不同 group 间指向不同分配，且每个
+descriptor 都有自己的 M/N/K，因此同一次 launch 支持 variable-K。
+
+已经在 host 端得到各 group descriptor 时，可直接使用当前 example 验证过的
+non-persistent launch 流程：
+
+```cpp
+std::vector<ck_tile::QuantGroupedGemmHostArgs> groups = /* one entry per group */;
+
+auto translated_args = Kernel::MakeKargs(groups);
+if(translated_args.size() != groups.size() ||
+   !Kernel::IsSupportedArgument(translated_args))
+{
+    // 拒绝当前 Kernel 配置不支持的 shape、stride 或对齐。
+}
+
+void* workspace = nullptr;
+const auto workspace_bytes = Kernel::GetWorkSpaceSize(groups);
+hipMalloc(&workspace, workspace_bytes);
+hipMemcpyAsync(workspace,
+               translated_args.data(),
+               workspace_bytes,
+               hipMemcpyHostToDevice,
+               stream);
+
+ck_tile::launch_kernel(
+    ck_tile::stream_config{stream},
+    ck_tile::make_kernel<Kernel::kBlockSize, 1>(
+        Kernel{},
+        Kernel::GridSize(groups),
+        Kernel::BlockSize(),
+        0,
+        ck_tile::cast_pointer_to_constant_address_space(workspace),
+        ck_tile::type_convert<ck_tile::index_t>(translated_args.size())));
+```
+
+输入、scale、输出和 workspace 必须至少存活到该 stream 上 kernel 执行完成。
+实际框架代码还应检查 HIP API 返回值，并缓存 workspace，避免每次调用
+`hipMalloc`。空 M/N/K group 会被 `MakeKargs` 跳过；框架若允许空 group，
+不能再用上面严格的 `translated_args.size() == groups.size()` 检查。
+
+Primus-Turbo 这类高频调用方也可以在 GPU 上直接生成
+`ck_tile::QuantGemmTransKernelArg` 数组，避免每次把 host descriptor 翻译后再
+拷贝。此时：
+
+- workspace 大小为 `Kernel::GetWorkSpaceSize(group_count)`；
+- 每项必须完整填写 `group_karg`，并为 non-persistent 查找填写
+  `[block_start, block_end)`；
+- non-persistent kernel 使用所有 group 的实际 tile 总数作为 grid；
+- persistent kernel 可按 `Kernel::MaxOccupancyGridSize(stream_config)` 启动，
+  具体选择必须与 `Kernel::UsePersistentKernel` 一致。
+
+Primus-Turbo 中可参考
+`csrc/kernels/grouped_gemm/ck/ck_grouped_gemm_kernel_template.h` 的
+`CKQuantGroupedGemmRunner` 和
+`csrc/kernels/grouped_gemm/ck_grouped_gemm.cu` 的 quant args setup。CK 侧只提供
+kernel、descriptor 和 launch building blocks；dtype/layout/tile dispatch、
+workspace 缓存及框架注册仍由第三方负责。
+
+gfx938 编译时，第三方 target 除指定 `--offload-arch=gfx938` 外，还需要在
+host 编译阶段定义 `CK_TILE_HCU_QUANT_GEMM_GFX938=1`；本目录 CMake 已自动处理。
+gfx946 对应宏为 `CK_TILE_HCU_QUANT_GEMM_GFX946=1`，目前只是代码预留，尚未在
+当前 nmz-2 工具链上编译验证。
+
+当前没有为 quant grouped GEMM 新增稳定 C ABI。下面的
+`ck_tile_dcu_grouped_gemm_run` 只覆盖非量化 FP16/BF16 grouped GEMM，不能用它
+调用 tensorwise、rowwise 或 blockwise quant kernel。需要纯 C/PyTorch ABI 的
+第三方应在自己的扩展层封装上述 runner，或者后续在 CK 中单独设计并验证 quant
+C ABI。
+
 ## 现有 C ABI（框架入口）
 
 现有框架（包括 aiter）继续从本 example 目录包含原有 header：
