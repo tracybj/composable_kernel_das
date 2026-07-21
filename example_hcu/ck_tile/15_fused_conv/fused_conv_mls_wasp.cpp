@@ -13,11 +13,18 @@
 #include "ck_tile/ops/fused_conv.hpp"
 #include "ck_tile/ops/elementwise.hpp"
 
+#if defined(CK_TILE_MLS_PROBE_BF16)
+using InDataType   = ck_tile::bf16_t;
+using WeiDataType  = ck_tile::bf16_t;
+using OutDataType  = ck_tile::bf16_t;
+using BiasDataType = ck_tile::bf16_t;
+#else
 using InDataType   = ck_tile::fp16_t;
 using WeiDataType  = ck_tile::fp16_t;
 using OutDataType  = ck_tile::fp16_t;
-using AccDataType  = float;
 using BiasDataType = ck_tile::fp16_t;
+#endif
+using AccDataType  = float;
 
 #if 1
 using InLayout  = ck_tile::tensor_layout::convolution::NHWGC;
@@ -31,7 +38,7 @@ using OutLayout = ck_tile::tensor_layout::convolution::NGKHWk<32>;
 
 using InElementOp  = ck_tile::element_wise::PassThrough;
 using WeiElementOp = ck_tile::element_wise::PassThrough;
-using OutElementOp = ck_tile::element_wise::AddRelu;
+using OutElementOp = ck_tile::element_wise::PassThrough;
 
 // configs
 static constexpr ck_tile::index_t MPerWG    = 128;
@@ -94,8 +101,10 @@ bool run_fused_conv(const ck_tile::conv::ConvParam& conv_param)
     std::cout << "res: " << res.mDesc << std::endl;
 
 #if 1
-    ck_tile::FillUniformDistribution<InDataType>{0.0f, 1.0f}(in);
-    ck_tile::FillUniformDistribution<WeiDataType>{-.0005f, 0.0005f}(wei);
+    // Keep the validation signal well above fp16 round-off.  The former tiny
+    // weights could let a missing/zero MLS load pass a loose all-close check.
+    ck_tile::FillUniformDistribution<InDataType>{0.25f, 1.0f}(in);
+    ck_tile::FillUniformDistribution<WeiDataType>{0.125f, 0.5f}(wei);
     ck_tile::FillUniformDistribution<BiasDataType>{-.0000f, 0.0000f}(bias);
     ck_tile::FillUniformDistribution<OutDataType>{0.0000f, 0.0000f}(res);
 #else
@@ -206,10 +215,11 @@ bool run_fused_conv(const ck_tile::conv::ConvParam& conv_param)
     }
 
     float avg_time =
-        ck_tile::launch_kernel({nullptr, true, 0, 0, 1},
+        ck_tile::launch_kernel({nullptr, true, 0, 10, 100},
                                ck_tile::make_kernel<TileShape::BlockSize, MinBlockPerCU>(
                                    Kernel{},
-                                   kernel_args.tile_partitioner.CalculateGridSize(),
+                                   kernel_args.tile_partitioner.CalculateGridSize() *
+                                       kernel_args.num_group,
                                    TileShape::BlockSize,
                                    0,
                                    kernel_args,
@@ -249,7 +259,13 @@ bool run_fused_conv(const ck_tile::conv::ConvParam& conv_param)
 
     // check
     out_device_buf.FromDevice(out_device.data());
-    return ck_tile::check_err(out_device, out_host, "Error: incorrect results!", 1e-5f, 1e-4f);
+#if defined(CK_TILE_MLS_PROBE_BF16)
+    constexpr float tolerance = 1e-2f;
+#else
+    constexpr float tolerance = 1e-3f;
+#endif
+    return ck_tile::check_err(
+        out_device, out_host, "Error: incorrect results!", tolerance, tolerance);
 }
 
 bool run_fused_conv_example(int argc, char* argv[])
@@ -290,8 +306,7 @@ bool run_fused_conv_example(int argc, char* argv[])
 
     if(arg_parser.get_int("m") == 2)
     {
-        run_fused_conv(conv_param);
-        return 0;
+        return run_fused_conv(conv_param);
     }
     else
     {

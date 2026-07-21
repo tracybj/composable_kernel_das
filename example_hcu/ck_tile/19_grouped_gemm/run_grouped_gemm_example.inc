@@ -489,6 +489,12 @@ float invoke_gemm(int n_warmup,
         {
             grouped_gemm_throw_min_two_k_loop_error();
         }
+        if(!grouped_gemm_all_groups_have_safe_mls_k_stride<
+               GemmConfig, ALayout, BLayout>(args))
+        {
+            throw std::runtime_error(
+                "MLS grouped_gemm K tails require stride_A and stride_B to cover padded K.");
+        }
         for(const auto& arg : args)
         {
             kargs.emplace_back(ck_tile::UniversalGemmKernelArgs<>{{arg.a_ptr},
@@ -518,7 +524,13 @@ float invoke_gemm(int n_warmup,
                                          ADataType,
                                          BDataType,
                                          AccDataType,
-                                         CDataType>(stream, group_count, kargs_ptr, splitk);
+                                         CDataType>(stream,
+                                                    group_count,
+                                                    kargs_ptr,
+                                                    grouped_gemm_make_output_resets<GemmConfig,
+                                                                                    CDataType,
+                                                                                    CLayout>(args),
+                                                    splitk);
     }
 
     return ave_time;
@@ -557,11 +569,14 @@ int run_grouped_gemm_example_with_layouts(int argc,
     const std::string int4_const_b = arg_parser.get_str("int4_const_b");
     const ck_tile::index_t int4_b_one_k = arg_parser.get_int("int4_b_one_k");
 
-    if(kbatch > 1 && validate && warmup + repeat > 1)
+    if constexpr(!GemmConfig::SupportsSplitKOutputAtomic)
     {
-        std::cout << "WARNING: Data validation enabled with SplitK and more than"
-                  << "1 warmup/repeat. Disabling validation." << std::endl;
-        validate = false;
+        if(kbatch > 1 && validate && warmup + repeat > 1)
+        {
+            std::cout << "WARNING: Data validation enabled with SplitK and more than"
+                      << "1 warmup/repeat. Disabling validation." << std::endl;
+            validate = false;
+        }
     }
 
     std::vector<ck_tile::index_t> Ms        = arg_parser.get_int_vec("Ms");

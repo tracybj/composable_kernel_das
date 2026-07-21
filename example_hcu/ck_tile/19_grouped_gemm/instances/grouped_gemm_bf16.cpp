@@ -2,7 +2,12 @@
 // Copyright (c) 2025, Advanced Micro Devices, Inc. All rights reserved.
 #include "grouped_gemm_impl.hpp"
 
-#if defined(CK_TILE_GROUPED_GEMM_TUNE_SQUARE_M4)
+#if defined(CK_TILE_GROUPED_GEMM_TUNE_MLS)
+template <typename PrecType>
+using GroupedGemmBf16Config = GemmConfigMls<PrecType>;
+template <typename PrecType>
+using GroupedGemmBf16PaddedConfig = GemmConfigMls<PrecType>;
+#elif defined(CK_TILE_GROUPED_GEMM_TUNE_SQUARE_M4)
 template <typename PrecType>
 using GroupedGemmBf16Config = GemmConfigComputeV4SquareM4<PrecType>;
 template <typename PrecType>
@@ -31,14 +36,17 @@ int grouped_gemm_c_run_bf16(const ck_tile_dcu_grouped_gemm_desc* descs,
                             void* workspace,
                             hipStream_t stream)
 {
-#if !defined(CK_TILE_GROUPED_GEMM_TUNE_SQUARE) && \
+#if !defined(CK_TILE_GROUPED_GEMM_TUNE_MLS) && \
+    !defined(CK_TILE_GROUPED_GEMM_TUNE_SQUARE) && \
     !defined(CK_TILE_GROUPED_GEMM_TUNE_SQUARE_WIDE) && \
     !defined(CK_TILE_GROUPED_GEMM_TUNE_SQUARE_M4) && \
     !defined(CK_TILE_GROUPED_GEMM_FORCE_BASELINE)
     if(grouped_gemm_prefers_large_config<GemmConfigComputeV4SquareWide<ck_tile::bf16_t>>(
            descs, group_count))
     {
-        if(ck_tile::get_hcu_target_enum() == ck_tile::hcu_target_enum::gfx936)
+        const auto hcu_target = ck_tile::get_hcu_target_enum();
+        if(hcu_target == ck_tile::hcu_target_enum::gfx936 ||
+           hcu_target == ck_tile::hcu_target_enum::gfx938)
         {
             return dispatch_grouped_gemm_c_layout<GemmConfigComputeV4SquareM4<ck_tile::bf16_t>,
                                                   ck_tile::bf16_t>(
@@ -76,14 +84,17 @@ int grouped_gemm_example_run_bf16(std::string a_layout, std::string b_layout, in
                                                            argc,
                                                            argv);
     }
-#if !defined(CK_TILE_GROUPED_GEMM_TUNE_SQUARE) && \
+#if !defined(CK_TILE_GROUPED_GEMM_TUNE_MLS) && \
+    !defined(CK_TILE_GROUPED_GEMM_TUNE_SQUARE) && \
     !defined(CK_TILE_GROUPED_GEMM_TUNE_SQUARE_WIDE) && \
     !defined(CK_TILE_GROUPED_GEMM_TUNE_SQUARE_M4) && \
     !defined(CK_TILE_GROUPED_GEMM_FORCE_BASELINE)
     if(grouped_gemm_example_prefers_large_config<GemmConfigComputeV4SquareWide<ck_tile::bf16_t>>(
            argc, argv))
     {
-        if(ck_tile::get_hcu_target_enum() == ck_tile::hcu_target_enum::gfx936)
+        const auto hcu_target = ck_tile::get_hcu_target_enum();
+        if(hcu_target == ck_tile::hcu_target_enum::gfx936 ||
+           hcu_target == ck_tile::hcu_target_enum::gfx938)
         {
             return run_gemm_example_prec_type<GemmConfigComputeV4SquareM4<ck_tile::bf16_t>,
                                               ck_tile::bf16_t>(

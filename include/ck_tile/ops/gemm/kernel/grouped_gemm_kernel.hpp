@@ -18,6 +18,17 @@
 
 namespace ck_tile {
 
+template <typename T, typename = void>
+struct is_grouped_gemm_mls_pipeline : std::false_type
+{
+};
+
+template <typename T>
+struct is_grouped_gemm_mls_pipeline<T, std::void_t<decltype(T::IsMlsPipeline)>>
+    : std::bool_constant<T::IsMlsPipeline>
+{
+};
+
 /// @brief The Grouped GEMM kernel host arguments.
 ///
 /// @par Overview
@@ -293,11 +304,67 @@ struct GroupedGemmKernel
 
     CK_TILE_HOST static bool IsSupportedArgument(const std::vector<TransKernelArg>& kargs)
     {
+        if constexpr(is_grouped_gemm_mls_pipeline<GemmPipeline>::value)
+        {
+            if(get_hcu_target_enum() != hcu_target_enum::gfx938)
+            {
+                return false;
+            }
+        }
+
         for(const auto& karg : kargs)
         {
             if(!Base::IsSupportedArgument(karg.group_karg))
             {
                 return false;
+            }
+            if constexpr(is_grouped_gemm_mls_pipeline<GemmPipeline>::value)
+            {
+                const auto& group_karg = karg.group_karg;
+                constexpr index_t k_warp_tile =
+                    TilePartitioner::BlockGemmShape::WarpTile::at(number<2>{});
+                const index_t k_grain = group_karg.k_batch * k_warp_tile;
+                const index_t k_read =
+                    integer_divide_ceil(group_karg.K, k_grain) * k_warp_tile;
+                index_t required_k_span = 0;
+
+                for(index_t split = 0; split < group_karg.k_batch; ++split)
+                {
+                    const index_t split_k = split + 1 < group_karg.k_batch
+                                                ? k_read
+                                                : group_karg.K -
+                                                      k_read * (group_karg.k_batch - 1);
+                    if(split_k <= 0)
+                    {
+                        return false;
+                    }
+                    const index_t num_loop =
+                        integer_divide_ceil(split_k, GemmPipeline::KPerBlock);
+                    if(!GemmPipeline::IsSupported(num_loop))
+                    {
+                        return false;
+                    }
+                    required_k_span =
+                        max(required_k_span,
+                            split * k_read + num_loop * GemmPipeline::KPerBlock);
+                }
+
+                // MLS issues a fixed-width physical matrix load for each K tile. The tail
+                // mask zero-fills invalid K values, but a compact leading dimension can
+                // still cross row boundaries and fault before masking. Require physical
+                // row padding through the last split; aligned K naturally satisfies this.
+                const bool a_stride_safe =
+                    std::is_same_v<ALayout, tensor_layout::gemm::RowMajor>
+                        ? group_karg.stride_As[0] >= required_k_span
+                        : group_karg.stride_As[0] >= group_karg.M;
+                const bool b_stride_safe =
+                    std::is_same_v<BLayout, tensor_layout::gemm::ColumnMajor>
+                        ? group_karg.stride_Bs[0] >= required_k_span
+                        : group_karg.stride_Bs[0] >= group_karg.N;
+                if(!a_stride_safe || !b_stride_safe)
+                {
+                    return false;
+                }
             }
         }
         return true;
@@ -312,9 +379,6 @@ struct GroupedGemmKernel
                             const tuple<index_t, index_t>& block_idx_2d,
                             const index_t block_idx_z) const
     {
-
-        static_assert(GemmPipeline::DoubleSmemBuffer || !GemmPipeline::Preshuffle,
-                      "SingleSmemBuffer and Preshuffle cannot both be enabled simultaneously!");
 
         const auto [iM, iN] = block_idx_2d;
 
@@ -333,61 +397,160 @@ struct GroupedGemmKernel
         // allocate LDS
         __shared__ char smem_ptr_0[GetSmemSize()];
 
+        if constexpr(is_grouped_gemm_mls_pipeline<GemmPipeline>::value)
+        {
+            RunGemmMls(a_ptr,
+                       b_ptr,
+                       c_ptr,
+                       smem_ptr_0,
+                       kargs,
+                       splitk_batch_offset,
+                       i_m,
+                       i_n);
+        }
+        else
+        {
+            static_assert(
+                GemmPipeline::DoubleSmemBuffer || !GemmPipeline::Preshuffle,
+                "SingleSmemBuffer and Preshuffle cannot both be enabled simultaneously!");
+
 //         // TO DO:
 //         // Can we simplify this branching logic?
-        if constexpr(GemmPipeline::DoubleSmemBuffer == true)
-        {
-
-            __shared__ char smem_ptr_1[GetSmemSize()];
-            if constexpr(UsePersistentKernel || GemmPipeline::Preshuffle)
+            if constexpr(GemmPipeline::DoubleSmemBuffer == true)
             {
-                RunGemmWithPipelineSelection2LDS(a_ptr,
-                                                 b_ptr,
-                                                 c_ptr,
-                                                 smem_ptr_0,
-                                                 smem_ptr_1,
-                                                 kargs,
-                                                 splitk_batch_offset,
-                                                 i_m,
-                                                 i_n);
+                __shared__ char smem_ptr_1[GetSmemSize()];
+                if constexpr(UsePersistentKernel || GemmPipeline::Preshuffle)
+                {
+                    RunGemmWithPipelineSelection2LDS(a_ptr,
+                                                     b_ptr,
+                                                     c_ptr,
+                                                     smem_ptr_0,
+                                                     smem_ptr_1,
+                                                     kargs,
+                                                     splitk_batch_offset,
+                                                     i_m,
+                                                     i_n);
+                }
+                else
+                {
+
+                    Base::RunGemm2LDS({a_ptr},
+                                      {b_ptr},
+                                      kargs.ds_ptr,
+                                      c_ptr,
+                                      smem_ptr_0,
+                                      smem_ptr_1,
+                                      kargs,
+                                      splitk_batch_offset,
+                                      i_m,
+                                      i_n);
+                }
             }
-            else
+            else // SingleSmemBuffer
             {
+                static_assert(false, "SingleSmemBuffer Not support!");
 
-                Base::RunGemm2LDS({a_ptr},
+                if constexpr(UsePersistentKernel)
+                {
+                    RunGemmWithPipelineSelection(
+                        a_ptr, b_ptr, c_ptr, smem_ptr_0, kargs, splitk_batch_offset, i_m, i_n);
+                }
+                else // Non-persistent kernel
+                {
+                    Base::RunGemm({a_ptr},
                                   {b_ptr},
                                   kargs.ds_ptr,
                                   c_ptr,
                                   smem_ptr_0,
-                                  smem_ptr_1,
                                   kargs,
                                   splitk_batch_offset,
                                   i_m,
                                   i_n);
+                }
             }
         }
-        else // SingleSmemBuffer
-        {
-            static_assert(false, "SingleSmemBuffer Not support!");
+    }
 
-            if constexpr(UsePersistentKernel)
+    CK_TILE_DEVICE static void
+    RunGemmMls(const ADataType* a_ptr,
+               const BDataType* b_ptr,
+               CDataType* c_ptr,
+               void* p_smem,
+               const KernelArgs& kargs,
+               const typename Base::SplitKBatchOffset& splitk_batch_offset,
+               const index_t block_idx_m,
+               const index_t block_idx_n)
+    {
+        static_assert(is_grouped_gemm_mls_pipeline<GemmPipeline>::value);
+
+        auto a_desc = [&]() {
+            if constexpr(std::is_same_v<ALayout, tensor_layout::gemm::RowMajor>)
             {
-                RunGemmWithPipelineSelection(
-                    a_ptr, b_ptr, c_ptr, smem_ptr_0, kargs, splitk_batch_offset, i_m, i_n);
+                return make_naive_tensor_descriptor(
+                    make_tuple(kargs.M, splitk_batch_offset.splitted_k),
+                    make_tuple(kargs.stride_As[0], 1),
+                    number<1>{},
+                    number<1>{});
             }
-            else // Non-persistent kernel
+            else
             {
-                Base::RunGemm({a_ptr},
-                              {b_ptr},
-                              kargs.ds_ptr,
-                              c_ptr,
-                              smem_ptr_0,
-                              kargs,
-                              splitk_batch_offset,
-                              i_m,
-                              i_n);
+                return make_naive_tensor_descriptor(
+                    make_tuple(kargs.M, splitk_batch_offset.splitted_k),
+                    make_tuple(1, kargs.stride_As[0]),
+                    number<1>{},
+                    number<1>{});
             }
-        }
+        }();
+        auto b_desc = [&]() {
+            if constexpr(std::is_same_v<BLayout, tensor_layout::gemm::ColumnMajor>)
+            {
+                return make_naive_tensor_descriptor(
+                    make_tuple(kargs.N, splitk_batch_offset.splitted_k),
+                    make_tuple(kargs.stride_Bs[0], 1),
+                    number<1>{},
+                    number<1>{});
+            }
+            else
+            {
+                return make_naive_tensor_descriptor(
+                    make_tuple(kargs.N, splitk_batch_offset.splitted_k),
+                    make_tuple(1, kargs.stride_Bs[0]),
+                    number<1>{},
+                    number<1>{});
+            }
+        }();
+        auto a_view = make_hcu_tensor_view<address_space_enum::global>(a_ptr, a_desc);
+        auto b_view = make_hcu_tensor_view<address_space_enum::global>(b_ptr, b_desc);
+
+        const auto& gemm_tensor_views_tuple =
+            Base::template MakeGemmTensorViews<EpiloguePipeline::MemoryOperation>(
+                {a_ptr}, {b_ptr}, kargs.ds_ptr, c_ptr, kargs, splitk_batch_offset);
+        const auto& gemm_pad_views = Base::MakeGemmPadViews(gemm_tensor_views_tuple);
+        auto gemm_tile_windows =
+            Base::MakeGemmTileWindows(gemm_pad_views, block_idx_m, block_idx_n);
+        const auto& d_block_window = gemm_tile_windows.at(Base::I2);
+
+        const index_t num_loop = __builtin_amdgcn_readfirstlane(
+            TilePartitioner::GetLoopNum(splitk_batch_offset.splitted_k));
+        const index_t k_remainder = __builtin_amdgcn_readfirstlane(
+            num_loop * GemmPipeline::KPerBlock - splitk_batch_offset.splitted_k);
+        const bool has_hot_loop = GemmPipeline::BlockHasHotloop(num_loop);
+
+        const auto& c_block_tile = GemmPipeline{}(a_view,
+                                                  b_view,
+                                                  block_idx_m,
+                                                  block_idx_n,
+                                                  kargs.stride_As[0],
+                                                  kargs.stride_Bs[0],
+                                                  k_remainder,
+                                                  num_loop,
+                                                  has_hot_loop,
+                                                  p_smem);
+
+        auto& c_block_window = gemm_tile_windows.at(Base::I3);
+        EpiloguePipeline{}.template
+        operator()<decltype(c_block_window), decltype(c_block_tile), decltype(d_block_window)>(
+            c_block_window, c_block_tile, d_block_window, p_smem);
     }
 
     /**

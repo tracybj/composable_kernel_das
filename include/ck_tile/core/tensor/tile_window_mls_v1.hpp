@@ -77,8 +77,18 @@ struct tile_window_mls_v1
     static constexpr auto mfmt = detail::mfmt_traits<Interleave_>::value;
     static constexpr auto t =
         bool_constant<std::is_same_v<Layout, tensor_layout::gemm::RowMajor>>{};
-    static constexpr auto m_length  = t ? number<KPerMls>{} : number<MNPerMls>{};
-    static constexpr auto nm_length = t ? number<MNPerMls>{} : number<KPerMls>{};
+    static constexpr auto m_length = []() {
+        if constexpr(t)
+            return number<KPerMls>{};
+        else
+            return number<MNPerMls>{};
+    }();
+    static constexpr auto nm_length = []() {
+        if constexpr(t)
+            return number<MNPerMls>{};
+        else
+            return number<KPerMls>{};
+    }();
 
     static constexpr auto lds_consec_bytes =
         get_lds_consec_bytes<DataType>(m_length, nm_length, t, mfmt);
@@ -161,7 +171,7 @@ struct tile_window_mls_v1
                 if constexpr(i_issue == 0)
                 {
                     const_addr_byte_offset_ = __builtin_amdgcn_readfirstlane(
-                        KPerBlock * raw_length_mn * sizeof(DataType));
+                        KPerBlock * ld_raw * sizeof(DataType));
                 }
             }
         });
@@ -199,7 +209,7 @@ struct tile_window_mls_v1
                                            t,
                                            mfmt,
                                            moffset,
-                                           bool_constant<false>{},
+                                           bool_constant<!t>{},
                                            bool_constant<bps>{});
         });
     }

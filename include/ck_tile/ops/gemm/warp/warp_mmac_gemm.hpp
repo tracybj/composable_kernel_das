@@ -22,6 +22,9 @@ using WarpGemmMmacF16F16F32_WT32x64x32_MR2NR1MI1NI4 = WarpGemmImpl<
 using WarpGemmMmacF16F16F32_WT32x32x16_MR2NR2MI1NI1 = WarpGemmImpl<
     WarpGemmAttributeMmacIterateK<WarpGemmAttributeMmacImplF16F16F32M16N16K16, 2, 2, 1, 1, 1>>;
 
+using WarpGemmMmacF16F16F32_WT32x32x16_MR1NR1MI2NI2 = WarpGemmImpl<
+    WarpGemmAttributeMmacIterateK<WarpGemmAttributeMmacImplF16F16F32M16N16K16, 1, 1, 2, 2, 1>>;
+
 using WarpGemmMmacF16F16F32_WT16x64x32_MR1NR4MI1NI1 = WarpGemmImpl<
     WarpGemmAttributeMmacIterateK<WarpGemmAttributeMmacImplF16F16F32M16N16K16, 1, 4, 1, 1, 2>>;
 using WarpGemmMmacF16F16F32_WT16x64x32_MR1NR1MI1NI4 = WarpGemmImpl<
@@ -56,6 +59,9 @@ using WarpGemmMmacF16F16F32_WT16x16x128_MR1NR1MI1NI1 = WarpGemmImpl<
     WarpGemmAttributeMmacIterateK<WarpGemmAttributeMmacImplF16F16F32M16N16K16, 1, 1, 1, 1, 8>>;
 
 // bf16
+using WarpGemmMmacBF16BF16F32_WT32x32x16_MR1NR1MI2NI2 = WarpGemmImpl<
+    WarpGemmAttributeMmacIterateK<WarpGemmAttributeMmacImplBf16Bf16F32M16N16K16, 1, 1, 2, 2, 1>>;
+
 using WarpGemmMmacBF16BF16F32_WT16x32x128_MR1NR1MI1NI2 = WarpGemmImpl<
     WarpGemmAttributeMmacIterateK<WarpGemmAttributeMmacImplBf16Bf16F32M16N16K16, 1, 1, 1, 2, 8>>;
 

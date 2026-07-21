@@ -7,6 +7,8 @@
 #include <fstream>
 #include <string>
 #include <tuple>
+#include <utility>
+#include <vector>
 
 #include "ck_tile/core.hpp"
 #include "ck_tile/host/kernel_launch.hpp"
@@ -16,6 +18,7 @@
 #include "ck_tile/utility/json_dump.hpp"
 // #include "ck_tile/ops/gemm/pipeline/gemm_pipeline_ag_bg_cr_comp_v3.hpp"
 #include "ck_tile/ops/gemm/pipeline/gemm_pipeline_ag_bg_cr_comp_v4.hpp"
+#include "ck_tile/ops/gemm/pipeline/gemm_pipeline_ag_bg_cr_mls.hpp"
 
 // #include "ck_tile/ops/gemm/pipeline/wp_pipeline_agmem_bgmem_creg_v2.hpp"
 #include "ck_tile/ops/gemm/kernel/grouped_gemm_kernel.hpp"
@@ -25,6 +28,7 @@
 #define CK_TILE_PIPELINE_MEMORY 2
 #define CK_TILE_PIPELINE_COMPUTE_V4 3
 #define CK_TILE_PIPELINE_PRESHUFFLE_V2 4
+#define CK_TILE_PIPELINE_MLS 5
 
 #ifndef CK_TILE_PIPELINE_DEFAULT
 #define CK_TILE_PIPELINE_DEFAULT CK_TILE_PIPELINE_COMPUTE_V3
@@ -147,6 +151,13 @@ struct GemmConfigBase
     static constexpr bool DoubleSmemBuffer          = false;
     static constexpr bool SupportsFastRowMajorB     = false;
     static constexpr bool SupportsFastColumnMajorA  = false;
+    static constexpr bool SupportsSplitKOutputAtomic = false;
+    static constexpr bool TiledMMAPermuteN           = false;
+    // Zero keeps CShuffle's legacy default: repeat = warp tile / 16, interleave = 1.
+    static constexpr ck_tile::index_t CShuffleWarpGemmMRepeat     = 0;
+    static constexpr ck_tile::index_t CShuffleWarpGemmNRepeat     = 0;
+    static constexpr ck_tile::index_t CShuffleWarpGemmMInterleave = 0;
+    static constexpr ck_tile::index_t CShuffleWarpGemmNInterleave = 0;
 };
 
 template <typename PrecType>
@@ -244,7 +255,7 @@ struct GemmConfigComputeV4SquareMpad : public GemmConfigComputeV4Square<PrecType
     static constexpr bool kPadK = true;
 };
 
-// gfx936 spill-reduction config for the 128x128 FP16/BF16 square path.
+// gfx936/gfx938 spill-reduction config for the 128x128 FP16/BF16 square path.
 // Split M across four waves instead of doing two M iterations in each of two waves.
 // This keeps the block tile, K tile, LDS buffering and per-wave MMAC primitive unchanged,
 // while halving each wave's C accumulator footprint.
@@ -261,6 +272,44 @@ struct GemmConfigComputeV4SquareM4Mpad : public GemmConfigComputeV4SquareM4<Prec
     static constexpr bool kPadM = true;
     static constexpr bool kPadN = true;
     static constexpr bool kPadK = true;
+};
+
+// gfx938-only direct MLS candidate. Keep it isolated from W1 until correctness,
+// ISA and same-interface A/B validation are complete.
+template <typename PrecType>
+struct GemmConfigMls : public GemmConfigBase
+{
+    static_assert(std::is_same_v<PrecType, ck_tile::half_t> ||
+                      std::is_same_v<PrecType, ck_tile::bf16_t>,
+                  "The direct grouped-GEMM MLS config supports FP16 and BF16");
+
+    static constexpr ck_tile::index_t M_Tile = 128;
+    static constexpr ck_tile::index_t N_Tile = 128;
+    static constexpr ck_tile::index_t K_Tile = 32;
+
+    static constexpr ck_tile::index_t M_Warp = 2;
+    static constexpr ck_tile::index_t N_Warp = 2;
+    static constexpr ck_tile::index_t K_Warp = 1;
+
+    static constexpr ck_tile::index_t M_Warp_Tile = 32;
+    static constexpr ck_tile::index_t N_Warp_Tile = 32;
+    static constexpr ck_tile::index_t K_Warp_Tile = 16;
+
+    static constexpr bool kPadM = true;
+    static constexpr bool kPadN = true;
+    static constexpr bool kPadK = true;
+    static constexpr bool Persistent = true;
+    static constexpr bool DoubleSmemBuffer = false;
+    static constexpr bool TiledMMAPermuteN = true;
+    static constexpr bool SupportsFastRowMajorB    = true;
+    static constexpr bool SupportsFastColumnMajorA = true;
+    static constexpr bool SupportsSplitKOutputAtomic = true;
+    static constexpr ck_tile::index_t CShuffleWarpGemmMRepeat     = 1;
+    static constexpr ck_tile::index_t CShuffleWarpGemmNRepeat     = 1;
+    static constexpr ck_tile::index_t CShuffleWarpGemmMInterleave = 2;
+    static constexpr ck_tile::index_t CShuffleWarpGemmNInterleave = 2;
+    static constexpr ck_tile::index_t Pipeline = CK_TILE_PIPELINE_MLS;
+    static constexpr int kBlockPerCu = 1;
 };
 
 template <typename PrecType>
@@ -548,6 +597,15 @@ struct PipelineTypeTraits<CK_TILE_PIPELINE_COMPUTE_V4>
     using GemmPipeline = ck_tile::GemmPipelineAgBgCrCompV4<PipelineProblem>;
     template <typename PipelineProblem>
     using UniversalGemmPipeline = ck_tile::BaseGemmPipelineAgBgCrCompV4<PipelineProblem>;
+};
+
+template <>
+struct PipelineTypeTraits<CK_TILE_PIPELINE_MLS>
+{
+    template <typename PipelineProblem>
+    using GemmPipeline = ck_tile::GemmPipelineAgBgCrMls<PipelineProblem>;
+    template <typename PipelineProblem>
+    using UniversalGemmPipeline = ck_tile::GemmPipelineAgBgCrMls<PipelineProblem>;
 };
 
 template <typename PrecType>
@@ -902,4 +960,5 @@ template <typename GemmConfig,
 float grouped_gemm_tileloop(const ck_tile::stream_config& s,
                             const ck_tile::index_t num_groups,
                             void* kargs_ptr,
+                            const std::vector<std::pair<void*, std::size_t>>& output_resets,
                             bool splitk = false);

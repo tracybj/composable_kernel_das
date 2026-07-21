@@ -60,7 +60,39 @@ inline constexpr bool grouped_gemm_requires_min_two_k_loops =
 template <typename GemmConfig, typename ADataType, typename GemmDesc>
 bool grouped_gemm_has_min_two_k_loops(const GemmDesc& desc)
 {
-    if constexpr(!grouped_gemm_requires_min_two_k_loops<GemmConfig>)
+    if constexpr(GemmConfig::Pipeline == CK_TILE_PIPELINE_MLS)
+    {
+        if(desc.K <= 0 || desc.k_batch <= 0)
+        {
+            return false;
+        }
+
+        constexpr ck_tile::index_t packed_size = ck_tile::numeric_traits<ADataType>::PackedSize;
+        constexpr ck_tile::index_t k_warp_tile = GemmConfig::K_Warp_Tile;
+        const auto k                           = static_cast<ck_tile::index_t>(desc.K);
+        const auto k_batch                     = static_cast<ck_tile::index_t>(desc.k_batch);
+        const auto k_packed                    = k / packed_size;
+        const auto k_grain                     = k_batch * k_warp_tile;
+        const auto k_read = ((k + k_grain - 1) / k_grain) * k_warp_tile / packed_size;
+
+        for(ck_tile::index_t split = 0; split < k_batch; ++split)
+        {
+            const auto split_k = split + 1 < k_batch ? k_read
+                                                     : k_packed - k_read * (k_batch - 1);
+            if(split_k <= 0)
+            {
+                return false;
+            }
+            const auto num_loop =
+                (split_k + GemmConfig::K_Tile - 1) / GemmConfig::K_Tile;
+            if(num_loop < 4 || num_loop % 2 != 0)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+    else if constexpr(!grouped_gemm_requires_min_two_k_loops<GemmConfig>)
     {
         return true;
     }
@@ -115,10 +147,88 @@ bool grouped_gemm_all_groups_have_min_two_k_loops(const std::vector<GemmDesc>& d
     return true;
 }
 
+template <typename GemmConfig, typename ALayout, typename BLayout, typename GemmDesc>
+bool grouped_gemm_has_safe_mls_k_stride(const GemmDesc& desc)
+{
+    if constexpr(GemmConfig::Pipeline != CK_TILE_PIPELINE_MLS)
+    {
+        return true;
+    }
+    else
+    {
+        if(desc.K <= 0 || desc.stride_A <= 0 || desc.stride_B <= 0)
+        {
+            return false;
+        }
+
+        constexpr auto k_tile      = GemmConfig::K_Tile;
+        constexpr auto k_warp_tile = GemmConfig::K_Warp_Tile;
+        const auto k_batch          = static_cast<ck_tile::index_t>(desc.k_batch);
+        const auto k_grain          = k_batch * k_warp_tile;
+        const auto k_read = ((desc.K + k_grain - 1) / k_grain) * k_warp_tile;
+        ck_tile::index_t required_k_span = 0;
+        for(ck_tile::index_t split = 0; split < k_batch; ++split)
+        {
+            const auto split_k = split + 1 < k_batch ? k_read
+                                                     : desc.K - k_read * (k_batch - 1);
+            if(split_k <= 0)
+            {
+                return false;
+            }
+            const auto padded_split_k = ((split_k + k_tile - 1) / k_tile) * k_tile;
+            required_k_span =
+                std::max(required_k_span, split * k_read + padded_split_k);
+        }
+        const bool a_stride_safe =
+            std::is_same_v<ALayout, ck_tile::tensor_layout::gemm::RowMajor>
+                ? desc.stride_A >= required_k_span
+                : desc.stride_A >= desc.M;
+        const bool b_stride_safe =
+            std::is_same_v<BLayout, ck_tile::tensor_layout::gemm::ColumnMajor>
+                ? desc.stride_B >= required_k_span
+                : desc.stride_B >= desc.N;
+        return a_stride_safe && b_stride_safe;
+    }
+}
+
+template <typename GemmConfig, typename CDataType, typename CLayout, typename GemmDesc>
+std::vector<std::pair<void*, std::size_t>>
+grouped_gemm_make_output_resets(const std::vector<GemmDesc>& descs)
+{
+    std::vector<std::pair<void*, std::size_t>> resets;
+    if constexpr(!GemmConfig::SupportsSplitKOutputAtomic)
+    {
+        return resets;
+    }
+    resets.reserve(descs.size());
+    for(const auto& desc : descs)
+    {
+        const auto rows = std::is_same_v<CLayout, ck_tile::tensor_layout::gemm::RowMajor>
+                              ? desc.M
+                              : desc.N;
+        resets.emplace_back(desc.e_ptr,
+                            static_cast<std::size_t>(rows) * desc.stride_E * sizeof(CDataType));
+    }
+    return resets;
+}
+
+template <typename GemmConfig, typename ALayout, typename BLayout, typename GemmDesc>
+bool grouped_gemm_all_groups_have_safe_mls_k_stride(const std::vector<GemmDesc>& descs)
+{
+    for(const auto& desc : descs)
+    {
+        if(!grouped_gemm_has_safe_mls_k_stride<GemmConfig, ALayout, BLayout>(desc))
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
 [[noreturn]] void grouped_gemm_throw_min_two_k_loop_error()
 {
     throw std::runtime_error(
-        "Current grouped_gemm fast path requires num_loop = split_K / K_Tile >= 2 for every group.");
+        "Current grouped_gemm pipeline does not support the requested per-split K-loop count.");
 }
 
 } // namespace
@@ -177,7 +287,8 @@ int run_grouped_gemm_c_impl(const ck_tile_dcu_grouped_gemm_desc* descs,
                 {
                     return -3;
                 }
-                if(!grouped_gemm_has_min_two_k_loops<GemmConfig, ADataType>(arg))
+                if(!grouped_gemm_has_min_two_k_loops<GemmConfig, ADataType>(arg) ||
+                   !grouped_gemm_has_safe_mls_k_stride<GemmConfig, ALayout, BLayout>(arg))
                 {
                     return -3;
                 }
@@ -252,7 +363,8 @@ int run_grouped_gemm_c_impl(const ck_tile_dcu_grouped_gemm_desc* descs,
             {
                 return -3;
             }
-            if(!grouped_gemm_has_min_two_k_loops<GemmConfig, ADataType>(arg))
+            if(!grouped_gemm_has_min_two_k_loops<GemmConfig, ADataType>(arg) ||
+               !grouped_gemm_has_safe_mls_k_stride<GemmConfig, ALayout, BLayout>(arg))
             {
                 return -3;
             }
@@ -324,7 +436,8 @@ int run_grouped_gemm_c_impl(const ck_tile_dcu_grouped_gemm_desc* descs,
             {
                 return -3;
             }
-            if(!grouped_gemm_has_min_two_k_loops<GemmConfig, ADataType>(arg))
+            if(!grouped_gemm_has_min_two_k_loops<GemmConfig, ADataType>(arg) ||
+               !grouped_gemm_has_safe_mls_k_stride<GemmConfig, ALayout, BLayout>(arg))
             {
                 return -3;
             }
@@ -384,7 +497,13 @@ int run_grouped_gemm_c_impl(const ck_tile_dcu_grouped_gemm_desc* descs,
                                   ADataType,
                                   BDataType,
                                   AccDataType,
-                                  CDataType>(stream_cfg, group_count, kargs_ptr, splitk);
+                                  CDataType>(stream_cfg,
+                                             group_count,
+                                             kargs_ptr,
+                                             grouped_gemm_make_output_resets<GemmConfig,
+                                                                             CDataType,
+                                                                             CLayout>(gemm_descs_vec),
+                                             splitk);
         }
         else
         {
@@ -611,7 +730,20 @@ float grouped_gemm(const std::vector<ck_tile::GroupedGemmHostArgsImpl<DsDataType
                                              memory_operation,
                                              1,
                                              use_fixed_padding_vectors,
-                                             padding_vector_size>>;
+                                             padding_vector_size,
+                                             GemmConfig::TiledMMAPermuteN,
+                                             GemmConfig::CShuffleWarpGemmMRepeat == 0
+                                                 ? GemmConfig::M_Warp_Tile / 16
+                                                 : GemmConfig::CShuffleWarpGemmMRepeat,
+                                             GemmConfig::CShuffleWarpGemmNRepeat == 0
+                                                 ? GemmConfig::N_Warp_Tile / 16
+                                                 : GemmConfig::CShuffleWarpGemmNRepeat,
+                                             GemmConfig::CShuffleWarpGemmMInterleave == 0
+                                                 ? 1
+                                                 : GemmConfig::CShuffleWarpGemmMInterleave,
+                                             GemmConfig::CShuffleWarpGemmNInterleave == 0
+                                                 ? 1
+                                                 : GemmConfig::CShuffleWarpGemmNInterleave>>;
 
         using Kernel = ck_tile::GroupedGemmKernel<TilePartitioner, GemmPipeline, GemmEpilogue>;
         auto kargs   = Kernel::MakeKargs(gemm_descs);(void)kargs;
@@ -677,6 +809,7 @@ template <typename GemmConfig,
 float grouped_gemm_tileloop(const ck_tile::stream_config& s,
                             const ck_tile::index_t num_groups,
                             void* kargs_ptr,
+                            const std::vector<std::pair<void*, std::size_t>>& output_resets,
                             bool splitk)
 {
     using GemmShape = ck_tile::TileGemmShape<
@@ -750,7 +883,20 @@ float grouped_gemm_tileloop(const ck_tile::stream_config& s,
                                              memory_operation,
                                              1,
                                              use_fixed_padding_vectors,
-                                             padding_vector_size>>;
+                                             padding_vector_size,
+                                             GemmConfig::TiledMMAPermuteN,
+                                             GemmConfig::CShuffleWarpGemmMRepeat == 0
+                                                 ? GemmConfig::M_Warp_Tile / 16
+                                                 : GemmConfig::CShuffleWarpGemmMRepeat,
+                                             GemmConfig::CShuffleWarpGemmNRepeat == 0
+                                                 ? GemmConfig::N_Warp_Tile / 16
+                                                 : GemmConfig::CShuffleWarpGemmNRepeat,
+                                             GemmConfig::CShuffleWarpGemmMInterleave == 0
+                                                 ? 1
+                                                 : GemmConfig::CShuffleWarpGemmMInterleave,
+                                             GemmConfig::CShuffleWarpGemmNInterleave == 0
+                                                 ? 1
+                                                 : GemmConfig::CShuffleWarpGemmNInterleave>>;
         using Kernel      = ck_tile::GroupedGemmKernel<TilePartitioner, GemmPipeline, GemmEpilogue>;
         constexpr dim3 blocks = Kernel::BlockSize();
         const dim3 grids  = Kernel::MaxOccupancyGridSize(s);
@@ -762,15 +908,28 @@ float grouped_gemm_tileloop(const ck_tile::stream_config& s,
                       << blocks.x << ", " << blocks.y << ", " << blocks.z << "}" << std::endl;
         }
 
-        ave_time =
-            ck_tile::launch_kernel(s,
-                                   ck_tile::make_kernel<blocks.x, GemmConfig::kBlockPerCu>(
-                                       Kernel{},
-                                       grids,
-                                       blocks,
-                                       0,
-                                       ck_tile::cast_pointer_to_constant_address_space(kargs_ptr),
-                                       num_groups));
+        const auto kernel = ck_tile::make_kernel<blocks.x, GemmConfig::kBlockPerCu>(
+            Kernel{},
+            grids,
+            blocks,
+            0,
+            ck_tile::cast_pointer_to_constant_address_space(kargs_ptr),
+            num_groups);
+        if constexpr(memory_operation == ck_tile::memory_operation_enum::atomic_add &&
+                     GemmConfig::SupportsSplitKOutputAtomic)
+        {
+            const auto reset_outputs = [output_resets](const ck_tile::stream_config& stream) {
+                for(const auto& [ptr, bytes] : output_resets)
+                {
+                    HIP_CHECK_ERROR(hipMemsetAsync(ptr, 0, bytes, stream.stream_id_));
+                }
+            };
+            ave_time = ck_tile::launch_kernel(s, reset_outputs, kernel);
+        }
+        else
+        {
+            ave_time = ck_tile::launch_kernel(s, kernel);
+        }
 
         return ave_time;
     };
@@ -780,7 +939,16 @@ float grouped_gemm_tileloop(const ck_tile::stream_config& s,
     {
         if(splitk)
         {
-            throw std::runtime_error("fp16/bf16 grouped_gemm output does not support SplitK");
+            if constexpr(GemmConfig::SupportsSplitKOutputAtomic)
+            {
+                Run(ck_tile::integral_constant<ck_tile::memory_operation_enum,
+                                               ck_tile::memory_operation_enum::atomic_add>{});
+                return ave_time;
+            }
+            else
+            {
+                throw std::runtime_error("fp16/bf16 grouped_gemm output does not support SplitK");
+            }
         }
 
         Run(ck_tile::integral_constant<ck_tile::memory_operation_enum,

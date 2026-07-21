@@ -377,8 +377,14 @@ struct FusedConvMlsWaspKernelV1
                                    ? CK_TILE_BLOCK_MAX_LDS_SIZE
                                    : GetLdsByteSize()];
 
-        // TG work idx
-        const auto block_work_idx = kargs.tile_partitioner.GetOutputTileIndex(get_block_1d_id());
+        // TG work idx.  The tile partitioner describes one convolution group,
+        // while the launch grid concatenates all groups.  Use the block id
+        // within the current group; otherwise group 1+ walks beyond its local
+        // M/N tile range.
+        const index_t block_id_in_group = __builtin_amdgcn_readfirstlane(
+            get_block_1d_id() - g_idx * num_blocks_per_group);
+        const auto block_work_idx =
+            kargs.tile_partitioner.GetOutputTileIndex(block_id_in_group);
         const index_t block_work_idx_m =
             __builtin_amdgcn_readfirstlane(block_work_idx[number<1>{}] * MPerBlock);
         const index_t block_work_idx_n =
