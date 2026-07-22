@@ -1104,7 +1104,7 @@ struct GridwiseGemm_xdl_cshuffle_base
     __device__ static constexpr auto GetCThreadDescriptor()
     {
         constexpr bool CThreadLayoutTransposeC =
-            TransposeC != BlockwiseGemmPipe::UseHcuBf16MmacCLayout();
+            TransposeC != BlockwiseGemmPipe::UseHcuMmacCLayout();
 
         if constexpr(CThreadLayoutTransposeC)
         {
@@ -1134,7 +1134,7 @@ struct GridwiseGemm_xdl_cshuffle_base
     __device__ static constexpr auto GetCBlockThreadDescriptor()
     {
         constexpr bool CThreadLayoutTransposeC =
-            TransposeC != BlockwiseGemmPipe::UseHcuBf16MmacCLayout();
+            TransposeC != BlockwiseGemmPipe::UseHcuMmacCLayout();
 
         static_assert(
             CShuffleBlockTransferClusterLengths_MBlock_MPerBlock_NBlock_NPerBlock::Size() == 4 ||
@@ -1389,7 +1389,7 @@ struct GridwiseGemm_xdl_cshuffle_base
         const index_t n_thread_data_on_block = c_thread_mtx_on_block[I1];
 
         constexpr bool CThreadLayoutTransposeC =
-            TransposeC != BlockwiseGemmPipe::UseHcuBf16MmacCLayout();
+            TransposeC != BlockwiseGemmPipe::UseHcuMmacCLayout();
 
         if constexpr(CThreadLayoutTransposeC)
         {
@@ -1693,7 +1693,7 @@ struct GridwiseGemm_xdl_cshuffle_base
     __device__ static constexpr auto GetCThreadWiseSpaceFillingCurve()
     {
         constexpr bool CThreadLayoutTransposeC =
-            TransposeC != BlockwiseGemmPipe::UseHcuBf16MmacCLayout();
+            TransposeC != BlockwiseGemmPipe::UseHcuMmacCLayout();
 
         if constexpr(CThreadLayoutTransposeC)
         {

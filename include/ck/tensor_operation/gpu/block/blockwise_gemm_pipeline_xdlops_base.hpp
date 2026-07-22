@@ -356,6 +356,11 @@ struct BlockwiseGemmXdlops_pipeline_base
     }
     __host__ __device__ static constexpr auto GetCThreadDesc() { return c_thread_desc_; }
 
+    __host__ __device__ static constexpr bool UseHcuMmacCLayout()
+    {
+        return xdlops_gemm.use_hcu_mmac_c_layout;
+    }
+
     __host__ __device__ static constexpr bool UseHcuBf16MmacCLayout()
     {
         return xdlops_gemm.use_hcu_bf16_mmac_c_layout;

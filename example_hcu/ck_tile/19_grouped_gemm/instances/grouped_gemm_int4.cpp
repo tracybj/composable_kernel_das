@@ -59,6 +59,7 @@ int grouped_gemm_c_run_int4_impl(const ck_tile_dcu_grouped_gemm_desc* descs,
                                         hipMemcpyHostToDevice,
                                         stream_cfg.stream_id_));
 
+    const std::vector<std::pair<void*, std::size_t>> output_resets;
     grouped_gemm_tileloop<GemmConfig,
                           ALayout,
                           BLayout,
@@ -67,7 +68,7 @@ int grouped_gemm_c_run_int4_impl(const ck_tile_dcu_grouped_gemm_desc* descs,
                           ck_tile::pk_int4_t,
                           int32_t,
                           int32_t>(
-        stream_cfg, group_count, kargs_ptr, k_batch > 1);
+        stream_cfg, group_count, kargs_ptr, output_resets, k_batch > 1);
     return 0;
 }
 

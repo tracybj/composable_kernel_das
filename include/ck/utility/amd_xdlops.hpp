@@ -9,6 +9,25 @@
 
 namespace ck {
 
+#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__)
+__device__ inline int32x2_t intrin_mmac_repack_16x16_input_x2(int32_t packed_input)
+{
+    // Small-K AMD MFMA distributes K fragments across four 16-lane groups. Merge adjacent
+    // source groups into HCU groups 0/1 and zero groups 2/3 for the doubled-K MMAC.
+    const index_t lane_id          = __lane_id();
+    const index_t mmac_group       = lane_id / 16;
+    const index_t lane_in_group    = lane_id % 16;
+    const index_t first_src_group  = (mmac_group % 2) * 2;
+    const index_t first_src_lane   = first_src_group * 16 + lane_in_group;
+    const index_t second_src_lane  = first_src_lane + 16;
+    const int32x2_t gathered_input = {
+        __builtin_amdgcn_ds_bpermute(first_src_lane << 2, packed_input),
+        __builtin_amdgcn_ds_bpermute(second_src_lane << 2, packed_input)};
+
+    return mmac_group < 2 ? gathered_input : int32x2_t{0, 0};
+}
+#endif
+
 // fp32
 template <index_t MPerWave, index_t NPerWave>
 struct intrin_mfma_f32_32x32x1f32;
@@ -60,8 +79,13 @@ struct intrin_mfma_f32_16x16x4f32<16, 16>
     template <class FloatC>
     __device__ static void Run(const float& reg_a, const float& reg_b, FloatC& reg_c)
     {
+#if defined(__gfx926__) || defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || \
+    defined(__gfx938__)
+        intrin_mmac_f32_16x16x4f32(reg_a, reg_b, reg_c);
+#else
         reg_c.template AsType<float4_t>()(Number<0>{}) = __builtin_amdgcn_mfma_f32_16x16x4f32(
             reg_a, reg_b, reg_c.template AsType<float4_t>()[Number<0>{}], 0, 0, 0);
+#endif
     }
 };
 
@@ -157,8 +181,12 @@ struct intrin_mfma_f32_16x16x16f16<16, 16>
     template <class FloatC>
     __device__ static void Run(const half4_t& reg_a, const half4_t& reg_b, FloatC& reg_c)
     {
+#if defined(__gfx936__) || defined(__gfx938__)
+        intrin_mmac_f32_16x16x16f16(reg_a, reg_b, reg_c);
+#else
         reg_c.template AsType<float4_t>()(Number<0>{}) = __builtin_amdgcn_mfma_f32_16x16x16f16(
             reg_a, reg_b, reg_c.template AsType<float4_t>()[Number<0>{}], 0, 0, 0);
+#endif
     }
 };
 
@@ -260,8 +288,15 @@ struct intrin_mfma_f32_16x16x8bf16<16, 16>
     template <class FloatC>
     __device__ static void Run(const bhalf2_t& reg_a, const bhalf2_t& reg_b, FloatC& reg_c)
     {
+#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__)
+        intrin_mmac_f32_16x16x16bf16(
+            bit_cast<int16x4_t>(intrin_mmac_repack_16x16_input_x2(bit_cast<int32_t>(reg_a))),
+            bit_cast<int16x4_t>(intrin_mmac_repack_16x16_input_x2(bit_cast<int32_t>(reg_b))),
+            reg_c);
+#else
         reg_c.template AsType<float4_t>()(Number<0>{}) = __builtin_amdgcn_mfma_f32_16x16x8bf16(
             reg_a, reg_b, reg_c.template AsType<float4_t>()[Number<0>{}], 0, 0, 0);
+#endif
     }
 };
 
@@ -293,6 +328,12 @@ struct intrin_mfma_i32_16x16x16i8<16, 16>
     template <class FloatC>
     __device__ static void Run(const int8x4_t& reg_a, const int8x4_t& reg_b, FloatC& reg_c)
     {
+#if defined(__gfx936__) || defined(__gfx938__)
+        intrin_mmac_i32_16x16x32i8(
+            intrin_mmac_repack_16x16_input_x2(bit_cast<int32_t>(reg_a)),
+            intrin_mmac_repack_16x16_input_x2(bit_cast<int32_t>(reg_b)),
+            reg_c);
+#else
         reg_c.template AsType<int32x4_t>()(Number<0>{}) =
             __builtin_amdgcn_mfma_i32_16x16x16i8(bit_cast<int32_t>(reg_a),
                                                  bit_cast<int32_t>(reg_b),
@@ -300,6 +341,7 @@ struct intrin_mfma_i32_16x16x16i8<16, 16>
                                                  0,
                                                  0,
                                                  0);
+#endif
     }
 };
 
@@ -331,6 +373,11 @@ struct intrin_mfma_i32_16x16x32i8<16, 16>
     template <class FloatC>
     __device__ static void Run(const int8x8_t& reg_a, const int8x8_t& reg_b, FloatC& reg_c)
     {
+#if defined(__gfx936__) || defined(__gfx938__)
+        intrin_mmac_i32_16x16x32i8(bit_cast<int32x2_t>(reg_a),
+                                   bit_cast<int32x2_t>(reg_b),
+                                   reg_c);
+#elif defined(__HIP_DEVICE_COMPILE__)
         reg_c.template AsType<int32x4_t>()(Number<0>{}) =
             __builtin_amdgcn_mfma_i32_16x16x32i8(bit_cast<int64_t>(reg_a),
                                                  bit_cast<int64_t>(reg_b),
@@ -338,6 +385,11 @@ struct intrin_mfma_i32_16x16x32i8<16, 16>
                                                  0,
                                                  0,
                                                  0);
+#else
+        (void)reg_a;
+        (void)reg_b;
+        (void)reg_c;
+#endif
     }
 };
 
@@ -350,13 +402,15 @@ struct intrin_mfma_f64_16x16x4f64<16, 16>
     template <class FloatC>
     __device__ static void Run(const double& reg_a, const double& reg_b, FloatC& reg_c)
     {
-#if defined(__gfx90a__) || defined(__gfx940__)
+#if defined(__gfx936__) || defined(__gfx938__)
+        intrin_mmac_16x16x4f64(reg_a, reg_b, reg_c);
+#elif defined(__gfx90a__) || defined(__gfx940__)
         reg_c.template AsType<double4_t>()(Number<0>{}) = __builtin_amdgcn_mfma_f64_16x16x4f64(
             reg_a, reg_b, reg_c.template AsType<double4_t>()[Number<0>{}], 0, 0, 0);
 #else
-        ignore = reg_a;
-        ignore = reg_b;
-        ignore = reg_c;
+        (void)reg_a;
+        (void)reg_b;
+        (void)reg_c;
 #endif
     }
 };

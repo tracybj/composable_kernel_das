@@ -82,8 +82,20 @@ struct mfma_type<MfmaInstr::mfma_f32_32x32x2xf32>
 template <>
 struct mfma_type<MfmaInstr::mfma_f32_16x16x4xf32>
 {
-    static constexpr index_t group_size          = 4;
-    static constexpr index_t num_groups_per_blk  = 1;
+    static constexpr index_t group_size =
+#if defined(__gfx926__) || defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || \
+    defined(__gfx938__)
+        1;
+#else
+        4;
+#endif
+    static constexpr index_t num_groups_per_blk =
+#if defined(__gfx926__) || defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || \
+    defined(__gfx938__)
+        4;
+#else
+        1;
+#endif
     static constexpr index_t num_regs_per_blk    = 4;
     static constexpr index_t num_threads_per_blk = 16;
     static constexpr index_t wave_size           = 64;
@@ -193,8 +205,18 @@ struct mfma_type<MfmaInstr::mfma_f32_32x32x8f16>
 template <>
 struct mfma_type<MfmaInstr::mfma_f32_16x16x16f16>
 {
-    static constexpr index_t group_size          = 4;
-    static constexpr index_t num_groups_per_blk  = 1;
+    static constexpr index_t group_size =
+#if defined(__gfx936__) || defined(__gfx938__)
+        1;
+#else
+        4;
+#endif
+    static constexpr index_t num_groups_per_blk =
+#if defined(__gfx936__) || defined(__gfx938__)
+        4;
+#else
+        1;
+#endif
     static constexpr index_t num_regs_per_blk    = 4;
     static constexpr index_t num_threads_per_blk = 16;
     static constexpr index_t wave_size           = 64;
@@ -335,8 +357,18 @@ struct mfma_type<MfmaInstr::mfma_f32_32x32x4bf16>
 template <>
 struct mfma_type<MfmaInstr::mfma_f32_16x16x8bf16>
 {
-    static constexpr index_t group_size          = 4;
-    static constexpr index_t num_groups_per_blk  = 1;
+    static constexpr index_t group_size =
+#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__)
+        1;
+#else
+        4;
+#endif
+    static constexpr index_t num_groups_per_blk =
+#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__)
+        4;
+#else
+        1;
+#endif
     static constexpr index_t num_regs_per_blk    = 4;
     static constexpr index_t num_threads_per_blk = 16;
     static constexpr index_t wave_size           = 64;
@@ -379,8 +411,18 @@ struct mfma_type<MfmaInstr::mfma_i32_32x32x8i8>
 template <>
 struct mfma_type<MfmaInstr::mfma_i32_16x16x16i8>
 {
-    static constexpr index_t group_size          = 4;
-    static constexpr index_t num_groups_per_blk  = 1;
+    static constexpr index_t group_size =
+#if defined(__gfx936__) || defined(__gfx938__)
+        1;
+#else
+        4;
+#endif
+    static constexpr index_t num_groups_per_blk =
+#if defined(__gfx936__) || defined(__gfx938__)
+        4;
+#else
+        1;
+#endif
     static constexpr index_t num_regs_per_blk    = 4;
     static constexpr index_t num_threads_per_blk = 16;
     static constexpr index_t wave_size           = 64;
@@ -423,8 +465,18 @@ struct mfma_type<MfmaInstr::mfma_i32_32x32x16i8>
 template <>
 struct mfma_type<MfmaInstr::mfma_i32_16x16x32i8>
 {
-    static constexpr index_t group_size          = 4;
-    static constexpr index_t num_groups_per_blk  = 1;
+    static constexpr index_t group_size =
+#if defined(__gfx936__) || defined(__gfx938__)
+        1;
+#else
+        4;
+#endif
+    static constexpr index_t num_groups_per_blk =
+#if defined(__gfx936__) || defined(__gfx938__)
+        4;
+#else
+        1;
+#endif
     static constexpr index_t num_regs_per_blk    = 4;
     static constexpr index_t num_threads_per_blk = 16;
     static constexpr index_t wave_size           = 64;
@@ -886,7 +938,7 @@ struct XdlopsGemm
         const auto blk_id = blk_idx[I0];
         const auto blk_td = blk_idx[I1];
 
-        if constexpr(use_hcu_bf16_mmac_c_layout)
+        if constexpr(use_hcu_mmac_c_layout)
         {
             ignore = xdlops_i;
             ignore = blk_i;
@@ -910,7 +962,7 @@ struct XdlopsGemm
         const auto blk_id = blk_idx[I0];
         const auto blk_td = blk_idx[I1];
 
-        if constexpr(use_hcu_bf16_mmac_c_layout)
+        if constexpr(use_hcu_mmac_c_layout)
         {
             ignore = xdlops_i;
             ignore = blk_i;
@@ -926,12 +978,20 @@ struct XdlopsGemm
 
     static constexpr auto mfma_instr = mfma.selected_mfma;
 
-    static constexpr bool use_hcu_bf16_mmac_c_layout =
-#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__)
-        is_same<base_type, bhalf_t>::value && MPerXdlops == 16 && NPerXdlops == 16;
+    static constexpr bool use_hcu_mmac_c_layout =
+#if defined(__gfx936__) || defined(__gfx938__)
+        MPerXdlops == 16 && NPerXdlops == 16;
+#elif defined(__gfx928__) || defined(__gfx92a__)
+        (is_same<base_type, float>::value || is_same<base_type, bhalf_t>::value) &&
+        MPerXdlops == 16 && NPerXdlops == 16;
+#elif defined(__gfx926__)
+        is_same<base_type, float>::value && MPerXdlops == 16 && NPerXdlops == 16;
 #else
         false;
 #endif
+
+    static constexpr bool use_hcu_bf16_mmac_c_layout =
+        use_hcu_mmac_c_layout && is_same<base_type, bhalf_t>::value;
 
     static constexpr auto KPerXdlops  = mfma.GetKPerXdlops();
     static constexpr auto K1PerXdlops = mfma.GetK1PerXdlops();
