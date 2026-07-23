@@ -2,7 +2,7 @@
 // Copyright (c) Advanced Micro Devices, Inc., or its affiliates.
 // Copyright (c) 2026 Hygon Info Technologies Ltd.
 //
-// Adapted for Hygon DCU: uses __builtin_hcu_raw_buffer_load*/store* and
+// Adapted for Hygon HCU: uses __builtin_hcu_raw_buffer_load*/store* and
 // __builtin_hcu_make_buffer_rsrc instead of AMD builtins.
 // gfx125+ specific features (async copy, constant AS workarounds) are gated.
 // BF16 buffer atomics (gfx942+) gated behind architecture guards.

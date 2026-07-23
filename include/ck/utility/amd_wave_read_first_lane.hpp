@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) Advanced Micro Devices, Inc., or its affiliates.
 //
-// Adapted for Hygon DCU: __builtin_amdgcn_readfirstlane is a base AMDGPU wave intrinsic
+// Adapted for Hygon HCU: __builtin_amdgcn_readfirstlane is a base AMDGPU wave intrinsic
 // and should work on HCU targets. Added architecture guards for safety.
 
 #pragma once

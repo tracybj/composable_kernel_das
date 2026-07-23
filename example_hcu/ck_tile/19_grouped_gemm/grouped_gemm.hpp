@@ -648,17 +648,17 @@ using grouped_gemm_kargs = ck_tile::GroupedGemmHostArgs;
 
 extern "C" {
 
-enum ck_tile_dcu_grouped_gemm_dtype
+enum ck_tile_hcu_grouped_gemm_dtype
 {
-    CK_TILE_DCU_GROUPED_GEMM_FP16 = 0,
-    CK_TILE_DCU_GROUPED_GEMM_FP8  = 1,
-    CK_TILE_DCU_GROUPED_GEMM_INT8 = 2,
-    CK_TILE_DCU_GROUPED_GEMM_BF8  = 3,
-    CK_TILE_DCU_GROUPED_GEMM_BF16 = 4,
-    CK_TILE_DCU_GROUPED_GEMM_INT4 = 5
+    CK_TILE_HCU_GROUPED_GEMM_FP16 = 0,
+    CK_TILE_HCU_GROUPED_GEMM_FP8  = 1,
+    CK_TILE_HCU_GROUPED_GEMM_INT8 = 2,
+    CK_TILE_HCU_GROUPED_GEMM_BF8  = 3,
+    CK_TILE_HCU_GROUPED_GEMM_BF16 = 4,
+    CK_TILE_HCU_GROUPED_GEMM_INT4 = 5
 };
 
-struct ck_tile_dcu_grouped_gemm_desc
+struct ck_tile_hcu_grouped_gemm_desc
 {
     const void* a_ptr;
     const void* b_ptr;
@@ -675,9 +675,9 @@ struct ck_tile_dcu_grouped_gemm_desc
     const int* stride_Ds;
 };
 
-std::size_t ck_tile_dcu_grouped_gemm_workspace_size(int group_count, int num_d_tensors = 0);
+std::size_t ck_tile_hcu_grouped_gemm_workspace_size(int group_count, int num_d_tensors = 0);
 
-int ck_tile_dcu_grouped_gemm_run(const ck_tile_dcu_grouped_gemm_desc* descs,
+int ck_tile_hcu_grouped_gemm_run(const ck_tile_hcu_grouped_gemm_desc* descs,
                                  int group_count,
                                  int dtype,
                                  char a_layout,
@@ -690,34 +690,34 @@ int ck_tile_dcu_grouped_gemm_run(const ck_tile_dcu_grouped_gemm_desc* descs,
 #endif // CK_GROUPED_GEMM_ABI_DEFINED
 
 // Per-dtype C ABI dispatch wrappers (non-template, defined in instances/)
-int grouped_gemm_c_run_fp16(const ck_tile_dcu_grouped_gemm_desc* descs,
+int grouped_gemm_c_run_fp16(const ck_tile_hcu_grouped_gemm_desc* descs,
     int group_count, char a_layout, char b_layout,
     void* workspace, hipStream_t stream);
-int grouped_gemm_c_run_fp16_mpad(const ck_tile_dcu_grouped_gemm_desc* descs,
+int grouped_gemm_c_run_fp16_mpad(const ck_tile_hcu_grouped_gemm_desc* descs,
     int group_count, char a_layout, char b_layout,
     void* workspace, hipStream_t stream);
-int grouped_gemm_c_run_bf16(const ck_tile_dcu_grouped_gemm_desc* descs,
+int grouped_gemm_c_run_bf16(const ck_tile_hcu_grouped_gemm_desc* descs,
     int group_count, char a_layout, char b_layout,
     void* workspace, hipStream_t stream);
-int grouped_gemm_c_run_bf16_mpad(const ck_tile_dcu_grouped_gemm_desc* descs,
+int grouped_gemm_c_run_bf16_mpad(const ck_tile_hcu_grouped_gemm_desc* descs,
     int group_count, char a_layout, char b_layout,
     void* workspace, hipStream_t stream);
-int grouped_gemm_c_run_fp8(const ck_tile_dcu_grouped_gemm_desc* descs,
+int grouped_gemm_c_run_fp8(const ck_tile_hcu_grouped_gemm_desc* descs,
     int group_count, char a_layout, char b_layout,
     void* workspace, hipStream_t stream);
-int grouped_gemm_c_run_fp8_mpad(const ck_tile_dcu_grouped_gemm_desc* descs,
+int grouped_gemm_c_run_fp8_mpad(const ck_tile_hcu_grouped_gemm_desc* descs,
     int group_count, char a_layout, char b_layout,
     void* workspace, hipStream_t stream);
-int grouped_gemm_c_run_bf8(const ck_tile_dcu_grouped_gemm_desc* descs,
+int grouped_gemm_c_run_bf8(const ck_tile_hcu_grouped_gemm_desc* descs,
     int group_count, char a_layout, char b_layout,
     void* workspace, hipStream_t stream);
-int grouped_gemm_c_run_bf8_mpad(const ck_tile_dcu_grouped_gemm_desc* descs,
+int grouped_gemm_c_run_bf8_mpad(const ck_tile_hcu_grouped_gemm_desc* descs,
     int group_count, char a_layout, char b_layout,
     void* workspace, hipStream_t stream);
-int grouped_gemm_c_run_int8(const ck_tile_dcu_grouped_gemm_desc* descs,
+int grouped_gemm_c_run_int8(const ck_tile_hcu_grouped_gemm_desc* descs,
     int group_count, char a_layout, char b_layout,
     void* workspace, hipStream_t stream);
-int grouped_gemm_c_run_int4(const ck_tile_dcu_grouped_gemm_desc* descs,
+int grouped_gemm_c_run_int4(const ck_tile_hcu_grouped_gemm_desc* descs,
     int group_count, char a_layout, char b_layout,
     void* workspace, hipStream_t stream);
 
@@ -741,7 +741,7 @@ int grouped_gemm_example_run_int8(std::string a_layout, std::string b_layout, in
 int grouped_gemm_example_run_int4(std::string a_layout, std::string b_layout, int argc, char* argv[]);
 
 template <typename GemmConfig>
-inline bool grouped_gemm_prefers_large_config(const ck_tile_dcu_grouped_gemm_desc* descs,
+inline bool grouped_gemm_prefers_large_config(const ck_tile_hcu_grouped_gemm_desc* descs,
                                               int group_count,
                                               int minimum_dimension = 512)
 {

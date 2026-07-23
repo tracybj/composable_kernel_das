@@ -4,8 +4,8 @@
 #pragma once
 
 #include "ck_tile/core.hpp"
-// [DCU移植] 非 gfx9 分支的默认 warp gemm 由上游 MFMA 32x32 TransposedCDistribution
-// 改为 DCU MMAC 16x32x64 TransC，并按 fp16/bf16 分别返回对应 MMAC 别名。
+// [HCU移植] 非 gfx9 分支的默认 warp gemm 由上游 MFMA 32x32 TransposedCDistribution
+// 改为 HCU MMAC 16x32x64 TransC，并按 fp16/bf16 分别返回对应 MMAC 别名。
 #include "ck_tile/ops/gemm/warp/warp_mmac_gemm.hpp"
 
 namespace ck_tile {

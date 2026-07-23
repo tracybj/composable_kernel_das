@@ -3,7 +3,7 @@
 #include "grouped_gemm_impl.hpp"
 
 // --- C ABI (uses GemmConfigComputeBf8K64 per current code) ---
-int grouped_gemm_c_run_bf8(const ck_tile_dcu_grouped_gemm_desc* descs,
+int grouped_gemm_c_run_bf8(const ck_tile_hcu_grouped_gemm_desc* descs,
                            int group_count,
                            char a_layout,
                            char b_layout,
@@ -14,7 +14,7 @@ int grouped_gemm_c_run_bf8(const ck_tile_dcu_grouped_gemm_desc* descs,
         descs, group_count, a_layout, b_layout, workspace, stream);
 }
 
-int grouped_gemm_c_run_bf8_mpad(const ck_tile_dcu_grouped_gemm_desc* descs,
+int grouped_gemm_c_run_bf8_mpad(const ck_tile_hcu_grouped_gemm_desc* descs,
                                  int group_count,
                                  char a_layout,
                                  char b_layout,

@@ -12,7 +12,7 @@
 #include "ck_tile/host.hpp"
 #include "grouped_gemm.hpp"
 
-std::size_t ck_tile_dcu_grouped_gemm_workspace_size(int group_count, int num_d_tensors)
+std::size_t ck_tile_hcu_grouped_gemm_workspace_size(int group_count, int num_d_tensors)
 {
     if(group_count <= 0)
         return 0;
@@ -29,7 +29,7 @@ namespace {
 // has M not aligned to the tile boundary.
 //   fp16/bf16 V4: MPerBlock=64 → check M % 64
 //   fp8/bf8 V5/Bf8K64: MPerBlock=128 → check M % 128
-[[maybe_unused]] bool grouped_gemm_need_mpad(const ck_tile_dcu_grouped_gemm_desc* descs, int group_count, int align_m = 64)
+[[maybe_unused]] bool grouped_gemm_need_mpad(const ck_tile_hcu_grouped_gemm_desc* descs, int group_count, int align_m = 64)
 {
     for(int i = 0; i < group_count; ++i)
     {
@@ -42,7 +42,7 @@ namespace {
 // Keep aligned FP16/BF16 problems on the original vectorized fast config. Select the
 // all-dimension padded config only when a group has an M/N tile tail or a per-split K tail.
 [[maybe_unused]] bool grouped_gemm_need_v4_padding(
-    const ck_tile_dcu_grouped_gemm_desc* descs, int group_count)
+    const ck_tile_hcu_grouped_gemm_desc* descs, int group_count)
 {
     constexpr int align_m = 64;
     constexpr int align_n = 128;
@@ -62,7 +62,7 @@ namespace {
 
 } // namespace
 
-int ck_tile_dcu_grouped_gemm_run(const ck_tile_dcu_grouped_gemm_desc* descs,
+int ck_tile_hcu_grouped_gemm_run(const ck_tile_hcu_grouped_gemm_desc* descs,
                                  int group_count,
                                  int dtype,
                                  char a_layout,
@@ -73,7 +73,7 @@ int ck_tile_dcu_grouped_gemm_run(const ck_tile_dcu_grouped_gemm_desc* descs,
     try
     {
 #if !defined(CK_TILE_GROUPED_GEMM_FAST_BUILD) || defined(CK_TILE_GROUPED_GEMM_FAST_FP16)
-        if(dtype == CK_TILE_DCU_GROUPED_GEMM_FP16)
+        if(dtype == CK_TILE_HCU_GROUPED_GEMM_FP16)
         {
             if(grouped_gemm_need_v4_padding(descs, group_count))
                 return grouped_gemm_c_run_fp16_mpad(descs, group_count,
@@ -83,7 +83,7 @@ int ck_tile_dcu_grouped_gemm_run(const ck_tile_dcu_grouped_gemm_desc* descs,
         }
 #endif
 #if !defined(CK_TILE_GROUPED_GEMM_FAST_BUILD) || defined(CK_TILE_GROUPED_GEMM_FAST_FP8)
-        if(dtype == CK_TILE_DCU_GROUPED_GEMM_FP8)
+        if(dtype == CK_TILE_HCU_GROUPED_GEMM_FP8)
         {
             if(grouped_gemm_need_mpad(descs, group_count, 128))
                 return grouped_gemm_c_run_fp8_mpad(descs, group_count,
@@ -93,7 +93,7 @@ int ck_tile_dcu_grouped_gemm_run(const ck_tile_dcu_grouped_gemm_desc* descs,
         }
 #endif
 #if !defined(CK_TILE_GROUPED_GEMM_FAST_BUILD) || defined(CK_TILE_GROUPED_GEMM_FAST_BF16)
-        if(dtype == CK_TILE_DCU_GROUPED_GEMM_BF16)
+        if(dtype == CK_TILE_HCU_GROUPED_GEMM_BF16)
         {
             if(grouped_gemm_need_v4_padding(descs, group_count))
                 return grouped_gemm_c_run_bf16_mpad(descs, group_count,
@@ -103,7 +103,7 @@ int ck_tile_dcu_grouped_gemm_run(const ck_tile_dcu_grouped_gemm_desc* descs,
         }
 #endif
 #if !defined(CK_TILE_GROUPED_GEMM_FAST_BUILD) || defined(CK_TILE_GROUPED_GEMM_FAST_BF8)
-        if(dtype == CK_TILE_DCU_GROUPED_GEMM_BF8)
+        if(dtype == CK_TILE_HCU_GROUPED_GEMM_BF8)
         {
             if(grouped_gemm_need_mpad(descs, group_count, 128))
                 return grouped_gemm_c_run_bf8_mpad(descs, group_count,
@@ -113,14 +113,14 @@ int ck_tile_dcu_grouped_gemm_run(const ck_tile_dcu_grouped_gemm_desc* descs,
         }
 #endif
 #if !defined(CK_TILE_GROUPED_GEMM_FAST_BUILD) || defined(CK_TILE_GROUPED_GEMM_FAST_INT8)
-        if(dtype == CK_TILE_DCU_GROUPED_GEMM_INT8)
+        if(dtype == CK_TILE_HCU_GROUPED_GEMM_INT8)
         {
             return grouped_gemm_c_run_int8(descs, group_count,
                 a_layout, b_layout, workspace, stream);
         }
 #endif
 #if !defined(CK_TILE_GROUPED_GEMM_FAST_BUILD) || defined(CK_TILE_GROUPED_GEMM_FAST_INT4)
-        if(dtype == CK_TILE_DCU_GROUPED_GEMM_INT4)
+        if(dtype == CK_TILE_HCU_GROUPED_GEMM_INT4)
         {
             return grouped_gemm_c_run_int4(descs, group_count,
                 a_layout, b_layout, workspace, stream);

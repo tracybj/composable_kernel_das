@@ -5,7 +5,7 @@
 #pragma once
 
 #include "ck_tile/core.hpp"
-// [DCU移植] 由上游 MFMA 头改为 DCU MMAC 头。dropout 随机数布局不再硬编码 MFMA SwizzleA 编码，
+// [HCU移植] 由上游 MFMA 头改为 HCU MMAC 头。dropout 随机数布局不再硬编码 MFMA SwizzleA 编码，
 // 改为从实际 warp gemm 的 WG::CWarpDstrEncoding 通用推导（见下方 RandValBlockInnerPartDstrEncoding），
 // 以保证 fwd/bwd 随机数布局与所用 MMAC warp gemm 一致。
 #include "ck_tile/ops/gemm/warp/warp_mmac_gemm.hpp"

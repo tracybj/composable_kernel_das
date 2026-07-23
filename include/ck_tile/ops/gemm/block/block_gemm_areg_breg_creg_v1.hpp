@@ -5,14 +5,14 @@
 #pragma once
 
 #include "ck_tile/core.hpp"
-// NOTE(DCU/FMHA-BWD): BWD default policy pulls in MFMA warp_gemm.hpp, whose
+// NOTE(HCU/FMHA-BWD): BWD default policy pulls in MFMA warp_gemm.hpp, whose
 // WarpGemmImpl collides with the HCU MMAC WarpGemmImpl. All current users of
 // BlockGemmARegBRegCRegV1 pass an explicit policy (via custom policy header),
 // so we only forward-declare the default policy here and let any caller that
 // actually needs it include the header. This cuts off BWD TU's path through
 // block_gemm_areg_breg_creg_v1 → default policy → MFMA warp_gemm.hpp.
 //
-// [DCU移植说明] 上游直接 include block_gemm_areg_breg_creg_v1_custom_policy.hpp，
+// [HCU移植说明] 上游直接 include block_gemm_areg_breg_creg_v1_custom_policy.hpp，
 // 而 custom_policy 头会 include 默认 policy 头（后者再 include MFMA warp_gemm），
 // 导致 BWD 编译单元引入 MFMA 头与 HCU MMAC WarpGemmImpl 重定义冲突。
 // 改为仅前向声明 BlockGemmARegBRegCRegV1DefaultPolicy，因为全仓库中只有两个
@@ -203,7 +203,7 @@ struct BlockGemmARegBRegCRegV1
         return c_block_tensor;
     }
 
-    // [DCU移植] 将 GEMM 的内部 C accumulator tile（WarpGemm 的 CWarpDstr）
+    // [HCU移植] 将 GEMM 的内部 C accumulator tile（WarpGemm 的 CWarpDstr）
     // 转换为逻辑 output-layout tile（WarpGemm 的 CWarpOutputDstr）。
     //
     // HCU MMAC 的 C 寄存器 lane 布局（CWarpDstr）与逻辑 [M,N] 排列不同，

@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) Advanced Micro Devices, Inc., or its affiliates.
 //
-// Adapted for Hygon DCU: workgroup barrier using global memory atomics.
+// Adapted for Hygon HCU: workgroup barrier using global memory atomics.
 // Uses only standard HIP atomics (atomicCAS, atomicAdd, __syncthreads) —
-// no AMD-specific builtins, works on DCU.
+// no AMD-specific builtins, works on HCU.
 
 #pragma once
 #include <hip/hip_runtime.h>

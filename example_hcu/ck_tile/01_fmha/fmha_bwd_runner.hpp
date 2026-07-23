@@ -37,7 +37,7 @@ CK_TILE_HOST void reference_batched_dropout_randval(HostTensor<RandValOutputData
                                                     uint64_t drop_seed,
                                                     uint64_t drop_offset)
 {
-    // DCU移植: fallback only to keep the upstream runner compiling. HCU BWD
+    // HCU移植: fallback only to keep the upstream runner compiling. HCU BWD
     // currently generates no-dropout instances, so this path is not exercised
     // by the bring-up smoke tests.
     randval_b_m_n.ForEach([&](auto& self, const auto& idx) {
@@ -453,7 +453,7 @@ bwd_result fmha_bwd_run(mode_enum mode,
     seqstart_q.ToDevice(seqstart_q_host.data());
     seqstart_k.ToDevice(seqstart_k_host.data());
 
-    // DCU移植: DCU tree does not carry upstream pinned_host_releaser. For the
+    // HCU移植: HCU tree does not carry upstream pinned_host_releaser. For the
     // current old-kernel workspace path prepare_workspace_async is synchronous
     // enough for this example, so release pinned staging memory directly.
     auto pinned_host_alloc = [](size_t bytes) -> std::shared_ptr<void> {

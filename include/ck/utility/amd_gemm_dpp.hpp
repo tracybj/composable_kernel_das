@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) Advanced Micro Devices, Inc., or its affiliates.
 //
-// Adapted for Hygon DCU: DPP8 lane-group gemm is NOT available.
-// DCU path uses regular inner_product() without DPP lane sharing.
+// Adapted for Hygon HCU: DPP8 lane-group gemm is NOT available.
+// HCU path uses regular inner_product() without DPP lane sharing.
 
 #pragma once
 
@@ -56,7 +56,7 @@ struct DppLanegroupGemm
                 const auto b_k_vec = b_vector.template AsType<BVecDataType>()[k_chunk];
 #if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__) || \
     defined(__gfx946__)
-                // DCU: DPP8 unavailable, use regular inner_product (source_lane ignored)
+                // HCU: DPP8 unavailable, use regular inner_product (source_lane ignored)
                 inner_product(a_k_vec, b_k_vec, c);
 #else
                 ck::dpp8::

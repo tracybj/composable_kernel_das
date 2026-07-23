@@ -3,7 +3,7 @@
 #include "grouped_gemm_impl.hpp"
 
 template <typename GemmConfig, typename ALayout, typename BLayout, typename CLayout>
-int grouped_gemm_c_run_int4_impl(const ck_tile_dcu_grouped_gemm_desc* descs,
+int grouped_gemm_c_run_int4_impl(const ck_tile_hcu_grouped_gemm_desc* descs,
                                  int group_count,
                                  void* workspace,
                                  hipStream_t stream)
@@ -48,7 +48,7 @@ int grouped_gemm_c_run_int4_impl(const ck_tile_dcu_grouped_gemm_desc* descs,
     void* kargs_ptr = workspace;
     if(kargs_ptr == nullptr)
     {
-        owned_workspace.Realloc(ck_tile_dcu_grouped_gemm_workspace_size(group_count));
+        owned_workspace.Realloc(ck_tile_hcu_grouped_gemm_workspace_size(group_count));
         kargs_ptr = owned_workspace.GetDeviceBuffer();
     }
 
@@ -72,7 +72,7 @@ int grouped_gemm_c_run_int4_impl(const ck_tile_dcu_grouped_gemm_desc* descs,
     return 0;
 }
 
-int grouped_gemm_c_run_int4(const ck_tile_dcu_grouped_gemm_desc* descs,
+int grouped_gemm_c_run_int4(const ck_tile_hcu_grouped_gemm_desc* descs,
                             int group_count,
                             char a_layout,
                             char b_layout,

@@ -17,8 +17,8 @@ def ops():
         ("Col", "Row", "Row"),
     ]:
         for datatype, dtype_enum in [
-            ("FP16", "CK_TILE_DCU_GROUPED_GEMM_FP16"),
-            ("BF16", "CK_TILE_DCU_GROUPED_GEMM_BF16"),
+            ("FP16", "CK_TILE_HCU_GROUPED_GEMM_FP16"),
+            ("BF16", "CK_TILE_HCU_GROUPED_GEMM_BF16"),
         ]:
             instances.append(
                 CKTileGroupedGemmOperation(
@@ -47,9 +47,9 @@ def ops():
                     k_batch=1,
                     m_padding="auto",
                     public_api_header="example_hcu/ck_tile/19_grouped_gemm/grouped_gemm.hpp",
-                    run_symbol="ck_tile_dcu_grouped_gemm_run",
-                    workspace_symbol="ck_tile_dcu_grouped_gemm_workspace_size",
-                    cmake_target="ck_tile_dcu_grouped_gemm",
+                    run_symbol="ck_tile_hcu_grouped_gemm_run",
+                    workspace_symbol="ck_tile_hcu_grouped_gemm_workspace_size",
+                    cmake_target="ck_tile_hcu_grouped_gemm",
                 )
             )
     return instances

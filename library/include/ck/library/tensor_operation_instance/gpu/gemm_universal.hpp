@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2018-2025, Advanced Micro Devices, Inc. All rights reserved.
 //
-// Adapted for Hygon DCU: gemm_universal factory header.
-// Wraps existing DCU V1 DeviceGemm instances into the DeviceGemmV2 interface
+// Adapted for Hygon HCU: gemm_universal factory header.
+// Wraps existing HCU V1 DeviceGemm instances into the DeviceGemmV2 interface
 // used by upstream client code. Delegates to gemm.hpp (V1 factory).
 
 #pragma once
@@ -55,7 +55,7 @@ struct DeviceOperationInstanceFactory<
 
     static auto GetInstances()
     {
-        // Get V1 instances from the existing DCU factory
+        // Get V1 instances from the existing HCU factory
         auto v1_instances = DeviceOperationInstanceFactory<
             DeviceGemm<ALayout,
                        BLayout,

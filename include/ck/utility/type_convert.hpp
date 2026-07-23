@@ -306,7 +306,7 @@ inline __host__ __device__ half_t type_convert<half_t, bf8_t>(bf8_t x)
 /**
  * @brief Converts a scalar value to f6_t with round-to-nearest-even.
  *
- * This DCU path currently supports the scalar f6_t surface only; packed/vector
+ * This HCU path currently supports the scalar f6_t surface only; packed/vector
  * F6 conversion remains a separate HCU audit item.
  */
 template <typename X>
@@ -329,7 +329,7 @@ inline __host__ __device__ f6_t f6_convert_sr(X x, float scale = 1.0f)
 /**
  * @brief Converts a scalar value to bf6_t with round-to-nearest-even.
  *
- * This DCU path currently supports the scalar bf6_t surface only; packed/vector
+ * This HCU path currently supports the scalar bf6_t surface only; packed/vector
  * BF6 conversion remains a separate HCU audit item.
  */
 template <typename X>

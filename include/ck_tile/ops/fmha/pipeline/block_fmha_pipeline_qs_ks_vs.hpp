@@ -388,7 +388,7 @@ struct [[deprecated]] BlockFmhaPipelineQSKSVS
                 sequence<1>{},
                 f_max,
                 -numeric<SMPLComputeDataType>::infinity()); // m_local = rowmax(S{j})
-            // [DCU移植] 上游为 block_tile_reduce_sync，改为 MMAC 16-lane 行规约。
+            // [HCU移植] 上游为 block_tile_reduce_sync，改为 MMAC 16-lane 行规约。
             fmha_reduce_sync_16lane(m_local, f_max);
 
             const auto m_old = m; // m{j-1}

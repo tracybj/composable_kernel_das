@@ -12,7 +12,7 @@
 #include "ck_tile/ops/fmha/block/block_position_encoding.hpp"
 #include "ck_tile/ops/fmha/block/block_rotary_embedding.hpp"
 #include "ck_tile/ops/fmha/block/page_block_navigator.hpp"
-// [DCU移植] FMHA 移植中 BWD 与扩展 FWD（appendkv/splitkv 等）头文件尚未在 DCU 上打通，
+// [HCU移植] FMHA 移植中 BWD 与扩展 FWD（appendkv/splitkv 等）头文件尚未在 HCU 上打通，
 // 用 CK_TILE_FMHA_ENABLE_BWD_HEADERS / CK_TILE_FMHA_ENABLE_EXTENDED_FWD_HEADERS 做编译门禁，
 // 仅在对应 example/实例目标里按需打开（见 01_fmha/CMakeLists.txt）。
 #if defined(CK_TILE_FMHA_ENABLE_BWD_HEADERS)

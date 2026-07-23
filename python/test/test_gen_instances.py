@@ -232,7 +232,7 @@ class TestUniversalGemmGenerator(unittest.TestCase):
             self.assertEqual(op.acc_dtype, "F32")
             self.assertEqual(op.c_shuffle_block_transfer_scalar_per_vector_n_per_block, (4,))
 
-    def test_preselected_gemm_is_disabled_until_dcu_benchmark(self):
+    def test_preselected_gemm_is_disabled_until_hcu_benchmark(self):
         self.assertEqual(gen_gemm_ops_preselected(), [])
 
 
@@ -378,8 +378,8 @@ class TestCKTileGroupedGemmGenerator(unittest.TestCase):
                 op.public_api_header,
                 "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm.hpp",
             )
-            self.assertEqual(op.run_symbol, "ck_tile_dcu_grouped_gemm_run")
-            self.assertEqual(op.cmake_target, "ck_tile_dcu_grouped_gemm")
+            self.assertEqual(op.run_symbol, "ck_tile_hcu_grouped_gemm_run")
+            self.assertEqual(op.cmake_target, "ck_tile_hcu_grouped_gemm")
             self.assertTrue(op.supports_problem([128, 192, 256]))
             self.assertTrue(op.supports_problem([129, 193, 255]))
             self.assertFalse(op.supports_problem([128, 64, 256]))
@@ -391,9 +391,9 @@ class TestCKTileGroupedGemmGenerator(unittest.TestCase):
         self.assertTrue(api_header.is_file())
         header_text = api_header.read_text(encoding="utf-8")
         self.assertIn("CK_GROUPED_GEMM_ABI_DEFINED", header_text)
-        self.assertIn("struct ck_tile_dcu_grouped_gemm_desc", header_text)
-        self.assertIn("ck_tile_dcu_grouped_gemm_workspace_size", header_text)
-        self.assertIn("ck_tile_dcu_grouped_gemm_run", header_text)
+        self.assertIn("struct ck_tile_hcu_grouped_gemm_desc", header_text)
+        self.assertIn("ck_tile_hcu_grouped_gemm_workspace_size", header_text)
+        self.assertIn("ck_tile_hcu_grouped_gemm_run", header_text)
 
     def test_names_are_stable_and_distinguish_layout(self):
         names = {op.name() for op in self.instances}

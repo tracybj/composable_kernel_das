@@ -174,7 +174,7 @@ def gen_ops_library() -> List[CKGemmOperation]:
 
 @lru_cache(None)
 def gen_ops_preselected() -> List[CKGemmOperation]:
-    """DCU preselected GEMM instances are intentionally empty until benchmarked."""
+    """HCU preselected GEMM instances are intentionally empty until benchmarked."""
 
     return []
 

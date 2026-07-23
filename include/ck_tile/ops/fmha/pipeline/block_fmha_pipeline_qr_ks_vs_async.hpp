@@ -326,7 +326,7 @@ struct BlockFmhaPipelineQRKSVSAsync
         auto randval_dram_window = dropout.template MakeRandvalDramWindow<decltype(gemm_0)>(
             randval_dram_block_window_tmp, seqlen_k_start);
 
-        // [DCU移植] V 窗口起点用真实 origin 而非硬编码 0（上游为 {0, seqlen_k_start}），
+        // [HCU移植] V 窗口起点用真实 origin 而非硬编码 0（上游为 {0, seqlen_k_start}），
         // 以正确支持 hdim 切分 / 非零 V 起点。
         const auto v_origin = v_dram_block_window_tmp.get_window_origin();
         auto v_dram_window =
@@ -478,7 +478,7 @@ struct BlockFmhaPipelineQRKSVSAsync
                 sequence<1>{},
                 f_max,
                 -numeric<SMPLComputeDataType>::infinity()); // m_local = rowmax(S{j})
-            // [DCU移植] 上游为 block_tile_reduce_sync，改为 MMAC 16-lane 行规约（见 block_fmha_pipeline_reduce.hpp）。
+            // [HCU移植] 上游为 block_tile_reduce_sync，改为 MMAC 16-lane 行规约（见 block_fmha_pipeline_reduce.hpp）。
             fmha_reduce_sync_16lane(m_local, f_max);
 
             const auto m_old = m; // m{j-1}
@@ -619,8 +619,8 @@ struct BlockFmhaPipelineQRKSVSAsync
                         tile_elementwise_in(p_compute_element_func, p_compute));
             }();
 
-            // [DCU移植] P-bridge：FMHA 移植新增的关键步骤（上游 github CK 没有）。
-            // 在 DCU 上，QK GEMM 输出 C 的 lane 布局与 PV GEMM 输入 A 的 lane 布局对不上
+            // [HCU移植] P-bridge：FMHA 移植新增的关键步骤（上游 github CK 没有）。
+            // 在 HCU 上，QK GEMM 输出 C 的 lane 布局与 PV GEMM 输入 A 的 lane 布局对不上
             // （MFMA 上两者天然衔接），因此把 P 经一块专用 LDS scratch（K/V 共享缓冲之后）
             // 做一次“写按 QK-C 布局、读按 PV-A 布局”的重排。LDS 大小见 GetSmemSizePBridge。
             // Bridge: rearrange P from QK CWarpTensor layout to PV AWarpTensor layout

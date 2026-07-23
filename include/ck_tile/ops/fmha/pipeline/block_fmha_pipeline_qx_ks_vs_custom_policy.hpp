@@ -115,8 +115,8 @@ struct BlockFmhaPipelineQXCustomPolicy</* QLoadOnce = */ true>
                          (std::is_same_v<typename Problem::QDataType, bf16_t> &&
                           std::is_same_v<typename Problem::KDataType, bf16_t>))
             {
-                // [DCU移植] QK GEMM 选择 warp gemm：上游用 MFMA 32x32 SwizzleB/TransposedC 系列，
-                // DCU 改为 MMAC 16x64x32。gfx938/gfx946 用 _GFX938(lit_lts)，其余 basic 架构用
+                // [HCU移植] QK GEMM 选择 warp gemm：上游用 MFMA 32x32 SwizzleB/TransposedC 系列，
+                // HCU 改为 MMAC 16x64x32。gfx938/gfx946 用 _GFX938(lit_lts)，其余 basic 架构用
                 // _FMHA（裸 C 布局）。当前仅支持 16x64x32，fp8 路径暂缓。
                 static_assert(std::is_same_v<typename Problem::SaccDataType, float>);
                 static_assert(WarpGemmM == 16 && WarpGemmN == 64 && WarpGemmK == 32,
@@ -726,7 +726,7 @@ struct BlockFmhaPipelineQXKSVSCustomPolicy : BlockFmhaPipelineQXCustomPolicy<QLo
                single_smem_size * max(NumPrefetchK, NumPrefetchV);
     }
 
-    // [DCU移植] FMHA 移植新增：为 P-bridge（QK-C → PV-A 的 LDS 重排，见 async 流水线）
+    // [HCU移植] FMHA 移植新增：为 P-bridge（QK-C → PV-A 的 LDS 重排，见 async 流水线）
     // 额外预留的 LDS 大小，kM0*kN0*sizeof(P) 并按 16 字节对齐。
     template <typename Problem>
     CK_TILE_HOST_DEVICE static constexpr ck_tile::index_t GetSmemSizePBridge()
@@ -988,7 +988,7 @@ struct BlockFmhaPipelineQXKSVSCustomPolicy : BlockFmhaPipelineQXCustomPolicy<QLo
                 static_assert(!std::is_same_v<typename Problem::KDataType, fp8_t>,
                               "HCU FMHA fp8 PV MMAC path is deferred.");
             }
-            // [DCU移植] PV GEMM 选择 warp gemm：上游用 MFMA dispatcher，DCU 改为 MMAC 16x32x64
+            // [HCU移植] PV GEMM 选择 warp gemm：上游用 MFMA dispatcher，HCU 改为 MMAC 16x32x64
             // TransC（转置 C）。gfx938/gfx946 用 _TRANSC_GFX938(lit_lts)，其余 basic 架构用 _FMHA。
             else if constexpr(std::is_same_v<typename Problem::PDataType, half_t> &&
                               std::is_same_v<typename Problem::VDataType, half_t> &&

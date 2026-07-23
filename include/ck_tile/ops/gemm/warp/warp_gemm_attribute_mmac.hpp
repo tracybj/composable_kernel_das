@@ -8,9 +8,9 @@
 
 namespace ck_tile {
 
-// [DCU移植] MMAC（海光 DCU 原生矩阵指令）warp GEMM 的基类。对应上游 github CK 的
+// [HCU移植] MMAC（海光 HCU 原生矩阵指令）warp GEMM 的基类。对应上游 github CK 的
 // MFMA 版本（WarpGemmAttributeMfmaIterateK）。注意：本基类的 CWarpDstrEncoding 必须
-// 维持与 DCU GEMM example（03_gemm/19_grouped_gemm）一致的 C 寄存器布局，FMHA 所需的
+// 维持与 HCU GEMM example（03_gemm/19_grouped_gemm）一致的 C 寄存器布局，FMHA 所需的
 // 裸硬件布局/转置布局一律走下面派生的 ...IterateKCRaw / ...IterateKLitLts，切勿改基类。
 template <typename WarpGemmAttributeMmacImpl_,
           index_t MRepeat,
@@ -160,7 +160,7 @@ struct WarpGemmAttributeMmacIterateK
     }
 };
 
-// [DCU移植] 本结构体为 FMHA 移植新增（上游 github CK 没有）。
+// [HCU移植] 本结构体为 FMHA 移植新增（上游 github CK 没有）。
 // basic MMAC（gfx936/gfx928/gfx92a，非 lit_lts）的 QK/PV C 矩阵在寄存器中的“裸硬件”
 // 布局为：lane = m + 16*(n%4), reg = n/4，即 col = c*16 + r*4 + lane/16。FMHA 直接在
 // 寄存器里消费该 C tile，必须用这套编码；而 GEMM example 走基类编码。两者不可合并。
@@ -620,11 +620,11 @@ struct WarpGemmAttributeMmacIterateKTransC_v3
     }
 };
 
-// [DCU移植] 本结构体为 FMHA 移植新增（上游 github CK 没有）。仅用于 gfx938/gfx946。
+// [HCU移植] 本结构体为 FMHA 移植新增（上游 github CK 没有）。仅用于 gfx938/gfx946。
 // 这些新架构上 MMAC 的“操作数交换”不像 AMD MFMA 那样能转置 C 布局，因此改用带 lts
 // (lane transpose sum) 的 _lit_lts 内建函数得到转置后的 C，并配套这套 CWarpDstrEncoding。
 // ------------------------------------------------------------------
-// LitLts: Hygon DCU gfx938+ __builtin_hcu_mmac_f32_16x16x16_f16_lit_lts(lit=true,lts=true).
+// LitLts: Hygon HCU gfx938+ __builtin_hcu_mmac_f32_16x16x16_f16_lit_lts(lit=true,lts=true).
 // Hardware C register layout: row = 4*(lane/16)+r, col = c*16+lane%16.
 // Each lane holds kCM1PerLane=4 consecutive M elements and kCNPerLane=1 N element.
 // Lane distribution: kCMLane=4 (M lanes), kCNLane=16 (N lanes).

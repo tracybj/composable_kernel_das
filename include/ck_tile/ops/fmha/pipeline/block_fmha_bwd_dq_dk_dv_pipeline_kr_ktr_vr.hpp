@@ -12,7 +12,7 @@
 
 namespace ck_tile {
 
-// [DCU移植总述] BWD pipeline 在 HCU MMAC 上的核心改动：
+// [HCU移植总述] BWD pipeline 在 HCU MMAC 上的核心改动：
 //
 // 1. output-layout 体系：HCU MMAC 的 C 寄存器 lane 布局与 AMD MFMA 不同，
 //    内部 C layout 不能被后续标量公式（softmax、dS=P*(dP-D)）直接当作逻辑
@@ -27,7 +27,7 @@ namespace ck_tile {
 //    的 tile distribution 做 load_tile，得到与 output-layout 同分布的广播 tile。
 //
 // 3. G1(P^T@dO) 和 G3(dS^T*Q^T) 转置：上游用 TransposeC=true 让 warp GEMM
-//    输出转置 C 分布，DCU 改为 TransposeC=false（HCU MMAC TransC 布局不兼容，
+//    输出转置 C 分布，HCU 改为 TransposeC=false（HCU MMAC TransC 布局不兼容，
 //    导致 dV/dK 约 83% wrong）。转置改为通过 LDS 中转：
 //    - P^T：store p_out_gemm_main → ds_lds → pt_lds_read_window（转置读视图）
 //    - dS^T：store ds_gemm → ds_lds → dst_lds_read_window（转置读视图）
@@ -396,7 +396,7 @@ struct BlockFmhaBwdDQDKDVPipelineKRKTRVR
                              ds_lds_window.get_window_origin(),
                              Policy::template MakeSGradRegSliceBlockDescriptor<Problem>());
 
-        // [DCU移植] dS/dS^T/P^T 共享同一块 ds_lds 的转置读视图。
+        // [HCU移植] dS/dS^T/P^T 共享同一块 ds_lds 的转置读视图。
         // dst_lds_read 是 ds_lds 的转置版本：(M,N) → (N,M)，用于：
         // - pt_lds_read_window：G1 输入 P^T（从 p_out_gemm_main 写入 ds_lds 后转置读出）
         // - dst_lds_read_window：G3 输入 dS^T（从 ds_gemm 写入 ds_lds 后转置读出）
@@ -722,7 +722,7 @@ struct BlockFmhaBwdDQDKDVPipelineKRKTRVR
                 }
             }();
 
-            // [DCU移植] output-layout softmax：HCU MMAC 内部 C layout 不能直接做行规约，
+            // [HCU移植] output-layout softmax：HCU MMAC 内部 C layout 不能直接做行规约，
             // 因此在 output-layout 中重新计算 P（而非使用内部 layout 的 p/p_gemm）。
             // 1. s_acc → s_out_main（output-layout）
             // 2. LSE 通过 stride-0 2D LDS 视图广播到 s_out_main 分布
@@ -838,9 +838,9 @@ struct BlockFmhaBwdDQDKDVPipelineKRKTRVR
 
             block_sync_lds();
 
-            // [DCU移植] G1 输入桥：P^T 通过 LDS 转置读获得。
+            // [HCU移植] G1 输入桥：P^T 通过 LDS 转置读获得。
             // 上游用 PTFromGemm0CToGemm1A 直接从 MFMA C 寄存器转置，
-            // DCU 改为 store p_out_gemm_main → ds_lds → pt_lds_read_window（转置读）。
+            // HCU 改为 store p_out_gemm_main → ds_lds → pt_lds_read_window（转置读）。
             // pt_lds_read_window 复用 dst_lds_read 转置视图，distribution 使用
             // MakePTRegSliceBlockDescriptor，与 G1 的 A warp 分布一致。
             store_tile(ds_lds_window, p_out_gemm_main);
@@ -1017,7 +1017,7 @@ struct BlockFmhaBwdDQDKDVPipelineKRKTRVR
             }
 
             // STAGE 5, dS = P * (dP - D) 在 output-layout 中计算
-            // [DCU移植] 核心改动：
+            // [HCU移植] 核心改动：
             // 1. dp_acc → dp_out：通过 MakeCOutputBlockTile 将 G2 C accumulator
             //    从内部 C layout 转为逻辑 output-layout（已验证 dpout valid:y）
             // 2. D 广播：用 stride-0 2D LDS 视图（strides=(1,0)），以 dp_out 的
@@ -1080,7 +1080,7 @@ struct BlockFmhaBwdDQDKDVPipelineKRKTRVR
             }
 
             // STAGE 6, dS^T@Q^T Gemm3
-            // [DCU移植] dS^T 输入桥：ds_gemm（output-layout ds_out 的半精度版本）
+            // [HCU移植] dS^T 输入桥：ds_gemm（output-layout ds_out 的半精度版本）
             // 先 store 到 ds_lds，再通过 dst_lds_read_window（转置读视图）读出 dS^T。
             // 这是 G3 TransposeC=false 替代方案的核心。
             auto qt_reg_tensor = load_tile(qt_lds_read_window);
@@ -1175,7 +1175,7 @@ struct BlockFmhaBwdDQDKDVPipelineKRKTRVR
                 seqlen_q_step += kM0;
                 continue;
             }
-            // [DCU移植] dQ 输出：dq_acc 通过 MakeCOutputBlockTile 转为 output-layout
+            // [HCU移植] dQ 输出：dq_acc 通过 MakeCOutputBlockTile 转为 output-layout
             // 后再 store/update_tile 到 DRAM。如果不做此转换，内部 C layout 的元素
             // 位置与逻辑 [M,K] 不对应，直接 store 会导致 dQ 约 88% wrong。
             if constexpr(kIsDeterministic)
@@ -1240,7 +1240,7 @@ struct BlockFmhaBwdDQDKDVPipelineKRKTRVR
             const auto dk_out = gemm_3.MakeCOutputBlockTile(dk_acc);
             store_tile(debug_dump_dk_dram_window, cast_tile<BiasGradDataType>(dk_out));
         }
-        // [DCU移植] dk_acc/dv_acc 通过 MakeCOutputBlockTile 转为 output-layout 后返回。
+        // [HCU移植] dk_acc/dv_acc 通过 MakeCOutputBlockTile 转为 output-layout 后返回。
         // dQ 已在主循环中直接 store/update_tile 到 DRAM（需要 split-accumulate，不在这里返回）。
         // dK/dV 这里返回给 caller（在 fmha_bwd_kernel.hpp 中 scale 后最终写回）。
         return make_tuple(gemm_3.MakeCOutputBlockTile(dk_acc),
@@ -1248,7 +1248,7 @@ struct BlockFmhaBwdDQDKDVPipelineKRKTRVR
     }
 };
 
-// Generic name expected by the BWD codegen; on the DCU/HCU port the only dq_dk_dv
+// Generic name expected by the BWD codegen; on the HCU port the only dq_dk_dv
 // pipeline variant is the KR/KTR/VR one.
 template <typename Problem, typename Policy = BlockFmhaBwdPipelineDefaultPolicy>
 using BlockFmhaBwdDQDKDVPipeline = BlockFmhaBwdDQDKDVPipelineKRKTRVR<Problem, Policy>;

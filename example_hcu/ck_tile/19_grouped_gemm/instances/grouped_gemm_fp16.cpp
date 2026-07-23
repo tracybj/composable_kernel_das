@@ -24,7 +24,7 @@ template <typename PrecType>
 using GroupedGemmFp16PaddedConfig = GemmConfigComputeV4Mpad<PrecType>;
 #endif
 
-int grouped_gemm_c_run_fp16(const ck_tile_dcu_grouped_gemm_desc* descs,
+int grouped_gemm_c_run_fp16(const ck_tile_hcu_grouped_gemm_desc* descs,
                             int group_count,
                             char a_layout,
                             char b_layout,
@@ -55,7 +55,7 @@ int grouped_gemm_c_run_fp16(const ck_tile_dcu_grouped_gemm_desc* descs,
         descs, group_count, a_layout, b_layout, workspace, stream);
 }
 
-int grouped_gemm_c_run_fp16_mpad(const ck_tile_dcu_grouped_gemm_desc* descs,
+int grouped_gemm_c_run_fp16_mpad(const ck_tile_hcu_grouped_gemm_desc* descs,
                                   int group_count,
                                   char a_layout,
                                   char b_layout,

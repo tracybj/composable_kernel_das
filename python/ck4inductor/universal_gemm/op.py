@@ -7,7 +7,7 @@ from typing import Optional, Tuple, Union
 
 @dataclass
 class CKGemmOperation:
-    """DCU DeviceGemm_Xdl_CShuffleV3 universal GEMM template parameters."""
+    """HCU DeviceGemm_Xdl_CShuffleV3 universal GEMM template parameters."""
 
     a_layout: str
     b_layout: str

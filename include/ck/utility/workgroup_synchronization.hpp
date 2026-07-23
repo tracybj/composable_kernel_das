@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) Advanced Micro Devices, Inc., or its affiliates.
 //
-// Adapted for Hygon DCU: cross-workgroup synchronization using global
+// Adapted for Hygon HCU: cross-workgroup synchronization using global
 // memory atomics. Uses only standard HIP atomics (atomicCAS, atomicSub,
-// __atomic_load_n) — no AMD-specific builtins, works on DCU.
+// __atomic_load_n) — no AMD-specific builtins, works on HCU.
 
 #pragma once
 #include "ck/host_utility/hip_check_error.hpp"

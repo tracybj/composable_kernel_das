@@ -84,7 +84,7 @@ list(APPEND CMAKE_PREFIX_PATH
 list(REMOVE_DUPLICATES CMAKE_PREFIX_PATH)
 
 # CK version file records the release version and git commit hash identifying
-# the DCU CK source tree. Degrade gracefully for release tarballs without .git.
+# the HCU CK source tree. Degrade gracefully for release tarballs without .git.
 find_package(Git)
 set(COMMIT_ID "unknown")
 set(CK_PARENT_COMMIT_ID "unknown")

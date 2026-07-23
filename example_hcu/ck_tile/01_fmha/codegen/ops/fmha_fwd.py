@@ -1537,7 +1537,7 @@ def get_factory(target: str):
 
     if target.startswith("gfx950"):
         return KernelComponentFactoryGfx950
-    # Hygon DCU architectures — all share the same HCU MMAC tile config
+    # Hygon HCU architectures — all share the same HCU MMAC tile config
     if target.startswith("gfx928"):
         return KernelComponentFactoryGfx928
     if target.startswith("gfx92a"):

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2018-2025, Advanced Micro Devices, Inc. All rights reserved.
 //
-// Adapted for Hygon DCU: wraps V1 DeviceGemm instances to satisfy the
+// Adapted for Hygon HCU: wraps V1 DeviceGemm instances to satisfy the
 // DeviceGemmV2 interface, bridging the gap without requiring a full
 // V3 pipeline import.
 

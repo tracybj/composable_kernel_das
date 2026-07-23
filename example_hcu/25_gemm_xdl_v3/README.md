@@ -1,6 +1,6 @@
 # GEMM XDL CShuffle V3 HCU 示例
 
-本目录用于在海光 DCU 上验证从 upstream CK 移植过来的 XDL CShuffle v3 device 路径：
+本目录用于在海光 HCU 上验证从 upstream CK 移植过来的 XDL CShuffle v3 device 路径：
 
 - `example_hcu_gemm_xdl_bf16_v3`: `DeviceGemm_Xdl_CShuffleV3`
 - `example_hcu_gemm_multi_d_xdl_bf16_v3`: `DeviceGemmMultiD_Xdl_CShuffle_V3`

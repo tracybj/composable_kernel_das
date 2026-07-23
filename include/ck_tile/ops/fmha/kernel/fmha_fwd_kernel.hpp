@@ -546,7 +546,7 @@ struct FmhaFwdKernel
         // divide problem
         const auto [i_tile_m, i_tile_n, i_nhead, i_batch] =
             TilePartitioner{}(kargs.seqlen_q, kargs.hdim_v);
-        // [DCU移植] DCU 编译器（aicc）在 lambda 里捕获结构化绑定变量（i_nhead/i_batch）会出错，
+        // [HCU移植] HCU 编译器（aicc）在 lambda 里捕获结构化绑定变量（i_nhead/i_batch）会出错，
         // 故先拷成普通变量供后续各 lambda 引用，替换上游的 [&, i_nhead_ = i_nhead] 写法。
         const auto i_nhead_copy = i_nhead;
         const auto i_batch_copy = i_batch;

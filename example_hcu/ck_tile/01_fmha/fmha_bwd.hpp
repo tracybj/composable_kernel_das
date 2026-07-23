@@ -224,7 +224,7 @@ template <typename FmhaBwdDQDKDVKernel>
 auto fmha_bwd_dq_dk_dv_create_kargs_and_grids(fmha_bwd_args args)
 {
     assert(args.nhead_q % args.nhead_k == 0);
-    // DCU移植: 旧 fmha_bwd_kernel.hpp 用外部 fp32 dq_acc(=workspace_ptr) + 独立 convert_dq
+    // HCU移植: 旧 fmha_bwd_kernel.hpp 用外部 fp32 dq_acc(=workspace_ptr) + 独立 convert_dq
     //          回写 dq，其 MakeKargs 接口与上游新版 MakeKargsImpl(内核内直接管理 dq、persistent
     //          batch、sink) 不同。这里把 dq_acc 视作与 dq 同形的连续 fp32 缓冲
     //          [batch, nhead_q, seqlen_q, hdim_q]，非确定性单 split。group 模式下 args.seqlen_q
@@ -358,7 +358,7 @@ auto fmha_bwd_dot_do_o_create_kargs_and_grids(fmha_bwd_args args)
 {
     auto kargs = [&] {
         // create group mode kernel arguments
-        // DCU移植: 旧 OGradDotO MakeKargs 无 lse/sink/d_sink/nhead_q/seqlen_q_ptr 等新参，
+        // HCU移植: 旧 OGradDotO MakeKargs 无 lse/sink/d_sink/nhead_q/seqlen_q_ptr 等新参，
         //          D 与 LSE 共享 [nhead, seqlen_q] 布局，故 d 的 stride 复用 lsed。
         if constexpr(FmhaBwdOGradDotOKernel::kIsGroupMode)
         {
@@ -402,7 +402,7 @@ auto fmha_bwd_convert_dq_create_kargs_and_grids(fmha_bwd_args args)
 {
     auto kargs = [&] {
         // create group mode kernel arguments
-        // DCU移植: dq_acc 布局须与 dq_dk_dv 写入端一致（连续 fp32，stride=hdim_q）。
+        // HCU移植: dq_acc 布局须与 dq_dk_dv 写入端一致（连续 fp32，stride=hdim_q）。
         const ck_tile::index_t stride_dq_acc       = args.hdim_q;
         const ck_tile::index_t nhead_stride_dq_acc = args.seqlen_q * args.hdim_q;
         const ck_tile::index_t batch_stride_dq_acc = args.nhead_q * args.seqlen_q * args.hdim_q;
@@ -750,10 +750,10 @@ struct fmha_bwd_launcher
             return fmha_bwd_<T0, T1, T2, Arch>(s, a);
         };
         host_ws_size_         = fmha_bwd_dq_dk_dv_dq_ws_host_size_<T1, Arch>(t.batch);
-        // [DCU移植] workspace 尺寸修复：上游代码仅在 host_ws_size_ > 0 时计算
+        // [HCU移植] workspace 尺寸修复：上游代码仅在 host_ws_size_ > 0 时计算
         // device_ws_size，导致旧内核（host_ws_size_=0，仅需要 device dq_acc）的
         // device workspace 不被计算，进而 workspace_ptr=null，dq_dk_dv kernel
-        // VMFault。DCU 改为无条件计算 device_ws_size（使用
+        // VMFault。HCU 改为无条件计算 device_ws_size（使用
         // fmha_bwd_dq_dk_dv_dq_ws_device_upper_bound_），即使 host_ws_size_=0 也能正确
         // 分配 device dq_acc workspace。
         const ck_tile::index_t total_seqlen_q_padded =

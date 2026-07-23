@@ -7,7 +7,7 @@ from typing import Tuple
 
 @dataclass(frozen=True)
 class CKGroupedConvFwdOp:
-    """DCU DeviceGroupedConvFwdMultipleD_Xdl_CShuffle template parameters."""
+    """HCU DeviceGroupedConvFwdMultipleD_Xdl_CShuffle template parameters."""
 
     n_dim_spatial: int
     a_layout: str

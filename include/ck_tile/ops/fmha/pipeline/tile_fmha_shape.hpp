@@ -43,8 +43,8 @@ struct TileFmhaShape
 
     static constexpr index_t NumWarps = max(NumGemm0Warps, NumGemm1Warps);
 
-    // [DCU移植] 删除了上游的 static_assert(Gemm0WarpTile == Gemm1WarpTile)。
-    // DCU FMHA 的 QK 与 PV 使用不同的 MMAC warp tile（QK 16x64x32、PV 16x32x64），
+    // [HCU移植] 删除了上游的 static_assert(Gemm0WarpTile == Gemm1WarpTile)。
+    // HCU FMHA 的 QK 与 PV 使用不同的 MMAC warp tile（QK 16x64x32、PV 16x32x64），
     // 两者本就不相等，保留该断言会编译失败。
     static constexpr index_t kM0 = BlockTile::at(number<0>{}); // tile size along q seqlen
     static constexpr index_t kN0 = BlockTile::at(number<1>{}); // tile size along k seqlen

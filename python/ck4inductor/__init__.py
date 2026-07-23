@@ -5,7 +5,7 @@ import subprocess
 
 
 def __version__():
-    dcu_baseline = "0.0.0+dcu"
+    hcu_baseline = "0.0.0+hcu"
     hash_width = 6
     try:
         git_hash = subprocess.check_output(
@@ -13,7 +13,7 @@ def __version__():
         )[:hash_width]
     except Exception:
         git_hash = "0" * hash_width
-    return f"{dcu_baseline}.g{git_hash}"
+    return f"{hcu_baseline}.g{git_hash}"
 
 
 _package_version = __version__()

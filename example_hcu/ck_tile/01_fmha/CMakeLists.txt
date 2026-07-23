@@ -225,7 +225,7 @@ list(APPEND FMHA_BWD_PRIVATE_COMPILE_OPTIONS -DCK_TILE_FLOAT_TO_BFLOAT16_DEFAULT
 list(APPEND FMHA_BWD_INTERFACE_COMPILE_OPTIONS -DCK_TILE_FLOAT_TO_BFLOAT16_DEFAULT=3)
 
 # BWD kernel/pipeline headers in ck_tile/ops/fmha.hpp are gated behind this macro
-# (kept off during the FWD-only DCU port). Enable it for all BWD instances and the
+# (kept off during the FWD-only HCU port). Enable it for all BWD instances and the
 # bwd example that consumes them.
 list(APPEND FMHA_BWD_PRIVATE_COMPILE_OPTIONS -DCK_TILE_FMHA_ENABLE_BWD_HEADERS=1)
 list(APPEND FMHA_BWD_INTERFACE_COMPILE_OPTIONS -DCK_TILE_FMHA_ENABLE_BWD_HEADERS=1)

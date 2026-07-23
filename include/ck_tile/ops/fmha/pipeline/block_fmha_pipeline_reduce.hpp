@@ -7,8 +7,8 @@
 
 namespace ck_tile {
 
-// [DCU移植] 本文件为 FMHA 移植新增（上游 github CK 没有）。
-// 背景：DCU MMAC 的 C 矩阵把 M 维放在 16 条 lane 上（wavefront=64），softmax 的行内
+// [HCU移植] 本文件为 FMHA 移植新增（上游 github CK 没有）。
+// 背景：HCU MMAC 的 C 矩阵把 M 维放在 16 条 lane 上（wavefront=64），softmax 的行内
 // 规约（rowmax/rowsum）必须按这套 16-lane 分布跨 lane 做 shuffle，与上游针对 AMD MFMA
 // 布局的 block_tile_reduce_sync 不同。各 fwd 流水线里的 block_tile_reduce_sync 已替换为本函数。
 //   - gfx938/gfx946（lit_lts 布局）：在 16 lane 组内按 delta=8/4/2/1 做 __shfl_xor。

@@ -7,7 +7,7 @@ from typing import Optional, Tuple
 
 @dataclass
 class CKBatchedGemmOperation:
-    """DCU DeviceBatchedGemmMultiD_Xdl_CShuffle_V3 universal batched GEMM parameters."""
+    """HCU DeviceBatchedGemmMultiD_Xdl_CShuffle_V3 universal batched GEMM parameters."""
 
     a_layout: str
     b_layout: str

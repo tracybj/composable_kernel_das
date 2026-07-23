@@ -28,7 +28,7 @@ bool run_c_api_smoke(int dtype,
     std::vector<std::unique_ptr<ck_tile::DeviceMem>> device_as;
     std::vector<std::unique_ptr<ck_tile::DeviceMem>> device_bs;
     std::vector<std::unique_ptr<ck_tile::DeviceMem>> device_cs;
-    std::vector<ck_tile_dcu_grouped_gemm_desc> descs;
+    std::vector<ck_tile_hcu_grouped_gemm_desc> descs;
 
     device_as.reserve(group_count);
     device_bs.reserve(group_count);
@@ -69,8 +69,8 @@ bool run_c_api_smoke(int dtype,
     }
 
     ck_tile::DeviceMem workspace(
-        ck_tile_dcu_grouped_gemm_workspace_size(group_count));
-    const int rc = ck_tile_dcu_grouped_gemm_run(descs.data(),
+        ck_tile_hcu_grouped_gemm_workspace_size(group_count));
+    const int rc = ck_tile_hcu_grouped_gemm_run(descs.data(),
                                                  group_count,
                                                  dtype,
                                                  a_layout,
@@ -79,7 +79,7 @@ bool run_c_api_smoke(int dtype,
                                                  nullptr);
     if(rc != 0)
     {
-        std::cerr << "ck_tile_dcu_grouped_gemm_run(" << a_layout << b_layout
+        std::cerr << "ck_tile_hcu_grouped_gemm_run(" << a_layout << b_layout
                   << ") returned " << rc << std::endl;
         return false;
     }
@@ -121,38 +121,38 @@ int main()
     const std::vector<int> padded_ks{129, 193, 255};
 
     const bool fp16_ok =
-        run_c_api_smoke<ck_tile::half_t>(CK_TILE_DCU_GROUPED_GEMM_FP16,
+        run_c_api_smoke<ck_tile::half_t>(CK_TILE_HCU_GROUPED_GEMM_FP16,
                                          'R',
                                          'R',
                                          aligned_ms,
                                          aligned_ns,
                                          aligned_ks) &&
-        run_c_api_smoke<ck_tile::half_t>(CK_TILE_DCU_GROUPED_GEMM_FP16,
+        run_c_api_smoke<ck_tile::half_t>(CK_TILE_HCU_GROUPED_GEMM_FP16,
                                          'R',
                                          'C',
                                          large_aligned_dims,
                                          large_aligned_dims,
                                          large_aligned_dims) &&
-        run_c_api_smoke<ck_tile::half_t>(CK_TILE_DCU_GROUPED_GEMM_FP16,
+        run_c_api_smoke<ck_tile::half_t>(CK_TILE_HCU_GROUPED_GEMM_FP16,
                                          'C',
                                          'R',
                                          padded_ms,
                                          padded_ns,
                                          padded_ks);
     const bool bf16_ok =
-        run_c_api_smoke<ck_tile::bf16_t>(CK_TILE_DCU_GROUPED_GEMM_BF16,
+        run_c_api_smoke<ck_tile::bf16_t>(CK_TILE_HCU_GROUPED_GEMM_BF16,
                                          'R',
                                          'R',
                                          aligned_ms,
                                          aligned_ns,
                                          aligned_ks) &&
-        run_c_api_smoke<ck_tile::bf16_t>(CK_TILE_DCU_GROUPED_GEMM_BF16,
+        run_c_api_smoke<ck_tile::bf16_t>(CK_TILE_HCU_GROUPED_GEMM_BF16,
                                          'R',
                                          'C',
                                          large_aligned_dims,
                                          large_aligned_dims,
                                          large_aligned_dims) &&
-        run_c_api_smoke<ck_tile::bf16_t>(CK_TILE_DCU_GROUPED_GEMM_BF16,
+        run_c_api_smoke<ck_tile::bf16_t>(CK_TILE_HCU_GROUPED_GEMM_BF16,
                                          'C',
                                          'R',
                                          padded_ms,

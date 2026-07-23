@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) Advanced Micro Devices, Inc., or its affiliates.
 //
-// Adapted for Hygon DCU: V2 GEMM device interface.
+// Adapted for Hygon HCU: V2 GEMM device interface.
 // Sub-interfaces (V2R1, BScale, BPreshuffle) are present for API compatibility
 // but require upstream V3 pipeline imports for full implementation.
 

@@ -32,7 +32,7 @@ using WarpGemmMmacF16F16F32_WT16x64x32_MR1NR1MI1NI4 = WarpGemmImpl<
 using WarpGemmMmacF16F16F32_WT16x32x64_MR1NR2MI1NI1 = WarpGemmImpl<
     WarpGemmAttributeMmacIterateK<WarpGemmAttributeMmacImplF16F16F32M16N16K16, 1, 2, 1, 1, 4>>;
 
-// [DCU移植] 以下 _FMHA 别名为 FMHA 移植新增：与上面 QK(16x64x32)/PV(16x32x64) 形状相同，
+// [HCU移植] 以下 _FMHA 别名为 FMHA 移植新增：与上面 QK(16x64x32)/PV(16x32x64) 形状相同，
 // 但基于 WarpGemmAttributeMmacIterateKCRaw（裸硬件 C 布局），供 FMHA 流水线在寄存器内直接
 // 消费；普通别名保留基类 C 布局给 GEMM example，两套不可混用。
 // ---- FMHA fwd (gfx936/gfx928/gfx92a basic MMAC) warp tiles ----
@@ -68,7 +68,7 @@ using WarpGemmMmacBF16BF16F32_WT16x32x128_MR1NR1MI1NI2 = WarpGemmImpl<
 using WarpGemmMmacBF16BF16F32_WT16x16x128_MR1NR1MI1NI1 = WarpGemmImpl<
     WarpGemmAttributeMmacIterateK<WarpGemmAttributeMmacImplBf16Bf16F32M16N16K16, 1, 1, 1, 1, 8>>;
 
-// [DCU移植] 以下 16x16 系列别名为 FMHA BWD 移植新增（WIP）：BWD 的 5 个 GEMM 都切成
+// [HCU移植] 以下 16x16 系列别名为 FMHA BWD 移植新增（WIP）：BWD 的 5 个 GEMM 都切成
 // 16x16 warp tile（K=32/16），_TRANSC 变体用于两个转置 GEMM（P^T*dO、dS^T*Q^T）。
 // ---- FMHA BWD (gfx9 basic MMAC) warp tiles ----
 // The BWD pipeline tiles every GEMM to a 16x16 warp tile with K=32 (kK0/kK2/kK4)

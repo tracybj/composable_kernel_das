@@ -1,12 +1,12 @@
-# ck4inductor DCU 移植总结
+# ck4inductor HCU 移植总结
 
-本文用于记录 `ck4inductor` 从 github CK 移植到 `composable_kernel_dcu` 的必要步骤、与 github CK 的差异点、以及已踩过的坑。本文不记录完整调试流水，后续补充 CK 实例时按这里的流程扩展即可。
+本文用于记录 `ck4inductor` 从 github CK 移植到 `composable_kernel_hcu` 的必要步骤、与 github CK 的差异点、以及已踩过的坑。本文不记录完整调试流水，后续补充 CK 实例时按这里的流程扩展即可。
 
 ## 目标与范围
 
-目标是让 DCU CK 通过 `pip install .` 提供 `ck4inductor` Python 包，使 PyTorch TorchInductor 能 import `ck4inductor`、发现 CK instance、生成 ROCm CK template，并进入 autotune/benchmark。
+目标是让 HCU CK 通过 `pip install .` 提供 `ck4inductor` Python 包，使 PyTorch TorchInductor 能 import `ck4inductor`、发现 CK instance、生成 ROCm CK template，并进入 autotune/benchmark。
 
-当前首轮目标是可安装、可枚举、可被 PyTorch CK template 消费。不把当前候选当成 DCU 最优性能配置，`preselected` 暂时禁用，后续必须在 DCU 上重新 benchmark。
+当前首轮目标是可安装、可枚举、可被 PyTorch CK template 消费。不把当前候选当成 HCU 最优性能配置，`preselected` 暂时禁用，后续必须在 HCU 上重新 benchmark。
 
 当前模块：
 
@@ -20,14 +20,14 @@
 
 ### 1. 新增 Python 包骨架
 
-在 `composable_kernel_dcu/python/ck4inductor/` 下建立包结构，新增：
+在 `composable_kernel_hcu/python/ck4inductor/` 下建立包结构，新增：
 
 - `__init__.py`
 - `util.py`
 - `_template_parser.py`
 - 各算子子包的 `op.py`、`gen_instances.py`
 
-在 `composable_kernel_dcu/pyproject.toml` 中显式声明 setuptools package，分发名沿用 `rocm-composable-kernel`，Python import 名沿用 `ck4inductor`，避免 PyTorch 侧 import 路径变化。
+在 `composable_kernel_hcu/pyproject.toml` 中显式声明 setuptools package，分发名沿用 `rocm-composable-kernel`，Python import 名沿用 `ck4inductor`，避免 PyTorch 侧 import 路径变化。
 
 ### 2. 配置 package-data
 
@@ -48,7 +48,7 @@
 
 ### 3. 使用通用模板解析器
 
-上游 github CK 的 Python 逻辑偏向简单文本扫描。DCU 版本新增 `_template_parser.py`，用 Python 原生 `pathlib.Path.rglob()` 扫描文件，并用括号深度解析模板参数。
+上游 github CK 的 Python 逻辑偏向简单文本扫描。HCU 版本新增 `_template_parser.py`，用 Python 原生 `pathlib.Path.rglob()` 扫描文件，并用括号深度解析模板参数。
 
 后续新增实例不要写 shell `grep` 依赖，统一走：
 
@@ -66,7 +66,7 @@
 - 模板：`DeviceGemm_Xdl_CShuffleV3`
 - 当前种子实例：BF16，`Row/Col/Row`
 
-与早期计划中扫描标准 `tensor_operation_instance/gpu/gemm` 不同，最终 PyTorch 需求指向 `gemm_universal` 命名，因此 DCU 侧新增 HCU instance 目录，而不是复用标准 GEMM 目录。
+与早期计划中扫描标准 `tensor_operation_instance/gpu/gemm` 不同，最终 PyTorch 需求指向 `gemm_universal` 命名，因此 HCU 侧新增 HCU instance 目录，而不是复用标准 GEMM 目录。
 
 注意：
 
@@ -84,7 +84,7 @@
 
 注意：
 
-- 当前实例是 PyTorch CK template 能消费的 MultiD CShuffle V3 形式，不是 DCU 老的 `DeviceBatchedGemmXdl` dtype-first 形式。
+- 当前实例是 PyTorch CK template 能消费的 MultiD CShuffle V3 形式，不是 HCU 老的 `DeviceBatchedGemmXdl` dtype-first 形式。
 - `CKBatchedGemmOperation` 同样不能 frozen。
 - `a_block_lds_extra_m`、`b_block_lds_extra_n` 等字段需输出 C++ 字面量。
 
@@ -106,13 +106,13 @@ HCU grouped conv 另建模块：
 
 ### 7. 移植 ck_tile_universal_gemm
 
-`ck_tile_universal_gemm` 当前是 Python 枚举，不扫描 C++ instance。DCU 侧只保留已在示例中有依据的组合：
+`ck_tile_universal_gemm` 当前是 Python 枚举，不扫描 C++ instance。HCU 侧只保留已在示例中有依据的组合：
 
 - pipeline: `Mem`、`CompV4`
 - scheduler: `Intrawave`
 - dtype/layout 只保留当前 allowlist
 
-`CompV3` 暂不进入稳定输出；后续如果 DCU 示例或 benchmark 确认可用，再加入 allowlist。
+`CompV3` 暂不进入稳定输出；后续如果 HCU 示例或 benchmark 确认可用，再加入 allowlist。
 
 ### 8. 补 header-only 安装闭包
 
@@ -143,8 +143,8 @@ PyTorch CK template 编译的是 header-only package 路径。`pip install .` �
 本地验证：
 
 ```powershell
-python -m pip install -e composable_kernel_dcu
-python -m unittest composable_kernel_dcu.python.test.test_gen_instances -v
+python -m pip install -e composable_kernel_hcu
+python -m unittest composable_kernel_hcu.python.test.test_gen_instances -v
 ```
 
 预期：
@@ -157,7 +157,7 @@ python -m unittest composable_kernel_dcu.python.test.test_gen_instances -v
 远端 nmz-1 验证：
 
 ```powershell
-dcu-remote --profile nmz-1 script --file hygon_tmp\remote_ck4_hcu_validate.sh
+hcu-remote --profile nmz-1 script --file hygon_tmp\remote_ck4_hcu_validate.sh
 ```
 
 预期：
@@ -197,7 +197,7 @@ config.rocm.ck_supported_arch.append("gfx938")
 当前 e2e 验证脚本：
 
 ```powershell
-dcu-remote --profile nmz-1 script --gpu --file hygon_tmp\nmz_torchinductor_ck_rcr_e2e.sh
+hcu-remote --profile nmz-1 script --gpu --file hygon_tmp\nmz_torchinductor_ck_rcr_e2e.sh
 ```
 
 当前结果：
@@ -214,14 +214,14 @@ dcu-remote --profile nmz-1 script --gpu --file hygon_tmp\nmz_torchinductor_ck_rc
 
 ### package 与路径差异
 
-github CK 的 package-data 默认不够 DCU 使用，尤其缺 `.h`、HCU instance 路径、grouped conv sidecar 文件。DCU 版本必须显式加入 HCU 路径。
+github CK 的 package-data 默认不够 HCU 使用，尤其缺 `.h`、HCU instance 路径、grouped conv sidecar 文件。HCU 版本必须显式加入 HCU 路径。
 
 github CK 常见路径：
 
 - `library/src/tensor_operation_instance/gpu/gemm_universal`
 - `library/src/tensor_operation_instance/gpu/gemm_universal_batched`
 
-DCU 当前路径：
+HCU 当前路径：
 
 - `library/src/tensor_operation_instance_hcu/gpu/gemm_universal`
 - `library/src/tensor_operation_instance_hcu/gpu/gemm_universal_batched`
@@ -229,7 +229,7 @@ DCU 当前路径：
 
 ### 模板体系差异
 
-DCU 标准 grouped conv 使用：
+HCU 标准 grouped conv 使用：
 
 - `DeviceGroupedConvFwdMultipleD_Xdl_CShuffle`
 
@@ -238,7 +238,7 @@ github CK/PyTorch 侧常见命名可能带：
 - `MultipleABD`
 - `_V3`
 
-不要按名字相似强行复用字段顺序。必须以 DCU 实际模板签名为准。
+不要按名字相似强行复用字段顺序。必须以 HCU 实际模板签名为准。
 
 ### HCU 与标准 XDL 差异
 
@@ -293,7 +293,7 @@ no type named 'pk_i4_t' in namespace 'ck'
 using MultiplyMultiply = ck::tensor_operation::element_wise::MultiplyMultiply;
 ```
 
-DCU header 里缺这个 struct 会直接编译失败。解决：补 `MultiplyMultiply` 到 `element_wise_operation.hpp`。
+HCU header 里缺这个 struct 会直接编译失败。解决：补 `MultiplyMultiply` 到 `element_wise_operation.hpp`。
 
 ### 4. `ck/utility/data_type.hpp` include 顺序不能太早
 
@@ -355,7 +355,7 @@ TorchInductor 会 autotune 多个 backend。当前 CK 已成功编译并参与 b
 ## 后续补充 CK 实例流程
 
 1. 先确认 PyTorch 需要的 layout/dtype/shape。
-2. 在 DCU/HCU 现有 example 或 profiler 中找到已能编译运行的模板参数。
+2. 在 HCU 现有 example 或 profiler 中找到已能编译运行的模板参数。
 3. 把模板参数整理成对应 instance hpp/cpp，放入当前 package-data 覆盖的路径。
 4. 若新增路径不在 package-data，先更新 `pyproject.toml`。
 5. 更新对应 `gen_instances.py` 的 parser 或 allowlist。
@@ -366,33 +366,33 @@ TorchInductor 会 autotune 多个 backend。当前 CK 已成功编译并参与 b
 7. 本地跑 unittest。
 8. nmz-1 跑 `remote_ck4_hcu_validate.sh`。
 9. 若是 GEMM/Batched GEMM，跑 TorchInductor e2e，确认 CK 进入 autotune。
-10. 只有在 DCU 上 benchmark 后，才把实例加入 preselected 或作为推荐候选。
+10. 只有在 HCU 上 benchmark 后，才把实例加入 preselected 或作为推荐候选。
 
 ## 常用验证命令
 
 本地：
 
 ```powershell
-python -m pip install -e composable_kernel_dcu
-python -m unittest composable_kernel_dcu.python.test.test_gen_instances -v
+python -m pip install -e composable_kernel_hcu
+python -m unittest composable_kernel_hcu.python.test.test_gen_instances -v
 ```
 
 远端安装与 generator：
 
 ```powershell
-dcu-remote --profile nmz-1 script --file hygon_tmp\remote_ck4_hcu_validate.sh
+hcu-remote --profile nmz-1 script --file hygon_tmp\remote_ck4_hcu_validate.sh
 ```
 
 PyTorch CK 选择条件检查：
 
 ```powershell
-dcu-remote --profile nmz-1 script --gpu --file hygon_tmp\nmz_torchinductor_ck_selection_probe.sh
+hcu-remote --profile nmz-1 script --gpu --file hygon_tmp\nmz_torchinductor_ck_selection_probe.sh
 ```
 
 TorchInductor RCR e2e：
 
 ```powershell
-dcu-remote --profile nmz-1 script --gpu --file hygon_tmp\nmz_torchinductor_ck_rcr_e2e.sh
+hcu-remote --profile nmz-1 script --gpu --file hygon_tmp\nmz_torchinductor_ck_rcr_e2e.sh
 ```
 
 ## 当前状态

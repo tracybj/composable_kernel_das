@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) Advanced Micro Devices, Inc., or its affiliates.
 //
-// Adapted for Hygon DCU: DPP8 instructions (v_dot2c_f32_f16_dpp, __builtin_amdgcn_mov_dpp8)
-// are NOT available on HCU. DCU path falls back to regular inner_product().
+// Adapted for Hygon HCU: DPP8 instructions (v_dot2c_f32_f16_dpp, __builtin_amdgcn_mov_dpp8)
+// are NOT available on HCU. HCU path falls back to regular inner_product().
 
 #pragma once
 
@@ -16,7 +16,7 @@ namespace dpp8 {
 
 constexpr index_t lane_group_size = 8;
 
-// DPP8 IntrinsicMaskDpp8 — kept for API compatibility, but unused on DCU
+// DPP8 IntrinsicMaskDpp8 — kept for API compatibility, but unused on HCU
 constexpr std::array<int, dpp8::lane_group_size> IntrinsicMaskDpp8 = {
     0,        // 0, 0, 0, 0, 0, 0, 0, 0
     2396745,  // 1, 1, 1, 1, 1, 1, 1, 1
@@ -37,7 +37,7 @@ constexpr int get_dpp_sel_mask_broadcast()
 }
 
 // On AMD: v_dot2c_f32_f16_dpp inline asm with DPP8 lane broadcast
-// On DCU: DPP8 not available — fall through to software inner_product
+// On HCU: DPP8 not available — fall through to software inner_product
 #if !defined(__gfx928__) && !defined(__gfx936__) && !defined(__gfx938__) && \
     !defined(__gfx92a__) && !defined(__gfx946__)
 
@@ -114,17 +114,17 @@ __device__ void intrinsic_fdot2(const half2_t& a, const half2_t& b, float& c)
     }
 }
 
-#endif // !DCU: AMD DPP path
+#endif // !HCU: AMD DPP path
 
 // Common entry point: inner_product_dpp
 // On AMD: uses DPP8 lane-group broadcast for dot product
-// On DCU: falls back to regular inner_product() without lane sharing
+// On HCU: falls back to regular inner_product() without lane sharing
 template <typename TA, typename TB, typename TC, int SrcLaneIdx, bool ShareA>
 __device__ void inner_product_dpp(const TA& a, const TB& b, TC& c)
 {
 #if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__) || \
     defined(__gfx946__)
-    // DCU: DPP8 not available, use regular inner_product (no lane sharing optimization)
+    // HCU: DPP8 not available, use regular inner_product (no lane sharing optimization)
     inner_product(a, b, c);
 #else
 #if CK_USE_AMD_V_DOT_DPP8_INLINE_ASM

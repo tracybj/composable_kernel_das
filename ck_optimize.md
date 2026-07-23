@@ -1,6 +1,6 @@
-# ck_tile DCU migration and optimization notes
+# ck_tile HCU migration and optimization notes
 
-This note records the working pattern used while migrating and tuning ck_tile examples on Hygon DCU. Treat it as a lightweight skill for future ck_tile operator work.
+This note records the working pattern used while migrating and tuning ck_tile examples on Hygon HCU. Treat it as a lightweight skill for future ck_tile operator work.
 
 ## Workflow
 
@@ -13,9 +13,9 @@ This note records the working pattern used while migrating and tuning ck_tile ex
 7. Every local commit for an optimized example should update that example's readme with the measured result.
 8. For heavy ck_tile examples, add narrow `EXCLUDE_FROM_ALL` fast targets for one dtype and the common layout while keeping the full target as the release/coverage target.
 
-## DCU ck_tile checks
+## HCU ck_tile checks
 
-- DCU grouped GEMM uses MMAC, not MFMA. Search `include/ck_tile` and nearby `example_hcu/ck_tile` code for an existing MMAC alias, dispatcher entry, LDS matrix-load shape, or inline asm before adding a new instruction path.
+- HCU grouped GEMM uses MMAC, not MFMA. Search `include/ck_tile` and nearby `example_hcu/ck_tile` code for an existing MMAC alias, dispatcher entry, LDS matrix-load shape, or inline asm before adding a new instruction path.
 - For new data type or tile shapes, check both `warp_mmac_gemm.hpp` and `warp_mmac_gemm_dispatcher.hpp`.
 - `K_Warp_Tile` changes can be a low-risk first experiment when the underlying MMAC implementation already supports K iteration through `WarpGemmAttribute*IterateK`.
 - Persistent grouped GEMM may hide host-side group shape restrictions, but validation should still cover all requested layouts and SplitK behavior.
@@ -30,8 +30,8 @@ Use the default grouped shapes unless testing a production shape:
 ```bash
 rocm-smi --showuse --showmemuse
 export HIP_VISIBLE_DEVICES=<idle_gpu>
-cmake --build /wksp/ai/composable_kernel_dcu/build_dev --target tile_example_grouped_gemm -j8
-/wksp/ai/composable_kernel_dcu/build_dev/bin/tile_example_grouped_gemm \
+cmake --build /wksp/ai/composable_kernel_hcu/build_dev --target tile_example_grouped_gemm -j8
+/wksp/ai/composable_kernel_hcu/build_dev/bin/tile_example_grouped_gemm \
   -prec=<dtype> -warmup=10 -repeat=100 -validate=1 -group_count=8 -kbatch=1
 ```
 

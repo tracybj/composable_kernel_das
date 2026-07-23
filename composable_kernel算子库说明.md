@@ -2,9 +2,9 @@
 
 # 1. Composable Kernel 简介
 
-Composable Kernel（CK）是面向 HIP/DCU/GPU 的高性能算子模板库，核心目标是用 tile-based programming model 和 tensor coordinate transformation 组织矩阵乘、卷积、归一化、注意力、MoE 等深度学习算子。当前 `composable_kernel` 工程是在源基础上适配海光 DCU/HCU 的源码树，包含传统 `ck` device operator、`ck_tile` tile-programming operator、示例程序、profiler、Python 侧 ck4inductor 适配等模块。
+Composable Kernel（CK）是面向 HIP/HCU/GPU 的高性能算子模板库，核心目标是用 tile-based programming model 和 tensor coordinate transformation 组织矩阵乘、卷积、归一化、注意力、MoE 等深度学习算子。当前 `composable_kernel` 工程是在源基础上适配海光 HCU 的源码树，包含传统 `ck` device operator、`ck_tile` tile-programming operator、示例程序、profiler、Python 侧 ck4inductor 适配等模块。
 
-本文档只整理DCU适配 `example_hcu` 中示例调用到的接口。
+本文档只整理HCU适配 `example_hcu` 中示例调用到的接口。
 
 ## 1.1 编译使用
 
@@ -12,7 +12,7 @@ Composable Kernel（CK）是面向 HIP/DCU/GPU 的高性能算子模板库，核
 
 常用环境如下：
 
-- DTK 或 ROCm HIP 工具链。DCU 环境优先使用 `/opt/dtk/bin/aicc`，其次使用 `/opt/dtk/llvm/bin/hipcc`。
+- DTK 或 ROCm HIP 工具链。HCU 环境优先使用 `/opt/dtk/bin/aicc`，其次使用 `/opt/dtk/llvm/bin/hipcc`。
 - CMake 3.14 及以上。
 - Python3。`ck_tile` 的 FMHA、LayerNorm、RMSNorm 等示例包含代码生成脚本，配置或构建时可能调用 Python。
 - GPU target 按机器选择。NMZ/gfx938 常用 `GPU_TARGETS="gfx938"`；双架构包可用 `GPU_TARGETS="gfx936;gfx938"`。
@@ -222,7 +222,7 @@ gemm_basic_args args{
 float time_ms = gemm_calc(args, ck_tile::stream_config{stream, true});
 ```
 
-## 3.2 Grouped GEMM C ABI: `ck_tile_dcu_grouped_gemm_run`
+## 3.2 Grouped GEMM C ABI: `ck_tile_hcu_grouped_gemm_run`
 
 声明路径：`example_hcu/ck_tile/19_grouped_gemm/grouped_gemm.hpp`。实现路径：
 `example_hcu/ck_tile/19_grouped_gemm/grouped_gemm.cpp` 与 `instances/`。aiter
@@ -238,17 +238,17 @@ float time_ms = gemm_calc(args, ck_tile::stream_config{stream, true});
 
 extern "C" {
 
-enum ck_tile_dcu_grouped_gemm_dtype
+enum ck_tile_hcu_grouped_gemm_dtype
 {
-    CK_TILE_DCU_GROUPED_GEMM_FP16 = 0,
-    CK_TILE_DCU_GROUPED_GEMM_FP8  = 1,
-    CK_TILE_DCU_GROUPED_GEMM_INT8 = 2,
-    CK_TILE_DCU_GROUPED_GEMM_BF8  = 3,
-    CK_TILE_DCU_GROUPED_GEMM_BF16 = 4,
-    CK_TILE_DCU_GROUPED_GEMM_INT4 = 5
+    CK_TILE_HCU_GROUPED_GEMM_FP16 = 0,
+    CK_TILE_HCU_GROUPED_GEMM_FP8  = 1,
+    CK_TILE_HCU_GROUPED_GEMM_INT8 = 2,
+    CK_TILE_HCU_GROUPED_GEMM_BF8  = 3,
+    CK_TILE_HCU_GROUPED_GEMM_BF16 = 4,
+    CK_TILE_HCU_GROUPED_GEMM_INT4 = 5
 };
 
-struct ck_tile_dcu_grouped_gemm_desc
+struct ck_tile_hcu_grouped_gemm_desc
 {
     const void* a_ptr;
     const void* b_ptr;
@@ -265,10 +265,10 @@ struct ck_tile_dcu_grouped_gemm_desc
     const int* stride_Ds;
 };
 
-std::size_t ck_tile_dcu_grouped_gemm_workspace_size(int group_count,
+std::size_t ck_tile_hcu_grouped_gemm_workspace_size(int group_count,
                                                     int num_d_tensors = 0);
 
-int ck_tile_dcu_grouped_gemm_run(const ck_tile_dcu_grouped_gemm_desc* descs,
+int ck_tile_hcu_grouped_gemm_run(const ck_tile_hcu_grouped_gemm_desc* descs,
                                  int group_count,
                                  int dtype,
                                  char a_layout,
@@ -285,9 +285,9 @@ int ck_tile_dcu_grouped_gemm_run(const ck_tile_dcu_grouped_gemm_desc* descs,
 | --- | --- |
 | `descs` | `group_count` 个 GEMM descriptor 数组，host 内存。 |
 | `group_count` | GEMM 组数。 |
-| `dtype` | `ck_tile_dcu_grouped_gemm_dtype` 枚举值。 |
+| `dtype` | `ck_tile_hcu_grouped_gemm_dtype` 枚举值。 |
 | `a_layout/b_layout` | `R` 表示 row-major，`C` 表示 column-major。 |
-| `workspace` | device workspace，大小由 `ck_tile_dcu_grouped_gemm_workspace_size()` 返回。 |
+| `workspace` | device workspace，大小由 `ck_tile_hcu_grouped_gemm_workspace_size()` 返回。 |
 | `num_d_tensors` | epilogue D tensor 数量，当前 C ABI 支持 `0/1/2`。 |
 | `d_ptrs/stride_Ds` | D tensor device pointer 数组和 stride 数组；无 D tensor 时为 `nullptr`。 |
 
@@ -303,7 +303,7 @@ int ck_tile_dcu_grouped_gemm_run(const ck_tile_dcu_grouped_gemm_desc* descs,
 调用示例：
 
 ```cpp
-std::vector<ck_tile_dcu_grouped_gemm_desc> descs(group_count);
+std::vector<ck_tile_hcu_grouped_gemm_desc> descs(group_count);
 descs[0] = {
     a0_dev,
     b0_dev,
@@ -320,13 +320,13 @@ descs[0] = {
     nullptr,
 };
 
-std::size_t ws_bytes = ck_tile_dcu_grouped_gemm_workspace_size(group_count);
+std::size_t ws_bytes = ck_tile_hcu_grouped_gemm_workspace_size(group_count);
 void* ws_dev = nullptr;
 hipMalloc(&ws_dev, ws_bytes);
 
-int rc = ck_tile_dcu_grouped_gemm_run(descs.data(),
+int rc = ck_tile_hcu_grouped_gemm_run(descs.data(),
                                       group_count,
-                                      CK_TILE_DCU_GROUPED_GEMM_FP16,
+                                      CK_TILE_HCU_GROUPED_GEMM_FP16,
                                       'R',
                                       'R',
                                       ws_dev,

@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) Advanced Micro Devices, Inc., or its affiliates.
 //
-// Adapted for Hygon DCU: coherence enum with DCU-appropriate defaults.
-// DCU architectures (gfx928/gfx936/gfx938) use the simple GLC/SLC coherence model.
+// Adapted for Hygon HCU: coherence enum with HCU-appropriate defaults.
+// HCU architectures (gfx928/gfx936/gfx938) use the simple GLC/SLC coherence model.
 // gfx942/gfx950 and gfx12 values are gated for compatibility with new upstream CK code.
 
 #pragma once
@@ -93,7 +93,7 @@ enum struct AmdBufferCoherenceEnum
     SLC     = SYSTEM_NT1,
     GLC_SLC = DEVICE_NT1 | SYSTEM_NT1,
 #else
-    // DCU path (gfx928/gfx936/gfx938) and other architectures:
+    // HCU path (gfx928/gfx936/gfx938) and other architectures:
     // simple coherence model with GLC/SLC bits
     GLC     = 1,
     SLC     = 2,

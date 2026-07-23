@@ -1,9 +1,9 @@
 // Copyright (c) Advanced Micro Devices, Inc., or its affiliates.
 // SPDX-License-Identifier: MIT
 //
-// Hygon DCU adaptation: HCU fast-path macro (CK_MX_ARCH_HCU) added.
+// Hygon HCU adaptation: HCU fast-path macro (CK_MX_ARCH_HCU) added.
 // AMD builtins (__builtin_amdgcn_cvt_scalef32_pk_fp4_*) are gated behind architecture guards.
-// On DCU, software fallback paths are used by default.
+// On HCU, software fallback paths are used by default.
 // HCU __builtin_hcu_cvt_scale_pk_fp4_* operates on 2-element pairs (pk=2); the pk8 operations
 // used in this file have no direct HCU equivalent. Future enablement via loop adaptation.
 

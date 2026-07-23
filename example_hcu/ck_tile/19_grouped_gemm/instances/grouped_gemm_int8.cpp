@@ -3,7 +3,7 @@
 #include "grouped_gemm_impl.hpp"
 
 // --- C ABI (uses GemmConfigComputeV7 per current code) ---
-int grouped_gemm_c_run_int8(const ck_tile_dcu_grouped_gemm_desc* descs,
+int grouped_gemm_c_run_int8(const ck_tile_hcu_grouped_gemm_desc* descs,
                             int group_count,
                             char a_layout,
                             char b_layout,

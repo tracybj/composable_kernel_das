@@ -25,9 +25,9 @@
 
 namespace {
 
-[[maybe_unused]] bool grouped_gemm_same_plain_descs(const ck_tile_dcu_grouped_gemm_desc* descs, int group_count)
+[[maybe_unused]] bool grouped_gemm_same_plain_descs(const ck_tile_hcu_grouped_gemm_desc* descs, int group_count)
 {
-    static std::vector<ck_tile_dcu_grouped_gemm_desc> cached;
+    static std::vector<ck_tile_hcu_grouped_gemm_desc> cached;
     if(static_cast<int>(cached.size()) != group_count)
     {
         return false;
@@ -46,10 +46,10 @@ namespace {
     return true;
 }
 
-[[maybe_unused]] void grouped_gemm_update_plain_desc_cache(const ck_tile_dcu_grouped_gemm_desc* descs,
+[[maybe_unused]] void grouped_gemm_update_plain_desc_cache(const ck_tile_hcu_grouped_gemm_desc* descs,
                                           int group_count)
 {
-    static std::vector<ck_tile_dcu_grouped_gemm_desc> cached;
+    static std::vector<ck_tile_hcu_grouped_gemm_desc> cached;
     cached.assign(descs, descs + group_count);
 }
 
@@ -241,7 +241,7 @@ template <typename GemmConfig,
           typename BDataType,
           typename AccDataType,
           typename CDataType>
-int run_grouped_gemm_c_impl(const ck_tile_dcu_grouped_gemm_desc* descs,
+int run_grouped_gemm_c_impl(const ck_tile_hcu_grouped_gemm_desc* descs,
                             int group_count,
                             void* workspace,
                             hipStream_t stream)
@@ -456,7 +456,7 @@ int run_grouped_gemm_c_impl(const ck_tile_dcu_grouped_gemm_desc* descs,
 
         if(kargs_ptr == nullptr)
         {
-            owned_workspace.Realloc(ck_tile_dcu_grouped_gemm_workspace_size(group_count));
+            owned_workspace.Realloc(ck_tile_hcu_grouped_gemm_workspace_size(group_count));
             kargs_ptr = owned_workspace.GetDeviceBuffer();
         }
 
@@ -524,7 +524,7 @@ int run_grouped_gemm_c_impl(const ck_tile_dcu_grouped_gemm_desc* descs,
 }
 
 template <typename GemmConfig, typename PrecType>
-int dispatch_grouped_gemm_c_layout(const ck_tile_dcu_grouped_gemm_desc* descs,
+int dispatch_grouped_gemm_c_layout(const ck_tile_hcu_grouped_gemm_desc* descs,
                                    int group_count,
                                    char a_layout,
                                    char b_layout,

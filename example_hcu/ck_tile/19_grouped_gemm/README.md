@@ -213,7 +213,7 @@ gfx946 对应宏为 `CK_TILE_HCU_QUANT_GEMM_GFX946=1`，目前只是代码预留
 当前 nmz-2 工具链上编译验证。
 
 当前没有为 quant grouped GEMM 新增稳定 C ABI。下面的
-`ck_tile_dcu_grouped_gemm_run` 只覆盖非量化 FP16/BF16 grouped GEMM，不能用它
+`ck_tile_hcu_grouped_gemm_run` 只覆盖非量化 FP16/BF16 grouped GEMM，不能用它
 调用 tensorwise、rowwise 或 blockwise quant kernel。需要纯 C/PyTorch ABI 的
 第三方应在自己的扩展层封装上述 runner，或者后续在 CK 中单独设计并验证 quant
 C ABI。
@@ -233,7 +233,7 @@ C ABI。
 FP16/BF16 实现可通过以下 target 构建为位置无关的静态库：
 
 ```bash
-cmake --build . --target ck_tile_dcu_grouped_gemm -j 32
+cmake --build . --target ck_tile_hcu_grouped_gemm -j 32
 ```
 
 独立 C ABI correctness consumer 的构建与运行命令为：
@@ -244,14 +244,14 @@ cmake --build . --target tile_example_grouped_gemm_c_api_smoke -j 32
 ```
 
 该程序不调用 `run_grouped_gemm_example`，而是分别构造对齐 NN variable-K 和
-非对齐 TN descriptor，直接调用 `ck_tile_dcu_grouped_gemm_run` 并验证 FP16/BF16
+非对齐 TN descriptor，直接调用 `ck_tile_hcu_grouped_gemm_run` 并验证 FP16/BF16
 输出。因此 layout 与 padding 能力不依赖 example CLI；fast CLI 是否开放
 RowMajor B/ColumnMajor A 分别由 `GemmConfig::SupportsFastRowMajorB` 和
 `GemmConfig::SupportsFastColumnMajorA` 声明。
 
 ck4inductor 的 `ck_tile_grouped_gemm` 模块枚举 FP16/BF16 × NT/NN/TN 六个
 consumer contract，并提供 variable-K、padding、最小 K、现有 ABI 符号和 CMake
-target 信息。它是 ROCm/DCU Torch backend 的接入材料；未修改的 PyTorch
+target 信息。它是 ROCm/HCU Torch backend 的接入材料；未修改的 PyTorch
 TorchInductor 仍需要 grouped lowering/template 才会自动把 `aten._grouped_mm`
 调度到该 C ABI。
 

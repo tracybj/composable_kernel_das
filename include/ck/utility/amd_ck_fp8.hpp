@@ -1,9 +1,9 @@
 // Copyright (c) Advanced Micro Devices, Inc., or its affiliates.
 // SPDX-License-Identifier: MIT
 //
-// Hygon DCU adaptation: HCU fast-path macros added (CK_FP8_HCU_CVT_FAST_PATH).
+// Hygon HCU adaptation: HCU fast-path macros added (CK_FP8_HCU_CVT_FAST_PATH).
 // AMD builtins are gated behind existing architecture guards (gfx94x/gfx95x/gfx12x).
-// On DCU (gfx92a+/gfx938+/gfx946+), software fallback paths are used by default.
+// On HCU (gfx92a+/gfx938+/gfx946+), software fallback paths are used by default.
 // HCU builtins (__builtin_hcu_cvt_*) operate on 2-element pairs (pk=2) and can be
 // enabled via CK_FP8_HCU_CVT_FAST_PATH once validation is complete.
 

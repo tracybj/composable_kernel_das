@@ -99,25 +99,25 @@ if(GPU_TARGETS MATCHES "gfx938|gfx946")
     endforeach()
 endif()
 
-add_library(ck_tile_dcu_grouped_gemm STATIC EXCLUDE_FROM_ALL
+add_library(ck_tile_hcu_grouped_gemm STATIC EXCLUDE_FROM_ALL
     grouped_gemm.cpp
     instances/grouped_gemm_fp16.cpp
     instances/grouped_gemm_bf16.cpp
 )
-target_include_directories(ck_tile_dcu_grouped_gemm PRIVATE ${CMAKE_CURRENT_LIST_DIR})
-target_compile_definitions(ck_tile_dcu_grouped_gemm
+target_include_directories(ck_tile_hcu_grouped_gemm PRIVATE ${CMAKE_CURRENT_LIST_DIR})
+target_compile_definitions(ck_tile_hcu_grouped_gemm
     PRIVATE
         CK_TILE_EXAMPLE_NO_MAIN
         CK_TILE_GROUPED_GEMM_FAST_BUILD
         CK_TILE_GROUPED_GEMM_FAST_RC_ONLY
         CK_TILE_GROUPED_GEMM_FAST_FP16
         CK_TILE_GROUPED_GEMM_FAST_BF16)
-set_target_properties(ck_tile_dcu_grouped_gemm PROPERTIES POSITION_INDEPENDENT_CODE ON)
+set_target_properties(ck_tile_hcu_grouped_gemm PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 add_executable(tile_example_grouped_gemm_c_api_smoke EXCLUDE_FROM_ALL
     grouped_gemm_c_api_smoke.cpp
 )
-target_link_libraries(tile_example_grouped_gemm_c_api_smoke PRIVATE ck_tile_dcu_grouped_gemm)
+target_link_libraries(tile_example_grouped_gemm_c_api_smoke PRIVATE ck_tile_hcu_grouped_gemm)
 
 set(GROUPED_GEMM_FAST_FIXED_SHAPE_ARGS
     -group_count=2

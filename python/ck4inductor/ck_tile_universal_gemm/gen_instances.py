@@ -8,7 +8,7 @@ from .op import CKTileGemmOperation
 
 @lru_cache(None)
 def ops():
-    """Generate the DCU ck_tile GEMM candidates with a conservative allowlist."""
+    """Generate the HCU ck_tile GEMM candidates with a conservative allowlist."""
 
     instances = []
 
