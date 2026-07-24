@@ -453,6 +453,8 @@ if(DEFINED CPACK_PACKAGING_INSTALL_PREFIX AND NOT "${CPACK_PACKAGING_INSTALL_PRE
     set(CPACK_SET_DESTDIR OFF CACHE BOOL "Use CPACK_PACKAGING_INSTALL_PREFIX for package layout" FORCE)
 endif()
 
+set(CPACK_DEBIAN_PACKAGE_VERSION "0.2.2~rc1")
+
 rocm_create_package(
     NAME composablekernel
     DESCRIPTION "High Performance Composable Kernel for HCU"
