@@ -81,11 +81,23 @@ struct BlockGemmMmacTNAsmemBsmemCregMlsV1
         BWarpDsreadmFormat::Impl::kK *
         (BUsesTransMls ? 1 : NPerMlsLoad) * sizeof(BDataType);
 
+#if defined(CK_TILE_GROUPED_GEMM_MLS_USE_LIT_LTS)
+    using MmacImpl = std::conditional_t<
+        std::is_same_v<ADataType, half_t>,
+        WarpGemmAttributeMmacImplF16F16F32M16N16K16LitLts,
+        WarpGemmAttributeMmacImplBf16Bf16F32M16N16K16LitLts>;
+    using WarpGemmK1 =
+        WarpGemmImpl<WarpGemmAttributeMmacIterateKLitLts<MmacImpl,
+                                                         MmmacIter,
+                                                         NmmacIter,
+                                                         MmmacInterleave,
+                                                         NmmacInterleave,
+                                                         1>>;
+#else
     using MmacImpl = std::conditional_t<
         std::is_same_v<ADataType, half_t>,
         WarpGemmAttributeMmacImplF16F16F32M16N16K16,
         WarpGemmAttributeMmacImplBf16Bf16F32M16N16K16>;
-
     using WarpGemmK1 =
         WarpGemmImpl<WarpGemmAttributeMmacIterateK<MmacImpl,
                                                    MmmacIter,
@@ -93,11 +105,21 @@ struct BlockGemmMmacTNAsmemBsmemCregMlsV1
                                                    MmmacInterleave,
                                                    NmmacInterleave,
                                                    1>>;
+#endif
 
     static constexpr index_t KIter =
         (AWarpDsreadmFormat::kKStoreLane * AWarpDsreadmFormat::kKStorePerLane) /
         WarpGemmK1::kK;
 
+#if defined(CK_TILE_GROUPED_GEMM_MLS_USE_LIT_LTS)
+    using WarpGemm =
+        WarpGemmImpl<WarpGemmAttributeMmacIterateKLitLts<MmacImpl,
+                                                         MmmacIter,
+                                                         NmmacIter,
+                                                         MmmacInterleave,
+                                                         NmmacInterleave,
+                                                         KIter>>;
+#else
     using WarpGemm =
         WarpGemmImpl<WarpGemmAttributeMmacIterateK<MmacImpl,
                                                    MmmacIter,
@@ -105,6 +127,7 @@ struct BlockGemmMmacTNAsmemBsmemCregMlsV1
                                                    MmmacInterleave,
                                                    NmmacInterleave,
                                                    KIter>>;
+#endif
 
     static constexpr index_t KWarpIter = KPerBlock / WarpGemm::kK;
 
@@ -166,6 +189,43 @@ struct BlockGemmMmacTNAsmemBsmemCregMlsV1
             number<MWarpIter * KWarpIter>{});
     }
 
+    template <index_t KBegin, index_t KCount, bool UseM0 = true>
+    CK_TILE_DEVICE auto GetAWarpTensorsSlice(CK_TILE_LDS_ADDR ADataType* smem_ptr,
+                                             bool_constant<UseM0> = {}) const
+    {
+        static_assert(KBegin >= 0 && KCount > 0 && KBegin + KCount <= KWarpIter,
+                      "Invalid A MLS K-fragment slice");
+        using vector_t = ext_vector_t<ADataType, AWarpDsreadmFormat::kVectorLength>;
+
+        return generate_tuple(
+            [&](auto i) {
+                constexpr auto k_warp_iter = KBegin + i % KCount;
+                constexpr auto m_warp_iter = i / KCount;
+                constexpr auto immed_offset =
+                    number<m_warp_iter * ALdsImmedOffsetM +
+                           k_warp_iter * ALdsImmedOffsetK>{};
+#if defined(CK_TILE_GROUPED_GEMM_MLS_REUSE_DS_M0)
+                constexpr bool skip_mov_m0 = (i != 0);
+#else
+                constexpr bool skip_mov_m0 = false;
+#endif
+
+                vector_t vec_value = bit_cast<vector_t>(AWarpDsreadmFormat{}(
+                    smem_ptr + a_warp_lds_elem_offset,
+                    immed_offset,
+                    bool_constant<UseM0>{},
+                    bool_constant<skip_mov_m0>{}));
+
+                auto warp_tensor =
+                    make_static_distributed_tensor<ADataType>(make_static_tile_distribution(
+                        typename AWarpDsreadmFormat::WarpStoreDstrEncoding{}));
+                warp_tensor.get_thread_buffer().template get_as<vector_t>()(number<0>{}) =
+                    vec_value;
+                return warp_tensor;
+            },
+            number<MWarpIter * KCount>{});
+    }
+
     template <bool UseM0 = true>
     CK_TILE_DEVICE auto GetBWarpTensors(CK_TILE_LDS_ADDR BDataType* smem_ptr,
                                         bool_constant<UseM0> = {}) const
@@ -193,6 +253,43 @@ struct BlockGemmMmacTNAsmemBsmemCregMlsV1
                 return warp_tensor;
             },
             number<NWarpIter * KWarpIter>{});
+    }
+
+    template <index_t KBegin, index_t KCount, bool UseM0 = true>
+    CK_TILE_DEVICE auto GetBWarpTensorsSlice(CK_TILE_LDS_ADDR BDataType* smem_ptr,
+                                             bool_constant<UseM0> = {}) const
+    {
+        static_assert(KBegin >= 0 && KCount > 0 && KBegin + KCount <= KWarpIter,
+                      "Invalid B MLS K-fragment slice");
+        using vector_t = ext_vector_t<BDataType, BWarpDsreadmFormat::kVectorLength>;
+
+        return generate_tuple(
+            [&](auto i) {
+                constexpr auto k_warp_iter = KBegin + i % KCount;
+                constexpr auto n_warp_iter = i / KCount;
+                constexpr auto immed_offset =
+                    number<n_warp_iter * BLdsImmedOffsetN +
+                           k_warp_iter * BLdsImmedOffsetK>{};
+#if defined(CK_TILE_GROUPED_GEMM_MLS_REUSE_DS_M0)
+                constexpr bool skip_mov_m0 = (i != 0);
+#else
+                constexpr bool skip_mov_m0 = false;
+#endif
+
+                vector_t vec_value = bit_cast<vector_t>(BWarpDsreadmFormat{}(
+                    smem_ptr + b_warp_lds_elem_offset,
+                    immed_offset,
+                    bool_constant<UseM0>{},
+                    bool_constant<skip_mov_m0>{}));
+
+                auto warp_tensor =
+                    make_static_distributed_tensor<BDataType>(make_static_tile_distribution(
+                        typename BWarpDsreadmFormat::WarpStoreDstrEncoding{}));
+                warp_tensor.get_thread_buffer().template get_as<vector_t>()(number<0>{}) =
+                    vec_value;
+                return warp_tensor;
+            },
+            number<NWarpIter * KCount>{});
     }
 
     template <typename CBlockTensor, typename AWarpTensors, typename BWarpTensors>
@@ -226,6 +323,50 @@ struct BlockGemmMmacTNAsmemBsmemCregMlsV1
             WarpGemm{}(c_warp_tensor,
                        a_warp_tensors[number<m_warp_iter * KWarpIter + k_warp_iter>{}],
                        b_warp_tensors[number<n_warp_iter * KWarpIter + k_warp_iter>{}]);
+
+            c_block_tensor.set_y_sliced_thread_data(
+                merge_sequences(sequence<m_warp_iter, n_warp_iter>{},
+                                c_warp_y_index_zeros),
+                merge_sequences(sequence<1, 1>{}, c_warp_y_lengths),
+                c_warp_tensor.get_thread_buffer());
+        });
+    }
+
+    template <index_t KCount,
+              typename CBlockTensor,
+              typename AWarpTensors,
+              typename BWarpTensors>
+    CK_TILE_DEVICE void RunKSlice(CBlockTensor& c_block_tensor,
+                                  const AWarpTensors& a_warp_tensors,
+                                  const BWarpTensors& b_warp_tensors) const
+    {
+        static_assert(KCount > 0 && KCount <= KWarpIter, "Invalid MLS K compute slice");
+        using SFC = space_filling_curve<sequence<MWarpIter, NWarpIter, KCount>,
+                                        sequence<0, 1, 2>,
+                                        sequence<1, 1, 1>>;
+
+        static_for<0, SFC::get_num_of_access(), 1>{}([&](auto access_id) {
+            constexpr auto idx         = SFC::get_index(access_id);
+            constexpr auto m_warp_iter = idx.at(number<0>{});
+            constexpr auto n_warp_iter = idx.at(number<1>{});
+            constexpr auto k_warp_iter = idx.at(number<2>{});
+
+            using CWarpDstr   = typename WarpGemm::CWarpDstr;
+            using CWarpTensor = typename WarpGemm::CWarpTensor;
+            constexpr auto c_warp_y_lengths =
+                to_sequence(CWarpDstr{}.get_ys_to_d_descriptor().get_lengths());
+            constexpr auto c_warp_y_index_zeros =
+                uniform_sequence_gen_t<CWarpDstr::NDimY, 0>{};
+
+            CWarpTensor c_warp_tensor;
+            c_warp_tensor.get_thread_buffer() = c_block_tensor.get_y_sliced_thread_data(
+                merge_sequences(sequence<m_warp_iter, n_warp_iter>{},
+                                c_warp_y_index_zeros),
+                merge_sequences(sequence<1, 1>{}, c_warp_y_lengths));
+
+            WarpGemm{}(c_warp_tensor,
+                       a_warp_tensors[number<m_warp_iter * KCount + k_warp_iter>{}],
+                       b_warp_tensors[number<n_warp_iter * KCount + k_warp_iter>{}]);
 
             c_block_tensor.set_y_sliced_thread_data(
                 merge_sequences(sequence<m_warp_iter, n_warp_iter>{},

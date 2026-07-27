@@ -47,7 +47,12 @@ struct GemmPipelineAgBgCrMlsDefaultPolicy
     template <typename Problem>
     CK_TILE_HOST_DEVICE static constexpr index_t GetLdsByteSize()
     {
-        return 2 *
+#if defined(CK_TILE_GROUPED_GEMM_MLS_SINGLE_STAGE)
+        constexpr index_t num_lds_stages = 1;
+#else
+        constexpr index_t num_lds_stages = 2;
+#endif
+        return num_lds_stages *
                (GetALdsElementSize<Problem>() * sizeof(typename Problem::ADataType) +
                 GetBLdsElementSize<Problem>() * sizeof(typename Problem::BDataType));
     }

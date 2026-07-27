@@ -52,6 +52,17 @@ using WarpGemmMmacBF16BF16F32_WT16x32x64_MR1NR2MI1NI1_FMHA = WarpGemmImpl<
 using WarpGemmMmacF16F16F32_WT32x64x32_MR2NR4MI1NI1 = WarpGemmImpl<
     WarpGemmAttributeMmacIterateK<WarpGemmAttributeMmacImplF16F16F32M16N16K16, 2, 4, 1, 1, 2>>;
 
+// Triton-layout grouped-GEMM probe: keep the full 32x64 wave output tile, but
+// consume one K16 operand set per call. This lets the block GEMM share each B
+// LDS read across four N repeats instead of materializing two 32x32 calls.
+using WarpGemmMmacF16F16F32_WT32x64x16_MR2NR4MI1NI1 = WarpGemmImpl<
+    WarpGemmAttributeMmacIterateK<WarpGemmAttributeMmacImplF16F16F32M16N16K16, 2, 4, 1, 1, 1>>;
+
+// Triton gfx936 uses one M128xN64 wave tile: eight M repeats and four N
+// repeats share the same K16 B operand distribution.
+using WarpGemmMmacF16F16F32_WT128x64x16_MR8NR4MI1NI1 = WarpGemmImpl<
+    WarpGemmAttributeMmacIterateK<WarpGemmAttributeMmacImplF16F16F32M16N16K16, 8, 4, 1, 1, 1>>;
+
 using WarpGemmMmacF16F16F32_WT16x32x128_MR1NR1MI1NI2 = WarpGemmImpl<
     WarpGemmAttributeMmacIterateK<WarpGemmAttributeMmacImplF16F16F32M16N16K16, 1, 1, 1, 2, 8>>;
 
@@ -59,6 +70,14 @@ using WarpGemmMmacF16F16F32_WT16x16x128_MR1NR1MI1NI1 = WarpGemmImpl<
     WarpGemmAttributeMmacIterateK<WarpGemmAttributeMmacImplF16F16F32M16N16K16, 1, 1, 1, 1, 8>>;
 
 // bf16
+using WarpGemmMmacBF16BF16F32_WT32x32x16_MR2NR2MI1NI1 = WarpGemmImpl<
+    WarpGemmAttributeMmacIterateK<WarpGemmAttributeMmacImplBf16Bf16F32M16N16K16,
+                                  2,
+                                  2,
+                                  1,
+                                  1,
+                                  1>>;
+
 using WarpGemmMmacBF16BF16F32_WT32x32x16_MR1NR1MI2NI2 = WarpGemmImpl<
     WarpGemmAttributeMmacIterateK<WarpGemmAttributeMmacImplBf16Bf16F32M16N16K16, 1, 1, 2, 2, 1>>;
 
@@ -102,6 +121,10 @@ using WarpGemmMmacBF16BF16F32_WT16x64x32_MR1NR4MI1NI1 = WarpGemmImpl<
     WarpGemmAttributeMmacIterateK<WarpGemmAttributeMmacImplBf16Bf16F32M16N16K16, 1, 4, 1, 1, 2>>;
 using WarpGemmMmacBF16BF16F32_WT32x64x32_MR2NR4MI1NI1 = WarpGemmImpl<
     WarpGemmAttributeMmacIterateK<WarpGemmAttributeMmacImplBf16Bf16F32M16N16K16, 2, 4, 1, 1, 2>>;
+using WarpGemmMmacBF16BF16F32_WT32x64x16_MR2NR4MI1NI1 = WarpGemmImpl<
+    WarpGemmAttributeMmacIterateK<WarpGemmAttributeMmacImplBf16Bf16F32M16N16K16, 2, 4, 1, 1, 1>>;
+using WarpGemmMmacBF16BF16F32_WT128x64x16_MR8NR4MI1NI1 = WarpGemmImpl<
+    WarpGemmAttributeMmacIterateK<WarpGemmAttributeMmacImplBf16Bf16F32M16N16K16, 8, 4, 1, 1, 1>>;
 using WarpGemmMmacBF16BF16F32_WT16x32x64_MR1NR2MI1NI1 = WarpGemmImpl<
     WarpGemmAttributeMmacIterateK<WarpGemmAttributeMmacImplBf16Bf16F32M16N16K16, 1, 2, 1, 1, 4>>;
 

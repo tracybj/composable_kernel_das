@@ -192,6 +192,7 @@ bool grouped_gemm_has_safe_mls_k_stride(const GemmDesc& desc)
 }
 
 template <typename GemmConfig, typename CDataType, typename CLayout, typename GemmDesc>
+[[maybe_unused]]
 std::vector<std::pair<void*, std::size_t>>
 grouped_gemm_make_output_resets(const std::vector<GemmDesc>& descs)
 {
@@ -213,6 +214,7 @@ grouped_gemm_make_output_resets(const std::vector<GemmDesc>& descs)
 }
 
 template <typename GemmConfig, typename ALayout, typename BLayout, typename GemmDesc>
+[[maybe_unused]]
 bool grouped_gemm_all_groups_have_safe_mls_k_stride(const std::vector<GemmDesc>& descs)
 {
     for(const auto& desc : descs)
@@ -269,6 +271,16 @@ int run_grouped_gemm_c_impl(const ck_tile_hcu_grouped_gemm_desc* descs,
     void* kargs_ptr = workspace;
     const auto stream_cfg = ck_tile::stream_config{stream, false, 0, 0, 1};
 
+#if defined(CK_TILE_GROUPED_GEMM_TRITON_OPERAND_NO_D)
+    // The isolated M128xN64 operand-layout probe already consumes the full
+    // 64-KiB LDS budget in its GEMM pipeline. Exclude D-tensor/CShuffle
+    // instantiations from this target so that its no-D direct-store path can
+    // be measured independently; normal grouped-GEMM targets retain them.
+    if(use_multi_d)
+    {
+        return -7;
+    }
+#else
     if(use_multi_d)
     {
         if(num_d == 1)
@@ -425,6 +437,7 @@ int run_grouped_gemm_c_impl(const ck_tile_hcu_grouped_gemm_desc* descs,
         } // end else (num_d == 2)
     }
     else
+#endif
     {
         std::vector<grouped_gemm_kargs> gemm_descs_vec;
         gemm_descs_vec.reserve(group_count);
@@ -710,7 +723,10 @@ float grouped_gemm(const std::vector<ck_tile::GroupedGemmHostArgsImpl<DsDataType
 
         using GemmPipeline = typename PipelineTypeTraits<
             GemmConfig::Pipeline>::template GemmPipeline<UniversalGemmProblem>;
-        using GemmEpilogue = ck_tile::CShuffleEpilogue<
+#if defined(CK_TILE_GROUPED_GEMM_TRITON_OPERAND_NO_D)
+        using GemmEpilogue = GroupedGemmDirectStoreEpilogue<AccDataType, CDataType>;
+#else
+        using CShuffleGemmEpilogue = ck_tile::CShuffleEpilogue<
             ck_tile::CShuffleEpilogueProblem<ADataType,
                                              BDataType,
                                              DsDataType,
@@ -744,6 +760,16 @@ float grouped_gemm(const std::vector<ck_tile::GroupedGemmHostArgsImpl<DsDataType
                                              GemmConfig::CShuffleWarpGemmNInterleave == 0
                                                  ? 1
                                                  : GemmConfig::CShuffleWarpGemmNInterleave>>;
+#if defined(CK_TILE_GROUPED_GEMM_DIRECT_STORE_EPILOGUE)
+        using GemmEpilogue = std::conditional_t<
+            std::tuple_size_v<DsDataType> == 0 &&
+                memory_operation == ck_tile::memory_operation_enum::set,
+            GroupedGemmDirectStoreEpilogue<AccDataType, CDataType>,
+            CShuffleGemmEpilogue>;
+#else
+        using GemmEpilogue = CShuffleGemmEpilogue;
+#endif
+#endif
 
         using Kernel = ck_tile::GroupedGemmKernel<TilePartitioner, GemmPipeline, GemmEpilogue>;
         auto kargs   = Kernel::MakeKargs(gemm_descs);(void)kargs;
@@ -863,6 +889,9 @@ float grouped_gemm_tileloop(const ck_tile::stream_config& s,
 
         using GemmPipeline = typename PipelineTypeTraits<
             GemmConfig::Pipeline>::template GemmPipeline<UniversalGemmProblem>;
+#if defined(CK_TILE_GROUPED_GEMM_TRITON_OPERAND_NO_D)
+        using GemmEpilogue = GroupedGemmDirectStoreEpilogue<AccDataType, CDataType>;
+#else
         using GemmEpilogue = ck_tile::CShuffleEpilogue<
             ck_tile::CShuffleEpilogueProblem<ADataType,
                                              BDataType,
@@ -894,9 +923,10 @@ float grouped_gemm_tileloop(const ck_tile::stream_config& s,
                                              GemmConfig::CShuffleWarpGemmMInterleave == 0
                                                  ? 1
                                                  : GemmConfig::CShuffleWarpGemmMInterleave,
-                                             GemmConfig::CShuffleWarpGemmNInterleave == 0
-                                                 ? 1
-                                                 : GemmConfig::CShuffleWarpGemmNInterleave>>;
+                                              GemmConfig::CShuffleWarpGemmNInterleave == 0
+                                                  ? 1
+                                                  : GemmConfig::CShuffleWarpGemmNInterleave>>;
+#endif
         using Kernel      = ck_tile::GroupedGemmKernel<TilePartitioner, GemmPipeline, GemmEpilogue>;
         constexpr dim3 blocks = Kernel::BlockSize();
         const dim3 grids  = Kernel::MaxOccupancyGridSize(s);
@@ -934,6 +964,14 @@ float grouped_gemm_tileloop(const ck_tile::stream_config& s,
         return ave_time;
     };
 
+#if defined(CK_TILE_GROUPED_GEMM_TRITON_OPERAND_NO_D)
+    if(splitk)
+    {
+        throw std::runtime_error("Triton operand-layout probe does not support SplitK");
+    }
+    Run(ck_tile::integral_constant<ck_tile::memory_operation_enum,
+                                   ck_tile::memory_operation_enum::set>{});
+#else
     if constexpr(std::is_same_v<CDataType, ck_tile::half_t> ||
                  std::is_same_v<CDataType, ck_tile::bf16_t>)
     {
@@ -964,6 +1002,7 @@ float grouped_gemm_tileloop(const ck_tile::stream_config& s,
         Run(ck_tile::integral_constant<ck_tile::memory_operation_enum,
                                        ck_tile::memory_operation_enum::atomic_add>{});
     }
+#endif
 
     return ave_time;
 }
@@ -990,6 +1029,11 @@ int run_gemm_example_prec_type(std::string a_layout, std::string b_layout, int a
     const bool md_multiply      = (md_op_str == "multiply");
     const bool bias             = arg_parser.get_bool("bias");
 
+#if defined(CK_TILE_GROUPED_GEMM_TRITON_OPERAND_NO_D)
+    (void)md_multiply;
+    auto run_multi_d = [&](auto, auto, auto) { return -7; };
+    auto run_bias    = [&](auto, auto, auto) { return -7; };
+#else
     auto run_multi_d = [&](auto a_layout_tag, auto b_layout_tag, auto c_layout_tag) {
         if(md_multiply)
         {
@@ -1018,6 +1062,7 @@ int run_gemm_example_prec_type(std::string a_layout, std::string b_layout, int a
                                                           AccDataType>(
             argc, argv, a_layout_tag, b_layout_tag, c_layout_tag);
     };
+#endif
 
 #if defined(CK_TILE_GROUPED_GEMM_FAST_RC_ONLY)
     if(a_layout == "R" && b_layout == "C")

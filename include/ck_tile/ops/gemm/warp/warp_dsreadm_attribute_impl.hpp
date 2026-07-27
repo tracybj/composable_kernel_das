@@ -94,6 +94,45 @@ struct WarpDsreadmAttributeImplF16MN32K16Alt
     }
 };
 
+// ds_read_m32x16 is a 16-bit matrix load. Keep a BF16-typed fragment so the
+// following warp GEMM selects BF16 MMAC instead of numerically converting the
+// loaded bits through FP16.
+struct WarpDsreadmAttributeImplBF16MN32K16 : WarpDsreadmAttributeImplF16MN32K16
+{
+    using RawType = bf16_t;
+    using RetType = ext_vector_t<bf16_t, 8>;
+
+    CK_TILE_DEVICE void operator()(const RawType* lds_ptr, RetType& ret) const
+    {
+#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__) || \
+    defined(__gfx946__)
+        const auto raw = __builtin_hcu_ds_read_m32x16_f16(
+            reinterpret_cast<const fp16_t*>(lds_ptr));
+        ret = bit_cast<RetType>(raw);
+#else
+        detail::swallow{lds_ptr, ret};
+#endif
+    }
+};
+
+struct WarpDsreadmAttributeImplBF16MN32K16Alt : WarpDsreadmAttributeImplF16MN32K16Alt
+{
+    using RawType = bf16_t;
+    using RetType = ext_vector_t<bf16_t, 8>;
+
+    CK_TILE_DEVICE void operator()(const RawType* lds_ptr, RetType& ret) const
+    {
+#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__) || \
+    defined(__gfx946__)
+        const auto raw = __builtin_hcu_ds_read_m32x16_f16_alt(
+            reinterpret_cast<const fp16_t*>(lds_ptr));
+        ret = bit_cast<RetType>(raw);
+#else
+        detail::swallow{lds_ptr, ret};
+#endif
+    }
+};
+
 // TODO: add more
 
 } // namespace ck_tile

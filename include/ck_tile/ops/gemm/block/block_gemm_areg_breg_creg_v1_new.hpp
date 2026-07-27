@@ -24,6 +24,17 @@ struct has_scale_support<T, std::void_t<typename T::AScaleType, typename T::BSca
 {
 };
 
+template <typename T, typename = void>
+struct use_direct_c_buffer_mmac : std::false_type
+{
+};
+
+template <typename T>
+struct use_direct_c_buffer_mmac<T, std::void_t<decltype(T::DirectCBufferMmac)>>
+    : std::bool_constant<T::DirectCBufferMmac>
+{
+};
+
 // template <bool Enabled, typename WarpGemm>
 // struct warp_scale_traits
 // {
@@ -422,6 +433,46 @@ struct BlockGemmARegBRegCRegV1
 
         // constexpr auto I0 = number<0>{};
 
+        constexpr bool kDirectInterleavedNativeMmac =
+            !kHasScale && detail::use_direct_c_buffer_mmac<Policy>::value &&
+            !TransposeC && KIterPerWarp == 1 && WarpGemm::kM == 16 &&
+            WarpGemm::kN == 16 && WarpGemm::kK == 16;
+
+        if constexpr(kDirectInterleavedNativeMmac)
+        {
+            // Triton's warpsPerCTA=[2,4] lowering keeps the native M16xN16
+            // MMAC tile and interleaves the wave coordinate between eight M
+            // repeats and four N repeats. The block-distributed thread
+            // buffers already have exactly that [m-repeat,n-repeat] order, so
+            // update their base MMAC vectors directly. This avoids creating
+            // and copying 32 one-MMAC AWarp/BWarp/CWarp tensor slices while
+            // the 128-FP32 accumulator is live.
+            using WarpAttr = typename WarpGemm::WarpGemmAttribute;
+            using Impl     = typename WarpAttr::Impl;
+            static_assert(WarpAttr::kM == Impl::kM &&
+                              WarpAttr::kN == Impl::kN &&
+                              WarpAttr::kK == Impl::kK &&
+                              MIterPerWarp == 8 && NIterPerWarp == 4,
+                          "native interleaved direct MMAC requires Triton's "
+                          "eight-M/four-N repeat geometry");
+
+            auto& c_vecs = c_block_tensor.get_thread_buffer()
+                               .template get_as<typename Impl::CVecType>();
+            const auto& a_vecs = a_block_tensor.get_thread_buffer()
+                                     .template get_as<typename Impl::AVecType>();
+            const auto& b_vecs = b_block_tensor.get_thread_buffer()
+                                     .template get_as<typename Impl::BVecType>();
+
+            static_for<0, MIterPerWarp, 1>{}([&](auto iMRepeat) {
+                static_for<0, NIterPerWarp, 1>{}([&](auto iNRepeat) {
+                    constexpr auto c_index =
+                        iMRepeat * number<NIterPerWarp>{} + iNRepeat;
+                    Impl{}(c_vecs[c_index], a_vecs[iMRepeat], b_vecs[iNRepeat]);
+                });
+            });
+        }
+        else
+        {
         static_for<0, KIterPerWarp, 1>{}([&](auto kIter) {
             static_for<0, MIterPerWarp, 1>{}([&](auto mIter) {
                 AWarpTensor a_warp_tensor;
@@ -435,17 +486,17 @@ struct BlockGemmARegBRegCRegV1
                         merge_sequences(sequence<nIter, kIter>{}, b_warp_y_index_zeros),
                         merge_sequences(sequence<1, 1>{}, b_warp_y_lengths));
 
-                    using c_iter_idx = std::conditional_t<TransposeC,
-                                                          sequence<nIter, mIter>,
-                                                          sequence<mIter, nIter>>;
-
-                    CWarpTensor c_warp_tensor;
-                    c_warp_tensor.get_thread_buffer() = c_block_tensor.get_y_sliced_thread_data(
-                        merge_sequences(c_iter_idx{}, c_warp_y_index_zeros),
-                        merge_sequences(sequence<1, 1>{}, c_warp_y_lengths));
-
                     if constexpr(kHasScale)
                     {
+                        using c_iter_idx = std::conditional_t<TransposeC,
+                                                              sequence<nIter, mIter>,
+                                                              sequence<mIter, nIter>>;
+                        CWarpTensor c_warp_tensor;
+                        c_warp_tensor.get_thread_buffer() =
+                            c_block_tensor.get_y_sliced_thread_data(
+                                merge_sequences(c_iter_idx{}, c_warp_y_index_zeros),
+                                merge_sequences(sequence<1, 1>{}, c_warp_y_lengths));
+
                         // const auto a_scale_thread_buffer = a_scale_block_tensor->get_y_sliced_thread_data(
                         //     merge_sequences(sequence<mIter, kIter>{}, a_scale_warp_y_index_zeros),
                         //     merge_sequences(sequence<1, 1>{}, a_scale_warp_y_lengths));
@@ -474,19 +525,74 @@ struct BlockGemmARegBRegCRegV1
                             merge_sequences(sequence<1, 1>{}, b_scale_warp_y_lengths));
 
                         WarpGemm{}(c_warp_tensor, a_warp_tensor, b_warp_tensor, a_scale_tensor, b_scale_tensor);
+                        c_block_tensor.set_y_sliced_thread_data(
+                            merge_sequences(c_iter_idx{}, c_warp_y_index_zeros),
+                            merge_sequences(sequence<1, 1>{}, c_warp_y_lengths),
+                            c_warp_tensor.get_thread_buffer());
+                    }
+                    else if constexpr(detail::use_direct_c_buffer_mmac<Policy>::value)
+                    {
+                        // Phase-39 gfx936 operand-layout path. Avoid constructing a
+                        // 32-register wide CWarpTensor beside the long-lived 128-VGPR
+                        // block accumulator. The embedded non-transposed C distribution
+                        // is outer-[m,n], inner-[MRepeat,NRepeat], so its CVec storage can
+                        // be updated in place by the base MMAC implementation.
+                        static_assert(!TransposeC && MIterPerWarp == 1 &&
+                                          NIterPerWarp == 1 &&
+                                          WarpGemm::kM == 128 && WarpGemm::kN == 64 &&
+                                          (WarpGemm::kK == 16 || WarpGemm::kK == 32),
+                                      "direct C-buffer MMAC is specialized for the "
+                                      "gfx936 M128xN64 RC operand probes");
+                        using WarpAttr = typename WarpGemm::WarpGemmAttribute;
+                        using Impl     = typename WarpAttr::Impl;
+                        constexpr index_t kKRepeat = WarpAttr::kK / Impl::kK;
+                        constexpr index_t kMRepeat = WarpAttr::kM / Impl::kM;
+                        constexpr index_t kNRepeat = WarpAttr::kN / Impl::kN;
+                        static_assert((kKRepeat == 1 || kKRepeat == 2) &&
+                                          kMRepeat == 8 && kNRepeat == 4 &&
+                                          WarpAttr::kM == kMRepeat * Impl::kM &&
+                                          WarpAttr::kN == 4 * Impl::kN,
+                                      "unexpected MMAC repeat shape");
+
+                        auto& c_vecs = c_block_tensor.get_thread_buffer()
+                                           .template get_as<typename Impl::CVecType>();
+                        const auto& a_vecs = a_warp_tensor.get_thread_buffer()
+                                                 .template get_as<typename Impl::AVecType>();
+                        const auto& b_vecs = b_warp_tensor.get_thread_buffer()
+                                                 .template get_as<typename Impl::BVecType>();
+
+                        static_for<0, kMRepeat, 1>{}([&](auto iMRepeat) {
+                            static_for<0, kNRepeat, 1>{}([&](auto iNRepeat) {
+                                static_for<0, kKRepeat, 1>{}([&](auto iKRepeat) {
+                                    constexpr auto c_index =
+                                        iMRepeat * number<kNRepeat>{} + iNRepeat;
+                                    Impl{}(c_vecs[c_index],
+                                           a_vecs[iMRepeat * number<kKRepeat>{} + iKRepeat],
+                                           b_vecs[iNRepeat * number<kKRepeat>{} + iKRepeat]);
+                                });
+                            });
+                        });
                     }
                     else
                     {
+                        using c_iter_idx = std::conditional_t<TransposeC,
+                                                              sequence<nIter, mIter>,
+                                                              sequence<mIter, nIter>>;
+                        CWarpTensor c_warp_tensor;
+                        c_warp_tensor.get_thread_buffer() =
+                            c_block_tensor.get_y_sliced_thread_data(
+                                merge_sequences(c_iter_idx{}, c_warp_y_index_zeros),
+                                merge_sequences(sequence<1, 1>{}, c_warp_y_lengths));
                         WarpGemm{}(c_warp_tensor, a_warp_tensor, b_warp_tensor);
+                        c_block_tensor.set_y_sliced_thread_data(
+                            merge_sequences(c_iter_idx{}, c_warp_y_index_zeros),
+                            merge_sequences(sequence<1, 1>{}, c_warp_y_lengths),
+                            c_warp_tensor.get_thread_buffer());
                     }
-
-                    c_block_tensor.set_y_sliced_thread_data(
-                        merge_sequences(c_iter_idx{}, c_warp_y_index_zeros),
-                        merge_sequences(sequence<1, 1>{}, c_warp_y_lengths),
-                        c_warp_tensor.get_thread_buffer());
                 });
             });
         });
+        }
     }
 
     // C += A * B
@@ -557,6 +663,86 @@ struct BlockGemmARegBRegCRegV1
             auto c_block_tensor         = make_static_distributed_tensor<CDataType>(c_block_dstr);
             return c_block_tensor;
         }
+    }
+
+    // Convert the MMAC accumulator register layout into the logical output
+    // layout without using LDS. The base MMAC instruction exposes C as
+    // [N-interleave, N0, N1] register fragments, while raw global stores
+    // require [N0, lane-N, N1]. CShuffle performs this conversion implicitly;
+    // the Triton-layout direct-store probe needs it explicitly.
+    template <typename CBlockTensor>
+    CK_TILE_DEVICE static constexpr auto MakeCOutputBlockTile(const CBlockTensor& c_block_tensor)
+    {
+        using c_distr_ys_major =
+            std::conditional_t<TransposeC, sequence<2, 1>, sequence<1, 2>>;
+        constexpr auto c_block_output_dstr_encode = []() {
+            if constexpr(UseDefaultScheduler)
+            {
+                constexpr auto c_block_outer_dstr_encoding = tile_distribution_encoding<
+                    sequence<MWarp>,
+                    tuple<sequence<MIterPerWarp>, sequence<NIterPerWarp, NWarp>>,
+                    tuple<>,
+                    tuple<>,
+                    c_distr_ys_major,
+                    sequence<0, 0>>{};
+                return detail::make_embed_tile_distribution_encoding(
+                    c_block_outer_dstr_encoding,
+                    typename WarpGemm::CWarpOutputDstrEncoding{});
+            }
+            else
+            {
+                constexpr auto c_block_outer_dstr_encoding = tile_distribution_encoding<
+                    sequence<>,
+                    tuple<sequence<MIterPerWarp, MWarp>, sequence<NIterPerWarp, NWarp>>,
+                    tuple<sequence<1, 2>>,
+                    tuple<sequence<1, 1>>,
+                    c_distr_ys_major,
+                    sequence<0, 0>>{};
+                return detail::make_embed_tile_distribution_encoding(
+                    c_block_outer_dstr_encoding,
+                    typename WarpGemm::CWarpOutputDstrEncoding{});
+            }
+        }();
+        constexpr auto c_block_output_dstr =
+            make_static_tile_distribution(c_block_output_dstr_encode);
+        auto c_block_output_tensor =
+            make_static_distributed_tensor<CDataType>(c_block_output_dstr);
+
+        using CWarpDstr         = typename WarpGemm::CWarpDstr;
+        using CWarpOutputDstr   = typename WarpGemm::CWarpOutputDstr;
+        using CWarpTensor       = typename WarpGemm::CWarpTensor;
+        using CWarpOutputTensor = typename WarpGemm::CWarpOutputTensor;
+
+        constexpr auto c_warp_y_lengths =
+            to_sequence(CWarpDstr{}.get_ys_to_d_descriptor().get_lengths());
+        constexpr auto c_warp_y_index_zeros =
+            uniform_sequence_gen_t<CWarpDstr::NDimY, 0>{};
+        constexpr auto c_warp_output_y_lengths =
+            to_sequence(CWarpOutputDstr{}.get_ys_to_d_descriptor().get_lengths());
+        constexpr auto c_warp_output_y_index_zeros =
+            uniform_sequence_gen_t<CWarpOutputDstr::NDimY, 0>{};
+
+        static_for<0, MIterPerWarp, 1>{}([&](auto mIter) {
+            static_for<0, NIterPerWarp, 1>{}([&](auto nIter) {
+                using c_iter_idx = std::conditional_t<TransposeC,
+                                                      sequence<nIter, mIter>,
+                                                      sequence<mIter, nIter>>;
+                CWarpTensor c_warp_tensor;
+                c_warp_tensor.get_thread_buffer() =
+                    c_block_tensor.get_y_sliced_thread_data(
+                        merge_sequences(c_iter_idx{}, c_warp_y_index_zeros),
+                        merge_sequences(sequence<1, 1>{}, c_warp_y_lengths));
+
+                const CWarpOutputTensor c_warp_output_tensor =
+                    WarpGemm{}.MakeCOutputLayout(c_warp_tensor);
+                c_block_output_tensor.set_y_sliced_thread_data(
+                    merge_sequences(c_iter_idx{}, c_warp_output_y_index_zeros),
+                    merge_sequences(sequence<1, 1>{}, c_warp_output_y_lengths),
+                    c_warp_output_tensor.get_thread_buffer());
+            });
+        });
+
+        return c_block_output_tensor;
     }
 
     // C = A * B

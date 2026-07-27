@@ -31,7 +31,11 @@ using OutLayout = ck_tile::tensor_layout::convolution::NGKHWk<32>;
 
 using InElementOp  = ck_tile::element_wise::PassThrough;
 using WeiElementOp = ck_tile::element_wise::PassThrough;
+#if defined(CK_TILE_MLS_PROBE_PERF_ONLY)
+using OutElementOp = ck_tile::element_wise::PassThrough;
+#else
 using OutElementOp = ck_tile::element_wise::AddRelu;
+#endif
 
 // configs
 static constexpr ck_tile::index_t MPerWG    = 128;
@@ -199,7 +203,11 @@ bool run_fused_conv(const ck_tile::conv::ConvParam& conv_param)
     }
 
     float avg_time = ck_tile::launch_kernel(
+#if defined(CK_TILE_MLS_PROBE_PERF_ONLY)
+        {nullptr, true, 0, 10, 100},
+#else
         {nullptr, true, 0, 0, 1},
+#endif
         ck_tile::make_kernel<TileShape::BlockSize, MinBlockPerCU>(
             Kernel{},
             kernel_args.tile_partitioner.CalculateGridSize(Kernel::GetMaxOccupancy()),
@@ -216,6 +224,9 @@ bool run_fused_conv(const ck_tile::conv::ConvParam& conv_param)
     std::cout << "Perf: " << avg_time << " ms, " << tflops << " TFlops, " << gb_per_sec << " GB/s, "
               << std::endl;
 
+#if defined(CK_TILE_MLS_PROBE_PERF_ONLY)
+    return true;
+#else
     // cpu fused conv
     auto ref_fused_conv = ck_tile::ReferenceFusedConv<NDimSpatial,
                                                       InDataType,
@@ -243,6 +254,7 @@ bool run_fused_conv(const ck_tile::conv::ConvParam& conv_param)
     // check
     out_device_buf.FromDevice(out_device.data());
     return ck_tile::check_err(out_device, out_host, "Error: incorrect results!", 1e-5f, 1e-4f);
+#endif
 }
 
 bool run_fused_conv_example(int argc, char* argv[])

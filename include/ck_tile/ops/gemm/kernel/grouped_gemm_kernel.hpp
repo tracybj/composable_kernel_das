@@ -15,7 +15,6 @@
 #include "ck_tile/host.hpp"
 
 #include <hip/hip_runtime.h>
-
 namespace ck_tile {
 
 template <typename T, typename = void>
@@ -141,7 +140,17 @@ struct GemmTransKernelArgImpl
 
 using GemmTransKernelArg = GemmTransKernelArgImpl<0>;
 
-template <typename TilePartitioner_, typename GemmPipeline_, typename EpiloguePipeline_>
+enum class GroupedGemmMFilter
+{
+    All,
+    Aligned,
+    Unaligned
+};
+
+template <typename TilePartitioner_,
+          typename GemmPipeline_,
+          typename EpiloguePipeline_,
+          GroupedGemmMFilter MFilter_ = GroupedGemmMFilter::All>
 struct GroupedGemmKernel
 {
     /// @brief Inject the UniversalGemmKernel base class to support execution of all necessary
@@ -178,7 +187,8 @@ struct GroupedGemmKernel
                   "C/ELayout and C/EDataType must be scalars.");
 
     using OffsetTile1DPartitioner = OffsettedTile1DPartitioner<TilePartitioner>;
-    using Kernel = GroupedGemmKernel<TilePartitioner, GemmPipeline, EpiloguePipeline>;
+    using Kernel =
+        GroupedGemmKernel<TilePartitioner, GemmPipeline, EpiloguePipeline, MFilter_>;
 
     static constexpr index_t kBlockSize       = GemmPipeline::BlockSize;
     static constexpr bool UsePersistentKernel = GemmPipeline::UsePersistentKernel;
@@ -186,6 +196,22 @@ struct GroupedGemmKernel
     using HostArgs                            = GroupedGemmHostArgsImpl<NumDTensor>;
     using KernelArgs                          = UniversalGemmKernelArgs<1, 1, NumDTensor>;
     using TransKernelArg                      = GemmTransKernelArgImpl<NumDTensor>;
+
+    CK_TILE_HOST_DEVICE static constexpr bool ShouldProcessM(index_t m)
+    {
+        if constexpr(MFilter_ == GroupedGemmMFilter::Aligned)
+        {
+            return m % TilePartitioner::MPerBlock == 0;
+        }
+        else if constexpr(MFilter_ == GroupedGemmMFilter::Unaligned)
+        {
+            return m % TilePartitioner::MPerBlock != 0;
+        }
+        else
+        {
+            return true;
+        }
+    }
 
     [[nodiscard]] CK_TILE_HOST static const std::string GetName()
     {
@@ -196,7 +222,10 @@ struct GroupedGemmKernel
                       concat('x', P_::MPerBlock, P_::NPerBlock, P_::KPerBlock),
                       concat('x', P_::GetVectorSizeA(), P_::GetVectorSizeB(), P_::GetVectorSizeC()),
                       concat('x', P_::kPadM, P_::kPadN, P_::kPadK),
-                      (UsePersistentKernel ? "Persistent" : "NonPersistent"));
+                      (UsePersistentKernel ? "Persistent" : "NonPersistent"),
+                      (MFilter_ == GroupedGemmMFilter::Aligned
+                           ? "MAligned"
+                           : (MFilter_ == GroupedGemmMFilter::Unaligned ? "MUnaligned" : "MAll")));
         // clang-format on
     }
 
@@ -233,10 +262,25 @@ struct GroupedGemmKernel
     {
         using ConstantPointer = const void CK_TILE_CONSTANT_ADDRESS_SPACE*;
         const auto kernel     = kentry<kBlockSize, 1, Kernel, ConstantPointer, index_t>;
-        int occupancy;
-        HIP_CHECK_ERROR(
-            hipOccupancyMaxActiveBlocksPerMultiprocessor(&occupancy, kernel, kBlockSize, 0));
-        const int grid_size = get_available_compute_units(s) * occupancy;
+        int device;
+        HIP_CHECK_ERROR(hipGetDevice(&device));
+
+        // Framework integrations call this path for every grouped-GEMM
+        // invocation. Occupancy is invariant for one kernel on one device, but
+        // querying it repeatedly is measurable at short kernel latencies.
+        // Thread-local storage avoids cross-thread contention. Remember only
+        // the most recently used device: framework workers normally stay on
+        // one device, while a device switch still refreshes the value.
+        static thread_local int cached_device    = -1;
+        static thread_local int cached_occupancy = 0;
+        if(device != cached_device)
+        {
+            HIP_CHECK_ERROR(
+                hipOccupancyMaxActiveBlocksPerMultiprocessor(
+                    &cached_occupancy, kernel, kBlockSize, 0));
+            cached_device = device;
+        }
+        const int grid_size = get_available_compute_units(s) * cached_occupancy;
 
         return dim3(grid_size, 1, 1);
     }
@@ -314,6 +358,10 @@ struct GroupedGemmKernel
 
         for(const auto& karg : kargs)
         {
+            if(!ShouldProcessM(karg.group_karg.M))
+            {
+                continue;
+            }
             if(!Base::IsSupportedArgument(karg.group_karg))
             {
                 return false;
@@ -448,8 +496,6 @@ struct GroupedGemmKernel
             }
             else // SingleSmemBuffer
             {
-                static_assert(false, "SingleSmemBuffer Not support!");
-
                 if constexpr(UsePersistentKernel)
                 {
                     RunGemmWithPipelineSelection(
@@ -596,16 +642,31 @@ struct GroupedGemmKernel
         // Get hot-loop and tail configuration
         const index_t num_loop = __builtin_amdgcn_readfirstlane(
             TilePartitioner::GetLoopNum(splitk_batch_offset.splitted_k));
-        const bool has_hot_loop   = GemmPipeline::BlockHasHotloop(num_loop);
-        const TailNumber tail_num = GemmPipeline::GetBlockLoopTailNum(num_loop);
+        [[maybe_unused]] const bool has_hot_loop =
+            GemmPipeline::BlockHasHotloop(num_loop);
+        [[maybe_unused]] const TailNumber tail_num =
+            GemmPipeline::GetBlockLoopTailNum(num_loop);
 
         // Run GEMM pipeline
-        const auto& c_block_tile = GemmPipeline{}.template operator()(a_block_window[Base::I0],
-                                                                      b_block_window[Base::I0],
-                                                                      num_loop,
-                                                                      has_hot_loop,
-                                                                      tail_num,
-                                                                      smem_ptr_0);
+        const auto& c_block_tile =
+#if defined(CK_TILE_GROUPED_GEMM_TRITON_FUSED_EPILOGUE)
+            GemmPipeline{}.RunWithEpiloguePreStore(
+                a_block_window[Base::I0],
+                b_block_window[Base::I0],
+                num_loop,
+                smem_ptr_0,
+                [&](const auto& partial_c_block_tile) {
+                    EpiloguePipeline::PreStoreRound0(
+                        partial_c_block_tile, smem_ptr_0);
+                });
+#else
+            GemmPipeline{}.template operator()(a_block_window[Base::I0],
+                                               b_block_window[Base::I0],
+                                               num_loop,
+                                               has_hot_loop,
+                                               tail_num,
+                                               smem_ptr_0);
+#endif
         // Run Epilogue Pipeline
         auto& c_block_window = gemm_tile_windows.at(Base::I3);
         EpiloguePipeline{}.template
@@ -736,6 +797,18 @@ struct GroupedGemmKernel
         const index_t group_id = FindGroupId(gemm_desc_ptr, block_id, group_count);
         const auto& kargs      = gemm_desc_ptr[group_id];
 
+        // Device-prepared grouped descriptors may reserve a uniform block range
+        // for an empty group. Skip it before deriving a zero-sized tile grid.
+        if(kargs.group_karg.M == 0 || kargs.group_karg.N == 0 || kargs.group_karg.K == 0)
+        {
+            return;
+        }
+
+        if(!ShouldProcessM(kargs.group_karg.M))
+        {
+            return;
+        }
+
         const auto grid_size_2d = TilePartitioner::GridSize(kargs.group_karg.M, kargs.group_karg.N);
 
         //通过1为block id序号，计算出二维的M, N tile索引
@@ -767,10 +840,13 @@ struct GroupedGemmKernel
             cum_grid_size += TilePartitioner::GridSize(kargs.M, kargs.N) * k_batch;
             while(block_id < cum_grid_size)
             {
-                const auto grid_size_2d = TilePartitioner::GridSize(kargs.M, kargs.N);
-                const auto block_idx_2d = OffsetTile1DPartitioner::GetOffsetedTileIndex(
-                    0, kargs.M, kargs.N, (block_id - block_start) % grid_size_2d);
-                Run(kargs, block_idx_2d, (block_id - block_start) / grid_size_2d);
+                if(ShouldProcessM(kargs.M))
+                {
+                    const auto grid_size_2d = TilePartitioner::GridSize(kargs.M, kargs.N);
+                    const auto block_idx_2d = OffsetTile1DPartitioner::GetOffsetedTileIndex(
+                        0, kargs.M, kargs.N, (block_id - block_start) % grid_size_2d);
+                    Run(kargs, block_idx_2d, (block_id - block_start) / grid_size_2d);
+                }
                 block_id = block_id + grid_size; // advance to next block
                 // NOTE: this check is redundant but helps the compiler avoid spilling some VGPR
                 if(block_id >= cum_grid_size)

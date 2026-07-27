@@ -233,6 +233,9 @@ bool run_fused_conv(const ck_tile::conv::ConvParam& conv_param)
     std::cout << "Perf: " << avg_time << " ms, " << tflops << " TFlops, " << gb_per_sec << " GB/s, "
               << std::endl;
 
+#if defined(CK_TILE_MLS_PROBE_PERF_ONLY)
+    return true;
+#else
     // cpu fused conv
     auto ref_fused_conv = ck_tile::ReferenceFusedConv<NDimSpatial,
                                                       InDataType,
@@ -266,6 +269,7 @@ bool run_fused_conv(const ck_tile::conv::ConvParam& conv_param)
 #endif
     return ck_tile::check_err(
         out_device, out_host, "Error: incorrect results!", tolerance, tolerance);
+#endif
 }
 
 bool run_fused_conv_example(int argc, char* argv[])

@@ -102,6 +102,33 @@ struct WarpGemmMmacDispatcher<bf16_t,
                                             KIter>>;
 };
 
+template <index_t MmmacIter,
+          index_t NmmacIter,
+          index_t MmmacInterleave,
+          index_t NmmacInterleave,
+          index_t KIter>
+struct WarpGemmMmacDispatcher<bf16_t,
+                              bf16_t,
+                              float,
+                              MmmacIter,
+                              NmmacIter,
+                              16,
+                              16,
+                              MmmacInterleave,
+                              NmmacInterleave,
+                              KIter,
+                              false>
+{
+    using Type =
+        WarpGemmImpl<WarpGemmAttributeMmacIterateK<
+            WarpGemmAttributeMmacImplBf16Bf16F32M16N16K16,
+            MmmacIter,
+            NmmacIter,
+            MmmacInterleave,
+            NmmacInterleave,
+            KIter>>;
+};
+
 } // namespace impl
 
 template <typename AType,

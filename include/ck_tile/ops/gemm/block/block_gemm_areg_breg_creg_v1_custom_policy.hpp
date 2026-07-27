@@ -11,7 +11,8 @@ template <typename AType_,
           typename BType_,
           typename CType_,
           typename BlockWarps_,
-          typename WarpGemm_>
+          typename WarpGemm_,
+          bool DirectCBufferMmac_ = false>
 struct BlockGemmARegBRegCRegV1CustomPolicy
 {
     using AType = remove_cvref_t<AType_>;
@@ -25,6 +26,7 @@ struct BlockGemmARegBRegCRegV1CustomPolicy
     static constexpr index_t kKWarps = BlockWarps::at(number<2>{});
 
     using WarpGemm = remove_cvref_t<WarpGemm_>;
+    static constexpr bool DirectCBufferMmac = DirectCBufferMmac_;
 
     template <typename Problem>
     CK_TILE_HOST_DEVICE static constexpr auto GetWarpGemmMWarpNWarp()

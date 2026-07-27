@@ -356,6 +356,8 @@ struct FusedConvMlsWaspPersistantKernelV1
             __builtin_amdgcn_readfirstlane(get_grid_size() / kargs.num_group);
         const index_t g_idx =
             __builtin_amdgcn_readfirstlane(get_block_1d_id() / num_blocks_per_group);
+        const index_t local_block_id = __builtin_amdgcn_readfirstlane(
+            get_block_1d_id() - g_idx * num_blocks_per_group);
 
         const long_index_t in_g_offset = __builtin_amdgcn_readfirstlane(
             static_cast<long_index_t>(kargs.grouped_conv_ptr_offset.GetAPtrOffset(g_idx)));
@@ -476,7 +478,8 @@ struct FusedConvMlsWaspPersistantKernelV1
                     kargs.mls_pad_n,
                     0);
 
-                for(int tile_idx = get_block_1d_id(); tile_idx < num_tiles; tile_idx += gridDim.x)
+                for(int tile_idx = local_block_id; tile_idx < num_tiles;
+                    tile_idx += num_blocks_per_group)
                 {
                     // TG work idx
                     const auto block_work_idx = kargs.tile_partitioner.GetOutputTileIndex(tile_idx);
@@ -508,7 +511,8 @@ struct FusedConvMlsWaspPersistantKernelV1
             {
                 const auto block_gemm = BlockGemm{};
 
-                for(int tile_idx = get_block_1d_id(); tile_idx < num_tiles; tile_idx += gridDim.x)
+                for(int tile_idx = local_block_id; tile_idx < num_tiles;
+                    tile_idx += num_blocks_per_group)
                 {
                     // TG work idx
                     const auto block_work_idx = kargs.tile_partitioner.GetOutputTileIndex(tile_idx);
@@ -549,7 +553,8 @@ struct FusedConvMlsWaspPersistantKernelV1
             {
                 const auto block_gemm = BlockGemm{};
 
-                for(int tile_idx = get_block_1d_id(); tile_idx < num_tiles; tile_idx += gridDim.x)
+                for(int tile_idx = local_block_id; tile_idx < num_tiles;
+                    tile_idx += num_blocks_per_group)
                 {
                     // TG work idx
                     const auto block_work_idx = kargs.tile_partitioner.GetOutputTileIndex(tile_idx);
@@ -671,7 +676,8 @@ struct FusedConvMlsWaspPersistantKernelV1
                     kargs.mls_pad_n,
                     0);
 
-                for(int tile_idx = get_block_1d_id(); tile_idx < num_tiles; tile_idx += gridDim.x)
+                for(int tile_idx = local_block_id; tile_idx < num_tiles;
+                    tile_idx += num_blocks_per_group)
                 {
                     // TG work idx
                     const auto block_work_idx = kargs.tile_partitioner.GetOutputTileIndex(tile_idx);
@@ -703,7 +709,8 @@ struct FusedConvMlsWaspPersistantKernelV1
             {
                 const auto block_gemm = BlockGemm{};
 
-                for(int tile_idx = get_block_1d_id(); tile_idx < num_tiles; tile_idx += gridDim.x)
+                for(int tile_idx = local_block_id; tile_idx < num_tiles;
+                    tile_idx += num_blocks_per_group)
                 {
                     // TG work idx
                     const auto block_work_idx = kargs.tile_partitioner.GetOutputTileIndex(tile_idx);
@@ -744,7 +751,8 @@ struct FusedConvMlsWaspPersistantKernelV1
             {
                 const auto block_gemm = BlockGemm{};
 
-                for(int tile_idx = get_block_1d_id(); tile_idx < num_tiles; tile_idx += gridDim.x)
+                for(int tile_idx = local_block_id; tile_idx < num_tiles;
+                    tile_idx += num_blocks_per_group)
                 {
                     // TG work idx
                     const auto block_work_idx = kargs.tile_partitioner.GetOutputTileIndex(tile_idx);

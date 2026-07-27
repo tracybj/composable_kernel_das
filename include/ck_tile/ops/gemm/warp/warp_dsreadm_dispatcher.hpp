@@ -25,6 +25,18 @@ struct WarpDsreadmDispatcher<fp16_t, 2, 16, 1>
     using Type = WarpDsreadmAttribute<WarpDsreadmAttributeImplF16MN32K16, 2, 16, 1>;
 };
 
+template <>
+struct WarpDsreadmDispatcher<bf16_t, 1, 16, 2>
+{
+    using Type = WarpDsreadmAttribute<WarpDsreadmAttributeImplBF16MN32K16Alt, 1, 16, 2>;
+};
+
+template <>
+struct WarpDsreadmDispatcher<bf16_t, 2, 16, 1>
+{
+    using Type = WarpDsreadmAttribute<WarpDsreadmAttributeImplBF16MN32K16, 2, 16, 1>;
+};
+
 } // namespace impl
 
 template <typename DataType, index_t MNIter, index_t MNPermmac, index_t MNInterleave>
