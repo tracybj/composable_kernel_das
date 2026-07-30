@@ -84,7 +84,9 @@ struct GemmPipelineAgBgCrCompV3WarpRakedPolicy
                                                 BlockWarps,
                                                 WarpGemm>;
 
-        return BlockGemmARegBRegCRegV1<Problem, BlockGemmPolicy>{};
+        return BlockGemmARegBRegCRegV1<Problem,
+                                       BlockGemmPolicy,
+                                       Problem::TransposeC>{};
     }
 };
 

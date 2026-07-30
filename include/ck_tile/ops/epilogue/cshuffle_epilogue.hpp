@@ -215,6 +215,15 @@ struct CShuffleEpilogue
      * - NumNXdlPerWavePerShuffle: Number of XDL tiles in N dimension processed per wave
      */
     static constexpr auto shuffle_tile_tuple = [] {
+#if defined(CK_TILE_GROUPED_GEMM_CSHUFFLE_MERGE_M2)
+        // After the GEMM K loop the 64-KiB operand allocation is dead.  Fold
+        // two adjacent M warp tiles into one CShuffle pass so a 256x256 BF16
+        // output needs two 64-KiB passes instead of four 32-KiB passes.
+        // Keep this behind a tuning gate until resource use, correctness, and
+        // gfx936 latency are validated.
+        static_assert(kMPerBlock % (2 * MPerXdl * MWave) == 0);
+        return std::make_tuple(2, 1);
+#else
         constexpr index_t elem_per_thread = MPerXdl * NPerXdl / get_warp_size();    //32*32/64=16
         if constexpr(elem_per_thread >= GetVectorSizeC())   // 16 >= 8
         {
@@ -240,6 +249,7 @@ struct CShuffleEpilogue
                 return std::make_tuple(1, min(num_xdl_shuffles, kNPerBlock / (NPerXdl * NWave)));
             }
         }
+#endif
     }();
     static constexpr index_t NumMXdlPerWavePerShuffle = std::get<0>(shuffle_tile_tuple);
     static constexpr index_t NumNXdlPerWavePerShuffle = std::get<1>(shuffle_tile_tuple);
@@ -286,9 +296,44 @@ struct CShuffleEpilogue
         // N is contiguous dimension
         if constexpr(std::is_same_v<ELayout, tensor_layout::gemm::RowMajor>)
         {
+#if defined(CK_TILE_GROUPED_GEMM_CSHUFFLE_XOR_VECTOR4) || \
+    defined(CK_TILE_GROUPED_GEMM_CSHUFFLE_XOR_VECTOR4_FORCE_LDS_STORE) || \
+    defined(CK_TILE_GROUPED_GEMM_CSHUFFLE_XOR_PAIR_B64_STORE)
+            // Keep each 4-element output vector physically contiguous while
+            // XOR-swizzling its vector slot by the row. This preserves the
+            // existing dwordx2 global writeback contract and distributes the
+            // MMAC-output LDS traffic across all 32 banks.
+            static_assert(NPerIterationShuffle % 4 == 0);
+            constexpr auto packed_m_n0_n1 =
+                make_naive_tensor_descriptor_packed(
+                    make_tuple(number<MPerIterationShuffle>{},
+                               number<NPerIterationShuffle / 4>{},
+                               number<4>{}),
+                    number<4>{});
+            constexpr auto xor_m_n0 = transform_tensor_descriptor(
+                packed_m_n0_n1,
+                make_tuple(
+                    make_xor_transform(
+                        make_tuple(number<MPerIterationShuffle>{},
+                                   number<NPerIterationShuffle / 4>{})),
+                    make_pass_through_transform(number<4>{})),
+                make_tuple(sequence<0, 1>{}, sequence<2>{}),
+                make_tuple(sequence<0, 1>{}, sequence<2>{}));
+            return transform_tensor_descriptor(
+                xor_m_n0,
+                make_tuple(
+                    make_pass_through_transform(
+                        number<MPerIterationShuffle>{}),
+                    make_merge_transform(
+                        make_tuple(number<NPerIterationShuffle / 4>{},
+                                   number<4>{}))),
+                make_tuple(sequence<0>{}, sequence<1, 2>{}),
+                make_tuple(sequence<0>{}, sequence<1>{}));
+#else
             return make_naive_tensor_descriptor(
                 make_tuple(number<MPerIterationShuffle>{}, number<NPerIterationShuffle>{}),
                 make_tuple(number<NPerIterationShuffle>{}, number<1>{}));
+#endif
         }
         // M is contiguous dimension
         else if constexpr(std::is_same_v<ELayout, tensor_layout::gemm::ColumnMajor>)
@@ -321,7 +366,15 @@ struct CShuffleEpilogue
 
     CK_TILE_HOST_DEVICE static constexpr index_t GetSmemSize()
     {
+#if defined(CK_TILE_GROUPED_GEMM_CSHUFFLE_PIPELINED_M2)
+        // Two independently swizzled slots let the next 32-KiB slab enter LDS
+        // after the current slab is read, without keeping a doubled register
+        // tile live.  The operand allocation is already 64 KiB for the tuned
+        // grouped GEMM, so this does not increase kernel LDS residency.
+        return 2 * MPerIterationShuffle * NPerIterationShuffle * sizeof(ODataType);
+#else
         return MPerIterationShuffle * NPerIterationShuffle * sizeof(ODataType);
+#endif
     }
 
     template <index_t iAccess, typename LdsTile, typename ScaleM, typename ScaleN>
@@ -426,7 +479,40 @@ struct CShuffleEpilogue
     {
         const auto c_warptile_in_tensor_casted = cast_tile<ODataType>(lds_tile);
 
+#if defined(CK_TILE_GROUPED_GEMM_CSHUFFLE_XOR_PAIR_B64_STORE)
+        // The two BF16x4 vectors in each pair land 32 bytes apart after the
+        // row XOR (the ordering flips with the XOR bit). Root both writes at
+        // the physical low address so the backend can select ds_write2_b64.
+        in_lds_window.template store_force_vectorized_pair<6, 4>(
+            c_warptile_in_tensor_casted);
+#elif defined(CK_TILE_GROUPED_GEMM_CSHUFFLE_XOR_VECTOR4_FORCE_LDS_STORE)
+        // The XOR descriptor makes the generic safety analysis scalarize this
+        // store. Y6 is the four-element contiguous N subspan of this MMAC
+        // output distribution, so issue it explicitly as one BF16x4 vector.
+        in_lds_window.template store_force_vectorized<6, 4>(
+            c_warptile_in_tensor_casted);
+#elif defined(CK_TILE_GROUPED_GEMM_CSHUFFLE_BUILTIN_SWIZZLE) || \
+    defined(CK_TILE_GROUPED_GEMM_CSHUFFLE_SCALAR_GROUP16_SWIZZLE)
+        // Apply the byte-offset swizzle at the vector transaction boundary.
+        // Unlike expressing the XOR as a tensor transform, this keeps the
+        // compiler's original 16-byte LDS write transaction intact.
+        constexpr index_t lds_store_bytes =
+            sizeof(typename remove_cvref_t<InLdsWindow>::load_store_traits::vector_t);
+        if constexpr(
+#if defined(CK_TILE_GROUPED_GEMM_CSHUFFLE_SCALAR_GROUP16_SWIZZLE)
+            lds_store_bytes == 2 ||
+#endif
+            lds_store_bytes == 4 || lds_store_bytes == 8 || lds_store_bytes == 16)
+        {
+            store_tile(in_lds_window, c_warptile_in_tensor_casted, bool_constant<true>{});
+        }
+        else
+        {
+            store_tile(in_lds_window, c_warptile_in_tensor_casted);
+        }
+#else
         store_tile(in_lds_window, c_warptile_in_tensor_casted);
+#endif
     }
 
     template <typename DramWindows, typename COutTensor>
@@ -695,6 +781,22 @@ struct CShuffleEpilogue
 
         constexpr index_t num_access = SFC::get_num_of_access();    //block包含多少个 配置的block gemm
 
+#if defined(CK_TILE_GROUPED_GEMM_CSHUFFLE_PIPELINED_M2)
+        auto o_lds_block_alt = make_tensor_view<address_space_enum::lds>(
+            static_cast<ODataType*>(p_smem) +
+                MPerIterationShuffle * NPerIterationShuffle,
+            lds_block_desc);
+        auto in_lds_window_alt = make_tile_window(
+            o_lds_block_alt,
+            make_tuple(number<MPerIterationShuffle>{}, number<NPerIterationShuffle>{}),
+            {0, 0},
+            LdsTileDistr);
+        auto out_lds_window_alt = make_tile_window(
+            o_lds_block_alt,
+            make_tuple(number<MPerIterationShuffle>{}, number<NPerIterationShuffle>{}),
+            {0, 0});
+#endif
+
         static_assert(std::is_same_v<ELayout, tensor_layout::gemm::RowMajor>,
                       "Currently, the CShuffle Epilogue only supports the Row Major Output layout");
 
@@ -741,6 +843,102 @@ struct CShuffleEpilogue
             }
         }();
 
+#if defined(CK_TILE_GROUPED_GEMM_CSHUFFLE_PIPELINED_M2)
+        if constexpr(num_access == 4)
+        {
+        auto write_lds_access = [&](auto i_access, auto& in_window) {
+            constexpr index_t iAccess = decltype(i_access)::value;
+            slice_acc_tile<iAccess>(o_acc_tile, lds_tile);
+
+            constexpr index_t thread_buf_size = lds_tile.get_thread_buffer_size();
+            if constexpr(!SkipMmacTensorRegShuffle)
+            {
+                shfl_tensor_regs<thread_buf_size>(lds_tile);
+            }
+
+            if constexpr(has_scale_windows)
+            {
+                scale_tile<iAccess>(lds_tile, scale_m_window, scale_n_window);
+            }
+            else if constexpr(has_scalar_scales)
+            {
+                tile_elementwise_inout(
+                    [&](auto& x) { x = x * scale_m * scale_n; }, lds_tile);
+            }
+            cast_lds_tile(lds_tile, in_window);
+        };
+        auto load_lds_access = [&](auto& out_window) {
+            auto c_out_lds_window =
+                make_tile_window(out_window, dram_tile_distribution);
+            return load_tile(c_out_lds_window);
+        };
+
+        // Five barriers replace the generic loop's eight:
+        // finish GEMM, publish slab0, then each following barrier both
+        // publishes the alternate slot and proves the prior slot is no longer
+        // being read before it is reused.
+        block_sync_lds();
+        write_lds_access(number<0>{}, in_lds_window);
+        block_sync_lds();
+
+#if defined(CK_TILE_GROUPED_GEMM_CSHUFFLE_PIPELINED_M2_STORE_FIRST)
+        {
+            auto c_out_tensor = load_lds_access(out_lds_window);
+            apply_d_tensors(d_dram_windows, c_out_tensor);
+            store_to_dram(out_dram_window, c_out_tensor);
+            move_windows<0>(out_dram_window, d_dram_windows);
+        }
+        write_lds_access(number<1>{}, in_lds_window_alt);
+#else
+        auto c_out_tensor_0 = load_lds_access(out_lds_window);
+        write_lds_access(number<1>{}, in_lds_window_alt);
+        apply_d_tensors(d_dram_windows, c_out_tensor_0);
+        store_to_dram(out_dram_window, c_out_tensor_0);
+        move_windows<0>(out_dram_window, d_dram_windows);
+#endif
+        block_sync_lds();
+
+#if defined(CK_TILE_GROUPED_GEMM_CSHUFFLE_PIPELINED_M2_STORE_FIRST)
+        {
+            auto c_out_tensor = load_lds_access(out_lds_window_alt);
+            apply_d_tensors(d_dram_windows, c_out_tensor);
+            store_to_dram(out_dram_window, c_out_tensor);
+            move_windows<1>(out_dram_window, d_dram_windows);
+        }
+        write_lds_access(number<2>{}, in_lds_window);
+#else
+        auto c_out_tensor_1 = load_lds_access(out_lds_window_alt);
+        write_lds_access(number<2>{}, in_lds_window);
+        apply_d_tensors(d_dram_windows, c_out_tensor_1);
+        store_to_dram(out_dram_window, c_out_tensor_1);
+        move_windows<1>(out_dram_window, d_dram_windows);
+#endif
+        block_sync_lds();
+
+#if defined(CK_TILE_GROUPED_GEMM_CSHUFFLE_PIPELINED_M2_STORE_FIRST)
+        {
+            auto c_out_tensor = load_lds_access(out_lds_window);
+            apply_d_tensors(d_dram_windows, c_out_tensor);
+            store_to_dram(out_dram_window, c_out_tensor);
+            move_windows<2>(out_dram_window, d_dram_windows);
+        }
+        write_lds_access(number<3>{}, in_lds_window_alt);
+#else
+        auto c_out_tensor_2 = load_lds_access(out_lds_window);
+        write_lds_access(number<3>{}, in_lds_window_alt);
+        apply_d_tensors(d_dram_windows, c_out_tensor_2);
+        store_to_dram(out_dram_window, c_out_tensor_2);
+        move_windows<2>(out_dram_window, d_dram_windows);
+#endif
+        block_sync_lds();
+
+        auto c_out_tensor_3 = load_lds_access(out_lds_window_alt);
+        apply_d_tensors(d_dram_windows, c_out_tensor_3);
+        store_to_dram(out_dram_window, c_out_tensor_3);
+        }
+        else
+#endif
+        {
         static_for<0, num_access, 1>{}([&](auto iAccess) {
             block_sync_lds();
             slice_acc_tile<iAccess>(o_acc_tile, lds_tile);
@@ -765,12 +963,40 @@ struct CShuffleEpilogue
             cast_lds_tile(lds_tile, in_lds_window);
             block_sync_lds();
 
-            auto c_out_tensor = load_tile(make_tile_window(out_lds_window, dram_tile_distribution));
+            auto c_out_lds_window =
+                make_tile_window(out_lds_window, dram_tile_distribution);
+            auto c_out_tensor =
+#if defined(CK_TILE_GROUPED_GEMM_CSHUFFLE_BUILTIN_SWIZZLE) || \
+    defined(CK_TILE_GROUPED_GEMM_CSHUFFLE_SCALAR_GROUP16_SWIZZLE)
+                [&]() {
+                    constexpr index_t lds_load_bytes =
+                        sizeof(typename remove_cvref_t<decltype(c_out_lds_window)>::
+                                   load_store_traits::vector_t);
+                    if constexpr(
+#if defined(CK_TILE_GROUPED_GEMM_CSHUFFLE_SCALAR_GROUP16_SWIZZLE)
+                        lds_load_bytes == 2 ||
+#endif
+                        lds_load_bytes == 4 || lds_load_bytes == 8 ||
+                                 lds_load_bytes == 16)
+                    {
+                        return load_tile(c_out_lds_window,
+                                         bool_constant<true>{},
+                                         bool_constant<true>{});
+                    }
+                    else
+                    {
+                        return load_tile(c_out_lds_window);
+                    }
+                }();
+#else
+                load_tile(c_out_lds_window);
+#endif
 
             apply_d_tensors(d_dram_windows, c_out_tensor);
             store_to_dram(out_dram_window, c_out_tensor);
             move_windows<iAccess>(out_dram_window, d_dram_windows);
         });
+        }
     }
 };
 

@@ -410,6 +410,58 @@ bool grouped_gemm_check_half_reference(
                   << grouped_gemm_to_float_for_validation(b_k_n.mData[0]) << ", "
                   << grouped_gemm_to_float_for_validation(c_m_n.mData[0]) << ", "
                   << first_ref << std::endl;
+
+        // A vector of eight rounded BF16/FP16 GEMM results is effectively
+        // unique for the deterministic validation input.  Locate a few
+        // produced vectors in the reference matrix so ISA-reconstruction
+        // probes can distinguish arithmetic errors from a hierarchical
+        // row/column permutation without dumping the whole tensor.
+        if(M <= 256 && N <= 256 && N % 8 == 0)
+        {
+            ck_tile::HostTensor<CDataType> reference({M, N});
+            grouped_gemm_make_host_reference(
+                a_m_k, b_k_n, reference, M, N, K, a_layout, b_layout);
+
+            for(ck_tile::index_t out_m = 0; out_m < std::min<ck_tile::index_t>(M, 4);
+                ++out_m)
+            {
+                for(ck_tile::index_t out_n = 0;
+                    out_n < std::min<ck_tile::index_t>(N, 32);
+                    out_n += 8)
+                {
+                    ck_tile::index_t match_m = -1;
+                    ck_tile::index_t match_n = -1;
+                    for(ck_tile::index_t ref_m = 0; ref_m < M && match_m < 0; ++ref_m)
+                    {
+                        for(ck_tile::index_t ref_n = 0; ref_n < N; ref_n += 8)
+                        {
+                            bool equal = true;
+                            for(ck_tile::index_t i = 0; i < 8; ++i)
+                            {
+                                const auto out_offset =
+                                    c_m_n.GetOffsetFromMultiIndex(out_m, out_n + i);
+                                const auto ref_offset =
+                                    reference.GetOffsetFromMultiIndex(ref_m, ref_n + i);
+                                equal =
+                                    equal &&
+                                    std::memcmp(&c_m_n.mData[out_offset],
+                                                &reference.mData[ref_offset],
+                                                sizeof(CDataType)) == 0;
+                            }
+                            if(equal)
+                            {
+                                match_m = ref_m;
+                                match_n = ref_n;
+                                break;
+                            }
+                        }
+                    }
+                    std::cout << "debug vec8 out(" << out_m << "," << out_n
+                              << ") -> ref(" << match_m << "," << match_n << ")"
+                              << std::endl;
+                }
+            }
+        }
     }
 
     if(!pass)
@@ -517,20 +569,104 @@ float invoke_gemm(int n_warmup,
                                             hipMemcpyHostToDevice,
                                             stream.stream_id_));
 
-        ave_time = grouped_gemm_tileloop<GemmConfig,
-                                         ALayout,
-                                         BLayout,
-                                         CLayout,
-                                         ADataType,
-                                         BDataType,
-                                         AccDataType,
-                                         CDataType>(stream,
-                                                    group_count,
-                                                    kargs_ptr,
-                                                    grouped_gemm_make_output_resets<GemmConfig,
-                                                                                    CDataType,
-                                                                                    CLayout>(args),
-                                                    splitk);
+#if defined(CK_TILE_GROUPED_GEMM_MULTI_STREAM_EXPERIMENT)
+        const char* multi_stream_env = std::getenv("CK_TILE_GROUPED_GEMM_MULTI_STREAM");
+        const bool  multi_stream =
+            multi_stream_env != nullptr && std::strcmp(multi_stream_env, "1") == 0 &&
+            group_count > 1 && !splitk;
+        if(multi_stream)
+        {
+            std::vector<hipStream_t> group_streams(static_cast<std::size_t>(group_count));
+            std::vector<hipEvent_t>  group_done(static_cast<std::size_t>(group_count));
+            hipEvent_t               ready{};
+            hipEvent_t               start{};
+            hipEvent_t               stop{};
+
+            HIP_CHECK_ERROR(hipEventCreateWithFlags(&ready, hipEventDisableTiming));
+            HIP_CHECK_ERROR(hipEventCreate(&start));
+            HIP_CHECK_ERROR(hipEventCreate(&stop));
+            for(int i = 0; i < group_count; ++i)
+            {
+                const auto idx = static_cast<std::size_t>(i);
+                HIP_CHECK_ERROR(
+                    hipStreamCreateWithFlags(&group_streams[idx], hipStreamNonBlocking));
+                HIP_CHECK_ERROR(
+                    hipEventCreateWithFlags(&group_done[idx], hipEventDisableTiming));
+            }
+
+            const auto launch_round = [&]() {
+                HIP_CHECK_ERROR(hipEventRecord(ready, stream.stream_id_));
+                for(int i = 0; i < group_count; ++i)
+                {
+                    const auto idx = static_cast<std::size_t>(i);
+                    HIP_CHECK_ERROR(hipStreamWaitEvent(group_streams[idx], ready, 0));
+                    auto* group_args =
+                        static_cast<unsigned char*>(kargs_ptr) +
+                        idx * sizeof(ck_tile::GemmTransKernelArg);
+                    grouped_gemm_tileloop<GemmConfig,
+                                          ALayout,
+                                          BLayout,
+                                          CLayout,
+                                          ADataType,
+                                          BDataType,
+                                          AccDataType,
+                                          CDataType>(
+                        ck_tile::stream_config{group_streams[idx], false, 0, 0, 1},
+                        1,
+                        group_args,
+                        {},
+                        false);
+                    HIP_CHECK_ERROR(hipEventRecord(group_done[idx], group_streams[idx]));
+                }
+                for(const auto event : group_done)
+                {
+                    HIP_CHECK_ERROR(hipStreamWaitEvent(stream.stream_id_, event, 0));
+                }
+            };
+
+            for(int i = 0; i < n_warmup; ++i)
+            {
+                launch_round();
+            }
+            HIP_CHECK_ERROR(hipEventRecord(start, stream.stream_id_));
+            for(int i = 0; i < n_repeat; ++i)
+            {
+                launch_round();
+            }
+            HIP_CHECK_ERROR(hipEventRecord(stop, stream.stream_id_));
+            HIP_CHECK_ERROR(hipEventSynchronize(stop));
+
+            float total_ms = 0.0f;
+            HIP_CHECK_ERROR(hipEventElapsedTime(&total_ms, start, stop));
+            ave_time = total_ms / static_cast<float>(n_repeat);
+
+            for(int i = 0; i < group_count; ++i)
+            {
+                const auto idx = static_cast<std::size_t>(i);
+                HIP_CHECK_ERROR(hipEventDestroy(group_done[idx]));
+                HIP_CHECK_ERROR(hipStreamDestroy(group_streams[idx]));
+            }
+            HIP_CHECK_ERROR(hipEventDestroy(stop));
+            HIP_CHECK_ERROR(hipEventDestroy(start));
+            HIP_CHECK_ERROR(hipEventDestroy(ready));
+        }
+        else
+#endif
+        {
+            ave_time = grouped_gemm_tileloop<GemmConfig,
+                                             ALayout,
+                                             BLayout,
+                                             CLayout,
+                                             ADataType,
+                                             BDataType,
+                                             AccDataType,
+                                             CDataType>(
+                stream,
+                group_count,
+                kargs_ptr,
+                grouped_gemm_make_output_resets<GemmConfig, CDataType, CLayout>(args),
+                splitk);
+        }
     }
 
     return ave_time;
@@ -813,9 +949,19 @@ int run_grouped_gemm_example_with_layouts(int argc,
         for(int i = 0; i < group_count; ++i)
         {
             float max_accumulated_value = 0.0f;
+#if defined(CK_TILE_GROUPED_GEMM_DEBUG_16BIT_MAPPING)
+            if constexpr(
+                (std::is_same_v<ADataType, ck_tile::half_t> &&
+                 std::is_same_v<BDataType, ck_tile::half_t> &&
+                 std::is_same_v<CDataType, ck_tile::half_t>) ||
+                (std::is_same_v<ADataType, ck_tile::bf16_t> &&
+                 std::is_same_v<BDataType, ck_tile::bf16_t> &&
+                 std::is_same_v<CDataType, ck_tile::bf16_t>))
+#else
             if constexpr(std::is_same_v<ADataType, ck_tile::half_t> &&
                          std::is_same_v<BDataType, ck_tile::half_t> &&
                          std::is_same_v<CDataType, ck_tile::half_t>)
+#endif
             {
                 max_accumulated_value =
                     grouped_gemm_half_reference_max(a_m_k_tensors[i],
@@ -1042,6 +1188,103 @@ int run_grouped_gemm_example_with_layouts(int argc,
                     ck_tile::reference_gemm<ADataType, BDataType, AccDataType, CDataType>(
                         a_m_k_tensors[i], b_k_n_tensors[i], c_m_n_host_ref);
                 }
+#if defined(CK_TILE_GROUPED_GEMM_DEBUG_16BIT_MAPPING)
+                if constexpr(std::is_same_v<CDataType, ck_tile::bf16_t>)
+                {
+                    if(debug)
+                    {
+                        std::array<std::size_t, 8> mismatch_n32{};
+                        std::array<std::size_t, 8> mismatch_m32{};
+                        for(ck_tile::index_t m = 0; m < Ms[i]; ++m)
+                        {
+                            for(ck_tile::index_t n = 0; n < Ns[i]; ++n)
+                            {
+                                const auto out_offset =
+                                    c_m_n_tensors[i].GetOffsetFromMultiIndex(m, n);
+                                const auto ref_offset =
+                                    c_m_n_host_ref.GetOffsetFromMultiIndex(m, n);
+                                const float out = grouped_gemm_to_float_for_validation(
+                                    c_m_n_tensors[i].mData[out_offset]);
+                                const float ref = grouped_gemm_to_float_for_validation(
+                                    c_m_n_host_ref.mData[ref_offset]);
+                                if(grouped_gemm_abs_float(out - ref) > 0.0f)
+                                {
+                                    const auto nb = static_cast<std::size_t>(n / 32);
+                                    const auto mb = static_cast<std::size_t>(m / 32);
+                                    if(nb < mismatch_n32.size())
+                                        ++mismatch_n32[nb];
+                                    if(mb < mismatch_m32.size())
+                                        ++mismatch_m32[mb];
+                                }
+                            }
+                        }
+                        std::cout << "debug bf16 mismatch n32:";
+                        for(std::size_t band = 0; band < mismatch_n32.size(); ++band)
+                            std::cout << " " << mismatch_n32[band];
+                        std::cout << "\ndebug bf16 mismatch m32:";
+                        for(std::size_t band = 0; band < mismatch_m32.size(); ++band)
+                            std::cout << " " << mismatch_m32[band];
+                        std::cout << std::endl;
+
+                        const ck_tile::index_t sample_rows =
+                            Ms[i] < 4 ? Ms[i] : ck_tile::index_t{4};
+                        const ck_tile::index_t sample_columns =
+                            Ns[i] < 128 ? Ns[i] : ck_tile::index_t{128};
+                        for(ck_tile::index_t out_m = 0; out_m < sample_rows; ++out_m)
+                        {
+                            for(ck_tile::index_t out_n = 0; out_n + 7 < sample_columns;
+                                out_n += 8)
+                            {
+                                ck_tile::index_t match_m = -1;
+                                ck_tile::index_t match_n = -1;
+                                for(ck_tile::index_t ref_m = 0;
+                                    ref_m < Ms[i] && match_m < 0;
+                                    ++ref_m)
+                                {
+                                    for(ck_tile::index_t ref_n = 0; ref_n + 7 < Ns[i];
+                                        ++ref_n)
+                                    {
+                                        bool matches = true;
+                                        for(ck_tile::index_t x = 0; x < 8; ++x)
+                                        {
+                                            const auto out_offset =
+                                                c_m_n_tensors[i].GetOffsetFromMultiIndex(
+                                                    out_m, out_n + x);
+                                            const auto ref_offset =
+                                                c_m_n_host_ref.GetOffsetFromMultiIndex(
+                                                    ref_m, ref_n + x);
+                                            const float out =
+                                                grouped_gemm_to_float_for_validation(
+                                                    c_m_n_tensors[i].mData[out_offset]);
+                                            const float ref =
+                                                grouped_gemm_to_float_for_validation(
+                                                    c_m_n_host_ref.mData[ref_offset]);
+                                            if(grouped_gemm_abs_float(out - ref) > 0.0f)
+                                            {
+                                                matches = false;
+                                                break;
+                                            }
+                                        }
+                                        if(matches)
+                                        {
+                                            match_m = ref_m;
+                                            match_n = ref_n;
+                                            break;
+                                        }
+                                    }
+                                }
+                                std::cout << "debug bf16 vec8 out(" << out_m << "," << out_n
+                                          << ")->";
+                                if(match_m >= 0)
+                                    std::cout << "ref(" << match_m << "," << match_n << ")";
+                                else
+                                    std::cout << "none";
+                                std::cout << std::endl;
+                            }
+                        }
+                    }
+                }
+#endif
                 pass &= ck_tile::check_err(
                     c_m_n_tensors[i],
                     c_m_n_host_ref,

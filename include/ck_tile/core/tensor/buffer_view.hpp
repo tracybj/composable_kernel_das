@@ -626,6 +626,49 @@ struct buffer_view<address_space_enum::global,
             x, p_data_, i, linear_offset, is_valid_element, buffer_size_);
     }
 
+#if defined(CK_TILE_GROUPED_GEMM_DSREADM_OUTPUT_MAPPED_IMMEDIATE_SCALAR_SHORT) || \
+    defined(CK_TILE_GROUPED_GEMM_DSREADM_BLAS_WAVE_IMMEDIATE_SCALAR_SHORT) || \
+    defined(CK_TILE_GROUPED_GEMM_DSREADM_BLAS_COLUMN_MAJOR_IMMEDIATE_SCALAR_SHORT) || \
+    defined(CK_TILE_GROUPED_GEMM_DSREADM_BLAS_RAW_C_COLUMN_MAJOR_IMMEDIATE_SCALAR_SHORT)
+    // Store from one dynamic per-lane base plus a compile-time immediate.
+    // The grouped-GEMM DSReadM epilogue uses this to match hipBLASLt's
+    // buffer_store_short ... offset:<imm> address shape and avoid rebuilding a
+    // tensor coordinate (and saving/restoring exec) for every scalar.
+    template <typename X,
+              index_t ImmediateElementOffset,
+              bool oob_conditional_check = false,
+              typename std::enable_if<
+                  std::is_same<typename vector_traits<remove_cvref_t<X>>::scalar_type,
+                               typename vector_traits<remove_cvref_t<T>>::scalar_type>::value,
+                  bool>::type = false>
+    CK_TILE_DEVICE void set_raw_immediate(index_t base_element_offset,
+                                          bool is_valid_element,
+                                          const X& x)
+    {
+        constexpr index_t scalar_per_t_vector =
+            vector_traits<remove_cvref_t<T>>::vector_size;
+        constexpr index_t scalar_per_x_vector =
+            vector_traits<remove_cvref_t<X>>::vector_size;
+        static_assert(scalar_per_x_vector % scalar_per_t_vector == 0);
+        constexpr index_t t_per_x =
+            scalar_per_x_vector / scalar_per_t_vector;
+        constexpr index_t immediate_byte_offset =
+            ImmediateElementOffset * sizeof(T);
+        static_assert(immediate_byte_offset <= 0xfff);
+
+        amd_buffer_store_raw_impl<remove_cvref_t<T>,
+                                  t_per_x,
+                                  Coherence,
+                                  oob_conditional_check>(
+            x,
+            cached_buf_res_,
+            base_element_offset * sizeof(T),
+            0,
+            immediate_byte_offset,
+            is_valid_element);
+    }
+#endif
+
     // TODO: support buffer_atomic_pk_add in future
     template <typename X,
               typename std::enable_if<
@@ -950,6 +993,37 @@ struct buffer_view<address_space_enum::lds,
         }
         
     }
+
+#if defined(CK_TILE_GROUPED_GEMM_CSHUFFLE_XOR_PAIR_B64_STORE)
+    template <typename X,
+              index_t PairLinearOffset,
+              typename std::enable_if<
+                  std::is_same<typename vector_traits<remove_cvref_t<X>>::scalar_type,
+                               typename vector_traits<remove_cvref_t<T>>::scalar_type>::value,
+                  bool>::type = false>
+    CK_TILE_DEVICE void set_pair(index_t i, const X& x0, const X& x1)
+    {
+        constexpr index_t scalar_per_t_vector =
+            vector_traits<remove_cvref_t<T>>::vector_size;
+        constexpr index_t scalar_per_x_vector =
+            vector_traits<remove_cvref_t<X>>::vector_size;
+
+        static_assert(scalar_per_x_vector % scalar_per_t_vector == 0,
+                      "X should contain multiple T");
+
+        using buf_t =
+            ext_vector_t<typename vector_traits<remove_cvref_t<T>>::scalar_type,
+                         scalar_per_t_vector * scalar_per_x_vector>;
+
+        // Keep both stores rooted at the same dynamic LDS address. For the
+        // XOR4 CShuffle descriptor PairLinearOffset is 16 BF16 elements
+        // (32 bytes), which maps directly to ds_write2_b64 offset1:4.
+        *c_style_pointer_cast<buf_t*>(&p_data_[i]) =
+            reinterpret_cast<const buf_t&>(x0);
+        *c_style_pointer_cast<buf_t*>(&p_data_[i + PairLinearOffset]) =
+            reinterpret_cast<const buf_t&>(x1);
+    }
+#endif
 
     // FIXME: remove
     CK_TILE_DEVICE static constexpr bool is_static_buffer() { return false; }

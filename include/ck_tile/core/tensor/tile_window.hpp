@@ -987,6 +987,180 @@ struct tile_window_with_static_distribution
         });
     }
 
+#if defined(CK_TILE_GROUPED_GEMM_CSHUFFLE_XOR_VECTOR4_FORCE_LDS_STORE) || \
+    defined(CK_TILE_GROUPED_GEMM_CSHUFFLE_XOR_PAIR_B64_STORE)
+    template <index_t VectorDimY,
+              index_t ScalarPerVector,
+              bool oob_conditional_check = true>
+    CK_TILE_DEVICE void
+    store_force_vectorized(const static_distributed_tensor<DataType, TileDstr>& dstr_tensor,
+                           bool_constant<oob_conditional_check> = {}) const
+    {
+        static_assert(0 <= VectorDimY && VectorDimY < NDimY);
+        static_assert(0 < ScalarPerVector);
+
+        constexpr auto tile_dstr = TileDstr{};
+        constexpr auto thread_tensor_lengths_ys =
+            to_sequence(tile_dstr.get_ys_to_d_descriptor().get_lengths());
+        static_assert(thread_tensor_lengths_ys[number<VectorDimY>{}] % ScalarPerVector == 0);
+
+        constexpr auto scalars_per_access = [] {
+            constexpr auto scalars_per_access_arr = generate_array(
+                [&](auto i) { return i == VectorDimY ? ScalarPerVector : 1; },
+                number<NDimY>{});
+            constexpr auto ndim_y = NDimY;
+            return TO_SEQUENCE(scalars_per_access_arr, ndim_y);
+        }();
+        using ScalarsPerAccess = remove_cvref_t<decltype(scalars_per_access)>;
+        using DimAccessOrder   = typename arithmetic_sequence_gen<0, NDimY, 1>::type;
+        using SFC_Ys           = space_filling_curve<decltype(thread_tensor_lengths_ys),
+                                           DimAccessOrder,
+                                           ScalarsPerAccess>;
+        using vector_t         = thread_buffer<DataType, ScalarPerVector>;
+
+        constexpr index_t num_access = SFC_Ys::get_num_of_access();
+        static_assert(num_access % NumCoord == 0);
+        constexpr index_t num_access_per_coord = num_access / NumCoord;
+
+        static_for<0, NumCoord, 1>{}([&](auto iCoord) {
+            auto window_adaptor_thread_coord = pre_computed_coords_[iCoord][I0];
+            auto bottom_tensor_thread_coord  = pre_computed_coords_[iCoord][I1];
+
+            static_for<0, num_access_per_coord, 1>{}([&](auto iCoordAccess) {
+                constexpr auto iAccess =
+                    number<iCoord * num_access_per_coord + iCoordAccess>{};
+                constexpr auto idx_ys_start = SFC_Ys::get_index(iAccess);
+                vector_t vec_value;
+
+                static_for<0, ScalarPerVector, 1>{}([&](auto j) {
+                    constexpr auto idx_ys = generate_tuple(
+                        [&](auto jj) {
+                            return jj == VectorDimY ? idx_ys_start[jj] + j
+                                                    : idx_ys_start[jj];
+                        },
+                        number<NDimY>{});
+                    constexpr index_t d =
+                        tile_dstr.get_ys_to_d_descriptor().calculate_offset(idx_ys);
+                    vec_value.template get_as<DataType>()(j) =
+                        dstr_tensor.get_thread_buffer().template at<d>();
+                });
+
+                get_bottom_tensor_view().template set_vectorized_elements<vector_t>(
+                    bottom_tensor_thread_coord,
+                    0,
+                    vec_value,
+                    bool_constant<oob_conditional_check>{});
+
+                if constexpr(iCoordAccess != num_access_per_coord - 1)
+                {
+                    constexpr auto idx_diff_ys = SFC_Ys::get_forward_step(iAccess);
+                    constexpr auto idx_diff_ps_ys = container_concat(
+                        generate_tuple([&](auto) { return number<0>{}; }, number<NDimP>{}),
+                        idx_diff_ys);
+                    move_window_adaptor_and_bottom_tensor_thread_coordinate(
+                        window_adaptor_thread_coord,
+                        bottom_tensor_thread_coord,
+                        idx_diff_ps_ys);
+                }
+            });
+        });
+    }
+
+#if defined(CK_TILE_GROUPED_GEMM_CSHUFFLE_XOR_PAIR_B64_STORE)
+    template <index_t VectorDimY, index_t ScalarPerVector>
+    CK_TILE_DEVICE void store_force_vectorized_pair(
+        const static_distributed_tensor<DataType, TileDstr>& dstr_tensor) const
+    {
+        static_assert(0 <= VectorDimY && VectorDimY < NDimY);
+        static_assert(ScalarPerVector == 4);
+
+        constexpr auto tile_dstr = TileDstr{};
+        constexpr auto thread_tensor_lengths_ys =
+            to_sequence(tile_dstr.get_ys_to_d_descriptor().get_lengths());
+        static_assert(thread_tensor_lengths_ys[number<VectorDimY>{}] %
+                          ScalarPerVector ==
+                      0);
+
+        constexpr auto scalars_per_access = [] {
+            constexpr auto scalars_per_access_arr = generate_array(
+                [&](auto i) { return i == VectorDimY ? ScalarPerVector : 1; },
+                number<NDimY>{});
+            constexpr auto ndim_y = NDimY;
+            return TO_SEQUENCE(scalars_per_access_arr, ndim_y);
+        }();
+        using ScalarsPerAccess = remove_cvref_t<decltype(scalars_per_access)>;
+        using DimAccessOrder   = typename arithmetic_sequence_gen<0, NDimY, 1>::type;
+        using SFC_Ys = space_filling_curve<decltype(thread_tensor_lengths_ys),
+                                           DimAccessOrder,
+                                           ScalarsPerAccess>;
+        using vector_t = thread_buffer<DataType, ScalarPerVector>;
+
+        constexpr index_t num_access = SFC_Ys::get_num_of_access();
+        static_assert(num_access % NumCoord == 0);
+        constexpr index_t num_access_per_coord = num_access / NumCoord;
+        static_assert(num_access_per_coord % 2 == 0);
+
+        const auto make_vector = [&](auto iAccess) {
+            constexpr auto idx_ys_start = SFC_Ys::get_index(iAccess);
+            vector_t vec_value;
+            static_for<0, ScalarPerVector, 1>{}([&](auto j) {
+                constexpr auto idx_ys = generate_tuple(
+                    [&](auto jj) {
+                        return jj == VectorDimY ? idx_ys_start[jj] + j
+                                                : idx_ys_start[jj];
+                    },
+                    number<NDimY>{});
+                constexpr index_t d =
+                    tile_dstr.get_ys_to_d_descriptor().calculate_offset(idx_ys);
+                vec_value.template get_as<DataType>()(j) =
+                    dstr_tensor.get_thread_buffer().template at<d>();
+            });
+            return vec_value;
+        };
+
+        static_for<0, NumCoord, 1>{}([&](auto iCoord) {
+            auto window_adaptor_thread_coord = pre_computed_coords_[iCoord][I0];
+            auto bottom_tensor_thread_coord  = pre_computed_coords_[iCoord][I1];
+
+            static_for<0, num_access_per_coord / 2, 1>{}([&](auto iPair) {
+                constexpr auto iAccess0 =
+                    number<iCoord * num_access_per_coord + iPair * 2>{};
+                constexpr auto iAccess1 = iAccess0 + number<1>{};
+                const auto vec0         = make_vector(iAccess0);
+                const auto vec1         = make_vector(iAccess1);
+                const auto coord0       = bottom_tensor_thread_coord;
+
+                constexpr auto step01 = SFC_Ys::get_forward_step(iAccess0);
+                constexpr auto step01_ps = container_concat(
+                    generate_tuple([&](auto) { return number<0>{}; }, number<NDimP>{}),
+                    step01);
+                move_window_adaptor_and_bottom_tensor_thread_coordinate(
+                    window_adaptor_thread_coord,
+                    bottom_tensor_thread_coord,
+                    step01_ps);
+                const auto coord1 = bottom_tensor_thread_coord;
+
+                get_bottom_tensor_view()
+                    .template set_vectorized_elements_pair<vector_t, 16>(
+                        coord0, coord1, vec0, vec1);
+
+                if constexpr(iPair != num_access_per_coord / 2 - 1)
+                {
+                    constexpr auto step12 = SFC_Ys::get_forward_step(iAccess1);
+                    constexpr auto step12_ps = container_concat(
+                        generate_tuple([&](auto) { return number<0>{}; }, number<NDimP>{}),
+                        step12);
+                    move_window_adaptor_and_bottom_tensor_thread_coordinate(
+                        window_adaptor_thread_coord,
+                        bottom_tensor_thread_coord,
+                        step12_ps);
+                }
+            });
+        });
+    }
+#endif
+#endif
+
     template <index_t i_access_unsupport_ = -1>
     CK_TILE_DEVICE void store_raw(const static_distributed_tensor<DataType, TileDstr>& dstr_tensor,
                                   number<i_access_unsupport_> = {}) const

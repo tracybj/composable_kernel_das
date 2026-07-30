@@ -128,12 +128,16 @@ struct GemmTransKernelArgImpl
     GemmTransKernelArgImpl(UniversalGemmKernelArgs<1, 1, NumDTensor>&& karg,
                            index_t bl_start,
                            index_t bl_end)
-        : group_karg{karg}, block_start{bl_start}, block_end{bl_end}
+        : group_karg{karg},
+          block_start{bl_start},
+          block_end{bl_end}
     {
     }
 
     GemmTransKernelArgImpl(UniversalGemmKernelArgs<1, 1, NumDTensor>&& karg)
-        : group_karg{karg}, block_start{0}, block_end{0}
+        : group_karg{karg},
+          block_start{0},
+          block_end{0}
     {
     }
 };
@@ -423,9 +427,163 @@ struct GroupedGemmKernel
         return max(GemmPipeline::GetSmemSize(), EpiloguePipeline::GetSmemSize());
     }
 
+#if defined(CK_TILE_GROUPED_GEMM_FUSED_PACK_GRADX)
+    CK_TILE_DEVICE __attribute__((noinline))
+    static void FusedPackGradX(const ADataType* a_ptr,
+                              CDataType* c_ptr,
+                              void* p_smem,
+                              const KernelArgs& kargs,
+                              const index_t group_id,
+                              const index_t group_count,
+                              const index_t physical_block_id,
+                              const index_t physical_grid_size)
+    {
+        static_assert(std::is_same_v<ALayout, tensor_layout::gemm::ColumnMajor> &&
+                          std::is_same_v<BLayout, tensor_layout::gemm::RowMajor> &&
+                          std::is_same_v<CLayout, tensor_layout::gemm::ColumnMajor>,
+                      "fused grad-X packing is specialized for transposed grad-W C,R,C");
+        static_assert(std::is_same_v<ADataType, CDataType> &&
+                          sizeof(ADataType) == 2,
+                      "fused grad-X packing requires matching 16-bit input/output types");
+        static_assert(TilePartitioner::MPerBlock == 256 && kBlockSize == 512,
+                      "fused grad-X packing requires the selected 256-M/512-thread kernel");
+
+        // The regular grad-W problem views physical row-major grad_out[K,M]
+        // as column-major A[M,K]. The appended output is packed row-major
+        // [M,K], which is the C,R,C grad-X operand expected by the fast lane.
+        //
+        // Run once per physical persistent workgroup after that workgroup has
+        // completed its final GEMM tile. Keeping this out of the logical-tile
+        // loop avoids interleaving LDS barriers with every GEMM iteration and
+        // the noinline boundary prevents the transpose coordinates from
+        // extending the GEMM hot loop's live ranges.
+        if(kargs.k_batch != 1 || kargs.K != kargs.N)
+        {
+            return;
+        }
+
+        block_sync_lds();
+
+        constexpr index_t TileDim   = 32;
+        constexpr index_t TilePitch = 33;
+        constexpr index_t TileElems = TileDim * TilePitch;
+        auto* tile = reinterpret_cast<ADataType*>(p_smem);
+
+        const index_t tid      = get_thread_id();
+        const index_t tile_sel = tid >> 8;
+        const index_t local    = tid & 255;
+        const index_t tx       = local & 31;
+        const index_t ty       = local >> 5;
+
+        const index_t M = kargs.M;
+        const index_t K = kargs.K;
+        const index_t m_tiles =
+            (M + TilePartitioner::MPerBlock - 1) / TilePartitioner::MPerBlock;
+        const index_t k_tiles =
+            (K + TilePartitioner::NPerBlock - 1) / TilePartitioner::NPerBlock;
+        const index_t tasks_per_group = m_tiles * k_tiles;
+        const index_t total_tasks     = group_count * tasks_per_group;
+
+        const ADataType* global_a_base =
+            a_ptr - group_id * K * kargs.stride_As[0];
+        CDataType* global_c_base = c_ptr - group_id * M * kargs.N;
+        auto* packed_base = reinterpret_cast<ADataType*>(
+            global_c_base + group_count * M * kargs.N);
+
+        for(index_t task = physical_block_id; task < total_tasks;
+            task += physical_grid_size)
+        {
+            const index_t pack_group = task / tasks_per_group;
+            const index_t group_task = task - pack_group * tasks_per_group;
+            const index_t block_idx_m = group_task / k_tiles;
+            const index_t block_idx_k = group_task - block_idx_m * k_tiles;
+            const index_t m_block =
+                block_idx_m * TilePartitioner::MPerBlock;
+            const index_t k_block =
+                block_idx_k * TilePartitioner::NPerBlock;
+            const index_t k_block_end =
+                min(k_block + TilePartitioner::NPerBlock, K);
+            const auto* a_group =
+                global_a_base + pack_group * K * kargs.stride_As[0];
+            auto* packed_group = packed_base + pack_group * M * K;
+
+            for(index_t m_sub = 0; m_sub < TilePartitioner::MPerBlock;
+                m_sub += TileDim)
+            {
+                const index_t m0 = m_block + m_sub;
+                for(index_t k_pair = k_block; k_pair < k_block_end;
+                    k_pair += 2 * TileDim)
+                {
+                    const index_t k0 = k_pair + tile_sel * TileDim;
+                    const index_t tile_base = tile_sel * TileElems;
+
+#pragma unroll
+                    for(index_t j = 0; j < TileDim; j += 8)
+                    {
+                        tile[tile_base + (ty + j) * TilePitch + tx] =
+                            a_group[(k0 + ty + j) * kargs.stride_As[0] +
+                                    m0 + tx];
+                    }
+                    block_sync_lds();
+
+#pragma unroll
+                    for(index_t j = 0; j < TileDim; j += 8)
+                    {
+                        packed_group[(m0 + ty + j) * K + k0 + tx] =
+                            tile[tile_base + tx * TilePitch + ty + j];
+                    }
+                    block_sync_lds();
+                }
+            }
+        }
+    }
+#endif
+
+#if defined(CK_TILE_GROUPED_GEMM_FUSED_PACK_GRADX_DSREADM)
+    CK_TILE_DEVICE static void
+    RepairPackedAPenultimateStage(const ADataType* a_ptr,
+                                  ADataType* packed_a_ptr,
+                                  const index_t source_stride,
+                                  const index_t packed_stride,
+                                  const index_t m_block)
+    {
+        static_assert(sizeof(ADataType) == 2 && kBlockSize == 512 &&
+#if defined(CK_TILE_GROUPED_GEMM_FUSED_PACK_GRADX_M128N256)
+                          TilePartitioner::MPerBlock == 128,
+#else
+                          TilePartitioner::MPerBlock == 256,
+#endif
+                      "packed-A tail repair requires the selected BF16 tile");
+        const index_t tid       = get_thread_id();
+#if defined(CK_TILE_GROUPED_GEMM_FUSED_PACK_GRADX_M128N256)
+        if(tid >= 256)
+        {
+            return;
+        }
+#endif
+        const index_t wave      = tid >> 6;
+        const index_t lane      = tid & 63;
+        const index_t k         = packed_stride - 32 + (lane & 15);
+        const index_t m_base    = m_block + wave * 32 + (lane >> 4) * 8;
+
+#pragma unroll
+        for(index_t j = 0; j < 8; ++j)
+        {
+            const index_t m = m_base + j;
+            packed_a_ptr[m * packed_stride + k] =
+                a_ptr[k * source_stride + m];
+        }
+    }
+#endif
+
     CK_TILE_DEVICE void Run(const KernelArgs& kargs,
                             const tuple<index_t, index_t>& block_idx_2d,
-                            const index_t block_idx_z) const
+                            const index_t block_idx_z,
+                            const index_t group_id,
+                            const index_t group_count,
+                            const bool run_fused_tail,
+                            const index_t physical_block_id,
+                            const index_t physical_grid_size) const
     {
 
         const auto [iM, iN] = block_idx_2d;
@@ -498,8 +656,62 @@ struct GroupedGemmKernel
             {
                 if constexpr(UsePersistentKernel)
                 {
+#if defined(CK_TILE_GROUPED_GEMM_FUSED_PACK_GRADX_DSREADM)
+                    ADataType* packed_a_ptr = nullptr;
+#if defined(CK_TILE_GROUPED_GEMM_FUSED_PACK_GRADX_FROM_B_TRANSPOSED_C)
+                    if(kargs.k_batch == 1 && kargs.K == kargs.M)
+#else
+                    if(kargs.k_batch == 1 && kargs.K == kargs.N)
+#endif
+                    {
+                        CDataType* global_c_base =
+                            c_ptr - group_id * kargs.M * kargs.N;
+                        auto* packed_base = reinterpret_cast<ADataType*>(
+                            global_c_base +
+                            group_count * kargs.M * kargs.N);
+#if defined(CK_TILE_GROUPED_GEMM_FUSED_PACK_GRADX_FROM_B_TRANSPOSED_C)
+                        packed_a_ptr =
+                            packed_base + group_id * kargs.N * kargs.K;
+#else
+                        packed_a_ptr =
+                            packed_base + group_id * kargs.M * kargs.K;
+#endif
+                    }
+                    RunGemmWithPipelineSelection(a_ptr,
+                                                 b_ptr,
+                                                 c_ptr,
+                                                 smem_ptr_0,
+                                                 kargs,
+                                                 splitk_batch_offset,
+                                                 i_m,
+                                                 i_n,
+                                                 packed_a_ptr,
+                                                 kargs.K,
+#if defined(CK_TILE_GROUPED_GEMM_FUSED_PACK_GRADX_FROM_B_TRANSPOSED_C)
+                                                 iM);
+                    if(packed_a_ptr != nullptr && iM == 15)
+                    {
+                        RepairPackedAPenultimateStage(b_ptr,
+                                                      packed_a_ptr,
+                                                      kargs.stride_Bs[0],
+                                                      kargs.K,
+                                                      i_n);
+                    }
+#else
+                                                 iN);
+                    if(packed_a_ptr != nullptr && iN == 15)
+                    {
+                        RepairPackedAPenultimateStage(a_ptr,
+                                                      packed_a_ptr,
+                                                      kargs.stride_As[0],
+                                                      kargs.K,
+                                                      i_m);
+                    }
+#endif
+#else
                     RunGemmWithPipelineSelection(
                         a_ptr, b_ptr, c_ptr, smem_ptr_0, kargs, splitk_batch_offset, i_m, i_n);
+#endif
                 }
                 else // Non-persistent kernel
                 {
@@ -515,6 +727,26 @@ struct GroupedGemmKernel
                 }
             }
         }
+
+#if defined(CK_TILE_GROUPED_GEMM_FUSED_PACK_GRADX)
+        if(run_fused_tail)
+        {
+            FusedPackGradX(a_ptr,
+                           c_ptr,
+                           smem_ptr_0,
+                           kargs,
+                           group_id,
+                           group_count,
+                           physical_block_id,
+                           physical_grid_size);
+        }
+#else
+        (void)group_id;
+        (void)group_count;
+        (void)run_fused_tail;
+        (void)physical_block_id;
+        (void)physical_grid_size;
+#endif
     }
 
     CK_TILE_DEVICE static void
@@ -625,7 +857,10 @@ struct GroupedGemmKernel
                                  const KernelArgs& kargs,
                                  const typename Base::SplitKBatchOffset& splitk_batch_offset,
                                  const index_t block_idx_m,
-                                 const index_t block_idx_n)
+                                 const index_t block_idx_n,
+                                 [[maybe_unused]] ADataType* packed_a_ptr = nullptr,
+                                 [[maybe_unused]] const index_t packed_a_stride = 0,
+                                 [[maybe_unused]] const index_t packed_a_stage_group = 0)
     {
         // Create Gemm tensor views, pad views and tile windows
         const auto& gemm_tensor_views_tuple =
@@ -659,6 +894,29 @@ struct GroupedGemmKernel
                     EpiloguePipeline::PreStoreRound0(
                         partial_c_block_tile, smem_ptr_0);
                 });
+#elif defined(CK_TILE_GROUPED_GEMM_FUSED_PACK_GRADX_DSREADM)
+            [&]() {
+                if(packed_a_ptr != nullptr)
+                {
+                    return GemmPipeline{}.template operator()(
+                        a_block_window[Base::I0],
+                        b_block_window[Base::I0],
+                        num_loop,
+                        has_hot_loop,
+                        tail_num,
+                        smem_ptr_0,
+                        packed_a_ptr,
+                        packed_a_stride,
+                        packed_a_stage_group);
+                }
+                return GemmPipeline{}.template operator()(
+                    a_block_window[Base::I0],
+                    b_block_window[Base::I0],
+                    num_loop,
+                    has_hot_loop,
+                    tail_num,
+                    smem_ptr_0);
+            }();
 #else
             GemmPipeline{}.template operator()(a_block_window[Base::I0],
                                                b_block_window[Base::I0],
@@ -817,7 +1075,14 @@ struct GroupedGemmKernel
             kargs.group_karg.M,
             kargs.group_karg.N,
             (block_id - kargs.block_start) % grid_size_2d);
-        Run(kargs.group_karg, block_idx_2d, (block_id - kargs.block_start) / grid_size_2d);
+        Run(kargs.group_karg,
+            block_idx_2d,
+            (block_id - kargs.block_start) / grid_size_2d,
+            group_id,
+            group_count,
+            false,
+            0,
+            1);
     }
 
     // For persistent kernels
@@ -845,7 +1110,15 @@ struct GroupedGemmKernel
                     const auto grid_size_2d = TilePartitioner::GridSize(kargs.M, kargs.N);
                     const auto block_idx_2d = OffsetTile1DPartitioner::GetOffsetedTileIndex(
                         0, kargs.M, kargs.N, (block_id - block_start) % grid_size_2d);
-                    Run(kargs, block_idx_2d, (block_id - block_start) / grid_size_2d);
+                    Run(kargs,
+                        block_idx_2d,
+                        (block_id - block_start) / grid_size_2d,
+                        group_id,
+                        group_count,
+                        group_id + 1 == group_count &&
+                            block_id + grid_size >= cum_grid_size,
+                        ck_tile::get_block_1d_id(),
+                        grid_size);
                 }
                 block_id = block_id + grid_size; // advance to next block
                 // NOTE: this check is redundant but helps the compiler avoid spilling some VGPR

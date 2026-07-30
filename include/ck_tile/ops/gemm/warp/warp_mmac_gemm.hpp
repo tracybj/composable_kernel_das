@@ -62,6 +62,24 @@ using WarpGemmMmacF16F16F32_WT32x64x16_MR2NR4MI1NI1 = WarpGemmImpl<
 // repeats share the same K16 B operand distribution.
 using WarpGemmMmacF16F16F32_WT128x64x16_MR8NR4MI1NI1 = WarpGemmImpl<
     WarpGemmAttributeMmacIterateK<WarpGemmAttributeMmacImplF16F16F32M16N16K16, 8, 4, 1, 1, 1>>;
+using WarpGemmMmacF16F16F32_WT64x64x16_MR4NR4MI1NI1 = WarpGemmImpl<
+    WarpGemmAttributeMmacIterateK<WarpGemmAttributeMmacImplF16F16F32M16N16K16, 4, 4, 1, 1, 1>>;
+using WarpGemmMmacF16F16F32_WT128x64x16_MR8NR4MI1NI1_NOuter = WarpGemmImpl<
+    WarpGemmAttributeMmacIterateKNOuter<
+        WarpGemmAttributeMmacImplF16F16F32M16N16K16,
+        8,
+        4,
+        1,
+        1,
+        1>>;
+using WarpGemmMmacF16F16F32_WT64x64x16_MR4NR4MI1NI1_NOuter = WarpGemmImpl<
+    WarpGemmAttributeMmacIterateKNOuter<
+        WarpGemmAttributeMmacImplF16F16F32M16N16K16,
+        4,
+        4,
+        1,
+        1,
+        1>>;
 
 using WarpGemmMmacF16F16F32_WT16x32x128_MR1NR1MI1NI2 = WarpGemmImpl<
     WarpGemmAttributeMmacIterateK<WarpGemmAttributeMmacImplF16F16F32M16N16K16, 1, 1, 1, 2, 8>>;
@@ -125,6 +143,24 @@ using WarpGemmMmacBF16BF16F32_WT32x64x16_MR2NR4MI1NI1 = WarpGemmImpl<
     WarpGemmAttributeMmacIterateK<WarpGemmAttributeMmacImplBf16Bf16F32M16N16K16, 2, 4, 1, 1, 1>>;
 using WarpGemmMmacBF16BF16F32_WT128x64x16_MR8NR4MI1NI1 = WarpGemmImpl<
     WarpGemmAttributeMmacIterateK<WarpGemmAttributeMmacImplBf16Bf16F32M16N16K16, 8, 4, 1, 1, 1>>;
+using WarpGemmMmacBF16BF16F32_WT64x64x16_MR4NR4MI1NI1 = WarpGemmImpl<
+    WarpGemmAttributeMmacIterateK<WarpGemmAttributeMmacImplBf16Bf16F32M16N16K16, 4, 4, 1, 1, 1>>;
+using WarpGemmMmacBF16BF16F32_WT128x64x16_MR8NR4MI1NI1_NOuter = WarpGemmImpl<
+    WarpGemmAttributeMmacIterateKNOuter<
+        WarpGemmAttributeMmacImplBf16Bf16F32M16N16K16,
+        8,
+        4,
+        1,
+        1,
+        1>>;
+using WarpGemmMmacBF16BF16F32_WT64x64x16_MR4NR4MI1NI1_NOuter = WarpGemmImpl<
+    WarpGemmAttributeMmacIterateKNOuter<
+        WarpGemmAttributeMmacImplBf16Bf16F32M16N16K16,
+        4,
+        4,
+        1,
+        1,
+        1>>;
 using WarpGemmMmacBF16BF16F32_WT16x32x64_MR1NR2MI1NI1 = WarpGemmImpl<
     WarpGemmAttributeMmacIterateK<WarpGemmAttributeMmacImplBf16Bf16F32M16N16K16, 1, 2, 1, 1, 4>>;
 

@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <cmath>
 #include <cstdint>
+#include <cstdlib>
 #include <cstring>
 #include <iostream>
 #include <limits>
@@ -24,6 +25,11 @@
 #include "../grouped_gemm.hpp"
 
 namespace {
+
+template <typename BaseKernel, int Tag>
+struct GroupedGemmKernelTagged : BaseKernel
+{
+};
 
 [[maybe_unused]] bool grouped_gemm_same_plain_descs(const ck_tile_hcu_grouped_gemm_desc* descs, int group_count)
 {
@@ -590,6 +596,23 @@ int dispatch_grouped_gemm_c_layout(const ck_tile_hcu_grouped_gemm_desc* descs,
         if constexpr(GemmConfig::SupportsFastColumnMajorA &&
                      GemmConfig::SupportsFastRowMajorB)
         {
+#if defined(CK_TILE_GROUPED_GEMM_DSREADM_BLAS_COLUMN_MAJOR_IMMEDIATE_SCALAR_SHORT) || \
+    defined(CK_TILE_GROUPED_GEMM_DSREADM_BLAS_RAW_C_COLUMN_MAJOR_IMMEDIATE_SCALAR_SHORT)
+            // The BLAS-compatible transposed view computes C^T = B^T A^T and
+            // writes the same physical row-major result through a column-major
+            // [N, M] descriptor.
+            return run_grouped_gemm_c_impl<GemmConfig,
+                                           Col,
+                                           Row,
+                                           Col,
+                                           ADataType,
+                                           BDataType,
+                                           AccDataType,
+                                           CDataType>(descs,
+                                                      group_count,
+                                                      workspace,
+                                                      stream);
+#else
             return run_grouped_gemm_c_impl<GemmConfig,
                                            Col,
                                            Row,
@@ -601,6 +624,7 @@ int dispatch_grouped_gemm_c_layout(const ck_tile_hcu_grouped_gemm_desc* descs,
                                                       group_count,
                                                       workspace,
                                                       stream);
+#endif
         }
         return -4;
     }
@@ -704,7 +728,8 @@ float grouped_gemm(const std::vector<ck_tile::GroupedGemmHostArgsImpl<DsDataType
         constexpr bool has_hot_loop_v   = has_hot_loop_.value;
         constexpr auto tail_number_v    = tail_number_.value;
         constexpr auto scheduler        = GemmConfig::Scheduler;
-        constexpr auto memory_operation = memory_operation_.value;
+        [[maybe_unused]] constexpr auto memory_operation =
+            memory_operation_.value;
 
         using UniversalGemmProblem = ck_tile::UniversalGemmPipelineProblem<ADataType,
                                                                            BDataType,
@@ -723,8 +748,23 @@ float grouped_gemm(const std::vector<ck_tile::GroupedGemmHostArgsImpl<DsDataType
 
         using GemmPipeline = typename PipelineTypeTraits<
             GemmConfig::Pipeline>::template GemmPipeline<UniversalGemmProblem>;
-#if defined(CK_TILE_GROUPED_GEMM_TRITON_OPERAND_NO_D)
-        using GemmEpilogue = GroupedGemmDirectStoreEpilogue<AccDataType, CDataType>;
+#if defined(CK_TILE_GROUPED_GEMM_DSREADM_OUTPUT_TILE_DIRECT_STORE)
+        using GemmEpilogue =
+            GroupedGemmOutputTileDirectStoreEpilogue<GemmPipeline,
+                                                      AccDataType,
+                                                      CDataType>;
+#elif defined(CK_TILE_GROUPED_GEMM_TRITON_OPERAND_NO_D)
+        using GemmEpilogue =
+            GroupedGemmDirectStoreEpilogue<AccDataType,
+                                           CDataType,
+#if defined(CK_TILE_GROUPED_GEMM_GFX936_RR_BLAS_VENDOR_OPERAND_ORDER_V4)
+                                           false>;
+#elif defined(CK_TILE_GROUPED_GEMM_GFX936_RR_BLAS_RING)
+                                           true,
+                                           true>;
+#else
+                                           UniversalGemmProblem::TransposeC>;
+#endif
 #else
         using CShuffleGemmEpilogue = ck_tile::CShuffleEpilogue<
             ck_tile::CShuffleEpilogueProblem<ADataType,
@@ -764,14 +804,36 @@ float grouped_gemm(const std::vector<ck_tile::GroupedGemmHostArgsImpl<DsDataType
         using GemmEpilogue = std::conditional_t<
             std::tuple_size_v<DsDataType> == 0 &&
                 memory_operation == ck_tile::memory_operation_enum::set,
-            GroupedGemmDirectStoreEpilogue<AccDataType, CDataType>,
+            GroupedGemmDirectStoreEpilogue<AccDataType,
+                                           CDataType,
+#if defined(CK_TILE_GROUPED_GEMM_GFX936_RR_BLAS_VENDOR_OPERAND_ORDER_V4)
+                                           false>,
+#elif defined(CK_TILE_GROUPED_GEMM_GFX936_RR_BLAS_RING)
+                                           true,
+                                           true>,
+#else
+                                           UniversalGemmProblem::TransposeC>,
+#endif
             CShuffleGemmEpilogue>;
 #else
         using GemmEpilogue = CShuffleGemmEpilogue;
 #endif
 #endif
 
-        using Kernel = ck_tile::GroupedGemmKernel<TilePartitioner, GemmPipeline, GemmEpilogue>;
+        using KernelBase =
+            ck_tile::GroupedGemmKernel<TilePartitioner, GemmPipeline, GemmEpilogue>;
+#if defined(CK_TILE_GROUPED_GEMM_UNIQUE_KERNEL_TAG)
+        // Macro-only schedules otherwise instantiate the same kentry type in
+        // separate HIP translation units. Primus links with
+        // --allow-multiple-definition, so the offload linker may silently
+        // collapse those device symbols. The empty tag wrapper changes only
+        // the launch type/mangled name and keeps KernelBase semantics intact.
+        using Kernel = GroupedGemmKernelTagged<
+            KernelBase,
+            CK_TILE_GROUPED_GEMM_UNIQUE_KERNEL_TAG>;
+#else
+        using Kernel = KernelBase;
+#endif
         auto kargs   = Kernel::MakeKargs(gemm_descs);(void)kargs;
         if(!Kernel::IsSupportedArgument(kargs))
         {
@@ -831,12 +893,14 @@ template <typename GemmConfig,
           typename ADataType,
           typename BDataType,
           typename AccDataType,
-          typename CDataType>
+          typename CDataType,
+          int UniqueKernelTag>
 float grouped_gemm_tileloop(const ck_tile::stream_config& s,
                             const ck_tile::index_t num_groups,
                             void* kargs_ptr,
                             const std::vector<std::pair<void*, std::size_t>>& output_resets,
-                            bool splitk)
+                            bool splitk,
+                            std::uint32_t requested_num_cu)
 {
     using GemmShape = ck_tile::TileGemmShape<
         ck_tile::sequence<GemmConfig::M_Tile, GemmConfig::N_Tile, GemmConfig::K_Tile>,
@@ -853,13 +917,13 @@ float grouped_gemm_tileloop(const ck_tile::stream_config& s,
                                GemmConfig::kPadN,
                                GemmConfig::kPadK,
                                GemmConfig::DoubleSmemBuffer,
-                               ALayout,
-                               BLayout,
-                               CLayout,
-                               false,
-                               false,
-                               false,
-                               true,
+                                ALayout,
+                                BLayout,
+                                CLayout,
+                                GemmConfig::TransposeC,
+                                false,
+                                false,
+                                true,
                                GemmConfig::SupportsFastRowMajorB,
                                GemmConfig::SupportsFastColumnMajorA>;
 
@@ -889,8 +953,23 @@ float grouped_gemm_tileloop(const ck_tile::stream_config& s,
 
         using GemmPipeline = typename PipelineTypeTraits<
             GemmConfig::Pipeline>::template GemmPipeline<UniversalGemmProblem>;
-#if defined(CK_TILE_GROUPED_GEMM_TRITON_OPERAND_NO_D)
-        using GemmEpilogue = GroupedGemmDirectStoreEpilogue<AccDataType, CDataType>;
+#if defined(CK_TILE_GROUPED_GEMM_DSREADM_OUTPUT_TILE_DIRECT_STORE)
+        using GemmEpilogue =
+            GroupedGemmOutputTileDirectStoreEpilogue<GemmPipeline,
+                                                      AccDataType,
+                                                      CDataType>;
+#elif defined(CK_TILE_GROUPED_GEMM_TRITON_OPERAND_NO_D)
+        using GemmEpilogue =
+            GroupedGemmDirectStoreEpilogue<AccDataType,
+                                           CDataType,
+#if defined(CK_TILE_GROUPED_GEMM_GFX936_RR_BLAS_VENDOR_OPERAND_ORDER_V4)
+                                           false>;
+#elif defined(CK_TILE_GROUPED_GEMM_GFX936_RR_BLAS_RING)
+                                           true,
+                                           true>;
+#else
+                                           UniversalGemmProblem::TransposeC>;
+#endif
 #else
         using GemmEpilogue = ck_tile::CShuffleEpilogue<
             ck_tile::CShuffleEpilogueProblem<ADataType,
@@ -927,9 +1006,34 @@ float grouped_gemm_tileloop(const ck_tile::stream_config& s,
                                                   ? 1
                                                   : GemmConfig::CShuffleWarpGemmNInterleave>>;
 #endif
-        using Kernel      = ck_tile::GroupedGemmKernel<TilePartitioner, GemmPipeline, GemmEpilogue>;
+        using KernelBase =
+            ck_tile::GroupedGemmKernel<TilePartitioner, GemmPipeline, GemmEpilogue>;
+        using Kernel = std::conditional_t<
+            UniqueKernelTag == 0,
+            KernelBase,
+            GroupedGemmKernelTagged<KernelBase, UniqueKernelTag>>;
         constexpr dim3 blocks = Kernel::BlockSize();
-        const dim3 grids  = Kernel::MaxOccupancyGridSize(s);
+        dim3 grids = Kernel::MaxOccupancyGridSize(s);
+        if(requested_num_cu > 0)
+        {
+            grids.x = std::min(
+                grids.x,
+                static_cast<decltype(grids.x)>(
+                    requested_num_cu * GemmConfig::kBlockPerCu));
+        }
+#if defined(CK_TILE_GROUPED_GEMM_GRID_SWEEP_RUNTIME)
+        // Performance-probe only: queue additional persistent blocks while
+        // keeping the device kernel and its grid-stride tile traversal intact.
+        // The default multiplier is one, so production behavior is unchanged.
+        if(const char* value = std::getenv("CK_TILE_GROUPED_GEMM_GRID_MULTIPLIER"))
+        {
+            const long multiplier = std::strtol(value, nullptr, 10);
+            if(multiplier > 1 && multiplier <= 16)
+            {
+                grids.x *= static_cast<unsigned int>(multiplier);
+            }
+        }
+#endif
 
         if(s.log_level_ > 0)
         {
@@ -1113,12 +1217,37 @@ int run_gemm_example_prec_type(std::string a_layout, std::string b_layout, int a
                                                          BDataType,
                                                          CDataType,
                                                          AccDataType>(
+#if defined(CK_TILE_GROUPED_GEMM_DSREADM_BLAS_COLUMN_MAJOR_IMMEDIATE_SCALAR_SHORT) || \
+    defined(CK_TILE_GROUPED_GEMM_DSREADM_BLAS_RAW_C_COLUMN_MAJOR_IMMEDIATE_SCALAR_SHORT)
+                argc, argv, Col{}, Row{}, Col{});
+#else
                 argc, argv, Col{}, Row{}, Row{});
+#endif
         }
     }
+#if defined(CK_TILE_GROUPED_GEMM_DSREADM_BLAS_COLUMN_MAJOR_IMMEDIATE_SCALAR_SHORT) || \
+    defined(CK_TILE_GROUPED_GEMM_DSREADM_BLAS_RAW_C_COLUMN_MAJOR_IMMEDIATE_SCALAR_SHORT)
+    if constexpr(GemmConfig::SupportsFastColumnMajorA)
+    {
+        if(a_layout == "C" && b_layout == "C")
+        {
+            if(bias || multiple_d)
+            {
+                throw std::runtime_error(
+                    "bias/multiple-D currently supports A row-major and B column-major.");
+            }
+            return run_grouped_gemm_example_with_layouts<GemmConfig,
+                                                         ADataType,
+                                                         BDataType,
+                                                         CDataType,
+                                                         AccDataType>(
+                argc, argv, Col{}, Col{}, Col{});
+        }
+    }
+#endif
     throw std::runtime_error(
         GemmConfig::SupportsFastColumnMajorA
-            ? "Fast grouped_gemm target supports NT, NN, and TN layouts only."
+            ? "Fast grouped_gemm target supports NT, NN, TN, and gated TT layouts only."
             : GemmConfig::SupportsFastRowMajorB
                   ? "Fast grouped_gemm target only supports A row-major with B row-major or column-major."
                   : "Fast grouped_gemm target only supports A row-major and B column-major.");
@@ -1173,7 +1302,12 @@ int run_gemm_example_prec_type(std::string a_layout, std::string b_layout, int a
                                                          BDataType,
                                                          CDataType,
                                                          AccDataType>(
+#if defined(CK_TILE_GROUPED_GEMM_DSREADM_BLAS_COLUMN_MAJOR_IMMEDIATE_SCALAR_SHORT) || \
+    defined(CK_TILE_GROUPED_GEMM_DSREADM_BLAS_RAW_C_COLUMN_MAJOR_IMMEDIATE_SCALAR_SHORT)
+                argc, argv, Col{}, Row{}, Col{});
+#else
                 argc, argv, Col{}, Row{}, Row{});
+#endif
         }
         throw std::runtime_error("B row-major is not supported for this grouped_gemm config.");
     }

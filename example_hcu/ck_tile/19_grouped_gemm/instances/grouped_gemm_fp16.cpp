@@ -28,14 +28,18 @@
 #if defined(CK_TILE_GROUPED_GEMM_TUNE_V3_TRITON_OPERAND)
 template <typename PrecType>
 using GroupedGemmFp16Config =
-#if defined(CK_TILE_GROUPED_GEMM_TRITON_EXACT_TILE_TRAVERSAL)
+#if defined(CK_TILE_GROUPED_GEMM_RR_BLAS_TRANSPOSE_C)
+    GemmConfigComputeV3TritonOperand256ExactTraversalTransposeC<PrecType>;
+#elif defined(CK_TILE_GROUPED_GEMM_TRITON_EXACT_TILE_TRAVERSAL)
     GemmConfigComputeV3TritonOperand256ExactTraversal<PrecType>;
 #else
     GemmConfigComputeV3TritonOperand256Aligned<PrecType>;
 #endif
 template <typename PrecType>
 using GroupedGemmFp16PaddedConfig =
-#if defined(CK_TILE_GROUPED_GEMM_TRITON_EXACT_TILE_TRAVERSAL)
+#if defined(CK_TILE_GROUPED_GEMM_RR_BLAS_TRANSPOSE_C)
+    GemmConfigComputeV3TritonOperand256ExactTraversalTransposeC<PrecType>;
+#elif defined(CK_TILE_GROUPED_GEMM_TRITON_EXACT_TILE_TRAVERSAL)
     GemmConfigComputeV3TritonOperand256ExactTraversal<PrecType>;
 #else
     GemmConfigComputeV3TritonOperand256Aligned<PrecType>;

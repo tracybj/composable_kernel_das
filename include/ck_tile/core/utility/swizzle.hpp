@@ -45,6 +45,17 @@ struct Swizzle
 template <index_t ds_read_bytes>
 CK_TILE_HOST_DEVICE constexpr auto make_swizzle(number<ds_read_bytes> = {})
 {
+#if defined(CK_TILE_GROUPED_GEMM_CSHUFFLE_SCALAR_GROUP16_SWIZZLE)
+    if constexpr(ds_read_bytes == 2)
+    {
+        // CShuffle's logical BF16 stores are scalar even though the backend
+        // combines adjacent stores. Use the same mapping as a 16-byte load:
+        // preserve the low three element-offset bits and XOR the 8-element
+        // transaction slot as a unit.
+        return Swizzle<3, 3, 3>{};
+    }
+    else
+#endif
     if constexpr(ds_read_bytes == 4)
     {
         return Swizzle<5, 1, 5>{};

@@ -28,14 +28,26 @@
 #if defined(CK_TILE_GROUPED_GEMM_TUNE_V3_TRITON_OPERAND)
 template <typename PrecType>
 using GroupedGemmBf16Config =
-#if defined(CK_TILE_GROUPED_GEMM_TRITON_EXACT_TILE_TRAVERSAL)
+#if defined(CK_TILE_GROUPED_GEMM_RR_BLAS_TRANSPOSE_C_NONPERSISTENT)
+    GemmConfigComputeV3TritonOperand256ExactTraversalTransposeCNonPersistent<PrecType>;
+#elif defined(CK_TILE_GROUPED_GEMM_TRITON_NONPERSISTENT)
+    GemmConfigComputeV3TritonOperand256ExactTraversalNonPersistent<PrecType>;
+#elif defined(CK_TILE_GROUPED_GEMM_RR_BLAS_TRANSPOSE_C)
+    GemmConfigComputeV3TritonOperand256ExactTraversalTransposeC<PrecType>;
+#elif defined(CK_TILE_GROUPED_GEMM_TRITON_EXACT_TILE_TRAVERSAL)
     GemmConfigComputeV3TritonOperand256ExactTraversal<PrecType>;
 #else
     GemmConfigComputeV3TritonOperand256Aligned<PrecType>;
 #endif
 template <typename PrecType>
 using GroupedGemmBf16PaddedConfig =
-#if defined(CK_TILE_GROUPED_GEMM_TRITON_EXACT_TILE_TRAVERSAL)
+#if defined(CK_TILE_GROUPED_GEMM_RR_BLAS_TRANSPOSE_C_NONPERSISTENT)
+    GemmConfigComputeV3TritonOperand256ExactTraversalTransposeCNonPersistent<PrecType>;
+#elif defined(CK_TILE_GROUPED_GEMM_TRITON_NONPERSISTENT)
+    GemmConfigComputeV3TritonOperand256ExactTraversalNonPersistent<PrecType>;
+#elif defined(CK_TILE_GROUPED_GEMM_RR_BLAS_TRANSPOSE_C)
+    GemmConfigComputeV3TritonOperand256ExactTraversalTransposeC<PrecType>;
+#elif defined(CK_TILE_GROUPED_GEMM_TRITON_EXACT_TILE_TRAVERSAL)
     GemmConfigComputeV3TritonOperand256ExactTraversal<PrecType>;
 #else
     GemmConfigComputeV3TritonOperand256Aligned<PrecType>;
@@ -57,10 +69,18 @@ using GroupedGemmBf16PaddedConfig =
 #elif defined(CK_TILE_GROUPED_GEMM_TUNE_V3_DSREADM_STAGE)
 template <typename PrecType>
 using GroupedGemmBf16Config =
+#if defined(CK_TILE_GROUPED_GEMM_DSREADM_STAGE_NONPERSISTENT)
+    GemmConfigComputeV3DsreadmStage256W8NonPersistent<PrecType>;
+#else
     GemmConfigComputeV3DsreadmStage256W8<PrecType>;
+#endif
 template <typename PrecType>
 using GroupedGemmBf16PaddedConfig =
+#if defined(CK_TILE_GROUPED_GEMM_DSREADM_STAGE_NONPERSISTENT)
+    GemmConfigComputeV3DsreadmStage256W8NonPersistent<PrecType>;
+#else
     GemmConfigComputeV3DsreadmStage256W8<PrecType>;
+#endif
 #elif defined(CK_TILE_GROUPED_GEMM_TUNE_V3_REGPREFETCH_256_W16_GROUP8)
 template <typename PrecType>
 using GroupedGemmBf16Config =

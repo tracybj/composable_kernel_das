@@ -484,6 +484,29 @@ struct tensor_view
             coord.get_offset(), linear_offset, is_valid_element, x);
     }
 
+#if defined(CK_TILE_GROUPED_GEMM_CSHUFFLE_XOR_PAIR_B64_STORE)
+    template <typename X,
+              index_t PairLinearOffset,
+              typename std::enable_if<
+                  std::is_same_v<typename vector_traits<remove_cvref_t<X>>::scalar_type,
+                                 typename vector_traits<remove_cvref_t<DataType>>::scalar_type>,
+                  bool>::type = false>
+    CK_TILE_DEVICE void set_vectorized_elements_pair(const TensorCoord& coord0,
+                                                     const TensorCoord& coord1,
+                                                     const X& x0,
+                                                     const X& x1)
+    {
+        const index_t offset0 = coord0.get_offset();
+        const index_t offset1 = coord1.get_offset();
+        const bool first_is_low = offset0 < offset1;
+        const index_t base      = first_is_low ? offset0 : offset1;
+        const X low             = first_is_low ? x0 : x1;
+        const X high            = first_is_low ? x1 : x0;
+
+        buf_.template set_pair<X, PairLinearOffset>(base, low, high);
+    }
+#endif
+
     // X is vector of DataType.
     // "coord" is coordinate of DataType, not X. "coord" should be aligned to X
     template <typename X,

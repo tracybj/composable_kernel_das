@@ -19,7 +19,7 @@
 #include "ck_tile/ops/gemm/pipeline/gemm_pipeline_ag_bg_cr_comp_v3.hpp"
 #include "ck_tile/ops/gemm/pipeline/gemm_pipeline_ag_bg_cr_comp_v3_dsreadm.hpp"
 #include "ck_tile/ops/gemm/pipeline/gemm_pipeline_ag_bg_cr_comp_v3_w8_overlap.hpp"
-#include "ck_tile/ops/gemm/pipeline/gemm_pipeline_ag_bg_cr_comp_v3_gfx936_operand.hpp"
+#include "ck_tile/ops/gemm/pipeline/gemm_pipeline_ag_bg_cr_comp_v3_bw_family_operand.hpp"
 #include "ck_tile/ops/gemm/pipeline/gemm_pipeline_ag_bg_cr_comp_v4.hpp"
 #include "ck_tile/ops/gemm/pipeline/gemm_pipeline_ag_bg_cr_mls.hpp"
 
@@ -400,8 +400,18 @@ struct GemmConfigComputeV3RegPrefetch256W16Group8Aligned
     static constexpr bool kPadM               = false;
     static constexpr bool kPadN               = false;
     static constexpr bool kPadK               = false;
+#if defined(CK_TILE_GROUPED_GEMM_DSREADM_TILE_GROUP_NUM)
+    static constexpr ck_tile::index_t TileParitionerGroupNum =
+        CK_TILE_GROUPED_GEMM_DSREADM_TILE_GROUP_NUM;
+#else
     static constexpr ck_tile::index_t TileParitionerGroupNum = 8;
-    static constexpr ck_tile::index_t TileParitionerM01      = 4;
+#endif
+#if defined(CK_TILE_GROUPED_GEMM_DSREADM_TILE_M01)
+    static constexpr ck_tile::index_t TileParitionerM01 =
+        CK_TILE_GROUPED_GEMM_DSREADM_TILE_M01;
+#else
+    static constexpr ck_tile::index_t TileParitionerM01 = 4;
+#endif
     static constexpr ck_tile::index_t Pipeline =
         CK_TILE_PIPELINE_COMPUTE_V3_WARP_RAKED;
 };
@@ -474,6 +484,32 @@ struct GemmConfigComputeV3TritonOperand256ExactTraversal
 #endif
 };
 
+template <typename PrecType>
+struct GemmConfigComputeV3TritonOperand256ExactTraversalNonPersistent
+    : public GemmConfigComputeV3TritonOperand256ExactTraversal<PrecType>
+{
+    static constexpr bool Persistent = false;
+};
+
+// hipBLASLt presents NN through column-major BLAS by swapping the physical
+// operands and accumulating C^T. This isolated config mirrors that contract:
+// the direct producer feeds physical B to the A-side DSReadM path and
+// physical A to the B-side B64 path, then transposes the native accumulator
+// mapping in the epilogue.
+template <typename PrecType>
+struct GemmConfigComputeV3TritonOperand256ExactTraversalTransposeC
+    : public GemmConfigComputeV3TritonOperand256ExactTraversal<PrecType>
+{
+    static constexpr bool TransposeC = true;
+};
+
+template <typename PrecType>
+struct GemmConfigComputeV3TritonOperand256ExactTraversalTransposeCNonPersistent
+    : public GemmConfigComputeV3TritonOperand256ExactTraversalTransposeC<PrecType>
+{
+    static constexpr bool Persistent = false;
+};
+
 // gfx936 NN/TN large-shape path. It keeps the selected V3 geometry but uses
 // the original thread-raked distribution: applying warp-raked A/B to the
 // transpose paths violates their vector offset/alignment contract.
@@ -515,11 +551,38 @@ struct GemmConfigComputeV3DsreadmStage256W8
     static constexpr bool kPadK = false;
     static constexpr bool SupportsFastRowMajorB    = true;
     static constexpr bool SupportsFastColumnMajorA = true;
+#if defined(CK_TILE_GROUPED_GEMM_DSREADM_STAGE_TILE_GROUP_NUM)
+    static constexpr ck_tile::index_t TileParitionerGroupNum =
+        CK_TILE_GROUPED_GEMM_DSREADM_STAGE_TILE_GROUP_NUM;
+#else
     static constexpr ck_tile::index_t TileParitionerGroupNum = 8;
-    static constexpr ck_tile::index_t TileParitionerM01      = 4;
+#endif
+#if defined(CK_TILE_GROUPED_GEMM_DSREADM_STAGE_TILE_M01)
+    static constexpr ck_tile::index_t TileParitionerM01 =
+        CK_TILE_GROUPED_GEMM_DSREADM_STAGE_TILE_M01;
+#else
+    static constexpr ck_tile::index_t TileParitionerM01 = 4;
+#endif
     static constexpr int kBlockPerCu = 1;
     static constexpr ck_tile::index_t Pipeline =
         CK_TILE_PIPELINE_COMPUTE_V3_DSREADM_STAGE;
+};
+
+// Fused-pack pressure probe: halve the grad-W M tile while retaining eight
+// waves and the 256-wide N tile. Each lane then holds 64 rather than 128 FP32
+// accumulators, leaving register headroom for the packed-gradX producer.
+template <typename PrecType>
+struct GemmConfigComputeV3DsreadmStage128x256W8
+    : public GemmConfigComputeV3DsreadmStage256W8<PrecType>
+{
+    static constexpr ck_tile::index_t M_Tile = 128;
+};
+
+template <typename PrecType>
+struct GemmConfigComputeV3DsreadmStage256W8NonPersistent
+    : public GemmConfigComputeV3DsreadmStage256W8<PrecType>
+{
+    static constexpr bool Persistent = false;
 };
 
 template <typename PrecType>
@@ -661,7 +724,10 @@ struct GemmConfigMls256Warp32x64 : public GemmConfigMls256<PrecType>
     static constexpr ck_tile::index_t CShuffleWarpGemmNInterleave = 4;
 };
 
-template <typename AccDataType_, typename ODataType_>
+template <typename AccDataType_,
+          typename ODataType_,
+          bool TransposeBlockTiles_ = false,
+          bool SingleBlockTileRemap_ = false>
 struct GroupedGemmDirectStoreEpilogue
 {
     using AccDataType = ck_tile::remove_cvref_t<AccDataType_>;
@@ -672,6 +738,8 @@ struct GroupedGemmDirectStoreEpilogue
     static constexpr ck_tile::index_t NumDTensor = 0;
     static constexpr ck_tile::memory_operation_enum MemoryOperation =
         ck_tile::memory_operation_enum::set;
+    static constexpr bool TransposeBlockTiles = TransposeBlockTiles_;
+    static constexpr bool SingleBlockTileRemap = SingleBlockTileRemap_;
 
     // Triton's gfx936 epilogue converts one 128x256 half-output slab at a time
     // through the 64-KiB compute LDS. Doing the conversion after the K loop
@@ -725,6 +793,50 @@ struct GroupedGemmDirectStoreEpilogue
                                               ck_tile::number<1>)
     {
         return Vec8{x0[2], x1[2], x2[2], x3[2], x0[3], x1[3], x2[3], x3[3]};
+    }
+
+    template <typename OView>
+    CK_TILE_DEVICE static void StoreOutputVector(OView& o_view,
+                                                 ck_tile::index_t output_row,
+                                                 ck_tile::index_t output_col,
+                                                 const Vec8& output)
+    {
+        constexpr bool kStoreOobCheck = true;
+#if defined(CK_TILE_GROUPED_GEMM_GFX936_EPILOGUE_STORE_VEC4)
+        const Vec4 output0{output[0], output[1], output[2], output[3]};
+        const Vec4 output1{output[4], output[5], output[6], output[7]};
+        const auto coord0 = ck_tile::make_tensor_coordinate(
+            o_view.get_tensor_descriptor(),
+            ck_tile::array<ck_tile::index_t, 2>{output_row, output_col});
+        const auto coord1 = ck_tile::make_tensor_coordinate(
+            o_view.get_tensor_descriptor(),
+            ck_tile::array<ck_tile::index_t, 2>{output_row, output_col + 4});
+        const auto& output_buffer0 =
+            reinterpret_cast<const ck_tile::thread_buffer<ODataType, 4>&>(
+                output0);
+        const auto& output_buffer1 =
+            reinterpret_cast<const ck_tile::thread_buffer<ODataType, 4>&>(
+                output1);
+        o_view
+            .template set_vectorized_elements_raw<
+                ck_tile::thread_buffer<ODataType, 4>,
+                kStoreOobCheck>(coord0, 0, output_buffer0);
+        o_view
+            .template set_vectorized_elements_raw<
+                ck_tile::thread_buffer<ODataType, 4>,
+                kStoreOobCheck>(coord1, 0, output_buffer1);
+#else
+        const auto coord = ck_tile::make_tensor_coordinate(
+            o_view.get_tensor_descriptor(),
+            ck_tile::array<ck_tile::index_t, 2>{output_row, output_col});
+        const auto& output_buffer =
+            reinterpret_cast<const ck_tile::thread_buffer<ODataType, 8>&>(
+                output);
+        o_view
+            .template set_vectorized_elements_raw<
+                ck_tile::thread_buffer<ODataType, 8>,
+                kStoreOobCheck>(coord, 0, output_buffer);
+#endif
     }
 
     template <ck_tile::index_t Offset0, ck_tile::index_t Offset1>
@@ -821,12 +933,468 @@ struct GroupedGemmDirectStoreEpilogue
         SyncAfterEpilogueLdsWrite();
     }
 
+    template <typename OWindow, typename AccTile>
+    CK_TILE_DEVICE static void DirectScalarStore(OWindow& o_window,
+                                                 const AccTile& acc_tile)
+    {
+#if !defined(CK_TILE_GROUPED_GEMM_DSREADM_DIRECT_SCALAR_SHORT) && \
+    !defined(CK_TILE_GROUPED_GEMM_DSREADM_DISTRIBUTED_SCALAR_SHORT) && \
+    !defined(CK_TILE_GROUPED_GEMM_DSREADM_OUTPUT_MAPPED_SCALAR_SHORT) && \
+    !defined(CK_TILE_GROUPED_GEMM_DSREADM_OUTPUT_MAPPED_IMMEDIATE_SCALAR_SHORT) && \
+    !defined(CK_TILE_GROUPED_GEMM_DSREADM_BLAS_WAVE_IMMEDIATE_SCALAR_SHORT) && \
+    !defined(CK_TILE_GROUPED_GEMM_DSREADM_BLAS_COLUMN_MAJOR_IMMEDIATE_SCALAR_SHORT) && \
+    !defined(CK_TILE_GROUPED_GEMM_DSREADM_BLAS_RAW_C_COLUMN_MAJOR_IMMEDIATE_SCALAR_SHORT)
+        static_assert(TransposeBlockTiles && SingleBlockTileRemap,
+                      "The gfx936 scalar-store permutation is defined for the "
+                      "validated RR BLAS accumulator layout");
+#endif
+
+        static_assert(ck_tile::remove_cvref_t<AccTile>::get_thread_buffer_size() == 128,
+                      "BLAS-layout scalar store requires 128 accumulators per lane");
+
+#if defined(CK_TILE_GROUPED_GEMM_DSREADM_BLAS_RAW_C_COLUMN_MAJOR_IMMEDIATE_SCALAR_SHORT)
+        // The hipBLASLt MIWT8_4 instruction stream numbers its 32 MMAC
+        // results as [N-repeat][M-repeat][four raw MMAC registers]. Keep that
+        // native order all the way to the store instead of transposing the B
+        // operand into CK's M-major accumulator contract.
+        const auto& c_buffer = acc_tile.get_thread_buffer();
+        const ck_tile::index_t tid = ck_tile::get_thread_id();
+        const ck_tile::index_t m_from_tid =
+            (tid & 15) | ((tid & 64) >> 1);
+        const ck_tile::index_t n_from_tid =
+            ((tid & 16) >> 4) | ((tid & 32) >> 4) |
+            ((tid & 128) >> 2) | ((tid & 256) >> 2);
+        const auto block_origin = o_window.get_window_origin();
+        auto o_view             = o_window.get_bottom_tensor_view();
+        o_view.init_raw();
+
+        ck_tile::static_for<0, 16, 1>{}([&](auto i_n_group) {
+            constexpr ck_tile::index_t n_group = i_n_group;
+            constexpr ck_tile::index_t n_repeat = n_group >> 2;
+            constexpr ck_tile::index_t n_raw_reg = n_group & 3;
+            constexpr ck_tile::index_t n_delta =
+                ((n_group & 3) << 2) |
+                ((n_group & 4) << 2) |
+                ((n_group & 8) << 4);
+            const auto base_coord = ck_tile::make_tensor_coordinate(
+                o_view.get_tensor_descriptor(),
+                ck_tile::array<ck_tile::index_t, 2>{
+                    block_origin.at(ck_tile::number<0>{}) + m_from_tid,
+                    block_origin.at(ck_tile::number<1>{}) +
+                        n_from_tid + n_delta});
+            const ck_tile::index_t base_offset = base_coord.get_offset();
+
+            ck_tile::static_for<0, 8, 1>{}([&](auto i_m_group) {
+                constexpr ck_tile::index_t m_group = i_m_group;
+                constexpr ck_tile::index_t acc_idx =
+                    n_repeat * 32 + m_group * 4 + n_raw_reg;
+                constexpr ck_tile::index_t m_delta =
+                    ((m_group & 1) << 4) |
+                    ((m_group & 2) << 5) |
+                    ((m_group & 4) << 5);
+                const ODataType output =
+                    ck_tile::type_convert<ODataType>(c_buffer[acc_idx]);
+                o_view.get_buffer_view()
+                    .template set_raw_immediate<
+                        ODataType,
+                        m_delta,
+                        false>(base_offset, true, output);
+            });
+        });
+
+        ck_tile::buffer_store_fence();
+#elif defined(CK_TILE_GROUPED_GEMM_DSREADM_BLAS_COLUMN_MAJOR_IMMEDIATE_SCALAR_SHORT)
+        // Column-major C keeps the M coordinate contiguous. This is the exact
+        // physical contract used by the selected hipBLASLt MIWT8_4 solution:
+        // sixteen uniform N bases, each followed by eight immediate M stores.
+        // A row-major C[M,N] can use this path without a transpose kernel by
+        // invoking the equivalent C^T[N,M] = B^T[N,K] * A^T[K,M] problem.
+        const auto& c_buffer = acc_tile.get_thread_buffer();
+        const ck_tile::index_t tid = ck_tile::get_thread_id();
+        const ck_tile::index_t m_from_tid =
+            (tid & 15) | ((tid & 64) >> 1);
+        const ck_tile::index_t n_from_tid =
+            ((tid & 16) >> 4) | ((tid & 32) >> 4) |
+            ((tid & 128) >> 2) | ((tid & 256) >> 2);
+        const auto block_origin = o_window.get_window_origin();
+        auto o_view             = o_window.get_bottom_tensor_view();
+        o_view.init_raw();
+
+        ck_tile::static_for<0, 16, 1>{}([&](auto i_n_group) {
+            constexpr ck_tile::index_t n_group = i_n_group;
+            constexpr ck_tile::index_t acc_n_base = n_group;
+            constexpr ck_tile::index_t n_delta =
+                ((n_group & 3) << 2) |
+                ((n_group & 4) << 2) |
+                ((n_group & 8) << 4);
+            const auto base_coord = ck_tile::make_tensor_coordinate(
+                o_view.get_tensor_descriptor(),
+                ck_tile::array<ck_tile::index_t, 2>{
+                    block_origin.at(ck_tile::number<0>{}) + m_from_tid,
+                    block_origin.at(ck_tile::number<1>{}) +
+                        n_from_tid + n_delta});
+            const ck_tile::index_t base_offset = base_coord.get_offset();
+
+            ck_tile::static_for<0, 8, 1>{}([&](auto i_m_group) {
+                constexpr ck_tile::index_t m_group = i_m_group;
+                constexpr ck_tile::index_t acc_idx =
+                    acc_n_base | (m_group << 4);
+                constexpr ck_tile::index_t m_delta =
+                    ((m_group & 1) << 4) |
+                    ((m_group & 2) << 5) |
+                    ((m_group & 4) << 5);
+                const ODataType output =
+                    ck_tile::type_convert<ODataType>(c_buffer[acc_idx]);
+                o_view.get_buffer_view()
+                    .template set_raw_immediate<
+                        ODataType,
+                        m_delta,
+                        false>(base_offset, true, output);
+            });
+        });
+
+        ck_tile::buffer_store_fence();
+#elif defined(CK_TILE_GROUPED_GEMM_DSREADM_BLAS_WAVE_IMMEDIATE_SCALAR_SHORT)
+        // The whole-wave CK MMAC uses n*2+m physical wave ownership and its
+        // generic MIWT8_4 C buffer orders the two N repeat bits before the
+        // three M repeat bits:
+        //   M = {tid[3:0], acc[4], tid[6], acc[5], acc[6]}
+        //   N = {tid[5:4], acc[1:0], acc[2], tid[7], tid[8], acc[3]}.
+        // The public CK contract stores C[M,N], so group the eight M repeat
+        // rows and issue sixteen compile-time N offsets from each row base.
+        const auto& c_buffer = acc_tile.get_thread_buffer();
+        const ck_tile::index_t tid = ck_tile::get_thread_id();
+        const ck_tile::index_t row_from_tid =
+            (tid & 15) | ((tid & 64) >> 1);
+        const ck_tile::index_t col_from_tid =
+            ((tid & 16) >> 4) | ((tid & 32) >> 4) |
+            ((tid & 128) >> 2) | ((tid & 256) >> 2);
+        const auto block_origin = o_window.get_window_origin();
+        auto o_view             = o_window.get_bottom_tensor_view();
+        o_view.init_raw();
+
+        ck_tile::static_for<0, 8, 1>{}([&](auto i_row_group) {
+            constexpr ck_tile::index_t row_group = i_row_group;
+            constexpr ck_tile::index_t acc_row_base = row_group << 4;
+            constexpr ck_tile::index_t row_delta =
+                ((row_group & 1) << 4) |
+                ((row_group & 2) << 5) |
+                ((row_group & 4) << 5);
+            const auto base_coord = ck_tile::make_tensor_coordinate(
+                o_view.get_tensor_descriptor(),
+                ck_tile::array<ck_tile::index_t, 2>{
+                    block_origin.at(ck_tile::number<0>{}) +
+                        row_from_tid + row_delta,
+                    block_origin.at(ck_tile::number<1>{}) +
+                        col_from_tid});
+            const ck_tile::index_t base_offset = base_coord.get_offset();
+
+            ck_tile::static_for<0, 16, 1>{}([&](auto i_col_group) {
+                constexpr ck_tile::index_t col_group = i_col_group;
+                constexpr ck_tile::index_t acc_idx = acc_row_base | col_group;
+                constexpr ck_tile::index_t col_delta =
+                    ((col_group & 3) << 2) |
+                    ((col_group & 4) << 2) |
+                    ((col_group & 8) << 4);
+                const ODataType output =
+                    ck_tile::type_convert<ODataType>(c_buffer[acc_idx]);
+                o_view.get_buffer_view()
+                    .template set_raw_immediate<
+                        ODataType,
+                        col_delta,
+                        false>(base_offset, true, output);
+            });
+        });
+
+        ck_tile::buffer_store_fence();
+#elif defined(CK_TILE_GROUPED_GEMM_DSREADM_OUTPUT_MAPPED_IMMEDIATE_SCALAR_SHORT)
+        // Eight row bases x sixteen compile-time column offsets. This preserves
+        // the Phase151 logical mapping while making the ISA use one dynamic
+        // voffset per row and buffer_store_short immediate offsets, like the
+        // selected hipBLASLt solution.
+        const auto& c_buffer = acc_tile.get_thread_buffer();
+        const ck_tile::index_t tid = ck_tile::get_thread_id();
+        const ck_tile::index_t row_from_tid =
+            (tid & 15) | ((tid & 256) >> 3);
+        const ck_tile::index_t col_from_tid =
+            ((tid & 16) >> 4) | ((tid & 32) >> 4) |
+            ((tid & 64) >> 1) | ((tid & 128) >> 1);
+        const auto block_origin = o_window.get_window_origin();
+        auto o_view             = o_window.get_bottom_tensor_view();
+        o_view.init_raw();
+
+        ck_tile::static_for<0, 8, 1>{}([&](auto i_row_group) {
+            constexpr ck_tile::index_t row_group = i_row_group;
+            constexpr ck_tile::index_t acc_row_base =
+                ((row_group & 1) << 3) | ((row_group & 2) << 4) |
+                ((row_group & 4) << 4);
+            constexpr ck_tile::index_t row_delta =
+                ((row_group & 1) << 4) | ((row_group & 2) << 5) |
+                ((row_group & 4) << 5);
+            const auto base_coord = ck_tile::make_tensor_coordinate(
+                o_view.get_tensor_descriptor(),
+                ck_tile::array<ck_tile::index_t, 2>{
+                    block_origin.at(ck_tile::number<0>{}) +
+                        row_from_tid + row_delta,
+                    block_origin.at(ck_tile::number<1>{}) +
+                        col_from_tid});
+            const ck_tile::index_t base_offset = base_coord.get_offset();
+
+            ck_tile::static_for<0, 16, 1>{}([&](auto i_col_group) {
+                constexpr ck_tile::index_t col_group = i_col_group;
+                constexpr ck_tile::index_t acc_idx =
+                    acc_row_base | (col_group & 7) |
+                    ((col_group & 8) << 1);
+                constexpr ck_tile::index_t col_delta =
+                    ((col_group & 1) << 2) | ((col_group & 2) << 2) |
+                    ((col_group & 4) << 2) | ((col_group & 8) << 4);
+                const ODataType output =
+                    ck_tile::type_convert<ODataType>(c_buffer[acc_idx]);
+                o_view.get_buffer_view()
+                    .template set_raw_immediate<
+                        ODataType,
+                        col_delta,
+                        false>(base_offset, true, output);
+            });
+        });
+
+        ck_tile::buffer_store_fence();
+#elif defined(CK_TILE_GROUPED_GEMM_DSREADM_OUTPUT_MAPPED_SCALAR_SHORT)
+        // Exact logical output distribution generated from
+        // MakeCOutputBlockTile and exhaustively checked over all
+        // 512 lanes x 128 accumulators:
+        //   m = {acc[6], acc[5], tid[8], acc[3], tid[3:0]}
+        //   n = {acc[4], tid[7:6], acc[2:0], tid[5:4]}
+        // MakeCOutputLayout is buffer-order preserving for this DSReadM
+        // (2x2 MMAC, unit interleave) shape, so consume the original
+        // accumulator buffer directly and avoid the generic adaptor's
+        // VGPR pressure and spills.
+        const auto& c_buffer = acc_tile.get_thread_buffer();
+        const ck_tile::index_t tid = ck_tile::get_thread_id();
+        const ck_tile::index_t row_from_tid =
+            (tid & 15) | ((tid & 256) >> 3);
+        const ck_tile::index_t col_from_tid =
+            ((tid & 16) >> 4) | ((tid & 32) >> 4) |
+            ((tid & 64) >> 1) | ((tid & 128) >> 1);
+
+        const auto block_origin = o_window.get_window_origin();
+        auto o_view             = o_window.get_bottom_tensor_view();
+        constexpr bool kStoreOobCheck = true;
+
+        ck_tile::static_for<0, 128, 1>{}([&](auto i_acc) {
+            constexpr ck_tile::index_t acc_idx = i_acc;
+            constexpr ck_tile::index_t row_from_acc =
+                ((acc_idx & 8) << 1) | ((acc_idx & 32) << 1) |
+                ((acc_idx & 64) << 1);
+            constexpr ck_tile::index_t col_from_acc =
+                ((acc_idx & 1) << 2) | ((acc_idx & 2) << 2) |
+                ((acc_idx & 4) << 2) | ((acc_idx & 16) << 3);
+
+            const auto coord = ck_tile::make_tensor_coordinate(
+                o_view.get_tensor_descriptor(),
+                ck_tile::array<ck_tile::index_t, 2>{
+                    block_origin.at(ck_tile::number<0>{}) +
+                        row_from_tid + row_from_acc,
+                    block_origin.at(ck_tile::number<1>{}) +
+                        col_from_tid + col_from_acc});
+            const ODataType output =
+                ck_tile::type_convert<ODataType>(c_buffer[i_acc]);
+            o_view.template set_vectorized_elements_raw<
+                ODataType,
+                kStoreOobCheck>(coord, 0, output);
+        });
+
+        ck_tile::buffer_store_fence();
+#elif defined(CK_TILE_GROUPED_GEMM_DSREADM_DISTRIBUTED_SCALAR_SHORT)
+        // Walk the raw accumulator tile's own static distribution.  This
+        // exposes each lane-owned MMAC value and its logical block coordinate
+        // without MakeCOutputBlockTile's ds_bpermute conversion or CShuffle.
+        // The generated stores stay scalar for an ISA-compatible first gate.
+        const auto block_origin = o_window.get_window_origin();
+        auto o_view             = o_window.get_bottom_tensor_view();
+        constexpr bool kStoreOobCheck = true;
+        constexpr auto spans =
+            ck_tile::remove_cvref_t<AccTile>::get_distributed_spans();
+        constexpr auto tile_distribution =
+            ck_tile::remove_cvref_t<AccTile>::get_tile_distribution();
+
+        ck_tile::sweep_tile_span(spans[ck_tile::number<0>{}], [&](auto idx_m) {
+            ck_tile::sweep_tile_span(spans[ck_tile::number<1>{}], [&](auto idx_n) {
+                constexpr auto distributed_indices =
+                    ck_tile::make_tuple(idx_m, idx_n);
+                const auto local = ck_tile::get_x_indices_from_distributed_indices(
+                    tile_distribution, distributed_indices);
+                const auto coord = ck_tile::make_tensor_coordinate(
+                    o_view.get_tensor_descriptor(),
+                    ck_tile::array<ck_tile::index_t, 2>{
+                        block_origin.at(ck_tile::number<0>{}) +
+                            local.at(ck_tile::number<0>{}),
+                        block_origin.at(ck_tile::number<1>{}) +
+                            local.at(ck_tile::number<1>{})});
+                const ODataType output = ck_tile::type_convert<ODataType>(
+                    acc_tile[distributed_indices]);
+                o_view.template set_vectorized_elements_raw<
+                    ODataType,
+                    kStoreOobCheck>(coord, 0, output);
+            });
+        });
+
+        ck_tile::buffer_store_fence();
+#else
+        const auto& c_buffer = acc_tile.get_thread_buffer();
+        // Compose the producer->LDS and LDS->consumer permutations used by the
+        // vector epilogue.  The result is a pure bit permutation, so every
+        // producer lane can write its own 128 accumulators directly:
+        //
+        // row bits = {tid[0:3], acc[2], tid[7:8], acc[3]}
+        // col bits = {tid[4:5], acc[0:1], acc[4], tid[6], acc[5:6]}
+        //
+        // This intentionally mirrors hipBLASLt's buffer_store_short epilogue
+        // and removes the four LDS transpose rounds plus their barriers.  The
+        // DSReadM grad-W probe shares the same 2x4-wave raw accumulator
+        // distribution and validates the composed coordinates independently.
+        const ck_tile::index_t tid = ck_tile::get_thread_id();
+        const ck_tile::index_t row_from_tid =
+            (tid & 15) | ((tid & 128) >> 2) | ((tid & 256) >> 2);
+        const ck_tile::index_t col_from_tid =
+            ((tid & 16) >> 4) | ((tid & 32) >> 4) | ((tid & 64) >> 1);
+
+        const auto block_origin = o_window.get_window_origin();
+        auto o_view             = o_window.get_bottom_tensor_view();
+        constexpr bool kStoreOobCheck = true;
+
+        ck_tile::static_for<0, 128, 1>{}([&](auto i_acc) {
+            constexpr ck_tile::index_t acc_idx = i_acc;
+            constexpr ck_tile::index_t row_from_acc =
+                ((acc_idx & 4) << 2) | ((acc_idx & 8) << 4);
+            constexpr ck_tile::index_t col_from_acc =
+                ((acc_idx & 1) << 2) | ((acc_idx & 2) << 2) |
+                (acc_idx & 16) | ((acc_idx & 32) << 1) |
+                ((acc_idx & 64) << 1);
+
+            const auto coord = ck_tile::make_tensor_coordinate(
+                o_view.get_tensor_descriptor(),
+                ck_tile::array<ck_tile::index_t, 2>{
+                    block_origin.at(ck_tile::number<0>{}) +
+                        row_from_tid + row_from_acc,
+                    block_origin.at(ck_tile::number<1>{}) +
+                        col_from_tid + col_from_acc});
+            const ODataType output =
+                ck_tile::type_convert<ODataType>(c_buffer[i_acc]);
+            o_view.template set_vectorized_elements_raw<
+                ODataType,
+                kStoreOobCheck>(coord, 0, output);
+        });
+
+        ck_tile::buffer_store_fence();
+#endif
+    }
+
     template <typename OWindow, typename AccTile, typename DWindow>
     CK_TILE_DEVICE void operator()(OWindow& o_window,
                                    const AccTile& acc_tile,
                                    const DWindow&,
                                    void* p_smem = nullptr) const
     {
+#if defined(CK_TILE_GROUPED_GEMM_GFX936_EPILOGUE_DIRECT_SCALAR_SHORT)
+        (void)p_smem;
+        DirectScalarStore(o_window, acc_tile);
+#elif defined(CK_TILE_GROUPED_GEMM_DSREADM_BLAS_ROW_MAJOR_LDS_VEC4)
+        const auto& c_buffer = acc_tile.get_thread_buffer();
+#if defined(CK_TILE_GROUPED_GEMM_FUSED_PACK_GRADX_M128N256)
+        static_assert(ck_tile::remove_cvref_t<AccTile>::get_thread_buffer_size() == 64,
+                      "M128 BLAS row-major LDS epilogue requires 64 accumulators per lane");
+        constexpr ck_tile::index_t epilogue_rounds = 1;
+#else
+        static_assert(ck_tile::remove_cvref_t<AccTile>::get_thread_buffer_size() == 128,
+                      "BLAS row-major LDS epilogue requires 128 accumulators per lane");
+        constexpr ck_tile::index_t epilogue_rounds = 2;
+#endif
+
+        // The BLAS-wave accumulator layout makes M contiguous across lanes,
+        // which is ideal for column-major scalar stores but badly coalesced
+        // for the contiguous row-major grad-W tensor. Transpose two 128-row
+        // slabs through the existing 64-KiB compute LDS. Every output lane
+        // then emits 32 aligned half4 stores instead of 128 scattered shorts.
+        auto* lds_halfs = static_cast<ODataType*>(p_smem);
+        auto* lds_words = static_cast<std::uint32_t*>(p_smem);
+        auto o_view = o_window.get_bottom_tensor_view();
+        const auto block_origin = o_window.get_window_origin();
+        const ck_tile::index_t tid = ck_tile::get_thread_id();
+
+        ck_tile::static_for<0, epilogue_rounds, 1>{}([&](auto i_round) {
+            constexpr ck_tile::index_t round = i_round;
+            constexpr ck_tile::index_t acc_round_base = round * 64;
+            constexpr ck_tile::index_t row_round_base = round * 128;
+
+            SyncBeforeEpilogueLdsOverwrite();
+            // Lane-major staging lets each lane pack two of its own BF16
+            // accumulators into one dword. This avoids concurrent half-word
+            // writes to a shared LDS bank word without any cross-lane
+            // exchange in the producer.
+            ck_tile::static_for<0, 32, 1>{}([&](auto i_pair) {
+                constexpr ck_tile::index_t acc0 =
+                    acc_round_base + i_pair * 2;
+                constexpr ck_tile::index_t acc1 = acc0 + 1;
+                const ODataType output0 =
+                    ck_tile::type_convert<ODataType>(c_buffer[acc0]);
+                const ODataType output1 =
+                    ck_tile::type_convert<ODataType>(c_buffer[acc1]);
+                const std::uint32_t bits0 =
+                    static_cast<std::uint32_t>(
+                        ck_tile::bit_cast<std::uint16_t>(output0));
+                const std::uint32_t bits1 =
+                    static_cast<std::uint32_t>(
+                        ck_tile::bit_cast<std::uint16_t>(output1));
+                lds_words[tid * 32 + i_pair] = bits0 | (bits1 << 16);
+            });
+            SyncAfterEpilogueLdsWrite();
+
+            ck_tile::static_for<0, 16, 1>{}([&](auto i_vec) {
+                const ck_tile::index_t vec_index = tid + i_vec * 512;
+                const ck_tile::index_t row_local = vec_index >> 6;
+                const ck_tile::index_t col_local = (vec_index & 63) << 2;
+                const ck_tile::index_t source_tid_base =
+                    (row_local & 15) |
+                    ((row_local & 32) << 1) |
+                    ((col_local & 32) << 2) |
+                    ((col_local & 64) << 2);
+                const ck_tile::index_t source_m_group =
+                    ((row_local & 16) >> 4) |
+                    ((row_local & 64) >> 5);
+                const ck_tile::index_t source_n_group =
+                    ((col_local & 12) >> 2) |
+                    ((col_local & 16) >> 2) |
+                    ((col_local & 128) >> 4);
+                const ck_tile::index_t source_acc =
+                    source_m_group * 16 + source_n_group;
+                const Vec4 output{
+                    lds_halfs[(source_tid_base + 0) * 64 + source_acc],
+                    lds_halfs[(source_tid_base + 16) * 64 + source_acc],
+                    lds_halfs[(source_tid_base + 32) * 64 + source_acc],
+                    lds_halfs[(source_tid_base + 48) * 64 + source_acc]};
+
+                const auto output_coord = ck_tile::make_tensor_coordinate(
+                    o_view.get_tensor_descriptor(),
+                    ck_tile::array<ck_tile::index_t, 2>{
+                        block_origin.at(ck_tile::number<0>{}) +
+                            row_round_base + row_local,
+                        block_origin.at(ck_tile::number<1>{}) + col_local});
+                const auto& output_buffer =
+                    reinterpret_cast<const ck_tile::thread_buffer<
+                        ODataType,
+                        4>&>(output);
+                o_view.template set_vectorized_elements_raw<
+                    ck_tile::thread_buffer<ODataType, 4>,
+                    false>(output_coord, 0, output_buffer);
+            });
+        });
+        // A persistent workgroup immediately reuses the same LDS allocation
+        // for the next GEMM tile. The vector LDS reads are inline/raw from the
+        // compiler's perspective, so fence them explicitly before that reuse.
+        SyncBeforeEpilogueLdsOverwrite();
+        ck_tile::buffer_store_fence();
+#else
         const auto& c_buffer = acc_tile.get_thread_buffer();
         static_assert(ck_tile::remove_cvref_t<AccTile>::get_thread_buffer_size() == 128,
                       "Triton-layout epilogue requires 128 accumulators per lane");
@@ -846,12 +1414,9 @@ struct GroupedGemmDirectStoreEpilogue
              ((((tid & 448) << 4) | ((tid & 14) << 2)) ^ ((tid & 448) >> 3)));
 
         const auto block_origin = o_window.get_window_origin();
-        const ck_tile::index_t output_col =
-            block_origin.at(ck_tile::number<1>{}) + (tid & 31) * 8;
-        const ck_tile::index_t output_row_lane =
-            block_origin.at(ck_tile::number<0>{}) + ((tid >> 5) & 15);
+        const ck_tile::index_t output_col_local      = (tid & 31) * 8;
+        const ck_tile::index_t output_row_lane_local = (tid >> 5) & 15;
         auto o_view = o_window.get_bottom_tensor_view();
-        constexpr bool kStoreOobCheck = true;
 
         constexpr auto raw_bases = ck_tile::sequence<0, 64, 32, 96>{};
         constexpr auto row_bases = ck_tile::sequence<0, 128, 64, 192>{};
@@ -863,9 +1428,19 @@ struct GroupedGemmDirectStoreEpilogue
 #if defined(CK_TILE_GROUPED_GEMM_TRITON_FUSED_EPILOGUE)
             if constexpr(i_round == ck_tile::number<0>{})
             {
+#if defined(CK_TILE_GROUPED_GEMM_TRITON_FUSED_EPILOGUE_RESTORE_ROUND0)
+                // The non-persistent kernel has a different accumulator
+                // lifetime/codegen contract. Re-materialize round 0 from the
+                // final tile here; the early fused write is retained only to
+                // preserve the lower-register pipeline schedule.
+                SyncBeforeEpilogueLdsOverwrite();
+                StoreAccRoundToLds<raw_base>(c_buffer);
+                SyncAfterEpilogueLdsWrite();
+#else
                 // Round 0 was converted and written after the first final-K16
                 // M pair. Its LDS traffic overlapped the remaining 24 MMACs.
                 SyncAfterEpilogueLdsWrite();
+#endif
             }
             else
             {
@@ -895,19 +1470,51 @@ struct GroupedGemmDirectStoreEpilogue
                 {0, 128, 256, 384, 64, 192, 320, 448};
 #if defined(CK_TILE_GROUPED_GEMM_GFX936_EPILOGUE_SPLIT_READ_STORE)
             const auto store_output = [&](const Vec8& output, auto i_row) {
-                const auto coord = ck_tile::make_tensor_coordinate(
-                    o_view.get_tensor_descriptor(),
-                    ck_tile::array<ck_tile::index_t, 2>{
-                        output_row_lane + row_base + i_row * 16,
-                        output_col});
-                const auto& output_buffer =
-                    reinterpret_cast<
-                        const ck_tile::thread_buffer<ODataType, 8>&>(
-                        output);
-                o_view
-                    .template set_vectorized_elements_raw<
-                        ck_tile::thread_buffer<ODataType, 8>,
-                        kStoreOobCheck>(coord, 0, output_buffer);
+                const ck_tile::index_t output_row_local =
+                    output_row_lane_local + row_base + i_row * 16;
+                const ck_tile::index_t candidate_tile_m = output_row_local >> 4;
+                const ck_tile::index_t candidate_tile_n = output_col_local >> 4;
+                const ck_tile::index_t remapped_tile_m =
+                    ((candidate_tile_m & 1) << 2) | (candidate_tile_n & 8) |
+                    (candidate_tile_n & 2) | ((candidate_tile_n & 4) >> 2);
+                const ck_tile::index_t remapped_tile_n =
+                    (candidate_tile_m & 12) | ((candidate_tile_m & 2) >> 1) |
+                    ((candidate_tile_n & 1) << 1);
+                // The first permutation converts the direct-store producer's
+                // logical tile coordinates into the intermediate BLAS wave
+                // order.  The correctness tile map shows that an output tile
+                // at (m,n) contains reference tile F(m,n), so route it through
+                // the same permutation once more to obtain its public C
+                // coordinate.
+                const ck_tile::index_t output_tile_m =
+                    ((remapped_tile_m & 1) << 2) | (remapped_tile_n & 8) |
+                    (remapped_tile_n & 2) | ((remapped_tile_n & 4) >> 2);
+                const ck_tile::index_t output_tile_n =
+                    (remapped_tile_m & 12) | ((remapped_tile_m & 2) >> 1) |
+                    ((remapped_tile_n & 1) << 1);
+                const ck_tile::index_t final_tile_m =
+                    (output_tile_n & 12) | ((output_tile_n & 1) << 1) |
+                    ((output_tile_m & 4) >> 2);
+                const ck_tile::index_t final_tile_n =
+                    (output_tile_m & 8) | ((output_tile_m & 1) << 2) |
+                    (output_tile_m & 2) | ((output_tile_n & 2) >> 1);
+                const ck_tile::index_t selected_tile_m =
+                    SingleBlockTileRemap ? remapped_tile_m : final_tile_m;
+                const ck_tile::index_t selected_tile_n =
+                    SingleBlockTileRemap ? remapped_tile_n : final_tile_n;
+                const ck_tile::index_t output_row =
+                    block_origin.at(ck_tile::number<0>{}) +
+                    (TransposeBlockTiles
+                         ? (selected_tile_m << 4) +
+                               (output_row_local & ck_tile::index_t{15})
+                         : output_row_local);
+                const ck_tile::index_t output_col =
+                    block_origin.at(ck_tile::number<1>{}) +
+                    (TransposeBlockTiles
+                         ? (selected_tile_n << 4) +
+                               (output_col_local & ck_tile::index_t{15})
+                         : output_col_local);
+                StoreOutputVector(o_view, output_row, output_col, output);
             };
 
             Vec4 first_loads[4];
@@ -982,21 +1589,141 @@ struct GroupedGemmDirectStoreEpilogue
                 MakeOutputVec8(loads[4], loads[5], loads[6], loads[7], ck_tile::number<1>{})};
 
             ck_tile::static_for<0, 4, 1>{}([&](auto i) {
-                const auto coord = ck_tile::make_tensor_coordinate(
-                    o_view.get_tensor_descriptor(),
-                    ck_tile::array<ck_tile::index_t, 2>{
-                        output_row_lane + row_base + i * 16, output_col});
-                const auto& output_buffer =
-                    reinterpret_cast<
-                        const ck_tile::thread_buffer<ODataType, 8>&>(outputs[i]);
-                o_view
-                    .template set_vectorized_elements_raw<
-                        ck_tile::thread_buffer<ODataType, 8>,
-                        kStoreOobCheck>(coord, 0, output_buffer);
+                const ck_tile::index_t output_row_local =
+                    output_row_lane_local + row_base + i * 16;
+                const ck_tile::index_t candidate_tile_m = output_row_local >> 4;
+                const ck_tile::index_t candidate_tile_n = output_col_local >> 4;
+                const ck_tile::index_t remapped_tile_m =
+                    ((candidate_tile_m & 1) << 2) | (candidate_tile_n & 8) |
+                    (candidate_tile_n & 2) | ((candidate_tile_n & 4) >> 2);
+                const ck_tile::index_t remapped_tile_n =
+                    (candidate_tile_m & 12) | ((candidate_tile_m & 2) >> 1) |
+                    ((candidate_tile_n & 1) << 1);
+                const ck_tile::index_t output_tile_m =
+                    ((remapped_tile_m & 1) << 2) | (remapped_tile_n & 8) |
+                    (remapped_tile_n & 2) | ((remapped_tile_n & 4) >> 2);
+                const ck_tile::index_t output_tile_n =
+                    (remapped_tile_m & 12) | ((remapped_tile_m & 2) >> 1) |
+                    ((remapped_tile_n & 1) << 1);
+                const ck_tile::index_t final_tile_m =
+                    (output_tile_n & 12) | ((output_tile_n & 1) << 1) |
+                    ((output_tile_m & 4) >> 2);
+                const ck_tile::index_t final_tile_n =
+                    (output_tile_m & 8) | ((output_tile_m & 1) << 2) |
+                    (output_tile_m & 2) | ((output_tile_n & 2) >> 1);
+                const ck_tile::index_t selected_tile_m =
+                    SingleBlockTileRemap ? remapped_tile_m : final_tile_m;
+                const ck_tile::index_t selected_tile_n =
+                    SingleBlockTileRemap ? remapped_tile_n : final_tile_n;
+                const ck_tile::index_t output_row =
+                    block_origin.at(ck_tile::number<0>{}) +
+                    (TransposeBlockTiles
+                         ? (selected_tile_m << 4) +
+                               (output_row_local & ck_tile::index_t{15})
+                         : output_row_local);
+                const ck_tile::index_t output_col =
+                    block_origin.at(ck_tile::number<1>{}) +
+                    (TransposeBlockTiles
+                         ? (selected_tile_n << 4) +
+                               (output_col_local & ck_tile::index_t{15})
+                         : output_col_local);
+                StoreOutputVector(
+                    o_view, output_row, output_col, outputs[i]);
             });
 #endif
         });
 
+        ck_tile::buffer_store_fence();
+#endif
+    }
+};
+
+// Zero-LDS epilogue for the gfx936 DSReadM stage pipeline.  The block GEMM
+// converts the raw MMAC accumulator order to a logical [M, N] distributed tile
+// in registers, after which CK's normal distributed-tile store can write it
+// directly.  Keep scalar stores for the first correctness/resource experiment;
+// vectorization can be layered on only after the output mapping is proven.
+template <typename GemmPipeline_, typename AccDataType_, typename ODataType_>
+struct GroupedGemmOutputTileDirectStoreEpilogue
+{
+    using GemmPipeline = ck_tile::remove_cvref_t<GemmPipeline_>;
+    using AccDataType  = ck_tile::remove_cvref_t<AccDataType_>;
+    using ODataType    = ck_tile::remove_cvref_t<ODataType_>;
+    using DsDataType   = ck_tile::tuple<>;
+    using DsLayout     = ck_tile::tuple<>;
+
+    static constexpr ck_tile::index_t NumDTensor = 0;
+    static constexpr ck_tile::memory_operation_enum MemoryOperation =
+        ck_tile::memory_operation_enum::set;
+
+    CK_TILE_HOST_DEVICE static constexpr ck_tile::index_t GetSmemSize()
+    {
+        return 0;
+    }
+
+    CK_TILE_HOST_DEVICE static constexpr ck_tile::index_t GetVectorSizeC()
+    {
+#if defined(CK_TILE_GROUPED_GEMM_DSREADM_OUTPUT_TILE_DIRECT_VECTOR4)
+        return 4;
+#else
+        return 1;
+#endif
+    }
+
+    template <ck_tile::index_t I>
+    CK_TILE_HOST_DEVICE static constexpr ck_tile::index_t
+    GetVectorSizeD(ck_tile::number<I>)
+    {
+        return 1;
+    }
+
+    template <typename OWindow, typename AccTile, typename DWindow>
+    CK_TILE_DEVICE void operator()(OWindow& o_window,
+                                   const AccTile& acc_tile,
+                                   const DWindow&,
+                                   void* = nullptr) const
+    {
+        using BlockGemm = typename GemmPipeline::BlockGemm;
+        const auto output_tile =
+            BlockGemm::MakeCOutputBlockTile(acc_tile);
+#if defined(CK_TILE_GROUPED_GEMM_DSREADM_OUTPUT_TILE_SCALAR_SHORT)
+        // MakeCOutputBlockTile changes the MMAC register metadata to the
+        // logical [M, N] output distribution. Walk that proven distribution
+        // explicitly so the correctness gate does not depend on store_tile's
+        // vectorization choices and emits the same scalar 16-bit store
+        // contract observed in hipBLASLt.
+        const auto block_origin = o_window.get_window_origin();
+        auto o_view             = o_window.get_bottom_tensor_view();
+        constexpr bool kStoreOobCheck = true;
+        constexpr auto spans =
+            ck_tile::remove_cvref_t<decltype(output_tile)>::get_distributed_spans();
+        constexpr auto tile_distribution =
+            ck_tile::remove_cvref_t<decltype(output_tile)>::get_tile_distribution();
+
+        ck_tile::sweep_tile_span(spans[ck_tile::number<0>{}], [&](auto idx_m) {
+            ck_tile::sweep_tile_span(spans[ck_tile::number<1>{}], [&](auto idx_n) {
+                constexpr auto distributed_indices =
+                    ck_tile::make_tuple(idx_m, idx_n);
+                const auto local = ck_tile::get_x_indices_from_distributed_indices(
+                    tile_distribution, distributed_indices);
+                const auto coord = ck_tile::make_tensor_coordinate(
+                    o_view.get_tensor_descriptor(),
+                    ck_tile::array<ck_tile::index_t, 2>{
+                        block_origin.at(ck_tile::number<0>{}) +
+                            local.at(ck_tile::number<0>{}),
+                        block_origin.at(ck_tile::number<1>{}) +
+                            local.at(ck_tile::number<1>{})});
+                const ODataType output = ck_tile::type_convert<ODataType>(
+                    output_tile[distributed_indices]);
+                o_view.template set_vectorized_elements_raw<
+                    ODataType,
+                    kStoreOobCheck>(coord, 0, output);
+            });
+        });
+#else
+        ck_tile::store_tile(
+            o_window, ck_tile::cast_tile<ODataType>(output_tile));
+#endif
         ck_tile::buffer_store_fence();
     }
 };
@@ -1757,9 +2484,11 @@ template <typename GemmConfig,
           typename ADataType,
           typename BDataType,
           typename AccDataType,
-          typename CDataType>
+          typename CDataType,
+          int UniqueKernelTag = 0>
 float grouped_gemm_tileloop(const ck_tile::stream_config& s,
                             const ck_tile::index_t num_groups,
                             void* kargs_ptr,
                             const std::vector<std::pair<void*, std::size_t>>& output_resets,
-                            bool splitk = false);
+                            bool splitk = false,
+                            std::uint32_t requested_num_cu = 0);
