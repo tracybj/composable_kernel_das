@@ -25,6 +25,7 @@
 
 // #include "ck_tile/ops/gemm/pipeline/wp_pipeline_agmem_bgmem_creg_v2.hpp"
 #include "ck_tile/ops/gemm/kernel/grouped_gemm_kernel.hpp"
+#include "ck_tile/ops/gemm/grouped_gemm_bw_family_selected.hpp"
 
 
 #define CK_TILE_PIPELINE_COMPUTE_V3 1
@@ -2178,6 +2179,67 @@ int grouped_gemm_c_run_gfx936_fp16(const ck_tile_hcu_grouped_gemm_desc* descs,
 int grouped_gemm_c_run_gfx936_bf16(const ck_tile_hcu_grouped_gemm_desc* descs,
     int group_count, char a_layout, char b_layout,
     void* workspace, hipStream_t stream);
+int grouped_gemm_c_run_gfx936_bf16_nn_fixed_srd_lds8_boundary_lds0_vmem0(
+    const ck_tile_hcu_grouped_gemm_desc* descs,
+    int group_count,
+    char a_layout,
+    char b_layout,
+    void* workspace,
+    hipStream_t stream);
+int grouped_gemm_c_run_gfx936_bf16_nn_rr_fast_vmem3_early_final_barrier(
+    const ck_tile_hcu_grouped_gemm_desc* descs,
+    int group_count,
+    char a_layout,
+    char b_layout,
+    void* workspace,
+    hipStream_t stream);
+
+inline bool grouped_gemm_prefers_gfx936_bf16_nn_fixed_srd_lds8(
+    const ck_tile_hcu_grouped_gemm_desc* descs,
+    int group_count)
+{
+    if(!ck_tile_hcu_grouped_gemm_bf16_nn_fixed_srd_lds8_enabled() ||
+       descs == nullptr || group_count != 16)
+    {
+        return false;
+    }
+
+    for(int i = 0; i < group_count; ++i)
+    {
+        const auto& arg = descs[i];
+        if(arg.M < 1920 || arg.M > 2304 || arg.N != 7168 || arg.K != 4096 ||
+           arg.k_batch != 1 || arg.num_d_tensors != 0 || arg.stride_A != 4096 ||
+           arg.stride_B != 7168 || arg.stride_C != 7168)
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+inline bool
+grouped_gemm_prefers_gfx936_bf16_nn_rr_fast_vmem3_early_final_barrier(
+    const ck_tile_hcu_grouped_gemm_desc* descs,
+    int group_count)
+{
+    if(!ck_tile_hcu_grouped_gemm_bf16_nn_fixed_srd_lds8_enabled() ||
+       descs == nullptr || group_count != 16)
+    {
+        return false;
+    }
+
+    for(int i = 0; i < group_count; ++i)
+    {
+        const auto& arg = descs[i];
+        if(arg.M < 1920 || arg.M > 2304 || arg.N != 2048 || arg.K != 7168 ||
+           arg.k_batch != 1 || arg.num_d_tensors != 0 || arg.stride_A != 7168 ||
+           arg.stride_B != 2048 || arg.stride_C != 2048)
+        {
+            return false;
+        }
+    }
+    return true;
+}
 int grouped_gemm_c_run_fp8(const ck_tile_hcu_grouped_gemm_desc* descs,
     int group_count, char a_layout, char b_layout,
     void* workspace, hipStream_t stream);

@@ -1021,7 +1021,15 @@ float grouped_gemm_tileloop(const ck_tile::stream_config& s,
                 static_cast<decltype(grids.x)>(
                     requested_num_cu * GemmConfig::kBlockPerCu));
         }
-#if defined(CK_TILE_GROUPED_GEMM_GRID_SWEEP_RUNTIME)
+#if defined(CK_TILE_GROUPED_GEMM_GRID_MULTIPLIER_FIXED)
+        // The promoted tag93714 uses a fixed two-block-per-CU traversal.
+        // Extra block ids safely exit after scanning the group list, without
+        // changing the public descriptor ABI.
+        static_assert(CK_TILE_GROUPED_GEMM_GRID_MULTIPLIER_FIXED > 0 &&
+                          CK_TILE_GROUPED_GEMM_GRID_MULTIPLIER_FIXED <= 128,
+                      "fixed grouped-GEMM grid multiplier must be in [1,128]");
+        grids.x *= CK_TILE_GROUPED_GEMM_GRID_MULTIPLIER_FIXED;
+#elif defined(CK_TILE_GROUPED_GEMM_GRID_SWEEP_RUNTIME)
         // Performance-probe only: queue additional persistent blocks while
         // keeping the device kernel and its grid-stride tile traversal intact.
         // The default multiplier is one, so production behavior is unchanged.

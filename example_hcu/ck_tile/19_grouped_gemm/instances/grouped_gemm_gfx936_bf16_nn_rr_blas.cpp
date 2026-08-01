@@ -26,6 +26,34 @@
 #define CK_TILE_GROUPED_GEMM_BF16_NN_RR_BLAS_ENTRY \
     ck_tile_hcu_grouped_gemm_bw_family_bf16_nn_rr_blas_device_args
 #endif
+#ifndef CK_TILE_GROUPED_GEMM_BF16_NN_RR_BLAS_COMPAT_ENTRY
+#define CK_TILE_GROUPED_GEMM_BF16_NN_RR_BLAS_COMPAT_ENTRY \
+    ck_tile_hcu_grouped_gemm_gfx936_bf16_nn_rr_blas_device_args
+#endif
+
+using Bf16NnRrBlasConfig =
+    GemmConfigComputeV3TritonOperand256ExactTraversalTransposeC<
+        ck_tile::bf16_t>;
+
+#if !defined(CK_TILE_GROUPED_GEMM_DEVICE_ARGS_ONLY) && \
+    defined(CK_TILE_GROUPED_GEMM_BF16_NN_RR_BLAS_HOST_ENTRY)
+int CK_TILE_GROUPED_GEMM_BF16_NN_RR_BLAS_HOST_ENTRY(
+    const ck_tile_hcu_grouped_gemm_desc* descs,
+    int group_count,
+    char a_layout,
+    char b_layout,
+    void* workspace,
+    hipStream_t stream)
+{
+    if(a_layout != 'R' || b_layout != 'R')
+    {
+        return -4;
+    }
+    return dispatch_grouped_gemm_c_layout<Bf16NnRrBlasConfig,
+                                           ck_tile::bf16_t>(
+        descs, group_count, a_layout, b_layout, workspace, stream);
+}
+#endif
 
 extern "C" int CK_TILE_GROUPED_GEMM_BF16_NN_RR_BLAS_ENTRY(
     void* device_args,
@@ -39,9 +67,7 @@ extern "C" int CK_TILE_GROUPED_GEMM_BF16_NN_RR_BLAS_ENTRY(
     }
 
     (void)num_cu;
-    using Config =
-        GemmConfigComputeV3TritonOperand256ExactTraversalTransposeC<
-            ck_tile::bf16_t>;
+    using Config = Bf16NnRrBlasConfig;
     using Row = ck_tile::tensor_layout::gemm::RowMajor;
 
     grouped_gemm_tileloop<Config,
@@ -61,12 +87,12 @@ extern "C" int CK_TILE_GROUPED_GEMM_BF16_NN_RR_BLAS_ENTRY(
     return 0;
 }
 
-extern "C" int ck_tile_hcu_grouped_gemm_gfx936_bf16_nn_rr_blas_device_args(
+extern "C" int CK_TILE_GROUPED_GEMM_BF16_NN_RR_BLAS_COMPAT_ENTRY(
     void* device_args,
     int group_count,
     std::uint32_t num_cu,
     hipStream_t stream)
 {
-    return ck_tile_hcu_grouped_gemm_bw_family_bf16_nn_rr_blas_device_args(
+    return CK_TILE_GROUPED_GEMM_BF16_NN_RR_BLAS_ENTRY(
         device_args, group_count, num_cu, stream);
 }

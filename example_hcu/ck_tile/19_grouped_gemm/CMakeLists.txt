@@ -4,7 +4,27 @@
 set(TILE_EXAMPLE_GROUPED_GEMM "tile_example_grouped_gemm")
 message("adding ${TILE_EXAMPLE_GROUPED_GEMM}")
 
-file(GLOB INSTANCE_SRCS instances/grouped_gemm_*.cpp)
+# Keep the development executable deterministic. Shared implementation bodies
+# and archived tuning probes must not be discovered as standalone TUs.
+set(INSTANCE_SRCS
+    instances/grouped_gemm_bf16.cpp
+    instances/grouped_gemm_bf8.cpp
+    instances/grouped_gemm_fp16.cpp
+    instances/grouped_gemm_fp8.cpp
+    instances/grouped_gemm_int4.cpp
+    instances/grouped_gemm_int8.cpp
+    # The generic FP16/BF16 dispatchers contain runtime-gated references to
+    # these providers on every architecture, so both TUs are link providers
+    # even when the compiled target is not gfx936.
+    instances/grouped_gemm_gfx936_bf16.cpp
+    instances/grouped_gemm_gfx936_fp16.cpp)
+
+# These wrappers instantiate Hygon gfx936-specific policies and must not be
+# compiled into the gfx938 development executable.
+if(GPU_TARGETS MATCHES "gfx936" AND NOT GPU_TARGETS MATCHES "gfx938|gfx946")
+    list(APPEND INSTANCE_SRCS
+        instances/grouped_gemm_gfx936_bf16_tn_direct.cpp)
+endif()
 
 ck_add_arch_vgpr_compile_options()
 add_compile_options("SHELL: -Rpass-analysis=kernel-resource-usage")
@@ -40,6 +60,23 @@ endfunction()
 
 add_grouped_gemm_fast_target(tile_example_grouped_gemm_fp16_fast CK_TILE_GROUPED_GEMM_FAST_FP16 grouped_gemm_fp16.cpp)
 add_grouped_gemm_fast_target(tile_example_grouped_gemm_bf16_fast CK_TILE_GROUPED_GEMM_FAST_BF16 grouped_gemm_bf16.cpp)
+set(HCU_GROUPED_GEMM_GFX936_SELECTED_SOURCES)
+# Keep only the two promoted gfx936 instances in normal and production targets.
+if(GPU_TARGETS MATCHES "gfx936" AND NOT GPU_TARGETS MATCHES "gfx938|gfx946")
+    list(APPEND HCU_GROUPED_GEMM_GFX936_SELECTED_SOURCES
+        instances/grouped_gemm_gfx936_bf16_nn_fixed_srd_lds8_boundary_lds0_vmem0.cpp
+        instances/grouped_gemm_gfx936_bf16_nn_rr_fast_vmem3_early_final_barrier.cpp)
+    target_sources(${TILE_EXAMPLE_GROUPED_GEMM}
+        PRIVATE ${HCU_GROUPED_GEMM_GFX936_SELECTED_SOURCES})
+    target_compile_definitions(${TILE_EXAMPLE_GROUPED_GEMM}
+        PRIVATE CK_TILE_GROUPED_GEMM_ENABLE_GFX936_SELECTED)
+    target_sources(tile_example_grouped_gemm_bf16_fast
+        PRIVATE
+            instances/grouped_gemm_gfx936_bf16.cpp
+            ${HCU_GROUPED_GEMM_GFX936_SELECTED_SOURCES})
+    target_compile_definitions(tile_example_grouped_gemm_bf16_fast
+        PRIVATE CK_TILE_GROUPED_GEMM_ENABLE_GFX936_SELECTED)
+endif()
 add_grouped_gemm_fast_target(tile_example_grouped_gemm_fp16_baseline CK_TILE_GROUPED_GEMM_FAST_FP16 grouped_gemm_fp16.cpp CK_TILE_GROUPED_GEMM_FORCE_BASELINE)
 add_grouped_gemm_fast_target(tile_example_grouped_gemm_bf16_baseline CK_TILE_GROUPED_GEMM_FAST_BF16 grouped_gemm_bf16.cpp CK_TILE_GROUPED_GEMM_FORCE_BASELINE)
 # BW-family large aligned RC: retain only the selected V3
@@ -2914,9 +2951,11 @@ add_library(ck_tile_hcu_grouped_gemm STATIC EXCLUDE_FROM_ALL
     instances/grouped_gemm_gfx936_fp16.cpp
     instances/grouped_gemm_gfx936_bf16.cpp
     instances/grouped_gemm_gfx936_bf16_tn_direct.cpp
+    ${HCU_GROUPED_GEMM_GFX936_SELECTED_SOURCES}
 )
 set_source_files_properties(
     instances/grouped_gemm_gfx936_bf16_tn_direct.cpp
+    ${HCU_GROUPED_GEMM_GFX936_SELECTED_SOURCES}
     PROPERTIES
         COMPILE_OPTIONS "-Wno-unused-template;-Wno-unneeded-internal-declaration")
 target_include_directories(ck_tile_hcu_grouped_gemm PRIVATE ${CMAKE_CURRENT_LIST_DIR})
@@ -2930,10 +2969,37 @@ target_compile_definitions(ck_tile_hcu_grouped_gemm
         CK_TILE_GROUPED_GEMM_FAST_BF16)
 set_target_properties(ck_tile_hcu_grouped_gemm PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
+# Minimal consumer-independent library used by the public C ABI matrix. It
+# deliberately excludes all default-off Phase316/317 candidate TUs so generic
+# NT/NN/TN fallback coverage cannot accidentally resolve an experiment symbol.
+add_library(ck_tile_hcu_grouped_gemm_generic STATIC EXCLUDE_FROM_ALL
+    grouped_gemm.cpp
+    instances/grouped_gemm_fp16.cpp
+    instances/grouped_gemm_bf16.cpp
+    instances/grouped_gemm_gfx936_fp16.cpp
+    instances/grouped_gemm_gfx936_bf16.cpp
+    instances/grouped_gemm_gfx936_bf16_tn_direct.cpp
+)
+set_source_files_properties(
+    instances/grouped_gemm_gfx936_bf16_tn_direct.cpp
+    PROPERTIES
+        COMPILE_OPTIONS "-Wno-unused-template;-Wno-unneeded-internal-declaration")
+target_include_directories(ck_tile_hcu_grouped_gemm_generic PRIVATE ${CMAKE_CURRENT_LIST_DIR})
+target_compile_definitions(ck_tile_hcu_grouped_gemm_generic
+    PRIVATE
+        CK_TILE_EXAMPLE_NO_MAIN
+        CK_TILE_GROUPED_GEMM_FAST_BUILD
+        CK_TILE_GROUPED_GEMM_FAST_RC_ONLY
+        CK_TILE_GROUPED_GEMM_FAST_FP16
+        CK_TILE_GROUPED_GEMM_FAST_BF16)
+set_target_properties(ck_tile_hcu_grouped_gemm_generic
+    PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
 add_executable(tile_example_grouped_gemm_c_api_smoke EXCLUDE_FROM_ALL
     grouped_gemm_c_api_smoke.cpp
 )
-target_link_libraries(tile_example_grouped_gemm_c_api_smoke PRIVATE ck_tile_hcu_grouped_gemm)
+target_link_libraries(tile_example_grouped_gemm_c_api_smoke
+    PRIVATE ck_tile_hcu_grouped_gemm_generic)
 
 set(GROUPED_GEMM_FAST_FIXED_SHAPE_ARGS
     -group_count=2

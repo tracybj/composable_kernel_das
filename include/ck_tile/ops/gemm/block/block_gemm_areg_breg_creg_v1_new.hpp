@@ -673,76 +673,83 @@ struct BlockGemmARegBRegCRegV1
     template <typename CBlockTensor>
     CK_TILE_DEVICE static constexpr auto MakeCOutputBlockTile(const CBlockTensor& c_block_tensor)
     {
-        using c_distr_ys_major =
-            std::conditional_t<TransposeC, sequence<2, 1>, sequence<1, 2>>;
-        constexpr auto c_block_output_dstr_encode = []() {
-            if constexpr(UseDefaultScheduler)
-            {
-                constexpr auto c_block_outer_dstr_encoding = tile_distribution_encoding<
-                    sequence<MWarp>,
-                    tuple<sequence<MIterPerWarp>, sequence<NIterPerWarp, NWarp>>,
-                    tuple<>,
-                    tuple<>,
-                    c_distr_ys_major,
-                    sequence<0, 0>>{};
-                return detail::make_embed_tile_distribution_encoding(
-                    c_block_outer_dstr_encoding,
-                    typename WarpGemm::CWarpOutputDstrEncoding{});
-            }
-            else
-            {
-                constexpr auto c_block_outer_dstr_encoding = tile_distribution_encoding<
-                    sequence<>,
-                    tuple<sequence<MIterPerWarp, MWarp>, sequence<NIterPerWarp, NWarp>>,
-                    tuple<sequence<1, 2>>,
-                    tuple<sequence<1, 1>>,
-                    c_distr_ys_major,
-                    sequence<0, 0>>{};
-                return detail::make_embed_tile_distribution_encoding(
-                    c_block_outer_dstr_encoding,
-                    typename WarpGemm::CWarpOutputDstrEncoding{});
-            }
-        }();
-        constexpr auto c_block_output_dstr =
-            make_static_tile_distribution(c_block_output_dstr_encode);
-        auto c_block_output_tensor =
-            make_static_distributed_tensor<CDataType>(c_block_output_dstr);
+            // The selected gfx936 policy uses a TransC MMAC warp attribute
+            // even though the block-level TransposeC template argument is
+            // false.  Detecting this conversion through the block flag is
+            // therefore incorrect: use the warp attribute's explicit
+            // GetCWarpPermuteTensor path and retain the block flag only for
+            // the outer M/N iteration order.
+            using WarpAttribute = typename WarpGemm::WarpGemmAttribute;
+            using c_distr_ys_major =
+                std::conditional_t<TransposeC, sequence<2, 1>, sequence<1, 2>>;
+            constexpr auto c_block_output_dstr_encode = []() {
+                if constexpr(UseDefaultScheduler)
+                {
+                    constexpr auto c_block_outer_dstr_encoding = tile_distribution_encoding<
+                        sequence<MWarp>,
+                        tuple<sequence<MIterPerWarp>, sequence<NIterPerWarp, NWarp>>,
+                        tuple<>,
+                        tuple<>,
+                        c_distr_ys_major,
+                        sequence<0, 0>>{};
+                    return detail::make_embed_tile_distribution_encoding(
+                        c_block_outer_dstr_encoding,
+                        typename WarpAttribute::CWarpPermuteDstrEncoding{});
+                }
+                else
+                {
+                    constexpr auto c_block_outer_dstr_encoding = tile_distribution_encoding<
+                        sequence<>,
+                        tuple<sequence<MIterPerWarp, MWarp>, sequence<NIterPerWarp, NWarp>>,
+                        tuple<sequence<1, 2>>,
+                        tuple<sequence<1, 1>>,
+                        c_distr_ys_major,
+                        sequence<0, 0>>{};
+                    return detail::make_embed_tile_distribution_encoding(
+                        c_block_outer_dstr_encoding,
+                        typename WarpAttribute::CWarpPermuteDstrEncoding{});
+                }
+            }();
+            constexpr auto c_block_output_dstr =
+                make_static_tile_distribution(c_block_output_dstr_encode);
+            auto c_block_output_tensor =
+                make_static_distributed_tensor<CDataType>(c_block_output_dstr);
 
-        using CWarpDstr         = typename WarpGemm::CWarpDstr;
-        using CWarpOutputDstr   = typename WarpGemm::CWarpOutputDstr;
-        using CWarpTensor       = typename WarpGemm::CWarpTensor;
-        using CWarpOutputTensor = typename WarpGemm::CWarpOutputTensor;
+            using CWarpDstr   = typename WarpGemm::CWarpDstr;
+            using CWarpTensor = typename WarpGemm::CWarpTensor;
+            using CWarpPermuteDstr = remove_cvref_t<decltype(make_static_tile_distribution(
+                typename WarpAttribute::CWarpPermuteDstrEncoding{}))>;
 
-        constexpr auto c_warp_y_lengths =
-            to_sequence(CWarpDstr{}.get_ys_to_d_descriptor().get_lengths());
-        constexpr auto c_warp_y_index_zeros =
-            uniform_sequence_gen_t<CWarpDstr::NDimY, 0>{};
-        constexpr auto c_warp_output_y_lengths =
-            to_sequence(CWarpOutputDstr{}.get_ys_to_d_descriptor().get_lengths());
-        constexpr auto c_warp_output_y_index_zeros =
-            uniform_sequence_gen_t<CWarpOutputDstr::NDimY, 0>{};
+            constexpr auto c_warp_y_lengths =
+                to_sequence(CWarpDstr{}.get_ys_to_d_descriptor().get_lengths());
+            constexpr auto c_warp_y_index_zeros =
+                uniform_sequence_gen_t<CWarpDstr::NDimY, 0>{};
+            constexpr auto c_warp_permute_y_lengths =
+                to_sequence(CWarpPermuteDstr{}.get_ys_to_d_descriptor().get_lengths());
+            constexpr auto c_warp_permute_y_index_zeros =
+                uniform_sequence_gen_t<CWarpPermuteDstr::NDimY, 0>{};
 
-        static_for<0, MIterPerWarp, 1>{}([&](auto mIter) {
-            static_for<0, NIterPerWarp, 1>{}([&](auto nIter) {
-                using c_iter_idx = std::conditional_t<TransposeC,
-                                                      sequence<nIter, mIter>,
-                                                      sequence<mIter, nIter>>;
-                CWarpTensor c_warp_tensor;
-                c_warp_tensor.get_thread_buffer() =
-                    c_block_tensor.get_y_sliced_thread_data(
-                        merge_sequences(c_iter_idx{}, c_warp_y_index_zeros),
-                        merge_sequences(sequence<1, 1>{}, c_warp_y_lengths));
+            static_for<0, MIterPerWarp, 1>{}([&](auto mIter) {
+                static_for<0, NIterPerWarp, 1>{}([&](auto nIter) {
+                    using c_iter_idx = std::conditional_t<TransposeC,
+                                                          sequence<nIter, mIter>,
+                                                          sequence<mIter, nIter>>;
+                    CWarpTensor c_warp_tensor;
+                    c_warp_tensor.get_thread_buffer() =
+                        c_block_tensor.get_y_sliced_thread_data(
+                            merge_sequences(c_iter_idx{}, c_warp_y_index_zeros),
+                            merge_sequences(sequence<1, 1>{}, c_warp_y_lengths));
 
-                const CWarpOutputTensor c_warp_output_tensor =
-                    WarpGemm{}.MakeCOutputLayout(c_warp_tensor);
-                c_block_output_tensor.set_y_sliced_thread_data(
-                    merge_sequences(c_iter_idx{}, c_warp_output_y_index_zeros),
-                    merge_sequences(sequence<1, 1>{}, c_warp_output_y_lengths),
-                    c_warp_output_tensor.get_thread_buffer());
+                    const auto c_warp_permute_tensor =
+                        WarpAttribute::GetCWarpPermuteTensor(c_warp_tensor);
+                    c_block_output_tensor.set_y_sliced_thread_data(
+                        merge_sequences(c_iter_idx{}, c_warp_permute_y_index_zeros),
+                        merge_sequences(sequence<1, 1>{}, c_warp_permute_y_lengths),
+                        c_warp_permute_tensor.get_thread_buffer());
+                });
             });
-        });
 
-        return c_block_output_tensor;
+            return c_block_output_tensor;
     }
 
     // C = A * B

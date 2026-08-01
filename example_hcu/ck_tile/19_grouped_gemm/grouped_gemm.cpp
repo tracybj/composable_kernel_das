@@ -95,6 +95,25 @@ int ck_tile_hcu_grouped_gemm_run(const ck_tile_hcu_grouped_gemm_desc* descs,
 #if !defined(CK_TILE_GROUPED_GEMM_FAST_BUILD) || defined(CK_TILE_GROUPED_GEMM_FAST_BF16)
         if(dtype == CK_TILE_HCU_GROUPED_GEMM_BF16)
         {
+#if defined(CK_TILE_GROUPED_GEMM_ENABLE_GFX936_SELECTED)
+            if(ck_tile::get_hcu_target_enum() ==
+                   ck_tile::hcu_target_enum::gfx936 &&
+               a_layout == 'R' && b_layout == 'R')
+            {
+                if(grouped_gemm_prefers_gfx936_bf16_nn_rr_fast_vmem3_early_final_barrier(
+                       descs, group_count))
+                {
+                    return grouped_gemm_c_run_gfx936_bf16_nn_rr_fast_vmem3_early_final_barrier(
+                        descs, group_count, a_layout, b_layout, workspace, stream);
+                }
+                if(grouped_gemm_prefers_gfx936_bf16_nn_fixed_srd_lds8(
+                       descs, group_count))
+                {
+                    return grouped_gemm_c_run_gfx936_bf16_nn_fixed_srd_lds8_boundary_lds0_vmem0(
+                        descs, group_count, a_layout, b_layout, workspace, stream);
+                }
+            }
+#endif
             if(grouped_gemm_need_v4_padding(descs, group_count))
                 return grouped_gemm_c_run_bf16_mpad(descs, group_count,
                     a_layout, b_layout, workspace, stream);

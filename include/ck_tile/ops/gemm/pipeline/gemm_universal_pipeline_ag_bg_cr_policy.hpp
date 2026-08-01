@@ -32,6 +32,22 @@ struct has_b_tile_access_pattern<T, std::void_t<decltype(T::BTileAccessPattern)>
 {
 };
 
+// Avoid forming KThreadRead / 0 in an unselected constexpr conditional. HCU
+// clang diagnoses that expression even when the ratio test selects the other
+// branch. Specialization ensures the division is instantiated only for a
+// strictly positive ratio greater than one.
+template <index_t KThreadRead, index_t KThreadReadRatio, bool = (KThreadReadRatio > 1)>
+struct safe_k_thread_read_perm
+{
+    static constexpr index_t value = KThreadRead;
+};
+
+template <index_t KThreadRead, index_t KThreadReadRatio>
+struct safe_k_thread_read_perm<KThreadRead, KThreadReadRatio, true>
+{
+    static constexpr index_t value = KThreadRead / KThreadReadRatio;
+};
+
 template <typename Derived>
 struct UniversalGemmBasePolicy
 {
@@ -120,10 +136,11 @@ struct UniversalGemmBasePolicy
             constexpr auto kfold = (AK1 * M0 * sizeof(ADataType) > LdsBanksWidth)
                                        ? 1
                                        : LdsBanksWidth / (AK1 * M0 * sizeof(ADataType));
+            constexpr index_t k_thread_read_ratio =
+                static_cast<index_t>(kfold * K0PerThreadWrite / K0PerThreadRead);
             constexpr auto KThreadReadPerm =
-                (kfold * K0PerThreadWrite / K0PerThreadRead) > 1
-                    ? KThreadRead / (kfold * K0PerThreadWrite / K0PerThreadRead)
-                    : KThreadRead;
+                number<safe_k_thread_read_perm<static_cast<index_t>(KThreadRead),
+                                               k_thread_read_ratio>::value>{};
 
             constexpr auto mpair =
                 (AK1 * MPerXdl * sizeof(ADataType) > LdsBanksWidth)
@@ -297,10 +314,11 @@ struct UniversalGemmBasePolicy
             constexpr auto kfold = (BK1 * N0 * sizeof(BDataType) > LdsBanksWidth)
                                        ? 1
                                        : LdsBanksWidth / (BK1 * N0 * sizeof(BDataType));
+            constexpr index_t k_thread_read_ratio =
+                static_cast<index_t>(kfold * K0PerThreadWrite / K0PerThreadRead);
             constexpr auto KThreadReadPerm =
-                (kfold * K0PerThreadWrite / K0PerThreadRead) > 1
-                    ? KThreadRead / (kfold * K0PerThreadWrite / K0PerThreadRead)
-                    : KThreadRead;
+                number<safe_k_thread_read_perm<static_cast<index_t>(KThreadRead),
+                                               k_thread_read_ratio>::value>{};
 
             constexpr auto npair =
                 (BK1 * NPerXdl * sizeof(BDataType) > LdsBanksWidth)

@@ -4,7 +4,17 @@
 #pragma once
 
 #include <cstdint>
+#include <cstdlib>
 #include <hip/hip_runtime.h>
+
+// CK-owned default for the validated gfx936 BF16 NN descriptor families.
+// Keep one explicit rollback switch for production and same-process A/B.
+inline bool ck_tile_hcu_grouped_gemm_bf16_nn_fixed_srd_lds8_enabled()
+{
+    const char* disable =
+        std::getenv("CK_TILE_GROUPED_GEMM_DISABLE_GFX936_BF16_NN_FIXED_SRD_LDS8");
+    return !(disable != nullptr && disable[0] == '1' && disable[1] == '\0');
+}
 
 // Launch the selected BW-family FP16/BF16 grouped-GEMM kernels from an
 // existing device array of ck_tile::GemmTransKernelArg. The validated family

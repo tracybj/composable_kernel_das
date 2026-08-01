@@ -60,6 +60,10 @@ struct GemmPipelineAgBgCrCompV3TritonOperand
     using StageBlockGemm =
         remove_cvref_t<decltype(Policy::template GetBlockGemm<StageProblem>())>;
 
+    // Register-only output epilogues obtain their accumulator distribution
+    // from the stage block GEMM; K depth does not participate in C layout.
+    using BlockGemm = StageBlockGemm;
+
     static constexpr bool IsARow =
         std::is_same_v<ALayout, tensor_layout::gemm::RowMajor>;
     static constexpr bool IsBRow =
@@ -2445,7 +2449,7 @@ struct GemmPipelineAgBgCrCompV3TritonOperand
                 make_static_distributed_tensor<BDataType>(b_stage_dstr);
 
             const auto compute_exact_stage =
-                [&](auto iOperandBuffer,
+                [&]([[maybe_unused]] auto iOperandBuffer,
                     auto& a_stage_tile,
                     auto& b_stage_tile) {
                     [[maybe_unused]] auto& c_vecs =
@@ -2852,6 +2856,12 @@ struct GemmPipelineAgBgCrCompV3TritonOperand
                                     a_vecs[iMRepeat],
                                     b_vecs[iNRepeat]);
                     });
+#if defined(CK_TILE_GROUPED_GEMM_GFX936_RR_BLAS_EARLY_AND_FINAL_INLINE_BARRIER)
+                    // Prevent a wave from refilling circular LDS while another
+                    // wave still consumes the current slot. Inline assembly
+                    // keeps the barrier after all 32 register-only MMACs.
+                    asm volatile("s_barrier" ::: "memory");
+#endif
                     __builtin_amdgcn_s_setprio(0);
 #elif !defined(CK_TILE_GROUPED_GEMM_GFX936_RR_BLAS_INLINE_MMAC_ORDER) && \
     !defined(CK_TILE_GROUPED_GEMM_GFX936_RR_BLAS_FIXED_ACCUMULATORS_V2) && \
