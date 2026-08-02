@@ -2193,6 +2193,38 @@ int grouped_gemm_c_run_gfx936_bf16_nn_rr_fast_vmem3_early_final_barrier(
     char b_layout,
     void* workspace,
     hipStream_t stream);
+int grouped_gemm_c_run_gfx936_bf16_tn_blas_transposed_logical_k_tail(
+    const ck_tile_hcu_grouped_gemm_desc* descs,
+    int group_count,
+    char a_layout,
+    char b_layout,
+    void* workspace,
+    hipStream_t stream);
+
+inline bool grouped_gemm_prefers_gfx936_bf16_tn_logical_k_tail(
+    const ck_tile_hcu_grouped_gemm_desc* descs,
+    int group_count)
+{
+    if(!ck_tile_hcu_grouped_gemm_bf16_tn_logical_k_tail_enabled() ||
+       descs == nullptr || group_count != 16)
+    {
+        return false;
+    }
+
+    for(int i = 0; i < group_count; ++i)
+    {
+        const auto& arg = descs[i];
+        if(arg.a_ptr == nullptr || arg.b_ptr == nullptr || arg.c_ptr == nullptr ||
+           arg.M < 2048 || arg.N < 2048 || arg.K < 128 ||
+           arg.M % 256 != 0 || arg.N % 256 != 0 || arg.k_batch != 1 ||
+           arg.num_d_tensors != 0 || arg.stride_A != arg.M ||
+           arg.stride_B != arg.N || arg.stride_C != arg.N)
+        {
+            return false;
+        }
+    }
+    return true;
+}
 
 inline bool grouped_gemm_prefers_gfx936_bf16_nn_fixed_srd_lds8(
     const ck_tile_hcu_grouped_gemm_desc* descs,

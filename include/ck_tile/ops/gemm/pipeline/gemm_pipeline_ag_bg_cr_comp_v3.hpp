@@ -56,6 +56,14 @@ struct BaseGemmPipelineAgBgCrCompV3
         const bool hot_loop      = amd_wave_read_first_lane(has_hot_loop);
         const TailNumber tail    = amd_wave_read_first_lane(tail_number);
         constexpr auto scenarios = []() {
+#if defined(CK_TILE_GROUPED_GEMM_DSREADM_HOT_TAIL_ONLY)
+            // Focused grouped-GEMM candidate: callers prove every descriptor
+            // has a V3 hot loop, so avoid embedding the three unreachable
+            // short-K pipeline bodies in the persistent kernel.
+            return std::array<std::pair<bool, TailNumber>, 2>{
+                std::make_pair(true, TailNumber::Even),
+                std::make_pair(true, TailNumber::Odd)};
+#else
             if constexpr(Problem::BlockGemmShape::NumWarps == 8)
             {
                 return std::array<std::pair<bool, TailNumber>, 5>{
@@ -73,6 +81,7 @@ struct BaseGemmPipelineAgBgCrCompV3
                     std::make_pair(false, TailNumber::Odd),
                     std::make_pair(false, TailNumber::Even)};
             }
+#endif
         }();
 
         if(hot_loop == scenarios[I].first && tail == scenarios[I].second)

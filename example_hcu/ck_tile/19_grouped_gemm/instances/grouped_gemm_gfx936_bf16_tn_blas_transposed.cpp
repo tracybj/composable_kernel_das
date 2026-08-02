@@ -7,7 +7,17 @@
 // like the matching hipBLASLt solution.
 #include "grouped_gemm_impl.hpp"
 
-extern "C" int ck_tile_hcu_grouped_gemm_bw_family_bf16_tn_blas_transposed_device_args(
+#ifndef CK_TILE_GROUPED_GEMM_BF16_TN_BLAS_TRANSPOSED_ENTRY
+#define CK_TILE_GROUPED_GEMM_BF16_TN_BLAS_TRANSPOSED_ENTRY \
+    ck_tile_hcu_grouped_gemm_bw_family_bf16_tn_blas_transposed_device_args
+#endif
+
+#ifndef CK_TILE_GROUPED_GEMM_BF16_TN_BLAS_TRANSPOSED_COMPAT_ENTRY
+#define CK_TILE_GROUPED_GEMM_BF16_TN_BLAS_TRANSPOSED_COMPAT_ENTRY \
+    ck_tile_hcu_grouped_gemm_gfx936_bf16_tn_blas_transposed_device_args
+#endif
+
+extern "C" int CK_TILE_GROUPED_GEMM_BF16_TN_BLAS_TRANSPOSED_ENTRY(
     void* device_args,
     int group_count,
     std::uint32_t num_cu,
@@ -29,21 +39,27 @@ extern "C" int ck_tile_hcu_grouped_gemm_bw_family_bf16_tn_blas_transposed_device
                           ck_tile::bf16_t,
                           ck_tile::bf16_t,
                           float,
-                          ck_tile::bf16_t>(ck_tile::stream_config{stream},
-                                           group_count,
-                                           device_args,
-                                           {},
-                                           false,
-                                           num_cu);
+                          ck_tile::bf16_t,
+#if defined(CK_TILE_GROUPED_GEMM_UNIQUE_KERNEL_TAG)
+                          CK_TILE_GROUPED_GEMM_UNIQUE_KERNEL_TAG
+#else
+                          0
+#endif
+                          >(ck_tile::stream_config{stream},
+                            group_count,
+                            device_args,
+                            {},
+                            false,
+                            num_cu);
     return 0;
 }
 
-extern "C" int ck_tile_hcu_grouped_gemm_gfx936_bf16_tn_blas_transposed_device_args(
+extern "C" int CK_TILE_GROUPED_GEMM_BF16_TN_BLAS_TRANSPOSED_COMPAT_ENTRY(
     void* device_args,
     int group_count,
     std::uint32_t num_cu,
     hipStream_t stream)
 {
-    return ck_tile_hcu_grouped_gemm_bw_family_bf16_tn_blas_transposed_device_args(
+    return CK_TILE_GROUPED_GEMM_BF16_TN_BLAS_TRANSPOSED_ENTRY(
         device_args, group_count, num_cu, stream);
 }

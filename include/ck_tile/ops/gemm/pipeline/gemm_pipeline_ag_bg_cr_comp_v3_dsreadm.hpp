@@ -1349,7 +1349,14 @@ struct GemmPipelineAgBgCrCompV3Dsreadm : public BaseGemmPipelineAgBgCrCompV3<Pro
         index_t a_stage_voffset_running = a_voffset;
 #endif
 
+#if defined(CK_TILE_GROUPED_GEMM_DSREADM_LOGICAL_K_TAIL_VENDOR_OOB_PEELED)
+        const auto direct_load_stage_impl =
+            [&](auto iSlot, index_t global_stage, auto tail_mask) {
+            constexpr bool apply_tail_mask =
+                remove_cvref_t<decltype(tail_mask)>::value;
+#else
         const auto direct_load_stage = [&](auto iSlot, index_t global_stage) {
+#endif
 #if defined(CK_TILE_GROUPED_GEMM_DSREADM_BLAS_FIXED_M0)
             // Register variables cannot be captured by a C++ lambda. Declare
             // them in this fully inlined stage body so the scalar bases remain
@@ -1364,7 +1371,30 @@ struct GemmPipelineAgBgCrCompV3Dsreadm : public BaseGemmPipelineAgBgCrCompV3<Pro
             constexpr index_t slot_byte_offset =
                 iSlot * 16 * MPerBlock * sizeof(ADataType);
 #endif
+#if defined(CK_TILE_GROUPED_GEMM_DSREADM_LOGICAL_K_TAIL_ZERO_FILL) || \
+    defined(CK_TILE_GROUPED_GEMM_DSREADM_LOGICAL_K_TAIL_VENDOR_OOB) || \
+    defined(CK_TILE_GROUPED_GEMM_DSREADM_LOGICAL_K_TAIL_VENDOR_OOB_PEELED)
+            const index_t logical_k_a = a_desc.get_length(number<0>{});
+            const index_t logical_k_b = b_desc.get_length(number<0>{});
+            const index_t stage_k     = global_stage * 16;
+            [[maybe_unused]] const bool a_stage_has_any =
+                a_origin[0] + stage_k < logical_k_a;
+            const bool b_stage_has_any = b_origin[0] + stage_k < logical_k_b;
+            // Do not materialize an SRD base beyond a compact allocation for
+            // the fully padded K16 stages in the final K64 tile. Zero-fill
+            // skips those VMEM operations; vendor-OOB issues only voffset -1.
+#if defined(CK_TILE_GROUPED_GEMM_DSREADM_LOGICAL_K_TAIL_VENDOR_OOB_PEELED)
+            const index_t b_stage_base =
+                !apply_tail_mask || b_stage_has_any
+                    ? global_stage * b_stage_byte_stride
+                    : 0;
+#else
+            const index_t b_stage_base =
+                b_stage_has_any ? global_stage * b_stage_byte_stride : 0;
+#endif
+#else
             const index_t b_stage_base = global_stage * b_stage_byte_stride;
+#endif
 #if defined(CK_TILE_GROUPED_GEMM_DSREADM_SCALAR_RESOURCE_RECURRENCE)
             const auto& a_stage_resource = a_stage_resource_running;
 #elif defined(CK_TILE_GROUPED_GEMM_DSREADM_SCALAR_POINTER_RECURRENCE)
@@ -1374,7 +1404,16 @@ struct GemmPipelineAgBgCrCompV3Dsreadm : public BaseGemmPipelineAgBgCrCompV3<Pro
             const auto& a_stage_resource = a_stage_resource_fixed;
 #else
             const index_t a_stage_base =
+#if defined(CK_TILE_GROUPED_GEMM_DSREADM_LOGICAL_K_TAIL_VENDOR_OOB_PEELED)
+                (!apply_tail_mask || a_stage_has_any)
+                    ? global_stage * a_stage_byte_stride
+                    : 0;
+#elif defined(CK_TILE_GROUPED_GEMM_DSREADM_LOGICAL_K_TAIL_ZERO_FILL) || \
+    defined(CK_TILE_GROUPED_GEMM_DSREADM_LOGICAL_K_TAIL_VENDOR_OOB)
+                a_stage_has_any ? global_stage * a_stage_byte_stride : 0;
+#else
                 global_stage * a_stage_byte_stride;
+#endif
             const auto a_stage_resource = make_wave_buffer_resource(
                 reinterpret_cast<const char*>(a_buf.p_data_) + a_stage_base,
                 a_buffer_bytes - a_stage_base);
@@ -1383,30 +1422,155 @@ struct GemmPipelineAgBgCrCompV3Dsreadm : public BaseGemmPipelineAgBgCrCompV3<Pro
                 reinterpret_cast<const char*>(b_buf.p_data_) + b_stage_base,
                 b_buffer_bytes - b_stage_base);
 
+#if defined(CK_TILE_GROUPED_GEMM_DSREADM_LOGICAL_K_TAIL_ZERO_FILL) || \
+    defined(CK_TILE_GROUPED_GEMM_DSREADM_LOGICAL_K_TAIL_VENDOR_OOB) || \
+    defined(CK_TILE_GROUPED_GEMM_DSREADM_LOGICAL_K_TAIL_VENDOR_OOB_PEELED)
+            const bool a_logical_k_valid =
+                a_origin[0] + stage_k + a_k16 < logical_k_a;
+            const bool b_logical_k_valid =
+                b_origin[0] + stage_k + k16 < logical_k_b;
+            [[maybe_unused]] const bool whole_stage_valid =
+                a_origin[0] + stage_k + 15 < logical_k_a &&
+                b_origin[0] + stage_k + 15 < logical_k_b;
+#endif
+
+#if defined(CK_TILE_GROUPED_GEMM_DSREADM_LOGICAL_K_TAIL_ZERO_FILL)
+            // Hygon direct-to-LDS buffer loads can fault instead of returning
+            // zero when a lane uses an out-of-range SRD offset. Zero the whole
+            // physical slot before a partial/empty K16 stage, synchronize the
+            // zero fill, and let only logically valid lanes issue VMEM. Valid
+            // DTL writes then overlay the exact established BLAS LDS mapping.
+            if(!whole_stage_valid)
+            {
+                const int32x4_t zero128 = {0, 0, 0, 0};
+                const index_t lane_byte = tid * 8 * sizeof(ADataType);
+                const index_t a_zero_address =
+                    reinterpret_cast<uintptr_t>(a_lds_ptr) +
+                    slot_byte_offset + lane_byte;
+                const index_t b_zero_address =
+                    reinterpret_cast<uintptr_t>(a_lds_ptr) + 0x2000 +
+                    slot_byte_offset + lane_byte;
+                asm volatile("ds_write_b128 %0, %1"
+                             :
+                             : "v"(a_zero_address), "v"(zero128)
+                             : "memory");
+                asm volatile("ds_write_b128 %0, %1"
+                             :
+                             : "v"(b_zero_address), "v"(zero128)
+                             : "memory");
+                block_sync_lds();
+            }
+#endif
+
+#if defined(CK_TILE_GROUPED_GEMM_DSREADM_LOGICAL_K_TAIL_VENDOR_OOB)
+            // Keep the original aligned-stage instruction stream on every
+            // full K16 stage. Only the final partial/empty stages pay the
+            // lane-varying compare/cndmask cost required by the vendor tail
+            // convention. `whole_stage_valid` is wave-uniform, so the hot
+            // path avoids introducing divergent EXEC around DTL.
+            const index_t a_current_voffset =
+#if defined(CK_TILE_GROUPED_GEMM_DSREADM_SCALAR_VOFFSET_RECURRENCE)
+                a_stage_voffset_running;
+#else
+                a_voffset;
+#endif
+            index_t a_issue_voffset = a_current_voffset;
+            index_t b_issue_voffset = b_voffset;
+            if(!whole_stage_valid)
+            {
+                a_issue_voffset =
+                    a_logical_k_valid ? a_current_voffset : index_t{-1};
+                b_issue_voffset =
+                    b_logical_k_valid ? b_voffset : index_t{-1};
+            }
+#elif defined(CK_TILE_GROUPED_GEMM_DSREADM_LOGICAL_K_TAIL_VENDOR_OOB_PEELED)
+            // This compile-time branch is instantiated twice. The full-stage
+            // instance preserves the original aligned offset path, while the
+            // peeled final-K64 instance applies the vendor -1 convention.
+            const index_t a_current_voffset =
+#if defined(CK_TILE_GROUPED_GEMM_DSREADM_SCALAR_VOFFSET_RECURRENCE)
+                a_stage_voffset_running;
+#else
+                a_voffset;
+#endif
+            const index_t a_issue_voffset = [&]() {
+                if constexpr(apply_tail_mask)
+                {
+                    return a_logical_k_valid ? a_current_voffset
+                                             : index_t{-1};
+                }
+                else
+                {
+                    return a_current_voffset;
+                }
+            }();
+            const index_t b_issue_voffset = [&]() {
+                if constexpr(apply_tail_mask)
+                {
+                    return b_logical_k_valid ? b_voffset : index_t{-1};
+                }
+                else
+                {
+                    return b_voffset;
+                }
+            }();
+#endif
+
 #if defined(CK_TILE_GROUPED_GEMM_DSREADM_BLAS_FIXED_M0)
+#if defined(CK_TILE_GROUPED_GEMM_DSREADM_LOGICAL_K_TAIL_ZERO_FILL)
+            if(a_logical_k_valid)
+            {
+#endif
             asm volatile(
                 "s_add_u32 m0, %0, %3\n\t"
                 "buffer_load_dwordx4 %1, %2, 0 offen offset:0 lds"
                 :
                 : "{s92}"(a_m0_base_reg),
-                  "v"(a_voffset),
+                  "v"(
+#if defined(CK_TILE_GROUPED_GEMM_DSREADM_LOGICAL_K_TAIL_VENDOR_OOB) || \
+    defined(CK_TILE_GROUPED_GEMM_DSREADM_LOGICAL_K_TAIL_VENDOR_OOB_PEELED)
+                      a_issue_voffset
+#else
+                      a_voffset
+#endif
+                  ),
                   "s"(a_stage_resource),
                   "n"(slot_byte_offset)
                 : "memory");
+#if defined(CK_TILE_GROUPED_GEMM_DSREADM_LOGICAL_K_TAIL_ZERO_FILL)
+            }
+#endif
 #else
 #if defined(CK_TILE_GROUPED_GEMM_FUSED_PACK_GRADX_M128N256)
             if((tid & 31) < 16)
             {
 #endif
-                hcu_async_buffer_load_asm_impl<ADataType, 8>(
+#if defined(CK_TILE_GROUPED_GEMM_DSREADM_LOGICAL_K_TAIL_ZERO_FILL)
+                if(a_logical_k_valid)
+                {
+#endif
+                    hcu_async_buffer_load_asm_impl<ADataType, 8>(
                     a_m0_base + slot_byte_offset,
                     a_stage_resource,
 #if defined(CK_TILE_GROUPED_GEMM_DSREADM_SCALAR_VOFFSET_RECURRENCE)
+#if defined(CK_TILE_GROUPED_GEMM_DSREADM_LOGICAL_K_TAIL_VENDOR_OOB) || \
+    defined(CK_TILE_GROUPED_GEMM_DSREADM_LOGICAL_K_TAIL_VENDOR_OOB_PEELED)
+                    a_issue_voffset,
+#else
                     a_stage_voffset_running,
+#endif
+#else
+#if defined(CK_TILE_GROUPED_GEMM_DSREADM_LOGICAL_K_TAIL_VENDOR_OOB) || \
+    defined(CK_TILE_GROUPED_GEMM_DSREADM_LOGICAL_K_TAIL_VENDOR_OOB_PEELED)
+                    a_issue_voffset,
 #else
                     a_voffset,
 #endif
+#endif
                     0);
+#if defined(CK_TILE_GROUPED_GEMM_DSREADM_LOGICAL_K_TAIL_ZERO_FILL)
+                }
+#endif
 #if defined(CK_TILE_GROUPED_GEMM_FUSED_PACK_GRADX_M128N256)
             }
 #endif
@@ -1511,11 +1675,23 @@ struct GemmPipelineAgBgCrCompV3Dsreadm : public BaseGemmPipelineAgBgCrCompV3<Pro
             else
 #endif
             {
-            hcu_async_buffer_load_asm_impl<BDataType, 8>(
-                b_m0_base + slot_byte_offset,
-                b_stage_resource,
-                b_voffset,
-                0);
+#if defined(CK_TILE_GROUPED_GEMM_DSREADM_LOGICAL_K_TAIL_ZERO_FILL)
+                if(b_logical_k_valid)
+                {
+#endif
+                    hcu_async_buffer_load_asm_impl<BDataType, 8>(
+                        b_m0_base + slot_byte_offset,
+                        b_stage_resource,
+#if defined(CK_TILE_GROUPED_GEMM_DSREADM_LOGICAL_K_TAIL_VENDOR_OOB) || \
+    defined(CK_TILE_GROUPED_GEMM_DSREADM_LOGICAL_K_TAIL_VENDOR_OOB_PEELED)
+                        b_issue_voffset,
+#else
+                        b_voffset,
+#endif
+                        0);
+#if defined(CK_TILE_GROUPED_GEMM_DSREADM_LOGICAL_K_TAIL_ZERO_FILL)
+                }
+#endif
             }
 #if defined(CK_TILE_GROUPED_GEMM_DSREADM_SCALAR_RESOURCE_RECURRENCE)
             advance_scalar_resource(
@@ -1535,6 +1711,17 @@ struct GemmPipelineAgBgCrCompV3Dsreadm : public BaseGemmPipelineAgBgCrCompV3<Pro
             a_stage_voffset_running += a_stage_byte_stride;
 #endif
         };
+#if defined(CK_TILE_GROUPED_GEMM_DSREADM_LOGICAL_K_TAIL_VENDOR_OOB_PEELED)
+        const auto direct_load_stage = [&](auto iSlot, index_t global_stage) {
+            direct_load_stage_impl(
+                iSlot, global_stage, bool_constant<false>{});
+        };
+        const auto direct_load_tail_stage =
+            [&](auto iSlot, index_t global_stage) {
+                direct_load_stage_impl(
+                    iSlot, global_stage, bool_constant<true>{});
+            };
+#endif
 #if defined(CK_TILE_GROUPED_GEMM_DSREADM_B_VGPR_PREPERMUTE_OVERLAP)
         // Split the producer-side B transpose into issue/commit halves.  The
         // coalesced global load is issued before the current 32-MMAC stage and
@@ -2552,7 +2739,11 @@ struct GemmPipelineAgBgCrCompV3Dsreadm : public BaseGemmPipelineAgBgCrCompV3<Pro
 #if defined(CK_TILE_GROUPED_GEMM_DSREADM_DISABLE_MAIN_LOOP_UNROLL)
 #pragma clang loop unroll(disable)
 #endif
+#if defined(CK_TILE_GROUPED_GEMM_DSREADM_LOGICAL_K_TAIL_VENDOR_OOB_PEELED)
+        for(index_t i = 0; i < num_loop - 2; ++i)
+#else
         for(index_t i = 0; i < num_loop - 1; ++i)
+#endif
         {
             auto a_stage =
                 block_gemm.template LdsLoadAStage<0>(a_lds_gemm_window);
@@ -2607,7 +2798,52 @@ struct GemmPipelineAgBgCrCompV3Dsreadm : public BaseGemmPipelineAgBgCrCompV3<Pro
 #endif
         }
 
+#if defined(CK_TILE_GROUPED_GEMM_DSREADM_LOGICAL_K_TAIL_VENDOR_OOB_PEELED)
+        // Peel the final transition iteration. Its first refill is the last
+        // full K16 stage of the penultimate K64 tile; the remaining three
+        // refills and the post-loop refill belong to the partial final tile.
+        {
+            auto a_stage =
+                block_gemm.template LdsLoadAStage<0>(a_lds_gemm_window);
+            direct_load_stage(number<3>{}, next_global_stage++);
+            sync_b_pipeline_direct_load();
+            auto b_next =
+                block_gemm.template LdsLoadBStage<1>(b_lds_gemm_window);
+            run_stage_with_optional_pack(a_stage, b_current);
+            b_current = b_next;
+
+            a_stage =
+                block_gemm.template LdsLoadAStage<1>(a_lds_gemm_window);
+            direct_load_tail_stage(number<0>{}, next_global_stage++);
+            sync_b_pipeline_direct_load();
+            b_next =
+                block_gemm.template LdsLoadBStage<2>(b_lds_gemm_window);
+            run_stage_with_optional_pack(a_stage, b_current);
+            b_current = b_next;
+
+            a_stage =
+                block_gemm.template LdsLoadAStage<2>(a_lds_gemm_window);
+            direct_load_tail_stage(number<1>{}, next_global_stage++);
+            sync_b_pipeline_direct_load();
+            b_next =
+                block_gemm.template LdsLoadBStage<3>(b_lds_gemm_window);
+            run_stage_with_optional_pack(a_stage, b_current);
+            b_current = b_next;
+
+            a_stage =
+                block_gemm.template LdsLoadAStage<3>(a_lds_gemm_window);
+            direct_load_tail_stage(number<2>{}, next_global_stage++);
+            sync_b_pipeline_direct_load();
+            b_next =
+                block_gemm.template LdsLoadBStage<0>(b_lds_gemm_window);
+            run_stage_with_optional_pack(a_stage, b_current);
+            b_current = b_next;
+        }
+
+        direct_load_tail_stage(number<3>{}, next_global_stage);
+#else
         direct_load_stage(number<3>{}, next_global_stage);
+#endif
         block_sync_lds_direct_load();
         auto a_stage =
             block_gemm.template LdsLoadAStage<0>(a_lds_gemm_window);

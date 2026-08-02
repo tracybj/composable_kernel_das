@@ -98,6 +98,15 @@ int ck_tile_hcu_grouped_gemm_run(const ck_tile_hcu_grouped_gemm_desc* descs,
 #if defined(CK_TILE_GROUPED_GEMM_ENABLE_GFX936_SELECTED)
             if(ck_tile::get_hcu_target_enum() ==
                    ck_tile::hcu_target_enum::gfx936 &&
+               a_layout == 'C' && b_layout == 'R' &&
+               grouped_gemm_prefers_gfx936_bf16_tn_logical_k_tail(
+                   descs, group_count))
+            {
+                return grouped_gemm_c_run_gfx936_bf16_tn_blas_transposed_logical_k_tail(
+                    descs, group_count, a_layout, b_layout, workspace, stream);
+            }
+            if(ck_tile::get_hcu_target_enum() ==
+                   ck_tile::hcu_target_enum::gfx936 &&
                a_layout == 'R' && b_layout == 'R')
             {
                 if(grouped_gemm_prefers_gfx936_bf16_nn_rr_fast_vmem3_early_final_barrier(

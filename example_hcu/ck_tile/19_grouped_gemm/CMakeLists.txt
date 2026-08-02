@@ -65,7 +65,8 @@ set(HCU_GROUPED_GEMM_GFX936_SELECTED_SOURCES)
 if(GPU_TARGETS MATCHES "gfx936" AND NOT GPU_TARGETS MATCHES "gfx938|gfx946")
     list(APPEND HCU_GROUPED_GEMM_GFX936_SELECTED_SOURCES
         instances/grouped_gemm_gfx936_bf16_nn_fixed_srd_lds8_boundary_lds0_vmem0.cpp
-        instances/grouped_gemm_gfx936_bf16_nn_rr_fast_vmem3_early_final_barrier.cpp)
+        instances/grouped_gemm_gfx936_bf16_nn_rr_fast_vmem3_early_final_barrier.cpp
+        instances/grouped_gemm_gfx936_bf16_tn_blas_transposed_logical_k_tail.cpp)
     target_sources(${TILE_EXAMPLE_GROUPED_GEMM}
         PRIVATE ${HCU_GROUPED_GEMM_GFX936_SELECTED_SOURCES})
     target_compile_definitions(${TILE_EXAMPLE_GROUPED_GEMM}
@@ -2964,9 +2965,15 @@ target_compile_definitions(ck_tile_hcu_grouped_gemm
         CK_TILE_EXAMPLE_NO_MAIN
         CK_TILE_GROUPED_GEMM_FAST_BUILD
         CK_TILE_GROUPED_GEMM_FAST_RC_ONLY
-        CK_TILE_GROUPED_GEMM_ENABLE_GFX936_SELECTED
         CK_TILE_GROUPED_GEMM_FAST_FP16
         CK_TILE_GROUPED_GEMM_FAST_BF16)
+if(HCU_GROUPED_GEMM_GFX936_SELECTED_SOURCES)
+    # Keep gfx936-only declarations and link providers paired. In particular,
+    # a gfx938-only build has an empty selected source list and must not make
+    # grouped_gemm.cpp reference the gfx936 selected entry points.
+    target_compile_definitions(ck_tile_hcu_grouped_gemm
+        PRIVATE CK_TILE_GROUPED_GEMM_ENABLE_GFX936_SELECTED)
+endif()
 set_target_properties(ck_tile_hcu_grouped_gemm PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 # Minimal consumer-independent library used by the public C ABI matrix. It
@@ -3000,6 +3007,22 @@ add_executable(tile_example_grouped_gemm_c_api_smoke EXCLUDE_FROM_ALL
 )
 target_link_libraries(tile_example_grouped_gemm_c_api_smoke
     PRIVATE ck_tile_hcu_grouped_gemm_generic)
+
+# Production-selector variant of the exact same 60-case public C ABI matrix.
+# On gfx936 it links the promoted selected instances; on gfx938 the selected
+# source list is empty and the architecture-specific generic portfolio stays
+# unchanged.
+add_executable(tile_example_grouped_gemm_c_api_selected_smoke EXCLUDE_FROM_ALL
+    grouped_gemm_c_api_smoke.cpp
+)
+target_link_libraries(tile_example_grouped_gemm_c_api_selected_smoke
+    PRIVATE ck_tile_hcu_grouped_gemm)
+
+add_executable(tile_example_grouped_gemm_c_api_tn_logical_k_tail_smoke EXCLUDE_FROM_ALL
+    grouped_gemm_c_api_tn_logical_k_tail_smoke.cpp
+)
+target_link_libraries(tile_example_grouped_gemm_c_api_tn_logical_k_tail_smoke
+    PRIVATE ck_tile_hcu_grouped_gemm)
 
 set(GROUPED_GEMM_FAST_FIXED_SHAPE_ARGS
     -group_count=2

@@ -249,6 +249,40 @@ cmake --build . --target tile_example_grouped_gemm_c_api_smoke -j 32
 RowMajor B/ColumnMajor A 分别由 `GemmConfig::SupportsFastRowMajorB` 和
 `GemmConfig::SupportsFastColumnMajorA` 声明。
 
+gfx936 的 BF16 TN（A 列主序、B 行主序）大 shape 还提供一个 CK-owned
+logical-K-tail 选择项。它把每组逻辑 K 直接传给 tag93607 的 peeled final-K64
+pipeline；调用方不需要把 compact A/B 扩容到 K64，也不需要把各组容量补到
+65536。只有下面的全部条件成立时，公共 C ABI 才选择该路径：
+
+- 当前设备为 gfx936，dtype 为 BF16，layout 为 TN；
+- group count 为 16，`k_batch=1`，没有 D tensor；
+- A/B/C 使用标准 TN/row-major output stride；
+- 每组 `M/N >= 2048` 且均为 256 的倍数，`K >= 128`。
+
+其他 dtype、layout、shape、group count 和 GPU 架构继续使用原 generic
+padding/non-padding portfolio。需要做同一 ELF 的回滚消融时，设置：
+
+```bash
+export CK_TILE_GROUPED_GEMM_DISABLE_GFX936_BF16_TN_LOGICAL_K_TAIL=1
+```
+
+生产 selector exact-60 case 和专用 logical-tail guard/hash/rollback smoke 可用以下
+命令复现：
+
+```bash
+cmake --build . --target \
+  tile_example_grouped_gemm_c_api_selected_smoke \
+  tile_example_grouped_gemm_c_api_tn_logical_k_tail_smoke -j 16
+
+./bin/tile_example_grouped_gemm_c_api_selected_smoke
+./bin/tile_example_grouped_gemm_c_api_tn_logical_k_tail_smoke
+```
+
+第二个 smoke 使用 16 个不同逻辑 K（总和 32757），以两个不同的 A/B
+post-allocation guard 运行默认路径，再在同一进程设置 rollback 开关运行 generic
+padding。验收要求两个默认输出 hash 相同、rollback 输出 hash 相同、抽样 FP32
+reference 和 output guard 全部通过。
+
 ck4inductor 的 `ck_tile_grouped_gemm` 模块枚举 FP16/BF16 × NT/NN/TN 六个
 consumer contract，并提供 variable-K、padding、最小 K、现有 ABI 符号和 CMake
 target 信息。它是 ROCm/HCU Torch backend 的接入材料；未修改的 PyTorch

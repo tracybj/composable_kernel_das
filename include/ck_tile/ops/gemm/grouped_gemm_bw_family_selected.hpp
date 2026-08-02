@@ -16,6 +16,16 @@ inline bool ck_tile_hcu_grouped_gemm_bf16_nn_fixed_srd_lds8_enabled()
     return !(disable != nullptr && disable[0] == '1' && disable[1] == '\0');
 }
 
+// CK-owned gfx936 BF16 TN logical-K-tail default. The candidate has an
+// explicit rollback switch so downstream integrations can perform same-
+// process A/B without changing the aligned/generic fallback portfolio.
+inline bool ck_tile_hcu_grouped_gemm_bf16_tn_logical_k_tail_enabled()
+{
+    const char* disable = std::getenv(
+        "CK_TILE_GROUPED_GEMM_DISABLE_GFX936_BF16_TN_LOGICAL_K_TAIL");
+    return !(disable != nullptr && disable[0] == '1' && disable[1] == '\0');
+}
+
 // Launch the selected BW-family FP16/BF16 grouped-GEMM kernels from an
 // existing device array of ck_tile::GemmTransKernelArg. The validated family
 // currently covers gfx936 and gfx938 under the same aligned-shape contract.
@@ -41,6 +51,8 @@ CK_TILE_DECLARE_BW_FAMILY_GROUPED_GEMM_ENTRY(bf16_nn_rr_blas);
 CK_TILE_DECLARE_BW_FAMILY_GROUPED_GEMM_ENTRY(bf16_nn_cc_blas_transposed);
 CK_TILE_DECLARE_BW_FAMILY_GROUPED_GEMM_ENTRY(bf16_tn);
 CK_TILE_DECLARE_BW_FAMILY_GROUPED_GEMM_ENTRY(bf16_tn_blas_transposed);
+CK_TILE_DECLARE_BW_FAMILY_GROUPED_GEMM_ENTRY(
+    bf16_tn_blas_transposed_logical_k_tail);
 CK_TILE_DECLARE_BW_FAMILY_GROUPED_GEMM_ENTRY(
     bf16_tn_blas_transposed_fused_pack);
 CK_TILE_DECLARE_BW_FAMILY_GROUPED_GEMM_ENTRY(
