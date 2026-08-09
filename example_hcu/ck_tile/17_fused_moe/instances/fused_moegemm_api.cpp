@@ -148,7 +148,10 @@ WeightLoadType get_weight_ld_type_from_sol_ID(int sol_id) {
 template <ck_tile::index_t... Is>
 using S = ck_tile::sequence<Is...>;
 
-float fused_moegemm(fused_moegemm_traits t, fused_moegemm_args a, const ck_tile::stream_config& s)
+template <ck_tile::index_t act_>
+float fused_moegemm_impl(fused_moegemm_traits t,
+                         fused_moegemm_args a,
+                         const ck_tile::stream_config& s)
 {
 //     printf("[fused_moegemm]: 1. t.prec_i = %s, t.prec_w = %s, t.prec_o = %s, t.prec_st = %s, t.prec_sw = %s, t.prec_sq = %s, t.prec_kw = %s, t.prec_zp = %s\n",
 //            t.prec_i.c_str(), t.prec_w.c_str(), t.prec_o.c_str(), t.prec_st.c_str(), t.prec_sw.c_str(), t.prec_sq.c_str(), t.prec_kw.c_str(), t.prec_zp.c_str());
@@ -158,9 +161,8 @@ float fused_moegemm(fused_moegemm_traits t, fused_moegemm_args a, const ck_tile:
 
     // 1. quant_type = 0, no quant
     if (t.prec_i == "fp16" && t.prec_w == "fp16" && t.prec_o == "fp32" && t.prec_st == "fp32" &&
-           t.prec_sw == "fp32" && t.prec_sq == "fp32" && t.prec_kw == "fp32" && t.gate_only == 0 && t.activation == 1)
+           t.prec_sw == "fp32" && t.prec_sq == "fp32" && t.prec_kw == "fp32" && t.gate_only == 0)
     {
-        constexpr ck_tile::index_t act_ = 1;
         constexpr ck_tile::index_t go_  = 0;
 
         if (t.block_m == 32) {
@@ -207,9 +209,8 @@ float fused_moegemm(fused_moegemm_traits t, fused_moegemm_args a, const ck_tile:
 
      else if (t.prec_w == "int8" && t.prec_o == "fp32" && t.prec_st == "fp32" &&
               t.prec_sw == "fp32" && t.prec_sq == "fp32" && t.prec_kw == "fp32" &&
-              t.fused_quant == 4 && t.block_m == 16 && t.gate_only == 0 && t.activation == 1)
+              t.fused_quant == 4 && t.block_m == 16 && t.gate_only == 0)
      {
-        constexpr ck_tile::index_t act_ = 1;
         constexpr ck_tile::index_t go_  = 0;
 
         // 1. use_int8_w8a8_block
@@ -221,9 +222,8 @@ float fused_moegemm(fused_moegemm_traits t, fused_moegemm_args a, const ck_tile:
 
      } else if (t.prec_w == "uint8" && t.prec_o == "fp32" && t.prec_st == "fp32" &&
         t.prec_sq == "fp32" && t.prec_kw == "fp32" && t.prec_zp == "uint8" && t.fused_quant == 3 &&
-        t.block_m == 16 && t.gate_only == 0 && t.activation == 1)
+        t.block_m == 16 && t.gate_only == 0)
     {
-        constexpr ck_tile::index_t act_ = 1;
         constexpr ck_tile::index_t go_  = 0;
 
         // 1. use_int8_w4a16_block
@@ -236,9 +236,8 @@ float fused_moegemm(fused_moegemm_traits t, fused_moegemm_args a, const ck_tile:
 
     } else if (t.prec_w == "uint8" && t.prec_o == "fp32" && t.prec_st == "fp32" &&
         t.prec_sq == "fp32" && t.prec_kw == "fp32" && t.prec_zp == "uint8" && t.fused_quant == 5 &&
-        t.block_m == 16 && t.gate_only == 0 && t.activation == 1)
+        t.block_m == 16 && t.gate_only == 0)
     {
-        constexpr ck_tile::index_t act_ = 1;
         constexpr ck_tile::index_t go_  = 0;
 
         // printf("[fused_moegemm]: 2. fused_quant=%d, block_shape_n=%d, block_shape_k=%d, t.prec_i=%s, t.prec_sw=%s\n",
@@ -265,6 +264,26 @@ float fused_moegemm(fused_moegemm_traits t, fused_moegemm_args a, const ck_tile:
 }
 
 
+float fused_moegemm(fused_moegemm_traits t,
+                     fused_moegemm_args a,
+                     const ck_tile::stream_config& s)
+{
+    // CK fused MoE traits: 0=GELU, 1=SiLU.
+    if(t.activation == 0)
+    {
+        return fused_moegemm_impl<0>(t, a, s);
+    }
+    if(t.activation == 1)
+    {
+        return fused_moegemm_impl<1>(t, a, s);
+    }
+
+    printf("[fused_moegemm]: unsupported activation=%d, expected 0 (GELU) or 1 (SiLU)\n",
+           t.activation);
+    return -1;
+}
+
+
 
 void fused_moe_find_solutions(fused_moegemm_traits t, fused_moegemm_args a, int* sol_data, int* sol_size)
 {
@@ -275,9 +294,16 @@ void fused_moe_find_solutions(fused_moegemm_traits t, fused_moegemm_args a, int*
         return;
     }
 
+    if (t.activation != 0 && t.activation != 1) {
+        *sol_size = 0;
+        printf("[fused_moe_find_solutions]: unsupported activation=%d, expected 0 (GELU) or 1 (SiLU)\n",
+               t.activation);
+        return;
+    }
+
     // 1. no quant
     if (t.prec_i == "fp16" && t.prec_w == "fp16" && t.prec_o == "fp32" && t.prec_st == "fp32" &&
-           t.prec_sw == "fp32" && t.prec_sq == "fp32" && t.prec_kw == "fp32" && t.gate_only == 0 && t.activation == 1)
+           t.prec_sw == "fp32" && t.prec_sq == "fp32" && t.prec_kw == "fp32" && t.gate_only == 0)
     {
         if (t.block_m == 32) {
             if (sol_data == nullptr) {
@@ -305,7 +331,7 @@ void fused_moe_find_solutions(fused_moegemm_traits t, fused_moegemm_args a, int*
     // 2. use_int8_w8a8_block
     else if (t.prec_i == "fp16" && t.prec_w == "int8" && t.prec_o == "fp32" && t.prec_st == "fp32" &&
            t.prec_sw == "fp32" && t.prec_sq == "fp32" && t.prec_kw == "fp32" && t.fused_quant == 4 &&
-           t.gate_only == 0 && t.activation == 1){
+           t.gate_only == 0){
 
         if (t.block_m == 16) {
             if (a.block_shape_k == 64) {

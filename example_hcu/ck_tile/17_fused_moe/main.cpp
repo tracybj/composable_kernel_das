@@ -485,7 +485,7 @@ bool run(const ck_tile::ArgParser& arg_parser)
                 local_expert_masking);
             if(activation == 0)
             {
-                CPU_FUSED_MOE(ck_tile::element_wise::Gelu);
+                CPU_FUSED_MOE(ck_tile::element_wise::FastGeluAsm);
             }
             else
             {
@@ -591,7 +591,7 @@ bool run(const ck_tile::ArgParser& arg_parser)
         {
             if(activation == 0)
             {
-                CPU_FUSED_MOE(ck_tile::element_wise::Gelu);
+                CPU_FUSED_MOE(ck_tile::element_wise::FastGeluAsm);
             }
             else
             {
@@ -617,6 +617,14 @@ int main(int argc, char* argv[])
     auto [result, arg_parser] = create_args(argc, argv);
     if(!result)
         return -1;
+
+    const int activation = arg_parser.get_int("act");
+    if(activation != 0 && activation != 1)
+    {
+        std::cerr << "unsupported activation=" << activation
+                  << ", expected 0 (GELU) or 1 (SiLU)" << std::endl;
+        return -1;
+    }
 
     std::string prec_i  = arg_parser.get_str("prec_i");
     std::string prec_w  = arg_parser.get_str("prec_w");
