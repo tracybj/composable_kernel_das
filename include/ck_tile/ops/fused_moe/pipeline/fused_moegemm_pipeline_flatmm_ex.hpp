@@ -69,6 +69,7 @@ struct FusedMoeGemmPipeline_FlatmmEx
     }();
 
     static constexpr const char* name = "fused_moe_flatmm";
+    static constexpr bool kSupportsDeterministicFp64Output = true;
 
     // TODO: there are multiple buffers
     CK_TILE_HOST_DEVICE static constexpr ck_tile::index_t GetSmemSize_A()
@@ -148,7 +149,8 @@ struct FusedMoeGemmPipeline_FlatmmEx
 
                 const auto u_view_1_ = pad_tensor_view(
                     u_view_,
-                    make_tuple(number<BlockShape::Block_N0>{}, number<BlockShape::Block_K0>{}),
+                    make_tuple(number<BlockShape::Block_N0>{},
+                               number<2 * BlockShape::Block_K0>{}),
                     sequence<PadIntermediateSize, PadHiddenSize>{});
                 return u_view_1_;
             }
@@ -340,10 +342,22 @@ struct FusedMoeGemmPipeline_FlatmmEx
         // constexpr auto issues_d = number<d_win.get_num_of_access()>{};
         // constexpr auto issues_o = number<o_win.get_num_of_access()>{};
 
-        const index_t num_blocks_k0 =
-            (hidden_size + BlockShape::Block_K0 - 1) / BlockShape::Block_K0;
-        const index_t num_blocks_n1 =
-            (hidden_size + BlockShape::Block_N1 - 1) / BlockShape::Block_N1;
+        // Both manually double-buffered tails below consume two tiles.  Pad-enabled
+        // shapes must therefore round the loop count to an even number of tiles;
+        // merely rounding to one tile drops the last K0 tile for odd counts (for
+        // example 1232 / 32 -> 39, while the old loop executed only 38).
+        const index_t num_blocks_k0 = PadHiddenSize
+                                          ? ((hidden_size + 2 * BlockShape::Block_K0 - 1) /
+                                             (2 * BlockShape::Block_K0)) *
+                                                2
+                                          : (hidden_size + BlockShape::Block_K0 - 1) /
+                                                BlockShape::Block_K0;
+        const index_t num_blocks_n1 = PadHiddenSize
+                                          ? ((hidden_size + 2 * BlockShape::Block_N1 - 1) /
+                                             (2 * BlockShape::Block_N1)) *
+                                                2
+                                          : (hidden_size + BlockShape::Block_N1 - 1) /
+                                                BlockShape::Block_N1;
 
         using a_thread_type = decltype(load_tile(a_sld_win0));
         using g_thread_type = decltype(load_tile(g_copy_dram_window));
@@ -427,10 +441,12 @@ struct FusedMoeGemmPipeline_FlatmmEx
                                                          0>{};                        // M1PerLane
                 constexpr auto c_warp_y_lengths = to_sequence(
                     output_tmp_buf.get_tile_distribution().get_ys_to_d_descriptor().get_lengths());
-                output_tmp_buf.get_thread_buffer() =
+                const auto output_slice =
                     o_.get_y_sliced_thread_data(c_warp_y_index, c_warp_y_lengths);
-                sweep_tile(output_tmp_buf, [&](auto idx0) {
-                    output_tmp_buf(idx0) = output_tmp_buf(idx0) * topk_weights[i];
+                constexpr index_t output_size = output_tmp_buf.get_thread_buffer_size();
+                static_for<0, output_size, 1>{}([&](auto j) {
+                    output_tmp_buf.get_thread_buffer()[j] =
+                        output_slice[j] * topk_weights[i];
                 });
                 update_tile(o_windows[i], output_tmp_buf); // 1xbuffer atomic issue
                 move_tile_window(o_windows[i], {number<0>{}, number<BlockShape::Block_N1>{}});
@@ -611,17 +627,33 @@ struct FusedMoeGemmPipeline_FlatmmEx
                 sweep_tile(
                     acc_0.at(number<0>{}),
                     [&](auto idx0, auto idx1) {
-                        fp32x2_t v_{acc_0.at(number<0>{})(idx0), acc_0.at(number<0>{})(idx1)};
-                        typename Problem::GateActivation{}(v_, v_);
-                        acc_0.at(number<0>{})(idx0) = v_.x;
-                        acc_0.at(number<0>{})(idx1) = v_.y;
+                        const YDataType x0 =
+                            type_convert<YDataType>(acc_0.at(number<0>{})(idx0));
+                        const YDataType x1 =
+                            type_convert<YDataType>(acc_0.at(number<0>{})(idx1));
+                        AccDataType y0_float;
+                        AccDataType y1_float;
+                        typename Problem::GateActivation{}(
+                            y0_float, type_convert<AccDataType>(x0));
+                        typename Problem::GateActivation{}(
+                            y1_float, type_convert<AccDataType>(x1));
+                        const YDataType y0 = type_convert<YDataType>(y0_float);
+                        const YDataType y1 = type_convert<YDataType>(y1_float);
+                        acc_0.at(number<0>{})(idx0) = type_convert<AccDataType>(y0);
+                        acc_0.at(number<0>{})(idx1) = type_convert<AccDataType>(y1);
                     },
                     sequence<1, 2>{}); // m=1, n=4 continuos element in thread_buffer(VGPR)
-                // mul
-                auto reduce_acc_0 =
-                    tile_elementwise_in([&](const auto& a_, const auto& b_) { return a_ * b_; },
-                                        acc_0.at(number<0>{}),
-                                        acc_0.at(number<1>{}));
+                // Match the unfused FP16 contract: GEMM0 output, activation output, and the
+                // gate/up product each cross an FP16 rounding boundary before GEMM1.
+                auto reduce_acc_0 = tile_elementwise_in(
+                    [&](const auto& a_, const auto& b_) {
+                        const YDataType activated = type_convert<YDataType>(a_);
+                        const YDataType up        = type_convert<YDataType>(b_);
+                        const YDataType product   = type_convert<YDataType>(activated * up);
+                        return type_convert<AccDataType>(product);
+                    },
+                    acc_0.at(number<0>{}),
+                    acc_0.at(number<1>{}));
 
                 constexpr auto bridge_tile_enc =
                     Policy::template MakeBridgeTileDistribution<Problem>();

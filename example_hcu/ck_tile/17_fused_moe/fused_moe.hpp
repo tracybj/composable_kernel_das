@@ -22,6 +22,8 @@ struct fused_moe_args
     void* ws_ptr;                      // size is moe_sorting_get_workspace_size()
                                        // if return zero, then could be nullptr
                                        // must be cleard before use
+    void* deterministic_tmp_ptr;       // [m, k], fp64 partials
+    void* deterministic_counter_ptr;   // [max_num_m_blocks], int32 completion counters
 
     const void* topk_ids_ptr;    // [tokens, topk]
     const void* topk_weight_ptr; // [tokens, topk]
@@ -30,8 +32,6 @@ struct fused_moe_args
     void* sorted_expert_ids_ptr; // [(max_num_tokens_padded + block_size - 1) / block_size]
     void* tokens_positions_per_expert_ptr;     // [num_experts*2]
     void* num_sorted_tiles_ptr;  // [1]
-
-    // void* tmp_out;              // tempary output
 
     ck_tile::index_t block_m;           // block_m, used to devide the input
     ck_tile::index_t hidden_size;       // k

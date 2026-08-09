@@ -872,6 +872,14 @@ struct Gelu
 
     template <>
     CK_TILE_HOST_DEVICE void
+    operator()<fp32x2_t, fp32x2_t>(fp32x2_t& y, const fp32x2_t& x) const
+    {
+        y.x = 0.5f * x.x * (1.f + erf(float(0.70710678118f * x.x)));
+        y.y = 0.5f * x.y * (1.f + erf(float(0.70710678118f * x.y)));
+    }
+
+    template <>
+    CK_TILE_HOST_DEVICE void
     operator()<ck_tile::fp16_t, ck_tile::fp16_t>(ck_tile::fp16_t& y, const ck_tile::fp16_t& x) const
     {
         y = ck_tile::fp16_t(0.5) * x *

@@ -108,6 +108,8 @@ struct FusedMoeGemmWWtW4A16QuantKernel
         const void* d_zp_ptr;           // [e, k, n/group], down zero-point
         const void* y_smooth_scale_ptr; // [e, 1, n], smooth-quant-scale for 2nd gemm input
         void* o_ptr;                    // [m, k], output token
+        void* deterministic_tmp_ptr;    // reserved for standard topk=1 kernel
+        void* deterministic_counter_ptr;
 
         const void* sorted_token_ids_ptr;
         const void* sorted_weight_ptr;

@@ -85,6 +85,18 @@ void reference_fused_moe(
     ck_tile::index_t intermediate_size_0 = intermediate_size * (gate_only ? 1 : 2);
     ck_tile::index_t intermediate_size_1 = intermediate_size;
 
+    constexpr bool round_fp16_bridge =
+        std::is_same_v<remove_cvref_t<ADataType>, fp16_t> &&
+        std::is_same_v<remove_cvref_t<GDataType>, fp16_t> &&
+        std::is_same_v<remove_cvref_t<DDataType>, fp16_t> &&
+        std::is_same_v<remove_cvref_t<AccDataType>, float>;
+    const auto bridge_round = [&](AccDataType x) {
+        if constexpr(round_fp16_bridge)
+            return type_convert<AccDataType>(type_convert<fp16_t>(x));
+        else
+            return x;
+    };
+
     ck_tile::HostTensor<AccDataType> out_topk_tokens({tokens, topk, hidden_size});
 
     int max_num_tokens_padded = topk * tokens + experts * block_m - topk;
@@ -145,7 +157,7 @@ void reference_fused_moe(
                 acc += type_convert<AccDataType>(a_host(i_token, i_k)) *
                        type_convert<AccDataType>(g_host(i_expert, i_n, i_k));
             }
-            acc_0(0, i_n) = acc;
+            acc_0(0, i_n) = bridge_round(acc);
             // printf("ie:%2d, it:%3d, in:%d, %f\n", i_expert, i_token, i_n, acc);
         }
 
@@ -159,6 +171,7 @@ void reference_fused_moe(
             for(ck_tile::index_t i_n = 0; i_n < intermediate_size_1; i_n++)
             {
                 Activation{}(y(0, i_n), acc_0(0, i_n));
+                y(0, i_n) = bridge_round(y(0, i_n));
                 // printf("ie:%2d, it:%3d, in:%d, %f\n", i_expert, i_token, i_n, y(0, i_n));
             }
         }
@@ -172,7 +185,9 @@ void reference_fused_moe(
             {
                 AccDataType tmp;
                 Activation{}(tmp, acc_0(0, i_n));
-                y(0, i_n) = tmp * acc_0(0, i_n + intermediate_size_1); // TODO: elementwise mul
+                tmp = bridge_round(tmp);
+                const AccDataType up = bridge_round(acc_0(0, i_n + intermediate_size_1));
+                y(0, i_n) = bridge_round(tmp * up); // TODO: elementwise mul
             }
         }
 

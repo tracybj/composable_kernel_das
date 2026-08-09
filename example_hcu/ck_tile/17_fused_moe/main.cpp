@@ -389,6 +389,21 @@ bool run(const ck_tile::ArgParser& arg_parser)
         if(workspace_size != 0)
             moe_sorting_ws.SetZero(); // note, clear here!!!!
 
+        const int deterministic_intermediate_block =
+            block_m == 32 ? 256 : (block_m == 16 ? 128 : 0);
+        const bool deterministic_topk1 = topk == 1 && fused_quant == 0 && solution_id == 0 &&
+                                         !use_wt_shuffle && deterministic_intermediate_block != 0;
+        const std::size_t deterministic_tmp_bytes =
+            static_cast<std::size_t>(deterministic_topk1) * tokens * hidden_size * sizeof(double);
+        ck_tile::DeviceMem deterministic_tmp_buf(deterministic_tmp_bytes);
+        ck_tile::DeviceMem deterministic_counter_buf(
+            deterministic_topk1 ? sorted_expert_ids_host.get_element_space_size_in_bytes() : 0);
+        if(deterministic_topk1)
+        {
+            deterministic_tmp_buf.SetZero();
+            deterministic_counter_buf.SetZero();
+        }
+
         fused_moe_traits traits{prec_i,
                                 prec_w,
                                 prec_o,
@@ -418,6 +433,8 @@ bool run(const ck_tile::ArgParser& arg_parser)
                                                  : nullptr,
                             o_buf.GetDeviceBuffer(),
                             workspace_size != 0 ? moe_sorting_ws.GetDeviceBuffer() : nullptr,
+                            deterministic_topk1 ? deterministic_tmp_buf.GetDeviceBuffer() : nullptr,
+                            deterministic_topk1 ? deterministic_counter_buf.GetDeviceBuffer() : nullptr,
                             topk_ids_buf.GetDeviceBuffer(),
                             topk_weight_buf.GetDeviceBuffer(),
                             sorted_token_ids_buf.GetDeviceBuffer(),
@@ -485,7 +502,7 @@ bool run(const ck_tile::ArgParser& arg_parser)
                 local_expert_masking);
             if(activation == 0)
             {
-                CPU_FUSED_MOE(ck_tile::element_wise::FastGeluAsm);
+                CPU_FUSED_MOE(ck_tile::element_wise::Gelu);
             }
             else
             {
@@ -535,6 +552,21 @@ bool run(const ck_tile::ArgParser& arg_parser)
         ck_tile::DeviceMem sorted_expert_ids_buf(sorted_expert_ids_host);
         ck_tile::DeviceMem num_sorted_tiles_buf(num_sorted_tiles_host);
 
+        const int deterministic_intermediate_block =
+            block_m == 32 ? 256 : (block_m == 16 ? 128 : 0);
+        const bool deterministic_topk1 = topk == 1 && fused_quant == 0 &&
+                                         deterministic_intermediate_block != 0;
+        const std::size_t deterministic_tmp_bytes =
+            static_cast<std::size_t>(deterministic_topk1) * tokens * hidden_size * sizeof(double);
+        ck_tile::DeviceMem deterministic_tmp_buf(deterministic_tmp_bytes);
+        ck_tile::DeviceMem deterministic_counter_buf(
+            deterministic_topk1 ? sorted_expert_ids_host.get_element_space_size_in_bytes() : 0);
+        if(deterministic_topk1)
+        {
+            deterministic_tmp_buf.SetZero();
+            deterministic_counter_buf.SetZero();
+        }
+
         fused_moegemm_traits traits{prec_i,
                                     prec_w,
                                     prec_o,
@@ -560,6 +592,8 @@ bool run(const ck_tile::ArgParser& arg_parser)
                                 nullptr,
                                 fused_quant == 1 ? sy_buf.GetDeviceBuffer() : nullptr,
                                 o_buf.GetDeviceBuffer(),
+                                deterministic_topk1 ? deterministic_tmp_buf.GetDeviceBuffer() : nullptr,
+                                deterministic_topk1 ? deterministic_counter_buf.GetDeviceBuffer() : nullptr,
                                 sorted_token_ids_buf.GetDeviceBuffer(),
                                 sorted_weight_buf.GetDeviceBuffer(),
                                 sorted_expert_ids_buf.GetDeviceBuffer(),
@@ -591,7 +625,7 @@ bool run(const ck_tile::ArgParser& arg_parser)
         {
             if(activation == 0)
             {
-                CPU_FUSED_MOE(ck_tile::element_wise::FastGeluAsm);
+                CPU_FUSED_MOE(ck_tile::element_wise::Gelu);
             }
             else
             {

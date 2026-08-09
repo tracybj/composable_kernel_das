@@ -69,11 +69,12 @@ float fused_moe(fused_moe_traits t, fused_moe_args a, const ck_tile::stream_conf
         a.d_zp_ptr,              // const void* d_zp_ptr;
         a.y_smooth_scale_ptr,    // const void* y_smooth_scale_ptr;
         a.o_ptr,                 // void* o_ptr;
+        a.deterministic_tmp_ptr, // void* deterministic_tmp_ptr;
+        a.deterministic_counter_ptr, // void* deterministic_counter_ptr;
         a.sorted_token_ids_ptr,  // const void* sorted_token_ids_ptr;
         a.sorted_weight_ptr,     // const void* sorted_weight_ptr;
         a.sorted_expert_ids_ptr, // const void* sorted_expert_ids_ptr;
         a.num_sorted_tiles_ptr,  // const void* num_sorted_tiles_ptr;
-        // a.tmp_out,               // const void* tmp_out;
         a.hidden_size,           // index_t hidden_size;
         a.intermediate_size,     // index_t intermediate_size;
         a.num_tokens,            // index_t num_tokens;
@@ -128,11 +129,12 @@ void fused_moe_get_solutions(fused_moe_traits t, fused_moe_args a, int* sol_data
         a.d_zp_ptr,              // const void* d_zp_ptr;
         a.y_smooth_scale_ptr,    // const void* y_smooth_scale_ptr;
         a.o_ptr,                 // void* o_ptr;
+        a.deterministic_tmp_ptr, // void* deterministic_tmp_ptr;
+        a.deterministic_counter_ptr, // void* deterministic_counter_ptr;
         a.sorted_token_ids_ptr,  // const void* sorted_token_ids_ptr;
         a.sorted_weight_ptr,     // const void* sorted_weight_ptr;
         a.sorted_expert_ids_ptr, // const void* sorted_expert_ids_ptr;
         a.num_sorted_tiles_ptr,  // const void* num_sorted_tiles_ptr;
-        // a.tmp_out,               // const void* tmp_out;
         a.hidden_size,           // index_t hidden_size;
         a.intermediate_size,     // index_t intermediate_size;
         a.num_tokens,            // index_t num_tokens;

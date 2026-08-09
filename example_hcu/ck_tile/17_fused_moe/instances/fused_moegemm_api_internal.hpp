@@ -24,7 +24,9 @@ float fused_moegemm_(const ck_tile::stream_config& s, fused_moegemm_args a)
                                                  Ts_::Gemm0NInterleave,
                                                  Ts_::Gemm1NInterleave,
                                                  ck_tile::FusedMoeGemmWeightPermuteEnum::no_permute,
-                                                 Ts_::swizzled>;
+                                                 Ts_::swizzled,
+                                                 true /* pad hidden size */,
+                                                 false /* pad intermediate size */>;
     using f_shape  = ck_tile::FusedMoeGemmShape<typename Ts_::BlockTile_0,
                                                typename Ts_::WarpPerBlock_0,
                                                typename Ts_::WarpTile_0,
@@ -35,7 +37,7 @@ float fused_moegemm_(const ck_tile::stream_config& s, fused_moegemm_args a)
     constexpr auto get_activation_ = []() {
         if constexpr(Ts_::Activation == 0)
         {
-            return ck_tile::element_wise::FastGeluAsm{};
+            return ck_tile::element_wise::Gelu{};
         }
         else
             return ck_tile::element_wise::Silu{};
@@ -77,8 +79,31 @@ float fused_moegemm_(const ck_tile::stream_config& s, fused_moegemm_args a)
         printed = 1;
     }
 
-    return ck_tile::launch_kernel(
+    float elapsed_ms = ck_tile::launch_kernel(
         s, ck_tile::make_kernel<blocks.x, kBlockPerCu>(f_kernel{}, grids, blocks, 0, kargs));
+
+    if(a.topk == 1 && a.deterministic_tmp_ptr != nullptr)
+    {
+        using reduce_kernel = ck_tile::FusedMoeDeterministicReduceKernel<
+            double,
+            typename Ts_::ODataType>;
+        constexpr ck_tile::index_t num_planes = 1;
+        const ck_tile::long_index_t element_count =
+            static_cast<ck_tile::long_index_t>(a.num_tokens) * a.stride_token;
+        const typename reduce_kernel::Kargs reduce_args{
+            reinterpret_cast<const double*>(a.deterministic_tmp_ptr),
+            reinterpret_cast<typename Ts_::ODataType*>(a.o_ptr),
+            element_count,
+            element_count,
+            num_planes};
+        const dim3 reduce_grids  = reduce_kernel::GridSize(reduce_args);
+        constexpr dim3 reduce_blocks = reduce_kernel::BlockSize();
+        elapsed_ms += ck_tile::launch_kernel(
+            s,
+            ck_tile::make_kernel<reduce_blocks.x, 1>(
+                reduce_kernel{}, reduce_grids, reduce_blocks, 0, reduce_args));
+    }
+    return elapsed_ms;
 }
 
 template <typename Ts_>
@@ -105,7 +130,7 @@ float fused_moegemm_swizzled_lds_(const ck_tile::stream_config& s, fused_moegemm
     constexpr auto get_activation_ = []() {
         if constexpr(Ts_::Activation == 0)
         {
-            return ck_tile::element_wise::FastGeluAsm{};
+            return ck_tile::element_wise::Gelu{};
         }
         else
             return ck_tile::element_wise::Silu{};
@@ -173,7 +198,7 @@ float fused_moegemm_wreg_(const ck_tile::stream_config& s, fused_moegemm_args a)
     constexpr auto get_activation_ = []() {
         if constexpr(Ts_::Activation == 0)
         {
-            return ck_tile::element_wise::FastGeluAsm{};
+            return ck_tile::element_wise::Gelu{};
         }
         else
             return ck_tile::element_wise::Silu{};
@@ -245,7 +270,7 @@ float fused_moegemm_wreg_shuffle_(const ck_tile::stream_config& s, fused_moegemm
     constexpr auto get_activation_ = []() {
         if constexpr(Ts_::Activation == 0)
         {
-            return ck_tile::element_wise::FastGeluAsm{};
+            return ck_tile::element_wise::Gelu{};
         }
         else
             return ck_tile::element_wise::Silu{};
@@ -317,7 +342,7 @@ float fused_moegemm_wt_bd_shuffle_(const ck_tile::stream_config& s, fused_moegem
     constexpr auto get_activation_ = []() {
         if constexpr(Ts_::Activation == 0)
         {
-            return ck_tile::element_wise::FastGeluAsm{};
+            return ck_tile::element_wise::Gelu{};
         }
         else
             return ck_tile::element_wise::Silu{};
@@ -389,7 +414,7 @@ float fused_moegemm_wt_shuffle_quant(const ck_tile::stream_config& s, fused_moeg
     constexpr auto get_activation_ = []() {
         if constexpr(Ts_::Activation == 0)
         {
-            return ck_tile::element_wise::FastGeluAsm{};
+            return ck_tile::element_wise::Gelu{};
         }
         else
             return ck_tile::element_wise::Silu{};
@@ -463,7 +488,7 @@ float fused_moegemm_wt_w8a8_quant(const ck_tile::stream_config& s, fused_moegemm
     constexpr auto get_activation_ = []() {
         if constexpr(Ts_::Activation == 0)
         {
-            return ck_tile::element_wise::FastGeluAsm{};
+            return ck_tile::element_wise::Gelu{};
         }
         else
             return ck_tile::element_wise::Silu{};
@@ -537,7 +562,7 @@ float fused_moegemm_wt_w4a16_quant(const ck_tile::stream_config& s, fused_moegem
     constexpr auto get_activation_ = []() {
         if constexpr(Ts_::Activation == 0)
         {
-            return ck_tile::element_wise::FastGeluAsm{};
+            return ck_tile::element_wise::Gelu{};
         }
         else
             return ck_tile::element_wise::Silu{};
@@ -610,7 +635,7 @@ float fused_moegemm_wt_w4a8_quant(const ck_tile::stream_config& s, fused_moegemm
     constexpr auto get_activation_ = []() {
         if constexpr(Ts_::Activation == 0)
         {
-            return ck_tile::element_wise::FastGeluAsm{};
+            return ck_tile::element_wise::Gelu{};
         }
         else
             return ck_tile::element_wise::Silu{};

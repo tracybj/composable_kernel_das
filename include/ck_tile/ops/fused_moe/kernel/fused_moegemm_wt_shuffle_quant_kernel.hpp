@@ -172,6 +172,8 @@ struct FusedMoeGemmWWtBDShuffleQuantKernel
         const void* g_zp_ptr;              // [e, 2*n, k/group], gate(up) zero-point
         const void* d_zp_ptr;              // [e, k, n/group], down zero-point
         void* o_ptr;                    // [m, k], output token
+        void* deterministic_tmp_ptr;    // reserved for standard topk=1 kernel
+        void* deterministic_counter_ptr;
 
         const void* sorted_token_ids_ptr;
         const void* sorted_weight_ptr;
