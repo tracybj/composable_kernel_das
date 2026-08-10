@@ -121,7 +121,7 @@ struct FusedMoeGemmHostArgs
     const void* y_smooth_scale_ptr; // [e, 1, n], smooth-quant-scale for 2nd gemm input
     void* o_ptr;                    // [m, k], output token
     void* deterministic_tmp_ptr;    // [m, k], fp64 partials
-    void* deterministic_counter_ptr; // [max_num_m_blocks], int32 completion counters
+    void* deterministic_counter_ptr; // serial-owner final FP16 output pointer
 
     const void* sorted_token_ids_ptr;  // [max_num_tokens_padded]
     const void* sorted_weight_ptr;     // [max_num_tokens_padded]
@@ -289,7 +289,7 @@ struct FusedMoeGemmKernel
             // note this is in unit of tile, need multiple tile size to get the index
             num_sorted_tiles = num_sorted_tiles / BlockShape::Block_M0;
             // printf("num_sorted_tiles:%d \n",num_sorted_tiles);
-            const auto [sorted_tile_id, intermediate_tile_id] =
+            const auto [sorted_tile_id, intermediate_tile_group_id] =
                 Partitioner{}(num_sorted_tiles, kargs.intermediate_size);
             if(sorted_tile_id >= num_sorted_tiles)
                 return;
@@ -298,9 +298,14 @@ struct FusedMoeGemmKernel
                 __builtin_amdgcn_readfirstlane(reinterpret_cast<const IndexDataType*>(
                     kargs.sorted_expert_ids_ptr)[sorted_tile_id]);
 
+            static_for<0, Partitioner::IntermediateTilesPerBlock, 1>{}([&](auto subtile_id) {
+            const index_t intermediate_tile_id =
+                intermediate_tile_group_id * Partitioner::IntermediateTilesPerBlock + subtile_id;
             // index along intermediate_size
             index_t hidden_idx =
                 __builtin_amdgcn_readfirstlane(intermediate_tile_id * BlockShape::Block_N0);
+            if(hidden_idx < kargs.intermediate_size)
+            {
 
             const auto a_coord = Pipeline::GetACoord(); // 2d thread offset, [i_row, i_col]
             const auto sorted_token_id =
@@ -465,7 +470,71 @@ struct FusedMoeGemmKernel
                            kargs.intermediate_size);
             };
 
-            if constexpr(fused_moe_supports_deterministic_fp64_output<Pipeline>::value)
+            auto run_serial_owner_output = [&]<memory_operation_enum MemoryOperation>() {
+                auto owner_o_windows =
+                    make_o_windows.template operator()<MemoryOperation>(
+                        reinterpret_cast<ODataType*>(kargs.o_ptr), 0);
+                Pipeline{}(a_window,
+                           g_window,
+                           d_window,
+                           owner_o_windows,
+                           topk_weights,
+                           smem,
+                           kargs.hidden_size,
+                           kargs.intermediate_size);
+            };
+
+            auto run_serial_owner_final_output = [&]<typename OwnerPipeline = Pipeline>() {
+                auto owner_o_windows =
+                    make_o_windows.template operator()<memory_operation_enum::set>(
+                        reinterpret_cast<ODataType*>(kargs.o_ptr), 0);
+                auto final_o_windows =
+                    make_o_windows.template operator()<memory_operation_enum::set>(
+                        reinterpret_cast<ADataType*>(kargs.deterministic_counter_ptr), 0);
+                auto writer_count_windows =
+                    make_o_windows.template operator()<memory_operation_enum::atomic_add>(
+                        reinterpret_cast<int*>(kargs.deterministic_tmp_ptr), 0);
+                OwnerPipeline{}
+                    .template operator()<true, Partitioner::DebugWriterCount>(
+                        a_window,
+                        g_window,
+                        d_window,
+                        owner_o_windows,
+                        topk_weights,
+                        smem,
+                        kargs.hidden_size,
+                        kargs.intermediate_size,
+                        &final_o_windows,
+                        &writer_count_windows);
+            };
+
+            if constexpr(Partitioner::IntermediateTilesPerBlock == 6)
+            {
+                // The AITER entry gates this specialization to topk=1/no-quant.
+                // All six intermediate chunks execute sequentially in this CTA,
+                // so there is no inter-CTA numeric conflict for its output tile.
+                if constexpr(decltype(subtile_id)::value > 0)
+                {
+                    // Chunks 1..5 perform ordinary global-memory RMW on the
+                    // preceding FP32 sum. Make every previous chunk visible,
+                    // not only chunk 4 before the last direct-FP16 sink.
+                    __threadfence();
+                    __syncthreads();
+                }
+                if constexpr(decltype(subtile_id)::value == 0)
+                {
+                    run_serial_owner_output.template operator()<memory_operation_enum::set>();
+                }
+                else if constexpr(decltype(subtile_id)::value == 5)
+                {
+                    run_serial_owner_final_output();
+                }
+                else
+                {
+                    run_serial_owner_output.template operator()<memory_operation_enum::add>();
+                }
+            }
+            else if constexpr(fused_moe_supports_deterministic_fp64_output<Pipeline>::value)
             {
                 const bool deterministic_topk1 =
                     kargs.topk == 1 && kargs.deterministic_tmp_ptr != nullptr;
@@ -495,6 +564,9 @@ struct FusedMoeGemmKernel
             {
                 run_atomic_output();
             }
+            }
+            });
+
         }
     }
 };

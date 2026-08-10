@@ -31,7 +31,9 @@ template <typename I,
           ck_tile::index_t QT_block_n_ = 1,
           ck_tile::index_t QT_block_k_ = 1,
           bool swizzled_               = true,
-          bool preshuffle_              = false>
+          bool preshuffle_             = false,
+          ck_tile::index_t IntermediateTilesPerBlock_ = 1,
+          bool DebugWriterCount_ = false>
 struct fmoe_ // traits, ugly name, only used for internal
 {
     using TypeConfig = FusedMoeGemmTypeConfig<I, W, O, ST, SW, SQ, KW, ZP>;
@@ -79,4 +81,7 @@ struct fmoe_ // traits, ugly name, only used for internal
     static constexpr ck_tile::index_t QuantBlockSizeK = QT_block_k_;
     static constexpr bool swizzled               = swizzled_;
     static constexpr bool preshuffle             = preshuffle_;
+    static constexpr ck_tile::index_t IntermediateTilesPerBlock =
+        IntermediateTilesPerBlock_;
+    static constexpr bool DebugWriterCount = DebugWriterCount_;
 };

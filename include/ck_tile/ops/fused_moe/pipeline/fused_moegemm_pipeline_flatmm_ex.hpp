@@ -98,11 +98,15 @@ struct FusedMoeGemmPipeline_FlatmmEx
         return o_coord;
     }
 
-    template <typename AWindow,
+    template <bool FinalOutput = false,
+              bool DebugWriterCount = false,
+              typename AWindow,
               typename GWindow,
               typename DWindow,
               typename OWindow,
-              typename TopkArrayType>
+              typename TopkArrayType,
+              typename FinalOWindow = OWindow,
+              typename WriterCountWindow = FinalOWindow>
     CK_TILE_DEVICE auto
     operator()(const AWindow& a_window_,
                const GWindow& g_window_,
@@ -111,7 +115,9 @@ struct FusedMoeGemmPipeline_FlatmmEx
                TopkArrayType& topk_weights /*topk_weight array for atomic, must be f32*/,
                CK_TILE_LDS_ADDR void* smem,
                index_t hidden_size,
-               index_t intermediate_size
+               index_t intermediate_size,
+               FinalOWindow* final_o_window_ = nullptr,
+               WriterCountWindow* writer_count_window_ = nullptr
                // index_t stride_token
     )
     {
@@ -315,6 +321,50 @@ struct FusedMoeGemmPipeline_FlatmmEx
                                         Policy::template MakeGlobalTileDistribution_O<Problem>());
             },
             number<atomic_issues>{});
+        auto final_o_windows = [&]() {
+            if constexpr(FinalOutput)
+            {
+                return generate_tuple(
+                    [&](auto i) {
+                        return make_tile_window(
+                            (*final_o_window_)[i],
+                            Policy::template MakeGlobalTileDistribution_O<Problem>());
+                    },
+                    number<atomic_issues>{});
+            }
+            else
+            {
+                return generate_tuple(
+                    [&](auto i) {
+                        return make_tile_window(
+                            o_window_[i],
+                            Policy::template MakeGlobalTileDistribution_O<Problem>());
+                    },
+                    number<atomic_issues>{});
+            }
+        }();
+        auto writer_count_windows = [&]() {
+            if constexpr(DebugWriterCount)
+            {
+                return generate_tuple(
+                    [&](auto i) {
+                        return make_tile_window(
+                            (*writer_count_window_)[i],
+                            Policy::template MakeGlobalTileDistribution_O<Problem>());
+                    },
+                    number<atomic_issues>{});
+            }
+            else
+            {
+                return generate_tuple(
+                    [&](auto i) {
+                        return make_tile_window(
+                            o_window_[i],
+                            Policy::template MakeGlobalTileDistribution_O<Problem>());
+                    },
+                    number<atomic_issues>{});
+            }
+        }();
 
         auto bridge_sst_win = [&]() {
             return make_tile_window(
@@ -448,7 +498,41 @@ struct FusedMoeGemmPipeline_FlatmmEx
                     output_tmp_buf.get_thread_buffer()[j] =
                         output_slice[j] * topk_weights[i];
                 });
-                update_tile(o_windows[i], output_tmp_buf); // 1xbuffer atomic issue
+                if constexpr(FinalOutput)
+                {
+                    // The owner CTA has already produced chunks 0..4 in FP32.
+                    // Add chunk 5 in the same output distribution and perform the
+                    // sole FP16 store without writing a sixth FP32 workspace value.
+                    auto accumulated_buf = load_tile(o_windows[i]);
+                    using final_thread_type = decltype(load_tile(final_o_windows[i]));
+                    final_thread_type final_output_buf;
+                    static_for<0, output_size, 1>{}([&](auto j) {
+                        using FinalDataType = remove_cvref_t<
+                            decltype(final_output_buf.get_thread_buffer()[j])>;
+                        final_output_buf.get_thread_buffer()[j] = type_convert<FinalDataType>(
+                            accumulated_buf.get_thread_buffer()[j] +
+                            output_tmp_buf.get_thread_buffer()[j]);
+                    });
+                    update_tile(final_o_windows[i], final_output_buf);
+                    if constexpr(DebugWriterCount)
+                    {
+                        using count_thread_type = decltype(load_tile(writer_count_windows[i]));
+                        count_thread_type count_buf;
+                        constexpr index_t count_size = count_buf.get_thread_buffer_size();
+                        static_for<0, count_size, 1>{}([&](auto j) {
+                            count_buf.get_thread_buffer()[j] = 1;
+                        });
+                        update_tile(writer_count_windows[i], count_buf);
+                        move_tile_window(writer_count_windows[i],
+                                         {number<0>{}, number<BlockShape::Block_N1>{}});
+                    }
+                    move_tile_window(final_o_windows[i],
+                                     {number<0>{}, number<BlockShape::Block_N1>{}});
+                }
+                else
+                {
+                    update_tile(o_windows[i], output_tmp_buf); // one output buffer issue
+                }
                 move_tile_window(o_windows[i], {number<0>{}, number<BlockShape::Block_N1>{}});
             });
         };

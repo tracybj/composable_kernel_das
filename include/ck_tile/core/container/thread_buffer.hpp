@@ -197,6 +197,18 @@ struct thread_buffer {
 
 #undef TB_COMMON_AS
 };
+
+// buffer_view's non-atomic memory_operation_enum::add reads an X-sized value
+// and adds it to the value being stored. Keep that operation available when X
+// is represented by a thread_buffer rather than a built-in vector type.
+template <typename T, index_t N>
+CK_TILE_HOST_DEVICE constexpr auto operator+(const thread_buffer<T, N>& x,
+                                             const thread_buffer<T, N>& y)
+{
+    thread_buffer<T, N> z;
+    static_for<0, N, 1>{}([&](auto i) { z[i] = x[i] + y[i]; });
+    return z;
+}
 // clang-format on
 
 template <typename, typename>

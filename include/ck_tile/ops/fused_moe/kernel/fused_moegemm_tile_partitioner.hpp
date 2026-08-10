@@ -5,11 +5,16 @@
 
 namespace ck_tile {
 
-template <typename BlockShape_>
+template <typename BlockShape_,
+          index_t IntermediateTilesPerBlock_ = 1,
+          bool DebugWriterCount_ = false>
 struct FusedMoeGemmTilePartitioner_Linear
 {
     //  FusedMoeGemmShape
     using BlockShape = ck_tile::remove_cvref_t<BlockShape_>;
+    static constexpr index_t IntermediateTilesPerBlock = IntermediateTilesPerBlock_;
+    static constexpr bool DebugWriterCount = DebugWriterCount_;
+    static_assert(IntermediateTilesPerBlock > 0);
 
     static constexpr const char* name = "lin";
 
@@ -26,7 +31,8 @@ struct FusedMoeGemmTilePartitioner_Linear
     {
         // TODO: this may need tuning
         index_t ms = ck_tile::integer_divide_ceil(max_tokens, BlockShape::Block_M0);
-        index_t ns = ck_tile::integer_divide_ceil(intermediate_size, BlockShape::Block_N0);
+        index_t ns = ck_tile::integer_divide_ceil(
+            intermediate_size, BlockShape::Block_N0 * IntermediateTilesPerBlock);
         if (max_num_m_block > 0)
         {
             // 减少小token_num时启动的无效block数量

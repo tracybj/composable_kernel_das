@@ -6,6 +6,11 @@
 #include "fused_moegemm_api_traits.hpp"
 #include "fused_moegemm_api_internal.hpp"
 
+// Test-only writer-count instance. Production builds leave it disabled.
+#ifndef AITER_CK_MOE_ENABLE_OWNER_DEBUG
+#define AITER_CK_MOE_ENABLE_OWNER_DEBUG 0
+#endif
+
 // #include "fused_moegemm_fp16_m32.cpp"
 
 // Note: this internal API only declare, not define here, otherwise will block `make -j`
@@ -34,6 +39,10 @@ enum struct OneStageBlockConfig{
     CFG_16_64_128_16_128_64 = 3,
 
     CFG_32_256_32_32_64_256 = 20,
+    CFG_32_256X6_OWNER_32_32_64_256 = 22,
+#if AITER_CK_MOE_ENABLE_OWNER_DEBUG
+    CFG_32_256X6_OWNER_DEBUG_32_32_64_256 = 23,
+#endif
 };
 
 // solution ID mapping:
@@ -55,6 +64,12 @@ OneStageBlockConfig get_block_config_from_sol_ID(int sol_id) {
         return OneStageBlockConfig::CFG_16_64_128_16_128_64;
     case 20:
         return OneStageBlockConfig::CFG_32_256_32_32_64_256;
+    case 22:
+        return OneStageBlockConfig::CFG_32_256X6_OWNER_32_32_64_256;
+#if AITER_CK_MOE_ENABLE_OWNER_DEBUG
+    case 23:
+        return OneStageBlockConfig::CFG_32_256X6_OWNER_DEBUG_32_32_64_256;
+#endif
     default:
         return OneStageBlockConfig::CFG_16_128_128_16_128_128;
     }
@@ -166,8 +181,40 @@ float fused_moegemm_impl(fused_moegemm_traits t,
         constexpr ck_tile::index_t go_  = 0;
 
         if (t.block_m == 32) {
-            using t_ = fmoe_<ck_tile::fp16_t, ck_tile::fp16_t, float, float, float, float, float, int, S<32, 256, 32>, S<1, 4, 1>, S<32, 64, 32>, S<32, 64, 256>, S<32, 16, 256>, S<2, 4, 4, 4>,  S<4>, S<8, 8, 8, 4>, 1, 4, 1, act_, go_, 0, 1, 1, false, false>;
-            r = fused_moegemm_<t_>(s, a);
+            const auto block_config = get_block_config_from_sol_ID(t.solution_id);
+            const auto weight_load = get_weight_ld_type_from_sol_ID(t.solution_id);
+            if(t.solution_id == 0 ||
+               (block_config == OneStageBlockConfig::CFG_32_256_32_32_64_256 &&
+                weight_load == WeightLoadType::GU_REGS_D_LDS))
+            {
+                using t_ = fmoe_<ck_tile::fp16_t, ck_tile::fp16_t, float, float, float, float, float, int, S<32, 256, 32>, S<1, 4, 1>, S<32, 64, 32>, S<32, 64, 256>, S<32, 16, 256>, S<2, 4, 4, 4>,  S<4>, S<8, 8, 8, 4>, 1, 4, 1, act_, go_, 0, 1, 1, false, false>;
+                r = fused_moegemm_<t_>(s, a);
+            }
+            else if(block_config ==
+                        OneStageBlockConfig::CFG_32_256X6_OWNER_32_32_64_256 &&
+                    weight_load == WeightLoadType::GU_REGS_D_LDS)
+            {
+                // Topk=1 serial-I owner: a single CTA owns one sorted-token tile
+                // and visits all six 256-wide intermediate chunks in fixed order.
+                using t_ = fmoe_<ck_tile::fp16_t, ck_tile::fp16_t, float, float, float, float, float, int, S<32, 256, 32>, S<1, 4, 1>, S<32, 64, 32>, S<32, 64, 256>, S<32, 16, 256>, S<2, 4, 4, 4>,  S<4>, S<8, 8, 8, 4>, 1, 4, 1, act_, go_, 0, 1, 1, false, false, 6>;
+                r = fused_moegemm_<t_>(s, a);
+            }
+#if AITER_CK_MOE_ENABLE_OWNER_DEBUG
+            else if(block_config ==
+                        OneStageBlockConfig::CFG_32_256X6_OWNER_DEBUG_32_32_64_256 &&
+                    weight_load == WeightLoadType::GU_REGS_D_LDS)
+            {
+                // Debug-only owner instance: the final-write planning point counts
+                // every valid output element and the AITER boundary requires count=1.
+                using t_ = fmoe_<ck_tile::fp16_t, ck_tile::fp16_t, float, float, float, float, float, int, S<32, 256, 32>, S<1, 4, 1>, S<32, 64, 32>, S<32, 64, 256>, S<32, 16, 256>, S<2, 4, 4, 4>,  S<4>, S<8, 8, 8, 4>, 1, 4, 1, act_, go_, 0, 1, 1, false, false, 6, true>;
+                r = fused_moegemm_<t_>(s, a);
+            }
+#endif
+            else
+            {
+                printf("[fused_moegemm][block_m=32]: unsupported solution_id=%d\n",
+                       t.solution_id);
+            }
 
         } else if (t.block_m == 16) {
 

@@ -63,7 +63,10 @@ float fused_moegemm_(const ck_tile::stream_config& s, fused_moegemm_args a)
 
     using f_pipeline = ck_tile::FusedMoeGemmPipeline_FlatmmEx<f_problem>;
     // using f_pipeline    = ck_tile::FusedMoeGemmPipeline_FlatmmUk<f_problem>;
-    using f_partitioner = ck_tile::FusedMoeGemmTilePartitioner_Linear<f_shape>;
+    using f_partitioner = ck_tile::FusedMoeGemmTilePartitioner_Linear<
+        f_shape,
+        Ts_::IntermediateTilesPerBlock,
+        Ts_::DebugWriterCount>;
     using f_kernel      = ck_tile::FusedMoeGemmKernel<f_partitioner, f_pipeline, void>;
 
     const dim3 grids                       = f_kernel::GridSize(a);
@@ -82,26 +85,29 @@ float fused_moegemm_(const ck_tile::stream_config& s, fused_moegemm_args a)
     float elapsed_ms = ck_tile::launch_kernel(
         s, ck_tile::make_kernel<blocks.x, kBlockPerCu>(f_kernel{}, grids, blocks, 0, kargs));
 
-    if(a.topk == 1 && a.deterministic_tmp_ptr != nullptr)
+    if constexpr(Ts_::IntermediateTilesPerBlock != 6)
     {
-        using reduce_kernel = ck_tile::FusedMoeDeterministicReduceKernel<
-            double,
-            typename Ts_::ODataType>;
-        constexpr ck_tile::index_t num_planes = 1;
-        const ck_tile::long_index_t element_count =
-            static_cast<ck_tile::long_index_t>(a.num_tokens) * a.stride_token;
-        const typename reduce_kernel::Kargs reduce_args{
-            reinterpret_cast<const double*>(a.deterministic_tmp_ptr),
-            reinterpret_cast<typename Ts_::ODataType*>(a.o_ptr),
-            element_count,
-            element_count,
-            num_planes};
-        const dim3 reduce_grids  = reduce_kernel::GridSize(reduce_args);
-        constexpr dim3 reduce_blocks = reduce_kernel::BlockSize();
-        elapsed_ms += ck_tile::launch_kernel(
-            s,
-            ck_tile::make_kernel<reduce_blocks.x, 1>(
-                reduce_kernel{}, reduce_grids, reduce_blocks, 0, reduce_args));
+        if(a.topk == 1 && a.deterministic_tmp_ptr != nullptr)
+        {
+            using reduce_kernel = ck_tile::FusedMoeDeterministicReduceKernel<
+                double,
+                typename Ts_::ODataType>;
+            constexpr ck_tile::index_t num_planes = 1;
+            const ck_tile::long_index_t element_count =
+                static_cast<ck_tile::long_index_t>(a.num_tokens) * a.stride_token;
+            const typename reduce_kernel::Kargs reduce_args{
+                reinterpret_cast<const double*>(a.deterministic_tmp_ptr),
+                reinterpret_cast<typename Ts_::ODataType*>(a.o_ptr),
+                element_count,
+                element_count,
+                num_planes};
+            const dim3 reduce_grids  = reduce_kernel::GridSize(reduce_args);
+            constexpr dim3 reduce_blocks = reduce_kernel::BlockSize();
+            elapsed_ms += ck_tile::launch_kernel(
+                s,
+                ck_tile::make_kernel<reduce_blocks.x, 1>(
+                    reduce_kernel{}, reduce_grids, reduce_blocks, 0, reduce_args));
+        }
     }
     return elapsed_ms;
 }
