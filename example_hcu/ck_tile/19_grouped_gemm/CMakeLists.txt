@@ -224,6 +224,16 @@ add_executable(tile_example_grouped_gemm_c_api_tn_logical_k_tail_smoke EXCLUDE_F
 target_link_libraries(tile_example_grouped_gemm_c_api_tn_logical_k_tail_smoke
     PRIVATE ck_tile_hcu_grouped_gemm)
 
+# Host-only Phase-1 selector/contract test. This target deliberately does not
+# link a grouped-GEMM provider, so adding it cannot alter a device launch.
+add_executable(tile_example_grouped_gemm_selector_test EXCLUDE_FROM_ALL
+    grouped_gemm_selector_test.cpp
+)
+add_test(NAME tile_example_grouped_gemm_selector_test
+    COMMAND $<TARGET_FILE:tile_example_grouped_gemm_selector_test>)
+set_tests_properties(tile_example_grouped_gemm_selector_test
+    PROPERTIES LABELS "hcu;ck_tile;grouped_gemm;selector")
+
 set(GROUPED_GEMM_FAST_FIXED_SHAPE_ARGS
     -group_count=2
     -Ms=128,256
