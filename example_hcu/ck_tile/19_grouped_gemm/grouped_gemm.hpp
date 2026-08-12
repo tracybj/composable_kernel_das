@@ -2579,7 +2579,8 @@ template <typename GemmConfig,
           typename BDataType,
           typename AccDataType,
           typename CDataType,
-          int UniqueKernelTag = 0>
+          int UniqueKernelTag = 0,
+          ck_tile::GroupedGemmMFilter MFilter = ck_tile::GroupedGemmMFilter::All>
 float grouped_gemm_tileloop(const ck_tile::stream_config& s,
                             const ck_tile::index_t num_groups,
                             void* kargs_ptr,

@@ -97,6 +97,10 @@ int run_table_tests()
     no_mls.enable_gfx938_mls        = false;
     GroupedGemmSelectorPolicy no_tail = defaults;
     no_tail.enable_bf16_tn_logical_k_tail = false;
+    GroupedGemmSelectorPolicy no_bw_selected = defaults;
+    no_bw_selected.enable_bw_selected        = false;
+    GroupedGemmSelectorPolicy no_mls_large = defaults;
+    no_mls_large.enable_gfx938_mls_large   = false;
 
     auto empty_ragged = make_problem(GroupedGemmArch::gfx936,
                                      GroupedGemmDataType::fp16,
@@ -158,6 +162,11 @@ int run_table_tests()
                       GroupedGemmLayout::nt, 4, 4 * 2048, 2048, 2048),
          no_bw,
          GroupedGemmInstanceId::gfx936_v3_256_m_only_padding},
+        {"gfx936 BW selected capability rollback",
+         make_problem(GroupedGemmArch::gfx936, GroupedGemmDataType::fp16,
+                      GroupedGemmLayout::nt, 4, 4 * 2048, 2048, 2048),
+         no_bw_selected,
+         GroupedGemmInstanceId::gfx936_v3_256_m_only_padding},
         {"gfx936 DSReadM NN rollback",
          make_problem(GroupedGemmArch::gfx936, GroupedGemmDataType::fp16,
                       GroupedGemmLayout::nn, 4, 4 * 2048, 2048, 2048),
@@ -178,6 +187,11 @@ int run_table_tests()
                       GroupedGemmLayout::nt, 1, 512, 512, 512),
          defaults,
          GroupedGemmInstanceId::gfx938_mls_small_128},
+        {"gfx938 MLS large capability rollback",
+         make_problem(GroupedGemmArch::gfx938, GroupedGemmDataType::bf16,
+                      GroupedGemmLayout::nn, 1, 2048, 2048, 2048),
+         no_mls_large,
+         GroupedGemmInstanceId::v4_128_m_only_padding},
         {"gfx938 MLS disabled aligned V4",
          make_problem(GroupedGemmArch::gfx938, GroupedGemmDataType::fp16,
                       GroupedGemmLayout::nt, 1, 512, 512, 512),

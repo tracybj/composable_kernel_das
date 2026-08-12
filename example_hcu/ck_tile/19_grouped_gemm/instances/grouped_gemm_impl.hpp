@@ -64,6 +64,7 @@ inline constexpr bool grouped_gemm_requires_min_two_k_loops =
     GemmConfig::DoubleSmemBuffer && GemmConfig::Pipeline == CK_TILE_PIPELINE_COMPUTE_V4;
 
 template <typename GemmConfig, typename ADataType, typename GemmDesc>
+[[maybe_unused]]
 bool grouped_gemm_has_min_two_k_loops(const GemmDesc& desc)
 {
     if constexpr(GemmConfig::Pipeline == CK_TILE_PIPELINE_MLS)
@@ -141,6 +142,7 @@ bool grouped_gemm_has_min_two_k_loops(const GemmDesc& desc)
 }
 
 template <typename GemmConfig, typename ADataType, typename GemmDesc>
+[[maybe_unused]]
 bool grouped_gemm_all_groups_have_min_two_k_loops(const std::vector<GemmDesc>& descs)
 {
     for(const auto& desc : descs)
@@ -154,6 +156,7 @@ bool grouped_gemm_all_groups_have_min_two_k_loops(const std::vector<GemmDesc>& d
 }
 
 template <typename GemmConfig, typename ALayout, typename BLayout, typename GemmDesc>
+[[maybe_unused]]
 bool grouped_gemm_has_safe_mls_k_stride(const GemmDesc& desc)
 {
     if constexpr(GemmConfig::Pipeline != CK_TILE_PIPELINE_MLS)
@@ -233,7 +236,7 @@ bool grouped_gemm_all_groups_have_safe_mls_k_stride(const std::vector<GemmDesc>&
     return true;
 }
 
-[[noreturn]] void grouped_gemm_throw_min_two_k_loop_error()
+[[maybe_unused, noreturn]] void grouped_gemm_throw_min_two_k_loop_error()
 {
     throw std::runtime_error(
         "Current grouped_gemm pipeline does not support the requested per-split K-loop count.");
@@ -903,7 +906,8 @@ template <typename GemmConfig,
           typename BDataType,
           typename AccDataType,
           typename CDataType,
-          int UniqueKernelTag>
+          int UniqueKernelTag,
+          ck_tile::GroupedGemmMFilter MFilter>
 float grouped_gemm_tileloop(const ck_tile::stream_config& s,
                             const ck_tile::index_t num_groups,
                             void* kargs_ptr,
@@ -1016,7 +1020,7 @@ float grouped_gemm_tileloop(const ck_tile::stream_config& s,
                                                   : GemmConfig::CShuffleWarpGemmNInterleave>>;
 #endif
         using KernelBase =
-            ck_tile::GroupedGemmKernel<TilePartitioner, GemmPipeline, GemmEpilogue>;
+            ck_tile::GroupedGemmKernel<TilePartitioner, GemmPipeline, GemmEpilogue, MFilter>;
         using Kernel = std::conditional_t<
             UniqueKernelTag == 0,
             KernelBase,

@@ -82,6 +82,8 @@ struct GroupedGemmSelectorPolicy
     bool enable_gfx938_mls                = true;
     bool enable_gfx936_bf16_nn_promoted   = true;
     bool enable_bf16_tn_logical_k_tail    = true;
+    bool enable_bw_selected               = true;
+    bool enable_gfx938_mls_large          = true;
 };
 
 enum class GroupedGemmInstanceId
@@ -281,8 +283,11 @@ constexpr GroupedGemmSelection select_grouped_gemm_candidate(
                                    : GroupedGemmInstanceId::bw_family_blas_transposed,
                     GroupedGemmSelectionReason::bw_family};
         }
-        return {GroupedGemmInstanceId::bw_family_selected,
-                GroupedGemmSelectionReason::bw_family};
+        if(policy.enable_bw_selected)
+        {
+            return {GroupedGemmInstanceId::bw_family_selected,
+                    GroupedGemmSelectionReason::bw_family};
+        }
     }
 
     if(policy.enable_gfx936_v3 && problem.arch == GroupedGemmArch::gfx936 &&
@@ -309,7 +314,8 @@ constexpr GroupedGemmSelection select_grouped_gemm_candidate(
     if(policy.enable_gfx938_mls && problem.arch == GroupedGemmArch::gfx938 &&
        effective_m >= 512 && n >= 512 && k >= 512)
     {
-        if(effective_m >= large_tile_m_threshold && n >= 2048)
+        if(effective_m >= large_tile_m_threshold && n >= 2048 &&
+           policy.enable_gfx938_mls_large)
         {
             return {GroupedGemmInstanceId::gfx938_mls_large_256,
                     GroupedGemmSelectionReason::gfx938_mls};

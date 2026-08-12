@@ -55,20 +55,35 @@ endfunction()
 add_grouped_gemm_fast_target(tile_example_grouped_gemm_fp16_fast CK_TILE_GROUPED_GEMM_FAST_FP16 grouped_gemm_fp16.cpp)
 add_grouped_gemm_fast_target(tile_example_grouped_gemm_bf16_fast CK_TILE_GROUPED_GEMM_FAST_BF16 grouped_gemm_bf16.cpp)
 set(HCU_GROUPED_GEMM_GFX936_SELECTED_SOURCES)
-# Keep only the three promoted gfx936 instances in normal and production targets.
+set(HCU_GROUPED_GEMM_BW_TN_DEVICE_ARGS_SOURCES)
+# Keep only the two promoted gfx936 BF16-NN instances in normal and production targets.
 if(GPU_TARGETS MATCHES "gfx936" AND NOT GPU_TARGETS MATCHES "gfx938|gfx946")
     list(APPEND HCU_GROUPED_GEMM_GFX936_SELECTED_SOURCES
         instances/grouped_gemm_gfx936_bf16_nn_fixed_srd_lds8_boundary_lds0_vmem0.cpp
-        instances/grouped_gemm_gfx936_bf16_nn_rr_fast_vmem3_early_final_barrier.cpp
+        instances/grouped_gemm_gfx936_bf16_nn_rr_fast_vmem3_early_final_barrier.cpp)
+endif()
+
+# The BF16 TN device-argument family is validated on both gfx936 and gfx938.
+# Keep its providers in the selected CK library even though the old
+# host-descriptor default only references the promoted logical-tail entry on gfx936.
+if(GPU_TARGETS MATCHES "gfx936|gfx938")
+    list(APPEND HCU_GROUPED_GEMM_BW_TN_DEVICE_ARGS_SOURCES
+        instances/grouped_gemm_gfx936_bf16_tn_blas_transposed.cpp
         instances/grouped_gemm_gfx936_bf16_tn_blas_transposed_logical_k_tail.cpp)
+endif()
+
+if(HCU_GROUPED_GEMM_GFX936_SELECTED_SOURCES)
     target_sources(${TILE_EXAMPLE_GROUPED_GEMM}
-        PRIVATE ${HCU_GROUPED_GEMM_GFX936_SELECTED_SOURCES})
+        PRIVATE
+            ${HCU_GROUPED_GEMM_GFX936_SELECTED_SOURCES}
+            ${HCU_GROUPED_GEMM_BW_TN_DEVICE_ARGS_SOURCES})
     target_compile_definitions(${TILE_EXAMPLE_GROUPED_GEMM}
         PRIVATE CK_TILE_GROUPED_GEMM_ENABLE_GFX936_SELECTED)
     target_sources(tile_example_grouped_gemm_bf16_fast
         PRIVATE
             instances/grouped_gemm_gfx936_bf16.cpp
-            ${HCU_GROUPED_GEMM_GFX936_SELECTED_SOURCES})
+            ${HCU_GROUPED_GEMM_GFX936_SELECTED_SOURCES}
+            ${HCU_GROUPED_GEMM_BW_TN_DEVICE_ARGS_SOURCES})
     target_compile_definitions(tile_example_grouped_gemm_bf16_fast
         PRIVATE CK_TILE_GROUPED_GEMM_ENABLE_GFX936_SELECTED)
 endif()
@@ -154,13 +169,20 @@ endif()
 
 add_library(ck_tile_hcu_grouped_gemm STATIC EXCLUDE_FROM_ALL
     grouped_gemm.cpp
+    grouped_gemm_device_args.cpp
     instances/grouped_gemm_fp16.cpp
     instances/grouped_gemm_bf16.cpp
     instances/grouped_gemm_gfx936_fp16.cpp
     instances/grouped_gemm_gfx936_bf16.cpp
+    ${HCU_GROUPED_GEMM_BW_TN_DEVICE_ARGS_SOURCES}
     ${HCU_GROUPED_GEMM_GFX936_SELECTED_SOURCES}
 )
+set(HCU_GROUPED_GEMM_RDC_BUILD OFF)
+if(CMAKE_CXX_FLAGS MATCHES "(^| )-fgpu-rdc( |$)")
+    set(HCU_GROUPED_GEMM_RDC_BUILD ON)
+endif()
 set_source_files_properties(
+    ${HCU_GROUPED_GEMM_BW_TN_DEVICE_ARGS_SOURCES}
     ${HCU_GROUPED_GEMM_GFX936_SELECTED_SOURCES}
     PROPERTIES
         COMPILE_OPTIONS "-Wno-unused-template;-Wno-unneeded-internal-declaration")
@@ -171,13 +193,32 @@ target_compile_definitions(ck_tile_hcu_grouped_gemm
         CK_TILE_GROUPED_GEMM_FAST_BUILD
         CK_TILE_GROUPED_GEMM_FAST_RC_ONLY
         CK_TILE_GROUPED_GEMM_FAST_FP16
-        CK_TILE_GROUPED_GEMM_FAST_BF16)
+        CK_TILE_GROUPED_GEMM_FAST_BF16
+        CK_TILE_GROUPED_GEMM_DEVICE_ARGS_REGISTRY)
+if(HCU_GROUPED_GEMM_RDC_BUILD)
+    target_compile_definitions(ck_tile_hcu_grouped_gemm
+        PRIVATE CK_TILE_GROUPED_GEMM_DEVICE_ARGS_RDC_BUILD)
+endif()
+if(GPU_TARGETS MATCHES "gfx936")
+    target_compile_definitions(ck_tile_hcu_grouped_gemm
+        PRIVATE CK_TILE_GROUPED_GEMM_DEVICE_ARGS_REGISTRY_GFX936)
+endif()
+if(GPU_TARGETS MATCHES "gfx938")
+    target_compile_definitions(ck_tile_hcu_grouped_gemm
+        PRIVATE CK_TILE_GROUPED_GEMM_DEVICE_ARGS_REGISTRY_GFX938)
+endif()
 if(HCU_GROUPED_GEMM_GFX936_SELECTED_SOURCES)
     # Keep gfx936-only declarations and link providers paired. In particular,
     # a gfx938-only build has an empty selected source list and must not make
     # grouped_gemm.cpp reference the gfx936 selected entry points.
     target_compile_definitions(ck_tile_hcu_grouped_gemm
-        PRIVATE CK_TILE_GROUPED_GEMM_ENABLE_GFX936_SELECTED)
+        PRIVATE
+            CK_TILE_GROUPED_GEMM_ENABLE_GFX936_SELECTED
+            CK_TILE_GROUPED_GEMM_DEVICE_ARGS_HAS_GFX936_PROMOTED)
+endif()
+if(HCU_GROUPED_GEMM_BW_TN_DEVICE_ARGS_SOURCES)
+    target_compile_definitions(ck_tile_hcu_grouped_gemm
+        PRIVATE CK_TILE_GROUPED_GEMM_DEVICE_ARGS_HAS_BW_TN)
 endif()
 set_target_properties(ck_tile_hcu_grouped_gemm PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
@@ -233,6 +274,46 @@ add_test(NAME tile_example_grouped_gemm_selector_test
     COMMAND $<TARGET_FILE:tile_example_grouped_gemm_selector_test>)
 set_tests_properties(tile_example_grouped_gemm_selector_test
     PROPERTIES LABELS "hcu;ck_tile;grouped_gemm;selector")
+
+# Compile the installed device-args header as strict C11, independently of
+# every C++ implementation header and the directory-level HIP compile flags.
+add_custom_target(tile_example_grouped_gemm_device_args_c_header_smoke
+    COMMAND ${CMAKE_C_COMPILER}
+            -std=c11
+            -Wall
+            -Wextra
+            -Werror
+            -I${PROJECT_SOURCE_DIR}/include
+            -fsyntax-only
+            ${CMAKE_CURRENT_LIST_DIR}/grouped_gemm_device_args_c_header_smoke.c
+    COMMENT "Compiling grouped-GEMM device-args v1 header as pure C11"
+    VERBATIM)
+
+add_executable(tile_example_grouped_gemm_device_args_query_test EXCLUDE_FROM_ALL
+    grouped_gemm_device_args_query_test.cpp)
+target_link_libraries(tile_example_grouped_gemm_device_args_query_test
+    PRIVATE ck_tile_hcu_grouped_gemm)
+if(HCU_GROUPED_GEMM_RDC_BUILD)
+    target_compile_definitions(tile_example_grouped_gemm_device_args_query_test
+        PRIVATE CK_TILE_GROUPED_GEMM_DEVICE_ARGS_RDC_BUILD)
+endif()
+add_test(NAME tile_example_grouped_gemm_device_args_query_test
+    COMMAND $<TARGET_FILE:tile_example_grouped_gemm_device_args_query_test>)
+set_tests_properties(tile_example_grouped_gemm_device_args_query_test
+    PROPERTIES LABELS "hcu;ck_tile;grouped_gemm;device_args;selector")
+
+add_executable(tile_example_grouped_gemm_device_args_smoke EXCLUDE_FROM_ALL
+    grouped_gemm_device_args_smoke.cpp)
+target_link_libraries(tile_example_grouped_gemm_device_args_smoke
+    PRIVATE ck_tile_hcu_grouped_gemm)
+if(HCU_GROUPED_GEMM_RDC_BUILD)
+    target_compile_definitions(tile_example_grouped_gemm_device_args_smoke
+        PRIVATE CK_TILE_GROUPED_GEMM_DEVICE_ARGS_RDC_BUILD)
+endif()
+add_test(NAME tile_example_grouped_gemm_device_args_smoke
+    COMMAND $<TARGET_FILE:tile_example_grouped_gemm_device_args_smoke>)
+set_tests_properties(tile_example_grouped_gemm_device_args_smoke
+    PROPERTIES LABELS "hcu;ck_tile;grouped_gemm;device_args;correctness;smoke")
 
 set(GROUPED_GEMM_FAST_FIXED_SHAPE_ARGS
     -group_count=2

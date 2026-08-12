@@ -294,3 +294,24 @@ int grouped_gemm_example_run_fp16(std::string a_layout, std::string b_layout, in
     return run_gemm_example_prec_type<GroupedGemmFp16Config<ck_tile::half_t>, ck_tile::half_t>(
         a_layout, b_layout, argc, argv);
 }
+
+#if defined(CK_TILE_GROUPED_GEMM_DEVICE_ARGS_REGISTRY)
+#include "grouped_gemm_device_args_provider.hpp"
+
+extern "C" int ck_tile_hcu_grouped_gemm_registry_fp16_device_args(
+    std::uint32_t instance_id,
+    std::uint32_t layout,
+    void* device_args,
+    int group_count,
+    std::uint32_t num_cu,
+    hipStream_t stream)
+{
+    return grouped_gemm_device_args_detail::launch_registry_candidate<ck_tile::half_t>(
+        static_cast<ck_tile::GroupedGemmInstanceId>(instance_id),
+        static_cast<ck_tile::GroupedGemmLayout>(layout),
+        device_args,
+        group_count,
+        num_cu,
+        stream);
+}
+#endif
