@@ -198,6 +198,37 @@ function(ck_tile_hcu_grouped_gemm_apply_codegen target_name)
         target_compile_options(${target_name} PRIVATE "-fno-gpu-rdc")
     endif()
 endfunction()
+
+# Compile the exact CK-owned provider manifest as its own archive. Consumers
+# such as Primus compile these same sources, whose DEVICE_ARGS_ONLY and
+# REGISTRY_ONLY wrappers keep the new device-args closure independent from the
+# retained host-descriptor ABI translation units below.
+set(HCU_GROUPED_GEMM_DEVICE_ARGS_PROVIDER_MANIFEST
+    ${CMAKE_CURRENT_LIST_DIR}/grouped_gemm_device_args_provider_sources.txt)
+file(STRINGS ${HCU_GROUPED_GEMM_DEVICE_ARGS_PROVIDER_MANIFEST}
+    HCU_GROUPED_GEMM_DEVICE_ARGS_PROVIDER_SOURCES
+    REGEX "^[^#].+")
+add_library(ck_tile_hcu_grouped_gemm_device_args_providers STATIC EXCLUDE_FROM_ALL
+    ${HCU_GROUPED_GEMM_DEVICE_ARGS_PROVIDER_SOURCES})
+target_include_directories(ck_tile_hcu_grouped_gemm_device_args_providers
+    PRIVATE ${CMAKE_CURRENT_LIST_DIR})
+target_compile_definitions(ck_tile_hcu_grouped_gemm_device_args_providers
+    PRIVATE
+        CK_TILE_GROUPED_GEMM_FAST_BUILD
+        CK_TILE_GROUPED_GEMM_DEVICE_ARGS_REGISTRY)
+if(GPU_TARGETS MATCHES "gfx936")
+    target_compile_definitions(ck_tile_hcu_grouped_gemm_device_args_providers
+        PRIVATE CK_TILE_GROUPED_GEMM_DEVICE_ARGS_REGISTRY_GFX936)
+endif()
+if(GPU_TARGETS MATCHES "gfx938")
+    target_compile_definitions(ck_tile_hcu_grouped_gemm_device_args_providers
+        PRIVATE CK_TILE_GROUPED_GEMM_DEVICE_ARGS_REGISTRY_GFX938)
+endif()
+target_compile_options(ck_tile_hcu_grouped_gemm_device_args_providers
+    PRIVATE "-Wno-unused-template" "-Wno-unneeded-internal-declaration")
+set_target_properties(ck_tile_hcu_grouped_gemm_device_args_providers
+    PROPERTIES POSITION_INDEPENDENT_CODE ON)
+ck_tile_hcu_grouped_gemm_apply_codegen(ck_tile_hcu_grouped_gemm_device_args_providers)
 set_source_files_properties(
     ${HCU_GROUPED_GEMM_BW_TN_DEVICE_ARGS_SOURCES}
     ${HCU_GROUPED_GEMM_GFX936_SELECTED_SOURCES}
@@ -239,6 +270,8 @@ if(HCU_GROUPED_GEMM_BW_TN_DEVICE_ARGS_SOURCES)
 endif()
 set_target_properties(ck_tile_hcu_grouped_gemm PROPERTIES POSITION_INDEPENDENT_CODE ON)
 ck_tile_hcu_grouped_gemm_apply_codegen(ck_tile_hcu_grouped_gemm)
+target_link_libraries(ck_tile_hcu_grouped_gemm
+    PUBLIC ck_tile_hcu_grouped_gemm_device_args_providers)
 
 # Minimal consumer-independent library used by the public C ABI matrix. It
 # deliberately excludes all default-off Phase316/317 candidate TUs so generic
