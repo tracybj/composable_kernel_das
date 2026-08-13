@@ -229,11 +229,7 @@ endif()
 target_compile_options(ck_tile_hcu_grouped_gemm_device_args_providers
     PRIVATE "-Wno-unused-template" "-Wno-unneeded-internal-declaration")
 set_target_properties(ck_tile_hcu_grouped_gemm_device_args_providers
-    PROPERTIES
-        POSITION_INDEPENDENT_CODE ON
-        CXX_STANDARD 20
-        CXX_STANDARD_REQUIRED ON
-        CXX_EXTENSIONS OFF)
+    PROPERTIES POSITION_INDEPENDENT_CODE ON)
 ck_tile_hcu_grouped_gemm_apply_codegen(ck_tile_hcu_grouped_gemm_device_args_providers)
 set_source_files_properties(
     ${HCU_GROUPED_GEMM_BW_TN_DEVICE_ARGS_SOURCES}
