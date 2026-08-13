@@ -208,6 +208,8 @@ set(HCU_GROUPED_GEMM_DEVICE_ARGS_PROVIDER_MANIFEST
 file(STRINGS ${HCU_GROUPED_GEMM_DEVICE_ARGS_PROVIDER_MANIFEST}
     HCU_GROUPED_GEMM_DEVICE_ARGS_PROVIDER_SOURCES
     REGEX "^[^#].+")
+set_source_files_properties(${HCU_GROUPED_GEMM_DEVICE_ARGS_PROVIDER_SOURCES}
+    PROPERTIES LANGUAGE CXX)
 add_library(ck_tile_hcu_grouped_gemm_device_args_providers STATIC EXCLUDE_FROM_ALL
     ${HCU_GROUPED_GEMM_DEVICE_ARGS_PROVIDER_SOURCES})
 target_include_directories(ck_tile_hcu_grouped_gemm_device_args_providers
