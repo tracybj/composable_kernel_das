@@ -206,8 +206,12 @@ int launch_registry_candidate(ck_tile::GroupedGemmInstanceId instance_id,
                                     PrecType>(
             layout, device_args, group_count, num_cu, stream);
     case ck_tile::GroupedGemmInstanceId::v4_128_full_padding:
-        return launch_layout<GemmConfigComputeV4SquareWideMpad<PrecType>,
-                             PrecType>(layout, device_args, group_count, num_cu, stream);
+        if constexpr(std::is_same_v<PrecType, ck_tile::bf16_t>)
+        {
+            return launch_layout<GemmConfigComputeV4SquareWideMpad<PrecType>,
+                                 PrecType>(layout, device_args, group_count, num_cu, stream);
+        }
+        break;
     case ck_tile::GroupedGemmInstanceId::v4_64_nonpadding:
         return launch_layout<GemmConfigComputeV4<PrecType>, PrecType>(
             layout, device_args, group_count, num_cu, stream);
