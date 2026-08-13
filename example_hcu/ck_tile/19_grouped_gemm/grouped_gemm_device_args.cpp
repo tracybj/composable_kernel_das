@@ -379,11 +379,13 @@ int dispatch_registry_candidate(const ck_tile::GroupedGemmProblem& problem,
 void candidate_masks(ck_tile::GroupedGemmInstanceId id,
                      std::uint32_t& architecture_mask,
                      std::uint32_t& data_type_mask,
-                     std::uint32_t& layout_mask)
+                     std::uint32_t& layout_mask,
+                     std::uint32_t& contract_flags)
 {
     architecture_mask = ArchGfx936 | ArchGfx938;
     data_type_mask     = DTypeFp16 | DTypeBf16;
     layout_mask        = LayoutNt | LayoutNn | LayoutTn;
+    contract_flags     = 0;
     switch(id)
     {
     case ck_tile::GroupedGemmInstanceId::none: break;
@@ -401,6 +403,7 @@ void candidate_masks(ck_tile::GroupedGemmInstanceId id,
     case ck_tile::GroupedGemmInstanceId::bw_family_logical_k_tail:
         data_type_mask = DTypeBf16;
         layout_mask    = LayoutTn;
+        contract_flags = CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_CONTRACT_C_TRANSPOSED_VIEW_V1;
         break;
     case ck_tile::GroupedGemmInstanceId::gfx936_v3_256_m_only_padding:
         architecture_mask = ArchGfx936;
@@ -519,7 +522,9 @@ extern "C" int ck_tile_hcu_grouped_gemm_query_instance_v1(
         std::uint32_t architecture_mask = 0;
         std::uint32_t data_type_mask     = 0;
         std::uint32_t layout_mask        = 0;
-        candidate_masks(id, architecture_mask, data_type_mask, layout_mask);
+        std::uint32_t contract_flags     = 0;
+        candidate_masks(
+            id, architecture_mask, data_type_mask, layout_mask, contract_flags);
         const std::uint32_t output_size = output->struct_size;
         *output                         = {};
         output->struct_size             = output_size;
@@ -529,6 +534,7 @@ extern "C" int ck_tile_hcu_grouped_gemm_query_instance_v1(
         output->architecture_mask = architecture_mask;
         output->data_type_mask     = data_type_mask;
         output->layout_mask        = layout_mask;
+        output->contract_flags     = contract_flags;
         copy_name(output->canonical_name, candidate->canonical_suffix);
         return CK_TILE_HCU_GROUPED_GEMM_DEVICE_ARGS_SUCCESS_V1;
     }

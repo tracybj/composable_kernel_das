@@ -89,6 +89,11 @@ typedef enum ck_tile_hcu_grouped_gemm_layout_mask_v1
     CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_TN_V1 = 1u << 2
 } ck_tile_hcu_grouped_gemm_layout_mask_v1;
 
+typedef enum ck_tile_hcu_grouped_gemm_candidate_contract_flags_v1
+{
+    CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_CONTRACT_C_TRANSPOSED_VIEW_V1 = 1u << 0
+} ck_tile_hcu_grouped_gemm_candidate_contract_flags_v1;
+
 typedef enum ck_tile_hcu_grouped_gemm_dimension_kind_v1
 {
     CK_TILE_HCU_GROUPED_GEMM_DIMENSION_COMMON_V1 = 0,
@@ -180,7 +185,7 @@ typedef struct ck_tile_hcu_grouped_gemm_candidate_info_v1
     uint32_t architecture_mask;
     uint32_t data_type_mask;
     uint32_t layout_mask;
-    uint32_t reserved0;
+    uint32_t contract_flags;
     char canonical_name[CK_TILE_HCU_GROUPED_GEMM_INSTANCE_NAME_CAPACITY];
     uint64_t reserved[4];
 } ck_tile_hcu_grouped_gemm_candidate_info_v1;

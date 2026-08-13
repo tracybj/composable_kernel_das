@@ -79,6 +79,7 @@ int main()
         std::uint32_t architecture_mask;
         std::uint32_t data_type_mask;
         std::uint32_t layout_mask;
+        std::uint32_t contract_flags = 0;
     };
     constexpr std::uint32_t both_arch =
         CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX936_V1 |
@@ -110,12 +111,14 @@ int main()
          CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_FAMILY_BW_V1,
          both_arch,
          CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_MASK_BF16_V1,
-         CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_TN_V1},
+         CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_TN_V1,
+         CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_CONTRACT_C_TRANSPOSED_VIEW_V1},
         {CK_TILE_HCU_GROUPED_GEMM_INSTANCE_BW_FAMILY_LOGICAL_K_TAIL_V1,
          CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_FAMILY_BW_V1,
          both_arch,
          CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_MASK_BF16_V1,
-         CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_TN_V1},
+         CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_TN_V1,
+         CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_CONTRACT_C_TRANSPOSED_VIEW_V1},
         {CK_TILE_HCU_GROUPED_GEMM_INSTANCE_GFX936_V3_256_M_ONLY_PADDING_V1,
          CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_FAMILY_GFX936_V3_V1,
          CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX936_V1,
@@ -175,6 +178,7 @@ int main()
         if(status != 0 || info.instance_id != item.id || info.family != item.family ||
            info.architecture_mask != item.architecture_mask ||
            info.data_type_mask != item.data_type_mask || info.layout_mask != item.layout_mask ||
+           info.contract_flags != item.contract_flags ||
            info.canonical_name[0] == '\0' || direct_name == nullptr ||
            std::strcmp(info.canonical_name, direct_name) != 0)
         {
