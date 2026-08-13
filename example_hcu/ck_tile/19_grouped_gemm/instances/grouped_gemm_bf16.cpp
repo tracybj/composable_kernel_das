@@ -100,6 +100,7 @@ template <typename PrecType>
 using GroupedGemmBf16PaddedConfig = GemmConfigComputeV4Mpad<PrecType>;
 #endif
 
+#if !defined(CK_TILE_GROUPED_GEMM_DEVICE_ARGS_REGISTRY_ONLY)
 int grouped_gemm_c_run_bf16(const ck_tile_hcu_grouped_gemm_desc* descs,
                             int group_count,
                             char a_layout,
@@ -289,6 +290,7 @@ int grouped_gemm_example_run_bf16(std::string a_layout, std::string b_layout, in
     return run_gemm_example_prec_type<GroupedGemmBf16Config<ck_tile::bf16_t>, ck_tile::bf16_t>(
         a_layout, b_layout, argc, argv);
 }
+#endif
 
 #if defined(CK_TILE_GROUPED_GEMM_DEVICE_ARGS_REGISTRY)
 #include "grouped_gemm_device_args_provider.hpp"
