@@ -181,6 +181,23 @@ set(HCU_GROUPED_GEMM_RDC_BUILD OFF)
 if(CMAKE_CXX_FLAGS MATCHES "(^| )-fgpu-rdc( |$)")
     set(HCU_GROUPED_GEMM_RDC_BUILD ON)
 endif()
+
+# Match the HCU production code-generation contract used by the existing
+# grouped-GEMM consumer.  These options are target-local: they affect only the
+# public grouped-GEMM archives and do not change CK-wide compilation policy.
+# Keep RDC an explicit opt-in because the validated non-RDC provider objects
+# avoid the register spill observed at the integration boundary.
+function(ck_tile_hcu_grouped_gemm_apply_codegen target_name)
+    target_compile_options(${target_name}
+        PRIVATE
+            "-fno-offload-uniform-block"
+            "SHELL: -mllvm --lsr-drop-solution=1"
+            "SHELL: -mllvm -enable-post-misched=0"
+            "SHELL: -mllvm -amdgpu-early-inline-all=true")
+    if(NOT HCU_GROUPED_GEMM_RDC_BUILD)
+        target_compile_options(${target_name} PRIVATE "-fno-gpu-rdc")
+    endif()
+endfunction()
 set_source_files_properties(
     ${HCU_GROUPED_GEMM_BW_TN_DEVICE_ARGS_SOURCES}
     ${HCU_GROUPED_GEMM_GFX936_SELECTED_SOURCES}
@@ -221,6 +238,7 @@ if(HCU_GROUPED_GEMM_BW_TN_DEVICE_ARGS_SOURCES)
         PRIVATE CK_TILE_GROUPED_GEMM_DEVICE_ARGS_HAS_BW_TN)
 endif()
 set_target_properties(ck_tile_hcu_grouped_gemm PROPERTIES POSITION_INDEPENDENT_CODE ON)
+ck_tile_hcu_grouped_gemm_apply_codegen(ck_tile_hcu_grouped_gemm)
 
 # Minimal consumer-independent library used by the public C ABI matrix. It
 # deliberately excludes all default-off Phase316/317 candidate TUs so generic
@@ -242,6 +260,7 @@ target_compile_definitions(ck_tile_hcu_grouped_gemm_generic
         CK_TILE_GROUPED_GEMM_FAST_BF16)
 set_target_properties(ck_tile_hcu_grouped_gemm_generic
     PROPERTIES POSITION_INDEPENDENT_CODE ON)
+ck_tile_hcu_grouped_gemm_apply_codegen(ck_tile_hcu_grouped_gemm_generic)
 
 add_executable(tile_example_grouped_gemm_c_api_smoke EXCLUDE_FROM_ALL
     grouped_gemm_c_api_smoke.cpp
