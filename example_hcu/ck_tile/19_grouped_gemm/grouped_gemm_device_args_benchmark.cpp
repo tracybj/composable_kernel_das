@@ -534,7 +534,7 @@ TimingStats summarize(std::vector<float> values)
     for(float value : values)
         variance += (value - result.mean) * (value - result.mean);
     variance /= values.size();
-    result.cv = result.mean == 0 ? 0 : std::sqrt(variance) / result.mean;
+    result.cv = result.mean <= 0 ? 0 : std::sqrt(variance) / result.mean;
     std::sort(values.begin(), values.end());
     const auto middle = values.size() / 2;
     result.median = values.size() % 2 == 0 ? (values[middle - 1] + values[middle]) / 2.0
@@ -556,9 +556,9 @@ public:
     ~EventTimer()
     {
         if(start_ != nullptr)
-            hipEventDestroy(start_);
+            static_cast<void>(hipEventDestroy(start_));
         if(stop_ != nullptr)
-            hipEventDestroy(stop_);
+            static_cast<void>(hipEventDestroy(stop_));
     }
 
     float measure(hipStream_t stream, const std::function<void()>& launch)
@@ -578,7 +578,7 @@ void print_timing(const char* backend,
                   const TimingStats& timing)
 {
     const double operations = 2.0 * options.group_count * options.m * options.n * options.k;
-    const double tflops     = timing.median == 0 ? 0 : operations / timing.median / 1.0e9;
+    const double tflops     = timing.median <= 0 ? 0 : operations / timing.median / 1.0e9;
     std::cout << "PERF backend=" << backend << " median_ms=" << timing.median
               << " mean_ms=" << timing.mean << " min_ms=" << timing.min
               << " max_ms=" << timing.max << " cv=" << timing.cv
@@ -803,7 +803,7 @@ int run(const Options& options)
     }
     if(run_ck_backend && run_blas_backend)
         std::cout << "RATIO ck_over_blas="
-                  << (blas_timing.median == 0 ? 0 : ck_timing.median / blas_timing.median)
+                  << (blas_timing.median <= 0 ? 0 : ck_timing.median / blas_timing.median)
                   << std::endl;
 
     std::cout << "SUMMARY result=PASS" << std::endl;
