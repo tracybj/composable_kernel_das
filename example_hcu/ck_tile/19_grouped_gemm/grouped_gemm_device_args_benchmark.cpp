@@ -22,12 +22,13 @@
  *
  * 二、构建方法
  * ------------
- * 在 CK 仓库根目录执行，例如 gfx936：
+ * 本 target 支持 gfx936 与 gfx938。在对应架构的机器上配置独立 build tree；
+ * 下面以 gfx936 为例，gfx938 只需把 GPU_TARGETS 改为 gfx938：
  *
- *   cmake -S . -B build_device_args_example_gfx936 \
+ *   cmake -S . -B build_device_args_example_bw \
  *       -DGPU_TARGETS=gfx936 \
  *       -DCK_GROUPED_GEMM_HIPBLASLT_ROOT=/wksp/hipblaslt-install
- *   cmake --build build_device_args_example_gfx936 \
+ *   cmake --build build_device_args_example_bw \
  *       --target tile_example_grouped_gemm_device_args_benchmark -j 16
  *
  * CK_GROUPED_GEMM_HIPBLASLT_ROOT 只决定本 example 编译时使用哪套 hipBLASLt
@@ -36,7 +37,7 @@
  * 三、基本运行方法
  * --------------
  *
- *   ./build_device_args_example_gfx936/bin/\
+ *   ./build_device_args_example_bw/bin/\
  *       tile_example_grouped_gemm_device_args_benchmark \
  *       --m=2048 --n=2048 --k=2048 --groups=4 \
  *       --dtype=bf16 --layout=TN --backend=both \
