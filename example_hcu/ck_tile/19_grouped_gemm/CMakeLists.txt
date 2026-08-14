@@ -373,7 +373,7 @@ set_tests_properties(tile_example_grouped_gemm_device_args_smoke
 # 运行时只选择 CK 已经预编译的 stable InstanceId。hipBLAS 通过 dlopen 加载，
 # 用户可用 --blas-lib 指定系统库 ELF，而无需把某个 BLAS 安装路径写死进 CK。
 add_executable(tile_example_grouped_gemm_device_args_benchmark EXCLUDE_FROM_ALL
-    grouped_gemm_device_args_benchmark.cu)
+    grouped_gemm_device_args_benchmark.cpp)
 target_link_libraries(tile_example_grouped_gemm_device_args_benchmark
     PRIVATE ck_tile_hcu_grouped_gemm ${CMAKE_DL_LIBS})
 
