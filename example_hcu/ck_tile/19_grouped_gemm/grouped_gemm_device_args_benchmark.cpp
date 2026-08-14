@@ -1,6 +1,141 @@
 // Copyright (c) 2026 Hygon Info Technologies Ltd.
 // SPDX-License-Identifier: MIT
 
+/*
+ * grouped GEMM device-args 参数化示例使用说明
+ * ============================================
+ *
+ * 一、用途与边界
+ * --------------
+ * 本程序用于在同一个进程、同一块 HCU、同一批输入数据上比较：
+ *
+ *   1. CK versioned device-args C ABI 选择并运行的预编译 grouped GEMM；
+ *   2. 传统 hipBLAS 或 hipBLASLt 逐组 GEMM 基线。
+ *
+ * CK 路径遵循 Problem -> pure selector -> stable InstanceId -> candidate registry ->
+ * 预编译 kernel 的生产调用流程。运行时参数只选择已经编译进 ELF 的 C++ template
+ * 实例，不会在运行时实例化或编译新的 C++ template。实际 HCU 架构由 CK 内部检测。
+ *
+ * 当前命令行模型中的所有 group 使用相同 M/N/K、dtype 和 layout，适合稳定复测
+ * selector 与 kernel 性能；它不是 heterogeneous/variable-shape grouped GEMM 驱动。
+ * 如果后续要研究异构 group，应扩展输入清单，不能把一个统一 shape 的结果外推过去。
+ *
+ * 二、构建方法
+ * ------------
+ * 在 CK 仓库根目录执行，例如 gfx936：
+ *
+ *   cmake -S . -B build_device_args_example_gfx936 \
+ *       -DGPU_TARGETS=gfx936 \
+ *       -DCK_GROUPED_GEMM_HIPBLASLT_ROOT=/wksp/hipblaslt-install
+ *   cmake --build build_device_args_example_gfx936 \
+ *       --target tile_example_grouped_gemm_device_args_benchmark -j 16
+ *
+ * CK_GROUPED_GEMM_HIPBLASLT_ROOT 只决定本 example 编译时使用哪套 hipBLASLt
+ * 头文件。它不会把该安装路径写入 CK selector、registry 或 grouped GEMM 公共 ABI。
+ *
+ * 三、基本运行方法
+ * --------------
+ *
+ *   ./build_device_args_example_gfx936/bin/\
+ *       tile_example_grouped_gemm_device_args_benchmark \
+ *       --m=2048 --n=2048 --k=2048 --groups=4 \
+ *       --dtype=bf16 --layout=TN --backend=both \
+ *       --blas-root=/wksp/hipblaslt-install
+ *
+ * 也可以直接指定一个运行时 ELF：
+ *
+ *   --blas-lib=/wksp/hipblaslt-install/lib/libhipblaslt.so
+ *
+ * 或沿用 Primus 风格的环境变量：
+ *
+ *   export HIPBLASLT_ROOT=/wksp/hipblaslt-install
+ *   # 也支持 PRIMUS_TURBO_HIPBLASLT_HOME
+ *
+ * BLAS 选择优先级为：
+ *
+ *   --blas-lib
+ *   -> --blas-root
+ *   -> CK_GROUPED_GEMM_BLAS_LIBRARY
+ *   -> PRIMUS_TURBO_HIPBLASLT_HOME
+ *   -> HIPBLASLT_ROOT
+ *   -> 系统 libhipblas.so
+ *
+ * 当指定 libhipblaslt.so 的绝对路径时，动态加载器不会自动搜索它的同级目录。
+ * 本程序会先从同一 lib 目录以 RTLD_GLOBAL 加载 liborigami.so.1，再加载
+ * libhipblaslt.so，因此通常不需要额外修改 LD_LIBRARY_PATH。
+ *
+ * 四、参数含义
+ * ------------
+ *
+ *   --m/--n/--k       每组 GEMM 的逻辑 M、N、K。
+ *   --groups          group 数量，当前每组 shape 相同。
+ *   --dtype           fp16 或 bf16。
+ *   --layout          NT、NN 或 TN；C 始终是 RowMajor：
+ *                       NT = A RowMajor，B ColumnMajor；
+ *                       NN = A RowMajor，B RowMajor；
+ *                       TN = A ColumnMajor，B RowMajor。
+ *   --backend         ck、blas 或 both。
+ *   --blas-root       hipBLASLt 安装根目录，预期包含 include/ 与 lib/。
+ *   --blas-lib        精确的 libhipblaslt.so 或 libhipblas.so 路径。
+ *   --warmup          正式采样前的预热次数，性能对比建议固定为 10。
+ *   --samples         GPU event 样本数，性能对比建议固定为 30。
+ *   --correctness-repeats
+ *                     correctness 重复次数，性能对比建议固定为 3。
+ *   --validate        1 时先验证精度，0 时跳过；正式结果不得关闭。
+ *   --num-cu          传给 CK launch 的 CU 限制，0 表示使用 CK 默认值。
+ *   --include-args-build
+ *                     1 时 CK 每个计时样本包含一次 GPU device-args 构造
+ *                     kernel，更接近 Primus 调用；0 时只测最终 CK grouped
+ *                     GEMM launch。比较前必须固定该值并在结果中记录。
+ *
+ * 五、精度与性能输出
+ * ------------------
+ * 程序坚持 correctness first：CK 和 BLAS 分别与 CPU 抽样 reference 比较；
+ * backend=both 时还会对 CK/BLAS 的全部输出元素逐一比较。任一 failed 非零，
+ * 程序以失败结束，不应继续采用对应性能结果。
+ *
+ * 性能使用 HIP GPU event，输出 median/mean/min/max/CV/TFLOPS。both 模式按
+ * 样本奇偶交替 CK 与 BLAS 的先后顺序，以减弱温度和频率漂移。正式比较建议使用
+ * 10 warmup、30 samples、3 次 correctness，并要求 CK 与 BLAS 的 CV 都不超过
+ * 10%。`RATIO ck_over_blas` 是 CK median / BLAS median，小于 1 表示 CK 更快。
+ *
+ * 六、单流逐组与 Primus 四流轮转的区别
+ * ------------------------------------
+ * 本 example 的 hipBLAS/hipBLASLt 基线是 single-stream sequential-per-group：
+ * 所有 group 都提交到调用方传入的同一 HIP stream。同一 stream 严格有序，因而
+ * G0、G1、...、G(G-1) 不发生组间并发。这种模式实现简单，适合观察单个 BLAS
+ * GEMM 的算法、数值和稳定性，也不会额外创建 stream/event。
+ *
+ * Primus 的 hipBLASLt grouped 后端是 four-stream round-robin：它创建 4 个
+ * hipBLASLt handle、4 条 non-blocking stream、4 份 workspace 和配套 event。
+ * 第 i 组发送到 stream[i % 4]。四条流先等待调用方 stream 的入口 event；全部
+ * group 提交后，各计算流记录完成 event，调用方 stream 再等待这些 event。因此
+ * 最多四组可以并发，G>4 时每条流内部仍保持顺序。
+ *
+ * 两种模式的含义可以概括为：
+ *
+ *   本 example：caller stream: G0 -> G1 -> G2 -> G3
+ *   Primus：     stream 0:     G0 -> G4 -> ...
+ *               stream 1:     G1 -> G5 -> ...
+ *               stream 2:     G2 -> G6 -> ...
+ *               stream 3:     G3 -> G7 -> ...
+ *               caller stream 在入口和出口通过 event 与四条计算流汇合。
+ *
+ * 多流可能通过组间并发降低总延迟，但也会增加 workspace、handle/event 管理和
+ * 计算资源竞争。因此 G>1 时，本程序的 CK/BLAS ratio 不是“CK 对 Primus 产品
+ * BLAS 后端”的严格等调度结论。做最终产品级比较时，应同时运行 Primus 原生
+ * benchmark，或者为本 example 新增独立的 four-stream BLAS backend，并明确
+ * 报告 stream 数量、workspace、入口/出口事件和计时边界。不得静默改变当前
+ * sequential 基线，否则前后性能数据不可比。
+ *
+ * 七、后续优化记录建议
+ * --------------------
+ * 每次优化至少记录：CK commit、InstanceId/instance_name、架构、dtype/layout、
+ * M/N/K/G、BLAS 与 origami SHA256、include_args_build、stream 模式、warmup、
+ * samples、三次精度结果、median、CV、CK/BLAS ratio，以及 kernel spill/资源。
+ * 只有同设备、同 BLAS、同调度模式、同参数协议下的数据才适合作为前后回归依据。
+ */
+
 #include <hip/hip_runtime.h>
 #include <hipblas/hipblas.h>
 #include <hipblaslt/hipblaslt.h>
