@@ -132,6 +132,12 @@ int launch_registry_candidate(ck_tile::GroupedGemmInstanceId instance_id,
                               std::uint32_t num_cu,
                               hipStream_t stream)
 {
+    // 这里只按 stable InstanceId 调用编译期已经生成的 kernel 模板：
+    // - GFX936 宏只开放 V3/DSReadM 与对应 V4 hybrid；
+    // - GFX938 宏只开放 MLS 与通用 V4；
+    // - dtype 由 PrecType、layout 由 NT/NN/TN 分支固定。
+    // selector 未选中的 ID 或 layout 组合返回 unsupported；这里不会在运行时
+    // 实例化新的 C++ template。
     switch(instance_id)
     {
     case ck_tile::GroupedGemmInstanceId::none:
