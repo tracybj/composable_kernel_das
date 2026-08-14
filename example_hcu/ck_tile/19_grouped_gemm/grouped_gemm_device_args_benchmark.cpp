@@ -27,6 +27,7 @@
  *
  *   cmake -S . -B build_device_args_example_bw \
  *       -DCMAKE_CXX_COMPILER=/opt/dtk/bin/aicc \
+ *       -DCMAKE_BUILD_TYPE=Release \
  *       -DGPU_TARGETS=gfx936 \
  *       -DCK_GROUPED_GEMM_HIPBLASLT_ROOT=/wksp/hipblaslt-install
  *   cmake --build build_device_args_example_bw \
