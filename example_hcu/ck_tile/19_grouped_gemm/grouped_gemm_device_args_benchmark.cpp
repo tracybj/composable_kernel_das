@@ -3,6 +3,7 @@
 
 #include <hip/hip_runtime.h>
 #include <hipblas/hipblas.h>
+#include <hipblaslt/hipblaslt.h>
 
 #include <algorithm>
 #include <array>
@@ -44,6 +45,7 @@ struct Options
     std::string layout      = "NT";
     std::string backend     = "both";
     std::string blas_library;
+    std::string blas_root;
     bool validate           = true;
     bool include_args_build = true;
 };
@@ -54,12 +56,17 @@ struct Options
     os << "用法: " << program << " [选项]\n"
        << "  --m=<int> --n=<int> --k=<int> --groups=<int>\n"
        << "  --dtype=fp16|bf16 --layout=NT|NN|TN\n"
-       << "  --backend=ck|blas|both --blas-lib=/path/to/libhipblas.so\n"
+       << "  --backend=ck|blas|both\n"
+       << "  --blas-root=/path/to/hipblaslt-install\n"
+       << "  --blas-lib=/path/to/libhipblaslt.so|libhipblas.so\n"
        << "  --warmup=10 --samples=30 --correctness-repeats=3\n"
        << "  --num-cu=0 --validate=0|1 --include-args-build=0|1\n"
        << "\n"
-       << "说明: --blas-lib 为空时依次读取 CK_GROUPED_GEMM_BLAS_LIBRARY、"
-          "libhipblas.so、libhipblas.so.2。\n"
+       << "说明: 显式 --blas-lib 优先；其次为 --blas-root、"
+          "CK_GROUPED_GEMM_BLAS_LIBRARY、PRIMUS_TURBO_HIPBLASLT_HOME、"
+          "HIPBLASLT_ROOT，最后回退 libhipblas.so。\n"
+       << "      hipBLASLt 安装根目录应包含 include/ 和 lib/；运行时会先从"
+          "同一 lib 目录加载 liborigami.so.1。\n"
        << "      CK 性能默认包含一次 GPU device-args 构造，以贴近 Primus 调用；"
           "设置 --include-args-build=0 可只测最终 grouped GEMM launch。\n";
     std::exit(code);
@@ -120,6 +127,8 @@ Options parse_options(int argc, char* argv[])
             options.backend = value;
         else if(name == "blas-lib")
             options.blas_library = value;
+        else if(name == "blas-root")
+            options.blas_root = value;
         else if(name == "validate")
             options.validate = parse_positive_or_zero(name, value) != 0;
         else if(name == "include-args-build")
@@ -143,6 +152,8 @@ Options parse_options(int argc, char* argv[])
         throw std::runtime_error("layout 只支持 NT、NN 或 TN");
     if(options.backend != "ck" && options.backend != "blas" && options.backend != "both")
         throw std::runtime_error("backend 只支持 ck、blas 或 both");
+    if(!options.blas_library.empty() && !options.blas_root.empty())
+        throw std::runtime_error("--blas-lib 与 --blas-root 不能同时指定");
     return options;
 }
 
@@ -170,6 +181,43 @@ int selector_layout(const std::string& layout)
 
 bool a_is_column_major(const std::string& layout) { return layout == "TN"; }
 bool b_is_column_major(const std::string& layout) { return layout == "NT"; }
+
+struct BlasLibraryRequest
+{
+    std::string path;
+    bool use_hipblaslt = false;
+};
+
+std::string append_path(std::string root, const std::string& suffix)
+{
+    while(!root.empty() && root.back() == '/')
+        root.pop_back();
+    return root + suffix;
+}
+
+bool names_hipblaslt(const std::string& path)
+{
+    std::string lower = path;
+    std::transform(lower.begin(), lower.end(), lower.begin(), [](unsigned char value) {
+        return static_cast<char>(std::tolower(value));
+    });
+    return lower.find("hipblaslt") != std::string::npos;
+}
+
+BlasLibraryRequest resolve_blas_library(const Options& options)
+{
+    if(!options.blas_library.empty())
+        return {options.blas_library, names_hipblaslt(options.blas_library)};
+    if(!options.blas_root.empty())
+        return {append_path(options.blas_root, "/lib/libhipblaslt.so"), true};
+    if(const char* library = std::getenv("CK_GROUPED_GEMM_BLAS_LIBRARY"))
+        return {library, names_hipblaslt(library)};
+    if(const char* root = std::getenv("PRIMUS_TURBO_HIPBLASLT_HOME"))
+        return {append_path(root, "/lib/libhipblaslt.so"), true};
+    if(const char* root = std::getenv("HIPBLASLT_ROOT"))
+        return {append_path(root, "/lib/libhipblaslt.so"), true};
+    return {"libhipblas.so", false};
+}
 
 ck_tile_hcu_grouped_gemm_dimension_v1 common_dimension(std::int64_t extent)
 {
@@ -414,6 +462,229 @@ public:
                                    HIPBLAS_R_32F,
                                    HIPBLAS_GEMM_DEFAULT),
                           "hipblasGemmEx");
+        }
+    }
+};
+
+class DynamicHipBlasLt
+{
+    using CreateFn                    = decltype(&hipblasLtCreate);
+    using DestroyFn                   = decltype(&hipblasLtDestroy);
+    using MatrixLayoutCreateFn        = decltype(&hipblasLtMatrixLayoutCreate);
+    using MatrixLayoutDestroyFn       = decltype(&hipblasLtMatrixLayoutDestroy);
+    using MatmulDescCreateFn          = decltype(&hipblasLtMatmulDescCreate);
+    using MatmulDescDestroyFn         = decltype(&hipblasLtMatmulDescDestroy);
+    using MatmulDescSetAttributeFn    = decltype(&hipblasLtMatmulDescSetAttribute);
+    using PreferenceCreateFn          = decltype(&hipblasLtMatmulPreferenceCreate);
+    using PreferenceDestroyFn         = decltype(&hipblasLtMatmulPreferenceDestroy);
+    using PreferenceSetAttributeFn    = decltype(&hipblasLtMatmulPreferenceSetAttribute);
+    using MatmulAlgoGetHeuristicFn    = decltype(&hipblasLtMatmulAlgoGetHeuristic);
+    using MatmulFn                    = decltype(&hipblasLtMatmul);
+
+    static constexpr std::size_t workspace_size_ = 32 * 1024 * 1024;
+
+    void* origami_library_                = nullptr;
+    void* library_                        = nullptr;
+    void* workspace_                      = nullptr;
+    hipblasLtHandle_t handle_             = nullptr;
+    DestroyFn destroy_                    = nullptr;
+    MatrixLayoutCreateFn layout_create_   = nullptr;
+    MatrixLayoutDestroyFn layout_destroy_ = nullptr;
+    MatmulDescCreateFn desc_create_       = nullptr;
+    MatmulDescDestroyFn desc_destroy_     = nullptr;
+    MatmulDescSetAttributeFn desc_set_    = nullptr;
+    PreferenceCreateFn pref_create_       = nullptr;
+    PreferenceDestroyFn pref_destroy_     = nullptr;
+    PreferenceSetAttributeFn pref_set_    = nullptr;
+    MatmulAlgoGetHeuristicFn heuristic_   = nullptr;
+    MatmulFn matmul_                      = nullptr;
+    std::string loaded_name_;
+    std::string dependency_name_;
+
+    template <typename Fn>
+    Fn load_symbol(const char* name)
+    {
+        dlerror();
+        void* symbol      = dlsym(library_, name);
+        const char* error = dlerror();
+        if(error != nullptr || symbol == nullptr)
+            throw std::runtime_error(std::string("dlsym(") + name + ") failed: " +
+                                     (error == nullptr ? "unknown error" : error));
+        return reinterpret_cast<Fn>(symbol);
+    }
+
+    void preload_origami_sibling(const std::string& library_path)
+    {
+        const auto slash = library_path.find_last_of('/');
+        if(slash == std::string::npos)
+            return;
+        const std::string directory = library_path.substr(0, slash);
+        for(const char* soname : {"liborigami.so.1", "liborigami.so"})
+        {
+            const std::string candidate = append_path(directory, "/" + std::string(soname));
+            origami_library_ = dlopen(candidate.c_str(), RTLD_NOW | RTLD_GLOBAL);
+            if(origami_library_ != nullptr)
+            {
+                dependency_name_ = candidate;
+                return;
+            }
+        }
+    }
+
+public:
+    explicit DynamicHipBlasLt(const std::string& requested_path) : loaded_name_(requested_path)
+    {
+        // 关键流程：只给 libhipblaslt.so 的绝对路径并不会让动态加载器自动搜索其
+        // 同级目录中的 DT_NEEDED。Primus 通过安装根目录/rpath 解决；本示例为保持
+        // 运行时可选 ELF，先以 RTLD_GLOBAL 预加载同目录的 liborigami.so.1。
+        preload_origami_sibling(requested_path);
+        library_ = dlopen(requested_path.c_str(), RTLD_NOW | RTLD_LOCAL);
+        if(library_ == nullptr)
+        {
+            const char* error = dlerror();
+            throw std::runtime_error("无法加载 hipBLASLt: " + requested_path + ": " +
+                                     (error == nullptr ? "unknown error" : error));
+        }
+
+        const auto create = load_symbol<CreateFn>("hipblasLtCreate");
+        destroy_          = load_symbol<DestroyFn>("hipblasLtDestroy");
+        layout_create_    = load_symbol<MatrixLayoutCreateFn>("hipblasLtMatrixLayoutCreate");
+        layout_destroy_   = load_symbol<MatrixLayoutDestroyFn>("hipblasLtMatrixLayoutDestroy");
+        desc_create_      = load_symbol<MatmulDescCreateFn>("hipblasLtMatmulDescCreate");
+        desc_destroy_     = load_symbol<MatmulDescDestroyFn>("hipblasLtMatmulDescDestroy");
+        desc_set_ = load_symbol<MatmulDescSetAttributeFn>("hipblasLtMatmulDescSetAttribute");
+        pref_create_ = load_symbol<PreferenceCreateFn>("hipblasLtMatmulPreferenceCreate");
+        pref_destroy_ = load_symbol<PreferenceDestroyFn>("hipblasLtMatmulPreferenceDestroy");
+        pref_set_ =
+            load_symbol<PreferenceSetAttributeFn>("hipblasLtMatmulPreferenceSetAttribute");
+        heuristic_ = load_symbol<MatmulAlgoGetHeuristicFn>("hipblasLtMatmulAlgoGetHeuristic");
+        matmul_     = load_symbol<MatmulFn>("hipblasLtMatmul");
+        hipblas_check(create(&handle_), "hipblasLtCreate");
+        hip_check(hipMalloc(&workspace_, workspace_size_), "hipBLASLt workspace hipMalloc");
+    }
+
+    ~DynamicHipBlasLt()
+    {
+        if(workspace_ != nullptr)
+            (void)hipFree(workspace_);
+        if(handle_ != nullptr && destroy_ != nullptr)
+            destroy_(handle_);
+        if(library_ != nullptr)
+            dlclose(library_);
+        if(origami_library_ != nullptr)
+            dlclose(origami_library_);
+    }
+
+    const std::string& loaded_name() const { return loaded_name_; }
+    const std::string& dependency_name() const { return dependency_name_; }
+
+    template <typename T>
+    void grouped_gemm(const Options& options,
+                      const T* a,
+                      const T* b,
+                      T* c,
+                      hipStream_t stream)
+    {
+        const hipDataType data_type =
+            std::is_same_v<T, ck_tile::half_t> ? HIP_R_16F : HIP_R_16BF;
+        const bool a_col = a_is_column_major(options.layout);
+        const bool b_col = b_is_column_major(options.layout);
+
+        // 与 Primus hipblaslt_grouped_gemm.cu 相同，把 row-major C[M,N] 解释成
+        // column-major C^T[N,M]，按 B^T * A^T 调用 hipBLASLt，不增加转置 kernel。
+        const hipblasOperation_t trans_b_logical = b_col ? HIPBLAS_OP_T : HIPBLAS_OP_N;
+        const hipblasOperation_t trans_a_logical = a_col ? HIPBLAS_OP_T : HIPBLAS_OP_N;
+        const std::int64_t b_rows = b_col ? options.k : options.n;
+        const std::int64_t b_cols = b_col ? options.n : options.k;
+        const std::int64_t b_ld   = b_col ? options.k : options.n;
+        const std::int64_t a_rows = a_col ? options.m : options.k;
+        const std::int64_t a_cols = a_col ? options.k : options.m;
+        const std::int64_t a_ld   = a_col ? options.m : options.k;
+        const std::size_t a_group_elements = static_cast<std::size_t>(options.m) * options.k;
+        const std::size_t b_group_elements = static_cast<std::size_t>(options.k) * options.n;
+        const std::size_t c_group_elements = static_cast<std::size_t>(options.m) * options.n;
+
+        for(int group = 0; group < options.group_count; ++group)
+        {
+            hipblasLtMatrixLayout_t b_desc = nullptr;
+            hipblasLtMatrixLayout_t a_desc = nullptr;
+            hipblasLtMatrixLayout_t c_desc = nullptr;
+            hipblasLtMatmulDesc_t operation_desc = nullptr;
+            hipblasLtMatmulPreference_t preference = nullptr;
+            hipblasLtMatmulHeuristicResult_t algorithm{};
+            int returned_algorithm_count = 0;
+            const std::int64_t workspace_size = static_cast<std::int64_t>(workspace_size_);
+            const hipblasLtEpilogue_t epilogue = HIPBLASLT_EPILOGUE_DEFAULT;
+
+            hipblas_check(layout_create_(&b_desc, data_type, b_rows, b_cols, b_ld),
+                          "hipblasLtMatrixLayoutCreate(B)");
+            hipblas_check(layout_create_(&a_desc, data_type, a_rows, a_cols, a_ld),
+                          "hipblasLtMatrixLayoutCreate(A)");
+            hipblas_check(layout_create_(&c_desc, data_type, options.n, options.m, options.n),
+                          "hipblasLtMatrixLayoutCreate(C)");
+            hipblas_check(desc_create_(&operation_desc, HIPBLAS_COMPUTE_32F, HIP_R_32F),
+                          "hipblasLtMatmulDescCreate");
+            hipblas_check(desc_set_(operation_desc,
+                                    HIPBLASLT_MATMUL_DESC_TRANSA,
+                                    &trans_b_logical,
+                                    sizeof(trans_b_logical)),
+                          "hipblasLtMatmulDescSetAttribute(TRANSA)");
+            hipblas_check(desc_set_(operation_desc,
+                                    HIPBLASLT_MATMUL_DESC_TRANSB,
+                                    &trans_a_logical,
+                                    sizeof(trans_a_logical)),
+                          "hipblasLtMatmulDescSetAttribute(TRANSB)");
+            hipblas_check(desc_set_(operation_desc,
+                                    HIPBLASLT_MATMUL_DESC_EPILOGUE,
+                                    &epilogue,
+                                    sizeof(epilogue)),
+                          "hipblasLtMatmulDescSetAttribute(EPILOGUE)");
+            hipblas_check(pref_create_(&preference), "hipblasLtMatmulPreferenceCreate");
+            hipblas_check(pref_set_(preference,
+                                    HIPBLASLT_MATMUL_PREF_MAX_WORKSPACE_BYTES,
+                                    &workspace_size,
+                                    sizeof(workspace_size)),
+                          "hipblasLtMatmulPreferenceSetAttribute");
+            hipblas_check(heuristic_(handle_,
+                                     operation_desc,
+                                     b_desc,
+                                     a_desc,
+                                     c_desc,
+                                     c_desc,
+                                     preference,
+                                     1,
+                                     &algorithm,
+                                     &returned_algorithm_count),
+                          "hipblasLtMatmulAlgoGetHeuristic");
+            if(returned_algorithm_count <= 0)
+                throw std::runtime_error("hipBLASLt 未找到当前 GEMM 的可用算法");
+
+            const float alpha = 1.0f;
+            const float beta  = 0.0f;
+            const auto offset = static_cast<std::size_t>(group);
+            hipblas_check(matmul_(handle_,
+                                  operation_desc,
+                                  &alpha,
+                                  b + offset * b_group_elements,
+                                  b_desc,
+                                  a + offset * a_group_elements,
+                                  a_desc,
+                                  &beta,
+                                  c + offset * c_group_elements,
+                                  c_desc,
+                                  c + offset * c_group_elements,
+                                  c_desc,
+                                  &algorithm.algo,
+                                  workspace_,
+                                  workspace_size_,
+                                  stream),
+                          "hipblasLtMatmul");
+
+            hipblas_check(pref_destroy_(preference), "hipblasLtMatmulPreferenceDestroy");
+            hipblas_check(desc_destroy_(operation_desc), "hipblasLtMatmulDescDestroy");
+            hipblas_check(layout_destroy_(c_desc), "hipblasLtMatrixLayoutDestroy(C)");
+            hipblas_check(layout_destroy_(a_desc), "hipblasLtMatrixLayoutDestroy(A)");
+            hipblas_check(layout_destroy_(b_desc), "hipblasLtMatrixLayoutDestroy(B)");
         }
     }
 };
@@ -689,15 +960,30 @@ int run(const Options& options)
     };
     build_args();
 
-    std::unique_ptr<DynamicHipBlas> blas;
+    std::unique_ptr<DynamicHipBlas> hipblas;
+    std::unique_ptr<DynamicHipBlasLt> hipblaslt;
+    BlasLibraryRequest blas_request;
     if(run_blas_backend)
-        blas = std::make_unique<DynamicHipBlas>(options.blas_library);
+    {
+        blas_request = resolve_blas_library(options);
+        if(blas_request.use_hipblaslt)
+            hipblaslt = std::make_unique<DynamicHipBlasLt>(blas_request.path);
+        else
+            hipblas = std::make_unique<DynamicHipBlas>(blas_request.path);
+    }
     auto launch_blas = [&] {
-        blas->grouped_gemm(options,
-                           static_cast<const T*>(device_a.GetDeviceBuffer()),
-                           static_cast<const T*>(device_b.GetDeviceBuffer()),
-                           static_cast<T*>(device_blas.GetDeviceBuffer()),
-                           stream);
+        if(hipblaslt)
+            hipblaslt->grouped_gemm(options,
+                                    static_cast<const T*>(device_a.GetDeviceBuffer()),
+                                    static_cast<const T*>(device_b.GetDeviceBuffer()),
+                                    static_cast<T*>(device_blas.GetDeviceBuffer()),
+                                    stream);
+        else
+            hipblas->grouped_gemm(options,
+                                  static_cast<const T*>(device_a.GetDeviceBuffer()),
+                                  static_cast<const T*>(device_b.GetDeviceBuffer()),
+                                  static_cast<T*>(device_blas.GetDeviceBuffer()),
+                                  stream);
     };
 
     std::cout << "CONFIG arch=" << ck_tile::get_device_name()
@@ -710,8 +996,17 @@ int run(const Options& options)
     std::cout << "SELECT instance_id=" << selection.instance_id
               << " instance_name=" << selection.instance_name
               << " contract_flags=" << candidate.contract_flags << std::endl;
-    if(blas)
-        std::cout << "BLAS library=" << blas->loaded_name()
+    if(hipblaslt)
+    {
+        std::cout << "BLAS library=" << hipblaslt->loaded_name()
+                  << " mode=hipblaslt_sequential_per_group"
+                  << " workspace_bytes=" << 32 * 1024 * 1024 << std::endl;
+        if(!hipblaslt->dependency_name().empty())
+            std::cout << "BLAS dependency=" << hipblaslt->dependency_name()
+                      << " load_mode=RTLD_GLOBAL" << std::endl;
+    }
+    else if(hipblas)
+        std::cout << "BLAS library=" << hipblas->loaded_name()
                   << " mode=hipblas_sequential_per_group" << std::endl;
 
     // 关键流程 6：先做 correctness，再允许性能计时。CK 与 BLAS 都和 CPU 抽样
@@ -799,7 +1094,9 @@ int run(const Options& options)
     if(run_blas_backend)
     {
         blas_timing = summarize(blas_samples);
-        print_timing("hipblas", options, blas_timing);
+        print_timing(blas_request.use_hipblaslt ? "hipblaslt" : "hipblas",
+                     options,
+                     blas_timing);
     }
     if(run_ck_backend && run_blas_backend)
         std::cout << "RATIO ck_over_blas="
