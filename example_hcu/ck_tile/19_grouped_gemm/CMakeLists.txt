@@ -369,6 +369,24 @@ add_test(NAME tile_example_grouped_gemm_device_args_smoke
 set_tests_properties(tile_example_grouped_gemm_device_args_smoke
     PROPERTIES LABELS "hcu;ck_tile;grouped_gemm;device_args;correctness;smoke")
 
+# 可参数化的生产调用示例：复用 Primus 使用的 versioned device-args ABI，
+# 运行时只选择 CK 已经预编译的 stable InstanceId。hipBLAS 通过 dlopen 加载，
+# 用户可用 --blas-lib 指定系统库 ELF，而无需把某个 BLAS 安装路径写死进 CK。
+add_executable(tile_example_grouped_gemm_device_args_benchmark EXCLUDE_FROM_ALL
+    grouped_gemm_device_args_benchmark.cu)
+target_link_libraries(tile_example_grouped_gemm_device_args_benchmark
+    PRIVATE ck_tile_hcu_grouped_gemm ${CMAKE_DL_LIBS})
+
+# CTest 仅覆盖 CK device-args 小 shape；系统 BLAS 路径和性能矩阵由用户显式运行，
+# 避免常规 correctness 测试依赖某个特定 BLAS 安装位置。
+add_test(NAME tile_example_grouped_gemm_device_args_benchmark_smoke
+    COMMAND $<TARGET_FILE:tile_example_grouped_gemm_device_args_benchmark>
+            --m=128 --n=128 --k=128 --groups=2
+            --dtype=fp16 --layout=NT --backend=ck
+            --warmup=1 --samples=1 --correctness-repeats=1)
+set_tests_properties(tile_example_grouped_gemm_device_args_benchmark_smoke
+    PROPERTIES LABELS "hcu;ck_tile;grouped_gemm;device_args;example;smoke")
+
 set(GROUPED_GEMM_FAST_FIXED_SHAPE_ARGS
     -group_count=2
     -Ms=128,256
