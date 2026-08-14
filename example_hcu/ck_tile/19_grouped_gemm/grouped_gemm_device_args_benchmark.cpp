@@ -25,10 +25,17 @@
  * 本 target 支持 gfx936 与 gfx938。在对应架构的机器上配置独立 build tree；
  * 下面以 gfx936 为例，gfx938 只需把 GPU_TARGETS 改为 gfx938：
  *
+ *   resource_dir=$(/opt/dtk/bin/aicc -print-resource-dir)
  *   cmake -S . -B build_device_args_example_bw \
+ *       -DCMAKE_PREFIX_PATH=/opt/dtk \
  *       -DCMAKE_CXX_COMPILER=/opt/dtk/bin/aicc \
+ *       -DCMAKE_CXX_FLAGS="-std=c++17 -O3 -ftemplate-backtrace-limit=0 -fPIE -Wno-gnu-line-marker" \
  *       -DCMAKE_BUILD_TYPE=Release \
+ *       -DBUILD_DEV=ON \
+ *       -DBUILD_EXAMPLE=ON \
+ *       -DUSE_BITINT_EXTENSION=ON \
  *       -DGPU_TARGETS=gfx936 \
+ *       -DHIP_CLANG_INCLUDE_PATH="${resource_dir}/include" \
  *       -DCK_GROUPED_GEMM_HIPBLASLT_ROOT=/wksp/hipblaslt-install
  *   cmake --build build_device_args_example_bw \
  *       --target tile_example_grouped_gemm_device_args_benchmark -j 16
@@ -36,6 +43,8 @@
  * 必须在首次配置这个 build tree 时选择 aicc。若 CMakeCache.txt 已把
  * CMAKE_CXX_COMPILER 缓存为 /usr/bin/c++，请保留旧目录作为失败证据并新建 build
  * tree，不要在同一个 cache 上继续构建；否则 HIP kernel 源文件无法正确编译。
+ * BUILD_EXAMPLE 必须为 ON；CK 顶层默认值是 OFF。若未打开，grouped GEMM example
+ * 的 CMakeLists.txt 不会被处理，表现为本 target 不存在且 hipBLASLt 变量未使用。
  *
  * CK_GROUPED_GEMM_HIPBLASLT_ROOT 只决定本 example 编译时使用哪套 hipBLASLt
  * 头文件。它不会把该安装路径写入 CK selector、registry 或 grouped GEMM 公共 ABI。
