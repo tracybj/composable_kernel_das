@@ -16,9 +16,10 @@
  * 预编译 kernel 的生产调用流程。运行时参数只选择已经编译进 ELF 的 C++ template
  * 实例，不会在运行时实例化或编译新的 C++ template。实际 HCU 架构由 CK 内部检测。
  *
- * 当前命令行模型中的所有 group 使用相同 M/N/K、dtype 和 layout，适合稳定复测
- * selector 与 kernel 性能；它不是 heterogeneous/variable-shape grouped GEMM 驱动。
- * 如果后续要研究异构 group，应扩展输入清单，不能把一个统一 shape 的结果外推过去。
+ * 不指定 --group-lengths 时，所有 group 使用相同 M/N/K。指定后，NT/NN 把该列表
+ * 解释为每组逻辑 M，TN 把它解释为每组逻辑 K；--variable-capacity 单独描述一块连续
+ * backing allocation 的提交容量。这样可以测试 ragged、empty、compact/padded 和
+ * logical-K tail，同时 CK 接口中不出现任何上层模型或训练阶段名称。
  *
  * 二、构建方法
  * ------------
@@ -58,6 +59,17 @@
  *       --dtype=bf16 --layout=TN --backend=both \
  *       --blas-root=/wksp/hipblaslt-install
  *
+ * ragged variable-M（NT/NN）示例：
+ *
+ *   --m=2120 --n=4096 --k=7168 --layout=NT \
+ *   --group-lengths=2102,2120,0,2092 --variable-capacity=16384 \
+ *   --allow-empty-groups=1 --blas-streams=4
+ *
+ * ragged variable-K（TN）示例：
+ *
+ *   --m=4096 --n=7168 --k=2120 --layout=TN \
+ *   --group-lengths=2102,2120,2108,2092 --variable-capacity=16384
+ *
  * 也可以直接指定一个运行时 ELF：
  *
  *   --blas-lib=/wksp/hipblaslt-install/lib/libhipblaslt.so
@@ -84,7 +96,13 @@
  * ------------
  *
  *   --m/--n/--k       每组 GEMM 的逻辑 M、N、K。
- *   --groups          group 数量，当前每组 shape 相同。
+ *   --groups          group 数量；指定 group-lengths 时可省略，否则必须与列表长度一致。
+ *   --group-lengths   逗号分隔的 per-group logical length；NT/NN 对应 M，TN 对应 K。
+ *   --variable-capacity
+ *                     变量维 backing capacity，必须不小于 lengths 合计；省略时取合计。
+ *                     它是通用容量，不代表任一 group 的逻辑长度。
+ *   --allow-empty-groups
+ *                     允许列表中包含 0，并向 CK 声明 empty-group contract。
  *   --dtype           fp16 或 bf16。
  *   --layout          NT、NN 或 TN；C 始终是 RowMajor：
  *                       NT = A RowMajor，B ColumnMajor；
@@ -103,6 +121,8 @@
  *                     1 时 CK 每个计时样本包含一次 GPU device-args 构造
  *                     kernel，更接近 Primus 调用；0 时只测最终 CK grouped
  *                     GEMM launch。比较前必须固定该值并在结果中记录。
+ *   --blas-streams    1 为单流逐组；4 为四流 round-robin。后者用于贴近采用四流
+ *                     grouped BLAS 的 consumer，但仍不能替代 consumer 自身验收。
  *
  * 五、精度与性能输出
  * ------------------
@@ -115,14 +135,14 @@
  * 10 warmup、30 samples、3 次 correctness，并要求 CK 与 BLAS 的 CV 都不超过
  * 10%。`RATIO ck_over_blas` 是 CK median / BLAS median，小于 1 表示 CK 更快。
  *
- * 六、单流逐组与 Primus 四流轮转的区别
- * ------------------------------------
- * 本 example 的 hipBLAS/hipBLASLt 基线是 single-stream sequential-per-group：
+ * 六、单流逐组与四流轮转
+ * ----------------------
+ * `--blas-streams=1` 的 hipBLAS/hipBLASLt 基线是 sequential-per-group：
  * 所有 group 都提交到调用方传入的同一 HIP stream。同一 stream 严格有序，因而
  * G0、G1、...、G(G-1) 不发生组间并发。这种模式实现简单，适合观察单个 BLAS
  * GEMM 的算法、数值和稳定性，也不会额外创建 stream/event。
  *
- * Primus 的 hipBLASLt grouped 后端是 four-stream round-robin：它创建 4 个
+ * `--blas-streams=4` 的 hipBLASLt 路径采用 four-stream round-robin：它创建 4 个
  * hipBLASLt handle、4 条 non-blocking stream、4 份 workspace 和配套 event。
  * 第 i 组发送到 stream[i % 4]。四条流先等待调用方 stream 的入口 event；全部
  * group 提交后，各计算流记录完成 event，调用方 stream 再等待这些 event。因此
@@ -130,19 +150,17 @@
  *
  * 两种模式的含义可以概括为：
  *
- *   本 example：caller stream: G0 -> G1 -> G2 -> G3
- *   Primus：     stream 0:     G0 -> G4 -> ...
+ *   单流：       caller stream: G0 -> G1 -> G2 -> G3
+ *   四流：       stream 0:     G0 -> G4 -> ...
  *               stream 1:     G1 -> G5 -> ...
  *               stream 2:     G2 -> G6 -> ...
  *               stream 3:     G3 -> G7 -> ...
  *               caller stream 在入口和出口通过 event 与四条计算流汇合。
  *
  * 多流可能通过组间并发降低总延迟，但也会增加 workspace、handle/event 管理和
- * 计算资源竞争。因此 G>1 时，本程序的 CK/BLAS ratio 不是“CK 对 Primus 产品
- * BLAS 后端”的严格等调度结论。做最终产品级比较时，应同时运行 Primus 原生
- * benchmark，或者为本 example 新增独立的 four-stream BLAS backend，并明确
- * 报告 stream 数量、workspace、入口/出口事件和计时边界。不得静默改变当前
- * sequential 基线，否则前后性能数据不可比。
+ * 计算资源竞争。程序会明确报告 stream 数量、workspace 和 mode；前后比较必须固定
+ * `--blas-streams`。即使使用四流，本程序仍不覆盖 Torch 参数转换、后端管理和
+ * variable-K 产品后处理，最终产品级结论仍须运行 consumer 原生 benchmark。
  *
  * 七、后续优化记录建议
  * --------------------
@@ -150,6 +168,22 @@
  * M/N/K/G、BLAS 与 origami SHA256、include_args_build、stream 模式、warmup、
  * samples、三次精度结果、median、CV、CK/BLAS ratio，以及 kernel spill/资源。
  * 只有同设备、同 BLAS、同调度模式、同参数协议下的数据才适合作为前后回归依据。
+ *
+ * 八、CSV 批量执行
+ * ----------------
+ * 同目录的 `run_grouped_gemm_device_args_cases.py` 可把通用 CSV 行转换成本程序参数，
+ * 并同时保存原始日志、JSONL 和汇总 CSV。列表在 CSV 中用分号分隔，避免与 CSV
+ * 本身的逗号冲突；runner 调用本程序时会转换回逗号：
+ *
+ *   runner=example_hcu/ck_tile/19_grouped_gemm/run_grouped_gemm_device_args_cases.py
+ *   binary=build_device_args_example_bw/bin/tile_example_grouped_gemm_device_args_benchmark
+ *   cases=example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args_cases_example.csv
+ *   python3 "$runner" --binary="$binary" --cases="$cases" \
+ *     --output-dir=hygon_tmp/grouped_gemm_results \
+ *     --blas-root=/wksp/hipblaslt-install --max-cv-pct=10
+ *
+ * CSV 的核心字段是 dtype/layout/m/n/k/group_lengths/variable_capacity；产品 PRD
+ * 可以在仓库外生成自己的 case CSV，但 CK 示例及其接口保持 consumer-independent。
  */
 
 #include <hip/hip_runtime.h>
@@ -169,6 +203,7 @@
 #include <limits>
 #include <memory>
 #include <numeric>
+#include <sstream>
 #include <stdexcept>
 #include <string>
 #include <type_traits>
@@ -197,8 +232,13 @@ struct Options
     std::string backend     = "both";
     std::string blas_library;
     std::string blas_root;
+    std::vector<std::int64_t> group_lengths;
+    std::int64_t variable_capacity = 0;
+    int blas_streams                = 1;
     bool validate           = true;
     bool include_args_build = true;
+    bool allow_empty_groups = false;
+    bool group_count_explicit = false;
 };
 
 [[noreturn]] void print_usage_and_exit(const char* program, int code)
@@ -206,12 +246,14 @@ struct Options
     std::ostream& os = code == 0 ? std::cout : std::cerr;
     os << "用法: " << program << " [选项]\n"
        << "  --m=<int> --n=<int> --k=<int> --groups=<int>\n"
+       << "  --group-lengths=2102,2120,... --variable-capacity=65536\n"
        << "  --dtype=fp16|bf16 --layout=NT|NN|TN\n"
        << "  --backend=ck|blas|both\n"
        << "  --blas-root=/path/to/hipblaslt-install\n"
        << "  --blas-lib=/path/to/libhipblaslt.so|libhipblas.so\n"
        << "  --warmup=10 --samples=30 --correctness-repeats=3\n"
        << "  --num-cu=0 --validate=0|1 --include-args-build=0|1\n"
+       << "  --allow-empty-groups=0|1 --blas-streams=1|4\n"
        << "\n"
        << "说明: 显式 --blas-lib 优先；其次为 --blas-root、"
           "CK_GROUPED_GEMM_BLAS_LIBRARY、PRIMUS_TURBO_HIPBLASLT_HOME、"
@@ -245,6 +287,29 @@ int parse_positive_or_zero(const std::string& name, const std::string& value)
     return static_cast<int>(parsed);
 }
 
+std::vector<std::int64_t> parse_nonnegative_list(const std::string& name,
+                                                 const std::string& value)
+{
+    if(value.empty())
+        throw std::runtime_error("选项 --" + name + " 缺少值");
+    std::vector<std::int64_t> result;
+    std::stringstream stream(value);
+    std::string item;
+    while(std::getline(stream, item, ','))
+    {
+        if(item.empty())
+            throw std::runtime_error("选项 --" + name + " 包含空元素");
+        std::size_t consumed = 0;
+        const long long parsed = std::stoll(item, &consumed);
+        if(consumed != item.size() || parsed < 0)
+            throw std::runtime_error("选项 --" + name + " 的元素无效: " + item);
+        result.push_back(static_cast<std::int64_t>(parsed));
+    }
+    if(result.empty())
+        throw std::runtime_error("选项 --" + name + " 不能为空");
+    return result;
+}
+
 Options parse_options(int argc, char* argv[])
 {
     Options options;
@@ -261,7 +326,10 @@ Options parse_options(int argc, char* argv[])
         else if(name == "k")
             options.k = parse_positive_or_zero(name, value);
         else if(name == "groups" || name == "group-count" || name == "group_count")
+        {
             options.group_count = parse_positive_or_zero(name, value);
+            options.group_count_explicit = true;
+        }
         else if(name == "warmup")
             options.warmup = parse_positive_or_zero(name, value);
         else if(name == "samples" || name == "repeat")
@@ -280,10 +348,18 @@ Options parse_options(int argc, char* argv[])
             options.blas_library = value;
         else if(name == "blas-root")
             options.blas_root = value;
+        else if(name == "group-lengths" || name == "group-lens")
+            options.group_lengths = parse_nonnegative_list(name, value);
+        else if(name == "variable-capacity" || name == "capacity")
+            options.variable_capacity = static_cast<std::int64_t>(parse_positive_or_zero(name, value));
+        else if(name == "blas-streams")
+            options.blas_streams = parse_positive_or_zero(name, value);
         else if(name == "validate")
             options.validate = parse_positive_or_zero(name, value) != 0;
         else if(name == "include-args-build")
             options.include_args_build = parse_positive_or_zero(name, value) != 0;
+        else if(name == "allow-empty-groups")
+            options.allow_empty_groups = parse_positive_or_zero(name, value) != 0;
         else
             throw std::runtime_error("未知选项: " + argument);
     }
@@ -293,6 +369,28 @@ Options parse_options(int argc, char* argv[])
     std::transform(options.dtype.begin(), options.dtype.end(), options.dtype.begin(), lower);
     std::transform(options.layout.begin(), options.layout.end(), options.layout.begin(), upper);
     std::transform(options.backend.begin(), options.backend.end(), options.backend.begin(), lower);
+    if(!options.group_lengths.empty())
+    {
+        if(options.group_count_explicit &&
+           options.group_count != static_cast<int>(options.group_lengths.size()))
+            throw std::runtime_error("--groups 必须与 --group-lengths 元素数量一致");
+        options.group_count = static_cast<int>(options.group_lengths.size());
+        const std::int64_t effective =
+            std::accumulate(options.group_lengths.begin(), options.group_lengths.end(), std::int64_t{0});
+        if(effective <= 0)
+            throw std::runtime_error("--group-lengths 至少包含一个正数");
+        if(options.variable_capacity == 0)
+            options.variable_capacity = effective;
+        if(options.variable_capacity < effective)
+            throw std::runtime_error("--variable-capacity 小于 group lengths 合计");
+        if(!options.allow_empty_groups &&
+           std::find(options.group_lengths.begin(), options.group_lengths.end(), 0) !=
+               options.group_lengths.end())
+            throw std::runtime_error("group length 为 0 时必须指定 --allow-empty-groups=1");
+    }
+    else if(options.variable_capacity != 0)
+        throw std::runtime_error("--variable-capacity 必须与 --group-lengths 同时使用");
+
     if(options.m <= 0 || options.n <= 0 || options.k <= 0 || options.group_count <= 0)
         throw std::runtime_error("M/N/K/group count 必须为正数");
     if(options.samples <= 0 || options.correctness_repeats <= 0)
@@ -303,6 +401,8 @@ Options parse_options(int argc, char* argv[])
         throw std::runtime_error("layout 只支持 NT、NN 或 TN");
     if(options.backend != "ck" && options.backend != "blas" && options.backend != "both")
         throw std::runtime_error("backend 只支持 ck、blas 或 both");
+    if(options.blas_streams != 1 && options.blas_streams != 4)
+        throw std::runtime_error("--blas-streams 只支持 1 或 4");
     if(!options.blas_library.empty() && !options.blas_root.empty())
         throw std::runtime_error("--blas-lib 与 --blas-root 不能同时指定");
     return options;
@@ -375,6 +475,94 @@ ck_tile_hcu_grouped_gemm_dimension_v1 common_dimension(std::int64_t extent)
     return {CK_TILE_HCU_GROUPED_GEMM_DIMENSION_COMMON_V1, 0, extent};
 }
 
+ck_tile_hcu_grouped_gemm_dimension_v1 device_dimension(std::int64_t capacity)
+{
+    return {CK_TILE_HCU_GROUPED_GEMM_DIMENSION_DEVICE_LENGTHS_WITH_CAPACITY_V1,
+            0,
+            capacity};
+}
+
+struct GroupPlan
+{
+    bool variable_m = false;
+    bool variable_k = false;
+    std::vector<std::int64_t> lengths;
+    std::vector<std::int64_t> offsets;
+    std::int64_t effective_length = 0;
+    std::int64_t capacity         = 0;
+    std::size_t a_elements        = 0;
+    std::size_t b_elements        = 0;
+    std::size_t c_elements        = 0;
+    double operations             = 0;
+
+    std::int64_t group_m(const Options& options, int group) const
+    {
+        return variable_m ? lengths.at(group) : options.m;
+    }
+
+    std::int64_t group_k(const Options& options, int group) const
+    {
+        return variable_k ? lengths.at(group) : options.k;
+    }
+
+    std::size_t a_offset(const Options& options, int group) const
+    {
+        return static_cast<std::size_t>(offsets.at(group)) *
+               (options.layout == "TN" ? options.m : options.k);
+    }
+
+    std::size_t b_offset(const Options& options, int group) const
+    {
+        return options.layout == "TN"
+                   ? static_cast<std::size_t>(offsets.at(group)) * options.n
+                   : static_cast<std::size_t>(group) * options.k * options.n;
+    }
+
+    std::size_t c_offset(const Options& options, int group) const
+    {
+        return options.layout == "TN"
+                   ? static_cast<std::size_t>(group) * options.m * options.n
+                   : static_cast<std::size_t>(offsets.at(group)) * options.n;
+    }
+};
+
+GroupPlan make_group_plan(const Options& options)
+{
+    GroupPlan plan;
+    plan.variable_m = !options.group_lengths.empty() && options.layout != "TN";
+    plan.variable_k = !options.group_lengths.empty() && options.layout == "TN";
+    const std::int64_t common_length = options.layout == "TN" ? options.k : options.m;
+    plan.lengths = options.group_lengths.empty()
+                       ? std::vector<std::int64_t>(options.group_count, common_length)
+                       : options.group_lengths;
+    plan.offsets.resize(options.group_count);
+    for(int group = 0; group < options.group_count; ++group)
+    {
+        plan.offsets[group] = plan.effective_length;
+        plan.effective_length += plan.lengths[group];
+    }
+    plan.capacity = options.group_lengths.empty() ? plan.effective_length
+                                                  : options.variable_capacity;
+
+    if(options.layout == "TN")
+    {
+        plan.a_elements = static_cast<std::size_t>(plan.capacity) * options.m;
+        plan.b_elements = static_cast<std::size_t>(plan.capacity) * options.n;
+        plan.c_elements = static_cast<std::size_t>(options.group_count) * options.m * options.n;
+    }
+    else
+    {
+        plan.a_elements = static_cast<std::size_t>(plan.capacity) * options.k;
+        plan.b_elements =
+            static_cast<std::size_t>(options.group_count) * options.k * options.n;
+        plan.c_elements = static_cast<std::size_t>(plan.capacity) * options.n;
+    }
+    for(int group = 0; group < options.group_count; ++group)
+        plan.operations += 2.0 * plan.group_m(options, group) * options.n *
+                           plan.group_k(options, group);
+    return plan;
+}
+
 template <typename T>
 T make_a_value(int group, int row, int reduction)
 {
@@ -392,32 +580,37 @@ T make_b_value(int group, int reduction, int column)
 }
 
 template <typename T>
-void initialize_inputs(const Options& options, std::vector<T>& a, std::vector<T>& b)
+void initialize_inputs(const Options& options,
+                       const GroupPlan& plan,
+                       std::vector<T>& a,
+                       std::vector<T>& b)
 {
-    const std::size_t a_group_elements = static_cast<std::size_t>(options.m) * options.k;
-    const std::size_t b_group_elements = static_cast<std::size_t>(options.k) * options.n;
-    a.resize(a_group_elements * options.group_count);
-    b.resize(b_group_elements * options.group_count);
+    const T a_tail = ck_tile::type_convert<T>(63.0f);
+    const T b_tail = ck_tile::type_convert<T>(-31.0f);
+    a.assign(plan.a_elements, a_tail);
+    b.assign(plan.b_elements, b_tail);
     const bool a_col = a_is_column_major(options.layout);
     const bool b_col = b_is_column_major(options.layout);
 
     for(int group = 0; group < options.group_count; ++group)
     {
-        const std::size_t a_base = static_cast<std::size_t>(group) * a_group_elements;
-        const std::size_t b_base = static_cast<std::size_t>(group) * b_group_elements;
-        for(int row = 0; row < options.m; ++row)
-            for(int reduction = 0; reduction < options.k; ++reduction)
+        const auto group_m = static_cast<int>(plan.group_m(options, group));
+        const auto group_k = static_cast<int>(plan.group_k(options, group));
+        const std::size_t a_base = plan.a_offset(options, group);
+        const std::size_t b_base = plan.b_offset(options, group);
+        for(int row = 0; row < group_m; ++row)
+            for(int reduction = 0; reduction < group_k; ++reduction)
             {
                 const std::size_t offset = a_col
-                                               ? static_cast<std::size_t>(reduction) * options.m + row
-                                               : static_cast<std::size_t>(row) * options.k + reduction;
+                                               ? static_cast<std::size_t>(reduction) * group_m + row
+                                               : static_cast<std::size_t>(row) * group_k + reduction;
                 a[a_base + offset] = make_a_value<T>(group, row, reduction);
             }
-        for(int reduction = 0; reduction < options.k; ++reduction)
+        for(int reduction = 0; reduction < group_k; ++reduction)
             for(int column = 0; column < options.n; ++column)
             {
                 const std::size_t offset = b_col
-                                               ? static_cast<std::size_t>(column) * options.k + reduction
+                                               ? static_cast<std::size_t>(column) * group_k + reduction
                                                : static_cast<std::size_t>(reduction) * options.n + column;
                 b[b_base + offset] = make_b_value<T>(group, reduction, column);
             }
@@ -428,25 +621,37 @@ void initialize_inputs(const Options& options, std::vector<T>& a, std::vector<T>
 // selector 若声明 C_TRANSPOSED_VIEW contract，则将 TN 问题改写成 C^T=B^T*A，
 // 仅交换 descriptor 解释，不移动 A/B/C 的物理数据。
 template <typename T>
-__global__ void build_uniform_device_args(ck_tile::GemmTransKernelArg* args,
-                                          const T* a,
-                                          const T* b,
-                                          T* c,
-                                          int group_count,
-                                          int m,
-                                          int n,
-                                          int k,
-                                          int layout,
-                                          bool transposed_output_view)
+__global__ void build_device_args(ck_tile::GemmTransKernelArg* args,
+                                  const T* a,
+                                  const T* b,
+                                  T* c,
+                                  const std::int64_t* group_lengths,
+                                  const std::int64_t* group_offsets,
+                                  int group_count,
+                                  int common_m,
+                                  int n,
+                                  int common_k,
+                                  int layout,
+                                  bool transposed_output_view)
 {
     const int group = blockIdx.x * blockDim.x + threadIdx.x;
     if(group >= group_count)
         return;
 
-    const std::size_t a_offset = static_cast<std::size_t>(group) * m * k;
-    const std::size_t b_offset = static_cast<std::size_t>(group) * k * n;
-    const std::size_t c_offset = static_cast<std::size_t>(group) * m * n;
-    auto& karg                 = args[group].group_karg;
+    const bool variable_k = layout == CK_TILE_HCU_GROUPED_GEMM_LAYOUT_TN_V1;
+    const std::int64_t length = group_lengths[group];
+    const std::int64_t offset = group_offsets[group];
+    const int m = variable_k ? (length > 0 ? common_m : 0) : static_cast<int>(length);
+    const int k = variable_k ? static_cast<int>(length) : common_k;
+    const std::size_t a_offset = static_cast<std::size_t>(offset) *
+                                 (variable_k ? common_m : common_k);
+    const std::size_t b_offset = variable_k
+                                     ? static_cast<std::size_t>(offset) * n
+                                     : static_cast<std::size_t>(group) * common_k * n;
+    const std::size_t c_offset = variable_k
+                                     ? static_cast<std::size_t>(group) * common_m * n
+                                     : static_cast<std::size_t>(offset) * n;
+    auto& karg = args[group].group_karg;
 
     if(transposed_output_view)
     {
@@ -457,7 +662,7 @@ __global__ void build_uniform_device_args(ck_tile::GemmTransKernelArg* args,
         karg.N                                                    = m;
         karg.K                                                    = k;
         karg.stride_As[0]                                         = n;
-        karg.stride_Bs[0]                                         = m;
+        karg.stride_Bs[0]                                         = common_m;
         karg.stride_E                                             = n;
         karg.k_batch                                              = 1;
         return;
@@ -471,7 +676,7 @@ __global__ void build_uniform_device_args(ck_tile::GemmTransKernelArg* args,
     karg.M                                                    = m;
     karg.N                                                    = n;
     karg.K                                                    = k;
-    karg.stride_As[0]                                         = a_col ? m : k;
+    karg.stride_As[0]                                         = a_col ? common_m : common_k;
     karg.stride_Bs[0]                                         = b_col ? k : n;
     karg.stride_E                                             = n;
     karg.k_batch                                              = 1;
@@ -566,6 +771,7 @@ public:
 
     template <typename T>
     void grouped_gemm(const Options& options,
+                      const GroupPlan& plan,
                       const T* a,
                       const T* b,
                       T* c,
@@ -585,29 +791,29 @@ public:
             b_col ? HIPBLAS_OP_T : HIPBLAS_OP_N;
         const hipblasOperation_t trans_a_logical =
             a_col ? HIPBLAS_OP_T : HIPBLAS_OP_N;
-        const int lda = b_col ? options.k : options.n;
-        const int ldb = a_col ? options.m : options.k;
-        const std::size_t a_group_elements = static_cast<std::size_t>(options.m) * options.k;
-        const std::size_t b_group_elements = static_cast<std::size_t>(options.k) * options.n;
-        const std::size_t c_group_elements = static_cast<std::size_t>(options.m) * options.n;
-
         for(int group = 0; group < options.group_count; ++group)
         {
+            const int group_m = static_cast<int>(plan.group_m(options, group));
+            const int group_k = static_cast<int>(plan.group_k(options, group));
+            if(group_m == 0 || group_k == 0)
+                continue;
+            const int lda = b_col ? group_k : options.n;
+            const int ldb = a_col ? group_m : group_k;
             hipblas_check(gemm_ex_(handle_,
                                    trans_b_logical,
                                    trans_a_logical,
                                    options.n,
-                                   options.m,
-                                   options.k,
+                                   group_m,
+                                   group_k,
                                    &alpha,
-                                   b + static_cast<std::size_t>(group) * b_group_elements,
+                                   b + plan.b_offset(options, group),
                                    data_type,
                                    lda,
-                                   a + static_cast<std::size_t>(group) * a_group_elements,
+                                   a + plan.a_offset(options, group),
                                    data_type,
                                    ldb,
                                    &beta,
-                                   c + static_cast<std::size_t>(group) * c_group_elements,
+                                   c + plan.c_offset(options, group),
                                    data_type,
                                    options.n,
                                    HIPBLAS_R_32F,
@@ -633,11 +839,16 @@ class DynamicHipBlasLt
     using MatmulFn                    = decltype(&hipblasLtMatmul);
 
     static constexpr std::size_t workspace_size_ = 32 * 1024 * 1024;
+    static constexpr int max_stream_count_        = 4;
 
     void* origami_library_                = nullptr;
     void* library_                        = nullptr;
-    void* workspace_                      = nullptr;
-    hipblasLtHandle_t handle_             = nullptr;
+    std::array<void*, max_stream_count_> workspaces_{};
+    std::array<hipblasLtHandle_t, max_stream_count_> handles_{};
+    std::array<hipStream_t, max_stream_count_> compute_streams_{};
+    std::array<hipEvent_t, max_stream_count_> complete_events_{};
+    hipEvent_t sync_event_ = nullptr;
+    int stream_count_      = 1;
     DestroyFn destroy_                    = nullptr;
     MatrixLayoutCreateFn layout_create_   = nullptr;
     MatrixLayoutDestroyFn layout_destroy_ = nullptr;
@@ -683,7 +894,8 @@ class DynamicHipBlasLt
     }
 
 public:
-    explicit DynamicHipBlasLt(const std::string& requested_path) : loaded_name_(requested_path)
+    explicit DynamicHipBlasLt(const std::string& requested_path, int stream_count)
+        : stream_count_(stream_count), loaded_name_(requested_path)
     {
         // 关键流程：只给 libhipblaslt.so 的绝对路径并不会让动态加载器自动搜索其
         // 同级目录中的 DT_NEEDED。Primus 通过安装根目录/rpath 解决；本示例为保持
@@ -710,16 +922,42 @@ public:
             load_symbol<PreferenceSetAttributeFn>("hipblasLtMatmulPreferenceSetAttribute");
         heuristic_ = load_symbol<MatmulAlgoGetHeuristicFn>("hipblasLtMatmulAlgoGetHeuristic");
         matmul_     = load_symbol<MatmulFn>("hipblasLtMatmul");
-        hipblas_check(create(&handle_), "hipblasLtCreate");
-        hip_check(hipMalloc(&workspace_, workspace_size_), "hipBLASLt workspace hipMalloc");
+        if(stream_count_ > 1)
+            hip_check(hipEventCreateWithFlags(&sync_event_, hipEventDisableTiming),
+                      "hipEventCreate(sync)");
+        for(int stream_index = 0; stream_index < stream_count_; ++stream_index)
+        {
+            hipblas_check(create(&handles_[stream_index]), "hipblasLtCreate");
+            hip_check(hipMalloc(&workspaces_[stream_index], workspace_size_),
+                      "hipBLASLt workspace hipMalloc");
+            if(stream_count_ > 1)
+            {
+                hip_check(hipStreamCreateWithPriority(&compute_streams_[stream_index],
+                                                      hipStreamNonBlocking,
+                                                      -1),
+                          "hipStreamCreateWithPriority");
+                hip_check(hipEventCreateWithFlags(&complete_events_[stream_index],
+                                                  hipEventDisableTiming),
+                          "hipEventCreate(complete)");
+            }
+        }
     }
 
     ~DynamicHipBlasLt()
     {
-        if(workspace_ != nullptr)
-            (void)hipFree(workspace_);
-        if(handle_ != nullptr && destroy_ != nullptr)
-            destroy_(handle_);
+        if(sync_event_ != nullptr)
+            (void)hipEventDestroy(sync_event_);
+        for(int stream_index = 0; stream_index < stream_count_; ++stream_index)
+        {
+            if(complete_events_[stream_index] != nullptr)
+                (void)hipEventDestroy(complete_events_[stream_index]);
+            if(compute_streams_[stream_index] != nullptr)
+                (void)hipStreamDestroy(compute_streams_[stream_index]);
+            if(workspaces_[stream_index] != nullptr)
+                (void)hipFree(workspaces_[stream_index]);
+            if(handles_[stream_index] != nullptr && destroy_ != nullptr)
+                destroy_(handles_[stream_index]);
+        }
         if(library_ != nullptr)
             dlclose(library_);
         if(origami_library_ != nullptr)
@@ -728,13 +966,15 @@ public:
 
     const std::string& loaded_name() const { return loaded_name_; }
     const std::string& dependency_name() const { return dependency_name_; }
+    int stream_count() const { return stream_count_; }
 
     template <typename T>
     void grouped_gemm(const Options& options,
+                      const GroupPlan& plan,
                       const T* a,
                       const T* b,
                       T* c,
-                      hipStream_t stream)
+                      hipStream_t caller_stream)
     {
         const hipDataType data_type =
             std::is_same_v<T, ck_tile::half_t> ? HIP_R_16F : HIP_R_16BF;
@@ -745,18 +985,19 @@ public:
         // column-major C^T[N,M]，按 B^T * A^T 调用 hipBLASLt，不增加转置 kernel。
         const hipblasOperation_t trans_b_logical = b_col ? HIPBLAS_OP_T : HIPBLAS_OP_N;
         const hipblasOperation_t trans_a_logical = a_col ? HIPBLAS_OP_T : HIPBLAS_OP_N;
-        const std::int64_t b_rows = b_col ? options.k : options.n;
-        const std::int64_t b_cols = b_col ? options.n : options.k;
-        const std::int64_t b_ld   = b_col ? options.k : options.n;
-        const std::int64_t a_rows = a_col ? options.m : options.k;
-        const std::int64_t a_cols = a_col ? options.k : options.m;
-        const std::int64_t a_ld   = a_col ? options.m : options.k;
-        const std::size_t a_group_elements = static_cast<std::size_t>(options.m) * options.k;
-        const std::size_t b_group_elements = static_cast<std::size_t>(options.k) * options.n;
-        const std::size_t c_group_elements = static_cast<std::size_t>(options.m) * options.n;
 
-        for(int group = 0; group < options.group_count; ++group)
-        {
+        auto launch_group = [&](int group, int stream_index, hipStream_t stream) {
+            const std::int64_t group_m = plan.group_m(options, group);
+            const std::int64_t group_k = plan.group_k(options, group);
+            const std::int64_t b_rows  = b_col ? group_k : options.n;
+            const std::int64_t b_cols  = b_col ? options.n : group_k;
+            const std::int64_t b_ld    = b_col ? group_k : options.n;
+            const std::int64_t a_rows  = a_col ? group_m : group_k;
+            const std::int64_t a_cols  = a_col ? group_k : group_m;
+            const std::int64_t a_ld    = a_col ? group_m : group_k;
+            auto handle                = handles_[stream_index];
+            auto workspace             = workspaces_[stream_index];
+
             hipblasLtMatrixLayout_t b_desc = nullptr;
             hipblasLtMatrixLayout_t a_desc = nullptr;
             hipblasLtMatrixLayout_t c_desc = nullptr;
@@ -771,8 +1012,8 @@ public:
                           "hipblasLtMatrixLayoutCreate(B)");
             hipblas_check(layout_create_(&a_desc, data_type, a_rows, a_cols, a_ld),
                           "hipblasLtMatrixLayoutCreate(A)");
-            hipblas_check(layout_create_(&c_desc, data_type, options.n, options.m, options.n),
-                          "hipblasLtMatrixLayoutCreate(C)");
+            hipblas_check(layout_create_(&c_desc, data_type, options.n, group_m, options.n),
+                           "hipblasLtMatrixLayoutCreate(C)");
             hipblas_check(desc_create_(&operation_desc, HIPBLAS_COMPUTE_32F, HIP_R_32F),
                           "hipblasLtMatmulDescCreate");
             hipblas_check(desc_set_(operation_desc,
@@ -796,7 +1037,7 @@ public:
                                     &workspace_size,
                                     sizeof(workspace_size)),
                           "hipblasLtMatmulPreferenceSetAttribute");
-            hipblas_check(heuristic_(handle_,
+            hipblas_check(heuristic_(handle,
                                      operation_desc,
                                      b_desc,
                                      a_desc,
@@ -812,21 +1053,20 @@ public:
 
             const float alpha = 1.0f;
             const float beta  = 0.0f;
-            const auto offset = static_cast<std::size_t>(group);
-            hipblas_check(matmul_(handle_,
+            hipblas_check(matmul_(handle,
                                   operation_desc,
                                   &alpha,
-                                  b + offset * b_group_elements,
+                                  b + plan.b_offset(options, group),
                                   b_desc,
-                                  a + offset * a_group_elements,
+                                  a + plan.a_offset(options, group),
                                   a_desc,
                                   &beta,
-                                  c + offset * c_group_elements,
+                                  c + plan.c_offset(options, group),
                                   c_desc,
-                                  c + offset * c_group_elements,
+                                  c + plan.c_offset(options, group),
                                   c_desc,
                                   &algorithm.algo,
-                                  workspace_,
+                                  workspace,
                                   workspace_size_,
                                   stream),
                           "hipblasLtMatmul");
@@ -836,7 +1076,45 @@ public:
             hipblas_check(layout_destroy_(c_desc), "hipblasLtMatrixLayoutDestroy(C)");
             hipblas_check(layout_destroy_(a_desc), "hipblasLtMatrixLayoutDestroy(A)");
             hipblas_check(layout_destroy_(b_desc), "hipblasLtMatrixLayoutDestroy(B)");
+        };
+
+        if(stream_count_ == 1)
+        {
+            for(int group = 0; group < options.group_count; ++group)
+            {
+                if(plan.group_m(options, group) == 0 || plan.group_k(options, group) == 0)
+                    continue;
+                launch_group(group, 0, caller_stream);
+            }
+            return;
         }
+
+        int nonempty_groups = 0;
+        for(int group = 0; group < options.group_count; ++group)
+            nonempty_groups +=
+                plan.group_m(options, group) > 0 && plan.group_k(options, group) > 0 ? 1 : 0;
+        if(nonempty_groups == 0)
+            return;
+        const int used_streams = std::min(stream_count_, nonempty_groups);
+        hip_check(hipEventRecord(sync_event_, caller_stream), "hipEventRecord(BLAS entry)");
+        for(int stream_index = 0; stream_index < used_streams; ++stream_index)
+            hip_check(hipStreamWaitEvent(compute_streams_[stream_index], sync_event_, 0),
+                      "hipStreamWaitEvent(BLAS entry)");
+
+        int dispatch_index = 0;
+        for(int group = 0; group < options.group_count; ++group)
+        {
+            if(plan.group_m(options, group) == 0 || plan.group_k(options, group) == 0)
+                continue;
+            const int stream_index = dispatch_index++ % stream_count_;
+            launch_group(group, stream_index, compute_streams_[stream_index]);
+        }
+        for(int stream_index = 0; stream_index < used_streams; ++stream_index)
+            hip_check(hipEventRecord(complete_events_[stream_index], compute_streams_[stream_index]),
+                      "hipEventRecord(BLAS complete)");
+        for(int stream_index = 0; stream_index < used_streams; ++stream_index)
+            hip_check(hipStreamWaitEvent(caller_stream, complete_events_[stream_index], 0),
+                      "hipStreamWaitEvent(BLAS complete)");
     }
 };
 
@@ -883,6 +1161,7 @@ AccuracyResult compare_values(const std::vector<T>& actual,
 
 template <typename T>
 AccuracyResult check_cpu_samples(const Options& options,
+                                 const GroupPlan& plan,
                                  const std::vector<T>& a,
                                  const std::vector<T>& b,
                                  const std::vector<T>& c,
@@ -892,16 +1171,17 @@ AccuracyResult check_cpu_samples(const Options& options,
     AccuracyResult result;
     const bool a_col = a_is_column_major(options.layout);
     const bool b_col = b_is_column_major(options.layout);
-    const std::size_t a_group_elements = static_cast<std::size_t>(options.m) * options.k;
-    const std::size_t b_group_elements = static_cast<std::size_t>(options.k) * options.n;
-    const std::size_t c_group_elements = static_cast<std::size_t>(options.m) * options.n;
-    const std::size_t checks_per_group = std::min<std::size_t>(257, c_group_elements);
-
     for(int group = 0; group < options.group_count; ++group)
     {
-        const std::size_t a_base = static_cast<std::size_t>(group) * a_group_elements;
-        const std::size_t b_base = static_cast<std::size_t>(group) * b_group_elements;
-        const std::size_t c_base = static_cast<std::size_t>(group) * c_group_elements;
+        const int group_m = static_cast<int>(plan.group_m(options, group));
+        const int group_k = static_cast<int>(plan.group_k(options, group));
+        if(group_m == 0 || group_k == 0)
+            continue;
+        const std::size_t a_base = plan.a_offset(options, group);
+        const std::size_t b_base = plan.b_offset(options, group);
+        const std::size_t c_base = plan.c_offset(options, group);
+        const std::size_t c_group_elements = static_cast<std::size_t>(group_m) * options.n;
+        const std::size_t checks_per_group = std::min<std::size_t>(257, c_group_elements);
         for(std::size_t check = 0; check < checks_per_group; ++check)
         {
             const std::size_t linear = checks_per_group == 1
@@ -911,13 +1191,13 @@ AccuracyResult check_cpu_samples(const Options& options,
             const int row    = static_cast<int>(linear / options.n);
             const int column = static_cast<int>(linear % options.n);
             float reference  = 0;
-            for(int reduction = 0; reduction < options.k; ++reduction)
+            for(int reduction = 0; reduction < group_k; ++reduction)
             {
                 const std::size_t a_offset =
-                    a_col ? static_cast<std::size_t>(reduction) * options.m + row
-                          : static_cast<std::size_t>(row) * options.k + reduction;
+                    a_col ? static_cast<std::size_t>(reduction) * group_m + row
+                          : static_cast<std::size_t>(row) * group_k + reduction;
                 const std::size_t b_offset =
-                    b_col ? static_cast<std::size_t>(column) * options.k + reduction
+                    b_col ? static_cast<std::size_t>(column) * group_k + reduction
                           : static_cast<std::size_t>(reduction) * options.n + column;
                 reference += as_float(a[a_base + a_offset]) * as_float(b[b_base + b_offset]);
             }
@@ -931,6 +1211,40 @@ AccuracyResult check_cpu_samples(const Options& options,
             if(abs_err > atol + rtol * std::abs(expected))
                 ++result.failed;
         }
+    }
+    return result;
+}
+
+template <typename T>
+AccuracyResult check_output_guards(const Options& options,
+                                   const GroupPlan& plan,
+                                   const std::vector<T>& c,
+                                   T sentinel)
+{
+    AccuracyResult result;
+    const float expected = as_float(sentinel);
+    auto check_range = [&](std::size_t begin, std::size_t end) {
+        for(std::size_t index = begin; index < end; ++index)
+        {
+            const double actual = as_float(c[index]);
+            const double error  = std::abs(actual - expected);
+            ++result.checked;
+            result.max_abs = std::max(result.max_abs, error);
+            if(error > 0)
+                ++result.failed;
+        }
+    };
+
+    if(plan.variable_m && plan.capacity > plan.effective_length)
+        check_range(static_cast<std::size_t>(plan.effective_length) * options.n,
+                    static_cast<std::size_t>(plan.capacity) * options.n);
+    if(plan.variable_k)
+    {
+        const std::size_t group_elements = static_cast<std::size_t>(options.m) * options.n;
+        for(int group = 0; group < options.group_count; ++group)
+            if(plan.lengths[group] == 0)
+                check_range(static_cast<std::size_t>(group) * group_elements,
+                            static_cast<std::size_t>(group + 1) * group_elements);
     }
     return result;
 }
@@ -996,11 +1310,10 @@ public:
 };
 
 void print_timing(const char* backend,
-                  const Options& options,
+                  const GroupPlan& plan,
                   const TimingStats& timing)
 {
-    const double operations = 2.0 * options.group_count * options.m * options.n * options.k;
-    const double tflops     = timing.median <= 0 ? 0 : operations / timing.median / 1.0e9;
+    const double tflops = timing.median <= 0 ? 0 : plan.operations / timing.median / 1.0e9;
     std::cout << "PERF backend=" << backend << " median_ms=" << timing.median
               << " mean_ms=" << timing.mean << " min_ms=" << timing.min
               << " max_ms=" << timing.max << " cv=" << timing.cv
@@ -1012,27 +1325,32 @@ int run(const Options& options)
 {
     const bool run_ck_backend   = options.backend == "ck" || options.backend == "both";
     const bool run_blas_backend = options.backend == "blas" || options.backend == "both";
-    const std::size_t a_elements =
-        static_cast<std::size_t>(options.group_count) * options.m * options.k;
-    const std::size_t b_elements =
-        static_cast<std::size_t>(options.group_count) * options.k * options.n;
-    const std::size_t c_elements =
-        static_cast<std::size_t>(options.group_count) * options.m * options.n;
+    const GroupPlan plan         = make_group_plan(options);
+    const T output_sentinel      = ck_tile::type_convert<T>(-7.0f);
 
     std::vector<T> host_a;
     std::vector<T> host_b;
-    initialize_inputs(options, host_a, host_b);
-    std::vector<T> host_ck(c_elements);
-    std::vector<T> host_blas(c_elements);
+    initialize_inputs(options, plan, host_a, host_b);
+    std::vector<T> host_ck(plan.c_elements, output_sentinel);
+    std::vector<T> host_blas(plan.c_elements, output_sentinel);
+    const std::vector<T> initial_output(plan.c_elements, output_sentinel);
 
-    ck_tile::DeviceMem device_a(a_elements * sizeof(T));
-    ck_tile::DeviceMem device_b(b_elements * sizeof(T));
-    ck_tile::DeviceMem device_ck(c_elements * sizeof(T));
-    ck_tile::DeviceMem device_blas(c_elements * sizeof(T));
+    ck_tile::DeviceMem device_a(plan.a_elements * sizeof(T));
+    ck_tile::DeviceMem device_b(plan.b_elements * sizeof(T));
+    ck_tile::DeviceMem device_ck(plan.c_elements * sizeof(T));
+    ck_tile::DeviceMem device_blas(plan.c_elements * sizeof(T));
     ck_tile::DeviceMem device_args(static_cast<std::size_t>(options.group_count) *
                                    sizeof(ck_tile::GemmTransKernelArg));
+    ck_tile::DeviceMem device_group_lengths(static_cast<std::size_t>(options.group_count) *
+                                            sizeof(std::int64_t));
+    ck_tile::DeviceMem device_group_offsets(static_cast<std::size_t>(options.group_count) *
+                                            sizeof(std::int64_t));
     device_a.ToDevice(host_a.data());
     device_b.ToDevice(host_b.data());
+    device_ck.ToDevice(initial_output.data());
+    device_blas.ToDevice(initial_output.data());
+    device_group_lengths.ToDevice(plan.lengths.data());
+    device_group_offsets.ToDevice(plan.offsets.data());
     hipStream_t stream = nullptr;
 
     // 关键流程 1：把用户参数转换成 consumer-independent Problem。架构不由调用者
@@ -1045,9 +1363,16 @@ int run(const Options& options)
                                 : CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_BF16_V1;
     problem.layout        = selector_layout(options.layout);
     problem.group_count   = options.group_count;
-    problem.m             = common_dimension(options.m);
+    if(!options.group_lengths.empty())
+        problem.problem_flags = CK_TILE_HCU_GROUPED_GEMM_PROBLEM_GROUP_LENGTHS_RAGGED_V1 |
+                                (options.allow_empty_groups
+                                     ? CK_TILE_HCU_GROUPED_GEMM_PROBLEM_MAY_HAVE_EMPTY_GROUPS_V1
+                                     : 0u);
+    problem.m             = plan.variable_m ? device_dimension(plan.capacity)
+                                            : common_dimension(options.m);
     problem.n             = common_dimension(options.n);
-    problem.k             = common_dimension(options.k);
+    problem.k             = plan.variable_k ? device_dimension(plan.capacity)
+                                            : common_dimension(options.k);
 
     // 关键流程 2：pure selector 只返回已经预编译的 stable InstanceId；这里不会
     // 根据 M/N/K 在运行时实例化任何 C++ template。
@@ -1076,18 +1401,20 @@ int run(const Options& options)
     auto build_args = [&] {
         constexpr int threads = 256;
         const int grids       = (options.group_count + threads - 1) / threads;
-        build_uniform_device_args<T><<<grids, threads, 0, stream>>>(
+        build_device_args<T><<<grids, threads, 0, stream>>>(
             static_cast<ck_tile::GemmTransKernelArg*>(device_args.GetDeviceBuffer()),
             static_cast<const T*>(device_a.GetDeviceBuffer()),
             static_cast<const T*>(device_b.GetDeviceBuffer()),
             static_cast<T*>(device_ck.GetDeviceBuffer()),
+            static_cast<const std::int64_t*>(device_group_lengths.GetDeviceBuffer()),
+            static_cast<const std::int64_t*>(device_group_offsets.GetDeviceBuffer()),
             options.group_count,
             options.m,
             options.n,
             options.k,
             problem.layout,
             transposed_output_view);
-        hip_check(hipGetLastError(), "build_uniform_device_args launch");
+        hip_check(hipGetLastError(), "build_device_args launch");
     };
 
     ck_tile_hcu_grouped_gemm_launch_v1 ck_launch{};
@@ -1118,19 +1445,26 @@ int run(const Options& options)
     {
         blas_request = resolve_blas_library(options);
         if(blas_request.use_hipblaslt)
-            hipblaslt = std::make_unique<DynamicHipBlasLt>(blas_request.path);
+            hipblaslt =
+                std::make_unique<DynamicHipBlasLt>(blas_request.path, options.blas_streams);
         else
+        {
+            if(options.blas_streams != 1)
+                throw std::runtime_error("传统 hipBLAS 只支持 --blas-streams=1");
             hipblas = std::make_unique<DynamicHipBlas>(blas_request.path);
+        }
     }
     auto launch_blas = [&] {
         if(hipblaslt)
             hipblaslt->grouped_gemm(options,
+                                    plan,
                                     static_cast<const T*>(device_a.GetDeviceBuffer()),
                                     static_cast<const T*>(device_b.GetDeviceBuffer()),
                                     static_cast<T*>(device_blas.GetDeviceBuffer()),
                                     stream);
         else
             hipblas->grouped_gemm(options,
+                                  plan,
                                   static_cast<const T*>(device_a.GetDeviceBuffer()),
                                   static_cast<const T*>(device_b.GetDeviceBuffer()),
                                   static_cast<T*>(device_blas.GetDeviceBuffer()),
@@ -1139,19 +1473,33 @@ int run(const Options& options)
 
     std::cout << "CONFIG arch=" << ck_tile::get_device_name()
               << " dtype=" << options.dtype << " layout=" << options.layout
-              << " groups=" << options.group_count << " m=" << options.m
-              << " n=" << options.n << " k=" << options.k
-              << " warmup=" << options.warmup << " samples=" << options.samples
-              << " include_args_build=" << options.include_args_build
-              << " num_cu=" << options.num_cu << std::endl;
+               << " groups=" << options.group_count << " m=" << options.m
+               << " n=" << options.n << " k=" << options.k
+               << " variable_axis="
+               << (plan.variable_m ? "M" : (plan.variable_k ? "K" : "none"))
+               << " effective_length=" << plan.effective_length
+               << " variable_capacity=" << plan.capacity
+               << " warmup=" << options.warmup << " samples=" << options.samples
+               << " include_args_build=" << options.include_args_build
+               << " num_cu=" << options.num_cu
+               << " blas_streams=" << options.blas_streams << std::endl;
+    std::cout << "GROUP_LENGTHS values=";
+    for(int group = 0; group < options.group_count; ++group)
+        std::cout << (group == 0 ? "" : ",") << plan.lengths[group];
+    std::cout << std::endl;
     std::cout << "SELECT instance_id=" << selection.instance_id
               << " instance_name=" << selection.instance_name
               << " contract_flags=" << candidate.contract_flags << std::endl;
     if(hipblaslt)
     {
         std::cout << "BLAS library=" << hipblaslt->loaded_name()
-                  << " mode=hipblaslt_sequential_per_group"
-                  << " workspace_bytes=" << 32 * 1024 * 1024 << std::endl;
+                  << " mode="
+                  << (hipblaslt->stream_count() == 1 ? "hipblaslt_sequential_per_group"
+                                                     : "hipblaslt_round_robin")
+                  << " streams=" << hipblaslt->stream_count()
+                  << " workspace_bytes="
+                  << static_cast<std::size_t>(hipblaslt->stream_count()) * 32 * 1024 * 1024
+                  << std::endl;
         if(!hipblaslt->dependency_name().empty())
             std::cout << "BLAS dependency=" << hipblaslt->dependency_name()
                       << " load_mode=RTLD_GLOBAL" << std::endl;
@@ -1170,29 +1518,46 @@ int run(const Options& options)
         {
             if(run_ck_backend)
             {
+                device_ck.ToDevice(initial_output.data());
                 launch_ck();
                 hip_check(hipStreamSynchronize(stream), "CK correctness synchronize");
                 device_ck.FromDevice(host_ck.data());
-                const auto cpu = check_cpu_samples(options, host_a, host_b, host_ck, atol, rtol);
+                const auto cpu =
+                    check_cpu_samples(options, plan, host_a, host_b, host_ck, atol, rtol);
                 std::cout << "ACCURACY backend=ck repeat=" << repeat
                           << " checked=" << cpu.checked << " failed=" << cpu.failed
                           << " max_abs=" << cpu.max_abs << " max_rel=" << cpu.max_rel
                           << std::endl;
                 if(cpu.failed != 0)
                     return 2;
+                const auto guard =
+                    check_output_guards(options, plan, host_ck, output_sentinel);
+                std::cout << "ACCURACY backend=ck_guard repeat=" << repeat
+                          << " checked=" << guard.checked << " failed=" << guard.failed
+                          << " max_abs=" << guard.max_abs << std::endl;
+                if(guard.failed != 0)
+                    return 2;
             }
             if(run_blas_backend)
             {
+                device_blas.ToDevice(initial_output.data());
                 launch_blas();
                 hip_check(hipStreamSynchronize(stream), "BLAS correctness synchronize");
                 device_blas.FromDevice(host_blas.data());
                 const auto cpu =
-                    check_cpu_samples(options, host_a, host_b, host_blas, atol, rtol);
+                    check_cpu_samples(options, plan, host_a, host_b, host_blas, atol, rtol);
                 std::cout << "ACCURACY backend=blas repeat=" << repeat
                           << " checked=" << cpu.checked << " failed=" << cpu.failed
                           << " max_abs=" << cpu.max_abs << " max_rel=" << cpu.max_rel
                           << std::endl;
                 if(cpu.failed != 0)
+                    return 3;
+                const auto guard =
+                    check_output_guards(options, plan, host_blas, output_sentinel);
+                std::cout << "ACCURACY backend=blas_guard repeat=" << repeat
+                          << " checked=" << guard.checked << " failed=" << guard.failed
+                          << " max_abs=" << guard.max_abs << std::endl;
+                if(guard.failed != 0)
                     return 3;
             }
             if(run_ck_backend && run_blas_backend)
@@ -1240,13 +1605,13 @@ int run(const Options& options)
     if(run_ck_backend)
     {
         ck_timing = summarize(ck_samples);
-        print_timing("ck_device_args", options, ck_timing);
+        print_timing("ck_device_args", plan, ck_timing);
     }
     if(run_blas_backend)
     {
         blas_timing = summarize(blas_samples);
         print_timing(blas_request.use_hipblaslt ? "hipblaslt" : "hipblas",
-                     options,
+                     plan,
                      blas_timing);
     }
     if(run_ck_backend && run_blas_backend)

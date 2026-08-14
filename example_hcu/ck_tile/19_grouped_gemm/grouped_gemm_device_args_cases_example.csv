@@ -1,0 +1,4 @@
+case_id,dtype,layout,m,n,k,groups,group_lengths,variable_capacity,allow_empty_groups,backend,blas_streams,warmup,samples,correctness_repeats
+uniform_fp16_nt_g4,fp16,NT,256,256,256,4,,,0,both,1,2,5,1
+ragged_bf16_nn_compact,bf16,NN,129,256,256,,65;0;127;129,321,1,both,4,2,5,1
+ragged_bf16_tn_padded,bf16,TN,256,256,129,,65;0;127;129,512,1,both,4,2,5,1

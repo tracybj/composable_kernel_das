@@ -399,6 +399,28 @@ add_test(NAME tile_example_grouped_gemm_device_args_benchmark_smoke
 set_tests_properties(tile_example_grouped_gemm_device_args_benchmark_smoke
     PROPERTIES LABELS "hcu;ck_tile;grouped_gemm;device_args;example;smoke")
 
+# 通用 ragged frontend smoke：不包含任何 consumer workload 名称。NT/NN 将
+# group lengths 解释为 M，TN 将其解释为 K；capacity 与 logical lengths 分离。
+add_test(NAME tile_example_grouped_gemm_device_args_benchmark_ragged_m_smoke
+    COMMAND $<TARGET_FILE:tile_example_grouped_gemm_device_args_benchmark>
+            --m=129 --n=129 --k=129
+            --group-lengths=65,0,129 --variable-capacity=256
+            --allow-empty-groups=1
+            --dtype=bf16 --layout=NN --backend=ck
+            --warmup=1 --samples=1 --correctness-repeats=1)
+set_tests_properties(tile_example_grouped_gemm_device_args_benchmark_ragged_m_smoke
+    PROPERTIES LABELS "hcu;ck_tile;grouped_gemm;device_args;ragged;example;smoke")
+
+add_test(NAME tile_example_grouped_gemm_device_args_benchmark_ragged_k_smoke
+    COMMAND $<TARGET_FILE:tile_example_grouped_gemm_device_args_benchmark>
+            --m=128 --n=128 --k=129
+            --group-lengths=65,0,129 --variable-capacity=256
+            --allow-empty-groups=1
+            --dtype=bf16 --layout=TN --backend=ck
+            --warmup=1 --samples=1 --correctness-repeats=1)
+set_tests_properties(tile_example_grouped_gemm_device_args_benchmark_ragged_k_smoke
+    PROPERTIES LABELS "hcu;ck_tile;grouped_gemm;device_args;ragged;example;smoke")
+
 set(GROUPED_GEMM_FAST_FIXED_SHAPE_ARGS
     -group_count=2
     -Ms=128,256
