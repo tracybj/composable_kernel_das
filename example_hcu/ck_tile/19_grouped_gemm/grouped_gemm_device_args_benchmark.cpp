@@ -199,6 +199,7 @@
 #include <cstring>
 #include <dlfcn.h>
 #include <functional>
+#include <iomanip>
 #include <iostream>
 #include <limits>
 #include <memory>
@@ -1313,6 +1314,9 @@ void print_timing(const char* backend,
                   const GroupPlan& plan,
                   const TimingStats& timing)
 {
+    // 某些外部 BLAS 实现会修改进程级 iostream 浮点格式；结构化记录必须显式恢复，
+    // 否则 median/CV/ratio 可能被静默压缩为两位小数。
+    std::cout << std::defaultfloat << std::setprecision(8);
     const double tflops = timing.median <= 0 ? 0 : plan.operations / timing.median / 1.0e9;
     std::cout << "PERF backend=" << backend << " median_ms=" << timing.median
               << " mean_ms=" << timing.mean << " min_ms=" << timing.min
@@ -1524,6 +1528,7 @@ int run(const Options& options)
                 device_ck.FromDevice(host_ck.data());
                 const auto cpu =
                     check_cpu_samples(options, plan, host_a, host_b, host_ck, atol, rtol);
+                std::cout << std::defaultfloat << std::setprecision(8);
                 std::cout << "ACCURACY backend=ck repeat=" << repeat
                           << " checked=" << cpu.checked << " failed=" << cpu.failed
                           << " max_abs=" << cpu.max_abs << " max_rel=" << cpu.max_rel
@@ -1546,6 +1551,7 @@ int run(const Options& options)
                 device_blas.FromDevice(host_blas.data());
                 const auto cpu =
                     check_cpu_samples(options, plan, host_a, host_b, host_blas, atol, rtol);
+                std::cout << std::defaultfloat << std::setprecision(8);
                 std::cout << "ACCURACY backend=blas repeat=" << repeat
                           << " checked=" << cpu.checked << " failed=" << cpu.failed
                           << " max_abs=" << cpu.max_abs << " max_rel=" << cpu.max_rel
