@@ -1,5 +1,66 @@
 #!/usr/bin/env python3
-"""Run generic grouped-GEMM device-args cases from CSV and retain evidence."""
+"""从 CSV 批量运行通用 grouped GEMM device-args benchmark，并保存复测证据。
+
+用途
+====
+
+本脚本逐行读取 ``grouped_gemm_device_args_cases_example.csv``，把每行参数转换成
+``tile_example_grouped_gemm_device_args_benchmark`` 的命令行。它只做运行时参数选择，
+不会在运行时实例化 C++ template。实际 kernel 必须已经由 CK 编译进 benchmark。
+
+快速使用
+========
+
+1. 先构建 benchmark（构建目录名称可以自定，gfx936/gfx938 均可）：
+
+   ``cmake --build build_device_args_example_bw --target tile_example_grouped_gemm_device_args_benchmark -j 16``
+
+2. 先用 ``--dry-run`` 检查筛选结果和最终命令，不启动 GPU：
+
+   ``python3 run_grouped_gemm_device_args_cases.py --binary=build_device_args_example_bw/bin/tile_example_grouped_gemm_device_args_benchmark --cases=example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args_cases_example.csv --output-dir=hygon_tmp/grouped_gemm/dry_run --case-ids=uniform_fp16_nt_g4 --blas-root=/wksp/hipblaslt-install --dry-run``
+
+3. 运行一组或多组正式复测：
+
+   ``python3 run_grouped_gemm_device_args_cases.py --binary=build_device_args_example_bw/bin/tile_example_grouped_gemm_device_args_benchmark --cases=example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args_cases_example.csv --output-dir=hygon_tmp/grouped_gemm/results --dtypes=bf16 --layouts=NT,NN,TN --group-counts=1,3,4,5,8 --blas-root=/wksp/hipblaslt-install``
+
+也可以用 ``--case-ids=id1,id2`` 精确选择用例。``--dtypes``、``--layouts``、
+``--group-counts`` 和 ``--case-ids`` 同时给出时取交集。G16 占用通常更高，建议与
+G1/3/4/5/8 分开执行。CSV 中正式性能行已经设置 10 次 warmup、30 个 GPU event
+sample、3 次 correctness；脚本默认以 CK/BLAS CV 不超过 10% 作为通过条件。
+
+BLAS 路径
+=========
+
+推荐传 ``--blas-root=/wksp/hipblaslt-install``。benchmark 会同时找到
+``lib/libhipblaslt.so`` 及同目录依赖（例如 ``liborigami.so.1``）。只有在系统动态
+库搜索路径已经包含所有依赖时，才直接传 ``--blas-lib=/path/libhipblaslt.so``；两个
+选项互斥。CSV 每行的 ``backend``、``blas_streams`` 可覆盖脚本默认值。
+
+CSV 字段
+========
+
+必需字段为 ``case_id,dtype,layout,m,n,k,group_lengths,variable_capacity``。
+``groups`` 用于等长组；``group_lengths`` 用分号分隔，例如 ``65;0;127;129``，此时
+``variable_capacity`` 指输入/输出分组维度的总可用容量。``allow_empty_groups=1`` 允许
+长度为 0 的组。其余可选字段包括 ``backend,blas_streams,warmup,samples,``
+``correctness_repeats``。layout 同时传给 CK 与 BLAS：NT/NN 的动态轴是 M，TN 的动态轴
+是 K；脚本不把 layout 解释成某个 consumer 的产品阶段。
+
+工作流程与产物
+==============
+
+1. 校验 benchmark、CSV 和 BLAS 参数；读取 CSV 并按筛选条件选行。
+2. 计算 benchmark、CSV、hipBLASLt/origami 的路径和 SHA256，写入 metadata。
+3. 对每行构造 benchmark 命令；``--dry-run`` 只打印命令。
+4. 正式运行时捕获 stdout/stderr，从 SELECT/PERF/RATIO/SUMMARY 结构化行提取
+   InstanceId、耗时、TFLOPS、CV、CK/BLAS ratio 和 correctness 结论。
+5. 检查子进程退出码、SUMMARY、期望 backend 是否齐全以及 CV 门限。
+6. 输出 ``runner.log``（完整命令/日志）、``results.jsonl``（逐用例原始结构化证据）
+   和 ``results.csv``（便于聚合比较）；任一用例失败时脚本最终返回非零。
+
+完整 CSV 有 615 行：3 个通用教学/冒烟用例，加上从 Primus PRD 参数矩阵转换出的
+612 个通用参数行。CK CSV 不携带 P0/Stage3、FC1/FC2、layer 等 consumer 语义。
+"""
 
 from __future__ import annotations
 
@@ -63,6 +124,7 @@ def positive(row: dict[str, str], name: str, default: int) -> int:
 
 
 def build_command(args: argparse.Namespace, row: dict[str, str]) -> list[str]:
+    # CSV 内使用分号避免和列分隔符冲突；传给 benchmark 时恢复为逗号列表。
     lengths = [item for item in row["group_lengths"].split(";") if item != ""]
     command = [
         str(args.binary),
@@ -98,7 +160,10 @@ def build_command(args: argparse.Namespace, row: dict[str, str]) -> list[str]:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
+    # 第一步：解析并校验输入，避免跑了很久以后才发现路径或筛选条件错误。
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     parser.add_argument("--binary", type=Path, required=True)
     parser.add_argument("--cases", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
@@ -127,10 +192,11 @@ def main() -> int:
     if args.blas_lib and args.blas_root:
         parser.error("--blas-lib and --blas-root are mutually exclusive")
 
-    selected = set(args.case_ids.split(",")) if args.case_ids else None
-    selected_dtypes = set(args.dtypes.split(",")) if args.dtypes else None
-    selected_layouts = set(args.layouts.split(",")) if args.layouts else None
-    selected_groups = set(args.group_counts.split(",")) if args.group_counts else None
+    selected = {item.strip() for item in args.case_ids.split(",")} if args.case_ids else None
+    selected_dtypes = {item.strip() for item in args.dtypes.split(",")} if args.dtypes else None
+    selected_layouts = {item.strip() for item in args.layouts.split(",")} if args.layouts else None
+    selected_groups = {item.strip() for item in args.group_counts.split(",")} if args.group_counts else None
+    # 第二步：加载 CSV，并让多个筛选条件按交集生效。
     with args.cases.open(newline="", encoding="utf-8") as stream:
         reader = csv.DictReader(stream)
         missing = [name for name in REQUIRED_COLUMNS if name not in (reader.fieldnames or ())]
@@ -147,6 +213,7 @@ def main() -> int:
     if not rows:
         parser.error("case selection is empty")
 
+    # 第三步：先记录二进制、用例表和 BLAS 依赖的 SHA，保证结果可追溯。
     args.output_dir.mkdir(parents=True, exist_ok=True)
     log_path = args.output_dir / "runner.log"
     jsonl_path = args.output_dir / "results.jsonl"
@@ -179,6 +246,7 @@ def main() -> int:
         "w", encoding="utf-8", newline="\n"
     ) as jsonl:
         jsonl.write(json.dumps(metadata, ensure_ascii=False) + "\n")
+        # 第四至六步：逐用例执行，解析结构化输出，并执行 correctness/backend/CV 门禁。
         for index, row in enumerate(rows, 1):
             command = build_command(args, row)
             command_text = shlex.join(command)
@@ -265,6 +333,7 @@ def main() -> int:
                 flush=True,
             )
 
+    # 第七步：生成便于汇总的 CSV；JSONL 和完整日志已在循环中同步落盘。
     if result_rows:
         with csv_path.open("w", newline="", encoding="utf-8") as stream:
             writer = csv.DictWriter(stream, fieldnames=list(result_rows[0]))
