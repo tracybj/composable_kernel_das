@@ -148,7 +148,9 @@ enum class GroupedGemmMFilter
 {
     All,
     Aligned,
-    Unaligned
+    Unaligned,
+    LessEqual64,
+    Greater64
 };
 
 template <typename TilePartitioner_,
@@ -211,6 +213,14 @@ struct GroupedGemmKernel
         {
             return m % TilePartitioner::MPerBlock != 0;
         }
+        else if constexpr(MFilter_ == GroupedGemmMFilter::LessEqual64)
+        {
+            return m <= 64;
+        }
+        else if constexpr(MFilter_ == GroupedGemmMFilter::Greater64)
+        {
+            return m > 64;
+        }
         else
         {
             return true;
@@ -229,7 +239,12 @@ struct GroupedGemmKernel
                       (UsePersistentKernel ? "Persistent" : "NonPersistent"),
                       (MFilter_ == GroupedGemmMFilter::Aligned
                            ? "MAligned"
-                           : (MFilter_ == GroupedGemmMFilter::Unaligned ? "MUnaligned" : "MAll")));
+                           : (MFilter_ == GroupedGemmMFilter::Unaligned
+                                  ? "MUnaligned"
+                                  : (MFilter_ == GroupedGemmMFilter::LessEqual64
+                                         ? "MLe64"
+                                         : (MFilter_ == GroupedGemmMFilter::Greater64 ? "MGt64"
+                                                                                       : "MAll")))));
         // clang-format on
     }
 

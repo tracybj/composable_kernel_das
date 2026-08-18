@@ -1054,6 +1054,10 @@ float grouped_gemm_tileloop(const ck_tile::stream_config& s,
                 grids.x *= static_cast<unsigned int>(multiplier);
             }
         }
+#else
+        static_assert(GemmConfig::kGridMultiplier > 0 && GemmConfig::kGridMultiplier <= 128,
+                      "grouped-GEMM config grid multiplier must be in [1,128]");
+        grids.x *= static_cast<unsigned int>(GemmConfig::kGridMultiplier);
 #endif
 
         if(s.log_level_ > 0)

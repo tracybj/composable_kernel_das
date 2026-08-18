@@ -148,6 +148,7 @@ struct GemmConfigBase
     static constexpr bool UseStructuredSparsity = false;
 
     static constexpr int kBlockPerCu                         = 1;
+    static constexpr int kGridMultiplier                     = 1;
     // static constexpr ck_tile::index_t TileParitionerGroupNum = 8;
     // static constexpr ck_tile::index_t TileParitionerM01      = 4;
     static constexpr ck_tile::index_t TileParitionerGroupNum = 1;
@@ -281,6 +282,78 @@ struct GemmConfigComputeV4SquareM4Mpad : public GemmConfigComputeV4SquareM4<Prec
     static constexpr bool kPadM = true;
     static constexpr bool kPadN = true;
     static constexpr bool kPadK = true;
+};
+
+// Default-off P1 Family-B experiment for gfx936. Preserve the proven
+// V4 dual-LDS/nonpadding production path, but halve M64/MWarp2 to M32/MWarp1
+// so small ragged groups issue two waves instead of four. The selector and
+// provider restrict this type to FP16 NN N3072/K1232 with selector-effective
+// M (device-length capacity divided by group count) <=8.
+template <typename PrecType>
+struct GemmConfigComputeV6FamilyBM32Mle8Gfx936Candidate
+    : public GemmConfigComputeV4<PrecType>
+{
+    static_assert(std::is_same_v<PrecType, ck_tile::half_t>,
+                  "The Family-B V6 M32 selector-effective-M<=8 gfx936 candidate is FP16-only");
+    static constexpr ck_tile::index_t M_Tile = 32;
+    static constexpr ck_tile::index_t M_Warp = 1;
+};
+
+// gfx938-only traversal experiment for ragged FP16 NN. Preserve the proven
+// M128xN128xK64/M4/full-padding persistent V4 compute core and queue two
+// independent grid-stride workers per occupancy slot to improve load balance.
+template <typename PrecType>
+struct GemmConfigComputeV4SquareM4MpadGrid2
+    : public GemmConfigComputeV4SquareM4Mpad<PrecType>
+{
+    static_assert(std::is_same_v<PrecType, ck_tile::half_t>,
+                  "The V4 square M4 grid2 candidate is FP16-only");
+    static constexpr int kGridMultiplier = 2;
+};
+
+// gfx938-only pipeline-family experiment for ragged FP16 NN. Preserve the
+// selected 128x128x64/M4/full-padding geometry, but replace V4's intrinsic
+// dual-LDS ping-pong pipeline with the supported V3 single-LDS pipeline. The
+// coupled buffer trait is part of this one pipeline-family change.
+template <typename PrecType>
+struct GemmConfigComputeV3SquareM4Mpad
+    : public GemmConfigComputeV4SquareM4Mpad<PrecType>
+{
+    static_assert(std::is_same_v<PrecType, ck_tile::half_t>,
+                  "The V3 square M4 single-LDS candidate is FP16-only");
+    static constexpr bool DoubleSmemBuffer     = false;
+    static constexpr ck_tile::index_t Pipeline = CK_TILE_PIPELINE_COMPUTE_V3;
+};
+
+// gfx938-only occupancy experiment for ragged FP16 NN. Keep the proven 128x128 M4
+// wave geometry, but halve KTile so the V4 ping-pong A/B allocation can fit in
+// 32 KiB instead of 64 KiB. K_Warp_Tile remains 32, so every block K tile is one
+// complete warp K tile. This type stays isolated behind a default-off provider.
+template <typename PrecType>
+struct GemmConfigComputeV4SquareM4K32Mpad : public GemmConfigComputeV4SquareM4<PrecType>
+{
+    static_assert(std::is_same_v<PrecType, ck_tile::half_t>,
+                  "The V4 square M4 K32 candidate is FP16-only");
+    static constexpr ck_tile::index_t K_Tile = 32;
+    static constexpr bool kPadM              = true;
+    static constexpr bool kPadN              = true;
+    static constexpr bool kPadK              = true;
+};
+
+// gfx938-only block-granularity experiment for ragged FP16 NN. Keep the proven
+// M128/K64/M4 V4 pipeline and change only N128/NWarp2 to N64/NWarp1. The
+// candidate remains one kernel launch; kBlockPerCu intentionally stays at one
+// so a later experiment can isolate that scheduling control.
+template <typename PrecType>
+struct GemmConfigComputeV4M128N64M4Mpad : public GemmConfigComputeV4SquareM4<PrecType>
+{
+    static_assert(std::is_same_v<PrecType, ck_tile::half_t>,
+                  "The V4 M128N64 M4 candidate is FP16-only");
+    static constexpr ck_tile::index_t N_Tile = 64;
+    static constexpr ck_tile::index_t N_Warp = 1;
+    static constexpr bool kPadM              = true;
+    static constexpr bool kPadN              = true;
+    static constexpr bool kPadK              = true;
 };
 
 // Dynamic grouped GEMM often has device-resident per-group M while host-visible

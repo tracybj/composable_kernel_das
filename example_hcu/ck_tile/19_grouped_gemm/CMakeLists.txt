@@ -29,6 +29,29 @@ add_executable(${TILE_EXAMPLE_GROUPED_GEMM}
 )
 target_include_directories(${TILE_EXAMPLE_GROUPED_GEMM} PRIVATE ${CMAKE_CURRENT_LIST_DIR})
 option(CK_TILE_GROUPED_GEMM_RESOURCE_REPORT "Print grouped_gemm kernel resource usage during compile" OFF)
+option(CK_TILE_GROUPED_GEMM_P1_FAMILY_B_V6_M32_MLE8_GFX936_CANDIDATE
+    "Enable the default-off gfx936 FP16 NN V4 nonpadding 32x128x64 Family-B selector-effective-M<=8 candidate" OFF)
+option(CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V4_128_CANDIDATE
+    "Enable the default-off FP16 NN V4 128x128 M4 full-padding candidate"
+    OFF)
+option(CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V4_128_K32_CANDIDATE
+    "Enable the default-off gfx938 FP16 NN V4 128x128x32 M4 full-padding candidate"
+    OFF)
+option(CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V4_M_THRESHOLD_CANDIDATE
+    "Enable the default-off gfx938 FP16 NN V4 M<=64/M>64 hybrid candidate"
+    OFF)
+option(CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V4_128X64_CANDIDATE
+    "Enable the default-off gfx938 FP16 NN V4 128x64x64 M4 full-padding candidate"
+    OFF)
+option(CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V4_128_GRID2_CANDIDATE
+    "Enable the default-off gfx938 FP16 NN V4 128x128x64 M4 grid2 candidate"
+    OFF)
+option(CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V3_128_CANDIDATE
+    "Enable the default-off gfx938 FP16 NN V3 single-LDS 128x128x64 M4 candidate"
+    OFF)
+option(CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V3_128_GFX936_CANDIDATE
+    "Enable the default-off gfx936 FP16 NN V3 single-LDS 128x128x64 M4 candidate"
+    OFF)
 if(CK_TILE_GROUPED_GEMM_RESOURCE_REPORT)
     target_compile_options(${TILE_EXAMPLE_GROUPED_GEMM} PRIVATE "-Rpass-analysis=kernel-resource-usage")
 endif()
@@ -218,6 +241,10 @@ target_compile_definitions(ck_tile_hcu_grouped_gemm_device_args_providers
     PRIVATE
         CK_TILE_GROUPED_GEMM_FAST_BUILD
         CK_TILE_GROUPED_GEMM_DEVICE_ARGS_REGISTRY)
+if(CK_TILE_GROUPED_GEMM_P1_FAMILY_B_V6_M32_MLE8_GFX936_CANDIDATE)
+    target_compile_definitions(ck_tile_hcu_grouped_gemm_device_args_providers
+        PRIVATE CK_TILE_GROUPED_GEMM_P1_FAMILY_B_V6_M32_MLE8_GFX936_CANDIDATE)
+endif()
 if(GPU_TARGETS MATCHES "gfx936")
     target_compile_definitions(ck_tile_hcu_grouped_gemm_device_args_providers
         PRIVATE CK_TILE_GROUPED_GEMM_DEVICE_ARGS_REGISTRY_GFX936)
@@ -225,6 +252,34 @@ endif()
 if(GPU_TARGETS MATCHES "gfx938")
     target_compile_definitions(ck_tile_hcu_grouped_gemm_device_args_providers
         PRIVATE CK_TILE_GROUPED_GEMM_DEVICE_ARGS_REGISTRY_GFX938)
+endif()
+if(CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V4_128_CANDIDATE)
+    target_compile_definitions(ck_tile_hcu_grouped_gemm_device_args_providers
+        PRIVATE CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V4_128_CANDIDATE)
+endif()
+if(CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V4_128_K32_CANDIDATE)
+    target_compile_definitions(ck_tile_hcu_grouped_gemm_device_args_providers
+        PRIVATE CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V4_128_K32_CANDIDATE)
+endif()
+if(CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V4_M_THRESHOLD_CANDIDATE)
+    target_compile_definitions(ck_tile_hcu_grouped_gemm_device_args_providers
+        PRIVATE CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V4_M_THRESHOLD_CANDIDATE)
+endif()
+if(CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V4_128X64_CANDIDATE)
+    target_compile_definitions(ck_tile_hcu_grouped_gemm_device_args_providers
+        PRIVATE CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V4_128X64_CANDIDATE)
+endif()
+if(CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V4_128_GRID2_CANDIDATE)
+    target_compile_definitions(ck_tile_hcu_grouped_gemm_device_args_providers
+        PRIVATE CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V4_128_GRID2_CANDIDATE)
+endif()
+if(CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V3_128_CANDIDATE)
+    target_compile_definitions(ck_tile_hcu_grouped_gemm_device_args_providers
+        PRIVATE CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V3_128_CANDIDATE)
+endif()
+if(CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V3_128_GFX936_CANDIDATE)
+    target_compile_definitions(ck_tile_hcu_grouped_gemm_device_args_providers
+        PRIVATE CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V3_128_GFX936_CANDIDATE)
 endif()
 target_compile_options(ck_tile_hcu_grouped_gemm_device_args_providers
     PRIVATE "-Wno-unused-template" "-Wno-unneeded-internal-declaration")
@@ -245,9 +300,41 @@ target_compile_definitions(ck_tile_hcu_grouped_gemm
         CK_TILE_GROUPED_GEMM_FAST_FP16
         CK_TILE_GROUPED_GEMM_FAST_BF16
         CK_TILE_GROUPED_GEMM_DEVICE_ARGS_REGISTRY)
+if(CK_TILE_GROUPED_GEMM_P1_FAMILY_B_V6_M32_MLE8_GFX936_CANDIDATE)
+    target_compile_definitions(ck_tile_hcu_grouped_gemm
+        PRIVATE CK_TILE_GROUPED_GEMM_P1_FAMILY_B_V6_M32_MLE8_GFX936_CANDIDATE)
+endif()
 if(HCU_GROUPED_GEMM_RDC_BUILD)
     target_compile_definitions(ck_tile_hcu_grouped_gemm
         PRIVATE CK_TILE_GROUPED_GEMM_DEVICE_ARGS_RDC_BUILD)
+endif()
+if(CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V4_128_CANDIDATE)
+    target_compile_definitions(ck_tile_hcu_grouped_gemm
+        PRIVATE CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V4_128_CANDIDATE)
+endif()
+if(CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V4_128_K32_CANDIDATE)
+    target_compile_definitions(ck_tile_hcu_grouped_gemm
+        PRIVATE CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V4_128_K32_CANDIDATE)
+endif()
+if(CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V4_M_THRESHOLD_CANDIDATE)
+    target_compile_definitions(ck_tile_hcu_grouped_gemm
+        PRIVATE CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V4_M_THRESHOLD_CANDIDATE)
+endif()
+if(CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V4_128X64_CANDIDATE)
+    target_compile_definitions(ck_tile_hcu_grouped_gemm
+        PRIVATE CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V4_128X64_CANDIDATE)
+endif()
+if(CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V4_128_GRID2_CANDIDATE)
+    target_compile_definitions(ck_tile_hcu_grouped_gemm
+        PRIVATE CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V4_128_GRID2_CANDIDATE)
+endif()
+if(CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V3_128_CANDIDATE)
+    target_compile_definitions(ck_tile_hcu_grouped_gemm
+        PRIVATE CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V3_128_CANDIDATE)
+endif()
+if(CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V3_128_GFX936_CANDIDATE)
+    target_compile_definitions(ck_tile_hcu_grouped_gemm
+        PRIVATE CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V3_128_GFX936_CANDIDATE)
 endif()
 if(GPU_TARGETS MATCHES "gfx936")
     target_compile_definitions(ck_tile_hcu_grouped_gemm

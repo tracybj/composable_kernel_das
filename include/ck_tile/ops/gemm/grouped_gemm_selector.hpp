@@ -84,6 +84,14 @@ struct GroupedGemmSelectorPolicy
     bool enable_bf16_tn_logical_k_tail    = true;
     bool enable_bw_selected               = true;
     bool enable_gfx938_mls_large          = true;
+    bool enable_v4_128_fp16_full_padding_candidate = false;
+    bool enable_v4_128_fp16_full_padding_candidate_k32 = false;
+    bool enable_v4_fp16_m_threshold_candidate = false;
+    bool enable_v4_128x64_fp16_full_padding_candidate = false;
+    bool enable_v4_128_fp16_full_padding_grid2_candidate = false;
+    bool enable_v3_128_fp16_full_padding_candidate = false;
+    bool enable_v3_128_fp16_full_padding_gfx936_candidate = false;
+    bool enable_v6_family_b_m32_mle8_gfx936_candidate = false;
 };
 
 enum class GroupedGemmInstanceId
@@ -105,6 +113,14 @@ enum class GroupedGemmInstanceId
     v4_128_full_padding                            = 4001,
     v4_64_nonpadding                               = 4002,
     v4_64_full_padding                             = 4003,
+    v4_128_m4_full_padding_candidate               = 4004,
+    v4_128_m4_k32_full_padding_candidate           = 4005,
+    v4_m_threshold_full_padding_candidate           = 4006,
+    v4_128x64_m4_full_padding_candidate             = 4007,
+    v4_128_m4_full_padding_grid2_candidate          = 4008,
+    v3_128_m4_full_padding_candidate                = 4009,
+    v3_128_m4_full_padding_gfx936_candidate         = 4010,
+    v6_m32_nonpadding_mle8_family_b_gfx936_candidate = 4104,
 };
 
 enum class GroupedGemmCandidateFamily
@@ -122,7 +138,7 @@ struct GroupedGemmCandidateIdentity
     GroupedGemmCandidateFamily family;
 };
 
-inline constexpr std::array<GroupedGemmCandidateIdentity, 14>
+inline constexpr std::array<GroupedGemmCandidateIdentity, 22>
     grouped_gemm_candidate_registry{{
         {GroupedGemmInstanceId::bw_family_selected,
          "bw_family.selected",
@@ -166,6 +182,30 @@ inline constexpr std::array<GroupedGemmCandidateIdentity, 14>
         {GroupedGemmInstanceId::v4_64_full_padding,
          "v4.64x128x64.full_padding",
          GroupedGemmCandidateFamily::v4},
+        {GroupedGemmInstanceId::v4_128_m4_full_padding_candidate,
+         "v4.128x128x64.m4.full_padding.candidate",
+         GroupedGemmCandidateFamily::v4},
+        {GroupedGemmInstanceId::v4_128_m4_k32_full_padding_candidate,
+         "v4.128x128x32.m4.full_padding.candidate",
+         GroupedGemmCandidateFamily::v4},
+        {GroupedGemmInstanceId::v4_m_threshold_full_padding_candidate,
+         "v4.64_128x128x64.m_threshold.full_padding.candidate",
+         GroupedGemmCandidateFamily::v4},
+        {GroupedGemmInstanceId::v4_128x64_m4_full_padding_candidate,
+         "v4.128x64x64.m4.full_padding.candidate",
+         GroupedGemmCandidateFamily::v4},
+        {GroupedGemmInstanceId::v4_128_m4_full_padding_grid2_candidate,
+         "v4.128x128x64.m4.full_padding.grid2.candidate",
+         GroupedGemmCandidateFamily::v4},
+        {GroupedGemmInstanceId::v3_128_m4_full_padding_candidate,
+         "v3.128x128x64.m4.full_padding.single_lds.candidate",
+         GroupedGemmCandidateFamily::v4},
+        {GroupedGemmInstanceId::v3_128_m4_full_padding_gfx936_candidate,
+         "v3.128x128x64.m4.full_padding.single_lds.gfx936.candidate",
+         GroupedGemmCandidateFamily::v4},
+        {GroupedGemmInstanceId::v6_m32_nonpadding_mle8_family_b_gfx936_candidate,
+         "v6.32x128x64.nonpadding.selector_m_le_8.family_b.gfx936.candidate",
+         GroupedGemmCandidateFamily::v4},
     }};
 
 constexpr const GroupedGemmCandidateIdentity*
@@ -189,6 +229,14 @@ enum class GroupedGemmSelectionReason
     gfx938_mls,
     v4_aligned,
     v4_bf16_padding,
+    v4_fp16_full_padding_candidate,
+    v4_fp16_full_padding_candidate_k32,
+    v4_fp16_m_threshold_candidate,
+    v4_fp16_128x64_full_padding_candidate,
+    v4_fp16_full_padding_grid2_candidate,
+    v3_fp16_full_padding_candidate,
+    v3_fp16_full_padding_gfx936_candidate,
+    v6_family_b_m32_mle8_gfx936_candidate,
     v4_n_aligned,
     v4_fallback,
 };
@@ -337,6 +385,61 @@ constexpr GroupedGemmSelection select_grouped_gemm_candidate(
     {
         return {GroupedGemmInstanceId::v4_128_full_padding,
                 GroupedGemmSelectionReason::v4_bf16_padding};
+    }
+    if(policy.enable_v4_fp16_m_threshold_candidate &&
+       problem.arch == GroupedGemmArch::gfx938 && !is_bf16 && is_nn && effective_m >= 33 &&
+       n >= 1024 && k >= 1024 && n % 128 != 0 && k % 64 == 0)
+    {
+        return {GroupedGemmInstanceId::v4_m_threshold_full_padding_candidate,
+                GroupedGemmSelectionReason::v4_fp16_m_threshold_candidate};
+    }
+    if(policy.enable_v4_128x64_fp16_full_padding_candidate &&
+       problem.arch == GroupedGemmArch::gfx938 && !is_bf16 && is_nn && effective_m >= 33 &&
+       n >= 1024 && k >= 1024 && n % 128 != 0 && k % 64 == 0)
+    {
+        return {GroupedGemmInstanceId::v4_128x64_m4_full_padding_candidate,
+                GroupedGemmSelectionReason::v4_fp16_128x64_full_padding_candidate};
+    }
+    if(policy.enable_v3_128_fp16_full_padding_candidate &&
+       problem.arch == GroupedGemmArch::gfx938 && !is_bf16 && is_nn && effective_m >= 33 &&
+       n >= 1024 && k >= 1024 && n % 128 != 0 && k % 64 == 0)
+    {
+        return {GroupedGemmInstanceId::v3_128_m4_full_padding_candidate,
+                GroupedGemmSelectionReason::v3_fp16_full_padding_candidate};
+    }
+    if(policy.enable_v3_128_fp16_full_padding_gfx936_candidate &&
+       problem.arch == GroupedGemmArch::gfx936 && !is_bf16 && is_nn && effective_m >= 33 &&
+       n >= 1024 && k >= 1024 && n % 128 != 0 && k % 64 == 0)
+    {
+        return {GroupedGemmInstanceId::v3_128_m4_full_padding_gfx936_candidate,
+                GroupedGemmSelectionReason::v3_fp16_full_padding_gfx936_candidate};
+    }
+    if(policy.enable_v4_128_fp16_full_padding_grid2_candidate &&
+       problem.arch == GroupedGemmArch::gfx938 && !is_bf16 && is_nn && effective_m >= 33 &&
+       n >= 1024 && k >= 1024 && n % 128 != 0 && k % 64 == 0)
+    {
+        return {GroupedGemmInstanceId::v4_128_m4_full_padding_grid2_candidate,
+                GroupedGemmSelectionReason::v4_fp16_full_padding_grid2_candidate};
+    }
+    if(policy.enable_v4_128_fp16_full_padding_candidate_k32 &&
+       problem.arch == GroupedGemmArch::gfx938 && !is_bf16 && is_nn && effective_m >= 33 &&
+       n >= 1024 && k >= 1024 && n % 128 != 0 && k % 64 == 0)
+    {
+        return {GroupedGemmInstanceId::v4_128_m4_k32_full_padding_candidate,
+                GroupedGemmSelectionReason::v4_fp16_full_padding_candidate_k32};
+    }
+    if(policy.enable_v4_128_fp16_full_padding_candidate && !is_bf16 && is_nn &&
+       effective_m >= 33 && n >= 1024 && k >= 1024 && n % 128 != 0 && k % 64 == 0)
+    {
+        return {GroupedGemmInstanceId::v4_128_m4_full_padding_candidate,
+                GroupedGemmSelectionReason::v4_fp16_full_padding_candidate};
+    }
+    if(policy.enable_v6_family_b_m32_mle8_gfx936_candidate &&
+       problem.arch == GroupedGemmArch::gfx936 && !is_bf16 && is_nn &&
+       effective_m <= 8 && n == 3072 && k == 1232)
+    {
+        return {GroupedGemmInstanceId::v6_m32_nonpadding_mle8_family_b_gfx936_candidate,
+                GroupedGemmSelectionReason::v6_family_b_m32_mle8_gfx936_candidate};
     }
     if(n % 128 == 0)
     {
