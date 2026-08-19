@@ -41,6 +41,7 @@ struct CaseSpec
     std::uint32_t expected_instance_id = 0;
     bool blas_transposed_device_args = false;
     bool compare_old_c_abi = false;
+    std::int64_t k_capacity = 0;
 };
 
 template <typename T>
@@ -224,8 +225,9 @@ bool run_case(const CaseSpec& spec, const char* dtype_name)
     problem.m = spec.variable_m ? device_dimension(static_cast<std::int64_t>(max_m) * group_count)
                                 : common_dimension(spec.shapes.front().m);
     problem.n = common_dimension(spec.shapes.front().n);
-    problem.k = spec.variable_k ? device_dimension(max_k)
-                                : common_dimension(spec.shapes.front().k);
+    problem.k = spec.variable_k
+                    ? device_dimension(spec.k_capacity > 0 ? spec.k_capacity : max_k)
+                    : common_dimension(spec.shapes.front().k);
 
     ck_tile_hcu_grouped_gemm_selection_v1 selected{};
     selected.struct_size = sizeof(selected);
@@ -470,6 +472,22 @@ int main()
                          disable_bw, 2000});
         cases.push_back({"gfx936_dsreadm", 1, 2, {{2048, 2048, 2048}}, false, false, false,
                          disable_bw, 2001});
+        cases.push_back({"gfx936_dsreadm_m128_mod_tail", 1, 2, {{1920, 2048, 2048}}, true,
+                         false, false, disable_bw, 2001});
+        cases.push_back({"gfx936_dsreadm_mixed_m_tail", 1, 2,
+                         {{1920, 2048, 2048}, {2048, 2048, 2048}, {2176, 2048, 2048}}, true,
+                         false, false, disable_bw, 2001});
+        // Instance 2001 selects on K capacity; logical K=192 is three 64-wide
+        // blocks (HasHotLoop=false, TailNumber::Odd).
+        cases.push_back({"gfx936_dsreadm_k128_tn", 1, 3, {{2048, 2816, 128}}, false, true,
+                         false, disable_bw, 2001, false, false, 2048});
+        cases.push_back({"gfx936_dsreadm_k192_tn", 1, 3, {{2048, 2816, 192}}, false, true,
+                         false, disable_bw, 2001, false, false, 2048});
+        cases.push_back({"gfx936_dsreadm_k192_tn_ragged", 1, 3,
+                         {{2048, 2816, 192}, {2048, 2816, 128}}, false, true, false,
+                         disable_bw, 2001, false, false, 2048});
+        cases.push_back({"gfx936_dsreadm_k192_nn", 1, 2, {{2048, 2816, 192}}, false, true,
+                         false, disable_bw, 2001, false, false, 2048});
         cases.push_back({"gfx936_v3_default_backward", 2, 2, {{2048, 2048, 2048}}, false,
                          false, false, disable_bw | disable_dsreadm, 2002});
         cases.push_back({"gfx936_bw_selected", 1, 1, {{2048, 2048, 2048}}, false, false,

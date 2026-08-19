@@ -154,7 +154,8 @@ enum class GroupedGemmMFilter
 template <typename TilePartitioner_,
           typename GemmPipeline_,
           typename EpiloguePipeline_,
-          GroupedGemmMFilter MFilter_ = GroupedGemmMFilter::All>
+          GroupedGemmMFilter MFilter_ = GroupedGemmMFilter::All,
+          index_t MFilterAlign_       = 0>
 struct GroupedGemmKernel
 {
     /// @brief Inject the UniversalGemmKernel base class to support execution of all necessary
@@ -191,8 +192,11 @@ struct GroupedGemmKernel
                   "C/ELayout and C/EDataType must be scalars.");
 
     using OffsetTile1DPartitioner = OffsettedTile1DPartitioner<TilePartitioner>;
-    using Kernel =
-        GroupedGemmKernel<TilePartitioner, GemmPipeline, EpiloguePipeline, MFilter_>;
+    using Kernel = GroupedGemmKernel<TilePartitioner,
+                                     GemmPipeline,
+                                     EpiloguePipeline,
+                                     MFilter_,
+                                     MFilterAlign_>;
 
     static constexpr index_t kBlockSize       = GemmPipeline::BlockSize;
     static constexpr bool UsePersistentKernel = GemmPipeline::UsePersistentKernel;
@@ -201,15 +205,24 @@ struct GroupedGemmKernel
     using KernelArgs                          = UniversalGemmKernelArgs<1, 1, NumDTensor>;
     using TransKernelArg                      = GemmTransKernelArgImpl<NumDTensor>;
 
+    // Hybrid M-only launches may pair a large aligned tile with a smaller padded
+    // tail. Filter both kernels against the aligned tile so groups such as
+    // M=1920 (128-mod-256) are not dropped by both sides.
+    CK_TILE_HOST_DEVICE static constexpr index_t FilterMPerBlock()
+    {
+        return MFilterAlign_ != 0 ? MFilterAlign_ : TilePartitioner::MPerBlock;
+    }
+
     CK_TILE_HOST_DEVICE static constexpr bool ShouldProcessM(index_t m)
     {
+        const index_t align = FilterMPerBlock();
         if constexpr(MFilter_ == GroupedGemmMFilter::Aligned)
         {
-            return m % TilePartitioner::MPerBlock == 0;
+            return m % align == 0;
         }
         else if constexpr(MFilter_ == GroupedGemmMFilter::Unaligned)
         {
-            return m % TilePartitioner::MPerBlock != 0;
+            return m % align != 0;
         }
         else
         {
@@ -229,7 +242,8 @@ struct GroupedGemmKernel
                       (UsePersistentKernel ? "Persistent" : "NonPersistent"),
                       (MFilter_ == GroupedGemmMFilter::Aligned
                            ? "MAligned"
-                           : (MFilter_ == GroupedGemmMFilter::Unaligned ? "MUnaligned" : "MAll")));
+                           : (MFilter_ == GroupedGemmMFilter::Unaligned ? "MUnaligned" : "MAll")),
+                      FilterMPerBlock());
         // clang-format on
     }
 

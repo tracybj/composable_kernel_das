@@ -29,7 +29,8 @@ template <typename Config,
           typename PrecType,
           typename ALayout,
           typename BLayout,
-          ck_tile::GroupedGemmMFilter MFilter = ck_tile::GroupedGemmMFilter::All>
+          ck_tile::GroupedGemmMFilter MFilter = ck_tile::GroupedGemmMFilter::All,
+          ck_tile::index_t MFilterAlign       = 0>
 int launch_one(void* device_args,
                int group_count,
                std::uint32_t num_cu,
@@ -44,7 +45,8 @@ int launch_one(void* device_args,
                            float,
                            PrecType,
                            0,
-                           MFilter>(ck_tile::stream_config{stream},
+                           MFilter,
+                           MFilterAlign>(ck_tile::stream_config{stream},
                                    group_count,
                                    device_args,
                                    {},
@@ -55,7 +57,8 @@ int launch_one(void* device_args,
 
 template <typename Config,
           typename PrecType,
-          ck_tile::GroupedGemmMFilter MFilter = ck_tile::GroupedGemmMFilter::All>
+          ck_tile::GroupedGemmMFilter MFilter = ck_tile::GroupedGemmMFilter::All,
+          ck_tile::index_t MFilterAlign       = 0>
 int launch_layout(ck_tile::GroupedGemmLayout layout,
                   void* device_args,
                   int group_count,
@@ -63,13 +66,13 @@ int launch_layout(ck_tile::GroupedGemmLayout layout,
                   hipStream_t stream)
 {
     if(layout == ck_tile::GroupedGemmLayout::nt)
-        return launch_one<Config, PrecType, Row, Col, MFilter>(
+        return launch_one<Config, PrecType, Row, Col, MFilter, MFilterAlign>(
             device_args, group_count, num_cu, stream);
     if(layout == ck_tile::GroupedGemmLayout::nn)
-        return launch_one<Config, PrecType, Row, Row, MFilter>(
+        return launch_one<Config, PrecType, Row, Row, MFilter, MFilterAlign>(
             device_args, group_count, num_cu, stream);
     if(layout == ck_tile::GroupedGemmLayout::tn)
-        return launch_one<Config, PrecType, Col, Row, MFilter>(
+        return launch_one<Config, PrecType, Col, Row, MFilter, MFilterAlign>(
             device_args, group_count, num_cu, stream);
     return CK_TILE_HCU_GROUPED_GEMM_DEVICE_ARGS_UNSUPPORTED_V1;
 }
@@ -84,11 +87,16 @@ int launch_m_only_hybrid_one(void* device_args,
                              std::uint32_t num_cu,
                              hipStream_t stream)
 {
+    // Partition groups by the aligned tile, not the tail tile. Instance 2001
+    // pairs DSReadM 256 with a V4 128 padded tail; filtering the tail on 128
+    // drops M=1920/2176 (128-mod-256) from both kernels.
+    constexpr ck_tile::index_t align = AlignedConfig::M_Tile;
     int status = launch_one<AlignedConfig,
                              PrecType,
                              ALayout,
                              BLayout,
-                             ck_tile::GroupedGemmMFilter::Aligned>(
+                             ck_tile::GroupedGemmMFilter::Aligned,
+                             align>(
         device_args, group_count, num_cu, stream);
     if(status != 0)
         return status;
@@ -96,7 +104,8 @@ int launch_m_only_hybrid_one(void* device_args,
                        PrecType,
                        ALayout,
                        BLayout,
-                       ck_tile::GroupedGemmMFilter::Unaligned>(
+                       ck_tile::GroupedGemmMFilter::Unaligned,
+                       align>(
         device_args, group_count, num_cu, stream);
 }
 

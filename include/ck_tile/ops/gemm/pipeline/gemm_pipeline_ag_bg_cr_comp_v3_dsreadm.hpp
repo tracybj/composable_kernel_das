@@ -3222,6 +3222,27 @@ struct GemmPipelineAgBgCrCompV3Dsreadm : public BaseGemmPipelineAgBgCrCompV3<Pro
                              a_lds_gemm_window,
                              b_lds_gemm_window);
         }
+        else if constexpr(!HasHotLoop && TailNum == TailNumber::Odd &&
+                          Problem::BlockGemmShape::NumWarps == 8)
+        {
+            // 8-wave num_loop==3: prologue loaded tile 0 and advanced the
+            // window to tile 1. The Even-only epilogue would drop tiles 1
+            // and 2 (K in [129, 192] when KPerBlock=64).
+            block_sync_lds();
+            direct_load_full_tile();
+            move_tile_window(a_dram_window, a_step);
+            move_tile_window(b_dram_window, b_step);
+            block_sync_lds();
+            RunOperandStages(c_block_tile,
+                             a_lds_gemm_window,
+                             b_lds_gemm_window);
+            block_sync_lds();
+            direct_load_full_tile();
+            block_sync_lds();
+            RunOperandStages(c_block_tile,
+                             a_lds_gemm_window,
+                             b_lds_gemm_window);
+        }
         return c_block_tile;
 #endif
     }
@@ -3372,6 +3393,31 @@ struct GemmPipelineAgBgCrCompV3Dsreadm : public BaseGemmPipelineAgBgCrCompV3<Pro
                          b_lds_gemm_window);
         if constexpr(TailNum == TailNumber::Even)
         {
+            block_sync_lds();
+            store_a(a_reg_tile);
+            store_b(b_reg_tile);
+            block_sync_lds();
+            RunOperandStages(c_block_tile,
+                             a_lds_gemm_window,
+                             b_lds_gemm_window);
+        }
+        else if constexpr(!HasHotLoop && TailNum == TailNumber::Odd &&
+                          Problem::BlockGemmShape::NumWarps == 8)
+        {
+            // 8-wave staged overlap classifies num_loop==3 as Odd without a
+            // hot loop. Prologue stored tile 0 (computed above), prefetched
+            // tile 1 into registers, and advanced the window to tile 2. The
+            // Even-only epilogue would drop tiles 1 and 2, which is the
+            // K in [129, 192] (KPerBlock=64) correctness hole.
+            block_sync_lds();
+            store_a(a_reg_tile);
+            store_b(b_reg_tile);
+            a_reg_tile = load_tile(a_dram_window);
+            b_reg_tile = load_tile(b_dram_window);
+            block_sync_lds();
+            RunOperandStages(c_block_tile,
+                             a_lds_gemm_window,
+                             b_lds_gemm_window);
             block_sync_lds();
             store_a(a_reg_tile);
             store_b(b_reg_tile);

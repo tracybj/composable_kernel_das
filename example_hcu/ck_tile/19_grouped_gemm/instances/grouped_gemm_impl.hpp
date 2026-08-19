@@ -907,7 +907,8 @@ template <typename GemmConfig,
           typename AccDataType,
           typename CDataType,
           int UniqueKernelTag,
-          ck_tile::GroupedGemmMFilter MFilter>
+          ck_tile::GroupedGemmMFilter MFilter,
+          ck_tile::index_t MFilterAlign>
 float grouped_gemm_tileloop(const ck_tile::stream_config& s,
                             const ck_tile::index_t num_groups,
                             void* kargs_ptr,
@@ -1020,7 +1021,11 @@ float grouped_gemm_tileloop(const ck_tile::stream_config& s,
                                                   : GemmConfig::CShuffleWarpGemmNInterleave>>;
 #endif
         using KernelBase =
-            ck_tile::GroupedGemmKernel<TilePartitioner, GemmPipeline, GemmEpilogue, MFilter>;
+            ck_tile::GroupedGemmKernel<TilePartitioner,
+                                       GemmPipeline,
+                                       GemmEpilogue,
+                                       MFilter,
+                                       MFilterAlign>;
         using Kernel = std::conditional_t<
             UniqueKernelTag == 0,
             KernelBase,

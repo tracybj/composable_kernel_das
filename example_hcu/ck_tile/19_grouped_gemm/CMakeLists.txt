@@ -252,19 +252,22 @@ endif()
 if(GPU_TARGETS MATCHES "gfx936")
     target_compile_definitions(ck_tile_hcu_grouped_gemm
         PRIVATE CK_TILE_GROUPED_GEMM_DEVICE_ARGS_REGISTRY_GFX936)
+    # Device-args providers always compile the gfx936 BF16-NN promoted
+    # kernels. Open the matching C ABI dispatch even in gfx936;gfx938 fat
+    # binaries so selector InstanceId 1001/1002 is not left undispatchable.
+    target_compile_definitions(ck_tile_hcu_grouped_gemm
+        PRIVATE CK_TILE_GROUPED_GEMM_DEVICE_ARGS_HAS_GFX936_PROMOTED)
 endif()
 if(GPU_TARGETS MATCHES "gfx938")
     target_compile_definitions(ck_tile_hcu_grouped_gemm
         PRIVATE CK_TILE_GROUPED_GEMM_DEVICE_ARGS_REGISTRY_GFX938)
 endif()
 if(HCU_GROUPED_GEMM_GFX936_SELECTED_SOURCES)
-    # Keep gfx936-only declarations and link providers paired. In particular,
-    # a gfx938-only build has an empty selected source list and must not make
-    # grouped_gemm.cpp reference the gfx936 selected entry points.
+    # Keep gfx936-only host-descriptor declarations and link providers paired.
+    # In particular, a gfx938-only build has an empty selected source list and
+    # must not make grouped_gemm.cpp reference the gfx936 selected entry points.
     target_compile_definitions(ck_tile_hcu_grouped_gemm
-        PRIVATE
-            CK_TILE_GROUPED_GEMM_ENABLE_GFX936_SELECTED
-            CK_TILE_GROUPED_GEMM_DEVICE_ARGS_HAS_GFX936_PROMOTED)
+        PRIVATE CK_TILE_GROUPED_GEMM_ENABLE_GFX936_SELECTED)
 endif()
 if(HCU_GROUPED_GEMM_BW_TN_DEVICE_ARGS_SOURCES)
     target_compile_definitions(ck_tile_hcu_grouped_gemm

@@ -3,6 +3,7 @@
 
 #include "ck_tile/ops/gemm/grouped_gemm_device_args.h"
 #include "ck_tile/ops/gemm/grouped_gemm_selector.hpp"
+#include "ck_tile/ops/gemm/grouped_gemm_bw_family_selected.hpp"
 #include "ck_tile/host/device_prop.hpp"
 
 #include <hip/hip_runtime.h>
@@ -246,6 +247,19 @@ int convert_problem(const ck_tile_hcu_grouped_gemm_problem_v1* source,
     policy.enable_bf16_tn_logical_k_tail =
         (disabled &
          CK_TILE_HCU_GROUPED_GEMM_POLICY_DISABLE_BF16_TN_LOGICAL_K_TAIL_V1) == 0;
+
+    // CK-owned rollback switches. The selector itself is a pure function of
+    // Problem+Policy; env handling stays in this adapter so same-process A/B
+    // does not require the consumer to translate those names into flags.
+    if(!ck_tile_hcu_grouped_gemm_bf16_nn_fixed_srd_lds8_enabled())
+        policy.enable_gfx936_bf16_nn_promoted = false;
+    if(!ck_tile_hcu_grouped_gemm_bf16_tn_logical_k_tail_enabled())
+        policy.enable_bf16_tn_logical_k_tail = false;
+
+#if !defined(CK_TILE_GROUPED_GEMM_DEVICE_ARGS_HAS_GFX936_PROMOTED)
+    // Do not name InstanceId 1001/1002 when this TU cannot dispatch them.
+    policy.enable_gfx936_bf16_nn_promoted = false;
+#endif
 
 #if defined(CK_TILE_GROUPED_GEMM_DEVICE_ARGS_RDC_BUILD)
     // These architecture-specialized code objects are retained for non-RDC
