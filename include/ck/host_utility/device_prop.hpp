@@ -140,8 +140,14 @@ template <typename ADataType,
           index_t NPerXDL32 = NPerXDL64>
 inline bool is_xdl_wmma_supported()
 {
-    if(is_hcu_xdl_supported() || ck::get_device_name() == "gfx908" ||
-       ck::get_device_name() == "gfx90a" || ck::get_device_name() == "gfx942")
+    if(is_hcu_xdl_supported())
+    {
+        // HCU MMAC is 16x16 only; 32x32 / 4x4 AMD MFMA sizes cannot be emulated.
+        return MPerXDL64 == 16 && NPerXDL64 == 16 && MPerXDL32 == 16 && NPerXDL32 == 16;
+    }
+
+    if(ck::get_device_name() == "gfx908" || ck::get_device_name() == "gfx90a" ||
+       ck::get_device_name() == "gfx942")
     {
         return true;
     }
@@ -205,7 +211,7 @@ template <typename ADataType,
           index_t NPerXDL32 = NPerXDL64>
 bool is_xdl_mmac_supported()
 {
-    if(ck::get_device_name() == "gfx936")
+    if(is_hcu_xdl_supported())
     {
         if constexpr((MPerXDL32 != 16) || (NPerXDL32 != 16))
         {

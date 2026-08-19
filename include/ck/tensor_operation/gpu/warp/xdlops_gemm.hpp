@@ -206,13 +206,13 @@ template <>
 struct mfma_type<MfmaInstr::mfma_f32_16x16x16f16>
 {
     static constexpr index_t group_size =
-#if defined(__gfx936__) || defined(__gfx938__)
+#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__)
         1;
 #else
         4;
 #endif
     static constexpr index_t num_groups_per_blk =
-#if defined(__gfx936__) || defined(__gfx938__)
+#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__)
         4;
 #else
         1;
@@ -412,13 +412,13 @@ template <>
 struct mfma_type<MfmaInstr::mfma_i32_16x16x16i8>
 {
     static constexpr index_t group_size =
-#if defined(__gfx936__) || defined(__gfx938__)
+#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__)
         1;
 #else
         4;
 #endif
     static constexpr index_t num_groups_per_blk =
-#if defined(__gfx936__) || defined(__gfx938__)
+#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__)
         4;
 #else
         1;
@@ -466,13 +466,13 @@ template <>
 struct mfma_type<MfmaInstr::mfma_i32_16x16x32i8>
 {
     static constexpr index_t group_size =
-#if defined(__gfx936__) || defined(__gfx938__)
+#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__)
         1;
 #else
         4;
 #endif
     static constexpr index_t num_groups_per_blk =
-#if defined(__gfx936__) || defined(__gfx938__)
+#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__)
         4;
 #else
         1;
@@ -515,6 +515,58 @@ struct mfma_type<MfmaInstr::mfma_f64_16x16x4f64>
         intrin_mfma_f64_16x16x4f64<MPerXdlops, NPerXdlops>::Run(a, b, reg_c);
     }
 };
+
+// Which AMD MFMA sizes have a native or emulated HCU MMAC path.
+template <MfmaInstr instr>
+struct mfma_is_supported_on_hcu
+{
+    static constexpr bool value = false;
+};
+
+#if defined(__gfx926__) || defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || \
+    defined(__gfx938__)
+template <>
+struct mfma_is_supported_on_hcu<MfmaInstr::mfma_f32_16x16x4xf32>
+{
+    static constexpr bool value = true;
+};
+#endif
+
+#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__)
+template <>
+struct mfma_is_supported_on_hcu<MfmaInstr::mfma_f32_16x16x16f16>
+{
+    static constexpr bool value = true;
+};
+template <>
+struct mfma_is_supported_on_hcu<MfmaInstr::mfma_f32_16x16x16bf16_1k>
+{
+    static constexpr bool value = true;
+};
+template <>
+struct mfma_is_supported_on_hcu<MfmaInstr::mfma_f32_16x16x8bf16>
+{
+    static constexpr bool value = true;
+};
+template <>
+struct mfma_is_supported_on_hcu<MfmaInstr::mfma_i32_16x16x16i8>
+{
+    static constexpr bool value = true;
+};
+template <>
+struct mfma_is_supported_on_hcu<MfmaInstr::mfma_i32_16x16x32i8>
+{
+    static constexpr bool value = true;
+};
+#endif
+
+#if defined(__gfx936__) || defined(__gfx938__)
+template <>
+struct mfma_is_supported_on_hcu<MfmaInstr::mfma_f64_16x16x4f64>
+{
+    static constexpr bool value = true;
+};
+#endif
 
 template <typename base_type, index_t MPerXdlops, index_t NPerXdlops>
 struct MfmaSelector
@@ -661,6 +713,10 @@ struct MfmaSelector
 
     __host__ __device__ constexpr MfmaSelector()
     {
+#if defined(CK_ARCH_HCU)
+        static_assert(mfma_is_supported_on_hcu<GetMfma<base_type, MPerXdlops, NPerXdlops>()>::value,
+                      "this MFMA size/type is not supported on HCU; use a 16x16 MMAC tile");
+#endif
         static_assert(selected_mfma.group_size * selected_mfma.num_groups_per_blk ==
                           selected_mfma.num_regs_per_blk,
                       "wrong! num_regs_per_blk");
@@ -982,8 +1038,7 @@ struct XdlopsGemm
 #if defined(__gfx936__) || defined(__gfx938__)
         MPerXdlops == 16 && NPerXdlops == 16;
 #elif defined(__gfx928__) || defined(__gfx92a__)
-        (is_same<base_type, float>::value || is_same<base_type, bhalf_t>::value) &&
-        MPerXdlops == 16 && NPerXdlops == 16;
+        !is_same<base_type, double>::value && MPerXdlops == 16 && NPerXdlops == 16;
 #elif defined(__gfx926__)
         is_same<base_type, float>::value && MPerXdlops == 16 && NPerXdlops == 16;
 #else

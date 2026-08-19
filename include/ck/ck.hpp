@@ -71,6 +71,12 @@
 #define CK_USE_AMD_MFMA_GFX940
 #endif
 
+// Hygon HCU (MMAC). Device compile only; host compilation does not define __gfx9xx__.
+#if defined(__gfx926__) || defined(__gfx928__) || defined(__gfx92a__) || \
+    defined(__gfx936__) || defined(__gfx938__) || defined(__gfx946__)
+#define CK_ARCH_HCU 1
+#endif
+
 // WMMA instruction
 #ifndef __HIP_DEVICE_COMPILE__ // for host code
 #define CK_USE_AMD_WMMA
