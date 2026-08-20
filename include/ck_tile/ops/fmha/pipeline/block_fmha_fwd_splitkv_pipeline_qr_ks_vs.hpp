@@ -263,10 +263,9 @@ struct BlockFmhaFwdSplitKVPipelineQRKSVS
                              {bias_origin.at(number<0>{}), adjusted_seqlen_k_start}, // M/N
                              Policy::template MakeBiasDramTileDistribution<decltype(gemm_0)>());
 
-        const auto v_origin = v_dram_block_window_tmp.get_window_origin();
         auto [i_page_block_v, v_dram_window] = v_page_block_navigator.make_tile_window(
             v_dram_block_window_lengths,
-            {v_origin.at(number<0>{}), adjusted_seqlen_k_start},
+            {0, adjusted_seqlen_k_start}, // TODO: hdim split?
             Policy::template MakeVDramTileDistribution<Problem>());
 
         auto q_tile = tile_elementwise_in(q_element_func, q);
