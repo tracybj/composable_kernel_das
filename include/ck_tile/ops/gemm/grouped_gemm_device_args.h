@@ -112,6 +112,8 @@ typedef enum ck_tile_hcu_grouped_gemm_dimension_kind_v1
 typedef enum ck_tile_hcu_grouped_gemm_problem_flags_v1
 {
     CK_TILE_HCU_GROUPED_GEMM_PROBLEM_MAY_HAVE_EMPTY_GROUPS_V1 = 1u << 0,
+    // Set only when the caller knows that host-visible per-group logical lengths differ.
+    // A DEVICE_LENGTHS_WITH_CAPACITY dimension may still describe homogeneous groups.
     CK_TILE_HCU_GROUPED_GEMM_PROBLEM_GROUP_LENGTHS_RAGGED_V1  = 1u << 1
 } ck_tile_hcu_grouped_gemm_problem_flags_v1;
 

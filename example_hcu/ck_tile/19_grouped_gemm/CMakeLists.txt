@@ -67,6 +67,12 @@ option(CK_TILE_GROUPED_GEMM_P2_BF16_G8_GFX938_V5_FC1_ROUTE_CANDIDATE
 option(CK_TILE_GROUPED_GEMM_P2_BF16_G8_GFX938_V5_FC1_ROUTE_DISABLE
     "Disable the default gfx938 BF16 G8 fixed-M 1918..1921 NT N4096 K7168 V4 route"
     OFF)
+option(CK_TILE_GROUPED_GEMM_P3_FP16_TN_M1024_K4096_ROUTE_CANDIDATE
+    "Compatibility force-enable for the default dual-architecture FP16 TN homogeneous M1024 N4096 K4096 selector exchange"
+    OFF)
+option(CK_TILE_GROUPED_GEMM_P3_FP16_TN_M1024_K4096_ROUTE_DISABLE
+    "Disable the default dual-architecture FP16 TN homogeneous M1024 N4096 K4096 selector exchange"
+    OFF)
 if(CK_TILE_GROUPED_GEMM_RESOURCE_REPORT)
     target_compile_options(${TILE_EXAMPLE_GROUPED_GEMM} PRIVATE "-Rpass-analysis=kernel-resource-usage")
 endif()
@@ -318,6 +324,14 @@ if(CK_TILE_GROUPED_GEMM_P2_BF16_G8_GFX938_V5_FC1_ROUTE_DISABLE)
     target_compile_definitions(ck_tile_hcu_grouped_gemm_device_args_providers
         PRIVATE CK_TILE_GROUPED_GEMM_P2_BF16_G8_GFX938_V5_FC1_ROUTE_DISABLE)
 endif()
+if(CK_TILE_GROUPED_GEMM_P3_FP16_TN_M1024_K4096_ROUTE_CANDIDATE)
+    target_compile_definitions(ck_tile_hcu_grouped_gemm_device_args_providers
+        PRIVATE CK_TILE_GROUPED_GEMM_P3_FP16_TN_M1024_K4096_ROUTE_CANDIDATE)
+endif()
+if(CK_TILE_GROUPED_GEMM_P3_FP16_TN_M1024_K4096_ROUTE_DISABLE)
+    target_compile_definitions(ck_tile_hcu_grouped_gemm_device_args_providers
+        PRIVATE CK_TILE_GROUPED_GEMM_P3_FP16_TN_M1024_K4096_ROUTE_DISABLE)
+endif()
 target_compile_options(ck_tile_hcu_grouped_gemm_device_args_providers
     PRIVATE "-Wno-unused-template" "-Wno-unneeded-internal-declaration")
 set_target_properties(ck_tile_hcu_grouped_gemm_device_args_providers
@@ -394,6 +408,14 @@ endif()
 if(CK_TILE_GROUPED_GEMM_P2_BF16_G8_GFX938_V5_FC1_ROUTE_DISABLE)
     target_compile_definitions(ck_tile_hcu_grouped_gemm
         PRIVATE CK_TILE_GROUPED_GEMM_P2_BF16_G8_GFX938_V5_FC1_ROUTE_DISABLE)
+endif()
+if(CK_TILE_GROUPED_GEMM_P3_FP16_TN_M1024_K4096_ROUTE_CANDIDATE)
+    target_compile_definitions(ck_tile_hcu_grouped_gemm
+        PRIVATE CK_TILE_GROUPED_GEMM_P3_FP16_TN_M1024_K4096_ROUTE_CANDIDATE)
+endif()
+if(CK_TILE_GROUPED_GEMM_P3_FP16_TN_M1024_K4096_ROUTE_DISABLE)
+    target_compile_definitions(ck_tile_hcu_grouped_gemm
+        PRIVATE CK_TILE_GROUPED_GEMM_P3_FP16_TN_M1024_K4096_ROUTE_DISABLE)
 endif()
 if(GPU_TARGETS MATCHES "gfx936")
     target_compile_definitions(ck_tile_hcu_grouped_gemm
@@ -500,6 +522,14 @@ endif()
 if(CK_TILE_GROUPED_GEMM_P2_BF16_G8_V4_64_M01_4_GFX936_DISABLE)
     target_compile_definitions(tile_example_grouped_gemm_device_args_query_test
         PRIVATE CK_TILE_GROUPED_GEMM_P2_BF16_G8_V4_64_M01_4_GFX936_DISABLE)
+endif()
+if(CK_TILE_GROUPED_GEMM_P3_FP16_TN_M1024_K4096_ROUTE_CANDIDATE)
+    target_compile_definitions(tile_example_grouped_gemm_device_args_query_test
+        PRIVATE CK_TILE_GROUPED_GEMM_P3_FP16_TN_M1024_K4096_ROUTE_CANDIDATE)
+endif()
+if(CK_TILE_GROUPED_GEMM_P3_FP16_TN_M1024_K4096_ROUTE_DISABLE)
+    target_compile_definitions(tile_example_grouped_gemm_device_args_query_test
+        PRIVATE CK_TILE_GROUPED_GEMM_P3_FP16_TN_M1024_K4096_ROUTE_DISABLE)
 endif()
 target_link_libraries(tile_example_grouped_gemm_device_args_query_test
     PRIVATE ck_tile_hcu_grouped_gemm)

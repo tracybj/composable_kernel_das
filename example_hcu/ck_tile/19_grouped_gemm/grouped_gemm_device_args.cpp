@@ -319,6 +319,14 @@ int convert_problem(const ck_tile_hcu_grouped_gemm_problem_v1* source,
     policy.enable_p2_bf16_g8_gfx938_v5_fc1_route_candidate = false;
 #endif
 
+#if defined(CK_TILE_GROUPED_GEMM_P3_FP16_TN_M1024_K4096_ROUTE_CANDIDATE)
+    policy.enable_p3_fp16_tn_m1024_k4096_route_candidate = true;
+#endif
+
+#if defined(CK_TILE_GROUPED_GEMM_P3_FP16_TN_M1024_K4096_ROUTE_DISABLE)
+    policy.enable_p3_fp16_tn_m1024_k4096_route_candidate = false;
+#endif
+
 #if defined(CK_TILE_GROUPED_GEMM_DEVICE_ARGS_RDC_BUILD)
     // These architecture-specialized code objects are retained for non-RDC
     // builds, but real gfx936/gfx938 validation shows they are not correct

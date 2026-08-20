@@ -99,6 +99,9 @@ struct GroupedGemmSelectorPolicy
     // Production default after dual-session focused/full316 validation. Callers can
     // still set this field false to roll the narrow gfx938 FC1 route back to MLS.
     bool enable_p2_bf16_g8_gfx938_v5_fc1_route_candidate = true;
+    // Production default after independent gfx936/gfx938 correctness and focused fallback
+    // comparisons. Callers can still set this field false for an explicit V4 rollback.
+    bool enable_p3_fp16_tn_m1024_k4096_route_candidate = true;
 };
 
 enum class GroupedGemmInstanceId
@@ -251,6 +254,7 @@ enum class GroupedGemmSelectionReason
     p2_bf16_g8_v4_64_m01_4_gfx936_candidate,
     p2_bf16_g8_gfx938_v4_route_candidate,
     p2_bf16_g8_gfx938_v5_fc1_route_candidate,
+    p3_fp16_tn_m1024_k4096_route_candidate,
     v4_n_aligned,
     v4_fallback,
 };
@@ -289,6 +293,13 @@ constexpr std::int64_t grouped_gemm_selector_m_extent(const GroupedGemmProblem& 
                : problem.m.extent;
 }
 
+constexpr std::int64_t grouped_gemm_selector_k_extent(const GroupedGemmProblem& problem)
+{
+    return problem.k.kind == GroupedGemmDimensionKind::device_lengths_with_capacity
+               ? problem.k.extent / problem.group_count
+               : problem.k.extent;
+}
+
 constexpr GroupedGemmSelection select_grouped_gemm_candidate(
     const GroupedGemmProblem& problem,
     const GroupedGemmSelectorPolicy& policy = {})
@@ -299,6 +310,7 @@ constexpr GroupedGemmSelection select_grouped_gemm_candidate(
     }
 
     const auto effective_m = grouped_gemm_selector_m_extent(problem);
+    const auto effective_k = grouped_gemm_selector_k_extent(problem);
     const auto m           = problem.m.extent;
     const auto n           = problem.n.extent;
     const auto k           = problem.k.extent;
@@ -313,6 +325,23 @@ constexpr GroupedGemmSelection select_grouped_gemm_candidate(
         is_bf16_tn && has_variable_k && policy.enable_bf16_tn_logical_k_tail;
     const std::int64_t large_tile_m_threshold =
         problem.m.kind == GroupedGemmDimensionKind::device_lengths_with_capacity ? 1920 : 2048;
+
+    if(policy.enable_p3_fp16_tn_m1024_k4096_route_candidate && !is_bf16 && is_tn &&
+       problem.m.kind == GroupedGemmDimensionKind::common && m == 1024 && n == 4096 &&
+       has_variable_k && k % problem.group_count == 0 && effective_k == 4096 &&
+       !problem.may_have_empty_groups && !problem.group_lengths_are_ragged)
+    {
+        if(problem.arch == GroupedGemmArch::gfx936)
+        {
+            return {GroupedGemmInstanceId::gfx936_v3_dsreadm_backward_m_only_padding,
+                    GroupedGemmSelectionReason::p3_fp16_tn_m1024_k4096_route_candidate};
+        }
+        if(problem.arch == GroupedGemmArch::gfx938)
+        {
+            return {GroupedGemmInstanceId::gfx938_mls_large_256,
+                    GroupedGemmSelectionReason::p3_fp16_tn_m1024_k4096_route_candidate};
+        }
+    }
 
     const bool bw_arch_layout =
         problem.arch == GroupedGemmArch::gfx936 ||

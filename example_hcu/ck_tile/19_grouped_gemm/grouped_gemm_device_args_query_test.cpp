@@ -54,6 +54,21 @@ ck_tile_hcu_grouped_gemm_problem_v1 make_fixed_m_problem(int data_type,
     return problem;
 }
 
+ck_tile_hcu_grouped_gemm_problem_v1 make_homogeneous_tn_problem(int groups,
+                                                                 std::int64_t m,
+                                                                 std::int64_t n,
+                                                                 std::int64_t k_per_group)
+{
+    auto problem = make_problem(CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_FP16_V1,
+                                CK_TILE_HCU_GROUPED_GEMM_LAYOUT_TN_V1,
+                                groups,
+                                m,
+                                n,
+                                groups * k_per_group);
+    problem.problem_flags = 0;
+    return problem;
+}
+
 ck_tile_hcu_grouped_gemm_selection_v1 make_selection()
 {
     ck_tile_hcu_grouped_gemm_selection_v1 selection{};
@@ -280,6 +295,19 @@ int main()
 #else
         passed &= expect_selection(p2_fixed, 4002, "gfx936_p2_fixed_m_rollback");
 #endif
+
+        auto p3_homogeneous = make_homogeneous_tn_problem(3, 1024, 4096, 4096);
+#if !defined(CK_TILE_GROUPED_GEMM_P3_FP16_TN_M1024_K4096_ROUTE_DISABLE)
+        passed &= expect_selection(p3_homogeneous, 2001, "gfx936_p3_homogeneous_candidate");
+#else
+        passed &= expect_selection(p3_homogeneous, 4000, "gfx936_p3_homogeneous_default");
+#endif
+        auto p3_ragged = p3_homogeneous;
+        p3_ragged.problem_flags = CK_TILE_HCU_GROUPED_GEMM_PROBLEM_GROUP_LENGTHS_RAGGED_V1;
+        passed &= expect_selection(p3_ragged, 4000, "gfx936_p3_ragged_rejected");
+        auto p3_empty = p3_homogeneous;
+        p3_empty.problem_flags = CK_TILE_HCU_GROUPED_GEMM_PROBLEM_MAY_HAVE_EMPTY_GROUPS_V1;
+        passed &= expect_selection(p3_empty, 4000, "gfx936_p3_empty_rejected");
     }
     else if(target == ck_tile::hcu_target_enum::gfx938)
     {
@@ -304,6 +332,19 @@ int main()
         selected.policy_disable_flags =
             CK_TILE_HCU_GROUPED_GEMM_POLICY_DISABLE_GFX938_MLS_V1;
         passed &= expect_selection(selected, 4000, "gfx938_v4_rollback");
+
+        auto p3_homogeneous = make_homogeneous_tn_problem(16, 1024, 4096, 4096);
+#if !defined(CK_TILE_GROUPED_GEMM_P3_FP16_TN_M1024_K4096_ROUTE_DISABLE)
+        passed &= expect_selection(p3_homogeneous, 3000, "gfx938_p3_homogeneous_candidate");
+#else
+        passed &= expect_selection(p3_homogeneous, 4000, "gfx938_p3_homogeneous_default");
+#endif
+        auto p3_ragged = p3_homogeneous;
+        p3_ragged.problem_flags = CK_TILE_HCU_GROUPED_GEMM_PROBLEM_GROUP_LENGTHS_RAGGED_V1;
+        passed &= expect_selection(p3_ragged, 4000, "gfx938_p3_ragged_rejected");
+        auto p3_empty = p3_homogeneous;
+        p3_empty.problem_flags = CK_TILE_HCU_GROUPED_GEMM_PROBLEM_MAY_HAVE_EMPTY_GROUPS_V1;
+        passed &= expect_selection(p3_empty, 4000, "gfx938_p3_empty_rejected");
     }
     else
     {

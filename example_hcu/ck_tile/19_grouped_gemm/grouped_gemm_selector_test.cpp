@@ -59,6 +59,23 @@ GroupedGemmProblem make_fixed_m_problem(GroupedGemmArch arch,
     return problem;
 }
 
+GroupedGemmProblem make_homogeneous_tn_problem(GroupedGemmArch arch,
+                                               std::int32_t groups,
+                                               std::int64_t m,
+                                               std::int64_t n,
+                                               std::int64_t k_per_group)
+{
+    auto problem = make_problem(arch,
+                                GroupedGemmDataType::fp16,
+                                GroupedGemmLayout::tn,
+                                groups,
+                                m,
+                                n,
+                                groups * k_per_group);
+    problem.group_lengths_are_ragged = false;
+    return problem;
+}
+
 std::vector<std::string> split_csv_line(const std::string& line)
 {
     std::vector<std::string> fields;
@@ -140,6 +157,19 @@ int run_table_tests()
     GroupedGemmSelectorPolicy p2_bf16_g8_gfx938_v5_fc1_route_disabled = defaults;
     p2_bf16_g8_gfx938_v5_fc1_route_disabled
         .enable_p2_bf16_g8_gfx938_v5_fc1_route_candidate = false;
+    GroupedGemmSelectorPolicy p3_fp16_tn_m1024_k4096_route_enabled = defaults;
+    p3_fp16_tn_m1024_k4096_route_enabled
+        .enable_p3_fp16_tn_m1024_k4096_route_candidate = true;
+    GroupedGemmSelectorPolicy p3_fp16_tn_m1024_k4096_route_disabled = defaults;
+    p3_fp16_tn_m1024_k4096_route_disabled
+        .enable_p3_fp16_tn_m1024_k4096_route_candidate = false;
+
+    auto p3_ragged = make_homogeneous_tn_problem(
+        GroupedGemmArch::gfx936, 3, 1024, 4096, 4096);
+    p3_ragged.group_lengths_are_ragged = true;
+    auto p3_empty = make_homogeneous_tn_problem(
+        GroupedGemmArch::gfx938, 16, 1024, 4096, 4096);
+    p3_empty.may_have_empty_groups = true;
 
     auto empty_ragged = make_problem(GroupedGemmArch::gfx936,
                                      GroupedGemmDataType::fp16,
@@ -161,6 +191,54 @@ int run_table_tests()
     invalid_two_variable.k = GroupedGemmDimensionSummary::DeviceLengthsWithCapacity(8192);
 
     const std::vector<TestCase> cases{
+        {"P3 gfx936 FP16 TN homogeneous route selects V3 dsreadm by default",
+         make_homogeneous_tn_problem(GroupedGemmArch::gfx936, 1, 1024, 4096, 4096),
+         defaults,
+         GroupedGemmInstanceId::gfx936_v3_dsreadm_backward_m_only_padding},
+        {"P3 gfx938 FP16 TN homogeneous route selects MLS large by default",
+         make_homogeneous_tn_problem(GroupedGemmArch::gfx938, 16, 1024, 4096, 4096),
+         defaults,
+         GroupedGemmInstanceId::gfx938_mls_large_256},
+        {"P3 gfx936 FP16 TN homogeneous explicit rollback stays V4",
+         make_homogeneous_tn_problem(GroupedGemmArch::gfx936, 1, 1024, 4096, 4096),
+         p3_fp16_tn_m1024_k4096_route_disabled,
+         GroupedGemmInstanceId::v4_128_m_only_padding},
+        {"P3 gfx938 FP16 TN homogeneous explicit rollback stays V4",
+         make_homogeneous_tn_problem(GroupedGemmArch::gfx938, 16, 1024, 4096, 4096),
+         p3_fp16_tn_m1024_k4096_route_disabled,
+         GroupedGemmInstanceId::v4_128_m_only_padding},
+        {"P3 gfx936 FP16 TN homogeneous G3 route selects V3 dsreadm",
+         make_homogeneous_tn_problem(GroupedGemmArch::gfx936, 3, 1024, 4096, 4096),
+         p3_fp16_tn_m1024_k4096_route_enabled,
+         GroupedGemmInstanceId::gfx936_v3_dsreadm_backward_m_only_padding},
+        {"P3 gfx936 FP16 TN homogeneous G16 route selects V3 dsreadm",
+         make_homogeneous_tn_problem(GroupedGemmArch::gfx936, 16, 1024, 4096, 4096),
+         p3_fp16_tn_m1024_k4096_route_enabled,
+         GroupedGemmInstanceId::gfx936_v3_dsreadm_backward_m_only_padding},
+        {"P3 gfx938 FP16 TN homogeneous G3 route selects MLS large",
+         make_homogeneous_tn_problem(GroupedGemmArch::gfx938, 3, 1024, 4096, 4096),
+         p3_fp16_tn_m1024_k4096_route_enabled,
+         GroupedGemmInstanceId::gfx938_mls_large_256},
+        {"P3 gfx938 FP16 TN homogeneous G16 route selects MLS large",
+         make_homogeneous_tn_problem(GroupedGemmArch::gfx938, 16, 1024, 4096, 4096),
+         p3_fp16_tn_m1024_k4096_route_enabled,
+         GroupedGemmInstanceId::gfx938_mls_large_256},
+        {"P3 candidate leaves N3072 near miss on V4",
+         make_homogeneous_tn_problem(GroupedGemmArch::gfx936, 8, 1024, 3072, 4096),
+         p3_fp16_tn_m1024_k4096_route_enabled,
+         GroupedGemmInstanceId::v4_128_m_only_padding},
+        {"P3 candidate leaves K2048 near miss on V4",
+         make_homogeneous_tn_problem(GroupedGemmArch::gfx938, 8, 1024, 4096, 2048),
+         p3_fp16_tn_m1024_k4096_route_enabled,
+         GroupedGemmInstanceId::v4_128_m_only_padding},
+        {"P3 candidate rejects ragged K lengths",
+         p3_ragged,
+         p3_fp16_tn_m1024_k4096_route_enabled,
+         GroupedGemmInstanceId::v4_128_m_only_padding},
+        {"P3 candidate rejects possibly empty groups",
+         p3_empty,
+         p3_fp16_tn_m1024_k4096_route_enabled,
+         GroupedGemmInstanceId::v4_128_m_only_padding},
         {"P2 gfx938 V5 FC1 route is default for misaligned NT",
          make_fixed_m_problem(GroupedGemmArch::gfx938, GroupedGemmDataType::bf16,
                               GroupedGemmLayout::nt, 8, 1919, 4096, 7168),
