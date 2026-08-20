@@ -264,6 +264,18 @@ int launch_registry_candidate(ck_tile::GroupedGemmInstanceId instance_id,
     case ck_tile::GroupedGemmInstanceId::v4_64_full_padding:
         return launch_layout<GemmConfigComputeV4Mpad<PrecType>, PrecType>(
             layout, device_args, group_count, num_cu, stream);
+    case ck_tile::GroupedGemmInstanceId::v4_64_m01_4_gfx936_candidate:
+#if defined(CK_TILE_GROUPED_GEMM_P2_BF16_G8_V4_64_M01_4_GFX936_CANDIDATE)
+        if constexpr(std::is_same_v<PrecType, ck_tile::bf16_t>)
+        {
+            if(layout == ck_tile::GroupedGemmLayout::nt ||
+               layout == ck_tile::GroupedGemmLayout::nn)
+                return launch_layout<GemmConfigComputeV4M01_4Gfx936Candidate<PrecType>,
+                                     PrecType>(
+                    layout, device_args, group_count, num_cu, stream);
+        }
+#endif
+        break;
     case ck_tile::GroupedGemmInstanceId::v6_m32_nonpadding_mle8_family_b_gfx936_candidate:
 #if defined(CK_TILE_GROUPED_GEMM_P1_FAMILY_B_V6_M32_MLE8_GFX936_CANDIDATE)
         if constexpr(std::is_same_v<PrecType, ck_tile::half_t>)

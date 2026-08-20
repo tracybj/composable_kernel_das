@@ -227,6 +227,17 @@ struct GemmConfigComputeV4Mpad : public GemmConfigComputeV4<PrecType>
     static constexpr bool kPadK = true;
 };
 
+// Default-off Primus P2 gfx936 locality experiment. Preserve the production
+// BF16 V4 64x128 nonpadding geometry and compute pipeline; only group four
+// adjacent M tiles under the same N/B locality window.
+template <typename PrecType>
+struct GemmConfigComputeV4M01_4Gfx936Candidate : public GemmConfigComputeV4<PrecType>
+{
+    static_assert(std::is_same_v<PrecType, ck_tile::bf16_t>,
+                  "The gfx936 V4 64x128 M01=4 candidate is BF16-only");
+    static constexpr ck_tile::index_t TileParitionerM01 = 4;
+};
+
 // Tuning candidate for large, regular FP16/BF16 GEMMs. Keep it separate from the production
 // V4 config until same-session A/B measurements and all layout/padding regressions pass.
 //

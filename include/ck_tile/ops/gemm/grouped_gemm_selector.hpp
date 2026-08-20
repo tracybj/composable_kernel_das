@@ -92,6 +92,13 @@ struct GroupedGemmSelectorPolicy
     bool enable_v3_128_fp16_full_padding_candidate = false;
     bool enable_v3_128_fp16_full_padding_gfx936_candidate = false;
     bool enable_v6_family_b_m32_mle8_gfx936_candidate = false;
+    // Production default after independent gfx936 focused/full316 validation. Callers can
+    // still set this field false to roll the narrow fixed-M route back to V4 64x128 M01=1.
+    bool enable_p2_bf16_g8_v4_64_m01_4_gfx936_candidate = true;
+    bool enable_p2_bf16_g8_gfx938_v4_route_candidate = false;
+    // Production default after dual-session focused/full316 validation. Callers can
+    // still set this field false to roll the narrow gfx938 FC1 route back to MLS.
+    bool enable_p2_bf16_g8_gfx938_v5_fc1_route_candidate = true;
 };
 
 enum class GroupedGemmInstanceId
@@ -120,6 +127,7 @@ enum class GroupedGemmInstanceId
     v4_128_m4_full_padding_grid2_candidate          = 4008,
     v3_128_m4_full_padding_candidate                = 4009,
     v3_128_m4_full_padding_gfx936_candidate         = 4010,
+    v4_64_m01_4_gfx936_candidate                    = 4011,
     v6_m32_nonpadding_mle8_family_b_gfx936_candidate = 4104,
 };
 
@@ -138,7 +146,7 @@ struct GroupedGemmCandidateIdentity
     GroupedGemmCandidateFamily family;
 };
 
-inline constexpr std::array<GroupedGemmCandidateIdentity, 22>
+inline constexpr std::array<GroupedGemmCandidateIdentity, 23>
     grouped_gemm_candidate_registry{{
         {GroupedGemmInstanceId::bw_family_selected,
          "bw_family.selected",
@@ -203,6 +211,9 @@ inline constexpr std::array<GroupedGemmCandidateIdentity, 22>
         {GroupedGemmInstanceId::v3_128_m4_full_padding_gfx936_candidate,
          "v3.128x128x64.m4.full_padding.single_lds.gfx936.candidate",
          GroupedGemmCandidateFamily::v4},
+        {GroupedGemmInstanceId::v4_64_m01_4_gfx936_candidate,
+         "v4.64x128x64.nonpadding.m01_4.gfx936.candidate",
+         GroupedGemmCandidateFamily::v4},
         {GroupedGemmInstanceId::v6_m32_nonpadding_mle8_family_b_gfx936_candidate,
          "v6.32x128x64.nonpadding.selector_m_le_8.family_b.gfx936.candidate",
          GroupedGemmCandidateFamily::v4},
@@ -237,6 +248,9 @@ enum class GroupedGemmSelectionReason
     v3_fp16_full_padding_candidate,
     v3_fp16_full_padding_gfx936_candidate,
     v6_family_b_m32_mle8_gfx936_candidate,
+    p2_bf16_g8_v4_64_m01_4_gfx936_candidate,
+    p2_bf16_g8_gfx938_v4_route_candidate,
+    p2_bf16_g8_gfx938_v5_fc1_route_candidate,
     v4_n_aligned,
     v4_fallback,
 };
@@ -359,6 +373,26 @@ constexpr GroupedGemmSelection select_grouped_gemm_candidate(
         }
     }
 
+    if(policy.enable_p2_bf16_g8_gfx938_v5_fc1_route_candidate && is_bf16 && is_nt &&
+       problem.arch == GroupedGemmArch::gfx938 && problem.group_count == 8 &&
+       problem.m.kind == GroupedGemmDimensionKind::common && m >= 1918 && m <= 1921 &&
+       n == 4096 && k == 7168)
+    {
+        return {m % 128 == 0 ? GroupedGemmInstanceId::v4_128_m_only_padding
+                            : GroupedGemmInstanceId::v4_64_nonpadding,
+                GroupedGemmSelectionReason::p2_bf16_g8_gfx938_v5_fc1_route_candidate};
+    }
+
+    if(policy.enable_p2_bf16_g8_gfx938_v4_route_candidate && is_bf16 && is_nt &&
+       problem.arch == GroupedGemmArch::gfx938 && problem.group_count == 8 &&
+       problem.m.kind == GroupedGemmDimensionKind::common && m >= 1918 && m <= 1921 &&
+       n >= 2048 && k >= 2048 && n % 128 == 0 && k % 64 == 0)
+    {
+        return {m % 128 == 0 ? GroupedGemmInstanceId::v4_128_m_only_padding
+                            : GroupedGemmInstanceId::v4_64_nonpadding,
+                GroupedGemmSelectionReason::p2_bf16_g8_gfx938_v4_route_candidate};
+    }
+
     if(policy.enable_gfx938_mls && problem.arch == GroupedGemmArch::gfx938 &&
        effective_m >= 512 && n >= 512 && k >= 512)
     {
@@ -385,6 +419,15 @@ constexpr GroupedGemmSelection select_grouped_gemm_candidate(
     {
         return {GroupedGemmInstanceId::v4_128_full_padding,
                 GroupedGemmSelectionReason::v4_bf16_padding};
+    }
+    if(policy.enable_p2_bf16_g8_v4_64_m01_4_gfx936_candidate && is_bf16 &&
+       problem.group_count == 8 && problem.m.kind == GroupedGemmDimensionKind::common &&
+       m >= 1918 && m <= 1921 && m % 128 != 0 && n >= 2048 && k >= 2048 &&
+       n % 128 == 0 && k % 64 == 0 && problem.arch == GroupedGemmArch::gfx936 &&
+       (is_nt || is_nn))
+    {
+        return {GroupedGemmInstanceId::v4_64_m01_4_gfx936_candidate,
+                GroupedGemmSelectionReason::p2_bf16_g8_v4_64_m01_4_gfx936_candidate};
     }
     if(policy.enable_v4_fp16_m_threshold_candidate &&
        problem.arch == GroupedGemmArch::gfx938 && !is_bf16 && is_nn && effective_m >= 33 &&

@@ -41,6 +41,19 @@ ck_tile_hcu_grouped_gemm_problem_v1 make_problem(int data_type,
     return problem;
 }
 
+ck_tile_hcu_grouped_gemm_problem_v1 make_fixed_m_problem(int data_type,
+                                                          int layout,
+                                                          int groups,
+                                                          std::int64_t m,
+                                                          std::int64_t n,
+                                                          std::int64_t k)
+{
+    auto problem          = make_problem(data_type, layout, groups, m, n, k);
+    problem.problem_flags = 0;
+    problem.m = {CK_TILE_HCU_GROUPED_GEMM_DIMENSION_COMMON_V1, 0, m};
+    return problem;
+}
+
 ck_tile_hcu_grouped_gemm_selection_v1 make_selection()
 {
     ck_tile_hcu_grouped_gemm_selection_v1 selection{};
@@ -90,7 +103,7 @@ int main()
     constexpr std::uint32_t all_layout = CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NT_V1 |
                                          CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NN_V1 |
                                          CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_TN_V1;
-    constexpr std::array<CandidateExpected, 22> expected{{
+    constexpr std::array<CandidateExpected, 23> expected{{
         {CK_TILE_HCU_GROUPED_GEMM_INSTANCE_BW_FAMILY_SELECTED_V1,
          CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_FAMILY_BW_V1,
          CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX936_V1,
@@ -200,6 +213,12 @@ int main()
          CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX936_V1,
          CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_MASK_FP16_V1,
          CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NN_V1},
+        {CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V4_64_M01_4_GFX936_CANDIDATE_V1,
+         CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_FAMILY_V4_V1,
+         CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX936_V1,
+         CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_MASK_BF16_V1,
+         CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NT_V1 |
+             CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NN_V1},
         {CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V6_M32_NONPADDING_MLE8_FAMILY_B_GFX936_CANDIDATE_V1,
          CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_FAMILY_V4_V1,
          CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX936_V1,
@@ -248,6 +267,19 @@ int main()
         selected.policy_disable_flags =
             CK_TILE_HCU_GROUPED_GEMM_POLICY_DISABLE_BW_FAMILY_V1;
         passed &= expect_selection(selected, 2000, "gfx936_v3_rollback");
+
+        auto p2_fixed = make_fixed_m_problem(CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_BF16_V1,
+                                             CK_TILE_HCU_GROUPED_GEMM_LAYOUT_NT_V1,
+                                             8,
+                                             1919,
+                                             4096,
+                                             7168);
+#if defined(CK_TILE_GROUPED_GEMM_P2_BF16_G8_V4_64_M01_4_GFX936_CANDIDATE) && \
+    !defined(CK_TILE_GROUPED_GEMM_P2_BF16_G8_V4_64_M01_4_GFX936_DISABLE)
+        passed &= expect_selection(p2_fixed, 4011, "gfx936_p2_fixed_m_default");
+#else
+        passed &= expect_selection(p2_fixed, 4002, "gfx936_p2_fixed_m_rollback");
+#endif
     }
     else if(target == ck_tile::hcu_target_enum::gfx938)
     {
