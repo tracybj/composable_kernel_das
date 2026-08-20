@@ -59,14 +59,17 @@ struct alignas(2) half_t
     CK_TILE_HOST_DEVICE
     explicit constexpr half_t(const double& x) : half_t(double_to_fp16_hip(x)) {}
 
-    // construct from int
+    // construct from int (__int2half_rn returns __half)
     CK_TILE_HOST_DEVICE
-    explicit constexpr half_t(const int& x) : half_t(static_cast<fp16_hip_t>(__int2half_rn(x))) {}
+    explicit constexpr half_t(const int& x)
+        : half_t(static_cast<__half_raw>(__int2half_rn(x)).data)
+    {
+    }
 
     // construct from unsigned int
     CK_TILE_HOST_DEVICE
     explicit constexpr half_t(const unsigned int& x)
-        : half_t(static_cast<fp16_hip_t>(__uint2half_rn(x)))
+        : half_t(static_cast<__half_raw>(__uint2half_rn(x)).data)
     {
     }
 
@@ -120,7 +123,8 @@ CK_TILE_HOST_DEVICE
 float fp16_to_float_hip(const fp16_hip_t& x)
 {
 #if defined(__HIP_DEVICE_COMPILE__)
-    return __half2float(x);
+    // Bridge _Float16 <-> __half (PyTorch sets __HIP_NO_HALF_CONVERSIONS__)
+    return __half2float(__half{__half_raw{x}});
 #else
     const uint16_t raw = ck_tile::bit_cast<uint16_t>(x);
     const uint32_t sign = static_cast<uint32_t>(raw & 0x8000u) << 16;
@@ -168,7 +172,8 @@ CK_TILE_HOST_DEVICE
 fp16_hip_t float_to_fp16_hip(const float& x)
 {
 #if defined(__HIP_DEVICE_COMPILE__)
-    return __float2half(x);
+    // Bridge __half -> _Float16 (PyTorch sets __HIP_NO_HALF_CONVERSIONS__)
+    return static_cast<__half_raw>(__float2half(x)).data;
 #else
     const uint32_t f32 = ck_tile::bit_cast<uint32_t>(x);
     const uint16_t sign = static_cast<uint16_t>((f32 >> 16) & 0x8000u);
