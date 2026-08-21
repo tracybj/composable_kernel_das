@@ -269,6 +269,7 @@ int convert_problem(const ck_tile_hcu_grouped_gemm_problem_v1* source,
 #if !defined(CK_TILE_GROUPED_GEMM_DEVICE_ARGS_HAS_GFX936_PROMOTED)
     // Do not name InstanceId 1001/1002 when this TU cannot dispatch them.
     policy.enable_gfx936_bf16_nn_promoted = false;
+#endif
 
 #if defined(CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V3_128_GFX938_DISABLE)
     policy.enable_p1_family_a_v3_128_gfx938 = false;
