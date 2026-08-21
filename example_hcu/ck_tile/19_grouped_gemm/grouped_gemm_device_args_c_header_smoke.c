@@ -14,7 +14,7 @@ int main(void)
     launch.struct_size = (uint32_t)sizeof(launch);
     candidate.struct_size = (uint32_t)sizeof(candidate);
     candidate.instance_id =
-        CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V3_128_M4_FULL_PADDING_CANDIDATE_V1;
+        CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V3_128_M4_FULL_PADDING_V1;
     candidate.family = CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_FAMILY_V4_V1;
     candidate.architecture_mask = CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX938_V1;
     candidate.data_type_mask = CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_MASK_FP16_V1;

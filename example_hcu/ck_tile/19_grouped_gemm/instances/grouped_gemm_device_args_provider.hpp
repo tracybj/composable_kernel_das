@@ -124,46 +124,6 @@ int launch_m_only_hybrid(ck_tile::GroupedGemmLayout layout,
     return CK_TILE_HCU_GROUPED_GEMM_DEVICE_ARGS_UNSUPPORTED_V1;
 }
 
-template <typename SmallConfig,
-          typename LargeConfig,
-          typename PrecType,
-          typename ALayout,
-          typename BLayout>
-int launch_m_threshold_hybrid_one(void* device_args,
-                                  int group_count,
-                                  std::uint32_t num_cu,
-                                  hipStream_t stream)
-{
-    int status = launch_one<SmallConfig,
-                            PrecType,
-                            ALayout,
-                            BLayout,
-                            ck_tile::GroupedGemmMFilter::LessEqual64>(
-        device_args, group_count, num_cu, stream);
-    if(status != 0)
-        return status;
-    return launch_one<LargeConfig,
-                      PrecType,
-                      ALayout,
-                      BLayout,
-                      ck_tile::GroupedGemmMFilter::Greater64>(
-        device_args, group_count, num_cu, stream);
-}
-
-template <typename SmallConfig, typename LargeConfig, typename PrecType>
-int launch_m_threshold_hybrid(ck_tile::GroupedGemmLayout layout,
-                              void* device_args,
-                              int group_count,
-                              std::uint32_t num_cu,
-                              hipStream_t stream)
-{
-    if(layout == ck_tile::GroupedGemmLayout::nn)
-        return launch_m_threshold_hybrid_one<
-            SmallConfig, LargeConfig, PrecType, Row, Row>(
-            device_args, group_count, num_cu, stream);
-    return CK_TILE_HCU_GROUPED_GEMM_DEVICE_ARGS_UNSUPPORTED_V1;
-}
-
 template <typename PrecType>
 int launch_registry_candidate(ck_tile::GroupedGemmInstanceId instance_id,
                               ck_tile::GroupedGemmLayout layout,
@@ -264,100 +224,40 @@ int launch_registry_candidate(ck_tile::GroupedGemmInstanceId instance_id,
     case ck_tile::GroupedGemmInstanceId::v4_64_full_padding:
         return launch_layout<GemmConfigComputeV4Mpad<PrecType>, PrecType>(
             layout, device_args, group_count, num_cu, stream);
-    case ck_tile::GroupedGemmInstanceId::v4_64_m01_4_gfx936_candidate:
-#if defined(CK_TILE_GROUPED_GEMM_P2_BF16_G8_V4_64_M01_4_GFX936_CANDIDATE)
+    case ck_tile::GroupedGemmInstanceId::v4_64_m01_4_gfx936:
         if constexpr(std::is_same_v<PrecType, ck_tile::bf16_t>)
         {
             if(layout == ck_tile::GroupedGemmLayout::nt ||
                layout == ck_tile::GroupedGemmLayout::nn)
-                return launch_layout<GemmConfigComputeV4M01_4Gfx936Candidate<PrecType>,
+                return launch_layout<GemmConfigComputeV4M01_4Gfx936<PrecType>,
                                      PrecType>(
                     layout, device_args, group_count, num_cu, stream);
         }
-#endif
         break;
-    case ck_tile::GroupedGemmInstanceId::v6_m32_nonpadding_mle8_family_b_gfx936_candidate:
-#if defined(CK_TILE_GROUPED_GEMM_P1_FAMILY_B_V6_M32_MLE8_GFX936_CANDIDATE)
+    case ck_tile::GroupedGemmInstanceId::v6_m32_nonpadding_mle8_family_b_gfx936:
         if constexpr(std::is_same_v<PrecType, ck_tile::half_t>)
         {
             if(layout == ck_tile::GroupedGemmLayout::nn)
-                return launch_layout<GemmConfigComputeV6FamilyBM32Mle8Gfx936Candidate<PrecType>,
+                return launch_layout<GemmConfigComputeV6FamilyBM32Mle8Gfx936<PrecType>,
                                      PrecType>(
                     layout, device_args, group_count, num_cu, stream);
         }
-#endif
         break;
-    case ck_tile::GroupedGemmInstanceId::v4_128_m4_full_padding_candidate:
-#if defined(CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V4_128_CANDIDATE)
-        if constexpr(std::is_same_v<PrecType, ck_tile::half_t>)
-        {
-            if(layout == ck_tile::GroupedGemmLayout::nn)
-                return launch_layout<GemmConfigComputeV4SquareM4Mpad<PrecType>, PrecType>(
-                    layout, device_args, group_count, num_cu, stream);
-        }
-#endif
-        break;
-    case ck_tile::GroupedGemmInstanceId::v4_128_m4_k32_full_padding_candidate:
-#if defined(CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V4_128_K32_CANDIDATE)
-        if constexpr(std::is_same_v<PrecType, ck_tile::half_t>)
-        {
-            if(layout == ck_tile::GroupedGemmLayout::nn)
-                return launch_layout<GemmConfigComputeV4SquareM4K32Mpad<PrecType>, PrecType>(
-                    layout, device_args, group_count, num_cu, stream);
-        }
-#endif
-        break;
-    case ck_tile::GroupedGemmInstanceId::v4_m_threshold_full_padding_candidate:
-#if defined(CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V4_M_THRESHOLD_CANDIDATE)
-        if constexpr(std::is_same_v<PrecType, ck_tile::half_t>)
-        {
-            return launch_m_threshold_hybrid<GemmConfigComputeV4Mpad<PrecType>,
-                                             GemmConfigComputeV4SquareM4Mpad<PrecType>,
-                                             PrecType>(
-                layout, device_args, group_count, num_cu, stream);
-        }
-#endif
-        break;
-    case ck_tile::GroupedGemmInstanceId::v4_128x64_m4_full_padding_candidate:
-#if defined(CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V4_128X64_CANDIDATE)
-        if constexpr(std::is_same_v<PrecType, ck_tile::half_t>)
-        {
-            if(layout == ck_tile::GroupedGemmLayout::nn)
-                return launch_layout<GemmConfigComputeV4M128N64M4Mpad<PrecType>, PrecType>(
-                    layout, device_args, group_count, num_cu, stream);
-        }
-#endif
-        break;
-    case ck_tile::GroupedGemmInstanceId::v4_128_m4_full_padding_grid2_candidate:
-#if defined(CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V4_128_GRID2_CANDIDATE)
-        if constexpr(std::is_same_v<PrecType, ck_tile::half_t>)
-        {
-            if(layout == ck_tile::GroupedGemmLayout::nn)
-                return launch_layout<
-                    GemmConfigComputeV4SquareM4MpadGrid2<PrecType>,
-                    PrecType>(layout, device_args, group_count, num_cu, stream);
-        }
-#endif
-        break;
-    case ck_tile::GroupedGemmInstanceId::v3_128_m4_full_padding_candidate:
-#if defined(CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V3_128_CANDIDATE)
+    case ck_tile::GroupedGemmInstanceId::v3_128_m4_full_padding:
         if constexpr(std::is_same_v<PrecType, ck_tile::half_t>)
         {
             if(layout == ck_tile::GroupedGemmLayout::nn)
                 return launch_layout<GemmConfigComputeV3SquareM4Mpad<PrecType>, PrecType>(
                     layout, device_args, group_count, num_cu, stream);
         }
-#endif
         break;
-    case ck_tile::GroupedGemmInstanceId::v3_128_m4_full_padding_gfx936_candidate:
-#if defined(CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V3_128_GFX936_CANDIDATE)
+    case ck_tile::GroupedGemmInstanceId::v3_128_m4_full_padding_gfx936:
         if constexpr(std::is_same_v<PrecType, ck_tile::half_t>)
         {
             if(layout == ck_tile::GroupedGemmLayout::nn)
                 return launch_layout<GemmConfigComputeV3SquareM4Mpad<PrecType>, PrecType>(
                     layout, device_args, group_count, num_cu, stream);
         }
-#endif
         break;
     }
     return CK_TILE_HCU_GROUPED_GEMM_DEVICE_ARGS_UNSUPPORTED_V1;

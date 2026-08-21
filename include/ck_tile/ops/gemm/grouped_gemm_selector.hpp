@@ -84,32 +84,27 @@ struct GroupedGemmSelectorPolicy
     bool enable_bf16_tn_logical_k_tail    = true;
     bool enable_bw_selected               = true;
     bool enable_gfx938_mls_large          = true;
-    bool enable_v4_128_fp16_full_padding_candidate = false;
-    bool enable_v4_128_fp16_full_padding_candidate_k32 = false;
-    bool enable_v4_fp16_m_threshold_candidate = false;
-    bool enable_v4_128x64_fp16_full_padding_candidate = false;
-    bool enable_v4_128_fp16_full_padding_grid2_candidate = false;
-    bool enable_v3_128_fp16_full_padding_candidate = false;
-    bool enable_v3_128_fp16_full_padding_gfx936_candidate = false;
-    bool enable_v6_family_b_m32_mle8_gfx936_candidate = false;
+    // P1 production defaults after architecture-local correctness and full G392 replay.
+    bool enable_p1_family_a_v3_128_gfx938 = true;
+    bool enable_p1_family_a_v3_128_gfx936 = true;
+    bool enable_p1_family_b_v6_m32_mle8_gfx936 = true;
     // Production default after independent gfx936 focused/full316 validation. Callers can
     // still set this field false to roll the narrow fixed-M route back to V4 64x128 M01=1.
-    bool enable_p2_bf16_g8_v4_64_m01_4_gfx936_candidate = true;
+    bool enable_p2_bf16_g8_v4_64_m01_4_gfx936 = true;
     // Production default after independent gfx936 correctness/focused validation. Callers can
     // still set this field false to roll the exact FC2 NN route back to bw_family_selected.
-    bool enable_p2_bf16_g8_gfx936_fc2_nn_fast_vmem3_candidate = true;
-    bool enable_p2_bf16_g8_gfx938_v4_route_candidate = false;
+    bool enable_p2_bf16_g8_gfx936_fc2_nn_fast_vmem3 = true;
     // Production default after dual-session focused/full316 validation. Callers can
     // still set this field false to roll the narrow gfx938 FC1 route back to MLS.
-    bool enable_p2_bf16_g8_gfx938_v5_fc1_route_candidate = true;
+    bool enable_p2_bf16_g8_gfx938_v5_fc1_route = true;
     // Production default after independent gfx936/gfx938 correctness and focused fallback
     // comparisons. Callers can still set this field false for an explicit V4 rollback.
-    bool enable_p3_fp16_tn_m1024_k4096_route_candidate = true;
+    bool enable_p3_fp16_tn_m1024_k4096_route = true;
 };
 
 enum class GroupedGemmInstanceId
 {
-    // Values are stable identity codes. Add new candidates to a family range;
+    // Values are stable identity codes. Add new instances to a family range;
     // never renumber an existing entry.
     none                                            = 0,
     bw_family_selected                              = 1000,
@@ -126,15 +121,10 @@ enum class GroupedGemmInstanceId
     v4_128_full_padding                            = 4001,
     v4_64_nonpadding                               = 4002,
     v4_64_full_padding                             = 4003,
-    v4_128_m4_full_padding_candidate               = 4004,
-    v4_128_m4_k32_full_padding_candidate           = 4005,
-    v4_m_threshold_full_padding_candidate           = 4006,
-    v4_128x64_m4_full_padding_candidate             = 4007,
-    v4_128_m4_full_padding_grid2_candidate          = 4008,
-    v3_128_m4_full_padding_candidate                = 4009,
-    v3_128_m4_full_padding_gfx936_candidate         = 4010,
-    v4_64_m01_4_gfx936_candidate                    = 4011,
-    v6_m32_nonpadding_mle8_family_b_gfx936_candidate = 4104,
+    v3_128_m4_full_padding                          = 4009,
+    v3_128_m4_full_padding_gfx936                   = 4010,
+    v4_64_m01_4_gfx936                              = 4011,
+    v6_m32_nonpadding_mle8_family_b_gfx936          = 4104,
 };
 
 enum class GroupedGemmCandidateFamily
@@ -152,7 +142,7 @@ struct GroupedGemmCandidateIdentity
     GroupedGemmCandidateFamily family;
 };
 
-inline constexpr std::array<GroupedGemmCandidateIdentity, 23>
+inline constexpr std::array<GroupedGemmCandidateIdentity, 18>
     grouped_gemm_candidate_registry{{
         {GroupedGemmInstanceId::bw_family_selected,
          "bw_family.selected",
@@ -196,32 +186,17 @@ inline constexpr std::array<GroupedGemmCandidateIdentity, 23>
         {GroupedGemmInstanceId::v4_64_full_padding,
          "v4.64x128x64.full_padding",
          GroupedGemmCandidateFamily::v4},
-        {GroupedGemmInstanceId::v4_128_m4_full_padding_candidate,
-         "v4.128x128x64.m4.full_padding.candidate",
+        {GroupedGemmInstanceId::v3_128_m4_full_padding,
+         "v3.128x128x64.m4.full_padding.single_lds",
          GroupedGemmCandidateFamily::v4},
-        {GroupedGemmInstanceId::v4_128_m4_k32_full_padding_candidate,
-         "v4.128x128x32.m4.full_padding.candidate",
+        {GroupedGemmInstanceId::v3_128_m4_full_padding_gfx936,
+         "v3.128x128x64.m4.full_padding.single_lds.gfx936",
          GroupedGemmCandidateFamily::v4},
-        {GroupedGemmInstanceId::v4_m_threshold_full_padding_candidate,
-         "v4.64_128x128x64.m_threshold.full_padding.candidate",
+        {GroupedGemmInstanceId::v4_64_m01_4_gfx936,
+         "v4.64x128x64.nonpadding.m01_4.gfx936",
          GroupedGemmCandidateFamily::v4},
-        {GroupedGemmInstanceId::v4_128x64_m4_full_padding_candidate,
-         "v4.128x64x64.m4.full_padding.candidate",
-         GroupedGemmCandidateFamily::v4},
-        {GroupedGemmInstanceId::v4_128_m4_full_padding_grid2_candidate,
-         "v4.128x128x64.m4.full_padding.grid2.candidate",
-         GroupedGemmCandidateFamily::v4},
-        {GroupedGemmInstanceId::v3_128_m4_full_padding_candidate,
-         "v3.128x128x64.m4.full_padding.single_lds.candidate",
-         GroupedGemmCandidateFamily::v4},
-        {GroupedGemmInstanceId::v3_128_m4_full_padding_gfx936_candidate,
-         "v3.128x128x64.m4.full_padding.single_lds.gfx936.candidate",
-         GroupedGemmCandidateFamily::v4},
-        {GroupedGemmInstanceId::v4_64_m01_4_gfx936_candidate,
-         "v4.64x128x64.nonpadding.m01_4.gfx936.candidate",
-         GroupedGemmCandidateFamily::v4},
-        {GroupedGemmInstanceId::v6_m32_nonpadding_mle8_family_b_gfx936_candidate,
-         "v6.32x128x64.nonpadding.selector_m_le_8.family_b.gfx936.candidate",
+        {GroupedGemmInstanceId::v6_m32_nonpadding_mle8_family_b_gfx936,
+         "v6.32x128x64.nonpadding.selector_m_le_8.family_b.gfx936",
          GroupedGemmCandidateFamily::v4},
     }};
 
@@ -246,19 +221,13 @@ enum class GroupedGemmSelectionReason
     gfx938_mls,
     v4_aligned,
     v4_bf16_padding,
-    v4_fp16_full_padding_candidate,
-    v4_fp16_full_padding_candidate_k32,
-    v4_fp16_m_threshold_candidate,
-    v4_fp16_128x64_full_padding_candidate,
-    v4_fp16_full_padding_grid2_candidate,
-    v3_fp16_full_padding_candidate,
-    v3_fp16_full_padding_gfx936_candidate,
-    v6_family_b_m32_mle8_gfx936_candidate,
-    p2_bf16_g8_v4_64_m01_4_gfx936_candidate,
-    p2_bf16_g8_gfx936_fc2_nn_fast_vmem3_candidate,
-    p2_bf16_g8_gfx938_v4_route_candidate,
-    p2_bf16_g8_gfx938_v5_fc1_route_candidate,
-    p3_fp16_tn_m1024_k4096_route_candidate,
+    p1_family_a_v3_128_gfx938,
+    p1_family_a_v3_128_gfx936,
+    p1_family_b_v6_m32_mle8_gfx936,
+    p2_bf16_g8_v4_64_m01_4_gfx936,
+    p2_bf16_g8_gfx936_fc2_nn_fast_vmem3,
+    p2_bf16_g8_gfx938_v5_fc1_route,
+    p3_fp16_tn_m1024_k4096_route,
     v4_n_aligned,
     v4_fallback,
 };
@@ -330,7 +299,7 @@ constexpr GroupedGemmSelection select_grouped_gemm_candidate(
     const std::int64_t large_tile_m_threshold =
         problem.m.kind == GroupedGemmDimensionKind::device_lengths_with_capacity ? 1920 : 2048;
 
-    if(policy.enable_p3_fp16_tn_m1024_k4096_route_candidate && !is_bf16 && is_tn &&
+    if(policy.enable_p3_fp16_tn_m1024_k4096_route && !is_bf16 && is_tn &&
        problem.m.kind == GroupedGemmDimensionKind::common && m == 1024 && n == 4096 &&
        has_variable_k && k % problem.group_count == 0 && effective_k == 4096 &&
        !problem.may_have_empty_groups && !problem.group_lengths_are_ragged)
@@ -338,12 +307,12 @@ constexpr GroupedGemmSelection select_grouped_gemm_candidate(
         if(problem.arch == GroupedGemmArch::gfx936)
         {
             return {GroupedGemmInstanceId::gfx936_v3_dsreadm_backward_m_only_padding,
-                    GroupedGemmSelectionReason::p3_fp16_tn_m1024_k4096_route_candidate};
+                    GroupedGemmSelectionReason::p3_fp16_tn_m1024_k4096_route};
         }
         if(problem.arch == GroupedGemmArch::gfx938)
         {
             return {GroupedGemmInstanceId::gfx938_mls_large_256,
-                    GroupedGemmSelectionReason::p3_fp16_tn_m1024_k4096_route_candidate};
+                    GroupedGemmSelectionReason::p3_fp16_tn_m1024_k4096_route};
         }
     }
 
@@ -372,14 +341,13 @@ constexpr GroupedGemmSelection select_grouped_gemm_candidate(
             }
         }
 
-        if(policy.enable_p2_bf16_g8_gfx936_fc2_nn_fast_vmem3_candidate &&
+        if(policy.enable_p2_bf16_g8_gfx936_fc2_nn_fast_vmem3 &&
            problem.arch == GroupedGemmArch::gfx936 && is_bf16 && is_nn &&
            problem.group_count == 8 && problem.m.kind == GroupedGemmDimensionKind::common &&
            m >= 2048 && m <= 2221 && n == 2048 && k == 7168)
         {
             return {GroupedGemmInstanceId::bw_family_bf16_nn_fast_vmem3,
-                    GroupedGemmSelectionReason::
-                        p2_bf16_g8_gfx936_fc2_nn_fast_vmem3_candidate};
+                    GroupedGemmSelectionReason::p2_bf16_g8_gfx936_fc2_nn_fast_vmem3};
         }
 
         if(is_bf16_tn)
@@ -416,24 +384,14 @@ constexpr GroupedGemmSelection select_grouped_gemm_candidate(
         }
     }
 
-    if(policy.enable_p2_bf16_g8_gfx938_v5_fc1_route_candidate && is_bf16 && is_nt &&
+    if(policy.enable_p2_bf16_g8_gfx938_v5_fc1_route && is_bf16 && is_nt &&
        problem.arch == GroupedGemmArch::gfx938 && problem.group_count == 8 &&
        problem.m.kind == GroupedGemmDimensionKind::common && m >= 1918 && m <= 1921 &&
        n == 4096 && k == 7168)
     {
         return {m % 128 == 0 ? GroupedGemmInstanceId::v4_128_m_only_padding
                             : GroupedGemmInstanceId::v4_64_nonpadding,
-                GroupedGemmSelectionReason::p2_bf16_g8_gfx938_v5_fc1_route_candidate};
-    }
-
-    if(policy.enable_p2_bf16_g8_gfx938_v4_route_candidate && is_bf16 && is_nt &&
-       problem.arch == GroupedGemmArch::gfx938 && problem.group_count == 8 &&
-       problem.m.kind == GroupedGemmDimensionKind::common && m >= 1918 && m <= 1921 &&
-       n >= 2048 && k >= 2048 && n % 128 == 0 && k % 64 == 0)
-    {
-        return {m % 128 == 0 ? GroupedGemmInstanceId::v4_128_m_only_padding
-                            : GroupedGemmInstanceId::v4_64_nonpadding,
-                GroupedGemmSelectionReason::p2_bf16_g8_gfx938_v4_route_candidate};
+                GroupedGemmSelectionReason::p2_bf16_g8_gfx938_v5_fc1_route};
     }
 
     if(policy.enable_gfx938_mls && problem.arch == GroupedGemmArch::gfx938 &&
@@ -463,69 +421,39 @@ constexpr GroupedGemmSelection select_grouped_gemm_candidate(
         return {GroupedGemmInstanceId::v4_128_full_padding,
                 GroupedGemmSelectionReason::v4_bf16_padding};
     }
-    if(policy.enable_p2_bf16_g8_v4_64_m01_4_gfx936_candidate && is_bf16 &&
+    if(policy.enable_p2_bf16_g8_v4_64_m01_4_gfx936 && is_bf16 &&
        problem.group_count == 8 && problem.m.kind == GroupedGemmDimensionKind::common &&
        m >= 1918 && m <= 1921 && m % 128 != 0 && n >= 2048 && k >= 2048 &&
        n % 128 == 0 && k % 64 == 0 && problem.arch == GroupedGemmArch::gfx936 &&
        (is_nt || is_nn))
     {
-        return {GroupedGemmInstanceId::v4_64_m01_4_gfx936_candidate,
-                GroupedGemmSelectionReason::p2_bf16_g8_v4_64_m01_4_gfx936_candidate};
+        return {GroupedGemmInstanceId::v4_64_m01_4_gfx936,
+                GroupedGemmSelectionReason::p2_bf16_g8_v4_64_m01_4_gfx936};
     }
-    if(policy.enable_v4_fp16_m_threshold_candidate &&
+
+    // Earlier P1 V4 M4/K32/M-threshold/128x64/grid2 experiments did not beat
+    // these architecture-local V3 single-LDS routes and were retired.
+    if(policy.enable_p1_family_a_v3_128_gfx938 &&
        problem.arch == GroupedGemmArch::gfx938 && !is_bf16 && is_nn && effective_m >= 33 &&
        n >= 1024 && k >= 1024 && n % 128 != 0 && k % 64 == 0)
     {
-        return {GroupedGemmInstanceId::v4_m_threshold_full_padding_candidate,
-                GroupedGemmSelectionReason::v4_fp16_m_threshold_candidate};
+        return {GroupedGemmInstanceId::v3_128_m4_full_padding,
+                GroupedGemmSelectionReason::p1_family_a_v3_128_gfx938};
     }
-    if(policy.enable_v4_128x64_fp16_full_padding_candidate &&
-       problem.arch == GroupedGemmArch::gfx938 && !is_bf16 && is_nn && effective_m >= 33 &&
-       n >= 1024 && k >= 1024 && n % 128 != 0 && k % 64 == 0)
-    {
-        return {GroupedGemmInstanceId::v4_128x64_m4_full_padding_candidate,
-                GroupedGemmSelectionReason::v4_fp16_128x64_full_padding_candidate};
-    }
-    if(policy.enable_v3_128_fp16_full_padding_candidate &&
-       problem.arch == GroupedGemmArch::gfx938 && !is_bf16 && is_nn && effective_m >= 33 &&
-       n >= 1024 && k >= 1024 && n % 128 != 0 && k % 64 == 0)
-    {
-        return {GroupedGemmInstanceId::v3_128_m4_full_padding_candidate,
-                GroupedGemmSelectionReason::v3_fp16_full_padding_candidate};
-    }
-    if(policy.enable_v3_128_fp16_full_padding_gfx936_candidate &&
+    if(policy.enable_p1_family_a_v3_128_gfx936 &&
        problem.arch == GroupedGemmArch::gfx936 && !is_bf16 && is_nn && effective_m >= 33 &&
        n >= 1024 && k >= 1024 && n % 128 != 0 && k % 64 == 0)
     {
-        return {GroupedGemmInstanceId::v3_128_m4_full_padding_gfx936_candidate,
-                GroupedGemmSelectionReason::v3_fp16_full_padding_gfx936_candidate};
+        return {GroupedGemmInstanceId::v3_128_m4_full_padding_gfx936,
+                GroupedGemmSelectionReason::p1_family_a_v3_128_gfx936};
     }
-    if(policy.enable_v4_128_fp16_full_padding_grid2_candidate &&
-       problem.arch == GroupedGemmArch::gfx938 && !is_bf16 && is_nn && effective_m >= 33 &&
-       n >= 1024 && k >= 1024 && n % 128 != 0 && k % 64 == 0)
-    {
-        return {GroupedGemmInstanceId::v4_128_m4_full_padding_grid2_candidate,
-                GroupedGemmSelectionReason::v4_fp16_full_padding_grid2_candidate};
-    }
-    if(policy.enable_v4_128_fp16_full_padding_candidate_k32 &&
-       problem.arch == GroupedGemmArch::gfx938 && !is_bf16 && is_nn && effective_m >= 33 &&
-       n >= 1024 && k >= 1024 && n % 128 != 0 && k % 64 == 0)
-    {
-        return {GroupedGemmInstanceId::v4_128_m4_k32_full_padding_candidate,
-                GroupedGemmSelectionReason::v4_fp16_full_padding_candidate_k32};
-    }
-    if(policy.enable_v4_128_fp16_full_padding_candidate && !is_bf16 && is_nn &&
-       effective_m >= 33 && n >= 1024 && k >= 1024 && n % 128 != 0 && k % 64 == 0)
-    {
-        return {GroupedGemmInstanceId::v4_128_m4_full_padding_candidate,
-                GroupedGemmSelectionReason::v4_fp16_full_padding_candidate};
-    }
-    if(policy.enable_v6_family_b_m32_mle8_gfx936_candidate &&
+    // The wider M<=10 Family-B experiment had regressions; retain the proven M<=8 gate.
+    if(policy.enable_p1_family_b_v6_m32_mle8_gfx936 &&
        problem.arch == GroupedGemmArch::gfx936 && !is_bf16 && is_nn &&
        effective_m <= 8 && n == 3072 && k == 1232)
     {
-        return {GroupedGemmInstanceId::v6_m32_nonpadding_mle8_family_b_gfx936_candidate,
-                GroupedGemmSelectionReason::v6_family_b_m32_mle8_gfx936_candidate};
+        return {GroupedGemmInstanceId::v6_m32_nonpadding_mle8_family_b_gfx936,
+                GroupedGemmSelectionReason::p1_family_b_v6_m32_mle8_gfx936};
     }
     if(n % 128 == 0)
     {

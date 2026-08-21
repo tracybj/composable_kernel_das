@@ -91,24 +91,14 @@ static_assert(static_cast<std::uint32_t>(InstanceId::v4_64_full_padding) ==
               CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V4_64_FULL_PADDING_V1);
 static_assert(
     static_cast<std::uint32_t>(
-        InstanceId::v6_m32_nonpadding_mle8_family_b_gfx936_candidate) ==
-    CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V6_M32_NONPADDING_MLE8_FAMILY_B_GFX936_CANDIDATE_V1);
-static_assert(static_cast<std::uint32_t>(InstanceId::v4_128_m4_full_padding_candidate) ==
-              CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V4_128_M4_FULL_PADDING_CANDIDATE_V1);
-static_assert(static_cast<std::uint32_t>(InstanceId::v4_128_m4_k32_full_padding_candidate) ==
-              CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V4_128_M4_K32_FULL_PADDING_CANDIDATE_V1);
-static_assert(static_cast<std::uint32_t>(InstanceId::v4_m_threshold_full_padding_candidate) ==
-              CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V4_M_THRESHOLD_FULL_PADDING_CANDIDATE_V1);
-static_assert(static_cast<std::uint32_t>(InstanceId::v4_128x64_m4_full_padding_candidate) ==
-              CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V4_128X64_M4_FULL_PADDING_CANDIDATE_V1);
-static_assert(static_cast<std::uint32_t>(InstanceId::v4_128_m4_full_padding_grid2_candidate) ==
-              CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V4_128_M4_FULL_PADDING_GRID2_CANDIDATE_V1);
-static_assert(static_cast<std::uint32_t>(InstanceId::v3_128_m4_full_padding_candidate) ==
-              CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V3_128_M4_FULL_PADDING_CANDIDATE_V1);
-static_assert(static_cast<std::uint32_t>(InstanceId::v3_128_m4_full_padding_gfx936_candidate) ==
-              CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V3_128_M4_FULL_PADDING_GFX936_CANDIDATE_V1);
-static_assert(static_cast<std::uint32_t>(InstanceId::v4_64_m01_4_gfx936_candidate) ==
-              CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V4_64_M01_4_GFX936_CANDIDATE_V1);
+        InstanceId::v6_m32_nonpadding_mle8_family_b_gfx936) ==
+    CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V6_M32_NONPADDING_MLE8_FAMILY_B_GFX936_V1);
+static_assert(static_cast<std::uint32_t>(InstanceId::v3_128_m4_full_padding) ==
+              CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V3_128_M4_FULL_PADDING_V1);
+static_assert(static_cast<std::uint32_t>(InstanceId::v3_128_m4_full_padding_gfx936) ==
+              CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V3_128_M4_FULL_PADDING_GFX936_V1);
+static_assert(static_cast<std::uint32_t>(InstanceId::v4_64_m01_4_gfx936) ==
+              CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V4_64_M01_4_GFX936_V1);
 static_assert(static_cast<std::int32_t>(ck_tile::GroupedGemmCandidateFamily::bw_family) ==
               CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_FAMILY_BW_V1);
 static_assert(static_cast<std::int32_t>(ck_tile::GroupedGemmCandidateFamily::gfx936_v3) ==
@@ -267,72 +257,32 @@ int convert_problem(const ck_tile_hcu_grouped_gemm_problem_v1* source,
         (disabled &
          CK_TILE_HCU_GROUPED_GEMM_POLICY_DISABLE_BF16_TN_LOGICAL_K_TAIL_V1) == 0;
 
-#if defined(CK_TILE_GROUPED_GEMM_P1_FAMILY_B_V6_M32_MLE8_GFX936_CANDIDATE)
-    policy.enable_v6_family_b_m32_mle8_gfx936_candidate = true;
+#if defined(CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V3_128_GFX938_DISABLE)
+    policy.enable_p1_family_a_v3_128_gfx938 = false;
 #endif
 
-#if defined(CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V4_128_CANDIDATE)
-    policy.enable_v4_128_fp16_full_padding_candidate = true;
+#if defined(CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V3_128_GFX936_DISABLE)
+    policy.enable_p1_family_a_v3_128_gfx936 = false;
 #endif
 
-#if defined(CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V4_128_K32_CANDIDATE)
-    policy.enable_v4_128_fp16_full_padding_candidate_k32 = true;
-#endif
-
-#if defined(CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V4_M_THRESHOLD_CANDIDATE)
-    policy.enable_v4_fp16_m_threshold_candidate = true;
-#endif
-
-#if defined(CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V4_128X64_CANDIDATE)
-    policy.enable_v4_128x64_fp16_full_padding_candidate = true;
-#endif
-
-#if defined(CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V4_128_GRID2_CANDIDATE)
-    policy.enable_v4_128_fp16_full_padding_grid2_candidate = true;
-#endif
-
-#if defined(CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V3_128_CANDIDATE)
-    policy.enable_v3_128_fp16_full_padding_candidate = true;
-#endif
-
-#if defined(CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V3_128_GFX936_CANDIDATE)
-    policy.enable_v3_128_fp16_full_padding_gfx936_candidate = true;
-#endif
-
-#if defined(CK_TILE_GROUPED_GEMM_P2_BF16_G8_V4_64_M01_4_GFX936_CANDIDATE)
-    policy.enable_p2_bf16_g8_v4_64_m01_4_gfx936_candidate = true;
+#if defined(CK_TILE_GROUPED_GEMM_P1_FAMILY_B_V6_M32_MLE8_GFX936_DISABLE)
+    policy.enable_p1_family_b_v6_m32_mle8_gfx936 = false;
 #endif
 
 #if defined(CK_TILE_GROUPED_GEMM_P2_BF16_G8_V4_64_M01_4_GFX936_DISABLE)
-    policy.enable_p2_bf16_g8_v4_64_m01_4_gfx936_candidate = false;
-#endif
-
-#if defined(CK_TILE_GROUPED_GEMM_P2_BF16_G8_GFX936_FC2_NN_FAST_VMEM3_CANDIDATE)
-    policy.enable_p2_bf16_g8_gfx936_fc2_nn_fast_vmem3_candidate = true;
+    policy.enable_p2_bf16_g8_v4_64_m01_4_gfx936 = false;
 #endif
 
 #if defined(CK_TILE_GROUPED_GEMM_P2_BF16_G8_GFX936_FC2_NN_FAST_VMEM3_DISABLE)
-    policy.enable_p2_bf16_g8_gfx936_fc2_nn_fast_vmem3_candidate = false;
-#endif
-
-#if defined(CK_TILE_GROUPED_GEMM_P2_BF16_G8_GFX938_V4_ROUTE_CANDIDATE)
-    policy.enable_p2_bf16_g8_gfx938_v4_route_candidate = true;
-#endif
-
-#if defined(CK_TILE_GROUPED_GEMM_P2_BF16_G8_GFX938_V5_FC1_ROUTE_CANDIDATE)
-    policy.enable_p2_bf16_g8_gfx938_v5_fc1_route_candidate = true;
+    policy.enable_p2_bf16_g8_gfx936_fc2_nn_fast_vmem3 = false;
 #endif
 
 #if defined(CK_TILE_GROUPED_GEMM_P2_BF16_G8_GFX938_V5_FC1_ROUTE_DISABLE)
-    policy.enable_p2_bf16_g8_gfx938_v5_fc1_route_candidate = false;
-#endif
-
-#if defined(CK_TILE_GROUPED_GEMM_P3_FP16_TN_M1024_K4096_ROUTE_CANDIDATE)
-    policy.enable_p3_fp16_tn_m1024_k4096_route_candidate = true;
+    policy.enable_p2_bf16_g8_gfx938_v5_fc1_route = false;
 #endif
 
 #if defined(CK_TILE_GROUPED_GEMM_P3_FP16_TN_M1024_K4096_ROUTE_DISABLE)
-    policy.enable_p3_fp16_tn_m1024_k4096_route_candidate = false;
+    policy.enable_p3_fp16_tn_m1024_k4096_route = false;
 #endif
 
 #if defined(CK_TILE_GROUPED_GEMM_DEVICE_ARGS_RDC_BUILD)
@@ -443,15 +393,10 @@ int dispatch_registry_candidate(const ck_tile::GroupedGemmProblem& problem,
     case ck_tile::GroupedGemmInstanceId::v4_128_full_padding:
     case ck_tile::GroupedGemmInstanceId::v4_64_nonpadding:
     case ck_tile::GroupedGemmInstanceId::v4_64_full_padding:
-    case ck_tile::GroupedGemmInstanceId::v6_m32_nonpadding_mle8_family_b_gfx936_candidate:
-    case ck_tile::GroupedGemmInstanceId::v4_128_m4_full_padding_candidate:
-    case ck_tile::GroupedGemmInstanceId::v4_128_m4_k32_full_padding_candidate:
-    case ck_tile::GroupedGemmInstanceId::v4_m_threshold_full_padding_candidate:
-    case ck_tile::GroupedGemmInstanceId::v4_128x64_m4_full_padding_candidate:
-    case ck_tile::GroupedGemmInstanceId::v4_128_m4_full_padding_grid2_candidate:
-    case ck_tile::GroupedGemmInstanceId::v3_128_m4_full_padding_candidate:
-    case ck_tile::GroupedGemmInstanceId::v3_128_m4_full_padding_gfx936_candidate:
-    case ck_tile::GroupedGemmInstanceId::v4_64_m01_4_gfx936_candidate:
+    case ck_tile::GroupedGemmInstanceId::v6_m32_nonpadding_mle8_family_b_gfx936:
+    case ck_tile::GroupedGemmInstanceId::v3_128_m4_full_padding:
+    case ck_tile::GroupedGemmInstanceId::v3_128_m4_full_padding_gfx936:
+    case ck_tile::GroupedGemmInstanceId::v4_64_m01_4_gfx936:
         if(dtype == ck_tile::GroupedGemmDataType::fp16)
             return ck_tile_hcu_grouped_gemm_registry_fp16_device_args(
                 static_cast<std::uint32_t>(instance_id),
@@ -524,33 +469,17 @@ void candidate_masks(ck_tile::GroupedGemmInstanceId id,
     case ck_tile::GroupedGemmInstanceId::v4_128_m_only_padding:
     case ck_tile::GroupedGemmInstanceId::v4_64_nonpadding:
     case ck_tile::GroupedGemmInstanceId::v4_64_full_padding: break;
-    case ck_tile::GroupedGemmInstanceId::v4_128_m4_full_padding_candidate:
-        data_type_mask = DTypeFp16;
-        layout_mask    = LayoutNn;
-        break;
-    case ck_tile::GroupedGemmInstanceId::v4_128_m4_k32_full_padding_candidate:
+    case ck_tile::GroupedGemmInstanceId::v3_128_m4_full_padding:
         architecture_mask = ArchGfx938;
         data_type_mask     = DTypeFp16;
         layout_mask        = LayoutNn;
         break;
-    case ck_tile::GroupedGemmInstanceId::v4_m_threshold_full_padding_candidate:
-        architecture_mask = ArchGfx938;
-        data_type_mask     = DTypeFp16;
-        layout_mask        = LayoutNn;
-        break;
-    case ck_tile::GroupedGemmInstanceId::v4_128x64_m4_full_padding_candidate:
-    case ck_tile::GroupedGemmInstanceId::v4_128_m4_full_padding_grid2_candidate:
-    case ck_tile::GroupedGemmInstanceId::v3_128_m4_full_padding_candidate:
-        architecture_mask = ArchGfx938;
-        data_type_mask     = DTypeFp16;
-        layout_mask        = LayoutNn;
-        break;
-    case ck_tile::GroupedGemmInstanceId::v3_128_m4_full_padding_gfx936_candidate:
+    case ck_tile::GroupedGemmInstanceId::v3_128_m4_full_padding_gfx936:
         architecture_mask = ArchGfx936;
         data_type_mask     = DTypeFp16;
         layout_mask        = LayoutNn;
         break;
-    case ck_tile::GroupedGemmInstanceId::v4_64_m01_4_gfx936_candidate:
+    case ck_tile::GroupedGemmInstanceId::v4_64_m01_4_gfx936:
         architecture_mask = ArchGfx936;
         data_type_mask     = DTypeBf16;
         layout_mask        = LayoutNt | LayoutNn;
@@ -558,7 +487,7 @@ void candidate_masks(ck_tile::GroupedGemmInstanceId id,
     case ck_tile::GroupedGemmInstanceId::v4_128_full_padding:
         data_type_mask = DTypeBf16;
         break;
-    case ck_tile::GroupedGemmInstanceId::v6_m32_nonpadding_mle8_family_b_gfx936_candidate:
+    case ck_tile::GroupedGemmInstanceId::v6_m32_nonpadding_mle8_family_b_gfx936:
         architecture_mask = ArchGfx936;
         data_type_mask     = DTypeFp16;
         layout_mask        = LayoutNn;
