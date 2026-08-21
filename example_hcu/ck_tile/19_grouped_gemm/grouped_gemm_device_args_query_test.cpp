@@ -296,6 +296,19 @@ int main()
         passed &= expect_selection(p2_fixed, 4002, "gfx936_p2_fixed_m_rollback");
 #endif
 
+        auto p2_fc2_nn = make_fixed_m_problem(CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_BF16_V1,
+                                              CK_TILE_HCU_GROUPED_GEMM_LAYOUT_NN_V1,
+                                              8,
+                                              2052,
+                                              2048,
+                                              7168);
+#if defined(CK_TILE_GROUPED_GEMM_P2_BF16_G8_GFX936_FC2_NN_FAST_VMEM3_CANDIDATE) && \
+    !defined(CK_TILE_GROUPED_GEMM_P2_BF16_G8_GFX936_FC2_NN_FAST_VMEM3_DISABLE)
+        passed &= expect_selection(p2_fc2_nn, 1002, "gfx936_p2_fc2_nn_fast_vmem3_default");
+#else
+        passed &= expect_selection(p2_fc2_nn, 1000, "gfx936_p2_fc2_nn_rollback");
+#endif
+
         auto p3_homogeneous = make_homogeneous_tn_problem(3, 1024, 4096, 4096);
 #if !defined(CK_TILE_GROUPED_GEMM_P3_FP16_TN_M1024_K4096_ROUTE_DISABLE)
         passed &= expect_selection(p3_homogeneous, 2001, "gfx936_p3_homogeneous_candidate");
@@ -332,6 +345,14 @@ int main()
         selected.policy_disable_flags =
             CK_TILE_HCU_GROUPED_GEMM_POLICY_DISABLE_GFX938_MLS_V1;
         passed &= expect_selection(selected, 4000, "gfx938_v4_rollback");
+
+        auto p2_fc2_nn = make_fixed_m_problem(CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_BF16_V1,
+                                              CK_TILE_HCU_GROUPED_GEMM_LAYOUT_NN_V1,
+                                              8,
+                                              2052,
+                                              2048,
+                                              7168);
+        passed &= expect_selection(p2_fc2_nn, 3000, "gfx938_p2_gfx936_fc2_nn_isolated");
 
         auto p3_homogeneous = make_homogeneous_tn_problem(16, 1024, 4096, 4096);
 #if !defined(CK_TILE_GROUPED_GEMM_P3_FP16_TN_M1024_K4096_ROUTE_DISABLE)

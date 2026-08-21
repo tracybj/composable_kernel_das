@@ -307,6 +307,14 @@ int convert_problem(const ck_tile_hcu_grouped_gemm_problem_v1* source,
     policy.enable_p2_bf16_g8_v4_64_m01_4_gfx936_candidate = false;
 #endif
 
+#if defined(CK_TILE_GROUPED_GEMM_P2_BF16_G8_GFX936_FC2_NN_FAST_VMEM3_CANDIDATE)
+    policy.enable_p2_bf16_g8_gfx936_fc2_nn_fast_vmem3_candidate = true;
+#endif
+
+#if defined(CK_TILE_GROUPED_GEMM_P2_BF16_G8_GFX936_FC2_NN_FAST_VMEM3_DISABLE)
+    policy.enable_p2_bf16_g8_gfx936_fc2_nn_fast_vmem3_candidate = false;
+#endif
+
 #if defined(CK_TILE_GROUPED_GEMM_P2_BF16_G8_GFX938_V4_ROUTE_CANDIDATE)
     policy.enable_p2_bf16_g8_gfx938_v4_route_candidate = true;
 #endif

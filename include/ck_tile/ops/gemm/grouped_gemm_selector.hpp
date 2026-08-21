@@ -95,6 +95,9 @@ struct GroupedGemmSelectorPolicy
     // Production default after independent gfx936 focused/full316 validation. Callers can
     // still set this field false to roll the narrow fixed-M route back to V4 64x128 M01=1.
     bool enable_p2_bf16_g8_v4_64_m01_4_gfx936_candidate = true;
+    // Production default after independent gfx936 correctness/focused validation. Callers can
+    // still set this field false to roll the exact FC2 NN route back to bw_family_selected.
+    bool enable_p2_bf16_g8_gfx936_fc2_nn_fast_vmem3_candidate = true;
     bool enable_p2_bf16_g8_gfx938_v4_route_candidate = false;
     // Production default after dual-session focused/full316 validation. Callers can
     // still set this field false to roll the narrow gfx938 FC1 route back to MLS.
@@ -252,6 +255,7 @@ enum class GroupedGemmSelectionReason
     v3_fp16_full_padding_gfx936_candidate,
     v6_family_b_m32_mle8_gfx936_candidate,
     p2_bf16_g8_v4_64_m01_4_gfx936_candidate,
+    p2_bf16_g8_gfx936_fc2_nn_fast_vmem3_candidate,
     p2_bf16_g8_gfx938_v4_route_candidate,
     p2_bf16_g8_gfx938_v5_fc1_route_candidate,
     p3_fp16_tn_m1024_k4096_route_candidate,
@@ -366,6 +370,16 @@ constexpr GroupedGemmSelection select_grouped_gemm_candidate(
                 return {GroupedGemmInstanceId::bw_family_bf16_nn_fast_vmem3,
                         GroupedGemmSelectionReason::bw_family};
             }
+        }
+
+        if(policy.enable_p2_bf16_g8_gfx936_fc2_nn_fast_vmem3_candidate &&
+           problem.arch == GroupedGemmArch::gfx936 && is_bf16 && is_nn &&
+           problem.group_count == 8 && problem.m.kind == GroupedGemmDimensionKind::common &&
+           m >= 2048 && m <= 2221 && n == 2048 && k == 7168)
+        {
+            return {GroupedGemmInstanceId::bw_family_bf16_nn_fast_vmem3,
+                    GroupedGemmSelectionReason::
+                        p2_bf16_g8_gfx936_fc2_nn_fast_vmem3_candidate};
         }
 
         if(is_bf16_tn)
