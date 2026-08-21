@@ -59,7 +59,11 @@ typedef enum ck_tile_hcu_grouped_gemm_instance_id_v1
     CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V4_128_M_ONLY_PADDING_V1 = 4000,
     CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V4_128_FULL_PADDING_V1 = 4001,
     CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V4_64_NONPADDING_V1 = 4002,
-    CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V4_64_FULL_PADDING_V1 = 4003
+    CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V4_64_FULL_PADDING_V1 = 4003,
+    CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V3_128_M4_FULL_PADDING_V1 = 4009,
+    CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V3_128_M4_FULL_PADDING_GFX936_V1 = 4010,
+    CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V4_64_M01_4_GFX936_V1 = 4011,
+    CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V6_M32_NONPADDING_MLE8_FAMILY_B_GFX936_V1 = 4104
 } ck_tile_hcu_grouped_gemm_instance_id_v1;
 
 typedef enum ck_tile_hcu_grouped_gemm_candidate_family_v1
@@ -103,6 +107,8 @@ typedef enum ck_tile_hcu_grouped_gemm_dimension_kind_v1
 typedef enum ck_tile_hcu_grouped_gemm_problem_flags_v1
 {
     CK_TILE_HCU_GROUPED_GEMM_PROBLEM_MAY_HAVE_EMPTY_GROUPS_V1 = 1u << 0,
+    // Set only when the caller knows that host-visible per-group logical lengths differ.
+    // A DEVICE_LENGTHS_WITH_CAPACITY dimension may still describe homogeneous groups.
     CK_TILE_HCU_GROUPED_GEMM_PROBLEM_GROUP_LENGTHS_RAGGED_V1  = 1u << 1
 } ck_tile_hcu_grouped_gemm_problem_flags_v1;
 

@@ -226,6 +226,17 @@ struct GemmConfigComputeV4Mpad : public GemmConfigComputeV4<PrecType>
     static constexpr bool kPadK = true;
 };
 
+// P2 gfx936 production locality path. Preserve the BF16 V4 64x128 nonpadding
+// geometry and compute pipeline; group four adjacent M tiles under the same
+// N/B locality window.
+template <typename PrecType>
+struct GemmConfigComputeV4M01_4Gfx936 : public GemmConfigComputeV4<PrecType>
+{
+    static_assert(std::is_same_v<PrecType, ck_tile::bf16_t>,
+                  "The gfx936 V4 64x128 M01=4 path is BF16-only");
+    static constexpr ck_tile::index_t TileParitionerM01 = 4;
+};
+
 // Tuning candidate for large, regular FP16/BF16 GEMMs. Keep it separate from the production
 // V4 config until same-session A/B measurements and all layout/padding regressions pass.
 //
@@ -281,6 +292,31 @@ struct GemmConfigComputeV4SquareM4Mpad : public GemmConfigComputeV4SquareM4<Prec
     static constexpr bool kPadM = true;
     static constexpr bool kPadN = true;
     static constexpr bool kPadK = true;
+};
+
+// P1 Family-B production path for gfx936. It halves M64/MWarp2 to M32/MWarp1
+// for FP16 NN N3072/K1232 groups with selector-effective M<=8. The wider
+// M<=10 experiment regressed individual rows and was retired.
+template <typename PrecType>
+struct GemmConfigComputeV6FamilyBM32Mle8Gfx936
+    : public GemmConfigComputeV4<PrecType>
+{
+    static_assert(std::is_same_v<PrecType, ck_tile::half_t>,
+                  "The Family-B V6 M32 selector-effective-M<=8 gfx936 path is FP16-only");
+    static constexpr ck_tile::index_t M_Tile = 32;
+    static constexpr ck_tile::index_t M_Warp = 1;
+};
+
+// P1 Family-A production geometry. Earlier V4/K32/128x64/grid2 variants did
+// not beat this V3 single-LDS implementation and were retired.
+template <typename PrecType>
+struct GemmConfigComputeV3SquareM4Mpad
+    : public GemmConfigComputeV4SquareM4Mpad<PrecType>
+{
+    static_assert(std::is_same_v<PrecType, ck_tile::half_t>,
+                  "The V3 square M4 single-LDS path is FP16-only");
+    static constexpr bool DoubleSmemBuffer     = false;
+    static constexpr ck_tile::index_t Pipeline = CK_TILE_PIPELINE_COMPUTE_V3;
 };
 
 // Dynamic grouped GEMM often has device-resident per-group M while host-visible

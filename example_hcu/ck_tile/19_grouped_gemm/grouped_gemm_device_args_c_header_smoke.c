@@ -13,17 +13,14 @@ int main(void)
     selection.struct_size = (uint32_t)sizeof(selection);
     launch.struct_size = (uint32_t)sizeof(launch);
     candidate.struct_size = (uint32_t)sizeof(candidate);
-    candidate.instance_id = CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V4_64_FULL_PADDING_V1;
+    candidate.instance_id =
+        CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V3_128_M4_FULL_PADDING_V1;
     candidate.family = CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_FAMILY_V4_V1;
-    candidate.architecture_mask = CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX936_V1 |
-                                  CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX938_V1;
-    candidate.data_type_mask = CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_MASK_FP16_V1 |
-                               CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_MASK_BF16_V1;
-    candidate.layout_mask = CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NT_V1 |
-                            CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NN_V1 |
-                            CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_TN_V1;
+    candidate.architecture_mask = CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX938_V1;
+    candidate.data_type_mask = CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_MASK_FP16_V1;
+    candidate.layout_mask = CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NN_V1;
     return CK_TILE_HCU_GROUPED_GEMM_DEVICE_ARGS_ABI_VERSION == 1u &&
-                   candidate.instance_id == 4003u
+                   candidate.instance_id == 4009u
                ? 0
                : 1;
 }

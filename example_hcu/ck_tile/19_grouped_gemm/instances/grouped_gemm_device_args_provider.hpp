@@ -233,6 +233,41 @@ int launch_registry_candidate(ck_tile::GroupedGemmInstanceId instance_id,
     case ck_tile::GroupedGemmInstanceId::v4_64_full_padding:
         return launch_layout<GemmConfigComputeV4Mpad<PrecType>, PrecType>(
             layout, device_args, group_count, num_cu, stream);
+    case ck_tile::GroupedGemmInstanceId::v4_64_m01_4_gfx936:
+        if constexpr(std::is_same_v<PrecType, ck_tile::bf16_t>)
+        {
+            if(layout == ck_tile::GroupedGemmLayout::nt ||
+               layout == ck_tile::GroupedGemmLayout::nn)
+                return launch_layout<GemmConfigComputeV4M01_4Gfx936<PrecType>,
+                                     PrecType>(
+                    layout, device_args, group_count, num_cu, stream);
+        }
+        break;
+    case ck_tile::GroupedGemmInstanceId::v6_m32_nonpadding_mle8_family_b_gfx936:
+        if constexpr(std::is_same_v<PrecType, ck_tile::half_t>)
+        {
+            if(layout == ck_tile::GroupedGemmLayout::nn)
+                return launch_layout<GemmConfigComputeV6FamilyBM32Mle8Gfx936<PrecType>,
+                                     PrecType>(
+                    layout, device_args, group_count, num_cu, stream);
+        }
+        break;
+    case ck_tile::GroupedGemmInstanceId::v3_128_m4_full_padding:
+        if constexpr(std::is_same_v<PrecType, ck_tile::half_t>)
+        {
+            if(layout == ck_tile::GroupedGemmLayout::nn)
+                return launch_layout<GemmConfigComputeV3SquareM4Mpad<PrecType>, PrecType>(
+                    layout, device_args, group_count, num_cu, stream);
+        }
+        break;
+    case ck_tile::GroupedGemmInstanceId::v3_128_m4_full_padding_gfx936:
+        if constexpr(std::is_same_v<PrecType, ck_tile::half_t>)
+        {
+            if(layout == ck_tile::GroupedGemmLayout::nn)
+                return launch_layout<GemmConfigComputeV3SquareM4Mpad<PrecType>, PrecType>(
+                    layout, device_args, group_count, num_cu, stream);
+        }
+        break;
     }
     return CK_TILE_HCU_GROUPED_GEMM_DEVICE_ARGS_UNSUPPORTED_V1;
 }

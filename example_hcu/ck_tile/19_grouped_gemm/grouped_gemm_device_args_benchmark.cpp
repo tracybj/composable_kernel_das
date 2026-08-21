@@ -1368,10 +1368,20 @@ int run(const Options& options)
     problem.layout        = selector_layout(options.layout);
     problem.group_count   = options.group_count;
     if(!options.group_lengths.empty())
-        problem.problem_flags = CK_TILE_HCU_GROUPED_GEMM_PROBLEM_GROUP_LENGTHS_RAGGED_V1 |
-                                (options.allow_empty_groups
-                                     ? CK_TILE_HCU_GROUPED_GEMM_PROBLEM_MAY_HAVE_EMPTY_GROUPS_V1
-                                     : 0u);
+    {
+        const bool group_lengths_are_ragged =
+            std::adjacent_find(options.group_lengths.begin(),
+                               options.group_lengths.end(),
+                               [](std::int64_t lhs, std::int64_t rhs) { return lhs != rhs; }) !=
+            options.group_lengths.end();
+        problem.problem_flags =
+            (group_lengths_are_ragged
+                 ? CK_TILE_HCU_GROUPED_GEMM_PROBLEM_GROUP_LENGTHS_RAGGED_V1
+                 : 0u) |
+            (options.allow_empty_groups
+                 ? CK_TILE_HCU_GROUPED_GEMM_PROBLEM_MAY_HAVE_EMPTY_GROUPS_V1
+                 : 0u);
+    }
     problem.m             = plan.variable_m ? device_dimension(plan.capacity)
                                             : common_dimension(options.m);
     problem.n             = common_dimension(options.n);

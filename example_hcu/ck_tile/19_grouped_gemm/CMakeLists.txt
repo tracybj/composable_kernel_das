@@ -29,6 +29,41 @@ add_executable(${TILE_EXAMPLE_GROUPED_GEMM}
 )
 target_include_directories(${TILE_EXAMPLE_GROUPED_GEMM} PRIVATE ${CMAKE_CURRENT_LIST_DIR})
 option(CK_TILE_GROUPED_GEMM_RESOURCE_REPORT "Print grouped_gemm kernel resource usage during compile" OFF)
+option(CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V3_128_GFX938_DISABLE
+    "Disable the default gfx938 FP16 NN ragged-M Family-A V3 single-LDS route" OFF)
+option(CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V3_128_GFX936_DISABLE
+    "Disable the default gfx936 FP16 NN ragged-M Family-A V3 single-LDS route" OFF)
+option(CK_TILE_GROUPED_GEMM_P1_FAMILY_B_V6_M32_MLE8_GFX936_DISABLE
+    "Disable the default gfx936 FP16 NN Family-B selector-effective-M<=8 V6 route" OFF)
+option(CK_TILE_GROUPED_GEMM_P2_BF16_G8_V4_64_M01_4_GFX936_DISABLE
+    "Disable the default gfx936 BF16 G8 fixed-M 1918..1921 V4 64x128 M01=4 route"
+    OFF)
+option(CK_TILE_GROUPED_GEMM_P2_BF16_G8_GFX936_FC2_NN_FAST_VMEM3_DISABLE
+    "Disable the default gfx936 BF16 G8 common-M 2048..2221 FC2 NN fast-vmem3 route"
+    OFF)
+option(CK_TILE_GROUPED_GEMM_P2_BF16_G8_GFX938_V5_FC1_ROUTE_DISABLE
+    "Disable the default gfx938 BF16 G8 fixed-M 1918..1921 NT N4096 K7168 V4 route"
+    OFF)
+option(CK_TILE_GROUPED_GEMM_P3_FP16_TN_M1024_K4096_ROUTE_DISABLE
+    "Disable the default dual-architecture FP16 TN homogeneous M1024 N4096 K4096 selector exchange"
+    OFF)
+
+set(HCU_GROUPED_GEMM_DEFAULT_ROUTE_DISABLE_OPTIONS
+    CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V3_128_GFX938_DISABLE
+    CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V3_128_GFX936_DISABLE
+    CK_TILE_GROUPED_GEMM_P1_FAMILY_B_V6_M32_MLE8_GFX936_DISABLE
+    CK_TILE_GROUPED_GEMM_P2_BF16_G8_V4_64_M01_4_GFX936_DISABLE
+    CK_TILE_GROUPED_GEMM_P2_BF16_G8_GFX936_FC2_NN_FAST_VMEM3_DISABLE
+    CK_TILE_GROUPED_GEMM_P2_BF16_G8_GFX938_V5_FC1_ROUTE_DISABLE
+    CK_TILE_GROUPED_GEMM_P3_FP16_TN_M1024_K4096_ROUTE_DISABLE)
+
+function(ck_tile_hcu_grouped_gemm_apply_default_route_disables target_name)
+    foreach(route_disable IN LISTS HCU_GROUPED_GEMM_DEFAULT_ROUTE_DISABLE_OPTIONS)
+        if(${route_disable})
+            target_compile_definitions(${target_name} PRIVATE ${route_disable})
+        endif()
+    endforeach()
+endfunction()
 if(CK_TILE_GROUPED_GEMM_RESOURCE_REPORT)
     target_compile_options(${TILE_EXAMPLE_GROUPED_GEMM} PRIVATE "-Rpass-analysis=kernel-resource-usage")
 endif()
@@ -249,6 +284,7 @@ if(HCU_GROUPED_GEMM_RDC_BUILD)
     target_compile_definitions(ck_tile_hcu_grouped_gemm
         PRIVATE CK_TILE_GROUPED_GEMM_DEVICE_ARGS_RDC_BUILD)
 endif()
+ck_tile_hcu_grouped_gemm_apply_default_route_disables(ck_tile_hcu_grouped_gemm)
 if(GPU_TARGETS MATCHES "gfx936")
     target_compile_definitions(ck_tile_hcu_grouped_gemm
         PRIVATE CK_TILE_GROUPED_GEMM_DEVICE_ARGS_REGISTRY_GFX936)
@@ -348,6 +384,8 @@ add_custom_target(tile_example_grouped_gemm_device_args_c_header_smoke
 
 add_executable(tile_example_grouped_gemm_device_args_query_test EXCLUDE_FROM_ALL
     grouped_gemm_device_args_query_test.cpp)
+ck_tile_hcu_grouped_gemm_apply_default_route_disables(
+    tile_example_grouped_gemm_device_args_query_test)
 target_link_libraries(tile_example_grouped_gemm_device_args_query_test
     PRIVATE ck_tile_hcu_grouped_gemm)
 if(HCU_GROUPED_GEMM_RDC_BUILD)
