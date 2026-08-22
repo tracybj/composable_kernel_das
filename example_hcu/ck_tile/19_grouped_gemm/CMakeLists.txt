@@ -202,6 +202,66 @@ if(GPU_TARGETS MATCHES "gfx938|gfx946")
     endforeach()
 endif()
 
+# gfx938 quant grouped-GEMM instances and the versioned device-args C ABI are
+# CK-owned. Keep their heavy gemm_quant.hpp closure isolated from the existing
+# non-quant provider archive.
+if(GPU_TARGETS MATCHES "gfx938")
+    set(HCU_QUANT_GROUPED_GEMM_DEVICE_ARGS_PROVIDER_MANIFEST
+        ${CMAKE_CURRENT_LIST_DIR}/grouped_gemm_quant_device_args_provider_sources.txt)
+    file(STRINGS ${HCU_QUANT_GROUPED_GEMM_DEVICE_ARGS_PROVIDER_MANIFEST}
+        HCU_QUANT_GROUPED_GEMM_DEVICE_ARGS_PROVIDER_SOURCES
+        REGEX "^[^#].+")
+    set_source_files_properties(${HCU_QUANT_GROUPED_GEMM_DEVICE_ARGS_PROVIDER_SOURCES}
+        PROPERTIES LANGUAGE CXX)
+
+    add_library(ck_tile_hcu_quant_grouped_gemm_device_args_providers STATIC EXCLUDE_FROM_ALL
+        ${HCU_QUANT_GROUPED_GEMM_DEVICE_ARGS_PROVIDER_SOURCES})
+    target_include_directories(ck_tile_hcu_quant_grouped_gemm_device_args_providers
+        PRIVATE ${CMAKE_CURRENT_LIST_DIR})
+    target_compile_definitions(ck_tile_hcu_quant_grouped_gemm_device_args_providers
+        PRIVATE CK_TILE_HCU_QUANT_GEMM_GFX938=1)
+    target_compile_options(ck_tile_hcu_quant_grouped_gemm_device_args_providers
+        PRIVATE "-Wno-unused-template" "-Wno-unneeded-internal-declaration")
+    set_target_properties(ck_tile_hcu_quant_grouped_gemm_device_args_providers
+        PROPERTIES POSITION_INDEPENDENT_CODE ON)
+    target_compile_options(ck_tile_hcu_quant_grouped_gemm_device_args_providers
+        PRIVATE
+            "-fno-offload-uniform-block"
+            "SHELL: -mllvm --lsr-drop-solution=1"
+            "SHELL: -mllvm -enable-post-misched=0"
+            "SHELL: -mllvm -amdgpu-early-inline-all=true"
+            "-fno-gpu-rdc")
+
+    add_library(ck_tile_hcu_quant_grouped_gemm STATIC EXCLUDE_FROM_ALL
+        grouped_gemm_quant_device_args.cpp)
+    target_include_directories(ck_tile_hcu_quant_grouped_gemm
+        PRIVATE ${CMAKE_CURRENT_LIST_DIR})
+    target_compile_definitions(ck_tile_hcu_quant_grouped_gemm
+        PRIVATE CK_TILE_HCU_QUANT_GEMM_GFX938=1)
+    set_target_properties(ck_tile_hcu_quant_grouped_gemm
+        PROPERTIES POSITION_INDEPENDENT_CODE ON)
+    target_compile_options(ck_tile_hcu_quant_grouped_gemm
+        PRIVATE
+            "-fno-offload-uniform-block"
+            "SHELL: -mllvm --lsr-drop-solution=1"
+            "SHELL: -mllvm -enable-post-misched=0"
+            "SHELL: -mllvm -amdgpu-early-inline-all=true"
+            "-fno-gpu-rdc")
+    target_link_libraries(ck_tile_hcu_quant_grouped_gemm
+        PUBLIC ck_tile_hcu_quant_grouped_gemm_device_args_providers)
+
+    add_executable(tile_example_grouped_gemm_quant_device_args_smoke EXCLUDE_FROM_ALL
+        grouped_gemm_quant_device_args_smoke.cpp)
+    target_compile_definitions(tile_example_grouped_gemm_quant_device_args_smoke
+        PRIVATE CK_TILE_HCU_QUANT_GEMM_GFX938=1)
+    target_link_libraries(tile_example_grouped_gemm_quant_device_args_smoke
+        PRIVATE ck_tile_hcu_quant_grouped_gemm)
+    add_test(NAME tile_example_grouped_gemm_quant_device_args_smoke
+        COMMAND $<TARGET_FILE:tile_example_grouped_gemm_quant_device_args_smoke>)
+    set_tests_properties(tile_example_grouped_gemm_quant_device_args_smoke
+        PROPERTIES LABELS "hcu;ck_tile;grouped_gemm;quant;device_args;smoke")
+endif()
+
 add_library(ck_tile_hcu_grouped_gemm STATIC EXCLUDE_FROM_ALL
     grouped_gemm.cpp
     grouped_gemm_device_args.cpp
@@ -367,6 +427,29 @@ add_test(NAME tile_example_grouped_gemm_selector_test
     COMMAND $<TARGET_FILE:tile_example_grouped_gemm_selector_test>)
 set_tests_properties(tile_example_grouped_gemm_selector_test
     PROPERTIES LABELS "hcu;ck_tile;grouped_gemm;selector")
+
+# Host-only quant contract/selector test. It covers the reported gfx938
+# group-count-sensitive cases without linking or launching a device provider.
+add_executable(tile_example_grouped_gemm_quant_selector_test EXCLUDE_FROM_ALL
+    grouped_gemm_quant_selector_test.cpp)
+add_test(NAME tile_example_grouped_gemm_quant_selector_test
+    COMMAND $<TARGET_FILE:tile_example_grouped_gemm_quant_selector_test>)
+set_tests_properties(tile_example_grouped_gemm_quant_selector_test
+    PROPERTIES LABELS "hcu;ck_tile;grouped_gemm;quant;selector")
+
+add_custom_target(tile_example_grouped_gemm_quant_device_args_c_header_smoke
+    COMMAND ${CMAKE_C_COMPILER}
+            -std=c11
+            -Wall
+            -Wextra
+            -Werror
+            -I${PROJECT_SOURCE_DIR}/include
+            -c
+            ${CMAKE_CURRENT_LIST_DIR}/grouped_gemm_quant_device_args_c_header_smoke.c
+            -o
+            ${CMAKE_CURRENT_BINARY_DIR}/grouped_gemm_quant_device_args_c_header_smoke.o
+    COMMENT "Compiling quant grouped-GEMM device-args public header as C11"
+    VERBATIM)
 
 # Compile the installed device-args header as strict C11, independently of
 # every C++ implementation header and the directory-level HIP compile flags.
