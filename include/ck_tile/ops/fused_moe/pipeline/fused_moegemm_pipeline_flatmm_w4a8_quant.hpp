@@ -97,7 +97,7 @@ struct FusedMoeGemmPipeline_Flatmm_W4A8_quant
 
     using QT_BlockTile  = ck_tile::sequence<Block_M0, QuantBlockSizeK_>;    // <16, 64>
     using QT_BlockWarps = ck_tile::sequence<BlockShape::NumWarps, 1>;       // warps along M = 4, warps along N = 1
-    using QT_WarpTile   = ck_tile::sequence<4, warpSize / 4 * QT_Vector_N_>;  //warpSize / 4 * QT_Vector_N_ == QuantBlockSizeK_
+    using QT_WarpTile   = ck_tile::sequence<4, get_warp_size() / 4 * QT_Vector_N_>;  //get_warp_size() / 4 * QT_Vector_N_ == QuantBlockSizeK_
     //using QT_WarpTile   = ck_tile::sequence<2, warpSize / 2 * QT_Vector_N_>;  //warpSize / 2 * QT_Vector_N_ == QuantBlockSizeK_
     // using QT_WarpTile   = ck_tile::sequence<1, warpSize * QT_Vector_N_>;
     using QT_Vector     = ck_tile::sequence<1, QT_Vector_N_>;
@@ -285,7 +285,7 @@ struct FusedMoeGemmPipeline_Flatmm_W4A8_quant
 
             index_t thread_off = hidden_size_group * Problem::Gemm0NInterleave;
             index_t warp_off = get_warp_id() * (thread_off * N_lane) / Problem::PackFactor;
-            index_t thread_pos = (threadIdx.x % N_lane / Gemm0_Thread_Dividor) * hidden_size_group + threadIdx.x % warpSize / N_lane / Block_Dividor_0;
+            index_t thread_pos = (threadIdx.x % N_lane / Gemm0_Thread_Dividor) * hidden_size_group + threadIdx.x % get_warp_size() / N_lane / Block_Dividor_0;
             index_t zp_idx = warp_off + thread_pos;
             GDataType zero_point = 0;
 
@@ -352,7 +352,7 @@ struct FusedMoeGemmPipeline_Flatmm_W4A8_quant
 
             index_t repeat_off = intermediate_size_group * N_lane;
             index_t warp_off = get_warp_id() * (repeat_off * warpGemmAttr::NRepeat) / Problem::PackFactor;
-            index_t thread_pos = (threadIdx.x % N_lane / Problem::PackFactor) * intermediate_size_group + threadIdx.x % warpSize / N_lane / Block_Dividor_1;
+            index_t thread_pos = (threadIdx.x % N_lane / Problem::PackFactor) * intermediate_size_group + threadIdx.x % get_warp_size() / N_lane / Block_Dividor_1;
             index_t zp_idx = warp_off + thread_pos;
 
             DZeroPointDataType* block_zp_ptr = zp_ptr + Block_N1_P * intermediate_size_group * loop_index;
@@ -423,7 +423,7 @@ struct FusedMoeGemmPipeline_Flatmm_W4A8_quant
 
         index_t warp_off = hidden_size_group * N_lane * kN_perLane * get_warp_id();
         index_t base_off = loop_index * Block_K0_Group + warp_off;
-        index_t tid_in_warp = threadIdx.x % warpSize;
+        index_t tid_in_warp = threadIdx.x % get_warp_size();
         index_t element_off = 4 * hidden_size_group;    // check the layout of matrix C in int8 gemm 
 
         AScaleDataType a_scale = a_scale_ptr[threadIdx.x % 16];     // LDS address space.
@@ -472,7 +472,7 @@ struct FusedMoeGemmPipeline_Flatmm_W4A8_quant
         constexpr index_t buf_sz_one = thread_buf_size / warpGemmAttr::NRepeat;
 
         for (int i = 0; i < buf_sz_one; i++) {
-            index_t a_idx = threadIdx.x % warpSize / N_lane + (i % 4 * 4);
+            index_t a_idx = threadIdx.x % get_warp_size() / N_lane + (i % 4 * 4);
 
             AScaleDataType a_scale = a_scale_ptr[a_idx];
             acc_1s_dequant.get_thread_buffer()[i] =
@@ -485,7 +485,7 @@ struct FusedMoeGemmPipeline_Flatmm_W4A8_quant
 
             int j = 0;
             for (int i = buf_sz_one; i < thread_buf_size; i++) {
-                index_t a_idx = threadIdx.x % warpSize / N_lane + ((j++) % 4 * 4);
+                index_t a_idx = threadIdx.x % get_warp_size() / N_lane + ((j++) % 4 * 4);
 
                 AScaleDataType a_scale = a_scale_ptr[a_idx];
                 acc_1s_dequant.get_thread_buffer()[i] =

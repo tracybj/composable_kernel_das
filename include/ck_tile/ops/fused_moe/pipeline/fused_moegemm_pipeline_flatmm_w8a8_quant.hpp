@@ -91,7 +91,7 @@ struct FusedMoeGemmPipeline_Flatmm_W8A8_quant
 
     using QT_BlockTile  = ck_tile::sequence<Block_M0, QuantBlockSizeK_>;
     using QT_BlockWarps = ck_tile::sequence<BlockShape::NumWarps, 1>;       // warps along M = 4, warps along N = 1
-    using QT_WarpTile   = ck_tile::sequence<1, warpSize* QT_Vector_N_>;
+    using QT_WarpTile   = ck_tile::sequence<1, get_warp_size()* QT_Vector_N_>;
     using QT_Vector     = ck_tile::sequence<1, QT_Vector_N_>;               // QT_Vector_N_ = 2 for QuantBlockSizeK_=128, 4 for QuantBlockSizeK_=256
     using QT_Shape = ck_tile::Generic2dBlockShape<QT_BlockTile, QT_BlockWarps, QT_WarpTile, QT_Vector>; // <<128,128>, <4, 1>, <1, 128>, <1, 2>>;
 

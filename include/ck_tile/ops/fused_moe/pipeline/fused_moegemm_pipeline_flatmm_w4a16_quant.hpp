@@ -168,7 +168,7 @@ struct FusedMoeGemmPipeline_Flatmm_W4A16_quant
         index_t interleave_off = hidden_size_group;
         index_t thread_off = interleave_off * Problem::Gemm0NInterleave;
         index_t warp_off = get_warp_id() * (thread_off * N_lane);
-        index_t thread_pos = (threadIdx.x % N_lane) * thread_off + threadIdx.x % warpSize / N_lane / Block_Dividor_0;
+        index_t thread_pos = (threadIdx.x % N_lane) * thread_off + threadIdx.x % get_warp_size() / N_lane / Block_Dividor_0;
         index_t sc_idx = warp_off + thread_pos;
 
         constexpr index_t buf_sz_one = thread_buf_size / Problem::Gemm0NInterleave;
@@ -196,7 +196,7 @@ struct FusedMoeGemmPipeline_Flatmm_W4A16_quant
         } else {
             GZeroPointDataType* block_zp_ptr = zp_ptr + loop_index * Block_K0_Group;
             warp_off = warp_off / Problem::PackFactor;
-            thread_pos = (threadIdx.x % N_lane / Gemm0_Thread_Dividor) * hidden_size_group + threadIdx.x % warpSize / N_lane / Block_Dividor_0;
+            thread_pos = (threadIdx.x % N_lane / Gemm0_Thread_Dividor) * hidden_size_group + threadIdx.x % get_warp_size() / N_lane / Block_Dividor_0;
             index_t zp_idx = warp_off + thread_pos;
             ADataType zero_point = 0;
 
@@ -257,7 +257,7 @@ struct FusedMoeGemmPipeline_Flatmm_W4A16_quant
         DScaleDataType* block_scale_ptr = scale_ptr +  BlockShape::Block_N1 * intermediate_size_group * loop_index;
         index_t repeat_off = intermediate_size_group * N_lane;
         index_t warp_off = get_warp_id() * (repeat_off * warpGemmAttr::NRepeat);
-        index_t thread_pos = (threadIdx.x % N_lane) * intermediate_size_group + threadIdx.x % warpSize / N_lane / Block_Dividor_1;
+        index_t thread_pos = (threadIdx.x % N_lane) * intermediate_size_group + threadIdx.x % get_warp_size() / N_lane / Block_Dividor_1;
         index_t idx = warp_off + thread_pos;
 
         index_t buf_sz_one = thread_buf_size / warpGemmAttr::NRepeat;
@@ -281,7 +281,7 @@ struct FusedMoeGemmPipeline_Flatmm_W4A16_quant
         } else {
             DZeroPointDataType* block_zp_ptr = zp_ptr + Block_N1_P * intermediate_size_group * loop_index;
             warp_off = warp_off / Problem::PackFactor;
-            thread_pos = (threadIdx.x % N_lane / Problem::PackFactor) * intermediate_size_group + threadIdx.x % warpSize / N_lane / Block_Dividor_1;
+            thread_pos = (threadIdx.x % N_lane / Problem::PackFactor) * intermediate_size_group + threadIdx.x % get_warp_size() / N_lane / Block_Dividor_1;
             index_t zp_idx = warp_off + thread_pos;
             index_t buf_sz_one_off = N_lane * intermediate_size_group / Problem::PackFactor;
             ADataType zero_point = 0;
