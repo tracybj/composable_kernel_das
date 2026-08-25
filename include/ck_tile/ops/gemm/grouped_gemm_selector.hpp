@@ -294,6 +294,9 @@ constexpr GroupedGemmSelection select_grouped_gemm_candidate(
     const bool is_bf16_tn  = is_bf16 && is_tn;
     const bool has_variable_k =
         problem.k.kind == GroupedGemmDimensionKind::device_lengths_with_capacity;
+    const bool has_integral_device_m_capacity =
+        problem.m.kind == GroupedGemmDimensionKind::device_lengths_with_capacity &&
+        problem.m.extent % problem.group_count == 0;
     const bool logical_k_tail =
         is_bf16_tn && has_variable_k && policy.enable_bf16_tn_logical_k_tail;
     const std::int64_t large_tile_m_threshold =
@@ -343,9 +346,15 @@ constexpr GroupedGemmSelection select_grouped_gemm_candidate(
 
         if(policy.enable_p2_bf16_g8_gfx936_fc2_nn_fast_vmem3 &&
            problem.arch == GroupedGemmArch::gfx936 && is_bf16 && is_nn &&
-           problem.group_count == 8 && problem.m.kind == GroupedGemmDimensionKind::common &&
-           m >= 2048 && m <= 2221 && n == 2048 && k == 7168)
+           problem.group_count == 8 &&
+           (problem.m.kind == GroupedGemmDimensionKind::common ||
+            has_integral_device_m_capacity) &&
+           effective_m >= 2048 && effective_m <= 2221 && n == 2048 && k == 7168)
         {
+            // ID1002 consumes the device-built per-group descriptors, as does the
+            // existing G16 route above. Primus reports the G8 M summary as total
+            // packed capacity, so use its integral per-group extent here; the
+            // ragged/empty flags remain valid and do not imply a common length.
             return {GroupedGemmInstanceId::bw_family_bf16_nn_fast_vmem3,
                     GroupedGemmSelectionReason::p2_bf16_g8_gfx936_fc2_nn_fast_vmem3};
         }
