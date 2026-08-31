@@ -239,7 +239,7 @@ struct BlockwiseGemmMmac_k0mk1_k0nk1_m0n0m1n1m2n2n3n4_v1r1
                     constexpr index_t c_offset =
                         c_thread_desc_.CalculateOffset(make_tuple(m0, n0, 0));
 
-                    mmac_gemm.template Run(a_thread_vec.template AsType<mmac_a_input_type>(),
+                    mmac_gemm.Run(a_thread_vec.template AsType<mmac_a_input_type>(),
                                            b_thread_vec.template AsType<mmac_b_input_type>(),
                                            c_thread_buf.GetVectorTypeReference(Number<c_offset>{}));
                 });

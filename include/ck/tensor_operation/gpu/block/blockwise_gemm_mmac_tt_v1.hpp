@@ -389,7 +389,7 @@ struct BlockwiseGemmASmemBSmemCReg_mmac_tt_mk_n0k0k1n1_mn_v1
                                                                   I0,
                                                                   I0));
 
-                    mmac_gemm.template RunOnce(
+                    mmac_gemm.RunOnce(
                         a_thread_vec.template AsType<mmac_a_input_type>()[I0],
                         b_thread_vec_n_k.template AsType<mmac_b_input_type>()[n_mmac_dsreadm],
                         c_thread_buf.GetVectorTypeReference(Number<c_offset>{}));
@@ -408,7 +408,7 @@ struct BlockwiseGemmASmemBSmemCReg_mmac_tt_mk_n0k0k1n1_mn_v1
                                                                   n_mmac_interleave,
                                                                   I0));
 
-                    mmac_gemm.template RunOnce(
+                    mmac_gemm.RunOnce(
                         a_thread_vec.template AsType<mmac_a_input_type>()[I0],
                         b_thread_vec_n_k.template AsType<mmac_b_input_type>()[n_mmac_dsreadm],
                         c_thread_buf.GetVectorTypeReference(Number<c_offset>{}));

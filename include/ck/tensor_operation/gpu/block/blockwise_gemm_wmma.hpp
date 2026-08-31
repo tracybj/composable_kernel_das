@@ -258,7 +258,7 @@ struct BlockwiseGemmWMMA_k0mk1_k0nk1_m0m1m2n0n1n2m3_CShuffle
                     constexpr index_t c_offset =
                         c_thread_desc_.CalculateOffset(make_tuple(m0, n0, 0));
 
-                    wmma_gemm.template Run(
+                    wmma_gemm.Run(
                         a_thread_vec.template AsType<wmma_input_type_a>()(Number<0>{}),
                         b_thread_vec.template AsType<wmma_input_type_b>()(Number<0>{}),
                         c_thread_buf.GetVectorTypeReference(Number<c_offset>{}));
@@ -575,7 +575,7 @@ struct BlockwiseGemmWMMA_k0mk1_k0nk1_m0m1m2n0n1n2m3_CShuffle_FIFO
                 constexpr index_t c_offset =
                     c_thread_desc_.CalculateOffset(make_tuple(iCut, iN, 0));
                 // s_nop();
-                wmma_gemm.template Run(
+                wmma_gemm.Run(
                     a_thread_vec.template AsType<wmma_input_type_a>()(Number<0>{}),
                     b_thread_vec.template AsType<wmma_input_type_b>()(Number<0>{}),
                     c_thread_buf.GetVectorTypeReference(Number<c_offset>{}));
@@ -615,7 +615,7 @@ struct BlockwiseGemmWMMA_k0mk1_k0nk1_m0m1m2n0n1n2m3_CShuffle_FIFO
                     constexpr index_t c_offset = c_thread_desc_.CalculateOffset(
                         make_tuple(WmmaInnerloop + RepeatDiff, iN, 0));
                     // s_nop();
-                    wmma_gemm.template Run(
+                    wmma_gemm.Run(
                         a_thread_vec.template AsType<wmma_input_type_a>()(Number<0>{}),
                         b_thread_vec.template AsType<wmma_input_type_b>()(Number<0>{}),
                         c_thread_buf.GetVectorTypeReference(Number<c_offset>{}));
@@ -651,7 +651,7 @@ struct BlockwiseGemmWMMA_k0mk1_k0nk1_m0m1m2n0n1n2m3_CShuffle_FIFO
                     constexpr index_t c_offset =
                         c_thread_desc_.CalculateOffset(make_tuple(iM, WmmaInnerloop, 0));
                     // s_nop();
-                    wmma_gemm.template Run(
+                    wmma_gemm.Run(
                         a_thread_vec.template AsType<wmma_input_type_a>()(Number<0>{}),
                         b_thread_vec.template AsType<wmma_input_type_b>()(Number<0>{}),
                         c_thread_buf.GetVectorTypeReference(Number<c_offset>{}));
@@ -687,7 +687,7 @@ struct BlockwiseGemmWMMA_k0mk1_k0nk1_m0m1m2n0n1n2m3_CShuffle_FIFO
                     constexpr index_t c_offset =
                         c_thread_desc_.CalculateOffset(make_tuple(iCut, iN, 0));
                     // s_nop();
-                    wmma_gemm.template Run(
+                    wmma_gemm.Run(
                         a_thread_vec.template AsType<wmma_input_type_a>()(Number<0>{}),
                         b_thread_vec.template AsType<wmma_input_type_b>()(Number<0>{}),
                         c_thread_buf.GetVectorTypeReference(Number<c_offset>{}));
@@ -727,7 +727,7 @@ struct BlockwiseGemmWMMA_k0mk1_k0nk1_m0m1m2n0n1n2m3_CShuffle_FIFO
                 constexpr index_t c_offset =
                     c_thread_desc_.CalculateOffset(make_tuple(WmmaInnerloop + RepeatDiff, iN, 0));
                 // s_nop();
-                wmma_gemm.template Run(
+                wmma_gemm.Run(
                     a_thread_vec.template AsType<wmma_input_type_a>()(Number<0>{}),
                     b_thread_vec.template AsType<wmma_input_type_b>()(Number<0>{}),
                     c_thread_buf.GetVectorTypeReference(Number<c_offset>{}));
@@ -753,7 +753,7 @@ struct BlockwiseGemmWMMA_k0mk1_k0nk1_m0m1m2n0n1n2m3_CShuffle_FIFO
                 constexpr index_t c_offset =
                     c_thread_desc_.CalculateOffset(make_tuple(iM, WmmaInnerloop, 0));
                 // s_nop();
-                wmma_gemm.template Run(
+                wmma_gemm.Run(
                     a_thread_vec.template AsType<wmma_input_type_a>()(Number<0>{}),
                     b_thread_vec.template AsType<wmma_input_type_b>()(Number<0>{}),
                     c_thread_buf.GetVectorTypeReference(Number<c_offset>{}));

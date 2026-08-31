@@ -453,7 +453,7 @@ struct BlockwiseGemmASmemBSmemCReg_mmac_tn_mk_nk_mn_v2
                             n_wave_repeat, 0, n_mmac_repeat, 0, n_mmac_interleave, k + i))>{}];
                 });
 
-                mmac_gemm.template Run(a_thread_vec.template AsType<mmac_a_input_type>(),
+                mmac_gemm.Run(a_thread_vec.template AsType<mmac_a_input_type>(),
                                        b_thread_vec.template AsType<mmac_b_input_type>(),
                                        c_thread_buf.GetVectorTypeReference(Number<c_offset>{}));
             });

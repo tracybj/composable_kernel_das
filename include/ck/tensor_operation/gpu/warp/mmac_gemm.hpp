@@ -722,11 +722,11 @@ struct MmacGemm
         static_for<0, KPack / mmac_instr.k_per_blk, 1>{}([&](auto k) {
             if constexpr(!TransposeC)
             {
-                mmac_instr.template run(p_a_thread[k], p_b_thread[k], p_c_thread);
+                mmac_instr.run(p_a_thread[k], p_b_thread[k], p_c_thread);
             }
             else
             {
-                mmac_instr.template run(p_b_thread[k], p_a_thread[k], p_c_thread);
+                mmac_instr.run(p_b_thread[k], p_a_thread[k], p_c_thread);
             }
         });
     }
@@ -758,11 +758,11 @@ struct MmacGemm
 
         if constexpr(!TransposeC)
         {
-            mmac_instr.template run(p_a_thread, p_b_thread, p_c_thread);
+            mmac_instr.run(p_a_thread, p_b_thread, p_c_thread);
         }
         else
         {
-            mmac_instr.template run(p_b_thread, p_a_thread, p_c_thread);
+            mmac_instr.run(p_b_thread, p_a_thread, p_c_thread);
         }
     }
 
