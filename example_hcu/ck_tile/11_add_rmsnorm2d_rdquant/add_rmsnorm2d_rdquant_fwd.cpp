@@ -43,6 +43,7 @@ auto create_args(int argc, char* argv[])
         .insert("kname", "1", "print kernel name or not")
         .insert("prec", "fp16", "precision")
         .insert("quant", "int8", "precision")
+        .insert("time", "1", "time kernel or not")
         .insert("warmup", "5", "cold iter")
         .insert("repeat", "20", "hot iter");
 
@@ -63,6 +64,7 @@ bool run(const ck_tile::ArgParser& arg_parser)
     std::string quantized_data_type = arg_parser.get_str("quant");
     int kname                       = arg_parser.get_int("kname");
     int do_validation               = arg_parser.get_int("v");
+    int time_kernel                 = arg_parser.get_int("time");
     int warmup                      = arg_parser.get_int("warmup");
     int repeat                      = arg_parser.get_int("repeat");
 
@@ -125,17 +127,27 @@ bool run(const ck_tile::ArgParser& arg_parser)
                                         stride};
 
     float ave_time = add_rmsnorm2d_rdquant_fwd(
-        traits, args, ck_tile::stream_config{nullptr, true, kname ? 1 : 0, warmup, repeat});
+        traits,
+        args,
+        ck_tile::stream_config{nullptr, time_kernel != 0, kname ? 1 : 0, warmup, repeat});
 
-    std::size_t num_byte = sizeof(ADataType) * m * n + sizeof(BDataType) * m * n +
-                           sizeof(GammaDataType) * n + sizeof(YScaleDataType) * m +
-                           sizeof(QYDataType) * m * n;
+    if(time_kernel != 0)
+    {
+        std::size_t num_byte = sizeof(ADataType) * m * n + sizeof(BDataType) * m * n +
+                               sizeof(GammaDataType) * n + sizeof(YScaleDataType) * m +
+                               sizeof(QYDataType) * m * n;
 
-    if constexpr(SaveX)
-        num_byte += sizeof(XDataType) * m * n;
+        if constexpr(SaveX)
+            num_byte += sizeof(XDataType) * m * n;
 
-    float gb_per_sec = num_byte / 1.E6 / ave_time;
-    std::cout << ", " << ave_time * 1.E3 << " us, " << gb_per_sec << " GB/s" << std::endl;
+        float gb_per_sec = num_byte / 1.E6 / ave_time;
+        std::cout << ", " << ave_time * 1.E3 << " us, " << gb_per_sec << " GB/s"
+                  << std::endl;
+    }
+    else
+    {
+        std::cout << ", timing:off" << std::flush;
+    }
 
     bool pass = true;
 
@@ -289,7 +301,7 @@ int main(int argc, char* argv[])
     }
     else if(input_data_type == "bf16" && quantized_data_type == "int8" && !save_x)
     {
-        return run<ck_tile::bf16_t, ck_tile::int8_t, true>(arg_parser) ? 0 : -2;
+        return run<ck_tile::bf16_t, ck_tile::int8_t, false>(arg_parser) ? 0 : -2;
     }
     else if(input_data_type == "fp16" && quantized_data_type == "fp8" && save_x)
     {
@@ -305,7 +317,7 @@ int main(int argc, char* argv[])
     }
     else if(input_data_type == "bf16" && quantized_data_type == "fp8" && !save_x)
     {
-        return run<ck_tile::bf16_t, ck_tile::fp8_t, true>(arg_parser) ? 0 : -2;
+        return run<ck_tile::bf16_t, ck_tile::fp8_t, false>(arg_parser) ? 0 : -2;
     }
 
     return -3;

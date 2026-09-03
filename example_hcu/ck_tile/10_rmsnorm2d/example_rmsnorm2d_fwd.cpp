@@ -17,6 +17,7 @@ auto create_args(int argc, char* argv[])
         .insert("e", "1e-5", "epsilon")
         .insert("v", "1", "cpu validation or not")
         .insert("prec", "fp16", "precision")
+        .insert("time", "1", "time kernel or not")
         .insert("warmup", "0", "cold iter")
         .insert("repeat", "1", "hot iter");
 
@@ -35,6 +36,7 @@ bool run(const ck_tile::ArgParser& arg_parser)
     float epsilon         = arg_parser.get_float("e");
     std::string data_type = arg_parser.get_str("prec");
     int do_validation     = arg_parser.get_int("v");
+    int time_kernel       = arg_parser.get_int("time");
     int warmup            = arg_parser.get_int("warmup");
     int repeat            = arg_parser.get_int("repeat");
 
@@ -130,7 +132,7 @@ bool run(const ck_tile::ArgParser& arg_parser)
     const dim3 grids                       = Kernel::GridSize(args);
     constexpr dim3 blocks                  = Kernel::BlockSize();
     constexpr ck_tile::index_t kBlockPerCu = 1;
-    auto s = ck_tile::stream_config{nullptr, true, 0, warmup, repeat};
+    auto s = ck_tile::stream_config{nullptr, time_kernel != 0, 0, warmup, repeat};
 
     ck_tile::launch_kernel(
         s, ck_tile::make_kernel<blocks.x, kBlockPerCu>(Kernel{}, grids, blocks, 0, kargs));
@@ -175,6 +177,7 @@ bool run(const ck_tile::ArgParser& arg_parser)
 
         std::cout << "[" << data_type << "]"
                   << " m:" << m << ", n:" << n << ", stride:" << stride
+                  << ", timing:" << (time_kernel != 0 ? "on" : "off")
                   << ", valid:" << (pass ? "y" : "n") << std::flush << std::endl;
     }
 

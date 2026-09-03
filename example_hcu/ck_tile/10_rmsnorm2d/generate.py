@@ -483,8 +483,9 @@ float rmsnorm2d_fwd(rmsnorm2d_fwd_traits t,
                         elif ins.F_kFusedQuant == 2:
                             _sweep_cond = 't.fused_quant == {f_fused_sweep} && (t.prec_sy == \"{f_sy_type}\" && t.save_unquant == {f_suq})'.format(
                                 f_fused_sweep = ins.F_kFusedQuant, f_sy_type=ins.F_YScaleDataType, f_suq=BOOL_MAP(ins.F_kSaveUnquant))
-                        _cond = '((a.n % {f_vec_n} == 0) && (t.fused_add == {f_fused_add}) && ({f_sweep_cond}))'.format(
+                        _cond = '((a.n % {f_vec_n} == 0) && (t.save_rms == {f_save_rms}) && (t.fused_add == {f_fused_add}) && ({f_sweep_cond}))'.format(
                                         f_vec_n = ins.F_Vector_N, f_fused_add = ins.F_kFusedAdd,
+                                        f_save_rms = BOOL_MAP(ins.F_kSaveInvRms),
                                         f_sweep_cond = _sweep_cond)
                         inner_str += self.API_INNER_CASE.format(F_if = get_if_str(idx_in_n, len_in_n, False),
                                             F_VEC_COND = _cond, F_instance_func=ins.call_name)
@@ -601,6 +602,14 @@ float rmsnorm2d_fwd(rmsnorm2d_fwd_traits t,
                     h_.F_kFusedQuant = fused_quant
                     h_.F_kSaveUnquant = save_unquant
                     current_hs.append(h_) # + "\n"
+                    # Training only needs the per-row inverse RMS output. Start with the
+                    # the first two one-pass shape classes and keep quant/fused-add combinations
+                    # out of this independent capability slice.
+                    if (hs_key in ('64', '128') and prec_i == prec_o and fused_add == 0 and
+                            fused_quant == 0 and save_unquant == False):
+                        h_save = copy.copy(h_)
+                        h_save.F_kSaveInvRms = True
+                        current_hs.append(h_save)
                 #f.write(str(f.parent / GEN_DIR / (blobs.api_common_header_
                 current_n_str = 'big' if hs_key == 'big' else current_n
                 total_blob.append(h_instance(dtype, current_n_str, fused_add, fused_quant, save_unquant, current_hs))

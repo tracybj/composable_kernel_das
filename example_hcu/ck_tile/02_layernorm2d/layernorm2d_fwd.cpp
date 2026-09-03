@@ -51,10 +51,11 @@ auto create_args(int argc, char* argv[])
                 "output quant scale type, set auto will use fp32. used when fquant=1")
         .insert("prec_sy",
                 "auto",
-                "output quant scale type, set auto will use fp32. used when fquant=1 or 2")
+                "output quant scale type, set auto will use fp32. used when fquant=1")
         .insert("xbias", "0", "add bias, 0:no add, 1:add bias before fadd")
-        .insert("fadd", "0", "fused-add, 0:no fused add, 1:preadd+store, 2:preadd only")
-        .insert("fquant", "0", "fused-quant, 0:no, 1:smooth-dynamic-quant, 2:dynamic-quant")
+        .insert("fadd", "0", "fused-add, 0:no fused add, 1:preadd+store")
+        .insert("fquant", "0", "fused-quant, 0:no, 1:smooth-dynamic-quant")
+        .insert("time", "1", "time kernel or not")
         .insert("warmup", "5", "cold iter")
         .insert("repeat", "20", "hot iter");
 
@@ -103,16 +104,36 @@ bool run(const ck_tile::ArgParser& arg_parser)
 
     int kname         = arg_parser.get_int("kname");
     int do_validation = arg_parser.get_int("v");
+    int time_kernel   = arg_parser.get_int("time");
     int warmup        = arg_parser.get_int("warmup");
     int repeat        = arg_parser.get_int("repeat");
     int xbias         = arg_parser.get_int("xbias");
     int fused_add     = arg_parser.get_int("fadd");
     int fused_quant   = arg_parser.get_int("fquant");
+
+    if(xbias != 0 && xbias != 1)
+    {
+        std::cout << "xbias only supports 0 (no bias) or 1 (add bias)." << std::endl;
+        return false;
+    }
+
+    if(fused_add != 0 && fused_add != 1)
+    {
+        std::cout << "fadd only supports 0 (no fused add) or 1 (preadd+store)." << std::endl;
+        return false;
+    }
+
+    if(fused_quant != 0 && fused_quant != 1)
+    {
+        std::cout << "fquant only supports 0 (no quant) or 1 (smooth-dynamic-quant)."
+                  << std::endl;
+        return false;
+    }
+
     if(fused_quant == 1 && prec_o != "int8" && prec_o != "fp8")
     {
-        std::cout
-            << "if fused_quant is 1 or 2, only support \"-prec_o=int8\" or \"-prec_o=fp8\" cases."
-            << std::endl;
+        std::cout << "if fused_quant is 1, only support \"-prec_o=int8\" or \"-prec_o=fp8\" cases."
+                  << std::endl;
         return false;
     }
 
@@ -224,7 +245,9 @@ bool run(const ck_tile::ArgParser& arg_parser)
                               yr_stride}; // y residule row stride
 
     float ave_time = layernorm2d_fwd(
-        traits, args, ck_tile::stream_config{nullptr, true, kname ? 1 : 0, warmup, repeat});
+        traits,
+        args,
+        ck_tile::stream_config{nullptr, time_kernel != 0, kname ? 1 : 0, warmup, repeat});
 
     if(ave_time < 0)
     {
@@ -232,12 +255,19 @@ bool run(const ck_tile::ArgParser& arg_parser)
         return false;
     }
 
-    std::size_t num_byte = sizeof(XDataType) * m * n + sizeof(XBiasDataType) * n +
-                           sizeof(GammaDataType) * n + sizeof(BetaDataType) * n +
-                           sizeof(YDataType) * m * n;
+    if(time_kernel != 0)
+    {
+        std::size_t num_byte = sizeof(XDataType) * m * n + sizeof(XBiasDataType) * n +
+                               sizeof(GammaDataType) * n + sizeof(BetaDataType) * n +
+                               sizeof(YDataType) * m * n;
 
-    float gb_per_sec = num_byte / 1.E6 / ave_time;
-    std::cout << ", " << ave_time * 1.E3 << " us, " << gb_per_sec << " GB/s" << std::flush;
+        float gb_per_sec = num_byte / 1.E6 / ave_time;
+        std::cout << ", " << ave_time * 1.E3 << " us, " << gb_per_sec << " GB/s" << std::flush;
+    }
+    else
+    {
+        std::cout << ", timing:off" << std::flush;
+    }
 
     bool pass = true;
 

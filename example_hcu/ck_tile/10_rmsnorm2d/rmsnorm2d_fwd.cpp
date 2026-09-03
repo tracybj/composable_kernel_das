@@ -40,7 +40,9 @@ auto create_args(int argc, char* argv[])
         .insert("y_stride", "-1", "y row_stride, if -1 then equal to n")
         .insert("yr_stride", "-1", "y residule row_stride, if -1 then equal to n")
         .insert("e", "1e-5", "epsilon")
-        .insert("save_rms", "0", "save rms(invrms) or not. set to 1 in training case")
+        .insert("save_rms",
+                "0",
+                "save per-row inv-rms; currently supports non-quant no-add with n<=128")
         .insert("save_unquant", "0", "save result before quant")
         .insert("v", "1", "cpu validation or not")
         .insert("kname", "1", "print kernel name or not")
@@ -52,8 +54,9 @@ auto create_args(int argc, char* argv[])
         .insert("prec_sy",
                 "auto",
                 "output quant scale type, set auto will use fp32. used when fquant=1 or 2")
-        .insert("fadd", "0", "fused-add, 0:no fused add, 1:preadd+store, 2:preadd only")
+        .insert("fadd", "0", "fused-add, 0:no fused add, 1:preadd+store")
         .insert("fquant", "0", "fused-quant, 0:no, 1:smooth-dynamic-quant, 2:dynamic-quant")
+        .insert("time", "1", "time kernel (0=no, 1=yes)")
         .insert("warmup", "5", "cold iter")
         .insert("repeat", "20", "hot iter");
 
@@ -76,8 +79,15 @@ bool run(const ck_tile::ArgParser& arg_parser)
     int do_validation  = arg_parser.get_int("v");
     int fused_add      = arg_parser.get_int("fadd");
     int fused_quant    = arg_parser.get_int("fquant");
+    bool time_kernel   = arg_parser.get_bool("time");
     int warmup         = arg_parser.get_int("warmup");
     int repeat         = arg_parser.get_int("repeat");
+
+    if(fused_add != 0 && fused_add != 1)
+    {
+        std::cout << "fadd only supports 0 (no fused add) or 1 (preadd+store)." << std::endl;
+        return false;
+    }
 
     ck_tile::index_t x_stride = arg_parser.get_int("x_stride");
     if(x_stride < 0)
@@ -126,6 +136,15 @@ bool run(const ck_tile::ArgParser& arg_parser)
         return false;
     }
 
+    if constexpr(SaveRms)
+    {
+        if(n > 128 || fused_add != 0 || fused_quant != 0)
+        {
+            std::cout << "save_rms currently supports non-quant no-add with n<=128." << std::endl;
+            return false;
+        }
+    }
+
     using TypeConfig =
         RmsnormTypeConfig<InDataType, OutDataType, SmoothScaleDataType, YScaleDataType>;
 
@@ -157,6 +176,7 @@ bool run(const ck_tile::ArgParser& arg_parser)
     ck_tile::HostTensor<YScaleDataType> y_scale_host_dev({m});
 
     ck_tile::HostTensor<InvRmsDataType> invRms_host_ref({m});
+    ck_tile::HostTensor<InvRmsDataType> invRms_host_dev({m});
 
     ck_tile::HostTensor<UnquantYDataType> unquant_y_host_ref({m, n}, {y_stride, 1});
     ck_tile::HostTensor<UnquantYDataType> unquant_y_host_dev({m, n}, {y_stride, 1});
@@ -175,6 +195,7 @@ bool run(const ck_tile::ArgParser& arg_parser)
     ck_tile::DeviceMem x_residual_buf(x_residual_host.get_element_space_size_in_bytes());
     ck_tile::DeviceMem y_residual_buf(y_residual_host.get_element_space_size_in_bytes());
     ck_tile::DeviceMem unquant_y_buf(unquant_y_host_dev.get_element_space_size_in_bytes());
+    ck_tile::DeviceMem inv_rms_buf(sizeof(XDataType) * m);
 
     x_buf.ToDevice(x_host.data());
     gamma_buf.ToDevice(gamma_host.data());
@@ -209,7 +230,7 @@ bool run(const ck_tile::ArgParser& arg_parser)
                             y_buf.GetDeviceBuffer(),
                             fused_add == 1 ? y_residual_buf.GetDeviceBuffer() : nullptr,
                             fused_quant != 0 ? y_scale_buf.GetDeviceBuffer() : nullptr,
-                            nullptr, // p_invRms, unsupported yet
+                            SaveRms ? inv_rms_buf.GetDeviceBuffer() : nullptr,
                             SaveUnquant ? unquant_y_buf.GetDeviceBuffer() : nullptr,
                             epsilon,
                             m,
@@ -220,18 +241,39 @@ bool run(const ck_tile::ArgParser& arg_parser)
                             yr_stride}; // y residule row stride
 
     float ave_time = rmsnorm2d_fwd(
-        traits, args, ck_tile::stream_config{nullptr, true, kname ? 1 : 0, warmup, repeat});
+        traits,
+        args,
+        ck_tile::stream_config{nullptr,
+                               time_kernel,
+                               kname ? 1 : 0,
+                               time_kernel ? warmup : 0,
+                               time_kernel ? repeat : 1});
 
-    std::size_t num_byte =
-        sizeof(XDataType) * m * n + sizeof(GammaDataType) * n + sizeof(YDataType) * m * n;
-    num_byte += SaveRms ? sizeof(InvRmsDataType) * m * n : 0;
-    num_byte += SaveUnquant ? sizeof(UnquantYDataType) * m * n : 0;
-    num_byte += fused_add ? sizeof(XResidualDataType) * m * n : 0;
-    num_byte += ((fused_quant == 1) || (fused_quant == 2)) ? sizeof(YScaleDataType) * m : 0;
-    num_byte += (fused_quant == 1) ? sizeof(SmoothScaleDataType) * n : 0;
+    if(ave_time < 0)
+    {
+        std::cout << ", not supported" << std::endl;
+        return false;
+    }
 
-    float gb_per_sec = num_byte / 1.E6 / ave_time;
-    std::cout << ", " << ave_time * 1.E3 << " us, " << gb_per_sec << " GB/s" << std::flush;
+    if(time_kernel)
+    {
+        std::size_t num_byte =
+            sizeof(XDataType) * m * n + sizeof(GammaDataType) * n + sizeof(YDataType) * m * n;
+        num_byte += SaveRms ? sizeof(InvRmsDataType) * m : 0;
+        num_byte += SaveUnquant ? sizeof(UnquantYDataType) * m * n : 0;
+        num_byte += fused_add ? sizeof(XResidualDataType) * m * n : 0;
+        num_byte +=
+            ((fused_quant == 1) || (fused_quant == 2)) ? sizeof(YScaleDataType) * m : 0;
+        num_byte += (fused_quant == 1) ? sizeof(SmoothScaleDataType) * n : 0;
+
+        float gb_per_sec = num_byte / 1.E6 / ave_time;
+        std::cout << ", " << ave_time * 1.E3 << " us, " << gb_per_sec << " GB/s"
+                  << std::flush;
+    }
+    else
+    {
+        std::cout << ", timing:off" << std::flush;
+    }
 
     bool pass = true;
 
@@ -431,6 +473,17 @@ bool run(const ck_tile::ArgParser& arg_parser)
                                        std::string("\nSCALE Error: Incorrect results!"),
                                        rtol,
                                        atol);
+        }
+
+        if constexpr(SaveRms)
+        {
+            inv_rms_buf.FromDevice(invRms_host_dev.data());
+            auto [rms_rtol, rms_atol] = get_elimit<InvRmsDataType>();
+            pass &= ck_tile::check_err(invRms_host_dev,
+                                       invRms_host_ref,
+                                       std::string("\nRMS Error: Incorrect inverse RMS results!"),
+                                       rms_rtol,
+                                       rms_atol);
         }
 
         std::cout << ", valid:" << (pass ? "y" : "n") << std::flush << std::endl;
