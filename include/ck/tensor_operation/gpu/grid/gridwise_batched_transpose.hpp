@@ -139,8 +139,14 @@ struct GridwiseBatchedTranspose
     {
         if constexpr(AddLdsExtraH)
         {
+#if defined(__gfx946__)
+            // gfx946 requires ds_read_b64 addresses to stay 8-byte aligned. A 4-byte row pad
+            // makes alternating rows misaligned for FP16 tiles whose unpadded row is aligned.
+            constexpr auto LdsPad = Number<8>{} / sizeof(OutDataType);
+#else
             // pad 1 bank element
             constexpr auto LdsPad = Number<4>{} / sizeof(OutDataType);
+#endif
             return make_naive_tensor_descriptor(
                 make_tuple(Number<NPerBlock>{}, Number<WPerBlock>{}, Number<HPerBlock>{}),
                 make_tuple(

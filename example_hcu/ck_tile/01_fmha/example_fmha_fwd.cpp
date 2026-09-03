@@ -107,6 +107,7 @@ auto create_args(int argc, char* argv[])
                 "# of splits for key/value. 0 to determine actual number by heuristic")
         .insert("page_block_size", "0", "paged-kvcache block size. 0 means not use paged-kvcahe")
         .insert("cache_batch_idx", "0", "whether to use index map to the kvcache")
+        .insert("time", "1", "time kernel (0=no, 1=yes)")
         .insert("warmup", "5", "number of iterations before benchmark the kernel")
         .insert("repeat", "20", "number of iterations to benchmark the kernel")
         .insert("json", "0", "0: No Json, 1: Dump Results in Json format")
@@ -164,11 +165,12 @@ auto run(const ck_tile::ArgParser& arg_parser)
     uint32_t seed                    = arg_parser.get_uint32("seed");
     int init_sink_value              = arg_parser.get_int("init_sink");
 
+    const bool time_kernel = arg_parser.get_bool("time");
     ck_tile::stream_config stream_config{nullptr,
-                                         true,
+                                         time_kernel,
                                          /* log_level = */ (arg_parser.get_bool("kname") ? 1 : 0),
-                                         arg_parser.get_int("warmup"),
-                                         arg_parser.get_int("repeat"),
+                                         time_kernel ? arg_parser.get_int("warmup") : 0,
+                                         time_kernel ? arg_parser.get_int("repeat") : 1,
                                          arg_parser.get_str("timer") == std::string("gpu")};
 
     auto json = arg_parser.get_int("json") == 1

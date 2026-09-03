@@ -23,5 +23,6 @@ args:
        -st_i    row stride of input, -1 means same as experts (default:-1)
        -seed    seed to be used, -1 means random every time (default:-1)
       -kname    when set to 1 it will print kernel name (default:0)
+       -time    time kernel or not (default:1)
 
 ```

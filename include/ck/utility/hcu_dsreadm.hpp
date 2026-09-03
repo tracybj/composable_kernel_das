@@ -33,7 +33,8 @@ __device__ int32x4_t intrin_ds_read_m32x8_tf32(const int* ptr)
 __device__ half8_t intrin_ds_read_m32x16_f16(const half_t* ptr)
 {
     half8_t reg;
-#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__)
+#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__) || \
+    defined(__gfx946__)
     reg = __builtin_hcu_ds_read_m32x16_f16(ptr);
 #else
     swallow(ptr, reg);
@@ -44,7 +45,8 @@ __device__ half8_t intrin_ds_read_m32x16_f16(const half_t* ptr)
 __device__ half8_t intrin_ds_read_m32x16_f16_alt(const half_t* ptr)
 {
     half8_t reg;
-#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__)
+#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__) || \
+    defined(__gfx946__)
     reg = __builtin_hcu_ds_read_m32x16_f16_alt(ptr);
 #else
     swallow(ptr, reg);

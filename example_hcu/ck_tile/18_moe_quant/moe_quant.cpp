@@ -41,7 +41,8 @@ auto create_args(int argc, char* argv[])
         .insert("v", "1", "cpu validation or not")
         .insert("kname", "1", "print kernel name or not")
         .insert("prec_i", "fp16", "input precision, fp16/bf16")
-        .insert("prec_o", "int8", "precision, int8/fp8")
+        .insert("prec_o", "int8", "output precision, int8 or fp8 (hidden_size<=8192)")
+        .insert("time", "1", "time kernel (0=no, 1=yes)")
         .insert("warmup", "5", "cold iter")
         .insert("repeat", "20", "hot iter");
 
@@ -59,6 +60,7 @@ bool run(const ck_tile::ArgParser& arg_parser)
     std::string prec_o       = arg_parser.get_str("prec_o");
     int kname                = arg_parser.get_int("kname");
     int do_validation        = arg_parser.get_int("v");
+    bool time_kernel         = arg_parser.get_bool("time");
     int warmup               = arg_parser.get_int("warmup");
     int repeat               = arg_parser.get_int("repeat");
 
@@ -101,15 +103,28 @@ bool run(const ck_tile::ArgParser& arg_parser)
                         x_stride,
                         y_stride};
 
-    float ave_time = moe_quant(
-        traits, args, ck_tile::stream_config{nullptr, true, kname ? 1 : 0, warmup, repeat});
+    float ave_time = moe_quant(traits,
+                               args,
+                               ck_tile::stream_config{nullptr,
+                                                      time_kernel,
+                                                      kname ? 1 : 0,
+                                                      time_kernel ? warmup : 0,
+                                                      time_kernel ? repeat : 1});
 
-    std::size_t num_byte = sizeof(InputDataType) * tokens * hidden_size +
-                           sizeof(ScaleDataType) * tokens +
-                           sizeof(OutDataType) * tokens * hidden_size;
+    if(time_kernel)
+    {
+        std::size_t num_byte = sizeof(InputDataType) * tokens * hidden_size +
+                               sizeof(ScaleDataType) * tokens +
+                               sizeof(OutDataType) * tokens * hidden_size;
 
-    float gb_per_sec = num_byte / 1.E6 / ave_time;
-    std::cout << ", " << ave_time * 1.E3 << " us, " << gb_per_sec << " GB/s" << std::flush;
+        float gb_per_sec = num_byte / 1.E6 / ave_time;
+        std::cout << ", " << ave_time * 1.E3 << " us, " << gb_per_sec << " GB/s"
+                  << std::flush;
+    }
+    else
+    {
+        std::cout << ", timing:off" << std::flush;
+    }
 
     bool pass = true;
 
@@ -183,15 +198,29 @@ int main(int argc, char* argv[])
     if(!result)
         return -1;
 
+    if(arg_parser.get_int("h") > 8192)
+    {
+        std::cerr << "[ERROR] hidden_size exceeds 8192" << std::endl;
+        return -4;
+    }
+
     const std::string prec_i = arg_parser.get_str("prec_i");
     const std::string prec_o = arg_parser.get_str("prec_o");
     if(prec_i == "fp16" && prec_o == "int8")
     {
         return run<ck_tile::half_t, ck_tile::int8_t>(arg_parser) ? 0 : -2;
     }
+    else if(prec_i == "fp16" && prec_o == "fp8")
+    {
+        return run<ck_tile::half_t, ck_tile::fp8_t>(arg_parser) ? 0 : -2;
+    }
     else if(prec_i == "bf16" && prec_o == "int8")
     {
         return run<ck_tile::bf16_t, ck_tile::int8_t>(arg_parser) ? 0 : -2;
+    }
+    else if(prec_i == "bf16" && prec_o == "fp8")
+    {
+        return run<ck_tile::bf16_t, ck_tile::fp8_t>(arg_parser) ? 0 : -2;
     }
 
     return -3;

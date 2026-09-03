@@ -1493,7 +1493,7 @@ __device__ void hcu_direct_load_global_to_lds(const T* global_base_ptr,
     // Only support read size 4, 8, 16
     static_assert(ReadSize == 4 || ReadSize == 8 || ReadSize == 16);
 
-#if defined(__gfx926__) || defined(__gfx928__) || defined(__gfx92a__)
+#if defined(__gfx926__) || defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx946__)
     constexpr bool is_read_size_support = ReadSize == 4;
 #elif defined(__gfx936__) || defined(__gfx938__)
     constexpr bool is_read_size_support = (ReadSize == 4) || (ReadSize == 8) || (ReadSize == 16);

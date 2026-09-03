@@ -97,7 +97,7 @@ auto create_args(int argc, char* argv[])
         .insert("i", "8192", "intermediate_size between 2 gemms of FFN")
         .insert("stride", "-1", "stride per row, if -1 then equal to hidden_size")
         .insert("bm", "16", "blocking factor for sorted tokens")
-        .insert("tp", "1", "tensor parallel size")
+        .insert("tp", "1", "positive tensor parallel size; must divide intermediate_size")
         .insert("v", "1", "cpu validation or not")
         .insert("kname", "1", "print kernel name or not")
         .insert("prec_i", "fp16", "input precision")
@@ -108,9 +108,8 @@ auto create_args(int argc, char* argv[])
         .insert("prec_sq", "auto", "(dynamic) smooth quant data type. auto will set to fp32")
         .insert("prec_kw", "auto", "topk-weight data type. auto will set to fp32")
         .insert("prec_zp", "auto", "zero points. auto will set to int")
-        .insert("fquant", "0", "fused-quant, 0:no, 1:smooth-dynamic-quant, 2:dynamic-quant")
-        .insert(
-            "gate_only", "0", "w0(gate/up) style, 0:gate+up will double interm size, 1:only gate")
+        .insert("fquant", "0", "fused-quant mode; this runner currently supports 0 only")
+        .insert("gate_only", "0", "w0(gate/up) style; this runner currently supports 0 only")
         .insert("api", "0", "benchmark api set: 0:fused-moe(moe-gemm+moe-sorting), 1:moe-gemm")
         .insert("act", "1", "activation after first gemm. 0:gelu, 1:silu")
         .insert("balance",
@@ -122,6 +121,7 @@ auto create_args(int argc, char* argv[])
                 "normalized[0, 1]"
                 "normalized(slow)")
         .insert("seed", "11939", "seed used to do random")
+        .insert("time", "1", "time kernel (0=no, 1=yes)")
         .insert("warmup", "5", "cold iter")
         .insert("repeat", "20", "hot iter");
 
@@ -167,6 +167,7 @@ bool run(const ck_tile::ArgParser& arg_parser)
     int balance               = arg_parser.get_int("balance");
     int tp                    = arg_parser.get_int("tp");
     int init                  = arg_parser.get_int("init");
+    bool time_kernel          = arg_parser.get_bool("time");
     uint32_t seed             = arg_parser.get_uint32("seed");
     bool local_expert_masking = false; // TODO...
     bool use_wt_shuffle       = false;
@@ -451,8 +452,13 @@ bool run(const ck_tile::ArgParser& arg_parser)
                             stride,
                             0,
                             0};
-        float ave_time = fused_moe(
-            traits, args, ck_tile::stream_config{nullptr, true, kname ? 1 : 0, warmup, repeat});
+        float ave_time = fused_moe(traits,
+                                   args,
+                                   ck_tile::stream_config{nullptr,
+                                                          time_kernel,
+                                                          kname ? 1 : 0,
+                                                          time_kernel ? warmup : 0,
+                                                          time_kernel ? repeat : 1});
 
         if(ave_time < 0)
         {
@@ -460,9 +466,16 @@ bool run(const ck_tile::ArgParser& arg_parser)
             return false;
         }
 
-        // float gb_per_sec = num_byte / 1.E6 / ave_time;
-        std::cout << ", " << ave_time * 1.E3 << " us, " << cal_tflops(ave_time) << " tflops, "
-                  << cal_tbps(ave_time) << " TB/s" << std::flush;
+        if(time_kernel)
+        {
+            // float gb_per_sec = num_byte / 1.E6 / ave_time;
+            std::cout << ", " << ave_time * 1.E3 << " us, " << cal_tflops(ave_time)
+                      << " tflops, " << cal_tbps(ave_time) << " TB/s" << std::flush;
+        }
+        else
+        {
+            std::cout << ", timing:off" << std::flush;
+        }
         bool pass = true;
 
 #define CPU_FUSED_MOE(act_type_)                                                 \
@@ -607,8 +620,13 @@ bool run(const ck_tile::ArgParser& arg_parser)
                                 0,
                                 0};
 
-        float ave_time = fused_moegemm(
-            traits, args, ck_tile::stream_config{nullptr, true, kname ? 1 : 0, warmup, repeat});
+        float ave_time = fused_moegemm(traits,
+                                       args,
+                                       ck_tile::stream_config{nullptr,
+                                                              time_kernel,
+                                                              kname ? 1 : 0,
+                                                              time_kernel ? warmup : 0,
+                                                              time_kernel ? repeat : 1});
 
         if(ave_time < 0)
         {
@@ -616,9 +634,16 @@ bool run(const ck_tile::ArgParser& arg_parser)
             return false;
         }
 
-        // float gb_per_sec = num_byte / 1.E6 / ave_time;
-        std::cout << ", " << ave_time * 1.E3 << " us, " << cal_tflops(ave_time) << " tflops, "
-                  << cal_tbps(ave_time) << " TB/s" << std::flush;
+        if(time_kernel)
+        {
+            // float gb_per_sec = num_byte / 1.E6 / ave_time;
+            std::cout << ", " << ave_time * 1.E3 << " us, " << cal_tflops(ave_time)
+                      << " tflops, " << cal_tbps(ave_time) << " TB/s" << std::flush;
+        }
+        else
+        {
+            std::cout << ", timing:off" << std::flush;
+        }
         bool pass = true;
 
         if(do_validation)
@@ -658,6 +683,72 @@ int main(int argc, char* argv[])
         std::cerr << "unsupported activation=" << activation
                   << ", expected 0 (GELU) or 1 (SiLU)" << std::endl;
         return -1;
+    }
+
+    const int tokens            = arg_parser.get_int("t");
+    const int experts           = arg_parser.get_int("e");
+    const int topk              = arg_parser.get_int("k");
+    const int hidden_size       = arg_parser.get_int("h");
+    const int intermediate_size = arg_parser.get_int("i");
+    const int stride            = arg_parser.get_int("stride");
+    const int block_m           = arg_parser.get_int("bm");
+    const int tp                = arg_parser.get_int("tp");
+    const int fused_quant       = arg_parser.get_int("fquant");
+    const int gate_only         = arg_parser.get_int("gate_only");
+    const int api               = arg_parser.get_int("api");
+    const int balance           = arg_parser.get_int("balance");
+    const int init              = arg_parser.get_int("init");
+
+    if(tokens <= 0 || experts <= 0 || hidden_size <= 0 || intermediate_size <= 0)
+    {
+        std::cerr << "tokens, experts, hidden_size, and intermediate_size must be positive"
+                  << std::endl;
+        return -4;
+    }
+    if(topk <= 0 || topk > experts)
+    {
+        std::cerr << "topk must be in [1, experts]" << std::endl;
+        return -4;
+    }
+    if(stride != -1 && stride < hidden_size)
+    {
+        std::cerr << "stride must be -1 or at least hidden_size" << std::endl;
+        return -4;
+    }
+    if(block_m != 16 && block_m != 32)
+    {
+        std::cerr << "block_m only supports 16 or 32" << std::endl;
+        return -4;
+    }
+    if(tp <= 0 || intermediate_size % tp != 0)
+    {
+        std::cerr << "tp must be positive and divide intermediate_size" << std::endl;
+        return -4;
+    }
+    if(fused_quant != 0)
+    {
+        std::cerr << "fquant only supports 0 in this runner" << std::endl;
+        return -4;
+    }
+    if(gate_only != 0)
+    {
+        std::cerr << "gate_only only supports 0 in this runner" << std::endl;
+        return -4;
+    }
+    if(api != 0 && api != 1)
+    {
+        std::cerr << "api only supports 0 or 1" << std::endl;
+        return -4;
+    }
+    if(balance != 0 && balance != 1)
+    {
+        std::cerr << "balance only supports 0 or 1" << std::endl;
+        return -4;
+    }
+    if(init < 0 || init > 2)
+    {
+        std::cerr << "init only supports 0, 1, or 2" << std::endl;
+        return -4;
     }
 
     std::string prec_i  = arg_parser.get_str("prec_i");

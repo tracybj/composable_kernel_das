@@ -81,6 +81,7 @@ auto create_args(int argc, char* argv[])
             "0",
             "whether dropout seed and offset values are present on GPU; 0 - host, 1 - device/GPU")
         .insert("timer", "gpu", "gpu:gpu timer, cpu:cpu timer")
+        .insert("time", "1", "time kernel (0=no, 1=yes)")
         .insert("warmup", "5", "number of iterations before benchmark the kernel")
         .insert("repeat", "20", "number of iterations to benchmark the kernel")
         .insert("deterministic",
@@ -125,11 +126,12 @@ auto run(const ck_tile::ArgParser& arg_parser)
     uint32_t seed            = arg_parser.get_uint32("seed");
     bool sink_grad           = arg_parser.get_bool("sink_grad");
 
+    const bool time_kernel = arg_parser.get_bool("time");
     ck_tile::stream_config stream_config{nullptr,
-                                         true,
+                                         time_kernel,
                                          /* log_level = */ (arg_parser.get_bool("kname") ? 1 : 0),
-                                         arg_parser.get_int("warmup"),
-                                         arg_parser.get_int("repeat"),
+                                         time_kernel ? arg_parser.get_int("warmup") : 0,
+                                         time_kernel ? arg_parser.get_int("repeat") : 1,
                                          arg_parser.get_str("timer") == std::string("gpu")};
 
     auto json = arg_parser.get_int("json") == 1

@@ -1774,6 +1774,10 @@ fwd_result fmha_fwd_run(mode_enum mode,
                   << std::setprecision(2) << tflops << " TFlops, " << std::setprecision(2)
                   << gb_per_sec << " GB/s" << std::flush;
     }
+    else
+    {
+        std::cout << ", timing:off" << std::flush;
+    }
 
     bool pass = true;
     if(do_validation == 0)

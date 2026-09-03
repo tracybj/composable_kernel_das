@@ -28,12 +28,13 @@ function(ck_add_arch_vgpr_compile_options)
         set(_enable_768 ON)
     endif()
 
-    if(_gpu_targets_lc MATCHES "gfx928" OR _gpu_targets_lc MATCHES "gfx92a")
+    if(_gpu_targets_lc MATCHES "gfx928" OR _gpu_targets_lc MATCHES "gfx92a" OR
+       _gpu_targets_lc MATCHES "gfx946")
         set(_enable_512 ON)
     endif()
 
     if(_enable_768 AND _enable_512)
-        message(WARNING "GPU_TARGETS includes both gfx93x and gfx92x; skip support-xxx-vgprs hint.")
+        message(WARNING "GPU_TARGETS includes both 768-VGPR and 512-VGPR target families; skip support-xxx-vgprs hint.")
         return()
     endif()
 

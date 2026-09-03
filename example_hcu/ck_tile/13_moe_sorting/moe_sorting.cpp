@@ -32,6 +32,7 @@ auto create_args(int argc, char* argv[])
                 "please make sure eid is in ascending order!")
         .insert("seed", "-1", "seed to be used, -1 means random every time")
         .insert("kname", "0", "when set to 1 it will print kernel name")
+        .insert("time", "1", "time kernel or not")
         .insert("warmup", "5", "number of iterations before benchmark the kernel")
         .insert("repeat", "5000", "number of iterations to benchmark the kernel");
 
@@ -76,6 +77,7 @@ bool test_moe_sorting(ck_tile::ArgParser args)
     int unit_size           = args.get_int("unit");
     int64_t moe_buf_size    = static_cast<int64_t>(args.get_uint64("moe_buf_size"));
     int kname               = args.get_int("kname");
+    int time_kernel         = args.get_int("time");
     int warmup              = args.get_int("warmup");
     int repeat              = args.get_int("repeat");
 
@@ -188,7 +190,7 @@ bool test_moe_sorting(ck_tile::ArgParser args)
                           static_cast<ck_tile::long_index_t>(moe_buf_size * sizeof(float))};
 
     ck_tile::stream_config sc{nullptr,
-                              true,
+                              time_kernel != 0,
                               /* log_level = */ (kname ? 1 : 0),
                               warmup,
                               repeat};
@@ -262,6 +264,8 @@ bool test_moe_sorting(ck_tile::ArgParser args)
 
     if(ms < 0)
         printf("not supported\n");
+    else if(time_kernel == 0)
+        printf("timing:off, \n");
     else
         printf("ms:%f, \n", ms);
     fflush(stdout);
@@ -273,6 +277,7 @@ bool test_moe_sorting(ck_tile::ArgParser args)
     sorted_ids_dev.FromDevice(sorted_ids_host.data());
     sorted_weights_dev.FromDevice(sorted_weights_host.data());
     sorted_expert_ids_dev.FromDevice(sorted_expert_ids_host.data());
+    tokens_positions_per_expert_dev.FromDevice(tokens_positions_per_expert_host.data());
     sorted_id_cnt_dev.FromDevice(sorted_id_cnt_host.data());
     if(moe_buf_size > 0)
     {
@@ -323,6 +328,69 @@ bool test_moe_sorting(ck_tile::ArgParser args)
         {
             printf("(token size not equal!!)");
             rtn = false;
+        }
+
+        if(!local_expert_masking)
+        {
+            IndexType padded_position = 0;
+            for(int expert = 0; expert < num_experts; ++expert)
+            {
+                IndexType token_count = 0;
+                for(const auto expert_id : topk_ids_host.mData)
+                {
+                    token_count += expert_id == expert ? 1 : 0;
+                }
+                const auto actual_count = tokens_positions_per_expert_host.mData[expert];
+                const auto actual_position =
+                    tokens_positions_per_expert_host.mData[num_experts + expert];
+                if(actual_count != token_count ||
+                   (token_count != 0 && actual_position != padded_position))
+                {
+                    printf("OUT Error: Incorrect expert %d count/position, expected (%d, %d), "
+                           "actual (%d, %d)! ",
+                           expert,
+                           token_count,
+                           padded_position,
+                           actual_count,
+                           actual_position);
+                    rtn = false;
+                }
+                padded_position +=
+                    ck_tile::integer_least_multiple(token_count, static_cast<IndexType>(unit_size));
+            }
+        }
+        else
+        {
+            IndexType padded_position = 0;
+            for(int expert = 0; expert < num_experts; ++expert)
+            {
+                IndexType token_count = 0;
+                for(const auto expert_id : topk_ids_host.mData)
+                {
+                    token_count += expert_id == expert ? 1 : 0;
+                }
+
+                if(local_expert_masking_host.mData[expert] != 0)
+                {
+                    const auto actual_count = tokens_positions_per_expert_host.mData[expert];
+                    const auto actual_position =
+                        tokens_positions_per_expert_host.mData[num_experts + expert];
+                    if(actual_count != token_count ||
+                       (token_count != 0 && actual_position != padded_position))
+                    {
+                        printf("OUT Error: Incorrect enabled expert %d count/position, "
+                               "expected (%d, %d), actual (%d, %d)! ",
+                               expert,
+                               token_count,
+                               padded_position,
+                               actual_count,
+                               actual_position);
+                        rtn = false;
+                    }
+                    padded_position += ck_tile::integer_least_multiple(
+                        token_count, static_cast<IndexType>(unit_size));
+                }
+            }
         }
 
         if(moe_buf_size)

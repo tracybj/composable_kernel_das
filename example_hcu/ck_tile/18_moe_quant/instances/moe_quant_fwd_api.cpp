@@ -134,6 +134,52 @@ float moe_quant_dispatch(moe_quant_traits /*t*/,
     // clang-format on
 }
 
+template <typename in_type>
+float moe_quant_fp8_dispatch(moe_quant_args a, const ck_tile::stream_config& s)
+{
+    if(a.hidden_size <= 64)
+    {
+        return moe_quant_<
+            trait_<in_type, ck_tile::fp8_t, 1, 1, 4, 64, 1, 1, true>>(s, a);
+    }
+    else if(a.hidden_size <= 128)
+    {
+        return moe_quant_<
+            trait_<in_type, ck_tile::fp8_t, 1, 2, 4, 64, 1, 1, true>>(s, a);
+    }
+    else if(a.hidden_size <= 256)
+    {
+        return moe_quant_<
+            trait_<in_type, ck_tile::fp8_t, 1, 4, 4, 64, 1, 1, true>>(s, a);
+    }
+    else if(a.hidden_size <= 512)
+    {
+        return moe_quant_<
+            trait_<in_type, ck_tile::fp8_t, 1, 8, 4, 64, 1, 1, true>>(s, a);
+    }
+    else if(a.hidden_size <= 1024)
+    {
+        return moe_quant_<
+            trait_<in_type, ck_tile::fp8_t, 1, 4, 1, 256, 1, 1, true>>(s, a);
+    }
+    else if(a.hidden_size <= 2048)
+    {
+        return moe_quant_<
+            trait_<in_type, ck_tile::fp8_t, 1, 8, 1, 256, 1, 1, true>>(s, a);
+    }
+    else if(a.hidden_size <= 4096)
+    {
+        return moe_quant_<
+            trait_<in_type, ck_tile::fp8_t, 1, 4, 1, 1024, 1, 1, true>>(s, a);
+    }
+    else if(a.hidden_size <= 8192)
+    {
+        return moe_quant_<
+            trait_<in_type, ck_tile::fp8_t, 1, 8, 1, 1024, 1, 1, true>>(s, a);
+    }
+    throw std::runtime_error("FP8 output hidden_size exceeds 8192");
+}
+
 float moe_quant(moe_quant_traits t,
                       moe_quant_args a,
                       const ck_tile::stream_config& s)
@@ -142,9 +188,17 @@ float moe_quant(moe_quant_traits t,
     {
         return moe_quant_dispatch<ck_tile::fp16_t, ck_tile::int8_t>(t, a, s);
     }
+    else if(t.in_type.compare("fp16") == 0 && t.out_type == "fp8")
+    {
+        return moe_quant_fp8_dispatch<ck_tile::fp16_t>(a, s);
+    }
     else if(t.in_type.compare("bf16") == 0 && t.out_type == "int8")
     {
         return moe_quant_dispatch<ck_tile::bf16_t, ck_tile::int8_t>(t, a, s);
+    }
+    else if(t.in_type.compare("bf16") == 0 && t.out_type == "fp8")
+    {
+        return moe_quant_fp8_dispatch<ck_tile::bf16_t>(a, s);
     }
     else
         throw std::runtime_error("Without supported instances!");

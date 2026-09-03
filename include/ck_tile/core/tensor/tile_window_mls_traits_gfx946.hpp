@@ -24,55 +24,55 @@ namespace ck_tile {
 template <index_t Alt>
 struct mls_ds_traits<gfx946_mls_32x16_b16, 2, Alt>
 {
-    using DsFormatInst = WarpDsreadmFormatDispatcherV2<2, 32, 16, Alt, false>;
+    using Type = WarpDsreadmFormatDispatcherV2<2, 32, 16, Alt, false>;
 };
 
 template <>
 struct mls_ds_traits<gfx946_mls_16x32_trans_b16, 2, 1>
 {
-    using DsFormatInst = WarpDsreadmFormatDispatcherV2<2, 32, 16, 1, true>;
+    using Type = WarpDsreadmFormatDispatcherV2<2, 32, 16, 1, true>;
 };
 
 template <>
 struct mls_ds_traits<gfx946_mls_16x32_trans_b16, 2, 2>
 {
-    using DsFormatInst = WarpDsreadmFormatDispatcherV2<2, 16, 32, 2, true>;
+    using Type = WarpDsreadmFormatDispatcherV2<2, 16, 32, 2, true>;
 };
 
 template <index_t Alt>
 struct mls_ds_traits<gfx946_mls_32x32_b16, 2, Alt>
 {
-    using DsFormatInst = WarpDsreadmFormatDispatcherV2<2, 32, 16, Alt, false>;
+    using Type = WarpDsreadmFormatDispatcherV2<2, 32, 16, Alt, false>;
 };
 
 template <>
 struct mls_ds_traits<gfx946_mls_32x32_trans_b16, 2, 1>
 {
-    using DsFormatInst = WarpDsreadmFormatDispatcherV2<2, 32, 16, 1, true>;
+    using Type = WarpDsreadmFormatDispatcherV2<2, 32, 16, 1, true>;
 };
 
 template <>
 struct mls_ds_traits<gfx946_mls_32x32_trans_b16, 2, 2>
 {
-    using DsFormatInst = WarpDsreadmFormatDispatcherV2<2, 16, 32, 2, true>;
+    using Type = WarpDsreadmFormatDispatcherV2<2, 16, 32, 2, true>;
 };
 
 template <index_t Alt>
 struct mls_ds_traits<gfx946_mls_64x16_b16, 2, Alt>
 {
-    using DsFormatInst = WarpDsreadmFormatDispatcherV2<2, 32, 16, Alt, false>;
+    using Type = WarpDsreadmFormatDispatcherV2<2, 32, 16, Alt, false>;
 };
 
 template <>
 struct mls_ds_traits<gfx946_mls_16x64_trans_b16, 2, 1>
 {
-    using DsFormatInst = WarpDsreadmFormatDispatcherV2<2, 32, 16, 1, true>;
+    using Type = WarpDsreadmFormatDispatcherV2<2, 32, 16, 1, true>;
 };
 
 template <>
 struct mls_ds_traits<gfx946_mls_16x64_trans_b16, 2, 2>
 {
-    using DsFormatInst = WarpDsreadmFormatDispatcherV2<2, 16, 32, 2, true>;
+    using Type = WarpDsreadmFormatDispatcherV2<2, 16, 32, 2, true>;
 };
 
 /*

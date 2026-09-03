@@ -167,7 +167,7 @@ float run(const ExecutionConfig& config,
                      "not support this  problem"
                   << std::endl;
 
-        return false;
+        return -1.0f;
     }
 
     float ave_time = invoker->Run(argument.get(), StreamConfig{nullptr, config.time_kernel});
@@ -191,11 +191,15 @@ float run(const ExecutionConfig& config,
                 static_cast<float>(tensor_trans(idx));
         });
 
-        ck::utils::check_err(tensor_host_result_fp32.mData,
-                             tensor_host_golden_fp32.mData,
-                             "Error: Incorrect results!",
-                             1e-5,
-                             3e-4);
+        const bool pass = ck::utils::check_err(tensor_host_result_fp32.mData,
+                                               tensor_host_golden_fp32.mData,
+                                               "Error: Incorrect results!",
+                                               1e-5,
+                                               3e-4);
+        if(!pass)
+        {
+            return -1.0f;
+        }
     }
 
     return ave_time;
@@ -225,8 +229,13 @@ int run_layout_transform_ngchw_to_ngchwc32(int argc, char* argv[])
         ck::utils::conv::make_input_host_tensor_descriptor_g_n_c_wis_packed<InLayout>(conv_params);
     const auto in_g_n_c_wis_trans_desc =
         ck::utils::conv::make_input_host_tensor_descriptor_g_n_c_wis_packed<OutLayout>(conv_params);
-    total_time +=
+    const float input_transform_time =
         run<DeviceLayoutTransformInstance>(config, in_g_n_c_wis_org_desc, in_g_n_c_wis_trans_desc);
+    if(input_transform_time < 0)
+    {
+        return EXIT_FAILURE;
+    }
+    total_time += input_transform_time;
 
 #if 0
     // filter trans
