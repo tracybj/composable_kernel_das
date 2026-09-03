@@ -73,7 +73,7 @@ include(ROCMInstallSymlinks)
 include(ROCMCreatePackage)
 include(CheckCXXCompilerFlag)
 
-rocm_setup_version(VERSION 0.2.2)
+rocm_setup_version(VERSION 0.2.3)
 include(TargetFlags)
 list(APPEND CMAKE_PREFIX_PATH
     ${CMAKE_INSTALL_PREFIX}
@@ -457,7 +457,7 @@ if(DEFINED CPACK_PACKAGING_INSTALL_PREFIX AND NOT "${CPACK_PACKAGING_INSTALL_PRE
     set(CPACK_SET_DESTDIR OFF CACHE BOOL "Use CPACK_PACKAGING_INSTALL_PREFIX for package layout" FORCE)
 endif()
 
-set(CPACK_DEBIAN_PACKAGE_VERSION "0.2.2~rc1")
+set(CPACK_DEBIAN_PACKAGE_VERSION "0.2.3~rc1")
 
 rocm_create_package(
     NAME composablekernel

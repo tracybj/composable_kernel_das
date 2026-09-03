@@ -505,8 +505,8 @@ def Build_CK(Map conf=[:]){
                            sh 'make -j package'
                            archiveArtifacts artifacts: 'composablekernel-ckprofiler_*.deb'
                            archiveArtifacts artifacts: 'composablekernel-tests_*.deb'
-                           sh 'mv composablekernel-ckprofiler_*.deb ckprofiler_0.2.2~rc1_amd64.deb'
-                           stash "ckprofiler_0.2.2~rc1_amd64.deb"
+                           sh 'mv composablekernel-ckprofiler_*.deb ckprofiler_0.2.3~rc1_amd64.deb'
+                           stash "ckprofiler_0.2.3~rc1_amd64.deb"
                         }
                     }
                 }
@@ -574,8 +574,8 @@ def process_results(Map conf=[:]){
                         unstash "perf_splitK_gemm.log"
                         unstash "perf_onnx_gemm.log"
                         sh "./process_qa_data.sh"
-                        unstash "ckprofiler_0.2.2~rc1_amd64.deb"
-                        sh "sshpass -p ${env.ck_deb_pw} scp -o StrictHostKeyChecking=no ckprofiler_0.2.2~rc1_amd64.deb ${env.ck_deb_user}@${env.ck_deb_ip}:/var/www/html/composable_kernel/"
+                        unstash "ckprofiler_0.2.3~rc1_amd64.deb"
+                        sh "sshpass -p ${env.ck_deb_pw} scp -o StrictHostKeyChecking=no ckprofiler_0.2.3~rc1_amd64.deb ${env.ck_deb_user}@${env.ck_deb_ip}:/var/www/html/composable_kernel/"
                     }
                     else{
                         // unstash perf files to master
