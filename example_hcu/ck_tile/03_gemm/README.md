@@ -29,6 +29,6 @@ args:
           -e    Absolute error tolerance (default:1e-5)
        -prec    data type. fp16/bf16/fp8/bf8 (default:fp16)
      -warmup    number of iterations before benchmark the kernel (default:10)
-     -repeat    number of iterations to benchmark the kernel (default:100)
+     -repeat    number of iterations to benchmark the kernel; 0 runs correctness only without timing (default:100)
       -timer    gpu:gpu timer, cpu:cpu timer (default:gpu)
 ```

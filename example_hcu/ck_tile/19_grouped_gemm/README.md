@@ -278,6 +278,10 @@ cmake --build . --target \
 ./bin/tile_example_grouped_gemm_c_api_tn_logical_k_tail_smoke
 ```
 
+其中 `tile_example_grouped_gemm_c_api_tn_logical_k_tail_smoke` 只在
+`GPU_TARGETS` 包含 `gfx936` 时入图；其他架构没有该 gfx936 host-descriptor
+selected path，应使用前一个通用 production-selector smoke 验收。
+
 第二个 smoke 使用 16 个不同逻辑 K（总和 32757），以两个不同的 A/B
 post-allocation guard 运行默认路径，再在同一进程设置 rollback 开关运行 generic
 padding。验收要求两个默认输出 hash 相同、rollback 输出 hash 相同、抽样 FP32

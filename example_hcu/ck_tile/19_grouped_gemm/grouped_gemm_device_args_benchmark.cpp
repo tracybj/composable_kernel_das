@@ -23,8 +23,8 @@
  *
  * 二、构建方法
  * ------------
- * 本 target 支持 gfx936 与 gfx938。在对应架构的机器上配置独立 build tree；
- * 下面以 gfx936 为例，gfx938 只需把 GPU_TARGETS 改为 gfx938：
+ * 本 target 支持 gfx936、gfx938 与 gfx946。在对应架构的机器上配置独立 build
+ * tree；下面以 gfx936 为例，其他架构只需修改 GPU_TARGETS：
  *
  *   resource_dir=$(/opt/dtk/bin/aicc -print-resource-dir)
  *   cmake -S . -B build_device_args_example_bw \
@@ -111,6 +111,7 @@
  *   --backend         ck、blas 或 both。
  *   --blas-root       hipBLASLt 安装根目录，预期包含 include/ 与 lib/。
  *   --blas-lib        精确的 libhipblaslt.so 或 libhipblas.so 路径。
+ *   --time            1 时执行 warmup/GPU event 采样；0 时只做 correctness。
  *   --warmup          正式采样前的预热次数，性能对比建议固定为 10。
  *   --samples         GPU event 样本数，性能对比建议固定为 30。
  *   --correctness-repeats
@@ -129,6 +130,8 @@
  * 程序坚持 correctness first：CK 和 BLAS 分别与 CPU 抽样 reference 比较；
  * backend=both 时还会对 CK/BLAS 的全部输出元素逐一比较。任一 failed 非零，
  * 程序以失败结束，不应继续采用对应性能结果。
+ * `--time=0` 强制 warmup/samples 为 0，在 correctness 后直接返回；适合指令
+ * 模拟器和常规 correctness smoke，不创建 GPU event timer。
  *
  * 性能使用 HIP GPU event，输出 median/mean/min/max/CV/TFLOPS。both 模式按
  * 样本奇偶交替 CK 与 BLAS 的先后顺序，以减弱温度和频率漂移。正式比较建议使用
@@ -237,6 +240,7 @@ struct Options
     std::int64_t variable_capacity = 0;
     int blas_streams                = 1;
     bool validate           = true;
+    bool time               = true;
     bool include_args_build = true;
     bool allow_empty_groups = false;
     bool group_count_explicit = false;
@@ -252,7 +256,7 @@ struct Options
        << "  --backend=ck|blas|both\n"
        << "  --blas-root=/path/to/hipblaslt-install\n"
        << "  --blas-lib=/path/to/libhipblaslt.so|libhipblas.so\n"
-       << "  --warmup=10 --samples=30 --correctness-repeats=3\n"
+       << "  --time=1 --warmup=10 --samples=30 --correctness-repeats=3\n"
        << "  --num-cu=0 --validate=0|1 --include-args-build=0|1\n"
        << "  --allow-empty-groups=0|1 --blas-streams=1|4\n"
        << "\n"
@@ -335,6 +339,8 @@ Options parse_options(int argc, char* argv[])
             options.warmup = parse_positive_or_zero(name, value);
         else if(name == "samples" || name == "repeat")
             options.samples = parse_positive_or_zero(name, value);
+        else if(name == "time")
+            options.time = parse_positive_or_zero(name, value) != 0;
         else if(name == "correctness-repeats")
             options.correctness_repeats = parse_positive_or_zero(name, value);
         else if(name == "num-cu")
@@ -370,6 +376,11 @@ Options parse_options(int argc, char* argv[])
     std::transform(options.dtype.begin(), options.dtype.end(), options.dtype.begin(), lower);
     std::transform(options.layout.begin(), options.layout.end(), options.layout.begin(), upper);
     std::transform(options.backend.begin(), options.backend.end(), options.backend.begin(), lower);
+    if(!options.time)
+    {
+        options.warmup  = 0;
+        options.samples = 0;
+    }
     if(!options.group_lengths.empty())
     {
         if(options.group_count_explicit &&
@@ -394,8 +405,8 @@ Options parse_options(int argc, char* argv[])
 
     if(options.m <= 0 || options.n <= 0 || options.k <= 0 || options.group_count <= 0)
         throw std::runtime_error("M/N/K/group count 必须为正数");
-    if(options.samples <= 0 || options.correctness_repeats <= 0)
-        throw std::runtime_error("samples 和 correctness-repeats 必须为正数");
+    if((options.time && options.samples <= 0) || options.correctness_repeats <= 0)
+        throw std::runtime_error("计时开启时 samples、所有模式下 correctness-repeats 必须为正数");
     if(options.dtype != "fp16" && options.dtype != "bf16")
         throw std::runtime_error("dtype 只支持 fp16 或 bf16");
     if(options.layout != "NT" && options.layout != "NN" && options.layout != "TN")
@@ -1493,6 +1504,7 @@ int run(const Options& options)
                << (plan.variable_m ? "M" : (plan.variable_k ? "K" : "none"))
                << " effective_length=" << plan.effective_length
                << " variable_capacity=" << plan.capacity
+               << " timing=" << (options.time ? "on" : "off")
                << " warmup=" << options.warmup << " samples=" << options.samples
                << " include_args_build=" << options.include_args_build
                << " num_cu=" << options.num_cu
@@ -1587,6 +1599,13 @@ int run(const Options& options)
                     return 4;
             }
         }
+    }
+
+    if(!options.time)
+    {
+        std::cout << "TIMING status=off warmup=0 samples=0" << std::endl;
+        std::cout << "SUMMARY result=PASS" << std::endl;
+        return 0;
     }
 
     // 关键流程 7：使用 GPU event；both 模式按样本奇偶交替 CK/BLAS 顺序，减少

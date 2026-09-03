@@ -114,6 +114,18 @@ int main()
         failures += pass ? 0 : 1;
     }
 
+    auto gfx946_problem      = make_problem(cases.front());
+    gfx946_problem.arch      = Arch::gfx946;
+    const auto gfx946_select = ck_tile::select_quant_grouped_gemm_candidate(gfx946_problem);
+    const auto gfx946_stable =
+        ck_tile::stable_quant_grouped_gemm_instance_id(gfx946_problem, gfx946_select);
+    const bool gfx946_pass =
+        gfx946_select.instance_id == Id::persistent_128x128x32 &&
+        gfx946_stable.rfind("ck.qgg.gfx946.", 0) == 0;
+    std::cout << "gfx946_control instance=" << static_cast<int>(gfx946_select.instance_id)
+              << " stable=" << gfx946_stable << " pass=" << gfx946_pass << '\n';
+    failures += gfx946_pass ? 0 : 1;
+
     auto invalid        = make_problem(cases.front());
     invalid.group_count = 0;
     failures += ck_tile::select_quant_grouped_gemm_candidate(invalid).supported() ? 1 : 0;

@@ -16,6 +16,15 @@ namespace {
 using Row = ck_tile::tensor_layout::gemm::RowMajor;
 using Col = ck_tile::tensor_layout::gemm::ColumnMajor;
 
+struct RunConfig
+{
+    bool time_kernel = true;
+    int warmup       = 5;
+    int repeat       = 20;
+};
+
+RunConfig run_config;
+
 template <typename ADataType,
           typename BDataType,
           typename CDataType,
@@ -187,51 +196,74 @@ bool run_rowcol_quant_gemm(const char* case_name,
         return false;
     }
 
-    const auto elapsed_ms =
-        ck_tile::launch_kernel(ck_tile::stream_config{nullptr, true, 1, 5, 20},
-                               ck_tile::make_kernel<1>(Kernel{},
-                                                       Kernel::GridSize(M, N, 1),
-                                                       Kernel::BlockSize(),
-                                                       0,
-                                                       kernel_args));
+    const auto elapsed_ms = ck_tile::launch_kernel(
+        ck_tile::stream_config{nullptr,
+                               run_config.time_kernel,
+                               1,
+                               run_config.time_kernel ? run_config.warmup : 0,
+                               run_config.time_kernel ? run_config.repeat : 1},
+        ck_tile::make_kernel<1>(
+            Kernel{}, Kernel::GridSize(M, N, 1), Kernel::BlockSize(), 0, kernel_args));
 
     c_device_buffer.FromDevice(c_device.data());
     const bool pass =
         ck_tile::check_err(c_device, c_expected, "row-col quant GEMM mismatch", 1e-2, 1e-2);
-    std::cout << case_name << " " << (pass ? "PASS" : "FAIL") << ", " << elapsed_ms << " ms"
-              << std::endl;
+    std::cout << case_name << " " << (pass ? "PASS" : "FAIL");
+    if(run_config.time_kernel)
+        std::cout << ", " << elapsed_ms << " ms";
+    else
+        std::cout << ", timing:off";
+    std::cout << std::endl;
     return pass;
 }
 
 } // namespace
 
-int main()
+int main(int argc, char* argv[])
 {
+    ck_tile::ArgParser arg_parser;
+    arg_parser.insert("time", "1", "time kernel (0=no, 1=yes)")
+        .insert("warmup", "5", "number of warmup iterations")
+        .insert("repeat", "20", "number of timed iterations")
+        .insert("bf16_output", "1", "run BF16 output cases (0=no, 1=yes)");
+    if(!arg_parser.parse(argc, argv))
+        return 1;
+    run_config = {arg_parser.get_bool("time"),
+                  arg_parser.get_int("warmup"),
+                  arg_parser.get_int("repeat")};
+    const bool run_bf16_output = arg_parser.get_bool("bf16_output");
+
     bool pass = true;
     pass = run_rowcol_quant_gemm<ck_tile::fp8_t, ck_tile::fp8_t, ck_tile::half_t>(
                "rowcol FP8xFP8->FP16") &&
            pass;
-    pass = run_rowcol_quant_gemm<ck_tile::fp8_t, ck_tile::fp8_t, ck_tile::bf16_t>(
-               "rowcol FP8xFP8->BF16") &&
-           pass;
+    if(run_bf16_output)
+        pass = run_rowcol_quant_gemm<ck_tile::fp8_t, ck_tile::fp8_t, ck_tile::bf16_t>(
+                   "rowcol FP8xFP8->BF16") &&
+               pass;
     pass = run_rowcol_quant_gemm<ck_tile::bf8_t, ck_tile::bf8_t, ck_tile::half_t>(
                "rowcol BF8xBF8->FP16") &&
            pass;
-    pass = run_rowcol_quant_gemm<ck_tile::bf8_t, ck_tile::bf8_t, ck_tile::bf16_t>(
-               "rowcol BF8xBF8->BF16") &&
-           pass;
+    if(run_bf16_output)
+        pass = run_rowcol_quant_gemm<ck_tile::bf8_t, ck_tile::bf8_t, ck_tile::bf16_t>(
+                   "rowcol BF8xBF8->BF16") &&
+               pass;
     pass = run_rowcol_quant_gemm<ck_tile::fp8_t, ck_tile::bf8_t, ck_tile::half_t>(
                "rowcol FP8xBF8->FP16") &&
            pass;
-    pass = run_rowcol_quant_gemm<ck_tile::fp8_t, ck_tile::bf8_t, ck_tile::bf16_t>(
-               "rowcol FP8xBF8->BF16") &&
-           pass;
+    if(run_bf16_output)
+        pass = run_rowcol_quant_gemm<ck_tile::fp8_t, ck_tile::bf8_t, ck_tile::bf16_t>(
+                   "rowcol FP8xBF8->BF16") &&
+               pass;
     pass = run_rowcol_quant_gemm<ck_tile::bf8_t, ck_tile::fp8_t, ck_tile::half_t>(
                "rowcol BF8xFP8->FP16") &&
            pass;
-    pass = run_rowcol_quant_gemm<ck_tile::bf8_t, ck_tile::fp8_t, ck_tile::bf16_t>(
-               "rowcol BF8xFP8->BF16") &&
-           pass;
+    if(run_bf16_output)
+        pass = run_rowcol_quant_gemm<ck_tile::bf8_t, ck_tile::fp8_t, ck_tile::bf16_t>(
+                   "rowcol BF8xFP8->BF16") &&
+               pass;
+    if(!run_bf16_output)
+        std::cout << "rowcol BF16 output SKIP-PMD" << std::endl;
     pass = run_rowcol_quant_gemm<ck_tile::fp8_t,
                                  ck_tile::fp8_t,
                                  ck_tile::half_t,

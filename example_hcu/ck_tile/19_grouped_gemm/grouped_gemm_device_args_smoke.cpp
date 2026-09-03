@@ -429,15 +429,28 @@ bool run_negative_cases()
 
 } // namespace
 
-int main()
+int main(int argc, char* argv[])
 {
+    bool pmd_correctness = false;
+    for(int i = 1; i < argc; ++i)
+    {
+        if(std::string{argv[i]} == "--pmd-correctness")
+            pmd_correctness = true;
+        else
+        {
+            std::cerr << "DEVICE_ARGS_SMOKE unknown_argument=" << argv[i] << std::endl;
+            return 2;
+        }
+    }
+
     hipDeviceProp_t props{};
     if(hipGetDeviceProperties(&props, 0) != hipSuccess)
         return 2;
     const std::string arch = props.gcnArchName;
     const bool gfx936 = arch.rfind("gfx936", 0) == 0;
     const bool gfx938 = arch.rfind("gfx938", 0) == 0;
-    if(!gfx936 && !gfx938)
+    const bool gfx946 = arch.rfind("gfx946", 0) == 0;
+    if(!gfx936 && !gfx938 && !gfx946)
     {
         std::cerr << "DEVICE_ARGS_SMOKE unsupported_arch=" << arch << std::endl;
         return 2;
@@ -456,6 +469,10 @@ int main()
         {"fp16_nt_regular_parity", 1, 1, {{64, 128, 128}}, false, false, false, 0, 4002, false, true},
         {"fp16_nn_padding", 1, 2, {{65, 129, 129}}, false, false, false, 0, 4003},
         {"fp16_tn_regular", 1, 3, {{64, 128, 128}}, false, false, false, 0, 4002},
+    };
+    if(!pmd_correctness)
+    {
+        cases.insert(cases.end(), {
         {"bf16_nt_padding", 2, 1, {{65, 129, 129}}, false, false, false, 0, 4003},
         {"bf16_nn_regular", 2, 2, {{64, 128, 128}}, false, false, false, 0, 4002},
         {"bf16_tn_padding", 2, 3, {{65, 129, 129}}, false, false, false, 0, 4003},
@@ -464,7 +481,8 @@ int main()
          gfx936 ? disable_bw | disable_v3 : disable_mls, 4000},
         {"v4_full_padding_fallback", 2, 2, {{512, 512, 513}}, false, false, false,
          gfx936 ? disable_bw | disable_v3 : disable_mls, 4001},
-    };
+        });
+    }
 
     if(gfx936)
     {
@@ -499,7 +517,7 @@ int main()
 #endif
         });
     }
-    else
+    else if(gfx938)
     {
         cases.push_back({"gfx938_mls_small", 1, 1, {{512, 512, 512}}, false, false, false,
                          0, 3001});
@@ -512,10 +530,13 @@ int main()
 #endif
         });
     }
-    cases.push_back({"bw_bf16_tn_transposed", 2, 3, {{2048, 2048, 2048}}, false, false,
-                     false, 0, 1003, true});
-    cases.push_back({"bw_bf16_tn_logical_k_tail", 2, 3, {{2048, 2048, 2111}}, false, true,
-                     false, 0, 1004, true});
+    if(!pmd_correctness && (gfx936 || gfx938))
+    {
+        cases.push_back({"bw_bf16_tn_transposed", 2, 3, {{2048, 2048, 2048}}, false, false,
+                         false, 0, 1003, true});
+        cases.push_back({"bw_bf16_tn_logical_k_tail", 2, 3, {{2048, 2048, 2111}}, false, true,
+                         false, 0, 1004, true});
+    }
 
     int passed = 0;
     for(const auto& spec : cases)
@@ -528,6 +549,7 @@ int main()
     const bool negative_pass = run_negative_cases();
     std::cout << "DEVICE_ARGS_SMOKE arch=" << arch << " passed=" << passed
               << " cases=" << cases.size() << " negative=" << (negative_pass ? 1 : 0)
+              << " pmd_correctness=" << (pmd_correctness ? 1 : 0)
               << " result="
               << (passed == static_cast<int>(cases.size()) && negative_pass ? "PASS" : "FAIL")
               << std::endl;

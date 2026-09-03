@@ -93,6 +93,8 @@ GroupedGemmArch parse_arch(const std::string& value)
         return GroupedGemmArch::gfx936;
     if(value == "gfx938")
         return GroupedGemmArch::gfx938;
+    if(value == "gfx946")
+        return GroupedGemmArch::gfx946;
     return GroupedGemmArch::unsupported;
 }
 
@@ -177,6 +179,21 @@ int run_table_tests()
     invalid_two_variable.k = GroupedGemmDimensionSummary::DeviceLengthsWithCapacity(8192);
 
     const std::vector<TestCase> cases{
+        {"gfx946 FP16 NT small aligned N uses generic V4 nonpadding",
+         make_problem(GroupedGemmArch::gfx946, GroupedGemmDataType::fp16,
+                      GroupedGemmLayout::nt, 1, 64, 128, 128),
+         defaults,
+         GroupedGemmInstanceId::v4_64_nonpadding},
+        {"gfx946 FP16 NN padding uses generic V4 full padding",
+         make_problem(GroupedGemmArch::gfx946, GroupedGemmDataType::fp16,
+                      GroupedGemmLayout::nn, 1, 65, 129, 129),
+         defaults,
+         GroupedGemmInstanceId::v4_64_full_padding},
+        {"gfx946 FP16 TN variable K uses generic V4 nonpadding",
+         make_problem(GroupedGemmArch::gfx946, GroupedGemmDataType::fp16,
+                      GroupedGemmLayout::tn, 1, 64, 128, 128),
+         defaults,
+         GroupedGemmInstanceId::v4_64_nonpadding},
         {"P3 gfx936 FP16 TN homogeneous route selects V3 dsreadm by default",
          make_homogeneous_tn_problem(GroupedGemmArch::gfx936, 1, 1024, 4096, 4096),
          defaults,

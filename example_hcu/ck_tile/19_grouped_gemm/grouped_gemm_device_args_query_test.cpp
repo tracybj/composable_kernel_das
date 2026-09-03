@@ -112,6 +112,8 @@ int main()
     constexpr std::uint32_t both_arch =
         CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX936_V1 |
         CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX938_V1;
+    constexpr std::uint32_t all_arch =
+        both_arch | CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX946_V1;
     constexpr std::uint32_t both_dtype =
         CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_MASK_FP16_V1 |
         CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_MASK_BF16_V1;
@@ -175,22 +177,22 @@ int main()
          CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NT_V1},
         {CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V4_128_M_ONLY_PADDING_V1,
          CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_FAMILY_V4_V1,
-         both_arch,
+         all_arch,
          both_dtype,
          all_layout},
         {CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V4_128_FULL_PADDING_V1,
          CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_FAMILY_V4_V1,
-         both_arch,
+         all_arch,
          CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_MASK_BF16_V1,
          all_layout},
         {CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V4_64_NONPADDING_V1,
          CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_FAMILY_V4_V1,
-         both_arch,
+         all_arch,
          both_dtype,
          all_layout},
         {CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V4_64_FULL_PADDING_V1,
          CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_FAMILY_V4_V1,
-         both_arch,
+         all_arch,
          both_dtype,
          all_layout},
         {CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V3_128_M4_FULL_PADDING_V1,
@@ -375,6 +377,23 @@ int main()
         auto p3_empty = p3_homogeneous;
         p3_empty.problem_flags = CK_TILE_HCU_GROUPED_GEMM_PROBLEM_MAY_HAVE_EMPTY_GROUPS_V1;
         passed &= expect_selection(p3_empty, 4000, "gfx938_p3_empty_rejected");
+    }
+    else if(target == ck_tile::hcu_target_enum::gfx946)
+    {
+        auto aligned = make_problem(CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_FP16_V1,
+                                    CK_TILE_HCU_GROUPED_GEMM_LAYOUT_NT_V1,
+                                    1,
+                                    64,
+                                    128,
+                                    128);
+        passed &= expect_selection(aligned, 4002, "gfx946_generic_aligned_n");
+        auto padded = make_problem(CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_FP16_V1,
+                                   CK_TILE_HCU_GROUPED_GEMM_LAYOUT_NN_V1,
+                                   1,
+                                   65,
+                                   129,
+                                   129);
+        passed &= expect_selection(padded, 4003, "gfx946_generic_padding");
     }
     else
     {

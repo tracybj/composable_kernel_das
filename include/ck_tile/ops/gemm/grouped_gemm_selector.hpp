@@ -15,6 +15,7 @@ enum class GroupedGemmArch
     unsupported,
     gfx936,
     gfx938,
+    gfx946,
 };
 
 enum class GroupedGemmDataType
@@ -242,7 +243,8 @@ struct GroupedGemmSelection
 
 constexpr bool is_valid_grouped_gemm_problem(const GroupedGemmProblem& problem)
 {
-    if((problem.arch != GroupedGemmArch::gfx936 && problem.arch != GroupedGemmArch::gfx938) ||
+    if((problem.arch != GroupedGemmArch::gfx936 && problem.arch != GroupedGemmArch::gfx938 &&
+        problem.arch != GroupedGemmArch::gfx946) ||
        (problem.data_type != GroupedGemmDataType::fp16 &&
         problem.data_type != GroupedGemmDataType::bf16) ||
        (problem.layout != GroupedGemmLayout::nt && problem.layout != GroupedGemmLayout::nn &&
@@ -477,6 +479,7 @@ constexpr std::string_view grouped_gemm_arch_name(GroupedGemmArch arch)
 {
     return arch == GroupedGemmArch::gfx936 ? "gfx936"
            : arch == GroupedGemmArch::gfx938 ? "gfx938"
+           : arch == GroupedGemmArch::gfx946 ? "gfx946"
                                               : "unsupported";
 }
 

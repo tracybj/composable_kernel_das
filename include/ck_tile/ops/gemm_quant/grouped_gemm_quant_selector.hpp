@@ -14,6 +14,7 @@ enum class QuantGroupedGemmArch
 {
     unsupported,
     gfx938,
+    gfx946,
 };
 
 enum class QuantGroupedGemmDataType
@@ -151,7 +152,8 @@ constexpr bool is_quant_grouped_gemm_output_type(QuantGroupedGemmDataType type)
 
 constexpr bool is_valid_quant_grouped_gemm_problem(const QuantGroupedGemmProblem& problem)
 {
-    if(problem.arch != QuantGroupedGemmArch::gfx938 ||
+    if((problem.arch != QuantGroupedGemmArch::gfx938 &&
+        problem.arch != QuantGroupedGemmArch::gfx946) ||
        !is_quant_grouped_gemm_input_type(problem.a_data_type) ||
        !is_quant_grouped_gemm_input_type(problem.b_data_type) ||
        !is_quant_grouped_gemm_output_type(problem.c_data_type) ||
@@ -203,7 +205,9 @@ select_quant_grouped_gemm_candidate(const QuantGroupedGemmProblem& problem)
 
 constexpr std::string_view quant_grouped_gemm_arch_name(QuantGroupedGemmArch arch)
 {
-    return arch == QuantGroupedGemmArch::gfx938 ? "gfx938" : "unsupported";
+    return arch == QuantGroupedGemmArch::gfx938 ? "gfx938"
+           : arch == QuantGroupedGemmArch::gfx946 ? "gfx946"
+                                                   : "unsupported";
 }
 
 constexpr std::string_view quant_grouped_gemm_data_type_name(QuantGroupedGemmDataType type)

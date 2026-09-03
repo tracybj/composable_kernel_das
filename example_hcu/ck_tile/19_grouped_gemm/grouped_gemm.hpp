@@ -2426,7 +2426,9 @@ inline std::pair<bool, ck_tile::ArgParser> create_args(int argc, char* argv[])
         .insert("prec", default_prec, "data type. fp16/bf16/fp8/bf8/int8/int4")
         .insert("config", "", "optional config selector, e.g. int8_32x32/bf8_128x64/bf8_128x128")
         .insert("warmup", "10", "number of iterations before benchmark the kernel.")
-        .insert("repeat", "100", "number of iterations to benchmark the kernel.")
+        .insert("repeat",
+                "100",
+                "number of benchmark iterations; 0 disables timing and runs one correctness launch.")
         .insert("group_count", "8", "group count.")
         .insert("kbatch", "1", "kbatch for SplitK")
         .insert("bias", "0", "0: GEMM only, 1: GEMM plus single bias tensor (C=A*B+D)")

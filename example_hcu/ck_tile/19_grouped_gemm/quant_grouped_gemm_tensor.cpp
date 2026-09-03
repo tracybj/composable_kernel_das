@@ -18,6 +18,15 @@ namespace {
 using Row = ck_tile::tensor_layout::gemm::RowMajor;
 using Col = ck_tile::tensor_layout::gemm::ColumnMajor;
 
+struct QuantRunConfig
+{
+    bool time_kernel = true;
+    int warmup       = 5;
+    int repeat       = 20;
+};
+
+QuantRunConfig run_config{};
+
 template <typename Layout>
 ck_tile::HostTensorDescriptor
 make_matrix_descriptor(ck_tile::index_t rows, ck_tile::index_t columns)
@@ -243,7 +252,11 @@ bool run_tensorwise_grouped_case(const char* case_name,
     kernel_args_device.ToDevice(kernel_args.data());
 
     const auto elapsed_ms = ck_tile::launch_kernel(
-        ck_tile::stream_config{nullptr, true, 1, 5, 20},
+        ck_tile::stream_config{nullptr,
+                               run_config.time_kernel,
+                               1,
+                               run_config.time_kernel ? run_config.warmup : 0,
+                               run_config.time_kernel ? run_config.repeat : 1},
         ck_tile::make_kernel<Kernel::kBlockSize, 1>(
             Kernel{},
             Kernel::GridSize(host_args),
@@ -259,8 +272,12 @@ bool run_tensorwise_grouped_case(const char* case_name,
         pass = groups[i]->Check(i) && pass;
     }
 
-    std::cout << case_name << " " << (pass ? "PASS" : "FAIL") << ", " << elapsed_ms << " ms"
-              << std::endl;
+    std::cout << case_name << " " << (pass ? "PASS" : "FAIL");
+    if(run_config.time_kernel)
+        std::cout << ", " << elapsed_ms << " ms";
+    else
+        std::cout << ", timing:off";
+    std::cout << std::endl;
     return pass;
 }
 
@@ -268,7 +285,8 @@ template <typename ALayout, typename BLayout>
 bool run_tensorwise_dtype_matrix(const char* layout_name,
                                  const std::vector<ck_tile::index_t>& ms,
                                  const std::vector<ck_tile::index_t>& ns,
-                                 const std::vector<ck_tile::index_t>& ks)
+                                 const std::vector<ck_tile::index_t>& ks,
+                                 bool run_bf16_output)
 {
     const std::string prefix = "tensorwise grouped ";
     const std::string suffix = std::string{" "} + layout_name;
@@ -280,13 +298,25 @@ bool run_tensorwise_dtype_matrix(const char* layout_name,
            pass
 
     RUN_TENSORWISE_CASE(ck_tile::fp8_t, ck_tile::fp8_t, ck_tile::half_t, "FP8xFP8->FP16");
-    RUN_TENSORWISE_CASE(ck_tile::fp8_t, ck_tile::fp8_t, ck_tile::bf16_t, "FP8xFP8->BF16");
     RUN_TENSORWISE_CASE(ck_tile::bf8_t, ck_tile::bf8_t, ck_tile::half_t, "BF8xBF8->FP16");
-    RUN_TENSORWISE_CASE(ck_tile::bf8_t, ck_tile::bf8_t, ck_tile::bf16_t, "BF8xBF8->BF16");
     RUN_TENSORWISE_CASE(ck_tile::fp8_t, ck_tile::bf8_t, ck_tile::half_t, "FP8xBF8->FP16");
-    RUN_TENSORWISE_CASE(ck_tile::fp8_t, ck_tile::bf8_t, ck_tile::bf16_t, "FP8xBF8->BF16");
     RUN_TENSORWISE_CASE(ck_tile::bf8_t, ck_tile::fp8_t, ck_tile::half_t, "BF8xFP8->FP16");
-    RUN_TENSORWISE_CASE(ck_tile::bf8_t, ck_tile::fp8_t, ck_tile::bf16_t, "BF8xFP8->BF16");
+    if(run_bf16_output)
+    {
+        RUN_TENSORWISE_CASE(
+            ck_tile::fp8_t, ck_tile::fp8_t, ck_tile::bf16_t, "FP8xFP8->BF16");
+        RUN_TENSORWISE_CASE(
+            ck_tile::bf8_t, ck_tile::bf8_t, ck_tile::bf16_t, "BF8xBF8->BF16");
+        RUN_TENSORWISE_CASE(
+            ck_tile::fp8_t, ck_tile::bf8_t, ck_tile::bf16_t, "FP8xBF8->BF16");
+        RUN_TENSORWISE_CASE(
+            ck_tile::bf8_t, ck_tile::fp8_t, ck_tile::bf16_t, "BF8xFP8->BF16");
+    }
+    else
+    {
+        std::cout << "tensorwise grouped BF16 output " << layout_name
+                  << " SKIP-PMD" << std::endl;
+    }
 
 #undef RUN_TENSORWISE_CASE
     return pass;
@@ -294,8 +324,20 @@ bool run_tensorwise_dtype_matrix(const char* layout_name,
 
 } // namespace
 
-int main()
+int main(int argc, char* argv[])
 {
+    ck_tile::ArgParser arg_parser;
+    arg_parser.insert("time", "1", "time kernel (0=no, 1=yes)")
+        .insert("warmup", "5", "number of warmup iterations")
+        .insert("repeat", "20", "number of timed iterations")
+        .insert("bf16_output", "1", "run BF16 output cases (0=no, 1=yes)");
+    if(!arg_parser.parse(argc, argv))
+        return 1;
+    run_config = {arg_parser.get_bool("time"),
+                  arg_parser.get_int("warmup"),
+                  arg_parser.get_int("repeat")};
+    const bool run_bf16_output = arg_parser.get_bool("bf16_output");
+
     const std::vector<ck_tile::index_t> fixed_ms{128, 96, 160};
     const std::vector<ck_tile::index_t> fixed_ns{128, 128, 128};
     const std::vector<ck_tile::index_t> fixed_ks{128, 128, 128};
@@ -307,12 +349,12 @@ int main()
     const std::vector<ck_tile::index_t> variable_ks{128, 160, 256};
 
     bool pass = run_tensorwise_dtype_matrix<Row, Col>(
-        "NT fixed-K", fixed_ms, fixed_ns, fixed_ks);
+        "NT fixed-K", fixed_ms, fixed_ns, fixed_ks, run_bf16_output);
     pass = run_tensorwise_dtype_matrix<Row, Row>(
-               "NN fixed-K", fixed_ms, fixed_ns, fixed_ks) &&
+               "NN fixed-K", fixed_ms, fixed_ns, fixed_ks, run_bf16_output) &&
            pass;
     pass = run_tensorwise_dtype_matrix<Col, Row>(
-               "TN variable-K", variable_ms, variable_ns, variable_ks) &&
+               "TN variable-K", variable_ms, variable_ns, variable_ks, run_bf16_output) &&
            pass;
     pass = run_tensorwise_grouped_case<ck_tile::fp8_t,
                                        ck_tile::fp8_t,

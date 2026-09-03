@@ -492,6 +492,10 @@ float invoke_gemm(int n_warmup,
 {
     (void)group_count;
 
+    const bool time_kernel      = n_repeat > 0;
+    const int  effective_warmup = time_kernel ? n_warmup : 0;
+    const int  effective_repeat = time_kernel ? n_repeat : 1;
+
     // Workspace memory allocated to hold the gemm descriptions.
     ck_tile::DeviceMem gemm_workspace;
     gemm_workspace.Realloc(get_workspace_size(args));
@@ -511,7 +515,8 @@ float invoke_gemm(int n_warmup,
                                 CLayout,
                                 CDEElementWise>(
             args,
-            ck_tile::stream_config{nullptr, true, 1, n_warmup, n_repeat},
+            ck_tile::stream_config{
+                nullptr, time_kernel, 1, effective_warmup, effective_repeat},
             gemm_workspace.GetDeviceBuffer());
     }
     else
@@ -562,7 +567,8 @@ float invoke_gemm(int n_warmup,
                                                                   arg.stride_E,
                                                                   arg.k_batch});
         }
-        const auto stream = ck_tile::stream_config{nullptr, true, 1, n_warmup, n_repeat};
+        const auto stream = ck_tile::stream_config{
+            nullptr, time_kernel, 1, effective_warmup, effective_repeat};
         HIP_CHECK_ERROR(hipMemcpyWithStream(kargs_ptr,
                                             kargs.data(),
                                             kargs.size() * sizeof(ck_tile::GemmTransKernelArg),
@@ -573,7 +579,7 @@ float invoke_gemm(int n_warmup,
         const char* multi_stream_env = std::getenv("CK_TILE_GROUPED_GEMM_MULTI_STREAM");
         const bool  multi_stream =
             multi_stream_env != nullptr && std::strcmp(multi_stream_env, "1") == 0 &&
-            group_count > 1 && !splitk;
+            time_kernel && group_count > 1 && !splitk;
         if(multi_stream)
         {
             std::vector<hipStream_t> group_streams(static_cast<std::size_t>(group_count));
@@ -624,12 +630,12 @@ float invoke_gemm(int n_warmup,
                 }
             };
 
-            for(int i = 0; i < n_warmup; ++i)
+            for(int i = 0; i < effective_warmup; ++i)
             {
                 launch_round();
             }
             HIP_CHECK_ERROR(hipEventRecord(start, stream.stream_id_));
-            for(int i = 0; i < n_repeat; ++i)
+            for(int i = 0; i < effective_repeat; ++i)
             {
                 launch_round();
             }
@@ -638,7 +644,7 @@ float invoke_gemm(int n_warmup,
 
             float total_ms = 0.0f;
             HIP_CHECK_ERROR(hipEventElapsedTime(&total_ms, start, stop));
-            ave_time = total_ms / static_cast<float>(n_repeat);
+            ave_time = total_ms / static_cast<float>(effective_repeat);
 
             for(int i = 0; i < group_count; ++i)
             {
@@ -932,11 +938,20 @@ int run_grouped_gemm_example_with_layouts(int argc,
                      sizeof(CDataType) * gemm_descs[j].M * gemm_descs[j].N;
     }
 
-    float tflops     = static_cast<float>(flop) / 1.E9 / ave_time;
-    float gb_per_sec = num_btype / 1.E6 / ave_time;
+    float tflops     = 0.0f;
+    float gb_per_sec = 0.0f;
+    if(repeat > 0)
+    {
+        tflops     = static_cast<float>(flop) / 1.E9 / ave_time;
+        gb_per_sec = num_btype / 1.E6 / ave_time;
 
-    std::cout << "Perf: " << std::setw(10) << ave_time << " ms, " << tflops << " TFlops, "
-              << gb_per_sec << " GB/s, " << op_name << std::endl;
+        std::cout << "Perf: " << std::setw(10) << ave_time << " ms, " << tflops
+                  << " TFlops, " << gb_per_sec << " GB/s, " << op_name << std::endl;
+    }
+    else
+    {
+        std::cout << "Timing: off, one correctness launch, " << op_name << std::endl;
+    }
 
     for(int i = 0; i < group_count; i++)
     {
@@ -1449,6 +1464,7 @@ int run_grouped_gemm_multiple_d_example_with_layouts(
 
     ck_tile::DeviceMem gemm_workspace;
     gemm_workspace.Realloc(get_workspace_size(gemm_descs));
+    const bool  time_kernel = repeat > 0;
     const float ave_time = grouped_gemm<GemmConfig,
                                         ADataType,
                                         BDataType,
@@ -1461,7 +1477,8 @@ int run_grouped_gemm_multiple_d_example_with_layouts(
                                         CLayout,
                                         CDEElementWise>(
         gemm_descs,
-        ck_tile::stream_config{nullptr, true, 1, warmup, repeat},
+        ck_tile::stream_config{
+            nullptr, time_kernel, 1, time_kernel ? warmup : 0, time_kernel ? repeat : 1},
         gemm_workspace.GetDeviceBuffer());
 
     std::size_t flop = 0, num_btype = 0;
@@ -1474,13 +1491,20 @@ int run_grouped_gemm_multiple_d_example_with_layouts(
                      sizeof(CDataType) * gemm_descs[j].M * gemm_descs[j].N;
     }
 
-    const float tflops     = static_cast<float>(flop) / 1.E9 / ave_time;
-    const float gb_per_sec = num_btype / 1.E6 / ave_time;
     const char* op_name = std::is_same_v<CDEElementWise, ck_tile::element_wise::MultiplyMultiply>
                               ? "Grouped Gemm Multiple-D Multiply"
                               : "Grouped Gemm Multiple-D Add";
-    std::cout << "Perf: " << std::setw(10) << ave_time << " ms, " << tflops << " TFlops, "
-              << gb_per_sec << " GB/s, " << op_name << std::endl;
+    if(time_kernel)
+    {
+        const float tflops     = static_cast<float>(flop) / 1.E9 / ave_time;
+        const float gb_per_sec = num_btype / 1.E6 / ave_time;
+        std::cout << "Perf: " << std::setw(10) << ave_time << " ms, " << tflops
+                  << " TFlops, " << gb_per_sec << " GB/s, " << op_name << std::endl;
+    }
+    else
+    {
+        std::cout << "Timing: off, one correctness launch, " << op_name << std::endl;
+    }
 
     for(int i = 0; i < group_count; i++)
     {
@@ -1773,6 +1797,7 @@ int run_grouped_gemm_bias_example_with_layouts(
 
     ck_tile::DeviceMem gemm_workspace;
     gemm_workspace.Realloc(get_workspace_size(gemm_descs));
+    const bool  time_kernel = repeat > 0;
     const float ave_time = grouped_gemm<GemmConfig,
                                         ADataType,
                                         BDataType,
@@ -1785,7 +1810,8 @@ int run_grouped_gemm_bias_example_with_layouts(
                                         CLayout,
                                         ck_tile::element_wise::Add>(
         gemm_descs,
-        ck_tile::stream_config{nullptr, true, 1, warmup, repeat},
+        ck_tile::stream_config{
+            nullptr, time_kernel, 1, time_kernel ? warmup : 0, time_kernel ? repeat : 1},
         gemm_workspace.GetDeviceBuffer());
 
     std::size_t flop = 0, num_btype = 0;
@@ -1798,10 +1824,17 @@ int run_grouped_gemm_bias_example_with_layouts(
                      sizeof(CDataType) * gemm_descs[j].M * gemm_descs[j].N;
     }
 
-    const float tflops     = static_cast<float>(flop) / 1.E9 / ave_time;
-    const float gb_per_sec = num_btype / 1.E6 / ave_time;
-    std::cout << "Perf: " << std::setw(10) << ave_time << " ms, " << tflops << " TFlops, "
-              << gb_per_sec << " GB/s, Grouped Gemm Bias Add" << std::endl;
+    if(time_kernel)
+    {
+        const float tflops     = static_cast<float>(flop) / 1.E9 / ave_time;
+        const float gb_per_sec = num_btype / 1.E6 / ave_time;
+        std::cout << "Perf: " << std::setw(10) << ave_time << " ms, " << tflops
+                  << " TFlops, " << gb_per_sec << " GB/s, Grouped Gemm Bias Add" << std::endl;
+    }
+    else
+    {
+        std::cout << "Timing: off, one correctness launch, Grouped Gemm Bias Add" << std::endl;
+    }
 
     for(int i = 0; i < group_count; i++)
     {

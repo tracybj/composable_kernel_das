@@ -113,9 +113,13 @@ int convert_problem(const ck_tile_hcu_quant_grouped_gemm_problem_v1* source,
        (source->problem_flags & ~KnownProblemFlags) != 0)
         return CK_TILE_HCU_QUANT_GROUPED_GEMM_INVALID_ARGUMENT_V1;
 
-    if(ck_tile::get_hcu_target_enum() != ck_tile::hcu_target_enum::gfx938)
+    const auto target = ck_tile::get_hcu_target_enum();
+    if(target != ck_tile::hcu_target_enum::gfx938 &&
+       target != ck_tile::hcu_target_enum::gfx946)
         return CK_TILE_HCU_QUANT_GROUPED_GEMM_UNSUPPORTED_ARCH_V1;
-    problem.arch = ck_tile::QuantGroupedGemmArch::gfx938;
+    problem.arch = target == ck_tile::hcu_target_enum::gfx938
+                       ? ck_tile::QuantGroupedGemmArch::gfx938
+                       : ck_tile::QuantGroupedGemmArch::gfx946;
 
     const auto convert_input = [](std::int32_t type) {
         return type == CK_TILE_HCU_QUANT_GROUPED_GEMM_DATA_TYPE_FP8_E4M3_V1
@@ -310,7 +314,8 @@ extern "C" int ck_tile_hcu_quant_grouped_gemm_query_instance_v1(
         output->abi_version = CK_TILE_HCU_QUANT_GROUPED_GEMM_DEVICE_ARGS_ABI_VERSION;
         output->instance_id = instance_id;
         output->architecture_mask =
-            CK_TILE_HCU_QUANT_GROUPED_GEMM_ARCHITECTURE_MASK_GFX938_V1;
+            CK_TILE_HCU_QUANT_GROUPED_GEMM_ARCHITECTURE_MASK_GFX938_V1 |
+            CK_TILE_HCU_QUANT_GROUPED_GEMM_ARCHITECTURE_MASK_GFX946_V1;
         output->quant_mode_mask = candidate->quant_mode_mask;
         copy_name(output->canonical_name, candidate->canonical_suffix);
         return CK_TILE_HCU_QUANT_GROUPED_GEMM_SUCCESS_V1;

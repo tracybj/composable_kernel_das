@@ -174,12 +174,32 @@ bool run_case(std::int32_t mode, const char* label)
     return pass;
 }
 
+bool check_registry_architecture_mask()
+{
+    ck_tile_hcu_quant_grouped_gemm_candidate_info_v1 candidate{};
+    candidate.struct_size = sizeof(candidate);
+    candidate.abi_version = CK_TILE_HCU_QUANT_GROUPED_GEMM_DEVICE_ARGS_ABI_VERSION;
+    const int status       = ck_tile_hcu_quant_grouped_gemm_query_instance_v1(
+        CK_TILE_HCU_QUANT_GROUPED_GEMM_INSTANCE_PERSISTENT_128X128X32_V1, &candidate);
+    const std::uint32_t expected =
+        CK_TILE_HCU_QUANT_GROUPED_GEMM_ARCHITECTURE_MASK_GFX938_V1 |
+        CK_TILE_HCU_QUANT_GROUPED_GEMM_ARCHITECTURE_MASK_GFX946_V1;
+    const bool pass = status == CK_TILE_HCU_QUANT_GROUPED_GEMM_SUCCESS_V1 &&
+                      candidate.architecture_mask == expected;
+    std::cout << "quant device-args registry architecture_mask="
+              << candidate.architecture_mask << " expected=" << expected << " "
+              << (pass ? "PASS" : "FAIL") << std::endl;
+    return pass;
+}
+
 } // namespace
 
 int main()
 {
-    bool pass = run_case(CK_TILE_HCU_QUANT_GROUPED_GEMM_MODE_TENSORWISE_V1,
-                         "quant device-args TN variable-K tensorwise");
+    bool pass = check_registry_architecture_mask();
+    pass = run_case(CK_TILE_HCU_QUANT_GROUPED_GEMM_MODE_TENSORWISE_V1,
+                    "quant device-args TN variable-K tensorwise") &&
+           pass;
     pass = run_case(CK_TILE_HCU_QUANT_GROUPED_GEMM_MODE_ROWWISE_V1,
                     "quant device-args TN variable-K rowwise") &&
            pass;

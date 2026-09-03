@@ -1129,8 +1129,8 @@ float grouped_gemm_tileloop(const ck_tile::stream_config& s,
     }
     else
     {
-        Run(ck_tile::integral_constant<ck_tile::memory_operation_enum,
-                                       ck_tile::memory_operation_enum::atomic_add>{});
+        throw std::runtime_error(
+            "fp32/int32 grouped_gemm output does not support SplitK vector atomic");
     }
 #endif
 

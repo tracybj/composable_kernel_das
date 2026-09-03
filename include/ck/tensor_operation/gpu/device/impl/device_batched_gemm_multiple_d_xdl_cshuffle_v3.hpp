@@ -38,7 +38,7 @@ __launch_bounds__(GridwiseGemm::MaxBlockSize, MinimumOccupancy)
     kernel_batched_gemm_xdl_cshuffle_v3_multi_d(BatchedGemmArg karg)
 {
 #if defined(__gfx9__) || defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || \
-    defined(__gfx938__) || defined(__gfx11__) || defined(__gfx12__)
+    defined(__gfx938__) || defined(__gfx946__) || defined(__gfx11__) || defined(__gfx12__)
     if constexpr(GridwiseGemm::template IsValidCompilationParameter<CGlobalMemoryDataOperation>())
     {
         __shared__ char p_shared[GridwiseGemm::GetSharedMemoryNumberOfByte(get_device_arch())];
@@ -88,7 +88,7 @@ __launch_bounds__(GridwiseGemm::MaxBlockSize, MinimumOccupancy)
     kernel_batched_gemm_xdl_cshuffle_v3_multi_d_2lds(BatchedGemmArg karg)
 {
 #if defined(__gfx9__) || defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || \
-    defined(__gfx938__) || defined(__gfx11__) || defined(__gfx12__)
+    defined(__gfx938__) || defined(__gfx946__) || defined(__gfx11__) || defined(__gfx12__)
     if constexpr(GridwiseGemm::template IsValidCompilationParameter<CGlobalMemoryDataOperation>())
     {
         // Pass two lds pointer is the key to tell compiler that ds_read/write

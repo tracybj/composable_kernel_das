@@ -51,6 +51,8 @@ constexpr std::uint32_t ArchGfx936 =
     CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX936_V1;
 constexpr std::uint32_t ArchGfx938 =
     CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX938_V1;
+constexpr std::uint32_t ArchGfx946 =
+    CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX946_V1;
 constexpr std::uint32_t DTypeFp16 = CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_MASK_FP16_V1;
 constexpr std::uint32_t DTypeBf16 = CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_MASK_BF16_V1;
 constexpr std::uint32_t LayoutNt  = CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NT_V1;
@@ -169,6 +171,11 @@ int detect_arch(ck_tile::GroupedGemmArch& arch)
     if(target == ck_tile::hcu_target_enum::gfx938)
     {
         arch = ck_tile::GroupedGemmArch::gfx938;
+        return CK_TILE_HCU_GROUPED_GEMM_DEVICE_ARGS_SUCCESS_V1;
+    }
+    if(target == ck_tile::hcu_target_enum::gfx946)
+    {
+        arch = ck_tile::GroupedGemmArch::gfx946;
         return CK_TILE_HCU_GROUPED_GEMM_DEVICE_ARGS_SUCCESS_V1;
     }
     return CK_TILE_HCU_GROUPED_GEMM_DEVICE_ARGS_UNSUPPORTED_ARCH_V1;
@@ -438,7 +445,7 @@ void candidate_masks(ck_tile::GroupedGemmInstanceId id,
                      std::uint32_t& layout_mask,
                      std::uint32_t& contract_flags)
 {
-    architecture_mask = ArchGfx936 | ArchGfx938;
+    architecture_mask = ArchGfx936 | ArchGfx938 | ArchGfx946;
     data_type_mask     = DTypeFp16 | DTypeBf16;
     layout_mask        = LayoutNt | LayoutNn | LayoutTn;
     contract_flags     = 0;
@@ -457,6 +464,7 @@ void candidate_masks(ck_tile::GroupedGemmInstanceId id,
         break;
     case ck_tile::GroupedGemmInstanceId::bw_family_blas_transposed:
     case ck_tile::GroupedGemmInstanceId::bw_family_logical_k_tail:
+        architecture_mask = ArchGfx936 | ArchGfx938;
         data_type_mask = DTypeBf16;
         layout_mask    = LayoutTn;
         contract_flags = CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_CONTRACT_C_TRANSPOSED_VIEW_V1;

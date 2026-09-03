@@ -304,13 +304,15 @@ template <>
 struct mfma_type<MfmaInstr::mfma_f32_16x16x16bf16_1k>
 {
     static constexpr index_t group_size =
-#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__)
+#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__) || \
+    defined(__gfx946__)
         1;
 #else
         4;
 #endif
     static constexpr index_t num_groups_per_blk =
-#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__)
+#if defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__) || \
+    defined(__gfx946__)
         4;
 #else
         1;
@@ -560,6 +562,14 @@ struct mfma_is_supported_on_hcu<MfmaInstr::mfma_i32_16x16x32i8>
 };
 #endif
 
+#if defined(__gfx946__)
+template <>
+struct mfma_is_supported_on_hcu<MfmaInstr::mfma_f32_16x16x16bf16_1k>
+{
+    static constexpr bool value = true;
+};
+#endif
+
 #if defined(__gfx936__) || defined(__gfx938__)
 template <>
 struct mfma_is_supported_on_hcu<MfmaInstr::mfma_f64_16x16x4f64>
@@ -677,8 +687,8 @@ struct MfmaSelector
     template <>
     static constexpr auto GetMfma<bhalf_t, 16, 16>()
     {
-#if defined(CK_USE_AMD_MFMA_BF16_1K_OP) || defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) ||         \
-    defined(__gfx938__)
+#if defined(CK_USE_AMD_MFMA_BF16_1K_OP) || defined(__gfx928__) || defined(__gfx92a__) || \
+    defined(__gfx936__) || defined(__gfx938__) || defined(__gfx946__)
         return MfmaInstr::mfma_f32_16x16x16bf16_1k;
 #else
         return MfmaInstr::mfma_f32_16x16x8bf16;

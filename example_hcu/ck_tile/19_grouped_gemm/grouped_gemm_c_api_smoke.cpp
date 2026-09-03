@@ -262,54 +262,69 @@ bool run_c_api_case(int dtype,
 
 } // namespace
 
-int main()
+int main(int argc, char* argv[])
 {
+    bool fp16_only = false;
+    for(int i = 1; i < argc; ++i)
+    {
+        if(std::string{argv[i]} == "--fp16-only")
+            fp16_only = true;
+        else
+        {
+            std::cerr << "unknown argument: " << argv[i] << std::endl;
+            return 2;
+        }
+    }
+
     const std::vector<std::tuple<const char*, char, char>> layouts{
         {"NT", 'R', 'C'}, {"NN", 'R', 'R'}, {"TN", 'C', 'R'}};
     const std::vector<int> group_counts{1, 3, 4, 5, 8, 16};
 
     int bf16_cases = 0;
     int bf16_passed = 0;
-    for(const auto& [layout_name, a_layout, b_layout] : layouts)
+    if(!fp16_only)
     {
-        for(int group_count : group_counts)
+        for(const auto& [layout_name, a_layout, b_layout] : layouts)
         {
-            const ProblemSet aligned = make_problem_set(group_count, false);
-            const ProblemSet ragged  = make_problem_set(group_count, true);
+            for(int group_count : group_counts)
+            {
+                const ProblemSet aligned = make_problem_set(group_count, false);
+                const ProblemSet ragged  = make_problem_set(group_count, true);
 
-            ++bf16_cases;
-            bf16_passed += run_c_api_case<ck_tile::bf16_t>(CK_TILE_HCU_GROUPED_GEMM_BF16,
-                                                            "bf16",
-                                                            layout_name,
-                                                            a_layout,
-                                                            b_layout,
-                                                            "aligned_packed",
-                                                            aligned,
-                                                            false,
-                                                            0.25f,
-                                                            0.02f);
-            ++bf16_cases;
-            bf16_passed += run_c_api_case<ck_tile::bf16_t>(CK_TILE_HCU_GROUPED_GEMM_BF16,
-                                                            "bf16",
-                                                            layout_name,
-                                                            a_layout,
-                                                            b_layout,
-                                                            "aligned_strided",
-                                                            aligned,
-                                                            true,
-                                                            0.25f,
-                                                            0.02f);
-            ++bf16_cases;
-            bf16_passed += run_c_api_case<ck_tile::bf16_t>(CK_TILE_HCU_GROUPED_GEMM_BF16,
-                                                            "bf16",
-                                                            layout_name,
-                                                            a_layout,
-                                                            b_layout,
-                                                            "ragged_strided",
-                                                            ragged,
-                                                            true,
-                                                            0.25f,
-                                                            0.02f);
+                ++bf16_cases;
+                bf16_passed += run_c_api_case<ck_tile::bf16_t>(CK_TILE_HCU_GROUPED_GEMM_BF16,
+                                                                "bf16",
+                                                                layout_name,
+                                                                a_layout,
+                                                                b_layout,
+                                                                "aligned_packed",
+                                                                aligned,
+                                                                false,
+                                                                0.25f,
+                                                                0.02f);
+                ++bf16_cases;
+                bf16_passed += run_c_api_case<ck_tile::bf16_t>(CK_TILE_HCU_GROUPED_GEMM_BF16,
+                                                                "bf16",
+                                                                layout_name,
+                                                                a_layout,
+                                                                b_layout,
+                                                                "aligned_strided",
+                                                                aligned,
+                                                                true,
+                                                                0.25f,
+                                                                0.02f);
+                ++bf16_cases;
+                bf16_passed += run_c_api_case<ck_tile::bf16_t>(CK_TILE_HCU_GROUPED_GEMM_BF16,
+                                                                "bf16",
+                                                                layout_name,
+                                                                a_layout,
+                                                                b_layout,
+                                                                "ragged_strided",
+                                                                ragged,
+                                                                true,
+                                                                0.25f,
+                                                                0.02f);
+            }
         }
     }
 
@@ -344,6 +359,7 @@ int main()
     }
 
     std::cout << "SUMMARY bf16_passed=" << bf16_passed << " bf16_cases=" << bf16_cases
-              << " fp16_passed=" << fp16_passed << " fp16_cases=" << fp16_cases << std::endl;
+              << " fp16_passed=" << fp16_passed << " fp16_cases=" << fp16_cases
+              << " fp16_only=" << (fp16_only ? 1 : 0) << std::endl;
     return bf16_passed == bf16_cases && fp16_passed == fp16_cases ? 0 : 1;
 }

@@ -77,7 +77,8 @@ typedef enum ck_tile_hcu_grouped_gemm_candidate_family_v1
 typedef enum ck_tile_hcu_grouped_gemm_architecture_mask_v1
 {
     CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX936_V1 = 1u << 0,
-    CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX938_V1 = 1u << 1
+    CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX938_V1 = 1u << 1,
+    CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX946_V1 = 1u << 2
 } ck_tile_hcu_grouped_gemm_architecture_mask_v1;
 
 typedef enum ck_tile_hcu_grouped_gemm_data_type_mask_v1

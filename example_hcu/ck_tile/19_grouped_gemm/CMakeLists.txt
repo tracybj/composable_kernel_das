@@ -150,10 +150,18 @@ add_grouped_gemm_fast_target(tile_example_grouped_gemm_bf16_v3_regprefetch_256_w
 # They were slower, neutral, unsupported, superseded, or failed Primus
 # fwd/grad-A/grad-B correctness. The normal fp16/bf16 targets also exercise
 # this accepted configuration through the bounded default dispatch.
-add_grouped_gemm_fast_target(tile_example_grouped_gemm_fp16_mls_256_k32_single_stage CK_TILE_GROUPED_GEMM_FAST_FP16 grouped_gemm_fp16.cpp CK_TILE_GROUPED_GEMM_TUNE_MLS_256 CK_TILE_GROUPED_GEMM_MLS_SINGLE_STAGE CK_TILE_GROUPED_GEMM_MLS_OVERLAP_GLOBAL_LOAD CK_TILE_GROUPED_GEMM_MLS_SKIP_POST_MMAC_SYNC)
-add_grouped_gemm_fast_target(tile_example_grouped_gemm_bf16_mls_256_k32_single_stage CK_TILE_GROUPED_GEMM_FAST_BF16 grouped_gemm_bf16.cpp CK_TILE_GROUPED_GEMM_TUNE_MLS_256 CK_TILE_GROUPED_GEMM_MLS_SINGLE_STAGE CK_TILE_GROUPED_GEMM_MLS_OVERLAP_GLOBAL_LOAD CK_TILE_GROUPED_GEMM_MLS_SKIP_POST_MMAC_SYNC)
-add_grouped_gemm_fast_target(tile_example_grouped_gemm_fp8_fast  CK_TILE_GROUPED_GEMM_FAST_FP8  grouped_gemm_fp8.cpp)
-add_grouped_gemm_fast_target(tile_example_grouped_gemm_bf8_fast  CK_TILE_GROUPED_GEMM_FAST_BF8  grouped_gemm_bf8.cpp)
+if(GPU_TARGETS STREQUAL "gfx938" OR GPU_TARGETS STREQUAL "gfx946")
+    add_grouped_gemm_fast_target(tile_example_grouped_gemm_fp16_mls_256_k32_single_stage CK_TILE_GROUPED_GEMM_FAST_FP16 grouped_gemm_fp16.cpp CK_TILE_GROUPED_GEMM_TUNE_MLS_256 CK_TILE_GROUPED_GEMM_MLS_SINGLE_STAGE CK_TILE_GROUPED_GEMM_MLS_OVERLAP_GLOBAL_LOAD CK_TILE_GROUPED_GEMM_MLS_SKIP_POST_MMAC_SYNC)
+endif()
+if(GPU_TARGETS STREQUAL "gfx938" OR GPU_TARGETS STREQUAL "gfx946")
+    add_grouped_gemm_fast_target(tile_example_grouped_gemm_bf16_mls_256_k32_single_stage CK_TILE_GROUPED_GEMM_FAST_BF16 grouped_gemm_bf16.cpp CK_TILE_GROUPED_GEMM_TUNE_MLS_256 CK_TILE_GROUPED_GEMM_MLS_SINGLE_STAGE CK_TILE_GROUPED_GEMM_MLS_OVERLAP_GLOBAL_LOAD CK_TILE_GROUPED_GEMM_MLS_SKIP_POST_MMAC_SYNC)
+endif()
+if(GPU_TARGETS STREQUAL "gfx938" OR GPU_TARGETS STREQUAL "gfx946")
+    add_grouped_gemm_fast_target(tile_example_grouped_gemm_fp8_fast CK_TILE_GROUPED_GEMM_FAST_FP8 grouped_gemm_fp8.cpp)
+endif()
+if(GPU_TARGETS STREQUAL "gfx938" OR GPU_TARGETS STREQUAL "gfx946")
+    add_grouped_gemm_fast_target(tile_example_grouped_gemm_bf8_fast CK_TILE_GROUPED_GEMM_FAST_BF8 grouped_gemm_bf8.cpp)
+endif()
 add_grouped_gemm_fast_target(tile_example_grouped_gemm_int8_fast CK_TILE_GROUPED_GEMM_FAST_INT8 grouped_gemm_int8.cpp)
 add_grouped_gemm_fast_target(tile_example_grouped_gemm_int4_fast CK_TILE_GROUPED_GEMM_FAST_INT4 grouped_gemm_int4.cpp)
 
@@ -202,10 +210,10 @@ if(GPU_TARGETS MATCHES "gfx938|gfx946")
     endforeach()
 endif()
 
-# gfx938 quant grouped-GEMM instances and the versioned device-args C ABI are
-# CK-owned. Keep their heavy gemm_quant.hpp closure isolated from the existing
-# non-quant provider archive.
-if(GPU_TARGETS MATCHES "gfx938")
+# gfx938/gfx946 quant grouped-GEMM instances and the versioned device-args C ABI
+# are CK-owned. Keep their heavy gemm_quant.hpp closure isolated from the
+# existing non-quant provider archive.
+if(GPU_TARGETS MATCHES "gfx938|gfx946")
     set(HCU_QUANT_GROUPED_GEMM_DEVICE_ARGS_PROVIDER_MANIFEST
         ${CMAKE_CURRENT_LIST_DIR}/grouped_gemm_quant_device_args_provider_sources.txt)
     file(STRINGS ${HCU_QUANT_GROUPED_GEMM_DEVICE_ARGS_PROVIDER_MANIFEST}
@@ -219,7 +227,7 @@ if(GPU_TARGETS MATCHES "gfx938")
     target_include_directories(ck_tile_hcu_quant_grouped_gemm_device_args_providers
         PRIVATE ${CMAKE_CURRENT_LIST_DIR})
     target_compile_definitions(ck_tile_hcu_quant_grouped_gemm_device_args_providers
-        PRIVATE CK_TILE_HCU_QUANT_GEMM_GFX938=1)
+        PRIVATE ${HCU_QUANT_GROUPED_GEMM_ARCH_DEFINITIONS})
     target_compile_options(ck_tile_hcu_quant_grouped_gemm_device_args_providers
         PRIVATE "-Wno-unused-template" "-Wno-unneeded-internal-declaration")
     set_target_properties(ck_tile_hcu_quant_grouped_gemm_device_args_providers
@@ -237,7 +245,7 @@ if(GPU_TARGETS MATCHES "gfx938")
     target_include_directories(ck_tile_hcu_quant_grouped_gemm
         PRIVATE ${CMAKE_CURRENT_LIST_DIR})
     target_compile_definitions(ck_tile_hcu_quant_grouped_gemm
-        PRIVATE CK_TILE_HCU_QUANT_GEMM_GFX938=1)
+        PRIVATE ${HCU_QUANT_GROUPED_GEMM_ARCH_DEFINITIONS})
     set_target_properties(ck_tile_hcu_quant_grouped_gemm
         PROPERTIES POSITION_INDEPENDENT_CODE ON)
     target_compile_options(ck_tile_hcu_quant_grouped_gemm
@@ -253,7 +261,7 @@ if(GPU_TARGETS MATCHES "gfx938")
     add_executable(tile_example_grouped_gemm_quant_device_args_smoke EXCLUDE_FROM_ALL
         grouped_gemm_quant_device_args_smoke.cpp)
     target_compile_definitions(tile_example_grouped_gemm_quant_device_args_smoke
-        PRIVATE CK_TILE_HCU_QUANT_GEMM_GFX938=1)
+        PRIVATE ${HCU_QUANT_GROUPED_GEMM_ARCH_DEFINITIONS})
     target_link_libraries(tile_example_grouped_gemm_quant_device_args_smoke
         PRIVATE ck_tile_hcu_quant_grouped_gemm)
     add_test(NAME tile_example_grouped_gemm_quant_device_args_smoke
@@ -412,11 +420,15 @@ add_executable(tile_example_grouped_gemm_c_api_selected_smoke EXCLUDE_FROM_ALL
 target_link_libraries(tile_example_grouped_gemm_c_api_selected_smoke
     PRIVATE ck_tile_hcu_grouped_gemm)
 
-add_executable(tile_example_grouped_gemm_c_api_tn_logical_k_tail_smoke EXCLUDE_FROM_ALL
-    grouped_gemm_c_api_tn_logical_k_tail_smoke.cpp
-)
-target_link_libraries(tile_example_grouped_gemm_c_api_tn_logical_k_tail_smoke
-    PRIVATE ck_tile_hcu_grouped_gemm)
+# This smoke validates the gfx936-only host-descriptor selected path and its
+# same-ELF rollback. Other architectures have no selected path to exercise.
+if(GPU_TARGETS MATCHES "gfx936")
+    add_executable(tile_example_grouped_gemm_c_api_tn_logical_k_tail_smoke EXCLUDE_FROM_ALL
+        grouped_gemm_c_api_tn_logical_k_tail_smoke.cpp
+    )
+    target_link_libraries(tile_example_grouped_gemm_c_api_tn_logical_k_tail_smoke
+        PRIVATE ck_tile_hcu_grouped_gemm)
+endif()
 
 # Host-only Phase-1 selector/contract test. This target deliberately does not
 # link a grouped-GEMM provider, so adding it cannot alter a device launch.
@@ -519,7 +531,7 @@ add_test(NAME tile_example_grouped_gemm_device_args_benchmark_smoke
     COMMAND $<TARGET_FILE:tile_example_grouped_gemm_device_args_benchmark>
             --m=128 --n=128 --k=128 --groups=2
             --dtype=fp16 --layout=NT --backend=ck
-            --warmup=1 --samples=1 --correctness-repeats=1)
+            --time=0 --correctness-repeats=1)
 set_tests_properties(tile_example_grouped_gemm_device_args_benchmark_smoke
     PROPERTIES LABELS "hcu;ck_tile;grouped_gemm;device_args;example;smoke")
 
@@ -531,7 +543,7 @@ add_test(NAME tile_example_grouped_gemm_device_args_benchmark_ragged_m_smoke
             --group-lengths=65,0,129 --variable-capacity=256
             --allow-empty-groups=1
             --dtype=bf16 --layout=NN --backend=ck
-            --warmup=1 --samples=1 --correctness-repeats=1)
+            --time=0 --correctness-repeats=1)
 set_tests_properties(tile_example_grouped_gemm_device_args_benchmark_ragged_m_smoke
     PROPERTIES LABELS "hcu;ck_tile;grouped_gemm;device_args;ragged;example;smoke")
 
@@ -541,7 +553,7 @@ add_test(NAME tile_example_grouped_gemm_device_args_benchmark_ragged_k_smoke
             --group-lengths=65,0,129 --variable-capacity=256
             --allow-empty-groups=1
             --dtype=bf16 --layout=TN --backend=ck
-            --warmup=1 --samples=1 --correctness-repeats=1)
+            --time=0 --correctness-repeats=1)
 set_tests_properties(tile_example_grouped_gemm_device_args_benchmark_ragged_k_smoke
     PROPERTIES LABELS "hcu;ck_tile;grouped_gemm;device_args;ragged;example;smoke")
 

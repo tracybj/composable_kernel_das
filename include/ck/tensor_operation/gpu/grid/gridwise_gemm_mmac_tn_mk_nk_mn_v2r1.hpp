@@ -51,8 +51,8 @@ __launch_bounds__(MaxThreadPerBlock, MinBlockPerCU)
                      const CElementwiseOperation c_element_op,
                      const Block2CTileMap block_2_ctile_map)
 {
-#if (!defined(__HIP_DEVICE_COMPILE__) || defined(__gfx926__) || defined(__gfx928__) || defined(__gfx92a__) || \
-     defined(__gfx936__) || defined(__gfx938__))
+#if(!defined(__HIP_DEVICE_COMPILE__) || defined(__gfx926__) || defined(__gfx928__) || \
+    defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__) || defined(__gfx946__))
     __shared__ char p_shared[GridwiseGemm::GetSharedMemoryNumberOfByte()];
 
     GridwiseGemm::template Run<HasMainKBlockLoop>(p_a_grid,
@@ -81,8 +81,7 @@ __launch_bounds__(MaxThreadPerBlock, MinBlockPerCU)
     ignore = b_element_op;
     ignore = c_element_op;
     ignore = block_2_ctile_map;
-#endif // end of if (defined(__gfx926__) || defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) ||
-       // defined(__gfx938__))
+#endif // gfx926/gfx928/gfx92a/gfx936/gfx938/gfx946
 }
 
 template <index_t BlockSize,
