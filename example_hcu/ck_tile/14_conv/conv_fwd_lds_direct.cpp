@@ -68,7 +68,7 @@ using TilePartitioner = ck_tile::ConvIgemmTilePartitioner<TileShape>;
 static constexpr auto ConvSpec = ck_tile::ConvFwdSpec::Default;
 
 template <ck_tile::index_t NDimSpatial>
-bool run_grouped_conv_fwd(const ck_tile::conv::ConvParam& conv_param)
+bool run_grouped_conv_fwd(const ck_tile::conv::ConvParam& conv_param, bool time_kernel)
 {
     static constexpr ck_tile::index_t NDim = NDimSpatial + 3;
 
@@ -179,17 +179,24 @@ bool run_grouped_conv_fwd(const ck_tile::conv::ConvParam& conv_param)
     auto kernel_args = Kernel::MakeKernelArgs(host_args);
 
     float avg_time = ck_tile::launch_kernel(
-        {nullptr, true},
+        {nullptr, time_kernel},
         ck_tile::make_kernel<BlockSize, MinBlockPerCU>(
             Kernel{}, kernel_args.tile_partitioner.CalculateGridSize(), BlockSize, 0, kernel_args));
 
-    std::size_t flop      = conv_param.GetFlops();
-    std::size_t num_btype = conv_param.GetByte<ADataType, BDataType, CDataType>();
+    if(time_kernel)
+    {
+        std::size_t flop      = conv_param.GetFlops();
+        std::size_t num_btype = conv_param.GetByte<ADataType, BDataType, CDataType>();
 
-    float tflops     = static_cast<float>(flop) / 1.E9 / avg_time;
-    float gb_per_sec = num_btype / 1.E6 / avg_time;
-    std::cout << "Perf: " << avg_time << " ms, " << tflops << " TFlops, " << gb_per_sec << " GB/s, "
-              << std::endl;
+        float tflops     = static_cast<float>(flop) / 1.E9 / avg_time;
+        float gb_per_sec = num_btype / 1.E6 / avg_time;
+        std::cout << "Perf: " << avg_time << " ms, " << tflops << " TFlops, " << gb_per_sec
+                  << " GB/s" << std::endl;
+    }
+    else
+    {
+        std::cout << "timing:off" << std::endl;
+    }
 
     auto ref_conv = ck_tile::ReferenceConvFwd<NDimSpatial,
                                               ADataType,
@@ -237,7 +244,8 @@ bool run_grouped_conv_fwd_example(int argc, char* argv[])
         .insert("l", "1", "dilation h")
         .insert("j", "1", "dilation w")
         .insert("p", "1", "pad h")
-        .insert("q", "1", "pad w");
+        .insert("q", "1", "pad w")
+        .insert("time", "1", "time kernel (0=no, 1=yes)");
 
     bool result = arg_parser.parse(argc, argv);
 
@@ -258,7 +266,7 @@ bool run_grouped_conv_fwd_example(int argc, char* argv[])
 
     if(arg_parser.get_int("m") == 2)
     {
-        return run_grouped_conv_fwd<2>(conv_param);
+        return run_grouped_conv_fwd<2>(conv_param, arg_parser.get_bool("time"));
     }
     else
     {

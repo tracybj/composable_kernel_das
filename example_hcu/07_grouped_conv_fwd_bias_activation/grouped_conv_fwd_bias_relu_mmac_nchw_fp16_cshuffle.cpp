@@ -75,9 +75,15 @@ using DeviceGroupedConvInstance =
         1, // NmmacRepeat,
         2, // MmmacInterleave,
         1, // NmmacInterleave,
+#if defined(CK_ENABLE_HCU_GFX946_INSTANCES)
+        S<1, 1, 1, 16, 16>,
+        4, // a vector dim
+        2, // a vector len: one DWORD per gfx946 direct-load thread
+#else
         S<1, 4, 1, 16, 4>,
         4, // a vector dim
         8, // a vector len
+#endif
         S<1, 128, 2>,
         2, // b vector dim
         8, // b vector len

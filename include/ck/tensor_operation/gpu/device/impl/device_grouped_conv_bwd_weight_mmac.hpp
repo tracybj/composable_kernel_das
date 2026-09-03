@@ -84,7 +84,7 @@ __launch_bounds__(MaxThreadPerBlock, MinBlockPerCU)
         const ComputePtrOffsetOfBatch compute_ptr_offset_of_batch)
 {
 #if (!defined(__HIP_DEVICE_COMPILE__) || defined(__gfx926__) || defined(__gfx928__) || defined(__gfx92a__) || \
-     defined(__gfx936__) || defined(__gfx938__))
+     defined(__gfx936__) || defined(__gfx938__) || defined(__gfx946__))
     const ck::index_t num_blocks_per_group =
         __builtin_amdgcn_readfirstlane(get_grid_size() / group_count);
     const ck::index_t g_idx =
@@ -128,7 +128,7 @@ __launch_bounds__(MaxThreadPerBlock, MinBlockPerCU)
     compute_ptr_offset_of_batch.GetBPtrOffset(0);
     compute_ptr_offset_of_batch.GetCPtrOffset(0);
 #endif // end of if (defined(__gfx926__) || defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) ||
-       // defined(__gfx938__))
+       // defined(__gfx938__) || defined(__gfx946__))
 }
 
 template <ck::index_t NDimSpatial,

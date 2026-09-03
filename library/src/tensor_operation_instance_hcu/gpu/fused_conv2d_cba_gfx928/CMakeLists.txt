@@ -11,4 +11,6 @@ add_instance_library_with_arch(device_fused_conv2d_cba_gfx928_instance
   ngchwc32_gkcyxc32_ngkhwk32/fused_conv2d_v1_f16_bias_f16_f1x1s1p0_instance.cpp
 )
 
-target_compile_options(device_fused_conv2d_cba_gfx928_instance PRIVATE -mls-ooo)
+if(TARGET device_fused_conv2d_cba_gfx928_instance)
+  target_compile_options(device_fused_conv2d_cba_gfx928_instance PRIVATE -mls-ooo)
+endif()

@@ -76,7 +76,7 @@ static constexpr ck_tile::index_t NDim        = NDimSpatial + 3;
 
 static constexpr ck_tile::index_t NumLdsStages = 3;
 
-bool run_fused_conv(const ck_tile::conv::ConvParam& conv_param)
+bool run_fused_conv(const ck_tile::conv::ConvParam& conv_param, bool time_kernel)
 {
     const auto in_g_n_c_wis_desc =
         ck_tile::conv::make_input_host_tensor_descriptor_g_n_c_wis_packed<InLayout>(conv_param);
@@ -204,7 +204,7 @@ bool run_fused_conv(const ck_tile::conv::ConvParam& conv_param)
     }
 
     float avg_time = ck_tile::launch_kernel(
-        {nullptr, true, 0, 0, 1},
+        {nullptr, time_kernel, 0, 0, 1},
         ck_tile::make_kernel<TileShape::BlockSize, MinBlockPerCU>(
             Kernel{},
             kernel_args.tile_partitioner.CalculateGridSize(Kernel::GetMaxOccupancy()),
@@ -213,13 +213,20 @@ bool run_fused_conv(const ck_tile::conv::ConvParam& conv_param)
             kernel_args,
             ck_tile::bool_constant<true>{}));
 
-    std::size_t flop      = conv_param.GetFlops();
-    std::size_t num_btype = conv_param.GetByte<InDataType, WeiDataType, OutDataType>();
+    if(time_kernel)
+    {
+        std::size_t flop      = conv_param.GetFlops();
+        std::size_t num_btype = conv_param.GetByte<InDataType, WeiDataType, OutDataType>();
 
-    float tflops     = static_cast<float>(flop) / 1.E9 / avg_time;
-    float gb_per_sec = num_btype / 1.E6 / avg_time;
-    std::cout << "Perf: " << avg_time << " ms, " << tflops << " TFlops, " << gb_per_sec << " GB/s, "
-              << std::endl;
+        float tflops     = static_cast<float>(flop) / 1.E9 / avg_time;
+        float gb_per_sec = num_btype / 1.E6 / avg_time;
+        std::cout << "Perf: " << avg_time << " ms, " << tflops << " TFlops, " << gb_per_sec
+                  << " GB/s, " << std::endl;
+    }
+    else
+    {
+        std::cout << "timing:off" << std::endl;
+    }
 
     // cpu fused conv
     auto ref_fused_conv = ck_tile::ReferenceFusedConv<NDimSpatial,
@@ -256,7 +263,7 @@ bool run_fused_conv_example(int argc, char* argv[])
     arg_parser.insert("m", "2", "spatial dim")
         .insert("g", "1", "group")
         .insert("n", "64", "batch size")
-        .insert("k", "64", "out channels")
+        .insert("k", "128", "out channels")
         .insert("c", "128", "in channels")
         .insert("r", "3", "filter x")
         .insert("s", "3", "filter y")
@@ -267,12 +274,13 @@ bool run_fused_conv_example(int argc, char* argv[])
         .insert("l", "1", "dilation h")
         .insert("j", "1", "dilation w")
         .insert("p", "1", "pad h")
-        .insert("q", "1", "pad w");
+        .insert("q", "1", "pad w")
+        .insert("time", "1", "time kernel (0=no, 1=yes)");
 
     bool result = arg_parser.parse(argc, argv);
 
     if(!result)
-        return -1;
+        return false;
 
     ck_tile::conv::ConvParam conv_param{arg_parser.get_int("m"),
                                         arg_parser.get_int("g"),
@@ -288,13 +296,12 @@ bool run_fused_conv_example(int argc, char* argv[])
 
     if(arg_parser.get_int("m") == 2)
     {
-        run_fused_conv(conv_param);
-        return 0;
+        return run_fused_conv(conv_param, arg_parser.get_bool("time"));
     }
     else
     {
         printf("unsupport spatial dim\n");
-        return -1;
+        return false;
     }
 }
 

@@ -65,7 +65,7 @@ using DeviceGroupedConvInstance =
         128, // MPerBlock
         128, // NPerBlock
         32,  // KPerBlock
-        4,   // KPack
+        8,   // KPack
         16,
         16,
         4, // MwaveRepeat

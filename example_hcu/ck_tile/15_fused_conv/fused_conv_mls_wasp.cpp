@@ -76,7 +76,13 @@ static constexpr ck_tile::index_t NDim        = NDimSpatial + 3;
 
 static constexpr ck_tile::index_t NumLdsStages = 2;
 
-bool run_fused_conv(const ck_tile::conv::ConvParam& conv_param)
+#if defined(CK_ENABLE_HCU_GFX946_INSTANCES)
+static constexpr auto HcuArch = ck_tile::hcu_target_enum::gfx946;
+#else
+static constexpr auto HcuArch = ck_tile::hcu_target_enum::gfx938;
+#endif
+
+bool run_fused_conv(const ck_tile::conv::ConvParam& conv_param, bool time_kernel)
 {
     const auto in_g_n_c_wis_desc =
         ck_tile::conv::make_input_host_tensor_descriptor_g_n_c_wis_packed<InLayout>(conv_param);
@@ -179,16 +185,14 @@ bool run_fused_conv(const ck_tile::conv::ConvParam& conv_param)
     using TilePartitioner = ck_tile::ConvIgemmTilePartitioner<TileShape>;
 
     using BlockwiseGemm = ck_tile::remove_cvref_t<
-        decltype(Policy::template GetBlockwiseGemm<ck_tile::hcu_target_enum::gfx938, Problem>())>;
+        decltype(Policy::template GetBlockwiseGemm<HcuArch, Problem>())>;
 
     using WarpGemm = typename BlockwiseGemm::WarpGemm;
 
     using Epilogue = ck_tile::FusedConvEpilogueWaspV2<Problem, WarpGemm>;
 
-    using Kernel = ck_tile::FusedConvMlsWaspKernelV1<ck_tile::hcu_target_enum::gfx938,
-                                                     TilePartitioner,
-                                                     Pipeline,
-                                                     Epilogue>;
+    using Kernel =
+        ck_tile::FusedConvMlsWaspKernelV1<HcuArch, TilePartitioner, Pipeline, Epilogue>;
 
     auto host_args = Kernel::MakeHostArgs(in_device_buf.GetDeviceBuffer(),
                                           wei_device_buf.GetDeviceBuffer(),
@@ -215,7 +219,11 @@ bool run_fused_conv(const ck_tile::conv::ConvParam& conv_param)
     }
 
     float avg_time =
-        ck_tile::launch_kernel({nullptr, true, 0, 10, 100},
+        ck_tile::launch_kernel({nullptr,
+                                time_kernel,
+                                0,
+                                time_kernel ? 10 : 0,
+                                time_kernel ? 100 : 1},
                                ck_tile::make_kernel<TileShape::BlockSize, MinBlockPerCU>(
                                    Kernel{},
                                    kernel_args.tile_partitioner.CalculateGridSize() *
@@ -225,13 +233,20 @@ bool run_fused_conv(const ck_tile::conv::ConvParam& conv_param)
                                    kernel_args,
                                    ck_tile::bool_constant<true>{}));
 
-    std::size_t flop      = conv_param.GetFlops();
-    std::size_t num_btype = conv_param.GetByte<InDataType, WeiDataType, OutDataType>();
+    if(time_kernel)
+    {
+        std::size_t flop      = conv_param.GetFlops();
+        std::size_t num_btype = conv_param.GetByte<InDataType, WeiDataType, OutDataType>();
 
-    float tflops     = static_cast<float>(flop) / 1.E9 / avg_time;
-    float gb_per_sec = num_btype / 1.E6 / avg_time;
-    std::cout << "Perf: " << avg_time << " ms, " << tflops << " TFlops, " << gb_per_sec << " GB/s, "
-              << std::endl;
+        float tflops     = static_cast<float>(flop) / 1.E9 / avg_time;
+        float gb_per_sec = num_btype / 1.E6 / avg_time;
+        std::cout << "Perf: " << avg_time << " ms, " << tflops << " TFlops, " << gb_per_sec
+                  << " GB/s, " << std::endl;
+    }
+    else
+    {
+        std::cout << "timing:off" << std::endl;
+    }
 
 #if defined(CK_TILE_MLS_PROBE_PERF_ONLY)
     return true;
@@ -278,7 +293,7 @@ bool run_fused_conv_example(int argc, char* argv[])
     arg_parser.insert("m", "2", "spatial dim")
         .insert("g", "1", "group")
         .insert("n", "64", "batch size")
-        .insert("k", "128", "out channels")
+        .insert("k", "256", "out channels")
         .insert("c", "256", "in channels")
         .insert("r", "1", "filter x")
         .insert("s", "1", "filter y")
@@ -289,7 +304,8 @@ bool run_fused_conv_example(int argc, char* argv[])
         .insert("l", "1", "dilation h")
         .insert("j", "1", "dilation w")
         .insert("p", "0", "pad h")
-        .insert("q", "0", "pad w");
+        .insert("q", "0", "pad w")
+        .insert("time", "1", "time kernel");
 
     bool result = arg_parser.parse(argc, argv);
 
@@ -310,7 +326,7 @@ bool run_fused_conv_example(int argc, char* argv[])
 
     if(arg_parser.get_int("m") == 2)
     {
-        return run_fused_conv(conv_param);
+        return run_fused_conv(conv_param, arg_parser.get_int("time") != 0);
     }
     else
     {

@@ -114,7 +114,7 @@ __global__ void __launch_bounds__(MaxThreadPerBlock, MinBlockPerCU) kernel_group
     const index_t b_const_stride)
 {
 #if (!defined(__HIP_DEVICE_COMPILE__) || defined(__gfx926__) || defined(__gfx928__) || defined(__gfx92a__) || \
-     defined(__gfx936__) || defined(__gfx938__))
+     defined(__gfx936__) || defined(__gfx938__) || defined(__gfx946__))
     __shared__ char p_shared[GridwiseGemm::GetSharedMemoryNumberOfByte()];
 
     // offset base pointer for each work-group
@@ -188,7 +188,7 @@ __global__ void __launch_bounds__(MaxThreadPerBlock, MinBlockPerCU) kernel_group
     ignore = a_const_stride;
     ignore = b_const_stride;
 #endif // end of if (defined(__gfx926__) || defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) ||
-       // defined(__gfx938__))
+       // defined(__gfx938__) || defined(__gfx946__))
 }
 
 template <ck::index_t NDimSpatial,

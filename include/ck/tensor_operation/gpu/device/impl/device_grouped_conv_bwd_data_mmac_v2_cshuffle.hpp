@@ -91,7 +91,7 @@ __launch_bounds__(MaxThreadPerBlock, MinBlockPerCU)
         const ComputePtrOffsetOfBatch compute_ptr_offset_of_batch)
 {
 #if (!defined(__HIP_DEVICE_COMPILE__) || defined(__gfx926__) || defined(__gfx928__) || defined(__gfx92a__) || \
-     defined(__gfx936__) || defined(__gfx938__))
+     defined(__gfx936__) || defined(__gfx938__) || defined(__gfx946__))
     __shared__ char p_shared[GridwiseGemm::GetSharedMemoryNumberOfByte()];
 
     // offset base pointer for each work-group
@@ -132,7 +132,7 @@ __launch_bounds__(MaxThreadPerBlock, MinBlockPerCU)
     ignore = block_2_ctile_map;
     ignore = compute_ptr_offset_of_batch;
 #endif // end of if (defined(__gfx926__) || defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) ||
-       // defined(__gfx938__))
+       // defined(__gfx938__) || defined(__gfx946__))
 }
 
 template <ck::index_t NDimSpatial,
