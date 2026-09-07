@@ -178,7 +178,7 @@ CK_TILE_HOST index_t moe_sorting_get_sub_token(int tokens_, int num_experts_)
 
 struct MoeSortingHostArgs
 {
-    const void* p_topk_ids;     // [token, topk]
+    const void* p_topk_ids;     // [token, topk]; IDs outside [0, num_experts) are ignored
     const void* p_weights;      // [token, topk]
 
     const void* p_local_expert_mask;
@@ -186,6 +186,8 @@ struct MoeSortingHostArgs
     void* p_sorted_token_ids;
     void* p_sorted_weights;
     void* p_sorted_expert_ids;
+    // Default EX/P0-P1-P23 paths: [0,E) local counts (masked=0), [E,2E) padded
+    // exclusive offsets in global expert order. Empty experts are also written.
     void* p_tokens_positions_per_expert;
     void* p_total_tokens_post_pad;
     // we fused the setzero of output of fused-moe buffer
@@ -486,7 +488,9 @@ struct MoeSortingKernel
 #pragma unroll Problem_::InternalLoadUnroll
         for(int i = start_idx; i < numel && i < start_idx + tokens_per_thread; ++i)
         {
-            ++tokens_cnts[calc_index(num_experts + 1, tid + 1, topk_id[i])];
+            const IndexType eid = topk_id[i];
+            if(eid >= 0 && eid < num_experts)
+                ++tokens_cnts[calc_index(num_experts + 1, tid + 1, eid)];
         }
         __syncthreads();
 
@@ -613,6 +617,8 @@ struct MoeSortingKernel
         for(int i = start_idx; i < numel && i < start_idx + tokens_per_thread; ++i)
         {
             index_t expert_id     = topk_id[i];
+            if(expert_id < 0 || expert_id >= num_experts)
+                continue;
             index_t local_cnt     = tokens_cnts[calc_index(num_experts + 1, tid, expert_id)];
             index_t rank_post_pad = local_cnt + cumsum[expert_id];
 #if CK_TILE_REFERENCE_MOE_SORTING_MOCK_ID
@@ -773,15 +779,13 @@ struct MoeSortingKernel
                                       curr_topk_id]; ///！ topk_id shape  = [tokens, topk], dtype =
                                                      ///int32, in HBM. 'eid' is expert index.
 
-                    if constexpr(Problem::SubTokenOneShot) ///！ is_sub_token_onshot = (tokens <=
-                                                           ///sub_tokens)?
-                        smem_tokens(curr_token_id, eid) =
-                            curr_topk_id +
-                            1; ///!
-                               ///对应expert位置标记出此expert其是本token选择的第几个expert，未选择的==0
-                    else
-                        smem_tokens(curr_token_id,
-                                    eid)++; ///! 当token数量一次无法处理完时，将采用累计计数
+                    if(eid >= 0 && eid < num_experts)
+                    {
+                        if constexpr(Problem::SubTokenOneShot)
+                            smem_tokens(curr_token_id, eid) = curr_topk_id + 1;
+                        else
+                            smem_tokens(curr_token_id, eid)++;
+                    }
                 }
                 __builtin_amdgcn_s_waitcnt(
                     0xc07f); ///!
@@ -832,7 +836,10 @@ struct MoeSortingKernel
                 }
                 if(lane_group_os == 0) {
                     smem_cumsum(i_e + 1) = cnt;
-                    p_tokens_positions_per_expert[i_e] = cnt; ///! 记录每个expert被选择的token个数
+                    if constexpr(Problem::LocalExpertMasking)
+                        p_tokens_positions_per_expert[i_e] = local_expert_mask[i_e] ? cnt : 0;
+                    else
+                        p_tokens_positions_per_expert[i_e] = cnt;
                 }
             }
         }
@@ -936,6 +943,7 @@ struct MoeSortingKernel
         {
             int e_start = smem_cumsum(i_e);
             int e_end   = smem_cumsum(i_e + 1);
+            p_pos_per_expert[i_e] = e_start;
 
             int expert_id = [&]() {
                 if constexpr(Problem::LocalExpertMasking)
@@ -993,8 +1001,8 @@ struct MoeSortingKernel
                     if(i_t < tokens)
                     {
                         int eid = topk_id[i_t * topk + curr_topk_id];
-                        smem_tokens(curr_token_id, eid) =
-                            curr_topk_id + 1; // at least 1 ///！存此expert的选择序号，从1开始计算
+                        if(eid >= 0 && eid < num_experts)
+                            smem_tokens(curr_token_id, eid) = curr_topk_id + 1;
                     }
                 }
                 __syncthreads();
@@ -1014,10 +1022,6 @@ struct MoeSortingKernel
                             continue;
                     }
                     int position = smem_cumsum(eid); ///! 本expert起始token序号
-
-                    if (lane_group_os == 0) {
-                        p_pos_per_expert[eid] = position;
-                    }
 
                     for(int i_sub_token = lane_group_os; i_sub_token < sub_tokens;
                         i_sub_token += lane_group_sz)
@@ -1444,6 +1448,7 @@ struct MoeSortingMultiPhaseKernel_P0
         const void* p_topk_ids; // [tokens, topk]
         void* p_expert_mesh;    // [expert, tokens]
         index_t tokens;
+        index_t num_experts;
         index_t mesh_stride; // mesh_stride for p_expert_mesh
         mdiv topk_mdiv;
     };
@@ -1466,6 +1471,7 @@ struct MoeSortingMultiPhaseKernel_P0
         k.p_topk_ids    = h.p_topk_ids;
         k.p_expert_mesh = h.p_ws;
         k.tokens        = h.tokens;
+        k.num_experts   = h.num_experts;
         k.mesh_stride   = impl::moe_sorting_mp_mesh_stride(h.tokens);
         k.topk_mdiv     = mdiv{static_cast<uint32_t>(h.topk)};
         return k;
@@ -1495,8 +1501,9 @@ struct MoeSortingMultiPhaseKernel_P0
                 IndexType eid = x[j.value]; // ext_vector_type must use int to []
                 uint32_t curr_token_id, curr_topk_id;
                 kargs.topk_mdiv.divmod(i * Problem::SubTokenTile + j, curr_token_id, curr_topk_id);
-                p_expert_mesh[eid * kargs.mesh_stride + curr_token_id] =
-                    (curr_topk_id + 1) & 0xffff;
+                if(eid >= 0 && eid < kargs.num_experts)
+                    p_expert_mesh[eid * kargs.mesh_stride + curr_token_id] =
+                        (curr_topk_id + 1) & 0xffff;
             });
         }
     }
@@ -1574,7 +1581,14 @@ struct MoeSortingMultiPhaseKernel_P1
         {
             IndexType mask = p_local_expert_mask[eid];
             if(mask == 0)
+            {
+                if(threadIdx.x == 0)
+                {
+                    p_expert_cumsum[eid] = 0;
+                    kargs.p_tokens_positions_per_expert[eid] = 0;
+                }
                 return; // skip
+            }
         }
 
         index_t cnt = 0; // per-wave cnt
@@ -1718,7 +1732,8 @@ struct MoeSortingMultiPhaseKernel_P01
                     uint32_t curr_token_id, curr_topk_id;
                     kargs.topk_mdiv.divmod(
                         i * Problem::SubTokenTile + j, curr_token_id, curr_topk_id);
-                    p_expert_mesh[eid * kargs.mesh_stride + curr_token_id] = curr_topk_id + 1;
+                    if(eid >= 0 && eid < kargs.num_experts)
+                        p_expert_mesh[eid * kargs.mesh_stride + curr_token_id] = curr_topk_id + 1;
                 });
             }
             if(static_cast<index_t>(blockIdx.x) < kargs.wg_count)
@@ -2433,6 +2448,8 @@ struct MoeSortingMultiPhaseKernel_P23
             int lane_id = threadIdx.x % get_warp_size();
             int e_start = p_expert_cumsum_smem[eid];
             int e_end   = p_expert_cumsum_smem[eid + 1];
+            if(threadIdx.x == 0)
+                p_pos_per_expert[eid] = e_start;
             if constexpr(Problem::SkipExpertsWithZeroTokens)
             {
                 if(e_start == e_end)
@@ -2444,10 +2461,6 @@ struct MoeSortingMultiPhaseKernel_P23
                 int e_mask = p_local_expert_mask[eid];
                 if(e_mask == 0)
                     return; // skip empty expert
-            }
-
-            if(threadIdx.x == 0) {
-                p_pos_per_expert[eid] = e_start;
             }
 
             // cumsum one by one

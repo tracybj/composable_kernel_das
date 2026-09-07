@@ -18,6 +18,9 @@ struct moe_sorting_args : public ck_tile::MoeSortingHostArgs
 {
 };
 
+// IDs outside [0, num_experts), including the -1 padding sentinel, are ignored.
+// Valid routes retain their original top-k rank and weight (no renormalization).
+
 // use below API before call moe_sorting() to indicate if need workspace or not
 // if return non zero, means need workspace, you need to allocate a GPU buffer
 // and set to moe_sorting_args.p_ws

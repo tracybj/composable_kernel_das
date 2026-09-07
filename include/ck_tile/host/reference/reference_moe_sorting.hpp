@@ -49,6 +49,8 @@ CK_TILE_HOST void reference_moe_sorting(const HostTensor<IndexType>& topk_ids,
         for(index_t k = 0; k < topk; k++)
         {
             IndexType e  = topk_ids(t, k);
+            if(e < 0 || e >= experts)
+                continue;
             WeightType w = weights(t, k);
             index_t idx  = expert_slice_idxs[e];
             if(idx > expert_slices[e] * unit_size - 1)
