@@ -12,7 +12,8 @@ template<typename C>
 __device__ void intrin_mmac_16x16x4f64(const double& reg_a, const double& reg_b, C& reg_c)
 {
 #if defined(__gfx936__) || defined(__gfx938__)
-    reg_c.template AsType<double4_t>()(Number<0>{}) = __builtin_hcu_mmac_16x16x4_f64(
+    // The explicit vstep entry is shared by aicc and dcc; keep the default C layout.
+    reg_c.template AsType<double4_t>()(Number<0>{}) = __builtin_hcu_mmac_16x16x4_f64_vstep(
         reg_a, reg_b, reg_c.template AsType<double4_t>()[Number<0>{}], 0);
 #else
     swallow(reg_a, reg_b, reg_c);
@@ -24,7 +25,7 @@ __device__ void intrin_mmac_f32_16x16x4f32(const float& reg_a, const float& reg_
 {
 #if defined(__gfx926__) || defined(__gfx928__) || defined(__gfx92a__) || defined(__gfx936__) || defined(__gfx938__)
     reg_c.template AsType<float4_t>()(Number<0>{}) = __builtin_hcu_mmac_16x16x4_f32(
-        reg_a, reg_b, reg_c.template AsType<float4_t>()[Number<0>{}], 0);
+        reg_a, reg_b, reg_c.template AsType<float4_t>()[Number<0>{}]);
 #else
     swallow(reg_a, reg_b, reg_c);
 #endif
