@@ -91,3 +91,7 @@
 ## 2026-10-28 iteration 19
 
 Frozen spreadsheet targets in targets_int8_nt.csv. Two small-M masked packed-LDS candidates improve five screened shapes by 1.95-2.16x; all full outputs/guards pass, all still below targets. Experimental only. Details: iteration_19_small_m.md.
+
+## 2026-10-28 iteration 20
+
+CTA-local K partition (2/4/8 waves), all 25 screened outputs/guards pass but slower than v19. Not promoted. Exact BLAS kernel ISA located via /opt/dtk/aillvm/bin/llvm-objdump. Static summary and iteration_20_local_k.md record evidence and limitations.
