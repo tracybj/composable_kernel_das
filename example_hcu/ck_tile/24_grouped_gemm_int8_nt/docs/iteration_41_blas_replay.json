@@ -1,0 +1,154 @@
+{
+  "scope": "Frozen BLASLt algorithm replay on physical GPU7; no retuning or target replacement",
+  "shape": {
+    "M": 2048,
+    "N": 4096,
+    "K": 8192,
+    "G": 128
+  },
+  "algorithm_id": 6950,
+  "normal_timing": {
+    "M": 2048,
+    "N": 4096,
+    "K": 8192,
+    "G": 128,
+    "gpu": 7,
+    "backend": "groupgemm",
+    "selected": {
+      "candidate_index": 5,
+      "algorithm_id": 6950,
+      "support_status": 0,
+      "workspace_bytes": 540672,
+      "origin": "heuristic",
+      "kernel_name": "Custom_Cijk_Alik_Bljk_I8II_BH_Bias_GG_AI_SAV_MT256x256x32_MI16x16x1_SN_GSU1_K1_MIWT8_4_WGM8",
+      "solution_name": "Custom_Cijk_Alik_Bljk_I8II_BH_Bias_GG_AI_SAV_MT256x256x32_MI16x16x1_SN_GSU1_K1_MIWT8_4_WGM8"
+    },
+    "mode": "timing",
+    "samples_ms": [
+      29.152591705322266,
+      29.27128028869629,
+      29.13718032836914
+    ],
+    "median_ms": 29.152591705322266,
+    "TOPS": 603.4518722122489,
+    "bad_elements": 0,
+    "output_guards": true,
+    "full_inputs_unchanged": true
+  },
+  "profile": {
+    "KernelName": "Custom_Cijk_Alik_Bljk_I8II_BH_Bias_GG_AI_SAV_MT256x256x32_MI16x16x1_SN_GSU1_K1_MIWT8_4_WGM8",
+    "gpu-id": "7",
+    "grd": "12582912",
+    "wgr": "768",
+    "lds": "65536",
+    "scr": "0",
+    "arch_vgpr": "256",
+    "sgpr": "112",
+    "SQ_INSTS_VALU": "1213267968",
+    "SQ_INSTS_LDS": "272891904",
+    "SQ_INSTS_VMEM_RD": "67895296",
+    "SQ_INSTS_VMEM_WR": "16777216",
+    "SQ_LDS_BANK_CONFLICT": "0",
+    "SQ_WAIT_INST_LDS": "409292954"
+  },
+  "compiled_resource_comparison": [
+    {
+      ".group_segment_fixed_size": 65536,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 120,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 768,
+      ".name": "Custom_Cijk_Alik_Bljk_I8II_BH_Bias_AI_MT256x256x128_SE_K1_USSB1_WGM5_0521_structbuffer1024_ccyBlockSize768_gfx936",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 102,
+      ".sgpr_spill_count": 0,
+      ".symbol": "Custom_Cijk_Alik_Bljk_I8II_BH_Bias_AI_MT256x256x128_SE_K1_USSB1_WGM5_0521_structbuffer1024_ccyBlockSize768_gfx936.kd",
+      ".vgpr_count": 255,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64,
+      "object": "/workspace/GroupGemm/baseline/hipblaslt-install/lib/hipblaslt/library_gfx936/TensileLibrary_gfx936.co"
+    },
+    {
+      ".group_segment_fixed_size": 65536,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 32,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 768,
+      ".name": "Custom_Cijk_Alik_Bljk_I8II_BH_Bias_GG_AI_SAV_MT256x256x32_MI16x16x1_SN_GSU1_K1_MIWT8_4_WGM8",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 100,
+      ".sgpr_spill_count": 0,
+      ".symbol": "Custom_Cijk_Alik_Bljk_I8II_BH_Bias_GG_AI_SAV_MT256x256x32_MI16x16x1_SN_GSU1_K1_MIWT8_4_WGM8.kd",
+      ".vgpr_count": 255,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64,
+      "object": "/workspace/GroupGemm/baseline/hipblaslt-install/lib/hipblaslt/library_gfx936/TensileLibrary_gfx936.co"
+    },
+    {
+      ".group_segment_fixed_size": 65536,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 8,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 512,
+      ".name": "_ZN7ck_tile6kentryILi512ELi1ENS_22GroupedInt8NtD2LKernelINS_23GroupedInt8NtD2LProblemILb1ELb0ELi0ELi1EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 58,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi512ELi1ENS_22GroupedInt8NtD2LKernelINS_23GroupedInt8NtD2LProblemILb1ELb0ELi0ELi1EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEEEEvDpT2_.kd",
+      ".unfolded_args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 206,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64,
+      "object": "/workspace/GroupGemm/composable_kernel/example_hcu/ck_tile/24_grouped_gemm_int8_nt/build/own_isa_v30/device_1.co"
+    },
+    {
+      ".group_segment_fixed_size": 65536,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 8,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 512,
+      ".name": "_ZN7ck_tile6kentryILi512ELi1ENS_30GroupedInt8NtD2LGeometryKernelINS_31GroupedInt8NtD2LGeometryProblemILi2ELi4ELi4ELb0ELi1EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 59,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi512ELi1ENS_30GroupedInt8NtD2LGeometryKernelINS_31GroupedInt8NtD2LGeometryProblemILi2ELi4ELi4ELb0ELi1EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEEEEvDpT2_.kd",
+      ".unfolded_args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 201,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64,
+      "object": "/workspace/GroupGemm/composable_kernel/example_hcu/ck_tile/24_grouped_gemm_int8_nt/build/own_isa_v30/device_1.co"
+    }
+  ]
+}

@@ -187,3 +187,7 @@ All78 shapes numerical PASS across620 development records; best-candidate target
 ## Iteration39 aligned/native-only loop
 
 40 full-range checks,5 >2GiB stride-span fallback checks and28 performance-output records pass. Hoisting improves4-6% on four representatives, still below targets. No default change. See iteration_39_aligned.md.
+
+## Iteration41 frozen BLAS replay
+
+GPU7 algorithm6950 reproduces603.452TOPS without profiler; full output/input/guard checks pass. Actual launch is768 threads and64KiB LDS; resource and raw PMC comparison saved. Fixed Excel target remains unchanged.
