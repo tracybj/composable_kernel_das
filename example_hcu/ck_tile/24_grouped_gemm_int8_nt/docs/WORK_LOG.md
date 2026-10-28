@@ -145,3 +145,7 @@ Iteration 26 evidence filenames corrected: restored iteration-23 audit/CSV/dispa
 ## Iteration 30 wave geometry and tile grouping
 
 40 full-range oracle checks and 48 performance-output checks pass. Best352-395 TOPS on representative large-M shapes, below targets. No default change. See iteration_30_geometry.md.
+
+## Iteration 31 medium-M packed deep-K
+
+44 full-range oracle checks and 1568 screening records pass. Best-candidate coverage192/196; no production change. Residual small-G/long-K requires further work. See iteration_31_medium_m.md.

@@ -1,0 +1,101 @@
+{
+  "scope": "candidate screening, not default public acceptance",
+  "shapes": 196,
+  "records": 1568,
+  "numerical_full_output_pass": true,
+  "full_range_boundary_checks": 44,
+  "oracle_target_pass": 192,
+  "min_R": 0.94394099174108,
+  "median_R": 1.3847419145224182,
+  "misses": [
+    {
+      "ID": 882,
+      "M": 32,
+      "N": 3072,
+      "K": 4096,
+      "G": 4,
+      "candidate": 7501,
+      "ms": 0.06180800125002861,
+      "samples_ms": [
+        0.06191999837756157,
+        0.06180800125002861,
+        0.06159989908337593
+      ],
+      "TOPS": 52.11664196952994,
+      "target_TOPS": 52.5862859041847,
+      "R": 0.9910690795788378,
+      "bad_elements": 0,
+      "guard": true,
+      "input_samples_unchanged": true
+    },
+    {
+      "ID": 1023,
+      "M": 64,
+      "N": 4096,
+      "K": 6144,
+      "G": 8,
+      "candidate": 7604,
+      "ms": 0.23846399784088135,
+      "samples_ms": [
+        0.23863990604877472,
+        0.23811189830303192,
+        0.23846399784088135
+      ],
+      "TOPS": 108.06580452113063,
+      "target_TOPS": 114.483644069536,
+      "R": 0.94394099174108,
+      "bad_elements": 0,
+      "guard": true,
+      "input_samples_unchanged": true
+    },
+    {
+      "ID": 1092,
+      "M": 32,
+      "N": 4096,
+      "K": 7168,
+      "G": 8,
+      "candidate": 7502,
+      "ms": 0.23564788699150085,
+      "samples_ms": [
+        0.2353760004043579,
+        0.23652799427509308,
+        0.23564788699150085
+      ],
+      "TOPS": 63.79172640976057,
+      "target_TOPS": 63.815567366752,
+      "R": 0.9996264084458514,
+      "bad_elements": 0,
+      "guard": true,
+      "input_samples_unchanged": true
+    },
+    {
+      "ID": 1093,
+      "M": 64,
+      "N": 4096,
+      "K": 7168,
+      "G": 8,
+      "candidate": 7603,
+      "ms": 0.2704958915710449,
+      "samples_ms": [
+        0.27043190598487854,
+        0.2704958915710449,
+        0.2705118954181671
+      ],
+      "TOPS": 111.14686769319593,
+      "target_TOPS": 116.598830243081,
+      "R": 0.9532417045821213,
+      "bad_elements": 0,
+      "guard": true,
+      "input_samples_unchanged": true
+    }
+  ],
+  "best_candidates": {
+    "7501": 7,
+    "7601": 11,
+    "7503": 4,
+    "7603": 23,
+    "7502": 62,
+    "7604": 58,
+    "7504": 31
+  }
+}
