@@ -99,3 +99,7 @@ CTA-local K partition (2/4/8 waves), all 25 screened outputs/guards pass but slo
 ## 2026-10-28 iteration 21
 
 Combined contiguous packed transfer with wave-local K partition and in-kernel INT32 reduction. All 25 screened outputs/guards pass; shape-dependent improvement over v19, still below spreadsheet targets. No public selector change. See iteration_21_packed_local_k.md.
+
+## 2026-10-28 iteration 22
+
+BK128/256 small-M packed-LDS experiments; all 35 outputs/guards pass. BK256 improves screened performance; M16/N7168/K3072/G12 is faster than spreadsheet target in screening. Expand coverage before production promotion. See iteration_22_deep_k.md.
