@@ -161,3 +161,7 @@ Iteration 26 evidence filenames corrected: restored iteration-23 audit/CSV/dispa
 ## Iteration 34 medium-M packed deep-K
 
 40 full-range oracle checks and 1556 screening records pass. All original packed candidates remain best; no production change. Residual small-G/long-K requires further work. See iteration_34_medium_m.md.
+
+## Iteration 35 medium-M packed deep-K
+
+32 full-range oracle checks and 1280 screening records pass. Limited wins; no default change. Residual small-G/long-K requires further work. See iteration_35_medium_m.md.
