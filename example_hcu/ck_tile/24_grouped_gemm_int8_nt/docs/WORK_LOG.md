@@ -137,3 +137,7 @@ Iteration 26 evidence filenames corrected: restored iteration-23 audit/CSV/dispa
 ## Iteration 28 native D2L GEMM
 
 20 full-range FP64 oracle checks and 28 performance-output checks pass. Ping-pong reaches ~328-367 TOPS on four large-M cases, still below targets; producer specialization does not improve this variant. Retained experimental, no default change. See iteration_28_direct_lds.md.
+
+## Iteration 29 LDS K-vector mapping
+
+28 full-range oracle combinations and 32 performance-output checks pass. Shift1 modestly improves some cases; shift2 regresses. No default change. See iteration_29_lds_mapping.md.

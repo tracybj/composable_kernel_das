@@ -1,0 +1,46 @@
+# Iteration 29: isolate LDS K-vector XOR row bits
+
+INT8 NT -> INT32, no scale; gfx936 physical GPU7. Experimental only; no production selector change.
+
+Rows are permuted by XORing their K16 vector index with `(row >> shift) & 3`. The compute read uses the inverse mapping, so all K entries remain exact. Compare shifts0/1/2/3 using the same ping-pong input buffers. Bank-conflict reduction is a hypothesis; no hardware conflict counters were collected.
+
+28 full-range INT8/FP64 oracle combinations pass (tails, strides, unequal group lengths, full input copies and output guards). 32 performance-output checks pass; 3 samples, warmup2/repeat5, median.
+
+| M | N | K | G | candidate | ms | TOPS |
+|---:|---:|---:|---:|---:|---:|---:|
+|2048|6144|7168|96|6048|53.295319|324.931|
+|2048|6144|7168|96|6702|48.534908|356.801|
+|2048|6144|7168|96|6802|47.245144|366.542|
+|2048|6144|7168|96|6902|77.461807|223.559|
+|2048|6144|7168|96|7002|52.674713|328.759|
+|2048|6144|7168|96|6903|77.372726|223.817|
+|2048|6144|7168|96|6904|69.150070|250.431|
+|2048|6144|7168|96|6905|69.585266|248.865|
+|2048|4096|8192|128|6048|55.529552|316.808|
+|2048|4096|8192|128|6702|47.906548|367.219|
+|2048|4096|8192|128|6802|46.631992|377.256|
+|2048|4096|8192|128|6902|79.957619|220.019|
+|2048|4096|8192|128|7002|54.247925|324.292|
+|2048|4096|8192|128|6903|78.598190|223.824|
+|2048|4096|8192|128|6904|70.602417|249.173|
+|2048|4096|8192|128|6905|70.751991|248.646|
+|16384|3072|4096|48|6048|65.895889|300.341|
+|16384|3072|4096|48|6702|58.847984|336.311|
+|16384|3072|4096|48|6802|57.288757|345.464|
+|16384|3072|4096|48|6902|93.738083|211.133|
+|16384|3072|4096|48|7002|64.405807|307.289|
+|16384|3072|4096|48|6903|92.808365|213.248|
+|16384|3072|4096|48|6904|83.523949|236.953|
+|16384|3072|4096|48|6905|83.599724|236.738|
+|16384|4096|6144|8|6048|22.039036|299.336|
+|16384|4096|6144|8|6702|19.976284|330.245|
+|16384|4096|6144|8|6802|19.535835|337.691|
+|16384|4096|6144|8|6902|31.097881|212.139|
+|16384|4096|6144|8|7002|21.510715|306.688|
+|16384|4096|6144|8|6903|30.891804|213.554|
+|16384|4096|6144|8|6904|27.828024|237.066|
+|16384|4096|6144|8|6905|27.513912|239.772|
+
+Shift1 gives a modest gain on some shapes; shift2 regresses strongly. These observations do not establish a specific hardware bank geometry or the full runtime bottleneck. Next compare compute-wave geometry and tile grouping independently.
+
+Library SHA256: 31a152101ff75012c77c99a45dc08a8a4e959169313227a29f071aaee0b3248b
