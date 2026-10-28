@@ -141,3 +141,7 @@ Iteration 26 evidence filenames corrected: restored iteration-23 audit/CSV/dispa
 ## Iteration 29 LDS K-vector mapping
 
 28 full-range oracle combinations and 32 performance-output checks pass. Shift1 modestly improves some cases; shift2 regresses. No default change. See iteration_29_lds_mapping.md.
+
+## Iteration 30 wave geometry and tile grouping
+
+40 full-range oracle checks and 48 performance-output checks pass. Best352-395 TOPS on representative large-M shapes, below targets. No default change. See iteration_30_geometry.md.
