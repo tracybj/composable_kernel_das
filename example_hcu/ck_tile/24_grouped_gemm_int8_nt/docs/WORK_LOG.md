@@ -207,3 +207,7 @@ All three paths pass full input/output/guard checks; corrected name filter captu
 ## Iteration45 K32 streaming ring
 
 80 full-range checks and48 performance-output records pass. No spills, but K32 ring-buffer variants regress. Retained experimental; next change physical copy tile and role lifetimes. See iteration_45_streaming.md.
+
+## Iteration46 dense K128
+
+72 full-range combinations and44 performance-output records pass. All-wave variants reach about381-419TOPS; mixed paired-producer variants spill6-7 VGPRs. Historical masked offset-proof gap documented; no promotion. Next split role loops/lifetimes and include padded K in the stride guard.
