@@ -133,3 +133,7 @@ Linear and XOR layouts round-trip exactly, OOB loads zero-fill preinitialized LD
 Iteration 26 completed: public API 560/560 numerical PASS; 560/560 meet fixed workbook throughput. Shape-only selector replay covers all 1178 rows; larger-M expected instances unchanged. Full-goal work continues.
 
 Iteration 26 evidence filenames corrected: restored iteration-23 audit/CSV/dispatch report from their original checkpoint; iteration-26 evidence is now stored separately. No GPU retesting or metric changes.
+
+## Iteration 28 native D2L GEMM
+
+20 full-range FP64 oracle checks and 28 performance-output checks pass. Ping-pong reaches ~328-367 TOPS on four large-M cases, still below targets; producer specialization does not improve this variant. Retained experimental, no default change. See iteration_28_direct_lds.md.
