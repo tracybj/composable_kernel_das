@@ -15,3 +15,7 @@ Full public 560-shape verification is launched next with 3 samples, warmup10/rep
 ## Completed public validation
 
 560/560 numerical checks pass; 545/560 exceed spreadsheet targets, min R 0.949404, median R 1.340675. Metrics in iteration_23_public_small_m.csv. All 1178 shape-only dispatch checks pass against selector_contract_v23.csv, including reorder/relabel invariance; this CSV is a selector contract and contains no performance claim for the other 618 shapes.
+
+## Completed public validation
+
+560/560 numerical checks pass; 560/560 exceed spreadsheet targets, min R 1.003401, median R 1.341192. Metrics in iteration_23_public_small_m.csv. All 1178 shape-only dispatch checks pass against selector_contract_v26.csv, including reorder/relabel invariance; this CSV is a selector contract and contains no performance claim for the other 618 shapes.

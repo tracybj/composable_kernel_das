@@ -95,12 +95,16 @@ CSV的INT8行默认使用include-args-build=0、blas-streams=1，repeat列指定
 只在 CPU 上检查全部 shape 的选核，且核对已有正式结果中的实例：
 
 ```bash
-python3 "$e/test_shape_selection.py" --results "$e/docs/selector_contract_v23.csv" \
+python3 "$e/test_shape_selection.py" --results "$e/docs/selector_contract_v26.csv" \
   --output "$e/results/shape_selection_audit.json"
 ```
 
 测试输入只传 M/N/K/G；还会反转输入顺序并更改测试标签后重复检查。该测试验证选核独立于 case ID，不重新测量吞吐。
 
-## 第23轮当前状态
+## 第23轮记录
 
-已注册3个K128/K256小M实例，按M/N/K/G与长度属性默认选核；K<1024使用16x64x128，否则G<=16用16x64x256，其余用16x128x256。旧14个实例保留，共17个INT8实例。560条小M公开入口验证见docs/iteration_23_public_audit.json；其余618条尚未完成新目标验收。早期FINAL_REPORT中的50%目标对应历史BLAS基准，本轮目标以targets_manifest.json指定Excel列为准。docs/selector_contract_v23.csv仅为1178条CPU选核契约，不能作为全量性能结果。
+已注册3个K128/K256小M实例，按M/N/K/G与长度属性默认选核；K<1024使用16x64x128，否则G<=16用16x64x256，其余用16x128x256。旧14个实例保留，共17个INT8实例。560条小M公开入口验证见docs/iteration_23_public_audit.json；其余618条尚未完成新目标验收。早期FINAL_REPORT中的50%目标对应历史BLAS基准，本轮目标以targets_manifest.json指定Excel列为准。docs/selector_contract_v26.csv仅为1178条CPU选核契约，不能作为全量性能结果。
+
+## 第26轮当前状态
+
+新增18号INT8实例（ABI ID 6505）：common且无empty/ragged、M<=16、K>=4096、G<=8时用16x32x512双wave。其余小M保留第23轮规则。当前共18个INT8实例；核心dtype仍为INT8×INT8→INT32，无scale。默认入口560条验证的实际数值和达标数见docs/iteration_26_public_audit.json，其余618条新目标验收尚未完成。
