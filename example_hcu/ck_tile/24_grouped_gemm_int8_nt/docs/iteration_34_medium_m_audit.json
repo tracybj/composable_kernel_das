@@ -1,0 +1,79 @@
+{
+  "scope": "candidate screening, not default public acceptance",
+  "shapes": 196,
+  "records": 1556,
+  "numerical_full_output_pass": true,
+  "full_range_boundary_checks": 40,
+  "oracle_target_pass": 193,
+  "min_R": 0.9438147215881117,
+  "median_R": 1.386693319275754,
+  "misses": [
+    {
+      "ID": 882,
+      "M": 32,
+      "N": 3072,
+      "K": 4096,
+      "G": 4,
+      "candidate": 7501,
+      "ms": 0.06287980079650879,
+      "samples_ms": [
+        0.06287980079650879,
+        0.06268800050020218,
+        0.06297600269317627
+      ],
+      "TOPS": 51.22830274899422,
+      "target_TOPS": 52.5862859041847,
+      "R": 0.9741760968313145,
+      "bad_elements": 0,
+      "guard": true,
+      "input_samples_unchanged": true
+    },
+    {
+      "ID": 1023,
+      "M": 64,
+      "N": 4096,
+      "K": 6144,
+      "G": 8,
+      "candidate": 7604,
+      "ms": 0.23849590122699738,
+      "samples_ms": [
+        0.23852798342704773,
+        0.23849590122699738,
+        0.23838388919830322
+      ],
+      "TOPS": 108.05134865388159,
+      "target_TOPS": 114.483644069536,
+      "R": 0.9438147215881117,
+      "bad_elements": 0,
+      "guard": true,
+      "input_samples_unchanged": true
+    },
+    {
+      "ID": 1093,
+      "M": 64,
+      "N": 4096,
+      "K": 7168,
+      "G": 8,
+      "candidate": 7603,
+      "ms": 0.2723197937011719,
+      "samples_ms": [
+        0.2723197937011719,
+        0.2720639109611511,
+        0.2724798917770386
+      ],
+      "TOPS": 110.40244509362164,
+      "target_TOPS": 116.598830243081,
+      "R": 0.9468572271562129,
+      "bad_elements": 0,
+      "guard": true,
+      "input_samples_unchanged": true
+    }
+  ],
+  "best_candidates": {
+    "7501": 11,
+    "7603": 31,
+    "7502": 62,
+    "7604": 61,
+    "7504": 31
+  }
+}
