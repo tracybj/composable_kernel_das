@@ -1,0 +1,32 @@
+{
+  "scope": "one instrumented dispatch; not formal performance acceptance",
+  "shape": {
+    "M": 2048,
+    "N": 4096,
+    "K": 8192,
+    "G": 128
+  },
+  "candidate": 7204,
+  "gpu": 7,
+  "library_sha256": "9e7481da7355c2808527d868998d8d41a799fc34f4bf8c0dfad44052fa4b0f32",
+  "LDS_bytes": 65536,
+  "scratch_bytes": 0,
+  "profiler_arch_vgpr": 204,
+  "counters": {
+    "GRBM_COUNT": 66324507,
+    "GRBM_GUI_ACTIVE": 66324507,
+    "SQ_ACTIVE_INST_VALU": 2714370048,
+    "SQ_INSTS_LDS": 214433792,
+    "SQ_INSTS_VALU": 1640235008,
+    "SQ_INSTS_VMEM_RD": 67108864,
+    "SQ_INSTS_VMEM_WR": 4194304,
+    "SQ_LDS_BANK_CONFLICT": 33554432,
+    "SQ_WAIT_INST_LDS": 617629956
+  },
+  "TCC_hit": 899473831,
+  "TCC_miss": 241567285,
+  "TCC_hit_counter_share": 0.7882922169826525,
+  "kernel_duration_ns": 44199352,
+  "output_check": "full [-8,8] input/output FP32 integer reference PASS",
+  "interpretation_limits": "Raw aggregated counters; do not infer occupancy, exact bandwidth, conflict percentage or stall-time percentage without DTK metric definitions and comparative runs."
+}

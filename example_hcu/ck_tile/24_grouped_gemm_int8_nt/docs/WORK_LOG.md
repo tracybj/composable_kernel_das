@@ -169,3 +169,7 @@ Iteration 26 evidence filenames corrected: restored iteration-23 audit/CSV/dispa
 ## Iteration 37 medium-M default dispatch
 
 Five packed deep-K instances registered using M/K/G thresholds. Host80+30, CPU1178 replay and28 full-range public boundaries PASS. Full196 default-entry performance run follows. No all1178 throughput claim. See iteration_37_medium_m_dispatch.md.
+
+## Iteration 36 native D2L PMC
+
+Captured one real GPU7 dispatch with installed hipprof PMC; full output check passes. Raw counters and interpretation limits recorded. v30/v32 experimental ELF extraction was corrected and exact original hashes restored. See iteration_36_pmc.md.
