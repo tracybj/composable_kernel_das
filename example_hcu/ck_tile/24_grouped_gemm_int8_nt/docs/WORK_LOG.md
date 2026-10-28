@@ -103,3 +103,7 @@ Combined contiguous packed transfer with wave-local K partition and in-kernel IN
 ## 2026-10-28 iteration 22
 
 BK128/256 small-M packed-LDS experiments; all 35 outputs/guards pass. BK256 improves screened performance; M16/N7168/K3072/G12 is faster than spreadsheet target in screening. Expand coverage before production promotion. See iteration_22_deep_k.md.
+
+## Iteration 22 expanded small-M screening
+
+560 shapes x 8 candidates, all 4480 full output/guard/input-sample checks pass. Best-per-shape oracle >= target: 546/560; median ratio 1.352390; min ratio 0.958686. This is candidate screening, not production selector acceptance. Shape rules and independent validation remain required. Summary and best rows saved in iteration_22_full_screen_summary.json and iteration_22_small_m_best_screen.csv.
