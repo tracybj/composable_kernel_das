@@ -195,3 +195,7 @@ GPU7 algorithm6950 reproduces603.452TOPS without profiler; full output/input/gua
 ## Iteration42 no-LDS output
 
 40 full-range checks,10 odd-output-stride/large-input-span checks and32 performance-output records pass. Scalar output regresses; wave-transposed vector output improves modestly on large M. No default change. See iteration_42_direct_output.md.
+
+## Iteration43 packed input/direct output screen
+
+128 full-range combinations and4196 full-output records across834 shapes pass. Best-candidate throughput meets830/834 targets; four residuals remain. Small-M long-K narrow-N K512 candidate improves margin. No default change. See iteration_43_direct_epi.md.
