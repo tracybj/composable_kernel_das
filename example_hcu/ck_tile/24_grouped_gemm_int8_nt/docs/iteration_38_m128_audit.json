@@ -1,0 +1,59 @@
+{
+  "scope": "explicit candidate screening, not public default acceptance",
+  "shapes": 78,
+  "records": 620,
+  "numeric_pass": true,
+  "oracle_target_pass": 76,
+  "min_R": 0.9664545222818144,
+  "median_R": 1.242457107190171,
+  "misses": [
+    {
+      "ID": 884,
+      "M": 128,
+      "N": 3072,
+      "K": 4096,
+      "G": 4,
+      "candidate": 6044,
+      "ms": 0.09300799667835236,
+      "samples_ms": [
+        0.09300799667835236,
+        0.09321600198745728,
+        0.09286399930715561
+      ],
+      "TOPS": 138.5354200516714,
+      "target_TOPS": 143.34396172578,
+      "R": 0.9664545222818144,
+      "bad_elements": 0,
+      "guard": true,
+      "input_samples_unchanged": true
+    },
+    {
+      "ID": 1103,
+      "M": 128,
+      "N": 4096,
+      "K": 7168,
+      "G": 12,
+      "candidate": 7703,
+      "ms": 0.5214878916740417,
+      "samples_ms": [
+        0.5205758213996887,
+        0.5216798782348633,
+        0.5214878916740417
+      ],
+      "TOPS": 172.95571892659848,
+      "target_TOPS": 175.159123264913,
+      "R": 0.9874205562505467,
+      "bad_elements": 0,
+      "guard": true,
+      "input_samples_unchanged": true
+    }
+  ],
+  "best_candidates": {
+    "6035": 2,
+    "6044": 40,
+    "7703": 4,
+    "6042": 31,
+    "6007": 1
+  },
+  "library_sha256": "201566bf5cae863bb3faa5efb4d5d32c2464e60038205035afe3bafcfc13de37"
+}
