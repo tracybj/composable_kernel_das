@@ -95,3 +95,7 @@ Frozen spreadsheet targets in targets_int8_nt.csv. Two small-M masked packed-LDS
 ## 2026-10-28 iteration 20
 
 CTA-local K partition (2/4/8 waves), all 25 screened outputs/guards pass but slower than v19. Not promoted. Exact BLAS kernel ISA located via /opt/dtk/aillvm/bin/llvm-objdump. Static summary and iteration_20_local_k.md record evidence and limitations.
+
+## 2026-10-28 iteration 21
+
+Combined contiguous packed transfer with wave-local K partition and in-kernel INT32 reduction. All 25 screened outputs/guards pass; shape-dependent improvement over v19, still below spreadsheet targets. No public selector change. See iteration_21_packed_local_k.md.
