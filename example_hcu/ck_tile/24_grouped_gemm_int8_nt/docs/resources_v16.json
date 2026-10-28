@@ -1,0 +1,110 @@
+{
+  "binary": "/workspace/GroupGemm/composable_kernel/example_hcu/ck_tile/24_grouped_gemm_int8_nt/results/full_screen_01/binaries/libint8_nt_public.so",
+  "sha256": "50bb6520b7c307f08e6a1b225059b5b0e9dd7715aa4245e99121e5951d81e4be",
+  "resources": [
+    {
+      "symbol": "_ZN7ck_tile6kentryILi256ELi1ENS_25GroupedInt8NtDirectKernelINS_26GroupedInt8NtDirectProblemEEEJPKNS_22GemmTransKernelArgImplILi0EEEEEEvDpT2_",
+      "group_segment_fixed_size": 0,
+      "private_segment_fixed_size": 0,
+      "sgpr_count": 19,
+      "vgpr_count": 16,
+      "wavefront_size": 64
+    },
+    {
+      "symbol": "_ZN7ck_tile6kentryILi256ELi1ENS_23GroupedInt8NtTileKernelINS_24GroupedInt8NtTileProblemILi32ELi128ELi64ELi2ELi2ELb0ELb0ELb0ELb0ELi1ELb0ELi0EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEEEEvDpT2_",
+      "group_segment_fixed_size": 12800,
+      "private_segment_fixed_size": 0,
+      "sgpr_count": 26,
+      "vgpr_count": 60,
+      "wavefront_size": 64
+    },
+    {
+      "symbol": "_ZN7ck_tile6kentryILi256ELi1ENS_23GroupedInt8NtTileKernelINS_24GroupedInt8NtTileProblemILi64ELi128ELi64ELi2ELi2ELb0ELb0ELb0ELb0ELi1ELb0ELi0EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEEEEvDpT2_",
+      "group_segment_fixed_size": 15360,
+      "private_segment_fixed_size": 0,
+      "sgpr_count": 23,
+      "vgpr_count": 79,
+      "wavefront_size": 64
+    },
+    {
+      "symbol": "_ZN7ck_tile6kentryILi256ELi1ENS_23GroupedInt8NtTileKernelINS_24GroupedInt8NtTileProblemILi128ELi128ELi64ELi2ELi2ELb0ELb0ELb0ELb0ELi1ELb0ELi0EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEEEEvDpT2_",
+      "group_segment_fixed_size": 20480,
+      "private_segment_fixed_size": 0,
+      "sgpr_count": 23,
+      "vgpr_count": 125,
+      "wavefront_size": 64
+    },
+    {
+      "symbol": "_ZN7ck_tile6kentryILi512ELi1ENS_23GroupedInt8NtTileKernelINS_24GroupedInt8NtTileProblemILi128ELi256ELi64ELi2ELi4ELb0ELb0ELb0ELb0ELi1ELb0ELi0EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEEEEvDpT2_",
+      "group_segment_fixed_size": 30720,
+      "private_segment_fixed_size": 0,
+      "sgpr_count": 23,
+      "vgpr_count": 120,
+      "wavefront_size": 64
+    },
+    {
+      "symbol": "_ZN7ck_tile6kentryILi256ELi1ENS_23GroupedInt8NtTileKernelINS_24GroupedInt8NtTileProblemILi128ELi128ELi64ELi2ELi2ELb1ELb1ELb1ELb1ELi1ELb0ELi0EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEEEEvDpT2_",
+      "group_segment_fixed_size": 20480,
+      "private_segment_fixed_size": 0,
+      "sgpr_count": 18,
+      "vgpr_count": 135,
+      "wavefront_size": 64
+    },
+    {
+      "symbol": "_ZN7ck_tile6kentryILi512ELi1ENS_23GroupedInt8NtTileKernelINS_24GroupedInt8NtTileProblemILi256ELi256ELi64ELi4ELi2ELb1ELb1ELb1ELb0ELi1ELb1ELi0EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEEEEvDpT2_",
+      "group_segment_fixed_size": 40960,
+      "private_segment_fixed_size": 0,
+      "sgpr_count": 20,
+      "vgpr_count": 226,
+      "wavefront_size": 64
+    },
+    {
+      "symbol": "_ZN7ck_tile6kentryILi512ELi2ENS_23GroupedInt8NtTileKernelINS_24GroupedInt8NtTileProblemILi128ELi256ELi64ELi2ELi4ELb1ELb1ELb1ELb0ELi2ELb1ELi0EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEEEEvDpT2_",
+      "group_segment_fixed_size": 30720,
+      "private_segment_fixed_size": 0,
+      "sgpr_count": 20,
+      "vgpr_count": 134,
+      "wavefront_size": 64
+    },
+    {
+      "symbol": "_ZN7ck_tile6kentryILi512ELi1ENS_23GroupedInt8NtTileKernelINS_24GroupedInt8NtTileProblemILi256ELi256ELi64ELi4ELi2ELb1ELb0ELb1ELb0ELi1ELb1ELi0EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEEEEvDpT2_",
+      "group_segment_fixed_size": 40960,
+      "private_segment_fixed_size": 0,
+      "sgpr_count": 30,
+      "vgpr_count": 226,
+      "wavefront_size": 64
+    },
+    {
+      "symbol": "_ZN7ck_tile6kentryILi256ELi1ENS_23GroupedInt8NtTileKernelINS_24GroupedInt8NtTileProblemILi128ELi128ELi64ELi2ELi2ELb1ELb0ELb1ELb0ELi1ELb1ELi0EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEEEEvDpT2_",
+      "group_segment_fixed_size": 20480,
+      "private_segment_fixed_size": 0,
+      "sgpr_count": 30,
+      "vgpr_count": 138,
+      "wavefront_size": 64
+    },
+    {
+      "symbol": "_ZN7ck_tile6kentryILi512ELi1ENS_23GroupedInt8NtTileKernelINS_24GroupedInt8NtTileProblemILi256ELi256ELi64ELi4ELi2ELb1ELb1ELb1ELb0ELi1ELb1ELi1EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEEEEvDpT2_",
+      "group_segment_fixed_size": 40960,
+      "private_segment_fixed_size": 0,
+      "sgpr_count": 22,
+      "vgpr_count": 226,
+      "wavefront_size": 64
+    },
+    {
+      "symbol": "_ZN7ck_tile6kentryILi256ELi1ENS_23GroupedInt8NtTileKernelINS_24GroupedInt8NtTileProblemILi128ELi128ELi64ELi2ELi2ELb1ELb1ELb1ELb1ELi1ELb0ELi8EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEEEEvDpT2_",
+      "group_segment_fixed_size": 20480,
+      "private_segment_fixed_size": 0,
+      "sgpr_count": 18,
+      "vgpr_count": 135,
+      "wavefront_size": 64
+    },
+    {
+      "symbol": "_ZN7ck_tile6kentryILi256ELi1ENS_23GroupedInt8NtTileKernelINS_24GroupedInt8NtTileProblemILi128ELi128ELi64ELi2ELi2ELb1ELb0ELb1ELb0ELi1ELb1ELi8EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEEEEvDpT2_",
+      "group_segment_fixed_size": 20480,
+      "private_segment_fixed_size": 0,
+      "sgpr_count": 32,
+      "vgpr_count": 138,
+      "wavefront_size": 64
+    }
+  ]
+}

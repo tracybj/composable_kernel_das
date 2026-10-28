@@ -1,0 +1,25 @@
+{
+  "status": "PASS",
+  "rows": 1178,
+  "unique_shapes": 1178,
+  "instance_count": 10,
+  "shape_fields": [
+    "M",
+    "N",
+    "K",
+    "G"
+  ],
+  "formal_instances_match": true,
+  "relabelled_reversed_match": true,
+  "invalid_group_counts_rejected": true,
+  "gpu_work_performed": false,
+  "reference_csv_sha256": "d18739fe6959aa03eaca8c0e9dd52a83d5876dd217d8362170431750b51144dd",
+  "original_selector_checks": 20,
+  "compiled_instances": 14,
+  "gfx936_bundles_unchanged": true,
+  "gfx936_sha256": [
+    "d381da89b4c098b848c8f265db775603d7914aa0db59e6081d84c037e9c664a2"
+  ],
+  "baseline_revision": "2be6ad4f959545c0ca7d8f4175353a2c7e9912a6",
+  "verification": "CPU shape replay and fresh HIP build; no GPU performance rerun"
+}
