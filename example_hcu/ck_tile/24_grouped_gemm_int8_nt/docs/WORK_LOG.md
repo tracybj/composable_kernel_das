@@ -153,3 +153,7 @@ Iteration 26 evidence filenames corrected: restored iteration-23 audit/CSV/dispa
 ## Iteration 33 medium-M packed deep-K
 
 36 full-range oracle checks and 1648 screening records pass. No production change; see audit for best-candidate coverage; no production change. Residual small-G/long-K requires further work. See iteration_33_medium_m.md.
+
+## Iteration 32 D2L depth and compiled resources
+
+32 full-range checks and 40 performance-output checks pass. K32 resource savings do not improve large-M throughput. Actual metadata confirms v30 four-wave candidate private allocation. No default change. See iteration_32_depth_resources.md.
