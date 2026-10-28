@@ -117,3 +117,7 @@ Iteration 23 completed: public API 560/560 numerical PASS; 545/560 meet fixed wo
 ## Iteration 24 large-M existing candidates
 
 Four representative large-M/large-K shapes x four existing instances; 16 full output/guard checks pass. Best ~300-325 TOPS, still below target; N-first helps M16384 but dispatch-only changes are insufficient. Next investigate operand supply/read scheduling. See iteration_24_large_tile.md.
+
+## Iteration 25 layout experiments
+
+128 small-M and 24 large-M full output/guard checks pass. Narrow BN32/BK512 meets all 15 remaining small-M targets in screening. Wide paired LDS reads improve large-M only slightly, insufficient for target. BLAS large-M direct-to-LDS instructions confirmed. See iteration_25_layout.md; production path unchanged this iteration.
