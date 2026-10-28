@@ -211,3 +211,7 @@ All three paths pass full input/output/guard checks; corrected name filter captu
 ## Iteration46 dense K128
 
 72 full-range combinations and44 performance-output records pass. All-wave variants reach about381-419TOPS; mixed paired-producer variants spill6-7 VGPRs. Historical masked offset-proof gap documented; no promotion. Next split role loops/lifetimes and include padded K in the stride guard.
+
+## Iteration48 split role loops
+
+54 full-range checks (48 boundary combinations +6 repeated smoke checks),36 performance records pass. Separate wave-role lifetimes remove spills:233-234 VGPRs,zero scratch. Representative throughput remains below the frozen BLAS targets; no default promotion. See iteration_48_split_roles.md.
