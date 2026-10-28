@@ -191,3 +191,7 @@ All78 shapes numerical PASS across620 development records; best-candidate target
 ## Iteration41 frozen BLAS replay
 
 GPU7 algorithm6950 reproduces603.452TOPS without profiler; full output/input/guard checks pass. Actual launch is768 threads and64KiB LDS; resource and raw PMC comparison saved. Fixed Excel target remains unchanged.
+
+## Iteration42 no-LDS output
+
+40 full-range checks,10 odd-output-stride/large-input-span checks and32 performance-output records pass. Scalar output regresses; wave-transposed vector output improves modestly on large M. No default change. See iteration_42_direct_output.md.
