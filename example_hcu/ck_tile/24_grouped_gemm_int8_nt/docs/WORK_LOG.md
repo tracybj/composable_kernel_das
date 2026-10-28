@@ -235,3 +235,7 @@ Iteration49 screen completed:344/344 original large-M shapes,2064 numerical/guar
 ## Iteration51 compiler lifetime controls
 
 66 full-range and32 performance-output checks PASS. Memory-only clobbers leave24-28 spills; volatile vector LDS loads regress. Continue with accumulator-tied MMAC ordering, no public default change. See iteration_51_lifetime.md.
+
+## Iteration52 ordered MMAC policies
+
+Native instruction and intrinsic-plus-tied-fragment compiler boundaries compile to244 VGPRs,zero scratch/spills.66 full-range and32 performance-output checks PASS. Representative best417-484TOPS; fixed targets still missed, no default promotion. Next matched operand-path counters. See iteration_52_ordered_mmac.md.
