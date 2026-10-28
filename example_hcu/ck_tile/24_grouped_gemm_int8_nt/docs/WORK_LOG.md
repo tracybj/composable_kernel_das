@@ -131,3 +131,5 @@ Added shape-only 6505 route, K512/BN32. 80 original plus 24 INT8 host checks and
 Linear and XOR layouts round-trip exactly, OOB loads zero-fill preinitialized LDS, all guards pass. Copy probe only, no GEMM throughput claim. See iteration_27_direct_lds_probe.md.
 
 Iteration 26 completed: public API 560/560 numerical PASS; 560/560 meet fixed workbook throughput. Shape-only selector replay covers all 1178 rows; larger-M expected instances unchanged. Full-goal work continues.
+
+Iteration 26 evidence filenames corrected: restored iteration-23 audit/CSV/dispatch report from their original checkpoint; iteration-26 evidence is now stored separately. No GPU retesting or metric changes.
