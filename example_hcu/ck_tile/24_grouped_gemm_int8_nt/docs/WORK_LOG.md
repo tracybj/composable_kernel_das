@@ -111,3 +111,5 @@ BK128/256 small-M packed-LDS experiments; all 35 outputs/guards pass. BK256 impr
 ## Iteration 23 public dispatch
 
 Integrated three small-M K128/K256 instances with K/G shape rules. 21 INT8 and 80 original host selector checks pass; 18 full-range boundary tests pass. Public 560-shape validation launched, pending results. See iteration_23_public_dispatch.md.
+
+Iteration 23 completed: public API 560/560 numerical PASS; 545/560 meet fixed workbook throughput. Shape-only selector replay covers all 1178 rows; larger-M expected instances unchanged. Full-goal work continues.
