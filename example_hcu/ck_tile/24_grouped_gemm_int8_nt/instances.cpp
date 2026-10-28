@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: MIT
 #include "grouped_int8_nt_tile.hpp"
 #include "grouped_int8_nt_direct.hpp"
+#include "grouped_int8_nt_direct_epilogue.hpp"
 #include "ck_tile/ops/gemm/grouped_gemm_selector.hpp"
 #include <hip/hip_runtime.h>
 namespace {
-template <class P>
+template <class P, class Epilogue = ck_tile::GroupedInt8NtTileEpilogue<P>>
 int launch(const void* args, int groups, int m, int n, hipStream_t stream)
 {
     dim3 grid(P::MFirst ? (m + P::BM - 1) / P::BM : (n + P::BN - 1) / P::BN,
@@ -17,7 +18,7 @@ int launch(const void* args, int groups, int m, int n, hipStream_t stream)
     }
     ck_tile::launch_kernel(ck_tile::stream_config{stream, false},
                            ck_tile::make_kernel<P::Threads, P::MinBlocks>(
-                               ck_tile::GroupedInt8NtTileKernel<P>{},
+                               ck_tile::GroupedInt8NtTileKernel<P, Epilogue>{},
                                grid,
                                dim3(P::Threads),
                                0,
@@ -123,6 +124,11 @@ ck_tile_grouped_int8_nt_launch(unsigned instance_id, const void* args, int g, in
     case Instance::int8_nt_m64_n128_k256:
         return launch<ck_tile::GroupedInt8NtTileProblem<64,128,256,2,2,
             false, false, true, true, 1, true>>(args, g, m, n, s);
+    case Instance::int8_nt_small_m_n32_k512_direct: {
+        using P = ck_tile::GroupedInt8NtTileProblem<16,32,512,1,2,
+            false,false,true,true,1,true>;
+        return launch<P,ck_tile::GroupedInt8NtDirectEpilogue<P>>(args,g,m,n,s);
+    }
     default: return -5;
     }
 }

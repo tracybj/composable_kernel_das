@@ -3,7 +3,7 @@
 #include "grouped_int8_nt_pipeline.hpp"
 #include "grouped_int8_nt_epilogue.hpp"
 namespace ck_tile {
-template <class P>
+template <class P, class Epilogue = GroupedInt8NtTileEpilogue<P>>
 struct GroupedInt8NtTileKernel
 {
     CK_TILE_DEVICE void operator()(const GemmTransKernelArg* args) const
@@ -39,7 +39,7 @@ struct GroupedInt8NtTileKernel
         __shared__ __align__(16) int8_t smem[Policy::SmemBytes];
         typename P::Mmac::CVecType c[P::MR][P::NR]{};
         GroupedInt8NtTilePipeline<P>{}(a, mb, nb, smem, c);
-        GroupedInt8NtTileEpilogue<P>{}(a, mb, nb, smem, c);
+        Epilogue{}(a, mb, nb, smem, c);
     }
 };
 } // namespace ck_tile

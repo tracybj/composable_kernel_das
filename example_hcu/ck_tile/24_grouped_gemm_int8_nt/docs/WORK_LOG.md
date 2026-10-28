@@ -215,3 +215,7 @@ All three paths pass full input/output/guard checks; corrected name filter captu
 ## Iteration48 split role loops
 
 54 full-range checks (48 boundary combinations +6 repeated smoke checks),36 performance records pass. Separate wave-role lifetimes remove spills:233-234 VGPRs,zero scratch. Representative throughput remains below the frozen BLAS targets; no default promotion. See iteration_48_split_roles.md.
+
+## Iteration47 small-M public integration
+
+Reusable no-LDS epilogue; uniform M<=16,K>=4096 selects8734 for every G. Host80+33, CPU1178 relabel/reverse,28 full-range public boundaries PASS. All560 small-M public throughput checks follow. See iteration_47_small_m_dispatch.md.
