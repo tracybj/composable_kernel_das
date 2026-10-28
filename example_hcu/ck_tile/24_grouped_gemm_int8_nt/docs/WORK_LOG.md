@@ -165,3 +165,7 @@ Iteration 26 evidence filenames corrected: restored iteration-23 audit/CSV/dispa
 ## Iteration 35 medium-M packed deep-K
 
 32 full-range oracle checks and 1280 screening records pass. Limited wins; no default change. Residual small-G/long-K requires further work. See iteration_35_medium_m.md.
+
+## Iteration 37 medium-M default dispatch
+
+Five packed deep-K instances registered using M/K/G thresholds. Host80+30, CPU1178 replay and28 full-range public boundaries PASS. Full196 default-entry performance run follows. No all1178 throughput claim. See iteration_37_medium_m_dispatch.md.

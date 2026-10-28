@@ -44,9 +44,9 @@ int main()
     p.m = GroupedGemmDimensionSummary::Common(16);
     expect(GroupedGemmInstanceId::int8_nt_small_m_n64_k128);
     p.m = GroupedGemmDimensionSummary::Common(32);
-    expect(GroupedGemmInstanceId::int8_nt_m32);
+    expect(GroupedGemmInstanceId::int8_nt_m32_n64_k128);
     p.m = GroupedGemmDimensionSummary::Common(64);
-    expect(GroupedGemmInstanceId::int8_nt_m64);
+    expect(GroupedGemmInstanceId::int8_nt_m64_n128_k128);
     p.k = GroupedGemmDimensionSummary::Common(131072);
     expect(GroupedGemmInstanceId::none);
     p.k    = GroupedGemmDimensionSummary::Common(512);
@@ -87,5 +87,22 @@ int main()
     p.group_count = 8;
     p.may_have_empty_groups = true;
     expect(GroupedGemmInstanceId::int8_nt_direct_m16);
+    p.may_have_empty_groups = false;
+    p.m = GroupedGemmDimensionSummary::Common(32);
+    p.k = GroupedGemmDimensionSummary::Common(4112);
+    p.group_count = 8;
+    expect(GroupedGemmInstanceId::int8_nt_m32_n64_k256);
+    p.group_count = 33;
+    expect(GroupedGemmInstanceId::int8_nt_m32_n128_k256);
+    p.group_count = 4;
+    expect(GroupedGemmInstanceId::int8_nt_m32_n64_k128);
+    p.m = GroupedGemmDimensionSummary::Common(64);
+    p.group_count = 8;
+    expect(GroupedGemmInstanceId::int8_nt_m64_n128_k256);
+    p.k = GroupedGemmDimensionSummary::Common(1232);
+    expect(GroupedGemmInstanceId::int8_nt_m64_n128_k128);
+    p.group_lengths_are_ragged = true;
+    expect(GroupedGemmInstanceId::int8_nt_m64);
+    p.group_lengths_are_ragged = false;
     std::cout << "INT8_SELECTOR_PASS checks=" << checks << std::endl;
 }

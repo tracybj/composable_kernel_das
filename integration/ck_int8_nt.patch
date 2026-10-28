@@ -1,5 +1,5 @@
 diff --git a/example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args.cpp b/example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args.cpp
-index bdaa4c5..f7bef89 100644
+index bdaa4c5..2b8f4d9 100644
 --- a/example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args.cpp
 +++ b/example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args.cpp
 @@ -62,6 +62,10 @@ extern "C" int ck_tile_hcu_grouped_gemm_v8_bf16_tn_device_args(
@@ -58,7 +58,7 @@ index bdaa4c5..f7bef89 100644
      return CK_TILE_HCU_GROUPED_GEMM_DEVICE_ARGS_UNSUPPORTED_V1;
  }
  
-@@ -512,6 +538,29 @@ void candidate_masks(ck_tile::GroupedGemmInstanceId id,
+@@ -512,6 +538,34 @@ void candidate_masks(ck_tile::GroupedGemmInstanceId id,
      contract_flags     = 0;
      switch(id)
      {
@@ -80,6 +80,11 @@ index bdaa4c5..f7bef89 100644
 +    case ck_tile::GroupedGemmInstanceId::int8_nt_small_m_n64_k256:
 +    case ck_tile::GroupedGemmInstanceId::int8_nt_small_m_n128_k256:
 +    case ck_tile::GroupedGemmInstanceId::int8_nt_small_g_n32_k512:
++    case ck_tile::GroupedGemmInstanceId::int8_nt_m32_n64_k128:
++    case ck_tile::GroupedGemmInstanceId::int8_nt_m32_n64_k256:
++    case ck_tile::GroupedGemmInstanceId::int8_nt_m32_n128_k256:
++    case ck_tile::GroupedGemmInstanceId::int8_nt_m64_n128_k128:
++    case ck_tile::GroupedGemmInstanceId::int8_nt_m64_n128_k256:
 +
 +        architecture_mask = ArchGfx936;
 +        data_type_mask = CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_MASK_INT8_INT32_V1;
@@ -193,7 +198,7 @@ index 25f69e8..d3442d8 100644
 +
 +add_subdirectory(24_grouped_gemm_int8_nt)
 diff --git a/include/ck_tile/ops/gemm/grouped_gemm_device_args.h b/include/ck_tile/ops/gemm/grouped_gemm_device_args.h
-index 545f081..20b7f69 100644
+index 545f081..930dfb8 100644
 --- a/include/ck_tile/ops/gemm/grouped_gemm_device_args.h
 +++ b/include/ck_tile/ops/gemm/grouped_gemm_device_args.h
 @@ -30,7 +30,9 @@ typedef enum ck_tile_hcu_grouped_gemm_data_type_v1
@@ -207,7 +212,7 @@ index 545f081..20b7f69 100644
  } ck_tile_hcu_grouped_gemm_data_type_v1;
  
  typedef enum ck_tile_hcu_grouped_gemm_layout_v1
-@@ -67,7 +69,25 @@ typedef enum ck_tile_hcu_grouped_gemm_instance_id_v1
+@@ -67,7 +69,30 @@ typedef enum ck_tile_hcu_grouped_gemm_instance_id_v1
      // v7: the uniform Direct-to-LDS NN / TN kernels driven through the
      // device-args ABI.
      CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V7_BF16_NN_V1 = 5000,
@@ -230,11 +235,16 @@ index 545f081..20b7f69 100644
 +    CK_TILE_HCU_GROUPED_GEMM_INSTANCE_INT8_NT_SMALL_M_N64_K128_V1 = 6401,
 +    CK_TILE_HCU_GROUPED_GEMM_INSTANCE_INT8_NT_SMALL_M_N64_K256_V1 = 6403,
 +    CK_TILE_HCU_GROUPED_GEMM_INSTANCE_INT8_NT_SMALL_M_N128_K256_V1 = 6404,
-+    CK_TILE_HCU_GROUPED_GEMM_INSTANCE_INT8_NT_SMALL_G_N32_K512_V1 = 6505
++    CK_TILE_HCU_GROUPED_GEMM_INSTANCE_INT8_NT_SMALL_G_N32_K512_V1 = 6505,
++    CK_TILE_HCU_GROUPED_GEMM_INSTANCE_INT8_NT_M32_N64_K128_V1 = 7501,
++    CK_TILE_HCU_GROUPED_GEMM_INSTANCE_INT8_NT_M32_N64_K256_V1 = 7502,
++    CK_TILE_HCU_GROUPED_GEMM_INSTANCE_INT8_NT_M32_N128_K256_V1 = 7504,
++    CK_TILE_HCU_GROUPED_GEMM_INSTANCE_INT8_NT_M64_N128_K128_V1 = 7603,
++    CK_TILE_HCU_GROUPED_GEMM_INSTANCE_INT8_NT_M64_N128_K256_V1 = 7604,
  } ck_tile_hcu_grouped_gemm_instance_id_v1;
  
  typedef enum ck_tile_hcu_grouped_gemm_candidate_family_v1
-@@ -76,7 +96,8 @@ typedef enum ck_tile_hcu_grouped_gemm_candidate_family_v1
+@@ -76,7 +101,8 @@ typedef enum ck_tile_hcu_grouped_gemm_candidate_family_v1
      CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_FAMILY_GFX936_V3_V1 = 1,
      CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_FAMILY_GFX938_MLS_V1 = 2,
      CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_FAMILY_V4_V1 = 3,
@@ -244,7 +254,7 @@ index 545f081..20b7f69 100644
  } ck_tile_hcu_grouped_gemm_candidate_family_v1;
  
  typedef enum ck_tile_hcu_grouped_gemm_architecture_mask_v1
-@@ -89,7 +110,8 @@ typedef enum ck_tile_hcu_grouped_gemm_architecture_mask_v1
+@@ -89,7 +115,8 @@ typedef enum ck_tile_hcu_grouped_gemm_architecture_mask_v1
  typedef enum ck_tile_hcu_grouped_gemm_data_type_mask_v1
  {
      CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_MASK_FP16_V1 = 1u << 0,
@@ -254,7 +264,7 @@ index 545f081..20b7f69 100644
  } ck_tile_hcu_grouped_gemm_data_type_mask_v1;
  
  typedef enum ck_tile_hcu_grouped_gemm_layout_mask_v1
-@@ -127,7 +149,8 @@ typedef enum ck_tile_hcu_grouped_gemm_selection_reason_v1
+@@ -127,7 +154,8 @@ typedef enum ck_tile_hcu_grouped_gemm_selection_reason_v1
      CK_TILE_HCU_GROUPED_GEMM_SELECTION_V4_ALIGNED_V1       = 4,
      CK_TILE_HCU_GROUPED_GEMM_SELECTION_V4_BF16_PADDING_V1  = 5,
      CK_TILE_HCU_GROUPED_GEMM_SELECTION_V4_N_ALIGNED_V1     = 6,
@@ -265,7 +275,7 @@ index 545f081..20b7f69 100644
  
  // These opt-outs expose CK's rollback policy without letting a consumer name
 diff --git a/include/ck_tile/ops/gemm/grouped_gemm_selector.hpp b/include/ck_tile/ops/gemm/grouped_gemm_selector.hpp
-index 24a5807..c6a3593 100644
+index 24a5807..0cd9add 100644
 --- a/include/ck_tile/ops/gemm/grouped_gemm_selector.hpp
 +++ b/include/ck_tile/ops/gemm/grouped_gemm_selector.hpp
 @@ -23,6 +23,7 @@ enum class GroupedGemmDataType
@@ -276,7 +286,7 @@ index 24a5807..c6a3593 100644
  };
  
  enum class GroupedGemmLayout
-@@ -144,6 +145,26 @@ enum class GroupedGemmInstanceId
+@@ -144,6 +145,31 @@ enum class GroupedGemmInstanceId
      // instances).
      v7_bf16_nn                                     = 5000,
      v8_bf16_tn                                     = 5001,
@@ -298,12 +308,17 @@ index 24a5807..c6a3593 100644
 +    int8_nt_small_m_n64_k256 = 6403,
 +    int8_nt_small_m_n128_k256 = 6404,
 +    int8_nt_small_g_n32_k512 = 6505,
++    int8_nt_m32_n64_k128 = 7501,
++    int8_nt_m32_n64_k256 = 7502,
++    int8_nt_m32_n128_k256 = 7504,
++    int8_nt_m64_n128_k128 = 7603,
++    int8_nt_m64_n128_k256 = 7604,
 +
 +
  };
  
  enum class GroupedGemmCandidateFamily
-@@ -153,6 +174,7 @@ enum class GroupedGemmCandidateFamily
+@@ -153,6 +179,7 @@ enum class GroupedGemmCandidateFamily
      gfx938_mls,
      v4,
      v7,
@@ -311,16 +326,16 @@ index 24a5807..c6a3593 100644
  };
  
  struct GroupedGemmCandidateIdentity
-@@ -162,7 +184,7 @@ struct GroupedGemmCandidateIdentity
+@@ -162,7 +189,7 @@ struct GroupedGemmCandidateIdentity
      GroupedGemmCandidateFamily family;
  };
  
 -inline constexpr std::array<GroupedGemmCandidateIdentity, 20>
-+inline constexpr std::array<GroupedGemmCandidateIdentity, 38>
++inline constexpr std::array<GroupedGemmCandidateIdentity, 43>
      grouped_gemm_candidate_registry{{
          {GroupedGemmInstanceId::bw_family_selected,
           "bw_family.selected",
-@@ -229,6 +251,25 @@ inline constexpr std::array<GroupedGemmCandidateIdentity, 20>
+@@ -229,6 +256,30 @@ inline constexpr std::array<GroupedGemmCandidateIdentity, 20>
          {GroupedGemmInstanceId::v8_bf16_tn,
           "v8.tn_ab.uniform_d2l.256x256x16",
           GroupedGemmCandidateFamily::v7},
@@ -342,11 +357,16 @@ index 24a5807..c6a3593 100644
 +        {GroupedGemmInstanceId::int8_nt_small_m_n64_k256, "int8_nt_small_m_n64_k256", GroupedGemmCandidateFamily::int8_nt},
 +        {GroupedGemmInstanceId::int8_nt_small_m_n128_k256, "int8_nt_small_m_n128_k256", GroupedGemmCandidateFamily::int8_nt},
 +        {GroupedGemmInstanceId::int8_nt_small_g_n32_k512, "int8_nt_small_g_n32_k512", GroupedGemmCandidateFamily::int8_nt},
++        {GroupedGemmInstanceId::int8_nt_m32_n64_k128, "int8_nt_m32_n64_k128", GroupedGemmCandidateFamily::int8_nt},
++        {GroupedGemmInstanceId::int8_nt_m32_n64_k256, "int8_nt_m32_n64_k256", GroupedGemmCandidateFamily::int8_nt},
++        {GroupedGemmInstanceId::int8_nt_m32_n128_k256, "int8_nt_m32_n128_k256", GroupedGemmCandidateFamily::int8_nt},
++        {GroupedGemmInstanceId::int8_nt_m64_n128_k128, "int8_nt_m64_n128_k128", GroupedGemmCandidateFamily::int8_nt},
++        {GroupedGemmInstanceId::int8_nt_m64_n128_k256, "int8_nt_m64_n128_k256", GroupedGemmCandidateFamily::int8_nt},
 +
      }};
  
  constexpr const GroupedGemmCandidateIdentity*
-@@ -263,6 +304,7 @@ enum class GroupedGemmSelectionReason
+@@ -263,6 +314,7 @@ enum class GroupedGemmSelectionReason
      v8_bf16_tn,
      v4_n_aligned,
      v4_fallback,
@@ -354,7 +374,7 @@ index 24a5807..c6a3593 100644
  };
  
  struct GroupedGemmSelection
-@@ -278,7 +320,8 @@ constexpr bool is_valid_grouped_gemm_problem(const GroupedGemmProblem& problem)
+@@ -278,7 +330,8 @@ constexpr bool is_valid_grouped_gemm_problem(const GroupedGemmProblem& problem)
      if((problem.arch != GroupedGemmArch::gfx936 && problem.arch != GroupedGemmArch::gfx938 &&
          problem.arch != GroupedGemmArch::gfx946) ||
         (problem.data_type != GroupedGemmDataType::fp16 &&
@@ -364,7 +384,7 @@ index 24a5807..c6a3593 100644
         (problem.layout != GroupedGemmLayout::nt && problem.layout != GroupedGemmLayout::nn &&
          problem.layout != GroupedGemmLayout::tn) ||
         problem.group_count <= 0 || problem.m.extent <= 0 || problem.n.extent <= 0 ||
-@@ -316,6 +359,59 @@ constexpr GroupedGemmSelection select_grouped_gemm_candidate(
+@@ -316,6 +369,71 @@ constexpr GroupedGemmSelection select_grouped_gemm_candidate(
          return {};
      }
  
@@ -418,13 +438,25 @@ index 24a5807..c6a3593 100644
 +        // More output CTAs and fewer K iterations for long-K, small-G inputs.
 +        if(uniform && m <= 16 && problem.k.extent >= 4096 && problem.group_count <= 8)
 +            id = GroupedGemmInstanceId::int8_nt_small_g_n32_k512;
++        // Medium-M deep-K tiles reuse operands across more output rows.
++        // Small G favors more BN64 output CTAs; short K favors lighter tiles.
++        if(uniform && m > 16 && m <= 32)
++            id = problem.k.extent < 1024 || problem.group_count <= 4
++                     ? GroupedGemmInstanceId::int8_nt_m32_n64_k128
++                     : problem.group_count <= 32
++                           ? GroupedGemmInstanceId::int8_nt_m32_n64_k256
++                           : GroupedGemmInstanceId::int8_nt_m32_n128_k256;
++        if(uniform && m > 32 && m <= 64)
++            id = problem.k.extent < 2048 || problem.group_count <= 4
++                     ? GroupedGemmInstanceId::int8_nt_m64_n128_k128
++                     : GroupedGemmInstanceId::int8_nt_m64_n128_k256;
 +        return {id, GroupedGemmSelectionReason::int8_nt};
 +    }
 +
      const auto effective_m = grouped_gemm_selector_m_extent(problem);
      const auto effective_k = grouped_gemm_selector_k_extent(problem);
      const auto m           = problem.m.extent;
-@@ -557,6 +653,7 @@ constexpr std::string_view grouped_gemm_data_type_name(GroupedGemmDataType data_
+@@ -557,6 +675,7 @@ constexpr std::string_view grouped_gemm_data_type_name(GroupedGemmDataType data_
  {
      return data_type == GroupedGemmDataType::fp16 ? "fp16"
             : data_type == GroupedGemmDataType::bf16 ? "bf16"
