@@ -229,3 +229,5 @@ Original screen stopped at132/344 shapes (792 valid records), active shape464. F
 ## Iteration50 A double buffer/B bypass
 
 66 full-range checks and32 perf-output records PASS. New structure uses A-only two32KiB LDS slots and direct B registers.256 VGPRs,24-28 spills; own ISA shows simultaneous loading of both A halves at final compute. Keep experimental; test stronger compiler lifetime boundaries next. See iteration_50_bypass_b.md.
+
+Iteration49 screen completed:344/344 original large-M shapes,2064 numerical/guard checks PASS. Oracle12/344 fixed targets; no public promotion. Full CSVs and audit preserve every tested candidate and phase.

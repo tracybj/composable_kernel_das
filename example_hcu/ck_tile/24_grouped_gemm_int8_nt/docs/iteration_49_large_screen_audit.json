@@ -1,0 +1,50 @@
+{
+  "scope": "All344 M>=256 shapes, explicit candidate screening; not default acceptance",
+  "numerical_shapes": 344,
+  "numerical_records": 2064,
+  "oracle_ge1": 12,
+  "oracle_min_R": 0.5877254055559461,
+  "oracle_median_R": 0.8120256313653058,
+  "by_M": {
+    "256": {
+      "shapes": 38,
+      "ge1": 4
+    },
+    "2048": {
+      "shapes": 108,
+      "ge1": 4
+    },
+    "4096": {
+      "shapes": 88,
+      "ge1": 4
+    },
+    "8192": {
+      "shapes": 72,
+      "ge1": 0
+    },
+    "16384": {
+      "shapes": 38,
+      "ge1": 0
+    }
+  },
+  "best_instances": {
+    "6035": 24,
+    "6049": 22,
+    "9003": 200,
+    "6041": 22,
+    "9004": 72,
+    "9001": 4
+  },
+  "library_sha256": "6f5f10d0e7557aab67a700fbfb473999d7d71a6fb1bfb8ed61cf47bade31c081",
+  "warmup": 2,
+  "repeat": 5,
+  "samples": 3,
+  "resume_runs": [
+    {
+      "completed_prefix": 132,
+      "validation": "Every output element, group/row chunks of256; avoids full int64 reduction temporary",
+      "source_revision": "406049dfbadfb7f7aec35f6ce085f3c7a609e28b"
+    }
+  ],
+  "validation": "Full output exact integer equality,guards,256 input samples; bounded row chunks after132 complete cases; full-range independent boundary tests separate"
+}
