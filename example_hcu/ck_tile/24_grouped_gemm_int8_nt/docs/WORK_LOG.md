@@ -199,3 +199,7 @@ GPU7 algorithm6950 reproduces603.452TOPS without profiler; full output/input/gua
 ## Iteration43 packed input/direct output screen
 
 128 full-range combinations and4196 full-output records across834 shapes pass. Best-candidate throughput meets830/834 targets; four residuals remain. Small-M long-K narrow-N K512 candidate improves margin. No default change. See iteration_43_direct_epi.md.
+
+## Iteration44 matched PMC
+
+All three paths pass full input/output/guard checks; corrected name filter captures9 dispatches. No-LDS output removes reported bank conflicts but only modestly improves time; do not treat that metric as the dominant bottleneck. See iteration_44_pmc_compare.md.

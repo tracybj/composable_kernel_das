@@ -1,0 +1,184 @@
+{
+  "shape": {
+    "M": 2048,
+    "N": 4096,
+    "K": 8192,
+    "G": 128
+  },
+  "scope": "matched instrumented counters, not baseline timings",
+  "paths": {
+    "7204": [
+      {
+        "wgr": 512,
+        "lds": 65536,
+        "scr": 0,
+        "arch_vgpr": 204,
+        "SQ_INSTS_VALU": 1640235008,
+        "SQ_INSTS_LDS": 214433792,
+        "SQ_INSTS_VMEM_RD": 67108864,
+        "SQ_INSTS_VMEM_WR": 4194304,
+        "SQ_LDS_BANK_CONFLICT": 33554432,
+        "SQ_WAIT_INST_LDS": 628940998,
+        "TCC_HIT": 899481620,
+        "TCC_MISS": 241584324
+      },
+      {
+        "wgr": 512,
+        "lds": 65536,
+        "scr": 0,
+        "arch_vgpr": 204,
+        "SQ_INSTS_VALU": 1640235008,
+        "SQ_INSTS_LDS": 214433792,
+        "SQ_INSTS_VMEM_RD": 67108864,
+        "SQ_INSTS_VMEM_WR": 4194304,
+        "SQ_LDS_BANK_CONFLICT": 33554432,
+        "SQ_WAIT_INST_LDS": 624974077,
+        "TCC_HIT": 899301062,
+        "TCC_MISS": 241570718
+      },
+      {
+        "wgr": 512,
+        "lds": 65536,
+        "scr": 0,
+        "arch_vgpr": 204,
+        "SQ_INSTS_VALU": 1640235008,
+        "SQ_INSTS_LDS": 214433792,
+        "SQ_INSTS_VMEM_RD": 67108864,
+        "SQ_INSTS_VMEM_WR": 4194304,
+        "SQ_LDS_BANK_CONFLICT": 33554432,
+        "SQ_WAIT_INST_LDS": 624951846,
+        "TCC_HIT": 899293439,
+        "TCC_MISS": 241570956
+      }
+    ],
+    "8402": [
+      {
+        "wgr": 512,
+        "lds": 65536,
+        "scr": 0,
+        "arch_vgpr": 204,
+        "SQ_INSTS_VALU": 1414004736,
+        "SQ_INSTS_LDS": 214433792,
+        "SQ_INSTS_VMEM_RD": 67108864,
+        "SQ_INSTS_VMEM_WR": 4194304,
+        "SQ_LDS_BANK_CONFLICT": 33554432,
+        "SQ_WAIT_INST_LDS": 206140991,
+        "TCC_HIT": 899477322,
+        "TCC_MISS": 241597807
+      },
+      {
+        "wgr": 512,
+        "lds": 65536,
+        "scr": 0,
+        "arch_vgpr": 204,
+        "SQ_INSTS_VALU": 1414004736,
+        "SQ_INSTS_LDS": 214433792,
+        "SQ_INSTS_VMEM_RD": 67108864,
+        "SQ_INSTS_VMEM_WR": 4194304,
+        "SQ_LDS_BANK_CONFLICT": 33554432,
+        "SQ_WAIT_INST_LDS": 203275092,
+        "TCC_HIT": 899299282,
+        "TCC_MISS": 241573916
+      },
+      {
+        "wgr": 512,
+        "lds": 65536,
+        "scr": 0,
+        "arch_vgpr": 204,
+        "SQ_INSTS_VALU": 1414004736,
+        "SQ_INSTS_LDS": 214433792,
+        "SQ_INSTS_VMEM_RD": 67108864,
+        "SQ_INSTS_VMEM_WR": 4194304,
+        "SQ_LDS_BANK_CONFLICT": 33554432,
+        "SQ_WAIT_INST_LDS": 203080273,
+        "TCC_HIT": 899288803,
+        "TCC_MISS": 241574118
+      }
+    ],
+    "8602": [
+      {
+        "wgr": 512,
+        "lds": 65536,
+        "scr": 0,
+        "arch_vgpr": 204,
+        "SQ_INSTS_VALU": 1408499712,
+        "SQ_INSTS_LDS": 218103808,
+        "SQ_INSTS_VMEM_RD": 67108864,
+        "SQ_INSTS_VMEM_WR": 4194304,
+        "SQ_LDS_BANK_CONFLICT": 0,
+        "SQ_WAIT_INST_LDS": 161542197,
+        "TCC_HIT": 899573745,
+        "TCC_MISS": 241587433
+      },
+      {
+        "wgr": 512,
+        "lds": 65536,
+        "scr": 0,
+        "arch_vgpr": 204,
+        "SQ_INSTS_VALU": 1408499712,
+        "SQ_INSTS_LDS": 218103808,
+        "SQ_INSTS_VMEM_RD": 67108864,
+        "SQ_INSTS_VMEM_WR": 4194304,
+        "SQ_LDS_BANK_CONFLICT": 0,
+        "SQ_WAIT_INST_LDS": 154069556,
+        "TCC_HIT": 899313665,
+        "TCC_MISS": 241566222
+      },
+      {
+        "wgr": 512,
+        "lds": 65536,
+        "scr": 0,
+        "arch_vgpr": 204,
+        "SQ_INSTS_VALU": 1408499712,
+        "SQ_INSTS_LDS": 218103808,
+        "SQ_INSTS_VMEM_RD": 67108864,
+        "SQ_INSTS_VMEM_WR": 4194304,
+        "SQ_LDS_BANK_CONFLICT": 0,
+        "SQ_WAIT_INST_LDS": 152984136,
+        "TCC_HIT": 899298425,
+        "TCC_MISS": 241566135
+      }
+    ]
+  },
+  "checks": [
+    {
+      "candidate": 7204,
+      "M": 2048,
+      "N": 4096,
+      "K": 8192,
+      "G": 128,
+      "profile_event_ms": 45.364200592041016,
+      "warmup": 2,
+      "repeat": 1,
+      "bad_elements": 0,
+      "output_guards": true,
+      "full_inputs_unchanged": true
+    },
+    {
+      "candidate": 8402,
+      "M": 2048,
+      "N": 4096,
+      "K": 8192,
+      "G": 128,
+      "profile_event_ms": 43.88642501831055,
+      "warmup": 2,
+      "repeat": 1,
+      "bad_elements": 0,
+      "output_guards": true,
+      "full_inputs_unchanged": true
+    },
+    {
+      "candidate": 8602,
+      "M": 2048,
+      "N": 4096,
+      "K": 8192,
+      "G": 128,
+      "profile_event_ms": 43.615543365478516,
+      "warmup": 2,
+      "repeat": 1,
+      "bad_elements": 0,
+      "output_guards": true,
+      "full_inputs_unchanged": true
+    }
+  ]
+}
