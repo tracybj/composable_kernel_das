@@ -183,3 +183,7 @@ All78 shapes numerical PASS across620 development records; best-candidate target
 ## Iteration 40 M128 narrow-N
 
 24 full-range checks and620 full-output screening records pass. Best-candidate coverage77/78; one small-G residual remains. No default change. See iteration_40_m128.md.
+
+## Iteration39 aligned/native-only loop
+
+40 full-range checks,5 >2GiB stride-span fallback checks and28 performance-output records pass. Hoisting improves4-6% on four representatives, still below targets. No default change. See iteration_39_aligned.md.
