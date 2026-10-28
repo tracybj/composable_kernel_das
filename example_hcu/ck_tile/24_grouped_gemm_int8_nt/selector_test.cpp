@@ -73,7 +73,15 @@ int main()
     p.m = GroupedGemmDimensionSummary::Common(16);
     p.n = GroupedGemmDimensionSummary::Common(4096);
     p.k = GroupedGemmDimensionSummary::Common(7168);
+    expect(GroupedGemmInstanceId::int8_nt_small_g_n32_k512);
+    p.k = GroupedGemmDimensionSummary::Common(4080);
     expect(GroupedGemmInstanceId::int8_nt_small_m_n64_k256);
+    p.k = GroupedGemmDimensionSummary::Common(4096);
+    expect(GroupedGemmInstanceId::int8_nt_small_g_n32_k512);
+    p.group_count = 9;
+    expect(GroupedGemmInstanceId::int8_nt_small_m_n64_k256);
+    p.group_count = 8;
+    p.k = GroupedGemmDimensionSummary::Common(7168);
     p.group_count = 32;
     expect(GroupedGemmInstanceId::int8_nt_small_m_n128_k256);
     p.group_count = 8;

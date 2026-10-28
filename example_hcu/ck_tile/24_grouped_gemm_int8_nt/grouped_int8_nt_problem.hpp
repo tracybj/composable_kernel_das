@@ -29,7 +29,8 @@ struct GroupedInt8NtTileProblem
     static constexpr bool Peeled     = Peeled_;
     static constexpr bool BatchedEpi = BatchedEpi_, CopyArg = CopyArg_;
     static constexpr index_t MinBlocks = MinBlocks_, MGroup = MGroup_;
-    static_assert(BK == 64 || BK == 128 || BK == 256, "Supported packed K tiles: 64/128/256");
+    static_assert(BK == 64 || BK == 128 || BK == 256 || BK == 512,
+                  "Supported packed K tiles: 64/128/256/512");
     static constexpr index_t Threads = WM * WN * 64, MR = BM / (WM * 16), NR = BN / (WN * 16);
     static_assert(BM % (WM * 16) == 0 && BN % (WN * 16) == 0 && BK % 32 == 0);
 };

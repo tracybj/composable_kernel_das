@@ -105,6 +105,9 @@ ck_tile_grouped_int8_nt_launch(unsigned instance_id, const void* args, int g, in
     case Instance::int8_nt_small_m_n128_k256:
         return launch<ck_tile::GroupedInt8NtTileProblem<16, 128, 256, 1, 4,
             false, false, true, true, 1, true>>(args, g, m, n, s);
+    case Instance::int8_nt_small_g_n32_k512:
+        return launch<ck_tile::GroupedInt8NtTileProblem<16, 32, 512, 1, 2,
+            false, false, true, true, 1, true>>(args, g, m, n, s);
     default: return -5;
     }
 }

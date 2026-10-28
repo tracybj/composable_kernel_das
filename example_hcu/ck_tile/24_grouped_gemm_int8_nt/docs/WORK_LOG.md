@@ -121,3 +121,7 @@ Four representative large-M/large-K shapes x four existing instances; 16 full ou
 ## Iteration 25 layout experiments
 
 128 small-M and 24 large-M full output/guard checks pass. Narrow BN32/BK512 meets all 15 remaining small-M targets in screening. Wide paired LDS reads improve large-M only slightly, insufficient for target. BLAS large-M direct-to-LDS instructions confirmed. See iteration_25_layout.md; production path unchanged this iteration.
+
+## Iteration 26 small-G long-K dispatch
+
+Added shape-only 6505 route, K512/BN32. 80 original plus 24 INT8 host checks and 21 full-range boundaries pass. Public 560-shape target verification pending. See iteration_26_small_g_dispatch.md.
