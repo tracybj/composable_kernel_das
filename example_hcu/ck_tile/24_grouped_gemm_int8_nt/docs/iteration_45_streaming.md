@@ -1,0 +1,62 @@
+# Iteration45: K32 streaming ring buffers
+
+gfx936 physical GPU7; INT8 NT -> INT32,no scale. New2/3/4-stage K32 ring-buffer pipeline: prime early tiles, keep later native D2L loads in flight using known per-wave VMEM issue counts and nonzero wait thresholds, synchronize before reading/reusing a slot. Compare all-wave copying with4 producer+8 compute waves, row swizzle, compute priority and middle/trailing producer placement. Allocate64KiB including generic K64 fallback. All stage/compute/epilogue phases preserve full work.
+
+80 full-range INT8/FP64 combinations pass, with aligned and ragged/tail shapes,strides,full input clones and guards.48 development performance-output records pass:3 HIP-event samples,warmup2/repeat5,median. These counts do not prove arbitrary concurrent-input safety; inputs must remain unchanged while the call runs.
+
+Compiled resource metadata reports200 VGPRs for all-wave variants and219 for producer variants,zero private bytes and zero spill counts. Therefore their regression is not attributable to spills. The smaller K step/copy distribution and synchronization frequency remain possible explanations. No default change.
+
+| M | N | K | G | candidate | ms | TOPS |
+|---:|---:|---:|---:|---:|---:|---:|
+|2048|6144|7168|96|8402|44.733116|387.125|
+|2048|6144|7168|96|8602|45.379482|381.611|
+|2048|6144|7168|96|8800|84.405807|205.167|
+|2048|6144|7168|96|8801|75.740341|228.640|
+|2048|6144|7168|96|8802|75.593460|229.085|
+|2048|6144|7168|96|8803|77.437874|223.628|
+|2048|6144|7168|96|8804|77.393997|223.755|
+|2048|6144|7168|96|8805|77.670769|222.958|
+|2048|6144|7168|96|8806|77.257362|224.151|
+|2048|6144|7168|96|8807|72.360596|239.320|
+|2048|6144|7168|96|8808|77.730217|222.787|
+|2048|6144|7168|96|8809|75.058388|230.718|
+|2048|4096|8192|128|8402|42.759380|411.423|
+|2048|4096|8192|128|8602|42.873623|410.327|
+|2048|4096|8192|128|8800|83.185806|211.481|
+|2048|4096|8192|128|8801|77.825775|226.046|
+|2048|4096|8192|128|8802|77.665802|226.511|
+|2048|4096|8192|128|8803|79.563690|221.108|
+|2048|4096|8192|128|8804|79.364273|221.664|
+|2048|4096|8192|128|8805|79.657036|220.849|
+|2048|4096|8192|128|8806|79.322189|221.781|
+|2048|4096|8192|128|8807|73.058090|240.797|
+|2048|4096|8192|128|8808|79.915085|220.136|
+|2048|4096|8192|128|8809|77.162987|227.987|
+|16384|3072|4096|48|8402|53.227608|371.822|
+|16384|3072|4096|48|8602|55.942291|353.779|
+|16384|3072|4096|48|8800|99.914185|198.082|
+|16384|3072|4096|48|8801|93.004135|212.799|
+|16384|3072|4096|48|8802|92.842667|213.169|
+|16384|3072|4096|48|8803|94.674789|209.044|
+|16384|3072|4096|48|8804|94.883682|208.584|
+|16384|3072|4096|48|8805|95.212456|207.864|
+|16384|3072|4096|48|8806|94.599777|209.210|
+|16384|3072|4096|48|8807|88.374664|223.947|
+|16384|3072|4096|48|8808|95.628036|206.960|
+|16384|3072|4096|48|8809|92.077095|214.942|
+|16384|4096|6144|8|8402|18.116314|364.151|
+|16384|4096|6144|8|8602|17.888763|368.783|
+|16384|4096|6144|8|8800|33.060886|199.543|
+|16384|4096|6144|8|8801|30.113398|219.074|
+|16384|4096|6144|8|8802|30.127417|218.972|
+|16384|4096|6144|8|8803|30.785496|214.291|
+|16384|4096|6144|8|8804|30.767511|214.417|
+|16384|4096|6144|8|8805|30.816504|214.076|
+|16384|4096|6144|8|8806|30.706614|214.842|
+|16384|4096|6144|8|8807|28.169018|234.196|
+|16384|4096|6144|8|8808|30.991383|212.868|
+|16384|4096|6144|8|8809|29.949463|220.273|
+
+The current K32 ring implementation regresses strongly versus the K64 control. This does not rule out producer/consumer specialization with a wider physical copy tile. Next compare dense K128 global prefetch and lifetimes.
+
+Library SHA256:c84ac5b368e9006485d8c4e681816b5163b00092793dcf8f3131c4292fc6a9da

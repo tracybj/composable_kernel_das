@@ -203,3 +203,7 @@ GPU7 algorithm6950 reproduces603.452TOPS without profiler; full output/input/gua
 ## Iteration44 matched PMC
 
 All three paths pass full input/output/guard checks; corrected name filter captures9 dispatches. No-LDS output removes reported bank conflicts but only modestly improves time; do not treat that metric as the dominant bottleneck. See iteration_44_pmc_compare.md.
+
+## Iteration45 K32 streaming ring
+
+80 full-range checks and48 performance-output records pass. No spills, but K32 ring-buffer variants regress. Retained experimental; next change physical copy tile and role lifetimes. See iteration_45_streaming.md.
