@@ -125,3 +125,7 @@ Four representative large-M/large-K shapes x four existing instances; 16 full ou
 ## Iteration 26 small-G long-K dispatch
 
 Added shape-only 6505 route, K512/BN32. 80 original plus 24 INT8 host checks and 21 full-range boundaries pass. Public 560-shape target verification pending. See iteration_26_small_g_dispatch.md.
+
+## Iteration 27 native D2L primitive
+
+Linear and XOR layouts round-trip exactly, OOB loads zero-fill preinitialized LDS, all guards pass. Copy probe only, no GEMM throughput claim. See iteration_27_direct_lds_probe.md.
