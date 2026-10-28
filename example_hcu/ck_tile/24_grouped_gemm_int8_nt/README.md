@@ -112,3 +112,7 @@ python3 "$e/test_shape_selection.py" --results "$e/docs/selector_contract_v26.cs
 ## 第37轮当前状态
 
 新增5个M32/64深K实例，当前23个INT8实例（含20个FP实例共43个注册项）。按M/K/G与common/empty/ragged属性分流，不读取caseID或phase。默认公共入口196条数值全部PASS，192/196达到固定目标；详见docs/iteration_37_public_audit.json和iteration_37_public_medium_m.csv。M<=16的分流保持第26轮规则；全1178条目标仍未完成。
+
+## 第47轮小M公共入口验证
+
+注册8734无LDS输出实例，uniform M<=16且K>=4096按尺寸选择，与caseID/phase无关。当前24个INT8实例，总注册44项。560/560条小M数值检查PASS，560/560达到固定Excel目标，最低R=1.007298、中位R=1.366718。28组完整INT8/FP64边界、host80+33、CPU1178维度重放PASS。详见docs/iteration_47_public_audit.json及CSV。本轮不代表全1178达标，大M及中等M剩余差距继续优化。

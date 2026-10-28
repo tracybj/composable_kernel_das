@@ -7,3 +7,7 @@ Register instance8734: BM16,BN32,BK512, two compute waves, masked packed input, 
 Host selector tests: original80 and INT8 33 PASS. All1178 CPU replay/relabel/reverse cases PASS. Public boundary tests:28 full-range INT8 / independent FP64 exact-reference profiles PASS, covering K16/N4 tails, ragged/empty fallback, padded strides, nondefault stream, full input clones, output guards and error contracts. These checks do not establish full1178 throughput.
 
 Next measure the default public API on all560 M<=16 targets, original dimensions and fixed workbook references, GPU7, warmup10/repeat50, three HIP-event samples/median. No claim of full1178 target completion. Contract: gfx936,INT8 NT to INT32,no scale.
+
+## Completed public validation
+
+560/560 numerical checks PASS; 560/560 reach frozen spreadsheet targets; minimum R=1.007298, median R=1.366718, 557 have at least3% margin. Full1178 target remains incomplete.
