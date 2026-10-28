@@ -221,3 +221,7 @@ All three paths pass full input/output/guard checks; corrected name filter captu
 Reusable no-LDS epilogue; uniform M<=16,K>=4096 selects8734 for every G. Host80+33, CPU1178 relabel/reverse,28 full-range public boundaries PASS. All560 small-M public throughput checks follow. See iteration_47_small_m_dispatch.md.
 
 Iteration47 public run completed:560/560 numerical PASS, 560/560 meet fixed target; minimum R=1.007298, median=1.366718. Default selection, original dimensions,28 independent full-range boundary profiles PASS. Remaining618 shapes not accepted by this run.
+
+## Iteration49 large-screen validation memory
+
+Original screen stopped at132/344 shapes (792 valid records), active shape464. Full bool-to-int64 reduction temporary requested42GiB. Preserve prefix and resume exact full-output comparisons in256-row chunks; no kernel/workload/timing change. See iteration_49_screening_oom.md.
