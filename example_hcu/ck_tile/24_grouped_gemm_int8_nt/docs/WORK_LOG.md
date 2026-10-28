@@ -179,3 +179,7 @@ Iteration37 public run completed:196/196 numerical PASS, 192/196 meet fixed targ
 ## Iteration 38 M128 coverage
 
 All78 shapes numerical PASS across620 development records; best-candidate target coverage76/78. No default change; next isolate narrow BN for small-G residual.
+
+## Iteration 40 M128 narrow-N
+
+24 full-range checks and620 full-output screening records pass. Best-candidate coverage77/78; one small-G residual remains. No default change. See iteration_40_m128.md.

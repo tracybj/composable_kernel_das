@@ -1,0 +1,39 @@
+{
+  "scope": "explicit candidate screening, not public default acceptance",
+  "shapes": 78,
+  "records": 620,
+  "numeric_pass": true,
+  "full_range_boundary_checks": 24,
+  "oracle_target_pass": 77,
+  "min_R": 0.9716361366702287,
+  "median_R": 1.24460106020784,
+  "misses": [
+    {
+      "ID": 884,
+      "M": 128,
+      "N": 3072,
+      "K": 4096,
+      "G": 4,
+      "candidate": 6044,
+      "ms": 0.09251199662685394,
+      "samples_ms": [
+        0.09313599765300751,
+        0.09251199662685394,
+        0.09230390191078186
+      ],
+      "TOPS": 139.27817318624201,
+      "target_TOPS": 143.34396172578,
+      "R": 0.9716361366702287,
+      "bad_elements": 0,
+      "guard": true,
+      "input_samples_unchanged": true
+    }
+  ],
+  "best_candidates": {
+    "8501": 14,
+    "6044": 33,
+    "6035": 1,
+    "6042": 30
+  },
+  "library_sha256": "7bfbb02e9cedad1b038aa92d7221a0dd31909dac89bd42f3d5eed6d064648ed2"
+}
