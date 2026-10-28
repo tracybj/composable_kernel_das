@@ -173,3 +173,5 @@ Five packed deep-K instances registered using M/K/G thresholds. Host80+30, CPU11
 ## Iteration 36 native D2L PMC
 
 Captured one real GPU7 dispatch with installed hipprof PMC; full output check passes. Raw counters and interpretation limits recorded. v30/v32 experimental ELF extraction was corrected and exact original hashes restored. See iteration_36_pmc.md.
+
+Iteration37 public run completed:196/196 numerical PASS, 192/196 meet fixed target. Four misses are retained; remaining optimization continues. All metrics use default selection and original dimensions.

@@ -108,3 +108,7 @@ python3 "$e/test_shape_selection.py" --results "$e/docs/selector_contract_v26.cs
 ## 第26轮当前状态
 
 新增18号INT8实例（ABI ID 6505）：common且无empty/ragged、M<=16、K>=4096、G<=8时用16x32x512双wave。其余小M保留第23轮规则。当前共18个INT8实例；核心dtype仍为INT8×INT8→INT32，无scale。默认入口560条验证的实际数值和达标数见docs/iteration_26_public_audit.json，其余618条新目标验收尚未完成。
+
+## 第37轮当前状态
+
+新增5个M32/64深K实例，当前23个INT8实例（含20个FP实例共43个注册项）。按M/K/G与common/empty/ragged属性分流，不读取caseID或phase。默认公共入口196条数值全部PASS，192/196达到固定目标；详见docs/iteration_37_public_audit.json和iteration_37_public_medium_m.csv。M<=16的分流保持第26轮规则；全1178条目标仍未完成。

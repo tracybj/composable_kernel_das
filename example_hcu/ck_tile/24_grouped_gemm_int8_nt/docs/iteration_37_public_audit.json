@@ -1,0 +1,65 @@
+{
+  "scope": "Default public selector, 196 M32/64 shapes only; full 1178 target incomplete",
+  "numeric_pass": 196,
+  "ge1": 192,
+  "ge103": 189,
+  "min_R": 0.9442049903292629,
+  "median_R": 1.3857716526054635,
+  "instances": {
+    "7501": 11,
+    "7603": 30,
+    "7504": 37,
+    "7502": 56,
+    "7604": 62
+  },
+  "warmup": 10,
+  "repeat": 50,
+  "samples": 3,
+  "source_revision": "b99c2ea2200f4b09dad886a2e752943afd87f758",
+  "library_sha256": "fc39b877a9b1abbbed4cd24fba20c584b3874504b513a125225c769d7f2becf8",
+  "boundary_pass": 28,
+  "original_host_selector_pass": 80,
+  "int8_host_selector_pass": 30,
+  "remaining": [
+    {
+      "ID": 1093,
+      "M": 64,
+      "N": 4096,
+      "K": 7168,
+      "G": 8,
+      "candidate": 7604,
+      "ms": 0.27308472990989685,
+      "R": 0.9442049903292629
+    },
+    {
+      "ID": 1023,
+      "M": 64,
+      "N": 4096,
+      "K": 6144,
+      "G": 8,
+      "candidate": 7604,
+      "ms": 0.23826555907726288,
+      "R": 0.9447271501940907
+    },
+    {
+      "ID": 882,
+      "M": 32,
+      "N": 3072,
+      "K": 4096,
+      "G": 4,
+      "candidate": 7501,
+      "ms": 0.0629119798541069,
+      "R": 0.9736778122628851
+    },
+    {
+      "ID": 1092,
+      "M": 32,
+      "N": 4096,
+      "K": 7168,
+      "G": 8,
+      "candidate": 7502,
+      "ms": 0.23574073612689972,
+      "R": 0.9992326943628678
+    }
+  ]
+}
