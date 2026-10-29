@@ -384,3 +384,7 @@ All12 whole-output/input-clone/guard checks PASS. v73/v80 match on identical all
 ## Iteration88 compiler-visible wait
 
 480 full-range and112 performance checks PASS;214VGPR,no spill. Builtin removes redundant generated VMEM wait but no stable material performance gain. Keep v80. Shift structural analysis to provided DeepGEMM FP8. See iteration_88_compiler_wait.md.
+
+## Iteration89 four-wave N reuse
+
+248 full-range and84 same-build performance checks PASS;180/204VGPR,16KB LDS,no spill. No gain over WASP controls on seven measured shapes. Next isolate physical weight packing with conversion costs. See iteration_89_n_reuse.md.
