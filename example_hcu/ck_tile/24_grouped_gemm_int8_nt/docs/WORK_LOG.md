@@ -288,3 +288,7 @@ Native fragment/full port failed. Static A/B reconstruction passes; ordered MMAC
 ## Iteration68 overlapping A-read/MMAC
 
 204 boundary and48 performance checks PASS;no scratch/spill. Representative best466/572/499/456TOPS, still below fixed targets. Correct controlled configuration only; no default promotion. See iteration_68_a_prefetch.md.
+
+## Iteration69 one stage publication/reuse barrier
+
+204 boundary and48 performance checks PASS;no scratch/spill. Representative best515/628/542/500TOPS; one of four exceeds its frozen target. Full344 and public1178 acceptance pending. Correct controlled configuration only; no default promotion. See iteration_69_one_barrier.md.
