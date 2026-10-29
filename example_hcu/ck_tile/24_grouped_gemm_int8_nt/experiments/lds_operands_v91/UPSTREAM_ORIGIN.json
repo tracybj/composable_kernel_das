@@ -1,0 +1,23 @@
+{
+  "path": "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_ag_bg_cr_wasp.hpp",
+  "sha256": "c48867666ff119a0a47ae427c4f2993477822d2dc0589b1c7c7806a1c29a9eba",
+  "license": "MIT",
+  "copyright": "Copyright (c) 2026 Hygon Info Technologies Co., Ltd.",
+  "adaptation": [
+    "int8_t input and int32_t accumulator problem",
+    "K stage64 BF16 ->128 INT8, K pass32 ->64, same physical bytes",
+    "8-byte fragments bit-cast to native I8I8I32 MMAC",
+    "Compile-time consumer split0/4/8 for uniform/quarter-stagger ablations",
+    "Private helper namespace/macros; no shared upstream-file changes"
+  ],
+  "additional_changes": [
+    "Native int32x2 I8 register fragments without uint16x4 carrier casts",
+    "Compile-time elimination of unused uniform C/CP persona branches",
+    "Ordered native INT8 MMAC and explicit A-read batch lifetime",
+    "Batched A-fragment consumption",
+    "Uniform-C single stage-publication/reuse barrier with same-build double-barrier controls",
+    "Standalone typed headers and12-wave generic packed fallback",
+    "Iteration80: optional typed RecordCap0/1024,independent quotient/remainder physical B address decomposition;two stable public instances and dimension-only non-power-K routing;original pipeline roles/math/fallback retained",
+    "Independent raw-NT256x256x64 eight-wave cooperative A+B LDS experiment;on-chip swizzle,no external packing;existing own MMAC/VMEM helpers;generated ISA confirms native overlap"
+  ]
+}

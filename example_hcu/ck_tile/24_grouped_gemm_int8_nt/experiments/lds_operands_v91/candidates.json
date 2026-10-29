@@ -1,0 +1,54 @@
+[
+  {
+    "candidate": 33001,
+    "transpose": false,
+    "A_batch": 1,
+    "geometry": [
+      256,
+      256,
+      64
+    ],
+    "waves": 8,
+    "external_packing": false,
+    "A_and_B_in_LDS": true
+  },
+  {
+    "candidate": 33004,
+    "transpose": false,
+    "A_batch": 4,
+    "geometry": [
+      256,
+      256,
+      64
+    ],
+    "waves": 8,
+    "external_packing": false,
+    "A_and_B_in_LDS": true
+  },
+  {
+    "candidate": 33101,
+    "transpose": true,
+    "A_batch": 1,
+    "geometry": [
+      256,
+      256,
+      64
+    ],
+    "waves": 8,
+    "external_packing": false,
+    "A_and_B_in_LDS": true
+  },
+  {
+    "candidate": 33104,
+    "transpose": true,
+    "A_batch": 4,
+    "geometry": [
+      256,
+      256,
+      64
+    ],
+    "waves": 8,
+    "external_packing": false,
+    "A_and_B_in_LDS": true
+  }
+]

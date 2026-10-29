@@ -55,3 +55,7 @@ v87提前B预取的28对同映射/同record比较全部变慢。反汇编发现�
 - `gfx938/m_grouped_fp8_gemm_nt_contiguous_wasp_pair32/bm256_bn256_nloop4.inc.cuh`：线程/资源约62–79行；C/C′时序约661–754行；7D权重检查约847–880行。SHA256 `d198cb1ed89c66a506c14bb96d29e0df5dd08784d1b0649cd16a2c1617087c2b`。
 - `gfx936_gfx938_shared/m_grouped_w8a8_gemm_nt_contiguous_gfx936.cu`：INT8 builtin条件约182–187行；任务划分/寄存器流水注释约215–243行；两stage A加三组B约400–540行。SHA256 `8072b9dddf56b033b6dca0d575ca7b471d89c9d58f69f2cfea79fe7e5f11110c`。
 - 本地必要参考副本保存在分析工作区`deepgemm_gfx938_reference`，不复制到自有代码GitHub仓库。新候选基于现有CK/自有VMEM与MMAC助手独立实现。
+
+## 后续隔离验证：v91原始NT下A/B均进LDS
+
+256×256×64、8-wave、A/B双缓冲共64KB LDS，消除了外部预排；124项全范围与56项代表输出检查均通过，151/175VGPR、无spill。但七组均慢于同轮WASP控制。反汇编确认当前计算与下一stage预取交错，首MMAC前无额外VMEM等待，不能沿用v87的失效解释。详见`iteration_91_lds_operands.md/json/csv`。正式默认与1178条结果保持v80。

@@ -392,3 +392,7 @@ All12 whole-output/input-clone/guard checks PASS. v73/v80 match on identical all
 ## Iteration90 physical B packing
 
 96 full-range,42 screen and28 rotating-order output/guard checks PASS. Packed198VGPR,no spill. Original-weight packed kernel improves6/7 against same-build best raw controls;GPU conversion cost and reuse threshold explicit. No raw-NT production promotion. See iteration_90_packed_b.md and deepgemm_fp8_to_int8_review.md.
+
+## Iteration91 raw NT A+B LDS
+
+124 full-range and56 performance checks PASS;151/175VGPR,64KB LDS,no spill. Native overlap visible in ISA,no extra pre-MMAC VMEM wait. All seven slower than same-build WASP controls;keep v80. See iteration_91_lds_operands.md.
