@@ -302,3 +302,7 @@ Iteration70 completed:344/344 original shapes,2408 numerical output checks PASS.
 ## Iteration71 dimension-only draft rules
 
 Depth3/minleaf12 M/N/K/G draft tree; {'total': 344, 'ge1': 99, 'min_R': 0.7587955956334363, 'median_R': 0.9498076525128778}; regressions>3%=1. Not public acceptance or default promotion. Full-domain guards/fallback and public replay remain required.
+
+## Iteration72 standalone WASP/fallback
+
+114 boundary and24 performance checks PASS;no scratch/spill. Root headers have no experimental includes;214/232VGPR. Public registry integration follows. Correct controlled configuration only; no default promotion. See iteration_72_standalone_wasp.md.
