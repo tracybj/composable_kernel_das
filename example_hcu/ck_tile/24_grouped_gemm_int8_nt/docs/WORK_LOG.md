@@ -400,3 +400,7 @@ All12 whole-output/input-clone/guard checks PASS. v73/v80 match on identical all
 ## DeepGEMM raw FP8 cross-check
 
 Verified raw-NT fp8_gemm_hipc is256-square4P8C/Cprime WASP,not universally packed;fp8_gemm is a hipBLASLt wrapper;ASM grouped CU is a code-object launch wrapper. Distinguish these from the packed grouped variants in the review. No new GPU claim or production change.
+
+## Iteration92 raw NT linear B addresses
+
+300 full-range and70 performance checks PASS;214VGPR,no spill. Seven representative best-linear candidates beat same-run best-structured by1.4–4.3%,no physical conversion. Broaden to344 before promotion. See iteration_92_linear_b.md.
