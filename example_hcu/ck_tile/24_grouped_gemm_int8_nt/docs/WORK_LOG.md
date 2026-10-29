@@ -272,3 +272,7 @@ Native fragment/full port failed. Static A/B reconstruction passes; ordered MMAC
 ## Iteration64 complete short-live WASP kernel
 
 68 boundary and16 representative-output checks PASS;243-244VGPR,no scratch/spill. Best representative361-427TOPS remains below fixed targets and earlier fast candidates. Correct controlled configuration only; no default promotion. See iteration_64_short_lifetime.md.
+
+## Iteration65 batched A-fragment consumption
+
+170 boundary and40 representative-output checks PASS;243-244VGPR,no scratch/spill. Best representative429-510TOPS remains below fixed targets. Correct controlled configuration only; no default promotion. See iteration_65_batched.md.
