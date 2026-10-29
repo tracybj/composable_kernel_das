@@ -1,0 +1,201 @@
+{
+  "shape": {
+    "M": 2048,
+    "N": 4096,
+    "K": 8192,
+    "G": 128
+  },
+  "gpu": 7,
+  "scope": "Matched instrumented counter observations; no profiler times used for ranking",
+  "paths": {
+    "9003": [
+      {
+        "wgr": 768,
+        "lds": 65536,
+        "scr": 0,
+        "arch_vgpr": 236,
+        "SQ_INSTS_VALU": 1245577216,
+        "SQ_INSTS_LDS": 285212672,
+        "SQ_INSTS_VMEM_RD": 67108864,
+        "SQ_INSTS_VMEM_WR": 4194304,
+        "SQ_LDS_BANK_CONFLICT": 0,
+        "SQ_WAIT_INST_LDS": 1086982360,
+        "TCC_HIT": 449900754,
+        "TCC_MISS": 154362307
+      },
+      {
+        "wgr": 768,
+        "lds": 65536,
+        "scr": 0,
+        "arch_vgpr": 236,
+        "SQ_INSTS_VALU": 1245577216,
+        "SQ_INSTS_LDS": 285212672,
+        "SQ_INSTS_VMEM_RD": 67108864,
+        "SQ_INSTS_VMEM_WR": 4194304,
+        "SQ_LDS_BANK_CONFLICT": 0,
+        "SQ_WAIT_INST_LDS": 1084821556,
+        "TCC_HIT": 449658194,
+        "TCC_MISS": 154337758
+      },
+      {
+        "wgr": 768,
+        "lds": 65536,
+        "scr": 0,
+        "arch_vgpr": 236,
+        "SQ_INSTS_VALU": 1245577216,
+        "SQ_INSTS_LDS": 285212672,
+        "SQ_INSTS_VMEM_RD": 67108864,
+        "SQ_INSTS_VMEM_WR": 4194304,
+        "SQ_LDS_BANK_CONFLICT": 0,
+        "SQ_WAIT_INST_LDS": 1084951576,
+        "TCC_HIT": 449658213,
+        "TCC_MISS": 154337739
+      }
+    ],
+    "9301": [
+      {
+        "wgr": 768,
+        "lds": 65536,
+        "scr": 0,
+        "arch_vgpr": 244,
+        "SQ_INSTS_VALU": 1393360896,
+        "SQ_INSTS_LDS": 285212672,
+        "SQ_INSTS_VMEM_RD": 67108864,
+        "SQ_INSTS_VMEM_WR": 4194304,
+        "SQ_LDS_BANK_CONFLICT": 0,
+        "SQ_WAIT_INST_LDS": 497420966,
+        "TCC_HIT": 657913799,
+        "TCC_MISS": 214792613
+      },
+      {
+        "wgr": 768,
+        "lds": 65536,
+        "scr": 0,
+        "arch_vgpr": 244,
+        "SQ_INSTS_VALU": 1393360896,
+        "SQ_INSTS_LDS": 285212672,
+        "SQ_INSTS_VMEM_RD": 67108864,
+        "SQ_INSTS_VMEM_WR": 4194304,
+        "SQ_LDS_BANK_CONFLICT": 0,
+        "SQ_WAIT_INST_LDS": 498699800,
+        "TCC_HIT": 657683042,
+        "TCC_MISS": 214761978
+      },
+      {
+        "wgr": 768,
+        "lds": 65536,
+        "scr": 0,
+        "arch_vgpr": 244,
+        "SQ_INSTS_VALU": 1393360896,
+        "SQ_INSTS_LDS": 285212672,
+        "SQ_INSTS_VMEM_RD": 67108864,
+        "SQ_INSTS_VMEM_WR": 4194304,
+        "SQ_LDS_BANK_CONFLICT": 0,
+        "SQ_WAIT_INST_LDS": 498818890,
+        "TCC_HIT": 657669428,
+        "TCC_MISS": 214761923
+      }
+    ],
+    "9302": [
+      {
+        "wgr": 768,
+        "lds": 65536,
+        "scr": 0,
+        "arch_vgpr": 244,
+        "SQ_INSTS_VALU": 1393360896,
+        "SQ_INSTS_LDS": 285212672,
+        "SQ_INSTS_VMEM_RD": 67108864,
+        "SQ_INSTS_VMEM_WR": 4194304,
+        "SQ_LDS_BANK_CONFLICT": 0,
+        "SQ_WAIT_INST_LDS": 496850346,
+        "TCC_HIT": 657933673,
+        "TCC_MISS": 214779782
+      },
+      {
+        "wgr": 768,
+        "lds": 65536,
+        "scr": 0,
+        "arch_vgpr": 244,
+        "SQ_INSTS_VALU": 1393360896,
+        "SQ_INSTS_LDS": 285212672,
+        "SQ_INSTS_VMEM_RD": 67108864,
+        "SQ_INSTS_VMEM_WR": 4194304,
+        "SQ_LDS_BANK_CONFLICT": 0,
+        "SQ_WAIT_INST_LDS": 497025999,
+        "TCC_HIT": 657683272,
+        "TCC_MISS": 214761980
+      },
+      {
+        "wgr": 768,
+        "lds": 65536,
+        "scr": 0,
+        "arch_vgpr": 244,
+        "SQ_INSTS_VALU": 1393360896,
+        "SQ_INSTS_LDS": 285212672,
+        "SQ_INSTS_VMEM_RD": 67108864,
+        "SQ_INSTS_VMEM_WR": 4194304,
+        "SQ_LDS_BANK_CONFLICT": 0,
+        "SQ_WAIT_INST_LDS": 496594577,
+        "TCC_HIT": 657669522,
+        "TCC_MISS": 214761926
+      }
+    ]
+  },
+  "checks": [
+    {
+      "candidate": 9003,
+      "M": 2048,
+      "N": 4096,
+      "K": 8192,
+      "G": 128,
+      "profile_event_ms": 37.46514892578125,
+      "warmup": 2,
+      "repeat": 1,
+      "bad_elements": 0,
+      "output_guards": true,
+      "full_inputs_unchanged": true
+    },
+    {
+      "candidate": 9301,
+      "M": 2048,
+      "N": 4096,
+      "K": 8192,
+      "G": 128,
+      "profile_event_ms": 37.313934326171875,
+      "warmup": 2,
+      "repeat": 1,
+      "bad_elements": 0,
+      "output_guards": true,
+      "full_inputs_unchanged": true
+    },
+    {
+      "candidate": 9302,
+      "M": 2048,
+      "N": 4096,
+      "K": 8192,
+      "G": 128,
+      "profile_event_ms": 37.31474304199219,
+      "warmup": 2,
+      "repeat": 1,
+      "bad_elements": 0,
+      "output_guards": true,
+      "full_inputs_unchanged": true
+    }
+  ],
+  "command": {
+    "command": [
+      "/opt/dtk/bin/hipprof",
+      "--pmc",
+      "--pmc-type",
+      "3",
+      "--kernel-name",
+      "GroupedInt8Nt",
+      "-o",
+      "/workspace/GroupGemm/composable_kernel/example_hcu/ck_tile/24_grouped_gemm_int8_nt/results/profile_v53_operand_paths/compare",
+      "python3",
+      "/workspace/GroupGemm/composable_kernel/example_hcu/ck_tile/24_grouped_gemm_int8_nt/experiments/profile_operand_paths_v53/profile_three.py"
+    ],
+    "library_sha256": "80a6fafb6c86fc2add4610b26bb211293285a11399cf200367581a8422114a36"
+  },
+  "blas_reference": "iteration_41_blas_replay.json; separate earlier frozen replay, not a joint timeline"
+}

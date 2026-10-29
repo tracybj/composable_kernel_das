@@ -239,3 +239,7 @@ Iteration49 screen completed:344/344 original large-M shapes,2064 numerical/guar
 ## Iteration52 ordered MMAC policies
 
 Native instruction and intrinsic-plus-tied-fragment compiler boundaries compile to244 VGPRs,zero scratch/spills.66 full-range and32 performance-output checks PASS. Representative best417-484TOPS; fixed targets still missed, no default promotion. Next matched operand-path counters. See iteration_52_ordered_mmac.md.
+
+## Iteration53 matched operand counters
+
+All3 full-output/input/guard checks PASS,9 target dispatches. Direct B reduces aggregate LDS-wait but has more VALU work and unchanged total LDS instructions; not a stall-time percentage. Local BLAS adapter confirms swapped operands/C-transpose mapping. Next test equivalent internal transposed task and contiguous scalar C stores. See iteration_53_operand_counters.md.
