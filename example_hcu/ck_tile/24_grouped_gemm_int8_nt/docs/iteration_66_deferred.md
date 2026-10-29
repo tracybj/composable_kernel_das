@@ -1,4 +1,4 @@
-# Iteration64: complete short-live INT8 WASP kernel
+# Iteration66: Bounded deferred A-fragment consumption
 
 Defer only the final AReadBatch fragments of each nonfinal H1 half to the next stage. All A LDS reads complete before the stage release barrier; the copied A fragments and previous B H1 registers remain live until the following C_I1, which consumes them before waiting for the next B stage. The final stage computes its H1 immediately, so no deferred work remains at exit. Compare1/2/4/8/16 fragments and original/equivalent-transposed internal mappings with CTA group4. External NT inputs and actual G are unchanged; generic masked fallback remains.
 

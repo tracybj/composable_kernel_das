@@ -1,4 +1,4 @@
-# Iteration64: complete short-live INT8 WASP kernel
+# Iteration65: Batched A-fragment consumption
 
 Parameterize the uniform-C consumer by AReadBatch=1/2/4/8/16. Read each batch into local fragments, wait for LDS, then issue the ordered native I8 MMAC operations. Keep current WASP double-buffer A direct-to-LDS, structured B loads, quarter-stage producer/consumer barriers and physical external NT layout. Ten candidates cover five A batches and original/equivalent-transposed internal mapping with M CTA group4. Retain generic masked fallback for unsupported/tail cases. Selection IDs are development instance IDs, not workload case dispatch.
 
