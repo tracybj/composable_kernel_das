@@ -315,3 +315,5 @@ Depth3/minleaf12 M/N/K/G draft tree; {'total': 344, 'ge1': 99, 'min_R': 0.758795
 
 {"numeric_pass": 1178, "ge1": 915, "ge05": 1178, "min_R": 0.7617497991099058, "median_R": 1.2049133250337323, "library_sha256": "cc5388e0e0d731a9775b8e4b2c4e8576ca62a4a284bc0f2cbdcd7449d086d16b", "phase": {"decode": {"total": 872, "ge1": 844, "median_R": 1.3274243393254848}, "prefill": {"total": 306, "ge1": 71, "median_R": 0.9398759626992711}}}
 See current_public_v73_1178.csv; all rows share one library identity,all1178 newly measured.
+
+Public73 gap analysis:915/1178 fixed targets met;263 remain (14 M<256,249 large-M). Original-target CSV preserved, no target relaxation. See current_public_v73_gap_summary.md and remaining.csv.
