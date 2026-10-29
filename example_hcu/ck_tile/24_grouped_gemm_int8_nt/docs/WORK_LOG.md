@@ -388,3 +388,7 @@ All12 whole-output/input-clone/guard checks PASS. v73/v80 match on identical all
 ## Iteration89 four-wave N reuse
 
 248 full-range and84 same-build performance checks PASS;180/204VGPR,16KB LDS,no spill. No gain over WASP controls on seven measured shapes. Next isolate physical weight packing with conversion costs. See iteration_89_n_reuse.md.
+
+## Iteration90 physical B packing
+
+96 full-range,42 screen and28 rotating-order output/guard checks PASS. Packed198VGPR,no spill. Original-weight packed kernel improves6/7 against same-build best raw controls;GPU conversion cost and reuse threshold explicit. No raw-NT production promotion. See iteration_90_packed_b.md and deepgemm_fp8_to_int8_review.md.

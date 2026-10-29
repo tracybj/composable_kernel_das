@@ -1,0 +1,34 @@
+{
+  "experiment": {
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/experiments/wasp_packed_b_v90/kernel.hpp": "30a0aa9814bcc0b9a1172b35ebc45d8e70593f0298a33120b5f8a05eccb987b8",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/experiments/wasp_packed_b_v90/candidates.json": "c41967983780f4a0a4dd4bf9cf1fb584a75e4949865a7b557c414ffbc0cc42e0",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/experiments/wasp_packed_b_v90/pipeline.hpp": "50279e7d92a4f429b154c1db8354521e4a7e1c657bcb65b4390035e5a23950e4",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/experiments/wasp_packed_b_v90/epilogue.hpp": "b0257a06e3911797c9a8fea351969d34cb03f7c98a86d6b1bc33c2542f76214b",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/experiments/wasp_packed_b_v90/problem.hpp": "78fa16bd2b8ab7640c530c85f1fb906624de2f2b0b0ac968f9b5891560486fab",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/experiments/wasp_packed_b_v90/instances.cpp": "ee28aa202c7037a4f89f649f7a9bcdb366e48c779bc8768a2a57611742a818a8"
+  },
+  "validation_scripts_and_cpu_audit_added_after_compile": {
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/experiments/wasp_packed_b_v90/build_command.json": "6bc21f83664bedabf119b2dd7bd12541aae32525ccdbb59ff32285f26bcb6ff8",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/experiments/wasp_packed_b_v90/kernel.hpp": "30a0aa9814bcc0b9a1172b35ebc45d8e70593f0298a33120b5f8a05eccb987b8",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/experiments/wasp_packed_b_v90/candidates.json": "c41967983780f4a0a4dd4bf9cf1fb584a75e4949865a7b557c414ffbc0cc42e0",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/experiments/wasp_packed_b_v90/pipeline.hpp": "50279e7d92a4f429b154c1db8354521e4a7e1c657bcb65b4390035e5a23950e4",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/experiments/wasp_packed_b_v90/check_math.py": "ad15302f81a79d8e0fec604e0c9e7932bc70d7631afabc7c479b214c4b000fbf",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/experiments/wasp_packed_b_v90/epilogue.hpp": "b0257a06e3911797c9a8fea351969d34cb03f7c98a86d6b1bc33c2542f76214b",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/experiments/wasp_packed_b_v90/problem.hpp": "78fa16bd2b8ab7640c530c85f1fb906624de2f2b0b0ac968f9b5891560486fab",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/experiments/wasp_packed_b_v90/instances.cpp": "ee28aa202c7037a4f89f649f7a9bcdb366e48c779bc8768a2a57611742a818a8",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/experiments/wasp_packed_b_v90/cpu_packed_address_audit.json": "5a85e476964a1d91de32ec6112eab769e3b40b34f7d0855bc6670e3bb1a351e4",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/experiments/wasp_packed_b_v90/probe_packed.py": "19c35da54e38af7e98bdb77afb8936a172d5c0c75cd64c76697d3ce86959b630",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/experiments/wasp_packed_b_v90/probe_balanced.py": "4dace4a1a9613394fdacc6ca96aefe40ed080ef8a06f75253d03eccc69c3ea6f"
+  },
+  "unchanged_public_context": {
+    "include/ck_tile/ops/gemm/grouped_gemm_selector.hpp": "dcc344d49aa13c4e22f02567cf12081e261e99ffb5b243e50983890c1ac08b4f",
+    "include/ck_tile/ops/gemm/grouped_gemm_device_args.h": "45ef94020156023aee585dc56ed77d1bdee65533f350bff03bffcb3db9592a02",
+    "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args.cpp": "75a76d0029ad7a65e65be65d7238598e7cee199e59a4c0eae589565a826bf81c",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/instances.cpp": "349b08225b5f2d783278663dde4eb05823d0a0b1db38a37955993fff9822b91e",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/grouped_int8_nt_wasp_pipeline.hpp": "083291bb58f4e24d5304d97e659a1af2f67bf5d2dfbd320e69d22fd2140975a3",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/grouped_int8_nt_wasp_problem.hpp": "e0834d68ac775e959ae87f7d97a3c7c7505a12af6f51ae440bb4382ae7c6fb76",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/grouped_int8_nt_wasp_epilogue.hpp": "1e84f0545089a1386e6c51214b3c45f66726c702ff1c71eccf3183c2daeb39bc",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/grouped_int8_nt_wasp_kernel.hpp": "abcd76e0ea422feeef15982ac58bc263f7b8226182c6e3f20c49a1f14ccb20fe",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/grouped_int8_nt_wasp_fallback.hpp": "1611b7e11c0590c43e88335f1c9aa99e83d41df5947c6ab229787c00d0948e39"
+  }
+}

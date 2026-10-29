@@ -1,0 +1,217 @@
+{
+  "status": "PASS",
+  "address_cases": [
+    {
+      "N": 256,
+      "K": 128,
+      "status": "PASS"
+    },
+    {
+      "N": 256,
+      "K": 384,
+      "status": "PASS"
+    },
+    {
+      "N": 256,
+      "K": 640,
+      "status": "PASS"
+    },
+    {
+      "N": 256,
+      "K": 1024,
+      "status": "PASS"
+    },
+    {
+      "N": 256,
+      "K": 6144,
+      "status": "PASS"
+    },
+    {
+      "N": 256,
+      "K": 7168,
+      "status": "PASS"
+    },
+    {
+      "N": 256,
+      "K": 8192,
+      "status": "PASS"
+    },
+    {
+      "N": 512,
+      "K": 128,
+      "status": "PASS"
+    },
+    {
+      "N": 512,
+      "K": 384,
+      "status": "PASS"
+    },
+    {
+      "N": 512,
+      "K": 640,
+      "status": "PASS"
+    },
+    {
+      "N": 512,
+      "K": 1024,
+      "status": "PASS"
+    },
+    {
+      "N": 512,
+      "K": 6144,
+      "status": "PASS"
+    },
+    {
+      "N": 512,
+      "K": 7168,
+      "status": "PASS"
+    },
+    {
+      "N": 512,
+      "K": 8192,
+      "status": "PASS"
+    },
+    {
+      "N": 1536,
+      "K": 128,
+      "status": "PASS"
+    },
+    {
+      "N": 1536,
+      "K": 384,
+      "status": "PASS"
+    },
+    {
+      "N": 1536,
+      "K": 640,
+      "status": "PASS"
+    },
+    {
+      "N": 1536,
+      "K": 1024,
+      "status": "PASS"
+    },
+    {
+      "N": 1536,
+      "K": 6144,
+      "status": "PASS"
+    },
+    {
+      "N": 1536,
+      "K": 7168,
+      "status": "PASS"
+    },
+    {
+      "N": 1536,
+      "K": 8192,
+      "status": "PASS"
+    },
+    {
+      "N": 3072,
+      "K": 128,
+      "status": "PASS"
+    },
+    {
+      "N": 3072,
+      "K": 384,
+      "status": "PASS"
+    },
+    {
+      "N": 3072,
+      "K": 640,
+      "status": "PASS"
+    },
+    {
+      "N": 3072,
+      "K": 1024,
+      "status": "PASS"
+    },
+    {
+      "N": 3072,
+      "K": 6144,
+      "status": "PASS"
+    },
+    {
+      "N": 3072,
+      "K": 7168,
+      "status": "PASS"
+    },
+    {
+      "N": 3072,
+      "K": 8192,
+      "status": "PASS"
+    },
+    {
+      "N": 4096,
+      "K": 128,
+      "status": "PASS"
+    },
+    {
+      "N": 4096,
+      "K": 384,
+      "status": "PASS"
+    },
+    {
+      "N": 4096,
+      "K": 640,
+      "status": "PASS"
+    },
+    {
+      "N": 4096,
+      "K": 1024,
+      "status": "PASS"
+    },
+    {
+      "N": 4096,
+      "K": 6144,
+      "status": "PASS"
+    },
+    {
+      "N": 4096,
+      "K": 7168,
+      "status": "PASS"
+    },
+    {
+      "N": 4096,
+      "K": 8192,
+      "status": "PASS"
+    },
+    {
+      "N": 6144,
+      "K": 128,
+      "status": "PASS"
+    },
+    {
+      "N": 6144,
+      "K": 384,
+      "status": "PASS"
+    },
+    {
+      "N": 6144,
+      "K": 640,
+      "status": "PASS"
+    },
+    {
+      "N": 6144,
+      "K": 1024,
+      "status": "PASS"
+    },
+    {
+      "N": 6144,
+      "K": 6144,
+      "status": "PASS"
+    },
+    {
+      "N": 6144,
+      "K": 7168,
+      "status": "PASS"
+    },
+    {
+      "N": 6144,
+      "K": 8192,
+      "status": "PASS"
+    }
+  ],
+  "formula": "[((K64*N16+Ntile)*4+K16)*16+Ninner]*16+Kinner",
+  "limits": "CPU physical address and bounds model only;GPU numeric verification required"
+}
