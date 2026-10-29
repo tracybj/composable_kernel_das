@@ -364,3 +364,7 @@ All12 whole-output/input-clone/guard checks PASS. v73/v80 match on identical all
 ## Iteration83 wide-M structural trial
 
 216 full-range and56 performance checks PASS.512x256x64,twelve waves,four producers:all8 kernels spill and representative throughput collapses. No public promotion. Next compare an eight-wave cooperative allocation with the same mathematical tile. See iteration_83_wide_m.md.
+
+## Iteration84 cooperative wide-M structure
+
+216 full-range and56 performance checks PASS. Eight cooperative waves do not remove wide-accumulator spill/performance cost. No public promotion. Next trade N128 for128 accumulator values and changed A/B reuse;see iteration_84_cooperative_wide.md.
