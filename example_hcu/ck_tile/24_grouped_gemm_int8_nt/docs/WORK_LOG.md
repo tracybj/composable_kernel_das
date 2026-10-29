@@ -372,3 +372,7 @@ All12 whole-output/input-clone/guard checks PASS. v73/v80 match on identical all
 ## Iteration85 narrow-N wide-M structure
 
 216 full-range and56 performance checks PASS;156--173VGPR,no scratch/spill.512x128x64 halves B requests but increases A movement/LDS/stage costs;representatives remain slower than public v80. No promotion. Return to fast256x256x128 consumer-schedule investigation;see iteration_85_narrow_n.md.
+
+## Iteration86 single-publication C/CP schedule
+
+360 full-range and84 performance checks PASS. CP variants spill;all-C controls remain fastest/no spill. Production assertion and formal v80 CSV retained. Next pair early/late B prefetch within all-C. See iteration_86_consumer_schedule.md.

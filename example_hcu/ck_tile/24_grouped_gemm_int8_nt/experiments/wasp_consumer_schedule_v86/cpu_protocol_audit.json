@@ -1,0 +1,476 @@
+{
+  "status": "PASS",
+  "scenarios": 66,
+  "scope": "CPU stage-generation/contribution/barrier-count model only",
+  "assumptions": [
+    "cp_I2 waits for all current high-half A LDS reads before release",
+    "cp_I1 consumes previous high registers before overwriting A registers",
+    "next B prefetch uses opposite static register slot",
+    "production pipeline remains unchanged"
+  ],
+  "limitations": "Not compiler/hardware/scheduling/numerical proof; full-range GPU validation still required",
+  "audits": [
+    {
+      "stages": 1,
+      "C_waves": 0,
+      "CP_waves": 8,
+      "barriers": 2,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 1,
+      "C_waves": 4,
+      "CP_waves": 4,
+      "barriers": 2,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 1,
+      "C_waves": 8,
+      "CP_waves": 0,
+      "barriers": 2,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 2,
+      "C_waves": 0,
+      "CP_waves": 8,
+      "barriers": 3,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 2,
+      "C_waves": 4,
+      "CP_waves": 4,
+      "barriers": 3,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 2,
+      "C_waves": 8,
+      "CP_waves": 0,
+      "barriers": 3,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 3,
+      "C_waves": 0,
+      "CP_waves": 8,
+      "barriers": 4,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 3,
+      "C_waves": 4,
+      "CP_waves": 4,
+      "barriers": 4,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 3,
+      "C_waves": 8,
+      "CP_waves": 0,
+      "barriers": 4,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 4,
+      "C_waves": 0,
+      "CP_waves": 8,
+      "barriers": 5,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 4,
+      "C_waves": 4,
+      "CP_waves": 4,
+      "barriers": 5,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 4,
+      "C_waves": 8,
+      "CP_waves": 0,
+      "barriers": 5,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 5,
+      "C_waves": 0,
+      "CP_waves": 8,
+      "barriers": 6,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 5,
+      "C_waves": 4,
+      "CP_waves": 4,
+      "barriers": 6,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 5,
+      "C_waves": 8,
+      "CP_waves": 0,
+      "barriers": 6,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 6,
+      "C_waves": 0,
+      "CP_waves": 8,
+      "barriers": 7,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 6,
+      "C_waves": 4,
+      "CP_waves": 4,
+      "barriers": 7,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 6,
+      "C_waves": 8,
+      "CP_waves": 0,
+      "barriers": 7,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 7,
+      "C_waves": 0,
+      "CP_waves": 8,
+      "barriers": 8,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 7,
+      "C_waves": 4,
+      "CP_waves": 4,
+      "barriers": 8,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 7,
+      "C_waves": 8,
+      "CP_waves": 0,
+      "barriers": 8,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 8,
+      "C_waves": 0,
+      "CP_waves": 8,
+      "barriers": 9,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 8,
+      "C_waves": 4,
+      "CP_waves": 4,
+      "barriers": 9,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 8,
+      "C_waves": 8,
+      "CP_waves": 0,
+      "barriers": 9,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 9,
+      "C_waves": 0,
+      "CP_waves": 8,
+      "barriers": 10,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 9,
+      "C_waves": 4,
+      "CP_waves": 4,
+      "barriers": 10,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 9,
+      "C_waves": 8,
+      "CP_waves": 0,
+      "barriers": 10,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 10,
+      "C_waves": 0,
+      "CP_waves": 8,
+      "barriers": 11,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 10,
+      "C_waves": 4,
+      "CP_waves": 4,
+      "barriers": 11,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 10,
+      "C_waves": 8,
+      "CP_waves": 0,
+      "barriers": 11,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 11,
+      "C_waves": 0,
+      "CP_waves": 8,
+      "barriers": 12,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 11,
+      "C_waves": 4,
+      "CP_waves": 4,
+      "barriers": 12,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 11,
+      "C_waves": 8,
+      "CP_waves": 0,
+      "barriers": 12,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 12,
+      "C_waves": 0,
+      "CP_waves": 8,
+      "barriers": 13,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 12,
+      "C_waves": 4,
+      "CP_waves": 4,
+      "barriers": 13,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 12,
+      "C_waves": 8,
+      "CP_waves": 0,
+      "barriers": 13,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 13,
+      "C_waves": 0,
+      "CP_waves": 8,
+      "barriers": 14,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 13,
+      "C_waves": 4,
+      "CP_waves": 4,
+      "barriers": 14,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 13,
+      "C_waves": 8,
+      "CP_waves": 0,
+      "barriers": 14,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 14,
+      "C_waves": 0,
+      "CP_waves": 8,
+      "barriers": 15,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 14,
+      "C_waves": 4,
+      "CP_waves": 4,
+      "barriers": 15,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 14,
+      "C_waves": 8,
+      "CP_waves": 0,
+      "barriers": 15,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 15,
+      "C_waves": 0,
+      "CP_waves": 8,
+      "barriers": 16,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 15,
+      "C_waves": 4,
+      "CP_waves": 4,
+      "barriers": 16,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 15,
+      "C_waves": 8,
+      "CP_waves": 0,
+      "barriers": 16,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 16,
+      "C_waves": 0,
+      "CP_waves": 8,
+      "barriers": 17,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 16,
+      "C_waves": 4,
+      "CP_waves": 4,
+      "barriers": 17,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 16,
+      "C_waves": 8,
+      "CP_waves": 0,
+      "barriers": 17,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 17,
+      "C_waves": 0,
+      "CP_waves": 8,
+      "barriers": 18,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 17,
+      "C_waves": 4,
+      "CP_waves": 4,
+      "barriers": 18,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 17,
+      "C_waves": 8,
+      "CP_waves": 0,
+      "barriers": 18,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 32,
+      "C_waves": 0,
+      "CP_waves": 8,
+      "barriers": 33,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 32,
+      "C_waves": 4,
+      "CP_waves": 4,
+      "barriers": 33,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 32,
+      "C_waves": 8,
+      "CP_waves": 0,
+      "barriers": 33,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 63,
+      "C_waves": 0,
+      "CP_waves": 8,
+      "barriers": 64,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 63,
+      "C_waves": 4,
+      "CP_waves": 4,
+      "barriers": 64,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 63,
+      "C_waves": 8,
+      "CP_waves": 0,
+      "barriers": 64,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 64,
+      "C_waves": 0,
+      "CP_waves": 8,
+      "barriers": 65,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 64,
+      "C_waves": 4,
+      "CP_waves": 4,
+      "barriers": 65,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 64,
+      "C_waves": 8,
+      "CP_waves": 0,
+      "barriers": 65,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 65,
+      "C_waves": 0,
+      "CP_waves": 8,
+      "barriers": 66,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 65,
+      "C_waves": 4,
+      "CP_waves": 4,
+      "barriers": 66,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 65,
+      "C_waves": 8,
+      "CP_waves": 0,
+      "barriers": 66,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 112,
+      "C_waves": 0,
+      "CP_waves": 8,
+      "barriers": 113,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 112,
+      "C_waves": 4,
+      "CP_waves": 4,
+      "barriers": 113,
+      "register_carry_checked": true
+    },
+    {
+      "stages": 112,
+      "C_waves": 8,
+      "CP_waves": 0,
+      "barriers": 113,
+      "register_carry_checked": true
+    }
+  ]
+}
