@@ -68,7 +68,8 @@
 //        group's own panel), D = [M, N] row major (d_stride)
 //   TN : A = [K, M] row major (a_stride, M contiguous), B = [K, N] row major
 //        (b_stride), D = [M, N] row major (d_stride)
-// Rows past M and columns past N are masked on the STORE only; the K extent must
+// NN A rows past M are masked on the LOAD (they read as 0, see the A setup in
+// run_tile); rows past M and columns past N are masked on the STORE. The K extent must
 // be a whole number of 16-wide k-stages and N a whole number of 256-wide tiles
 // (both are contract-level requirements, enforced by the host-side selector).
 // The A panel fetch reads a whole 256-column tile, so TN additionally requires
@@ -560,7 +561,14 @@ CK_TILE_DEVICE void GemmPipelineV7Uniform<Problem, kKind>::run_tile(
             a_stride_desc *= 2u;
         }
         const uint32_t a_off_rem = (uint32_t)a_stride_bytes - a_stride_desc;
-        S.a_pair = (uint64_t)(uint32_t)a_row_global |
+        // Rows past this group's M must not be fetched: the strided idxen
+        // descriptor range-checks the INDEX, and its size field (bytes) does
+        // not bound the row count, so an M tail would read up to 255 rows past
+        // the group. Index 0xffffffff is out of range for any size: the load
+        // writes 0 into the row's LDS slot without a memory access (measured).
+        const uint32_t a_index =
+            a_row_global < p.m ? (uint32_t)a_row_global : 0xffffffffu;
+        S.a_pair = (uint64_t)a_index |
                    ((uint64_t)((uint32_t)(a_row_global * (int)a_off_rem + a_kh * 16)) << 32);
         const uint32_t a_size_bytes = (uint32_t)((int64_t)p.m * a_stride_bytes);
         S.a_rsrc = make_buffer_rsrc(p.a_ptr, a_stride_desc, a_size_bytes, /*swizzle=*/true);
