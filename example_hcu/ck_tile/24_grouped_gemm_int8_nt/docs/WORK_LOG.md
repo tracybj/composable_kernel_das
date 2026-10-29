@@ -420,3 +420,7 @@ User permits one-time INT8 weight preparation/reuse;FP16/BF16 ABI/layout/default
 ## Iteration96 validator memory repair
 
 Verified process terminal afterOOM inboolean comparison reduction atID464.132 complete shapes/792 PASS records preserved. Bounded256-row validation,unchanged GEMM workload/libraries/timing;resume audited atID464. Original error/log preserved.
+
+## Iteration96 completed all344
+
+2064 full-output records PASS;prior792-prefix hash preserved after validator-only OOM repair. Same-run control168/344,oracle284/344,dimension-only draft284/344,minR0.9054,no>3% regressions.60 large-M misses remain. No formal1178 update. Additive INT8-only API integration next;existing16bit ABI/layout/defaults protected.
