@@ -1,0 +1,193 @@
+{
+  "manifest": {
+    "M": 16384,
+    "N": 4096,
+    "K": 6144,
+    "G": 8,
+    "gpu": 7,
+    "dtype": "int8_int32",
+    "layout": "NT",
+    "scale": null,
+    "ck_library_sha256": "cc5388e0e0d731a9775b8e4b2c4e8576ca62a4a284bc0f2cbdcd7449d086d16b",
+    "blas_library_sha256": "05524e5b1032409d3b4ba3926e26a4e989f2cccb4b867e0f1a2cfaa1e63ed5a5",
+    "bridge_sha256": "47a02606c849b7053695e6a58f3bec499fcc275f526598888fb916902974339f",
+    "algorithm_id": 2979,
+    "ck_instance": 19003,
+    "blas_kernel": "Custom_Cijk_Alik_Bljk_I8II_BH_Bias_AI_MT256x256x128_SE_K1_USSB1_WGM5_0521_structbuffer1024_ccyBlockSize768_gfx936",
+    "warmup": 5,
+    "repeat": 20,
+    "samples": 3,
+    "profiler": false,
+    "scope": "same physical allocations; frozen algorithm; no retuning; all8 independent groups included",
+    "target_TOPS": 636.581879099099,
+    "target_ms": 10.363269805908205
+  },
+  "unprofiled_records": [
+    {
+      "sample": 0,
+      "backend": "BLAS",
+      "ms": 10.419366836547852,
+      "TOPS": 633.1545736076363,
+      "R": 0.9946160806582914,
+      "bad_elements": 0,
+      "guard": true,
+      "full_inputs_unchanged": true
+    },
+    {
+      "sample": 0,
+      "backend": "CK",
+      "ms": 13.202150344848633,
+      "TOPS": 499.6966095928547,
+      "R": 0.7849683222212255,
+      "bad_elements": 0,
+      "guard": true,
+      "full_inputs_unchanged": true
+    },
+    {
+      "sample": 1,
+      "backend": "CK",
+      "ms": 13.204061508178711,
+      "TOPS": 499.6242832229854,
+      "R": 0.7848547054623386,
+      "bad_elements": 0,
+      "guard": true,
+      "full_inputs_unchanged": true
+    },
+    {
+      "sample": 1,
+      "backend": "BLAS",
+      "ms": 10.357519149780273,
+      "TOPS": 636.9353192840539,
+      "R": 1.0005552155921482,
+      "bad_elements": 0,
+      "guard": true,
+      "full_inputs_unchanged": true
+    },
+    {
+      "sample": 2,
+      "backend": "BLAS",
+      "ms": 10.377902030944824,
+      "TOPS": 635.6843364858196,
+      "R": 0.9985900594365809,
+      "bad_elements": 0,
+      "guard": true,
+      "full_inputs_unchanged": true
+    },
+    {
+      "sample": 2,
+      "backend": "CK",
+      "ms": 13.194238662719727,
+      "TOPS": 499.9962434585935,
+      "R": 0.7854390140137139,
+      "bad_elements": 0,
+      "guard": true,
+      "full_inputs_unchanged": true
+    }
+  ],
+  "unprofiled_summary": [
+    {
+      "backend": "BLAS",
+      "ms": 10.377902030944824,
+      "TOPS": 635.6843364858196,
+      "R": 0.9985900594365809,
+      "samples_ms": [
+        10.419366836547852,
+        10.357519149780273,
+        10.377902030944824
+      ]
+    },
+    {
+      "backend": "CK",
+      "ms": 13.202150344848633,
+      "TOPS": 499.6966095928547,
+      "R": 0.7849683222212255,
+      "samples_ms": [
+        13.202150344848633,
+        13.204061508178711,
+        13.194238662719727
+      ]
+    }
+  ],
+  "profile_validation": [
+    {
+      "sample": 0,
+      "backend": "BLAS",
+      "ms": 17.497600555419922,
+      "TOPS": 377.0271098463579,
+      "R": 0.5922680525872537,
+      "bad_elements": 0,
+      "guard": true,
+      "full_inputs_unchanged": true
+    },
+    {
+      "sample": 0,
+      "backend": "CK",
+      "ms": 14.092955589294434,
+      "TOPS": 468.1111584334655,
+      "R": 0.735351058210994,
+      "bad_elements": 0,
+      "guard": true,
+      "full_inputs_unchanged": true
+    }
+  ],
+  "counters": {
+    "BLAS": {
+      "kernel_launches": 8,
+      "resources": {
+        "wgr": [
+          "768"
+        ],
+        "lds": [
+          "65536"
+        ],
+        "scr": [
+          "0"
+        ],
+        "arch_vgpr": [
+          "256"
+        ]
+      },
+      "counters": {
+        "SQ_INSTS_VALU": 430276608,
+        "SQ_INSTS_LDS": 100663296,
+        "SQ_INSTS_VMEM_RD": 25427968,
+        "SQ_INSTS_VMEM_WR": 8388608,
+        "SQ_LDS_BANK_CONFLICT": 0,
+        "SQ_WAIT_INST_LDS": 114369265,
+        "TCC_HIT": 269055799,
+        "TCC_MISS": 66630428
+      }
+    },
+    "CK": {
+      "kernel_launches": 1,
+      "resources": {
+        "wgr": [
+          "768"
+        ],
+        "lds": [
+          "65536"
+        ],
+        "scr": [
+          "0"
+        ],
+        "arch_vgpr": [
+          "216"
+        ]
+      },
+      "counters": {
+        "SQ_INSTS_VALU": 464486400,
+        "SQ_INSTS_LDS": 109051904,
+        "SQ_INSTS_VMEM_RD": 25165824,
+        "SQ_INSTS_VMEM_WR": 2097152,
+        "SQ_LDS_BANK_CONFLICT": 0,
+        "SQ_WAIT_INST_LDS": 22087338,
+        "TCC_HIT": 251023919,
+        "TCC_MISS": 84530577
+      }
+    }
+  },
+  "raw_profile_sha256": "1c5f73e18a9b3c6b9ff713d6c45464d18757afe9fdda3806fbbf361e20c5e1e9",
+  "raw_profile_path": "/workspace/GroupGemm/composable_kernel/example_hcu/ck_tile/24_grouped_gemm_int8_nt/results/profile_long_m_v75/compare.csv",
+  "counter_aggregation": "Last measured full G8 call:sum last8 exact frozen BLAS kernels versus last1 CK Wasp kernel; warmup launches excluded",
+  "profile_times_are_not_rankings": true
+}
