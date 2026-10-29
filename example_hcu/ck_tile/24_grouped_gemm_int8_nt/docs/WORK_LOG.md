@@ -259,3 +259,8 @@ External inputs/output unchanged; scalar contiguous stores from internal B*A^T.6
 ## Iteration57 structured B/cache-swizzle
 
 120 full-range checks and40 performance-output checks PASS. No spills. Cache eligibility depends on physical stride. Representative gains remain below fixed targets; no default promotion. See iteration_57_structured_b.md.
+
+## Current public-v47 full1178 snapshot
+
+{"numeric_pass": 1178, "ge1": 832, "ge05": 1164, "min_R": 0.45631943431758887, "median_R": 1.198147838917571, "library_sha256": "865755915e5f4b9045d40689311ca531f7980b7531b9ac0b4cf22748a51e9bb5", "phase": {"decode": {"total": 872, "ge1": 825, "median_R": 1.329005798024912}, "prefill": {"total": 306, "ge1": 7, "median_R": 0.607738874675903}}}
+See current_public_v47_1178.csv; all rows share one library identity,560 reused and618 newly measured.
