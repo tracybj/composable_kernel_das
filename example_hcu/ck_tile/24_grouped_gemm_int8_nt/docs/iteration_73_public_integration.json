@@ -1,0 +1,559 @@
+{
+  "library_sha256": "cc5388e0e0d731a9775b8e4b2c4e8576ca62a4a284bc0f2cbdcd7449d086d16b",
+  "sources": {
+    "include/ck_tile/ops/gemm/grouped_gemm_selector.hpp": "cc9c23055cf33f261f5eafbdf12114013a57ba1b126b6097e18e14a7aa0f54cd",
+    "include/ck_tile/ops/gemm/grouped_gemm_device_args.h": "d851c18954e89c8f8c5424dedca6de9680b0989821a49ab497682ee0c5d29932",
+    "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args.cpp": "65e70ef945380175757f88c95f9fc84e4027b7db8e1f40fabc11219c68773b3a",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/instances.cpp": "83337720d3654782ad6bb2e5c72d66b2a5aaefb43be3faac23a3b82b9fd4c932",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/grouped_int8_nt_wasp_pipeline.hpp": "6a20f816ded2959dd980f3664ff1ba2361aca7e03871274e8d063e0f86e43865",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/grouped_int8_nt_wasp_problem.hpp": "2738543c6da24e47941785403b0949b134a7289b974ae17c856b891f2c7eaf00",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/grouped_int8_nt_wasp_epilogue.hpp": "1e84f0545089a1386e6c51214b3c45f66726c702ff1c71eccf3183c2daeb39bc",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/grouped_int8_nt_wasp_kernel.hpp": "abcd76e0ea422feeef15982ac58bc263f7b8226182c6e3f20c49a1f14ccb20fe",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/grouped_int8_nt_wasp_fallback.hpp": "1611b7e11c0590c43e88335f1c9aa99e83d41df5947c6ab229787c00d0948e39"
+  },
+  "host_int8_checks": 38,
+  "host_original_checks": 80,
+  "registry_entries": 47,
+  "int8_entries": 27,
+  "floating_entries": 20,
+  "cpu_replay": {
+    "status": "PASS",
+    "rows": 1178,
+    "unique_shapes": 1178,
+    "instance_count": 15,
+    "shape_fields": [
+      "M",
+      "N",
+      "K",
+      "G"
+    ],
+    "formal_instances_match": true,
+    "relabelled_reversed_match": true,
+    "invalid_group_counts_rejected": true,
+    "gpu_work_performed": false,
+    "reference_csv_sha256": "cfa93505eba3444536968050f9a3d870cf4308ff82cc204c56a320302da37bec"
+  },
+  "boundary_checks": [
+    {
+      "lengths": [
+        17,
+        17
+      ],
+      "N": 260,
+      "K": 528,
+      "status": "PASS",
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32
+      ],
+      "N": 260,
+      "K": 1232,
+      "status": "PASS",
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32
+      ],
+      "N": 260,
+      "K": 2064,
+      "status": "PASS",
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        33,
+        33
+      ],
+      "N": 260,
+      "K": 1232,
+      "status": "PASS",
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64
+      ],
+      "N": 260,
+      "K": 4112,
+      "status": "PASS",
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        32,
+        32,
+        32,
+        32
+      ],
+      "N": 260,
+      "K": 4112,
+      "status": "PASS",
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        64,
+        64,
+        64,
+        64
+      ],
+      "N": 260,
+      "K": 4112,
+      "status": "PASS",
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        1,
+        17,
+        0
+      ],
+      "N": 1236,
+      "K": 1232,
+      "status": "PASS",
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        0,
+        0
+      ],
+      "N": 128,
+      "K": 512,
+      "status": "PASS",
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        33,
+        0,
+        257
+      ],
+      "N": 300,
+      "K": 528,
+      "status": "PASS",
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        128,
+        256
+      ],
+      "N": 260,
+      "K": 256,
+      "status": "PASS",
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        128,
+        128
+      ],
+      "N": 256,
+      "K": 512,
+      "status": "PASS",
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        256,
+        256
+      ],
+      "N": 256,
+      "K": 2048,
+      "status": "PASS",
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        128
+      ],
+      "N": 256,
+      "K": 2048,
+      "status": "PASS",
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        257,
+        257
+      ],
+      "N": 260,
+      "K": 2064,
+      "status": "PASS",
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        129,
+        129
+      ],
+      "N": 260,
+      "K": 528,
+      "status": "PASS",
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        4096
+      ],
+      "N": 256,
+      "K": 2048,
+      "status": "PASS",
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        4096
+      ],
+      "N": 256,
+      "K": 4096,
+      "status": "PASS",
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        4097
+      ],
+      "N": 260,
+      "K": 1232,
+      "status": "PASS",
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        16,
+        16
+      ],
+      "N": 256,
+      "K": 4096,
+      "status": "PASS",
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        1
+      ],
+      "N": 260,
+      "K": 256,
+      "status": "PASS",
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        2,
+        2
+      ],
+      "N": 260,
+      "K": 768,
+      "status": "PASS",
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        3
+      ],
+      "N": 260,
+      "K": 1232,
+      "status": "PASS",
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8
+      ],
+      "N": 260,
+      "K": 2064,
+      "status": "PASS",
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16
+      ],
+      "N": 260,
+      "K": 528,
+      "status": "PASS",
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        1
+      ],
+      "N": 260,
+      "K": 4112,
+      "status": "PASS",
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16
+      ],
+      "N": 260,
+      "K": 6160,
+      "status": "PASS",
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "N": 260,
+      "K": 4096,
+      "status": "PASS",
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        256
+      ],
+      "N": 256,
+      "K": 384,
+      "status": "PASS",
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        512
+      ],
+      "N": 256,
+      "K": 640,
+      "status": "PASS",
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        2048
+      ],
+      "N": 256,
+      "K": 768,
+      "status": "PASS",
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        2304
+      ],
+      "N": 256,
+      "K": 768,
+      "status": "PASS",
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        2304
+      ],
+      "N": 256,
+      "K": 896,
+      "status": "PASS",
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        256
+      ],
+      "N": 512,
+      "K": 4096,
+      "status": "PASS",
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    }
+  ],
+  "full1178_performance_status": "not yet measured for this library"
+}

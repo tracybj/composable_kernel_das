@@ -306,3 +306,7 @@ Depth3/minleaf12 M/N/K/G draft tree; {'total': 344, 'ge1': 99, 'min_R': 0.758795
 ## Iteration72 standalone WASP/fallback
 
 114 boundary and24 performance checks PASS;no scratch/spill. Root headers have no experimental includes;214/232VGPR. Public registry integration follows. Correct controlled configuration only; no default promotion. See iteration_72_standalone_wasp.md.
+
+## Iteration73 public WASP integration
+
+3 public WASP instances;registry47. Host38+80,CPU1178 relabel/reverse and34 public full-range boundaries PASS. M/N/K/G-only large-M route with generic runtime stride fallback. All1178 public performance pending. See iteration_73_public_integration.md.

@@ -116,3 +116,7 @@ python3 "$e/test_shape_selection.py" --results "$e/docs/selector_contract_v26.cs
 ## 第47轮小M公共入口验证
 
 注册8734无LDS输出实例，uniform M<=16且K>=4096按尺寸选择，与caseID/phase无关。当前24个INT8实例，总注册44项。560/560条小M数值检查PASS，560/560达到固定Excel目标，最低R=1.007298、中位R=1.366718。28组完整INT8/FP64边界、host80+33、CPU1178维度重放PASS。详见docs/iteration_47_public_audit.json及CSV。本轮不代表全1178达标，大M及中等M剩余差距继续优化。
+
+## 第73轮公共入口集成
+
+新增三个独立WASP实例（19001/19002/19003），统一非空大M按尺寸选择，宽stride等请求保留kernel内通用fallback。Host38+80、CPU1178重放/改标签/倒序、34项公共全范围边界检查PASS。新库全部1178条默认性能测试尚待完成；旧版及oracle数据不作为本版验收结果。详见docs/iteration_73_public_integration.md。

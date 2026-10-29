@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 #include "grouped_int8_nt_tile.hpp"
+#include "grouped_int8_nt_wasp_kernel.hpp"
 #include "grouped_int8_nt_direct.hpp"
 #include "grouped_int8_nt_direct_epilogue.hpp"
 #include "ck_tile/ops/gemm/grouped_gemm_selector.hpp"
@@ -24,6 +25,18 @@ int launch(const void* args, int groups, int m, int n, hipStream_t stream)
                                0,
                                static_cast<const ck_tile::GemmTransKernelArg*>(args)));
     return hipGetLastError() == hipSuccess ? 0 : -100;
+}
+template<int Batch,bool Transpose>
+int launch_wasp(const void* args,int groups,int m,int n,hipStream_t stream)
+{
+    using P=ck_tile::GroupedInt8NtWaspProblem<Transpose,8,4,Batch,true,true>;
+    const int mm=Transpose?n:m,nn=Transpose?m:n;
+    const int mt=(mm+255)/256,nt=(nn+255)/256;
+    dim3 grid(((mt+P::MGroup-1)/P::MGroup)*P::MGroup*nt,1,groups);
+    ck_tile::launch_kernel(ck_tile::stream_config{stream,false},
+        ck_tile::make_kernel<P::Threads,1>(ck_tile::GroupedInt8NtWaspKernel<P>{},
+            grid,dim3(P::Threads),0,static_cast<const ck_tile::GemmTransKernelArg*>(args)));
+    return hipGetLastError()==hipSuccess?0:-100;
 }
 } // namespace
 extern "C" int
@@ -129,6 +142,9 @@ ck_tile_grouped_int8_nt_launch(unsigned instance_id, const void* args, int g, in
             false,false,true,true,1,true>;
         return launch<P,ck_tile::GroupedInt8NtDirectEpilogue<P>>(args,g,m,n,s);
     }
+    case Instance::int8_nt_wasp_a4_transposed: return launch_wasp<4,true>(args,g,m,n,s);
+    case Instance::int8_nt_wasp_a8_transposed: return launch_wasp<8,true>(args,g,m,n,s);
+    case Instance::int8_nt_wasp_a4: return launch_wasp<4,false>(args,g,m,n,s);
     default: return -5;
     }
 }
