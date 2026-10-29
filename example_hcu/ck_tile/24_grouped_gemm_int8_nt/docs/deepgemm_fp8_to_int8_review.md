@@ -59,3 +59,13 @@ v87提前B预取的28对同映射/同record比较全部变慢。反汇编发现�
 ## 后续隔离验证：v91原始NT下A/B均进LDS
 
 256×256×64、8-wave、A/B双缓冲共64KB LDS，消除了外部预排；124项全范围与56项代表输出检查均通过，151/175VGPR、无spill。但七组均慢于同轮WASP控制。反汇编确认当前计算与下一stage预取交错，首MMAC前无额外VMEM等待，不能沿用v87的失效解释。详见`iteration_91_lds_operands.md/json/csv`。正式默认与1178条结果保持v80。
+
+## 补充核对：该目录也有不预排的raw-NT FP8分支
+
+不能把前面的预排grouped分支当成DeepGEMM全部数据路径。`gfx938/fp8_gemm_hipc.cu`直接接受原始NT操作数，CTA256×256×128、4producer+8consumer、64KB A双缓冲LDS、B从global直接进入寄存器；4个C和4个C′错开半stage计算/读取，常规stage有两次barrier，batch由grid.z区分，scale可空、输出支持BF16/FP16/FP32。K非128倍数另走tail模板。A的XOR swizzle、B不经LDS和C/C′生命周期与当前已研究的WASP路线相近，不是一个已经实测胜过现有INT8的新pipe。
+
+它的搬运使用offen向量地址，循环内K增量走SGPR soffset；资源描述符还带cache-swizzle条件。当前v80的record1024属于不复制输入的地址/缓存策略，和v90真正改变B物理存储的预排是两件事。现有C′ INT8尝试v86出现spill，不能因为FP8源码使用C′就默认启用；后续若再试，必须重新控制其跨stage活跃寄存器并测量，而不是直接移植完整A carry。
+
+另一个`gfx938/fp8_gemm.cu`本身是hipBLASLt封装，不应把调用它的结果归到自写FP8 kernel。`asm_m_grouped_fp8_gemm_nt_contiguous.cu`则通过AiterAsmKernel加载`.co`，该`.cu`提供的是参数/launch包装，不能仅凭包装文件判定底层汇编的流水或性能；本轮没有把它当作已复现的新实现。
+
+新增参考摘要：`fp8_gemm_hipc.cu`的Traits约63–93行、原始B地址/读取约1480–1525行、C/C′时序约1527–1648行、launch约1782–1803行，SHA256 `c445e9266ef96177d4119af3e40721a1a6fab422a02c2a7d07a4b80182c8fe66`。`fp8_gemm.cu`的hipBLASLt入口约137行起，SHA256 `95703c39f1fc3a8ec476f2db7fa89a1ee7007b4f5dc862be72ec57c655812dea`。参考revision仍为`fc246fc4e4104c55a16b88d2f5682be54690469c`；源码副本仅在本地分析区。

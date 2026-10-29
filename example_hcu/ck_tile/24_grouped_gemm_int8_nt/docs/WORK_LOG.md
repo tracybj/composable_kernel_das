@@ -396,3 +396,7 @@ All12 whole-output/input-clone/guard checks PASS. v73/v80 match on identical all
 ## Iteration91 raw NT A+B LDS
 
 124 full-range and56 performance checks PASS;151/175VGPR,64KB LDS,no spill. Native overlap visible in ISA,no extra pre-MMAC VMEM wait. All seven slower than same-build WASP controls;keep v80. See iteration_91_lds_operands.md.
+
+## DeepGEMM raw FP8 cross-check
+
+Verified raw-NT fp8_gemm_hipc is256-square4P8C/Cprime WASP,not universally packed;fp8_gemm is a hipBLASLt wrapper;ASM grouped CU is a code-object launch wrapper. Distinguish these from the packed grouped variants in the review. No new GPU claim or production change.
