@@ -292,3 +292,7 @@ Native fragment/full port failed. Static A/B reconstruction passes; ordered MMAC
 ## Iteration69 one stage publication/reuse barrier
 
 204 boundary and48 performance checks PASS;no scratch/spill. Representative best515/628/542/500TOPS; one of four exceeds its frozen target. Full344 and public1178 acceptance pending. Correct controlled configuration only; no default promotion. See iteration_69_one_barrier.md.
+
+## Iteration70 original344 large-M screen launched
+
+Freeze iteration69,6 one-barrier candidates plus current-default instance. Bounded whole-output validation. Running; no completion/target claim. See iteration_70_large_screen.md.
