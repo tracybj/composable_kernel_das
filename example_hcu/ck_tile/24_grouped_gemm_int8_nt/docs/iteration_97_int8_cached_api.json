@@ -1,0 +1,142 @@
+{
+  "status": "BUILD_AND_CPU_COMPATIBILITY_PASS_GPU_VALIDATION_PENDING",
+  "library_sha256": "e39601a17a85e8392ae83197c71bdd1af86c2c2510fc71e35ac9231d5a159ac3",
+  "exports": {
+    "symbols": [
+      "ck_tile_int8_nt_cached_last_error_v1",
+      "ck_tile_int8_nt_cached_plan_create_v1",
+      "ck_tile_int8_nt_cached_plan_destroy_v1",
+      "ck_tile_int8_nt_cached_plan_query_v1",
+      "ck_tile_int8_nt_cached_run_v1",
+      "ck_tile_int8_nt_cached_weights_create_v1",
+      "ck_tile_int8_nt_cached_weights_destroy_v1",
+      "ck_tile_int8_nt_cached_weights_query_v1"
+    ],
+    "old_abi_definitions": [],
+    "library_sha256": "e39601a17a85e8392ae83197c71bdd1af86c2c2510fc71e35ac9231d5a159ac3"
+  },
+  "loader": {
+    "status": "PASS",
+    "legacy_api_symbols": 4,
+    "legacy_symbol_names": [
+      "ck_tile_hcu_grouped_gemm_instance_name_v1",
+      "ck_tile_hcu_grouped_gemm_query_instance_v1",
+      "ck_tile_hcu_grouped_gemm_run_device_args_v1",
+      "ck_tile_hcu_grouped_gemm_select_device_args_v1"
+    ],
+    "old_handle_addresses_unchanged": true,
+    "process_global_addresses_unchanged": true,
+    "new_library_sha256": "e39601a17a85e8392ae83197c71bdd1af86c2c2510fc71e35ac9231d5a159ac3",
+    "old_library_sha256": "10f21a6d71ed11497c9a3c72b621d8e7a717cb3c7c7294fdc009f2576e1ee04e",
+    "scope": "CPU loader symbol coexistence only;no GPU initialization or numerical claim"
+  },
+  "legacy_host_tests": {
+    "grouped_gemm_selector_test": {
+      "returncode": 0,
+      "stdout": "SELECTOR_TABLE_PASS cases=80 registry=49\n",
+      "stderr": ""
+    },
+    "grouped_gemm_quant_selector_test": {
+      "returncode": 0,
+      "stdout": "report_tensor_b32 instance=5000 stable=ck.qgg.gfx938.fp8_e4m3xfp8_e4m3_to_bf16.TN.tensorwise.persistent.128x128x32 pass=1\nreport_tensor_b8_hybrid instance=5000 stable=ck.qgg.gfx938.fp8_e4m3xfp8_e5m2_to_fp16.TN.tensorwise.persistent.128x128x32 pass=1\nreport_row_b16_nt instance=5000 stable=ck.qgg.gfx938.fp8_e4m3xfp8_e4m3_to_bf16.NT.rowwise.persistent.128x128x32 pass=1\nreport_row_b16_tn instance=5000 stable=ck.qgg.gfx938.fp8_e5m2xfp8_e5m2_to_bf16.TN.rowwise.persistent.128x128x32 pass=1\nreport_qt_b32 instance=5000 stable=ck.qgg.gfx938.fp8_e4m3xfp8_e4m3_to_bf16.TN.rowwise.persistent.128x128x32 pass=1\nreport_qt_b16 instance=5000 stable=ck.qgg.gfx938.fp8_e4m3xfp8_e4m3_to_bf16.TN.rowwise.persistent.128x128x32 pass=1\nreport_qt_b8 instance=5000 stable=ck.qgg.gfx938.fp8_e5m2xfp8_e5m2_to_bf16.TN.rowwise.persistent.128x128x32 pass=1\ncontrol_tensor_b16 instance=5000 stable=ck.qgg.gfx938.fp8_e4m3xfp8_e5m2_to_fp16.TN.tensorwise.persistent.128x128x32 pass=1\ncontrol_row_b32 instance=5000 stable=ck.qgg.gfx938.fp8_e4m3xfp8_e4m3_to_bf16.NT.rowwise.persistent.128x128x32 pass=1\ncontrol_qt_b32 instance=5000 stable=ck.qgg.gfx938.fp8_e4m3xfp8_e4m3_to_bf16.TN.rowwise.persistent.128x128x32 pass=1\nblockwise_nn instance=5001 stable=ck.qgg.gfx938.fp8_e4m3xfp8_e4m3_to_fp16.NN.blockwise.persistent.128x128x128 pass=1\nblockwise_nt instance=5001 stable=ck.qgg.gfx938.fp8_e5m2xfp8_e4m3_to_bf16.NT.blockwise.persistent.128x128x128 pass=1\ntensor_nn instance=5000 stable=ck.qgg.gfx938.fp8_e4m3xfp8_e5m2_to_fp16.NN.tensorwise.persistent.128x128x32 pass=1\nrow_nt instance=5000 stable=ck.qgg.gfx938.fp8_e5m2xfp8_e4m3_to_bf16.NT.rowwise.persistent.128x128x32 pass=1\nblockwise_tn instance=5001 stable=ck.qgg.gfx938.fp8_e4m3xfp8_e5m2_to_bf16.TN.blockwise.persistent.128x128x128 pass=1\ngfx946_control instance=5000 stable=ck.qgg.gfx946.fp8_e4m3xfp8_e4m3_to_bf16.TN.tensorwise.persistent.128x128x32 pass=1\nquant grouped GEMM selector failures=0\n",
+      "stderr": ""
+    }
+  },
+  "existing_public_sources_unchanged": {
+    "include/ck_tile/ops/gemm/grouped_gemm_selector.hpp": "dcc344d49aa13c4e22f02567cf12081e261e99ffb5b243e50983890c1ac08b4f",
+    "include/ck_tile/ops/gemm/grouped_gemm_device_args.h": "45ef94020156023aee585dc56ed77d1bdee65533f350bff03bffcb3db9592a02",
+    "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args.cpp": "75a76d0029ad7a65e65be65d7238598e7cee199e59a4c0eae589565a826bf81c",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/instances.cpp": "349b08225b5f2d783278663dde4eb05823d0a0b1db38a37955993fff9822b91e",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/grouped_int8_nt_wasp_pipeline.hpp": "083291bb58f4e24d5304d97e659a1af2f67bf5d2dfbd320e69d22fd2140975a3",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/grouped_int8_nt_wasp_problem.hpp": "e0834d68ac775e959ae87f7d97a3c7c7505a12af6f51ae440bb4382ae7c6fb76",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/grouped_int8_nt_wasp_epilogue.hpp": "1e84f0545089a1386e6c51214b3c45f66726c702ff1c71eccf3183c2daeb39bc",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/grouped_int8_nt_wasp_kernel.hpp": "abcd76e0ea422feeef15982ac58bc263f7b8226182c6e3f20c49a1f14ccb20fe",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/grouped_int8_nt_wasp_fallback.hpp": "1611b7e11c0590c43e88335f1c9aa99e83d41df5947c6ab229787c00d0948e39"
+  },
+  "new_source_hashes": {
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/cached_weights/selector.hpp": "d399b75e2dbaae6b458aedaf18a95d05e1bd1f7a9afebb6aa360c807b9c28945",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/cached_weights/pack_kernel.hpp": "ed282e5aa558cf255c97c01a462f83df5de5504f701448c765119dfe07a91b60",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/cached_weights/ck_tile_int8_nt_cached.h": "f1bccd7bc784c8e16f3bc181b723c9df064c184b74f7217c59da331f192d5128",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/cached_weights/cached_dispatch.cpp": "31165499fe3255317adc9eadd5582cda68ce35c8360f6ab8f43ed27770ea957b",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/cached_weights/kernel.hpp": "30a50048d270b196215bded949b08a1e986e1321f5b94232fd49c7ff8c4357e4",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/cached_weights/benchmark_bridge.cpp": "d7e969452eb30cf9f0f794bec56917421d9cd94e015d057ec545791a24b71a1e",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/cached_weights/CMakeLists.txt": "73479c726e84defc12ba4644f6373fc243f543e9d5c3fb10ec1fa63779ee4c5e",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/cached_weights/cached_api.cpp": "d755c3d9d5bd734e0d714630a0b29e0b59b5bd48bd7995cb473bc3df3af1bd1f",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/cached_weights/pipeline.hpp": "fcbe1540ad4b86d9c5102ee41ad6672942c4fe40d802499fe37d7071d5843f20",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/cached_weights/epilogue.hpp": "d865680d8900b554464c053af076b376eb2166c2d738ba853d5946ee457ef3bb",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/cached_weights/README.md": "349c478ef8db11ccb8ebb9e81a945305bb9732b45034378ac3f9cccb5d9729dd",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/cached_weights/problem.hpp": "0f45ff0ca7416a5e9317d3f386b6ed0065bbaf9ed7ea783e1339d269246f431a",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/cached_weights/tests/test_lifetime.py": "75a3c3398b9b71ee0a046f7556f8fcfc7bee016a4dc1418e574d172faf46f2e8",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/cached_weights/tests/bindings.py": "297bcc15c8d12855f36336f40d1d4c7806d359f54340ffbd4c1c5e3f543e3f8c",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/cached_weights/tests/test_cached_api.py": "6f8609b28a2369427aa04852fe680574078d5d74a7c109a68cfd00c5cf757925",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/cached_weights/tests/__pycache__/bindings.cpython-310.pyc": "9e3321baba8ee6194d1f3243d3ca8d85734547bed8a95b47cbaf34c28ac9e511"
+  },
+  "gpu_boundary_attempt": "Failed before first GPU allocation;no new GPU kernel executed",
+  "runtime_controls": {
+    "ldd_new_api": "\tlinux-vdso.so.1 (0x00007ffd274fe000)\n\tlibgalaxyhip.so.5 => /opt/dtk/lib/libgalaxyhip.so.5 (0x00007f2f6ab0e000)\n\tlibstdc++.so.6 => /lib/x86_64-linux-gnu/libstdc++.so.6 (0x00007f2f6a8d3000)\n\tlibm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007f2f6a7ec000)\n\tlibgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x00007f2f6a7ca000)\n\tlibc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f2f6a5a1000)\n\t/lib64/ld-linux-x86-64.so.2 (0x00007f2f6b779000)\n\tlibpthread.so.0 => /lib/x86_64-linux-gnu/libpthread.so.0 (0x00007f2f6a59c000)\n\tlibrt.so.1 => /lib/x86_64-linux-gnu/librt.so.1 (0x00007f2f6a597000)\n\tlibnuma.so.1 => /lib/x86_64-linux-gnu/libnuma.so.1 (0x00007f2f6a58a000)\n\tlibdl.so.2 => /lib/x86_64-linux-gnu/libdl.so.2 (0x00007f2f6a585000)\n",
+    "ldd_new_benchmark": "\tlinux-vdso.so.1 (0x00007fffe4a9e000)\n\tlibck_tile_int8_nt_cached.so => /workspace/GroupGemm/composable_kernel/example_hcu/ck_tile/24_grouped_gemm_int8_nt/build/cached_v97/libck_tile_int8_nt_cached.so (0x00007f1fed2da000)\n\tlibgalaxyhip.so.5 => /opt/dtk/lib/libgalaxyhip.so.5 (0x00007f1fec704000)\n\tlibstdc++.so.6 => /lib/x86_64-linux-gnu/libstdc++.so.6 (0x00007f1fec4c9000)\n\tlibm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007f1fec3e0000)\n\tlibgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x00007f1fec3c0000)\n\tlibc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f1fec197000)\n\t/lib64/ld-linux-x86-64.so.2 (0x00007f1fed374000)\n\tlibpthread.so.0 => /lib/x86_64-linux-gnu/libpthread.so.0 (0x00007f1fec192000)\n\tlibrt.so.1 => /lib/x86_64-linux-gnu/librt.so.1 (0x00007f1fec18d000)\n\tlibnuma.so.1 => /lib/x86_64-linux-gnu/libnuma.so.1 (0x00007f1fec180000)\n\tlibdl.so.2 => /lib/x86_64-linux-gnu/libdl.so.2 (0x00007f1fec179000)\n",
+    "ldd_known_probe": "\tlinux-vdso.so.1 (0x00007ffc7e77d000)\n\tlibgalaxyhip.so.5 => /opt/dtk/lib/libgalaxyhip.so.5 (0x00007fd8f6638000)\n\tlibstdc++.so.6 => /lib/x86_64-linux-gnu/libstdc++.so.6 (0x00007fd8f63fd000)\n\tlibm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007fd8f6316000)\n\tlibgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x00007fd8f62f4000)\n\tlibc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007fd8f60cb000)\n\tlibpthread.so.0 => /lib/x86_64-linux-gnu/libpthread.so.0 (0x00007fd8f60c6000)\n\tlibrt.so.1 => /lib/x86_64-linux-gnu/librt.so.1 (0x00007fd8f60c1000)\n\tlibnuma.so.1 => /lib/x86_64-linux-gnu/libnuma.so.1 (0x00007fd8f60b4000)\n\tlibdl.so.2 => /lib/x86_64-linux-gnu/libdl.so.2 (0x00007fd8f60af000)\n\t/lib64/ld-linux-x86-64.so.2 (0x00007fd8f72a6000)\n",
+    "torch_only": {
+      "returncode": 1,
+      "stdout": "2.9.0 6.3.26113 1 False\n",
+      "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"/usr/local/lib/python3.10/dist-packages/torch/cuda/__init__.py\", line 582, in get_device_name\n    return get_device_properties(device).name\n  File \"/usr/local/lib/python3.10/dist-packages/torch/cuda/__init__.py\", line 614, in get_device_properties\n    _lazy_init()  # will define _get_device_properties\n  File \"/usr/local/lib/python3.10/dist-packages/torch/cuda/__init__.py\", line 410, in _lazy_init\n    torch._C._cuda_init()\nRuntimeError: No HIP GPUs are available\n"
+    },
+    "known_probe_before_init": {
+      "returncode": 1,
+      "stdout": "1 False\n",
+      "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"/usr/local/lib/python3.10/dist-packages/torch/cuda/__init__.py\", line 582, in get_device_name\n    return get_device_properties(device).name\n  File \"/usr/local/lib/python3.10/dist-packages/torch/cuda/__init__.py\", line 614, in get_device_properties\n    _lazy_init()  # will define _get_device_properties\n  File \"/usr/local/lib/python3.10/dist-packages/torch/cuda/__init__.py\", line 410, in _lazy_init\n    torch._C._cuda_init()\nRuntimeError: No HIP GPUs are available\n"
+    },
+    "new_api_before_init": {
+      "returncode": 1,
+      "stdout": "1 False\n",
+      "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"/usr/local/lib/python3.10/dist-packages/torch/cuda/__init__.py\", line 582, in get_device_name\n    return get_device_properties(device).name\n  File \"/usr/local/lib/python3.10/dist-packages/torch/cuda/__init__.py\", line 614, in get_device_properties\n    _lazy_init()  # will define _get_device_properties\n  File \"/usr/local/lib/python3.10/dist-packages/torch/cuda/__init__.py\", line 410, in _lazy_init\n    torch._C._cuda_init()\nRuntimeError: No HIP GPUs are available\n"
+    },
+    "new_benchmark_before_init": {
+      "returncode": 1,
+      "stdout": "1 False\n",
+      "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"/usr/local/lib/python3.10/dist-packages/torch/cuda/__init__.py\", line 582, in get_device_name\n    return get_device_properties(device).name\n  File \"/usr/local/lib/python3.10/dist-packages/torch/cuda/__init__.py\", line 614, in get_device_properties\n    _lazy_init()  # will define _get_device_properties\n  File \"/usr/local/lib/python3.10/dist-packages/torch/cuda/__init__.py\", line 410, in _lazy_init\n    torch._C._cuda_init()\nRuntimeError: No HIP GPUs are available\n"
+    },
+    "new_api_after_init": {
+      "returncode": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"/usr/local/lib/python3.10/dist-packages/torch/cuda/__init__.py\", line 582, in get_device_name\n    return get_device_properties(device).name\n  File \"/usr/local/lib/python3.10/dist-packages/torch/cuda/__init__.py\", line 614, in get_device_properties\n    _lazy_init()  # will define _get_device_properties\n  File \"/usr/local/lib/python3.10/dist-packages/torch/cuda/__init__.py\", line 410, in _lazy_init\n    torch._C._cuda_init()\nRuntimeError: No HIP GPUs are available\n"
+    }
+  },
+  "visibility_checks": [
+    {
+      "env": {
+        "DTK_VISIBLE_DEVICES": "7",
+        "HIP_VISIBLE_DEVICES": "0",
+        "CUDA_VISIBLE_DEVICES": "0"
+      },
+      "returncode": 1,
+      "stdout": "1 False\n",
+      "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"/usr/local/lib/python3.10/dist-packages/torch/cuda/__init__.py\", line 614, in get_device_properties\n    _lazy_init()  # will define _get_device_properties\n  File \"/usr/local/lib/python3.10/dist-packages/torch/cuda/__init__.py\", line 410, in _lazy_init\n    torch._C._cuda_init()\nRuntimeError: No HIP GPUs are available\n"
+    },
+    {
+      "env": {
+        "DTK_VISIBLE_DEVICES": "7"
+      },
+      "returncode": 1,
+      "stdout": "8 False\n",
+      "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"/usr/local/lib/python3.10/dist-packages/torch/cuda/__init__.py\", line 614, in get_device_properties\n    _lazy_init()  # will define _get_device_properties\n  File \"/usr/local/lib/python3.10/dist-packages/torch/cuda/__init__.py\", line 410, in _lazy_init\n    torch._C._cuda_init()\nRuntimeError: No HIP GPUs are available\n"
+    },
+    {
+      "env": {
+        "HIP_VISIBLE_DEVICES": "7",
+        "CUDA_VISIBLE_DEVICES": "7"
+      },
+      "returncode": 1,
+      "stdout": "1 False\n",
+      "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"/usr/local/lib/python3.10/dist-packages/torch/cuda/__init__.py\", line 614, in get_device_properties\n    _lazy_init()  # will define _get_device_properties\n  File \"/usr/local/lib/python3.10/dist-packages/torch/cuda/__init__.py\", line 410, in _lazy_init\n    torch._C._cuda_init()\nRuntimeError: No HIP GPUs are available\n"
+    }
+  ],
+  "native_hip": "native_hipGetDeviceCount 100 b'no ROCm-capable device is detected' 0\nloaded_runtime ['7f50f1a00000-7f50f1a51000 r-xp 00000000 103:04 23201369                  /usr/local/hyhal/lib/libhydmi.so.1.5', '7f50f1a51000-7f50f1c51000 ---p 00051000 103:04 23201369                  /usr/local/hyhal/lib/libhydmi.so.1.5', '7f50f1c51000-7f50f1c52000 r--p 00051000 103:04 23201369                  /usr/local/hyhal/lib/libhydmi.so.1.5', '7f50f1c52000-7f50f1c53000 rw-p 00052000 103:04 23201369                  /usr/local/hyhal/lib/libhydmi.so.1.5', '7f50f2600000-7f50f284f000 r-xp 00000000 103:04 23201366                  /usr/local/hyhal/lib/libhsa-runtime64.so.1.11.0', '7f50f284f000-7f50f2a4e000 ---p 0024f000 103:04 23201366                  /usr/local/hyhal/lib/libhsa-runtime64.so.1.11.0', '7f50f2a4e000-7f50f2a58000 r--p 0024e000 103:04 23201366                  /usr/local/hyhal/lib/libhsa-runtime64.so.1.11.0', '7f50f2a58000-7f50f2ae2000 rw-p 00258000 103:04 23201366                  /usr/local/hyhal/lib/libhsa-runtime64.so.1.11.0', '7f50fc6c0000-7f50fc6f0000 r--p 00000000 103:04 25694970                  /opt/dtk/hip/lib/libgalaxyhip.so.5.2.26113.2065-6699a1f0', '7f50fc6f0000-7f50fcfa8000 r-xp 00030000 103:04 25694970                  /opt/dtk/hip/lib/libgalaxyhip.so.5.2.26113.2065-6699a1f0', '7f50fcfa8000-7f50fd26b000 r--p 008e8000 103:04 25694970                  /opt/dtk/hip/lib/libgalaxyhip.so.5.2.26113.2065-6699a1f0', '7f50fd26b000-7f50fd275000 r--p 00baa000 103:04 25694970                  /opt/dtk/hip/lib/libgalaxyhip.so.5.2.26113.2065-6699a1f0', '7f50fd275000-7f50fd288000 rw-p 00bb4000 103:04 25694970                  /opt/dtk/hip/lib/libgalaxyhip.so.5.2.26113.2065-6699a1f0']\n",
+  "rocminfo": "\u001b[37mC-3000 hycu module is loaded\u001b[0m\n\u001b[31mhsa api call failure at: /data/jenkins_workspace/workspace/galaxy_release/galaxy/rocminfo/rocminfo.cc:1230\n\u001b[31mCall returned HSA_STATUS_ERROR_OUT_OF_RESOURCES: The runtime failed to allocate the necessary resources. This error may also occur when the core runtime library needs to spawn threads or create internal OS-specific events.\n\u001b[0m",
+  "device_access": {
+    "/dev/kfd": "open PASS",
+    "/dev/dri/renderD135": "open PASS",
+    "cgroup": "0::/\n",
+    "limits": "Limit                     Soft Limit           Hard Limit           Units     \nMax cpu time              unlimited            unlimited            seconds   \nMax file size             unlimited            unlimited            bytes     \nMax data size             unlimited            unlimited            bytes     \nMax stack size            8388608              unlimited            bytes     \nMax core file size        unlimited            unlimited            bytes     \nMax resident set          unlimited            unlimited            bytes     \nMax processes             unlimited            unlimited            processes \nMax open files            1048576              1048576              files     \nMax locked memory         unlimited            unlimited            bytes     \nMax address space         unlimited            unlimited            bytes     \nMax file locks            unlimited            unlimited            locks     \nMax pending signals       2062388              2062388              signals   \nMax msgqueue size         819200               819200               bytes     \nMax nice priority         0                    0                    \nMax realtime priority     0                    0                    \nMax realtime timeout      unlimited            unlimited            us        \n"
+  }
+}
