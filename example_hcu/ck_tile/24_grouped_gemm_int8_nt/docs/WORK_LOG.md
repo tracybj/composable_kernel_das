@@ -296,3 +296,5 @@ Native fragment/full port failed. Static A/B reconstruction passes; ordered MMAC
 ## Iteration70 original344 large-M screen launched
 
 Freeze iteration69,6 one-barrier candidates plus current-default instance. Bounded whole-output validation. Running; no completion/target claim. See iteration_70_large_screen.md.
+
+Iteration70 completed:344/344 original shapes,2408 numerical output checks PASS. Oracle {'shapes': 344, 'ge1': 109, 'ge05': 344, 'min_R': 0.7587955956334363, 'median_R': 0.9542826236407698}; same-build default {'shapes': 344, 'ge1': 11, 'ge05': 329, 'min_R': 0.45609053335500704, 'median_R': 0.6110435596582857}. No public promotion. See full CSVs/audit.
