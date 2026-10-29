@@ -247,3 +247,7 @@ All3 full-output/input/guard checks PASS,9 target dispatches. Direct B reduces a
 ## Iteration54 internal transposed mapping
 
 External inputs/output unchanged; scalar contiguous stores from internal B*A^T.66 full-range and32 performance-output checks PASS;243 VGPRs,zero scratch/spills. Gains vary with shape; frozen targets not reached. No public default promotion. See iteration_54_transposed_mapping.md.
+
+## Iteration55 bulk raw copy
+
+88 full-range and40 performance-output checks PASS,243-244 VGPRs,no scratch/spills. Hoisted offsets/bulk m0/scalar descriptor advancement give only small shape-dependent gains. Both internal orientations retained as experiments. No default change. See iteration_55_hoisted_copy.md.
