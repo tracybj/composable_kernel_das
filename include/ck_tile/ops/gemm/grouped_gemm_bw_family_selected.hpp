@@ -62,12 +62,15 @@ inline bool ck_tile_hcu_grouped_gemm_bf16_v8_tn_enabled()
 // reference kernels' level (a wrapping tile loop costs 40 VGPRs and ~20%) -- so
 // the launcher has to size a flat grid, and per-group M is device-resident. The
 // bound comes from the host-visible problem dimensions and is never read back.
+// NN also takes `tiles_per_group`: the common per-group tile count when the
+// problem states one (the O(1) group lookup), else 0.
 extern "C" int ck_tile_hcu_grouped_gemm_v7_bf16_nn_device_args(
     void* device_args,
     int group_count,
     std::uint32_t num_cu,
     hipStream_t stream,
-    std::uint64_t tile_slots);
+    std::uint64_t tile_slots,
+    std::int32_t tiles_per_group);
 extern "C" int ck_tile_hcu_grouped_gemm_v8_bf16_tn_device_args(
     void* device_args,
     int group_count,

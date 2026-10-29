@@ -113,9 +113,18 @@ struct GroupedGemmSelectorPolicy
     bool enable_bf16_v8_tn = false;
 };
 
-// The v7 kernels carry their group table in the kernel argument, and that
-// table is fixed at 16.
-constexpr std::int32_t kGroupedGemmV7MaxGroups = 16;
+// Group-count bounds of the v7 instances. The kernels read the group table
+// through the device kargs pointer, so G is bounded by what each kernel's
+// group lookup was validated for, not by a table size. NN (5000) locates the
+// group in O(1) for a common M and by a 64-wide wave scan otherwise; TN (5001)
+// keeps the scalar scan and has only been validated up to 16 groups.
+constexpr std::int32_t kGroupedGemmV7NnMaxGroups = 1024;
+constexpr std::int32_t kGroupedGemmV8TnMaxGroups = 16;
+
+// The v7 kernels address their tiles with index_t block ids and tile prefix
+// sums. The gate leaves headroom below INT32_MAX for the launcher's round-up to
+// whole CTA slots.
+constexpr std::int64_t kGroupedGemmV7MaxTiles = std::int64_t{1} << 30;
 
 enum class GroupedGemmInstanceId
 {
@@ -307,6 +316,22 @@ constexpr std::int64_t grouped_gemm_selector_k_extent(const GroupedGemmProblem& 
                : problem.k.extent;
 }
 
+// Upper bound on the v7 (group, m tile, n tile) count, from host-visible
+// lengths/capacities only. A common M is every group's length; a device-resident
+// M is bounded by its capacity, and each group can round up to its own tile, so
+// ceil(capacity / 256) + group_count bounds the summed row tiles. The launcher
+// sizes its grid from this same bound (grouped_gemm_v7_uniform_launch.hpp).
+constexpr std::int64_t grouped_gemm_v7_tile_bound(const GroupedGemmProblem& problem)
+{
+    const std::int64_t groups  = problem.group_count > 0 ? problem.group_count : 1;
+    const std::int64_t n_tiles = (problem.n.extent + 255) / 256;
+    const bool device_m =
+        problem.m.kind == GroupedGemmDimensionKind::device_lengths_with_capacity;
+    const std::int64_t m_tiles = device_m ? (problem.m.extent + 255) / 256 + groups
+                                          : (problem.m.extent + 255) / 256 * groups;
+    return m_tiles * n_tiles;
+}
+
 constexpr GroupedGemmSelection select_grouped_gemm_candidate(
     const GroupedGemmProblem& problem,
     const GroupedGemmSelectorPolicy& policy = {})
@@ -364,8 +389,11 @@ constexpr GroupedGemmSelection select_grouped_gemm_candidate(
     //   common K                  -- the k-advance of both streams is per-launch
     //   non-empty groups          -- not validated for the walk yet; keep the
     //                                fallback until they are
-    //   <= kGroupedGemmV7MaxGroups -- the device-side group table is what
-    //                                bounds the kargs scan at kernel entry
+    //   G <= kGroupedGemmV7NnMaxGroups (NN) / kGroupedGemmV8TnMaxGroups (TN)
+    //                             -- the group counts each kernel's group
+    //                                lookup is validated for
+    //   tile bound <= kGroupedGemmV7MaxTiles
+    //                             -- block ids and tile prefix sums are index_t
     //   gfx936                    -- the kernels' ISA contract (v7 loads, the
     //                                CACHE_SWIZZLE descriptor bit)
     // TN additionally requires an M that the launcher can address: its A panel
@@ -378,14 +406,16 @@ constexpr GroupedGemmSelection select_grouped_gemm_candidate(
     // is therefore allowed; the caller owns the pad.
     const bool v7_contract =
         problem.arch == GroupedGemmArch::gfx936 && !has_variable_k &&
-        problem.group_count <= kGroupedGemmV7MaxGroups &&
+        grouped_gemm_v7_tile_bound(problem) <= kGroupedGemmV7MaxTiles &&
         !problem.may_have_empty_groups && k >= 64 && k % 16 == 0 && n % 256 == 0;
-    if(v7_contract && is_bf16 && is_nn && policy.enable_bf16_v7_nn)
+    if(v7_contract && problem.group_count <= kGroupedGemmV7NnMaxGroups && is_bf16 &&
+       is_nn && policy.enable_bf16_v7_nn)
     {
         return {GroupedGemmInstanceId::v7_bf16_nn,
                 GroupedGemmSelectionReason::v7_bf16_nn};
     }
-    if(v7_contract && is_bf16 && is_tn && policy.enable_bf16_v8_tn)
+    if(v7_contract && problem.group_count <= kGroupedGemmV8TnMaxGroups && is_bf16 &&
+       is_tn && policy.enable_bf16_v8_tn)
     {
         return {GroupedGemmInstanceId::v8_bf16_tn,
                 GroupedGemmSelectionReason::v8_bf16_tn};

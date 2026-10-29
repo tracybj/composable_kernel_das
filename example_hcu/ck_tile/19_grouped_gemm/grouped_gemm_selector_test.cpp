@@ -690,11 +690,75 @@ int compare_golden(const std::string& golden_path, const std::string& diff_path)
 
 } // namespace
 
+// The v7 group-count and tile bounds: each opted-in route is taken exactly up
+// to its bound and falls back past it.
+int run_v7_bound_tests()
+{
+    GroupedGemmSelectorPolicy v7 = {};
+    v7.enable_bf16_v7_nn         = true;
+    v7.enable_bf16_v8_tn         = true;
+
+    auto nn = [](std::int32_t groups, std::int64_t m, std::int64_t n) {
+        return make_fixed_m_problem(GroupedGemmArch::gfx936, GroupedGemmDataType::bf16,
+                                    GroupedGemmLayout::nn, groups, m, n, 4096);
+    };
+    auto nn_device_m = [](std::int32_t groups, std::int64_t capacity) {
+        return make_problem(GroupedGemmArch::gfx936, GroupedGemmDataType::bf16,
+                            GroupedGemmLayout::nn, groups, capacity, 4096, 4096);
+    };
+    auto tn = [](std::int32_t groups) {
+        auto problem = make_problem(GroupedGemmArch::gfx936, GroupedGemmDataType::bf16,
+                                    GroupedGemmLayout::tn, groups, 4096, 4096, 4096);
+        problem.k = GroupedGemmDimensionSummary::Common(4096);
+        return problem;
+    };
+    struct BoundCase
+    {
+        const char* name;
+        GroupedGemmProblem problem;
+        bool expect_v7;
+    };
+    const std::vector<BoundCase> cases{
+        {"NN G=16", nn(16, 2048, 4096), true},
+        {"NN G=17", nn(17, 2048, 4096), true},
+        {"NN G=392", nn(392, 1, 3072), true},
+        {"NN G=1024", nn(1024, 64, 4096), true},
+        {"NN G=1025 falls back", nn(1025, 64, 4096), false},
+        {"NN device M G=1024", nn_device_m(1024, 1024 * 64), true},
+        {"NN device M G=1025 falls back", nn_device_m(1025, 1025 * 64), false},
+        // 2^20 m tiles x (262144 / 256 = 2^10) n tiles = 2^30 tiles: the bound itself.
+        {"NN tile bound 2^30", nn(1, std::int64_t{1} << 28, 262144), true},
+        {"NN tile bound + 1 m tile falls back",
+         nn(1, (std::int64_t{1} << 28) + 256, 262144),
+         false},
+        {"TN G=16", tn(16), true},
+        {"TN G=17 falls back", tn(17), false},
+    };
+    int failures = 0;
+    for(const auto& test : cases)
+    {
+        const auto actual = select_grouped_gemm_candidate(test.problem, v7).instance_id;
+        const bool is_v7  = actual == GroupedGemmInstanceId::v7_bf16_nn ||
+                           actual == GroupedGemmInstanceId::v8_bf16_tn;
+        if(is_v7 != test.expect_v7)
+        {
+            std::cerr << "V7_BOUND_MISMATCH name=" << test.name
+                      << " expect_v7=" << test.expect_v7
+                      << " actual=" << static_cast<int>(actual) << '\n';
+            ++failures;
+        }
+    }
+    if(failures == 0)
+        std::cout << "SELECTOR_V7_BOUNDS_PASS cases=" << cases.size() << '\n';
+    return failures;
+}
+
 int main(int argc, char* argv[])
 {
     try
     {
         int failures = run_table_tests();
+        failures += run_v7_bound_tests();
         std::string golden_path;
         std::string diff_path;
         for(int i = 1; i < argc; ++i)

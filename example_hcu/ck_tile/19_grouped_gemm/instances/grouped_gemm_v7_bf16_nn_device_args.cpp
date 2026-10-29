@@ -12,7 +12,7 @@
 // CONTRACT (enforced by the CK selector, not here): bf16 in, bf16 out, gfx936,
 // NN layout (A [M_g, K] row-major, B [K, N] row-major, D [M_g, N] row-major),
 // K % 16 == 0, K >= 64 (the 4-stage ring), N % 256 == 0,
-// 1 <= G <= kGroupedGemmV7MaxGroups, positive group lengths. A group's M may
+// 1 <= G <= kGroupedGemmV7NnMaxGroups, positive group lengths. A group's M may
 // be ragged -- the epilogue masks rows past M_g.
 //
 // This TU is compiled under the v7 codegen contract (see CMakeLists.txt: the
@@ -30,10 +30,11 @@ extern "C" int ck_tile_hcu_grouped_gemm_v7_bf16_nn_device_args(
     int group_count,
     std::uint32_t num_cu,
     hipStream_t stream,
-    std::uint64_t tile_slots) {
+    std::uint64_t tile_slots,
+    ck_tile::index_t tiles_per_group) {
     (void)num_cu;   // the grid is sized by tile_slots, not by the CU count
     if (device_args == nullptr || group_count <= 0 ||
-        group_count > ck_tile::kGroupedGemmV7MaxGroups || tile_slots == 0) {
+        group_count > ck_tile::kGroupedGemmV7NnMaxGroups || tile_slots == 0) {
         return -1;
     }
 
@@ -48,5 +49,6 @@ extern "C" int ck_tile_hcu_grouped_gemm_v7_bf16_nn_device_args(
                               ck_tile::bf16_t>(device_args,
                                                group_count,
                                                tile_slots,
+                                               tiles_per_group,
                                                stream);
 }

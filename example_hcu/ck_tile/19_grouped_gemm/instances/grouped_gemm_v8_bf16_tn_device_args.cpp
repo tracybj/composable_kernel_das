@@ -32,7 +32,7 @@ extern "C" int ck_tile_hcu_grouped_gemm_v8_bf16_tn_device_args(
     std::uint64_t tile_slots) {
     (void)num_cu;   // the grid is sized by tile_slots, not by the CU count
     if (device_args == nullptr || group_count <= 0 ||
-        group_count > ck_tile::kGroupedGemmV7MaxGroups || tile_slots == 0) {
+        group_count > ck_tile::kGroupedGemmV8TnMaxGroups || tile_slots == 0) {
         return -1;
     }
 
@@ -47,5 +47,6 @@ extern "C" int ck_tile_hcu_grouped_gemm_v8_bf16_tn_device_args(
                               ck_tile::bf16_t>(device_args,
                                                group_count,
                                                tile_slots,
+                                               0,   // TN keeps the scalar scan
                                                stream);
 }

@@ -12,6 +12,8 @@
 //     m tile, n tile) by a tile prefix sum over the groups' M/N (see
 //     GroupedGemmV7UniformKernel; the kargs' block_start/block_end are not
 //     read, device-args callers need not fill them) and runs exactly ONE tile.
+//     For a large table with a common M the dispatch also passes the per-group
+//     tile count (tiles_per_group() below), which turns the lookup into O(1).
 //     The kernel cannot be made persistent: this pipeline's register budget
 //     (215 VGPR, 0 spill, the reference kernel's numbers) only survives when no
 //     loop wraps its k loop -- see the pipeline header.
@@ -25,6 +27,7 @@
 #include <hip/hip_runtime.h>
 
 #include <cstdint>
+#include <limits>
 
 #include "ck_tile/core.hpp"
 #include "ck_tile/host.hpp"
@@ -111,15 +114,26 @@ namespace v7_uniform_launch {
 inline std::uint64_t block_id_range(const ck_tile::GroupedGemmProblem& problem,
                                     std::uint32_t num_cu)
 {
-    const std::int64_t groups    = problem.group_count > 0 ? problem.group_count : 1;
-    const std::int64_t n_tiles   = (problem.n.extent + 255) / 256;
-    const bool device_m =
-        problem.m.kind == ck_tile::GroupedGemmDimensionKind::device_lengths_with_capacity;
-    const std::int64_t m_tiles = device_m ? (problem.m.extent + 255) / 256 + groups
-                                          : (problem.m.extent + 255) / 256 * groups;
-    const std::uint64_t tiles  = static_cast<std::uint64_t>(m_tiles * n_tiles);
-    const std::uint64_t slots  = num_cu > 0 ? num_cu : 1;
+    const std::uint64_t tiles =
+        static_cast<std::uint64_t>(ck_tile::grouped_gemm_v7_tile_bound(problem));
+    const std::uint64_t slots = num_cu > 0 ? num_cu : 1;
     return (tiles + slots - 1) / slots * slots;
+}
+
+// The O(1) group lookup's tile count per group (GroupedGemmV7UniformKernel), or
+// 0 to keep the scans. Only a common M with no ragged flag states that every
+// group has the same tile count; small tables keep the scalar scan they were
+// tuned with.
+inline ck_tile::index_t tiles_per_group(const ck_tile::GroupedGemmProblem& problem)
+{
+    if(problem.group_count <= ck_tile::kGroupedGemmV7ScalarScanMaxGroups ||
+       problem.m.kind != ck_tile::GroupedGemmDimensionKind::common ||
+       problem.group_lengths_are_ragged)
+    {
+        return 0;
+    }
+    return static_cast<ck_tile::index_t>(((problem.m.extent + 255) / 256) *
+                                         ((problem.n.extent + 255) / 256));
 }
 
 template <typename Config,
@@ -133,6 +147,7 @@ template <typename Config,
 inline int launch(const void* kargs_dev,
                   int group_count,
                   std::uint64_t tile_slots,
+                  ck_tile::index_t tiles_per_group,
                   hipStream_t stream)
 {
     using Shape = ck_tile::TileGemmShape<
@@ -179,7 +194,10 @@ inline int launch(const void* kargs_dev,
     using Kernel = ck_tile::GroupedGemmV7UniformKernel<
         ck_tile::GroupedGemmKernel<Partitioner, Pipeline, Epilogue>>;
 
-    if(kargs_dev == nullptr || group_count <= 0 || tile_slots == 0)
+    // The grid is one CTA per tile slot and the kernel's block ids are index_t.
+    if(kargs_dev == nullptr || group_count <= 0 || tile_slots == 0 ||
+       tile_slots > static_cast<std::uint64_t>(std::numeric_limits<ck_tile::index_t>::max()) ||
+       tiles_per_group < 0)
     {
         return -1;
     }
@@ -193,7 +211,8 @@ inline int launch(const void* kargs_dev,
         block,
         Kernel::GetSmemSize(),
         ck_tile::cast_pointer_to_constant_address_space(kargs_dev),
-        group_count);
+        group_count,
+        tiles_per_group);
     ck_tile::launch_kernel(ck_tile::stream_config{stream}, kernel);
     return 0;
 }

@@ -1420,6 +1420,11 @@ struct GroupedGemmWaspKernel
     }
 };
 
+// Group counts up to this bound locate the group with the scalar scan below;
+// larger tables use the 64-wide wave scan, or the O(1) path when the launcher
+// passes a common tile count per group.
+constexpr index_t kGroupedGemmV7ScalarScanMaxGroups = 16;
+
 // Entry for the v7/v8 uniform pipelines (one 256x256 tile per CTA, flat
 // non-persistent grid sized from a host-side bound). The block id -> (group,
 // tile) mapping is derived on the device from each group's M/N, the same tile
@@ -1427,6 +1432,16 @@ struct GroupedGemmWaspKernel
 // build the GemmTransKernelArg array on the GPU and need not fill those two
 // fields, so they are not read here; callers that do fill them get the same
 // mapping.
+//
+// The scalar scan costs one dependent s_load per group walked (~300 cycles
+// each, measured), O(G) per CTA, and a CTA owns its CU, so nothing hides it.
+// Past kGroupedGemmV7ScalarScanMaxGroups the lookup is therefore either
+//   * O(1): `tiles_per_group` > 0 states that every group has that many tiles
+//     (the launcher derives it from a common M/N in the problem summary); the
+//     group's own M/N still bound the tile, so a shorter group's surplus CTAs
+//     exit instead of computing past it; or
+//   * a wave scan: each lane reads one group, a wave prefix sum and a ballot
+//     locate the group 64 groups per round.
 template <typename GroupedKernel>
 struct GroupedGemmV7UniformKernel
 {
@@ -1445,8 +1460,53 @@ struct GroupedGemmV7UniformKernel
         return GroupedKernel::GetSmemSize();
     }
 
+    // Every wave runs the same scan, so the result is wave-uniform; it leaves
+    // group_id == group_count when block_id is past the last group's tiles.
+    CK_TILE_DEVICE static void FindGroupByWaveScan(const TransKernelArg* descs,
+                                                   index_t group_count,
+                                                   index_t block_id,
+                                                   index_t& group_id,
+                                                   index_t& tile_begin)
+    {
+        static_assert(get_warp_size() == 64, "the scan is 64 groups per round");
+        const index_t lane = get_lane_id();
+        index_t begin      = 0;
+        index_t found      = group_count;
+        for(index_t base = 0; base < group_count; base += 64)
+        {
+            const index_t g = base + lane;
+            index_t tiles   = 0;
+            if(g < group_count)
+            {
+                const auto& karg = descs[g].group_karg;
+                tiles            = TilePartitioner::GridSize(karg.M, karg.N);
+            }
+            index_t inclusive = tiles;
+            for(index_t offset = 1; offset < 64; offset <<= 1)
+            {
+                const index_t lower = warp_shuffle_up(inclusive, offset);
+                if(lane >= offset)
+                {
+                    inclusive += lower;
+                }
+            }
+            const auto hit = __ballot(g < group_count && block_id < begin + inclusive);
+            if(hit != 0)
+            {
+                const index_t first = __builtin_ctzll(hit);
+                found               = base + first;
+                begin += warp_shuffle(inclusive - tiles, first);
+                break;
+            }
+            begin += warp_shuffle(inclusive, 63);
+        }
+        group_id   = __builtin_amdgcn_readfirstlane(found);
+        tile_begin = __builtin_amdgcn_readfirstlane(begin);
+    }
+
     CK_TILE_DEVICE void operator()(const void CK_TILE_CONSTANT_ADDRESS_SPACE* gemm_descs_const,
-                                   index_t group_count) const
+                                   index_t group_count,
+                                   index_t tiles_per_group) const
     {
         static_assert(is_grouped_gemm_v7_uniform_pipeline<GemmPipeline>::value);
 
@@ -1454,20 +1514,32 @@ struct GroupedGemmV7UniformKernel
             cast_pointer_to_generic_address_space(gemm_descs_const));
         const index_t block_id = get_block_1d_id();
 
-        // Locate the group only; the tile runs once, outside the scan (a loop
-        // around the pipeline breaks its register budget). An empty group
-        // contributes no tiles and is skipped by the scan itself.
+        // Locate the group only; the tile runs once, outside the lookup (a
+        // loop around the pipeline breaks its register budget). An empty group
+        // contributes no tiles and is skipped by the scans themselves.
         index_t group_id   = 0;
         index_t tile_begin = 0;
-        for(; group_id < group_count; ++group_id)
+        if(tiles_per_group > 0)
         {
-            const auto& karg    = descs[group_id].group_karg;
-            const index_t tiles = TilePartitioner::GridSize(karg.M, karg.N);
-            if(block_id < tile_begin + tiles)
+            group_id   = block_id / tiles_per_group;
+            tile_begin = group_id * tiles_per_group;
+        }
+        else if(group_count <= kGroupedGemmV7ScalarScanMaxGroups)
+        {
+            for(; group_id < group_count; ++group_id)
             {
-                break;
+                const auto& karg    = descs[group_id].group_karg;
+                const index_t tiles = TilePartitioner::GridSize(karg.M, karg.N);
+                if(block_id < tile_begin + tiles)
+                {
+                    break;
+                }
+                tile_begin += tiles;
             }
-            tile_begin += tiles;
+        }
+        else
+        {
+            FindGroupByWaveScan(descs, group_count, block_id, group_id, tile_begin);
         }
         // The host-side grid bound over-covers the tile count; the surplus
         // CTAs land past the last group.
@@ -1477,7 +1549,10 @@ struct GroupedGemmV7UniformKernel
         }
 
         const auto& kargs = descs[group_id].group_karg;
-        if(kargs.K == 0 || !GroupedKernel::ShouldProcessM(kargs.M))
+        // The scans only land inside a group's tiles; the O(1) path checks it.
+        if(kargs.K == 0 || !GroupedKernel::ShouldProcessM(kargs.M) ||
+           (tiles_per_group > 0 &&
+            block_id - tile_begin >= TilePartitioner::GridSize(kargs.M, kargs.N)))
         {
             return;
         }

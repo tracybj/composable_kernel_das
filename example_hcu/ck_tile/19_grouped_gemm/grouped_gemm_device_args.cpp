@@ -55,9 +55,10 @@ ck_tile_hcu_grouped_gemm_bw_family_bf16_nn_rr_fast_vmem3_early_final_barrier_ck_
 // number of CTAs. Their config is non-persistent (one tile per CTA, by
 // construction -- see gemm_pipeline_v7_uniform.hpp), so the launcher has to size the
 // grid, and per-group M is device-resident. The bound is computed from the
-// problem's host-visible lengths/capacities below.
+// problem's host-visible lengths/capacities below. NN also takes the common
+// per-group tile count (0 when the problem does not state one).
 extern "C" int ck_tile_hcu_grouped_gemm_v7_bf16_nn_device_args(
-    void*, int, std::uint32_t, hipStream_t, std::uint64_t);
+    void*, int, std::uint32_t, hipStream_t, std::uint64_t, std::int32_t);
 extern "C" int ck_tile_hcu_grouped_gemm_v8_bf16_tn_device_args(
     void*, int, std::uint32_t, hipStream_t, std::uint64_t);
 #endif
@@ -451,7 +452,8 @@ int dispatch_registry_candidate(const ck_tile::GroupedGemmProblem& problem,
                 groups,
                 launch.num_cu,
                 stream,
-                v7_uniform_launch::block_id_range(problem, launch.num_cu));
+                v7_uniform_launch::block_id_range(problem, launch.num_cu),
+                v7_uniform_launch::tiles_per_group(problem));
 #endif
         break;
     case ck_tile::GroupedGemmInstanceId::v8_bf16_tn:
