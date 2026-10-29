@@ -284,3 +284,7 @@ Native fragment/full port failed. Static A/B reconstruction passes; ordered MMAC
 ## Iteration67 MMAC priority scope
 
 306 boundary and72 performance checks PASS;no scratch/spill. Per-batch priority gives small shape-dependent gains; two controls remain faster. Correct controlled configuration only; no default promotion. See iteration_67_priority.md.
+
+## Iteration68 overlapping A-read/MMAC
+
+204 boundary and48 performance checks PASS;no scratch/spill. Representative best466/572/499/456TOPS, still below fixed targets. Correct controlled configuration only; no default promotion. See iteration_68_a_prefetch.md.
