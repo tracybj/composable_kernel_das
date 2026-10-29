@@ -255,3 +255,7 @@ External inputs/output unchanged; scalar contiguous stores from internal B*A^T.6
 ## Iteration56 fresh same-input comparison
 
 12/12 full-output/input/guard checks PASS. Original BLAS algorithm6950 gives601.7TOPS; CK candidates481-486TOPS. Alternating order,5warm/20repeat,3samples, same allocations. Frozen target remains unchanged; gap is reproducible. See iteration_56_fresh_matched.md.
+
+## Iteration57 structured B/cache-swizzle
+
+120 full-range checks and40 performance-output checks PASS. No spills. Cache eligibility depends on physical stride. Representative gains remain below fixed targets; no default promotion. See iteration_57_structured_b.md.
