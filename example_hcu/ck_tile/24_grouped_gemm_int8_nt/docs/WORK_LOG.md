@@ -408,3 +408,7 @@ Verified raw-NT fp8_gemm_hipc is256-square4P8C/Cprime WASP,not universally packe
 ## Iteration93 M128 domain recheck
 
 All74 native-eligible originalM128 shapes,370 output/guard checks PASS. Four-wave Nreuse doesnot close any ofnine prior M128 misses;keep6042. Four already-passing1232-tail cases excluded explicitly. See iteration_93_m128_recheck.md.
+
+## Iteration95 native-domain resources and scope confirmation
+
+160 legal-domain full-range and84 performance checks PASS;198–201VGPR versus214 full kernel. Performance doesnot justify incomplete-domain promotion. User permits one-time static INT8 weight packing/reuse;FP16/BF16 existing ABI/layout/defaults must stay unchanged. Plan additive INT8-only cached API and344-shape comparison.
