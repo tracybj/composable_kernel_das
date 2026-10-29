@@ -416,3 +416,7 @@ All74 native-eligible originalM128 shapes,370 output/guard checks PASS. Four-wav
 ## Iteration96 all344 large-M packed/raw screen launched
 
 User permits one-time INT8 weight preparation/reuse;FP16/BF16 ABI/layout/defaults protected. Freeze v90/v92,6 candidates per original344 shapes,2064 expected full-output records. Running,not final acceptance.
+
+## Iteration96 validator memory repair
+
+Verified process terminal afterOOM inboolean comparison reduction atID464.132 complete shapes/792 PASS records preserved. Bounded256-row validation,unchanged GEMM workload/libraries/timing;resume audited atID464. Original error/log preserved.
