@@ -243,3 +243,7 @@ Native instruction and intrinsic-plus-tied-fragment compiler boundaries compile 
 ## Iteration53 matched operand counters
 
 All3 full-output/input/guard checks PASS,9 target dispatches. Direct B reduces aggregate LDS-wait but has more VALU work and unchanged total LDS instructions; not a stall-time percentage. Local BLAS adapter confirms swapped operands/C-transpose mapping. Next test equivalent internal transposed task and contiguous scalar C stores. See iteration_53_operand_counters.md.
+
+## Iteration54 internal transposed mapping
+
+External inputs/output unchanged; scalar contiguous stores from internal B*A^T.66 full-range and32 performance-output checks PASS;243 VGPRs,zero scratch/spills. Gains vary with shape; frozen targets not reached. No public default promotion. See iteration_54_transposed_mapping.md.
