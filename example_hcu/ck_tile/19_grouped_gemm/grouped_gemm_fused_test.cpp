@@ -856,6 +856,8 @@ struct DeviceCase
         // which is how the v7 uniform instances resolve their tile.
         const ck_tile::index_t n_tiles = (c.n + 255) / 256;
         ck_tile::index_t block_cursor = 0;
+        // P0b 实验用，不合入：CKF_ZERO_RANGES=1 时把 block 区间写成 0,0
+        const bool zero_ranges = std::getenv("CKF_ZERO_RANGES") != nullptr;
         std::vector<ck_tile::GemmTransKernelArg> host_kargs;
         host_kargs.reserve(c.g);
         for(int g = 0; g < c.g; ++g)
@@ -872,8 +874,8 @@ struct DeviceCase
                                                                        {},
                                                                        c.n,
                                                                        1},
-                                                          block_cursor,
-                                                          block_cursor +
+                                                          zero_ranges ? 0 : block_cursor,
+                                                          zero_ranges ? 0 : block_cursor +
                                                               ((c.group_m[g] + 255) / 256) * n_tiles);
             block_cursor += ((c.group_m[g] + 255) / 256) * n_tiles;
         }

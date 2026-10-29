@@ -644,7 +644,8 @@ __global__ void build_device_args(ck_tile::GemmTransKernelArg* args,
                                   int n,
                                   int common_k,
                                   int layout,
-                                  bool transposed_output_view)
+                                  bool transposed_output_view,
+                                  int fill_ranges) // P0b 实验用，不合入
 {
     const int group = blockIdx.x * blockDim.x + threadIdx.x;
     if(group >= group_count)
@@ -692,6 +693,15 @@ __global__ void build_device_args(ck_tile::GemmTransKernelArg* args,
     karg.stride_Bs[0]                                         = b_col ? k : n;
     karg.stride_E                                             = n;
     karg.k_batch                                              = 1;
+    if(fill_ranges) // P0b 实验用，不合入：按 256x256 tile 写 block 区间
+    {
+        const int n_tiles = (n + 255) / 256;
+        int start         = 0;
+        for(int g = 0; g < group; ++g)
+            start += (static_cast<int>(group_lengths[g]) + 255) / 256 * n_tiles;
+        args[group].block_start = start;
+        args[group].block_end   = start + (m + 255) / 256 * n_tiles;
+    }
 }
 
 class DynamicHipBlas
@@ -1438,7 +1448,8 @@ int run(const Options& options)
             options.n,
             options.k,
             problem.layout,
-            transposed_output_view);
+            transposed_output_view,
+            std::getenv("CKB_FILL_RANGES") != nullptr ? 1 : 0);
         hip_check(hipGetLastError(), "build_device_args launch");
     };
 
@@ -1462,6 +1473,26 @@ int run(const Options& options)
                                      std::to_string(status));
     };
     build_args();
+    if(std::getenv("CKB_DUMP_ARGS") != nullptr) // P0b 实验用，不合入
+    {
+        hip_check(hipStreamSynchronize(stream), "dump args synchronize");
+        std::vector<char> raw(static_cast<std::size_t>(options.group_count) *
+                              sizeof(ck_tile::GemmTransKernelArg));
+        hip_check(hipMemcpy(raw.data(), device_args.GetDeviceBuffer(), raw.size(),
+                            hipMemcpyDeviceToHost),
+                  "dump args copy");
+        std::cout << "ARGS sizeof=" << sizeof(ck_tile::GemmTransKernelArg) << std::endl;
+        for(int g = 0; g < options.group_count; ++g)
+        {
+            const auto* a = reinterpret_cast<const ck_tile::GemmTransKernelArg*>(
+                raw.data() + g * sizeof(ck_tile::GemmTransKernelArg));
+            const auto& k = a->group_karg;
+            std::cout << "ARGS g=" << g << " M=" << k.M << " N=" << k.N << " K=" << k.K
+                      << " sA=" << k.stride_As[0] << " sB=" << k.stride_Bs[0]
+                      << " sE=" << k.stride_E << " kb=" << k.k_batch
+                      << " bs=" << a->block_start << " be=" << a->block_end << std::endl;
+        }
+    }
 
     std::unique_ptr<DynamicHipBlas> hipblas;
     std::unique_ptr<DynamicHipBlasLt> hipblaslt;
@@ -1548,6 +1579,15 @@ int run(const Options& options)
                 launch_ck();
                 hip_check(hipStreamSynchronize(stream), "CK correctness synchronize");
                 device_ck.FromDevice(host_ck.data());
+                if(std::getenv("CKB_DUMP_ARGS") != nullptr) // P0b 实验用，不合入
+                {
+                    const float s = as_float(output_sentinel);
+                    std::size_t untouched = 0;
+                    for(std::size_t i = 0; i < plan.c_elements; ++i)
+                        untouched += std::abs(as_float(host_ck[i]) - s) > 0 ? 0 : 1;
+                    std::cout << "SENTINEL count=" << untouched << "/" << plan.c_elements
+                              << std::endl;
+                }
                 const auto cpu =
                     check_cpu_samples(options, plan, host_a, host_b, host_ck, atol, rtol);
                 std::cout << std::defaultfloat << std::setprecision(8);
