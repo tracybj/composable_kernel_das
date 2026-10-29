@@ -317,3 +317,7 @@ Depth3/minleaf12 M/N/K/G draft tree; {'total': 344, 'ge1': 99, 'min_R': 0.758795
 See current_public_v73_1178.csv; all rows share one library identity,all1178 newly measured.
 
 Public73 gap analysis:915/1178 fixed targets met;263 remain (14 M<256,249 large-M). Original-target CSV preserved, no target relaxation. See current_public_v73_gap_summary.md and remaining.csv.
+
+## Iteration74 cache-swizzle stride ablation
+
+132 boundary and24 performance checks PASS;no scratch/spill. Generalized cache eligibility does not improve representative throughput; disabling regresses power-of-two strides. Original public policy retained. Correct controlled configuration only; no default promotion. See iteration_74_cache_stride.md.
