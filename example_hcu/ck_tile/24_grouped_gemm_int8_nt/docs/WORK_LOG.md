@@ -368,3 +368,7 @@ All12 whole-output/input-clone/guard checks PASS. v73/v80 match on identical all
 ## Iteration84 cooperative wide-M structure
 
 216 full-range and56 performance checks PASS. Eight cooperative waves do not remove wide-accumulator spill/performance cost. No public promotion. Next trade N128 for128 accumulator values and changed A/B reuse;see iteration_84_cooperative_wide.md.
+
+## Iteration85 narrow-N wide-M structure
+
+216 full-range and56 performance checks PASS;156--173VGPR,no scratch/spill.512x128x64 halves B requests but increases A movement/LDS/stage costs;representatives remain slower than public v80. No promotion. Return to fast256x256x128 consumer-schedule investigation;see iteration_85_narrow_n.md.
