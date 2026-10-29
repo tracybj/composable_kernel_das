@@ -404,3 +404,7 @@ Verified raw-NT fp8_gemm_hipc is256-square4P8C/Cprime WASP,not universally packe
 ## Iteration92 raw NT linear B addresses
 
 300 full-range and70 performance checks PASS;214VGPR,no spill. Seven representative best-linear candidates beat same-run best-structured by1.4–4.3%,no physical conversion. Broaden to344 before promotion. See iteration_92_linear_b.md.
+
+## Iteration93 M128 domain recheck
+
+All74 native-eligible originalM128 shapes,370 output/guard checks PASS. Four-wave Nreuse doesnot close any ofnine prior M128 misses;keep6042. Four already-passing1232-tail cases excluded explicitly. See iteration_93_m128_recheck.md.
