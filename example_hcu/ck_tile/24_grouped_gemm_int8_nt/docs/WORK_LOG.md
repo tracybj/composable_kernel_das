@@ -337,3 +337,7 @@ All6 fresh and2 profiled output/input/guard checks PASS. Fresh BLAS635.7TOPS vs 
 ## Iteration78 same-allocation record1024 confirmation
 
 All12 full-output/input/guard checks PASS. Fresh frozen BLAS635.6TOPS,publicCK500.2,record0control499.6,record1024 574.9. Representative improvement survives paired alternate order. Target remains636.6TOPS; no public promotion. See iteration_78_paired_buffer_record.md.
+
+## Iteration79 all344 large-M record stride screen launched
+
+176 full-range prerequisites and12 paired comparisons PASS. Five candidates per original shape,all dimensions and groups unchanged. Running; no completion claim. See iteration_79_large_record_screen.md.

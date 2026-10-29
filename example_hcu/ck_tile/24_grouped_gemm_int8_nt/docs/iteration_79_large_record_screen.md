@@ -1,0 +1,3 @@
+# Iteration79: all344 original large-M record-stride screening (running)
+
+Freeze passing v77 library. Compare both internal orientations with record0/1024 plus each shape public-v73 default instance as same-library control. Retain all original M/N/K/G,1178 workbook targets unchanged. Three HIP-event samples,warmup2/repeat5,median; rotate candidate order. Whole outputs checked in256-row chunks,guards and sampled input immutability; inputs[-8,8],exact FP32 reference,TF32 disabled. No case-ID production dispatch,no public promotion. Screening results are not full1178 default acceptance. See results/wasp_record_stride_v79_large_screen for live progress and process identity.
