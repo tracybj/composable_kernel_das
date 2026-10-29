@@ -341,3 +341,5 @@ All12 full-output/input/guard checks PASS. Fresh frozen BLAS635.6TOPS,publicCK50
 ## Iteration79 all344 large-M record stride screen launched
 
 176 full-range prerequisites and12 paired comparisons PASS. Five candidates per original shape,all dimensions and groups unchanged. Running; no completion claim. See iteration_79_large_record_screen.md.
+
+Iteration79 completed:344/344 shapes,1720 output/guard/input-sample checks PASS. Transparent non-power-K draft {'total': 344, 'ge1': 156, 'min_R': 0.2967098624867015, 'median_R': 0.9938498117828563}; >3% regression count=0. Independent5-candidate timing outlier recheck PASS; original records preserved. Current public CSV remains v73. See iteration_79_large_record_screen.md and audit/CSVs.

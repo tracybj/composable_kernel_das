@@ -1,0 +1,241 @@
+{
+  "scope": "All344 original M>=256 shapes,5 explicit candidates,development screening only; current public formal CSV remains v73",
+  "numeric_shapes": 344,
+  "numeric_records": 1720,
+  "library_sha256": "5a5bf4c9e218ea61ca16e6773ae5856bb62b061cfaccaa05ffc65d0acb48ce16",
+  "raw_control": {
+    "total": 344,
+    "ge1": 95,
+    "min_R": 0.2967098624867015,
+    "median_R": 0.9480424888675709
+  },
+  "raw_oracle": {
+    "total": 344,
+    "ge1": 165,
+    "min_R": 0.8951966943180666,
+    "median_R": 0.9965444576629547
+  },
+  "dimension_rule_development_only": {
+    "total": 344,
+    "ge1": 156,
+    "min_R": 0.2967098624867015,
+    "median_R": 0.9938498117828563
+  },
+  "dimension_rule": "For non-power-of-two K choose record1024-transposed if M<=256 or K<1024,otherwise record1024-original; power-of-two K retains public default",
+  "dimension_rule_regressions_gt3pct": 0,
+  "by_M": {
+    "256": {
+      "control": {
+        "total": 38,
+        "ge1": 26,
+        "min_R": 0.9276993044574435,
+        "median_R": 1.0727817188277937
+      },
+      "oracle": {
+        "total": 38,
+        "ge1": 29,
+        "min_R": 0.9617947453529305,
+        "median_R": 1.0966861134379555
+      },
+      "rule": {
+        "total": 38,
+        "ge1": 28,
+        "min_R": 0.9594819439798602,
+        "median_R": 1.0960743304879226
+      }
+    },
+    "2048": {
+      "control": {
+        "total": 108,
+        "ge1": 37,
+        "min_R": 0.7897984003541227,
+        "median_R": 0.9403955325138019
+      },
+      "oracle": {
+        "total": 108,
+        "ge1": 67,
+        "min_R": 0.9272673392736283,
+        "median_R": 1.02224107859112
+      },
+      "rule": {
+        "total": 108,
+        "ge1": 66,
+        "min_R": 0.7931068359096419,
+        "median_R": 1.02224107859112
+      }
+    },
+    "4096": {
+      "control": {
+        "total": 88,
+        "ge1": 29,
+        "min_R": 0.2967098624867015,
+        "median_R": 0.9516811886664055
+      },
+      "oracle": {
+        "total": 88,
+        "ge1": 52,
+        "min_R": 0.9268470373045451,
+        "median_R": 1.0324195090128632
+      },
+      "rule": {
+        "total": 88,
+        "ge1": 48,
+        "min_R": 0.2967098624867015,
+        "median_R": 1.0212457484457413
+      }
+    },
+    "8192": {
+      "control": {
+        "total": 72,
+        "ge1": 3,
+        "min_R": 0.7832415595627409,
+        "median_R": 0.9397673380714926
+      },
+      "oracle": {
+        "total": 72,
+        "ge1": 16,
+        "min_R": 0.9223119521486134,
+        "median_R": 0.9728764085471894
+      },
+      "rule": {
+        "total": 72,
+        "ge1": 13,
+        "min_R": 0.9223119521486134,
+        "median_R": 0.9711080536002054
+      }
+    },
+    "16384": {
+      "control": {
+        "total": 38,
+        "ge1": 0,
+        "min_R": 0.7610402883166887,
+        "median_R": 0.8967491990188551
+      },
+      "oracle": {
+        "total": 38,
+        "ge1": 1,
+        "min_R": 0.8951966943180666,
+        "median_R": 0.9477383287643395
+      },
+      "rule": {
+        "total": 38,
+        "ge1": 1,
+        "min_R": 0.8900136357376585,
+        "median_R": 0.9437971751145624
+      }
+    }
+  },
+  "timing_outlier": {
+    "ID": 343,
+    "original": {
+      "ID": 343,
+      "M": 4096,
+      "N": 4096,
+      "K": 2048,
+      "G": 16,
+      "candidate": 19003,
+      "ms": 9.698172569274902,
+      "samples_ms": [
+        9.698172569274902,
+        27.61688804626465,
+        5.289534568786621
+      ],
+      "TOPS": 113.37307311476378,
+      "target_TOPS": 382.100790868875,
+      "R": 0.2967098624867015,
+      "bad_elements": 0,
+      "guard": true,
+      "input_samples_unchanged": true
+    },
+    "independent_recheck": [
+      {
+        "id": 343,
+        "M": 4096,
+        "N": 4096,
+        "K": 2048,
+        "E": 16,
+        "candidate": 19003,
+        "ms": 2.608095645904541,
+        "samples_ms": [
+          2.6083192825317383,
+          2.608095645904541,
+          2.6077113151550293
+        ],
+        "tops": 421.5764209040987,
+        "bad_elements": 0,
+        "guard": true
+      },
+      {
+        "id": 343,
+        "M": 4096,
+        "N": 4096,
+        "K": 2048,
+        "E": 16,
+        "candidate": 22000,
+        "ms": 2.606943368911743,
+        "samples_ms": [
+          2.6063671112060547,
+          2.6094393730163574,
+          2.606943368911743
+        ],
+        "tops": 421.76275897968054,
+        "bad_elements": 0,
+        "guard": true
+      },
+      {
+        "id": 343,
+        "M": 4096,
+        "N": 4096,
+        "K": 2048,
+        "E": 16,
+        "candidate": 22010,
+        "ms": 2.7814393043518066,
+        "samples_ms": [
+          2.7814393043518066,
+          2.77958345413208,
+          2.802591323852539
+        ],
+        "tops": 395.30311736650776,
+        "bad_elements": 0,
+        "guard": true
+      },
+      {
+        "id": 343,
+        "M": 4096,
+        "N": 4096,
+        "K": 2048,
+        "E": 16,
+        "candidate": 22002,
+        "ms": 2.710911273956299,
+        "samples_ms": [
+          2.710719108581543,
+          2.710911273956299,
+          2.711967706680298
+        ],
+        "tops": 405.58746364700266,
+        "bad_elements": 0,
+        "guard": true
+      },
+      {
+        "id": 343,
+        "M": 4096,
+        "N": 4096,
+        "K": 2048,
+        "E": 16,
+        "candidate": 22012,
+        "ms": 2.811359405517578,
+        "samples_ms": [
+          2.8119988441467285,
+          2.805887460708618,
+          2.811359405517578
+        ],
+        "tops": 391.0960745958332,
+        "bad_elements": 0,
+        "guard": true
+      }
+    ],
+    "prior_public_ms": 2.606889009475708,
+    "interpretation": "Original control samples are unstable; independent recheck returns2.608ms versus prior public2.607ms. Original1720 records unchanged; no unconditional substitution. Timing noise cause not identified."
+  },
+  "raw_records_sha256": "3a8c748abcd6039ac341b7f89965f649230a052fa885d62a1380537cc7ada027"
+}
