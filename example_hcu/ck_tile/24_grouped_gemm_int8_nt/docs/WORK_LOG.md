@@ -251,3 +251,7 @@ External inputs/output unchanged; scalar contiguous stores from internal B*A^T.6
 ## Iteration55 bulk raw copy
 
 88 full-range and40 performance-output checks PASS,243-244 VGPRs,no scratch/spills. Hoisted offsets/bulk m0/scalar descriptor advancement give only small shape-dependent gains. Both internal orientations retained as experiments. No default change. See iteration_55_hoisted_copy.md.
+
+## Iteration56 fresh same-input comparison
+
+12/12 full-output/input/guard checks PASS. Original BLAS algorithm6950 gives601.7TOPS; CK candidates481-486TOPS. Alternating order,5warm/20repeat,3samples, same allocations. Frozen target remains unchanged; gap is reproducible. See iteration_56_fresh_matched.md.
