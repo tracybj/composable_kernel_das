@@ -1242,11 +1242,11 @@ struct GroupedGemmKernel
         const auto gemm_desc_ptr = reinterpret_cast<const TransKernelArg*>(
             cast_pointer_to_generic_address_space(gemm_descs_const));
 
-        // A flat over-covered grid (the v7 instances pad the host-side tile
-        // bound up to a whole number of CTAs because per-group M is
-        // device-resident) hands some CTAs block ids past the last group's
-        // block_end. FindGroupId only converges for in-range ids, so exit
-        // before it. Exact-sized standard launches never take this branch.
+        // A flat over-covered grid hands some CTAs block ids past the last
+        // group's block_end. FindGroupId only converges for in-range ids, so
+        // exit before it. Exact-sized standard launches never take this branch.
+        // (The v7 uniform instances launch through GroupedGemmV7UniformKernel,
+        // which does not read the block ranges.)
         if(block_id >= gemm_desc_ptr[group_count - 1].block_end)
         {
             return;
@@ -1417,6 +1417,74 @@ struct GroupedGemmWaspKernel
                                     col_base,
                                     acc,
                                     smem);
+    }
+};
+
+// Entry for the v7/v8 uniform pipelines (one 256x256 tile per CTA, flat
+// non-persistent grid sized from a host-side bound). The block id -> (group,
+// tile) mapping is derived on the device from each group's M/N, the same tile
+// prefix sum MakeKargs writes into block_start/block_end. Device-args callers
+// build the GemmTransKernelArg array on the GPU and need not fill those two
+// fields, so they are not read here; callers that do fill them get the same
+// mapping.
+template <typename GroupedKernel>
+struct GroupedGemmV7UniformKernel
+{
+    using TilePartitioner         = typename GroupedKernel::TilePartitioner;
+    using GemmPipeline            = typename GroupedKernel::GemmPipeline;
+    using EpiloguePipeline        = typename GroupedKernel::EpiloguePipeline;
+    using TransKernelArg          = typename GroupedKernel::TransKernelArg;
+    using OffsetTile1DPartitioner = typename GroupedKernel::OffsetTile1DPartitioner;
+
+    static constexpr index_t kBlockSize = GroupedKernel::kBlockSize;
+
+    CK_TILE_HOST static constexpr auto BlockSize() -> dim3 { return GroupedKernel::BlockSize(); }
+
+    CK_TILE_HOST_DEVICE static constexpr auto GetSmemSize() -> index_t
+    {
+        return GroupedKernel::GetSmemSize();
+    }
+
+    CK_TILE_DEVICE void operator()(const void CK_TILE_CONSTANT_ADDRESS_SPACE* gemm_descs_const,
+                                   index_t group_count) const
+    {
+        static_assert(is_grouped_gemm_v7_uniform_pipeline<GemmPipeline>::value);
+
+        const auto* const descs = reinterpret_cast<const TransKernelArg*>(
+            cast_pointer_to_generic_address_space(gemm_descs_const));
+        const index_t block_id = get_block_1d_id();
+
+        // Locate the group only; the tile runs once, outside the scan (a loop
+        // around the pipeline breaks its register budget). An empty group
+        // contributes no tiles and is skipped by the scan itself.
+        index_t group_id   = 0;
+        index_t tile_begin = 0;
+        for(; group_id < group_count; ++group_id)
+        {
+            const auto& karg    = descs[group_id].group_karg;
+            const index_t tiles = TilePartitioner::GridSize(karg.M, karg.N);
+            if(block_id < tile_begin + tiles)
+            {
+                break;
+            }
+            tile_begin += tiles;
+        }
+        // The host-side grid bound over-covers the tile count; the surplus
+        // CTAs land past the last group.
+        if(group_id >= group_count)
+        {
+            return;
+        }
+
+        const auto& kargs = descs[group_id].group_karg;
+        if(kargs.K == 0 || !GroupedKernel::ShouldProcessM(kargs.M))
+        {
+            return;
+        }
+
+        const auto block_idx_2d = OffsetTile1DPartitioner::GetOffsetedTileIndex(
+            0, kargs.M, kargs.N, block_id - tile_begin);
+        GroupedKernel{}.Run(kargs, block_idx_2d, 0, group_id, group_count, false, 0, 1);
     }
 };
 

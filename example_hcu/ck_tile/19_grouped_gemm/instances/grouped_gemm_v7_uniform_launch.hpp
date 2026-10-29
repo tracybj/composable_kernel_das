@@ -9,7 +9,9 @@
 // differs is the GRID:
 //
 //   * the config is NON-persistent, so the kernel maps block id -> (group,
-//     m tile, n tile) from the kargs' block ranges and runs exactly ONE tile.
+//     m tile, n tile) by a tile prefix sum over the groups' M/N (see
+//     GroupedGemmV7UniformKernel; the kargs' block_start/block_end are not
+//     read, device-args callers need not fill them) and runs exactly ONE tile.
 //     The kernel cannot be made persistent: this pipeline's register budget
 //     (215 VGPR, 0 spill, the reference kernel's numbers) only survives when no
 //     loop wraps its k loop -- see the pipeline header.
@@ -45,9 +47,9 @@
 // framework only uses it for tile/loop bookkeeping -- the pipeline's own k
 // loop is the 4-stage ring, advanced by the 16-wide k-stage.
 //
-// Persistent = false is load-bearing, not taste: the non-persistent kernel path
-// maps block id -> (group, m tile, n tile) from the kargs' block ranges and then
-// runs ONE tile, which is the only structure this pipeline compiles to the
+// Persistent = false is load-bearing, not taste: the non-persistent v7 entry
+// (GroupedGemmV7UniformKernel) maps block id -> (group, m tile, n tile) from the
+// groups' M/N and then runs ONE tile, which is the only structure this pipeline compiles to the
 // reference kernel's register budget (215 VGPR / 0 spill; a tile loop costs 40
 // VGPRs and ~20% of the throughput, see the pipeline header).
 //
@@ -174,7 +176,8 @@ inline int launch(const void* kargs_dev,
     using Partitioner = ck_tile::GemmSpatiallyLocalTilePartitioner<Shape,
                                                                   Config::TileParitionerGroupNum,
                                                                   Config::TileParitionerM01>;
-    using Kernel = ck_tile::GroupedGemmKernel<Partitioner, Pipeline, Epilogue>;
+    using Kernel = ck_tile::GroupedGemmV7UniformKernel<
+        ck_tile::GroupedGemmKernel<Partitioner, Pipeline, Epilogue>>;
 
     if(kargs_dev == nullptr || group_count <= 0 || tile_slots == 0)
     {

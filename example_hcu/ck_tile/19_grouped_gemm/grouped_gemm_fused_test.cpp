@@ -851,9 +851,10 @@ struct DeviceCase
             c_ptrs[g] = c_blocks[g];
         }
 
-        // block_start/block_end must be filled: the framework's non-persistent
-        // kernel path maps a 1D block id to (group, m tile, n tile) through them,
-        // which is how the v7 uniform instances resolve their tile.
+        // block_start/block_end are filled the way MakeKargs fills them. The v7
+        // uniform instances do not read them (GroupedGemmV7UniformKernel derives
+        // the same tile mapping from the groups' M/N); they are kept so the
+        // kargs stay valid for the framework's generic non-persistent path.
         const ck_tile::index_t n_tiles = (c.n + 255) / 256;
         ck_tile::index_t block_cursor = 0;
         std::vector<ck_tile::GemmTransKernelArg> host_kargs;
