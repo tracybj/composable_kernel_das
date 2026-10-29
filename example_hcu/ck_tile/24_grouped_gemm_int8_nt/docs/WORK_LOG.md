@@ -276,3 +276,7 @@ Native fragment/full port failed. Static A/B reconstruction passes; ordered MMAC
 ## Iteration65 batched A-fragment consumption
 
 170 boundary and40 representative-output checks PASS;243-244VGPR,no scratch/spill. Best representative429-510TOPS remains below fixed targets. Correct controlled configuration only; no default promotion. See iteration_65_batched.md.
+
+## Iteration66 bounded deferred A fragments
+
+170 boundary and40 performance checks PASS. Batches1-8 no spill;16 spills and severely regresses. No representative gain over nondeferred65; no promotion. Correct controlled configuration only; no default promotion. See iteration_66_deferred.md.
