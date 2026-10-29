@@ -268,3 +268,7 @@ See current_public_v47_1178.csv; all rows share one library identity,560 reused 
 ## Iterations58-63 WASP correctness isolation
 
 Native fragment/full port failed. Static A/B reconstruction passes; ordered MMAC alone fails. Short A-fragment lifetime passes eight small controlled diagnostics. Full kernel/performance remain unverified. See iteration_58_63_diagnostics.md and exact JSON.
+
+## Iteration64 complete short-live WASP kernel
+
+68 boundary and16 representative-output checks PASS;243-244VGPR,no scratch/spill. Best representative361-427TOPS remains below fixed targets and earlier fast candidates. Correct controlled configuration only; no default promotion. See iteration_64_short_lifetime.md.
