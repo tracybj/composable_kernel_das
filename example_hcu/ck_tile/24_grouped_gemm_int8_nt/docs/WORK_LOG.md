@@ -280,3 +280,7 @@ Native fragment/full port failed. Static A/B reconstruction passes; ordered MMAC
 ## Iteration66 bounded deferred A fragments
 
 170 boundary and40 performance checks PASS. Batches1-8 no spill;16 spills and severely regresses. No representative gain over nondeferred65; no promotion. Correct controlled configuration only; no default promotion. See iteration_66_deferred.md.
+
+## Iteration67 MMAC priority scope
+
+306 boundary and72 performance checks PASS;no scratch/spill. Per-batch priority gives small shape-dependent gains; two controls remain faster. Correct controlled configuration only; no default promotion. See iteration_67_priority.md.
