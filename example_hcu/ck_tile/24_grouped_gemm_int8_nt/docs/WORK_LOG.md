@@ -329,3 +329,7 @@ All6 fresh and2 profiled output/input/guard checks PASS. Fresh BLAS635.7TOPS vs 
 ## Iteration76 M-group CTA order
 
 228 full-range and72 performance checks PASS; no scratch/spill. M-group1/2/4/5/8/16 alone does not close the large-M gap. Public selector and all1178 target/measurement CSV retained. See iteration_76_cta_order.md.
+
+## Iteration77 structured-buffer record address decomposition
+
+176 full-range and32 performance checks PASS;214VGPR,no scratch/spill. Independent quotient/remainder implementation improves representative K6144/K7168; regresses some power-of-two pitches. Validate paired same-allocation gains and all344 large-M domain before dimension-based promotion. Public CSV unchanged. See iteration_77_buffer_record_stride.md.
