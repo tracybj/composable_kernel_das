@@ -325,3 +325,7 @@ Public73 gap analysis:915/1178 fixed targets met;263 remain (14 M<256,249 large-
 ## Iteration75 fresh long-M comparison and PMC
 
 All6 fresh and2 profiled output/input/guard checks PASS. Fresh BLAS635.7TOPS vs public CK499.7TOPS. Complete G8 counter normalization uses8 BLAS versus1 CK launch. Higher CK VALU/LDS and TCC misses,lower accumulated LDS waits; test CTA order next. Profiled times excluded from rankings. See iteration_75_long_m_comparison.md.
+
+## Iteration76 M-group CTA order
+
+228 full-range and72 performance checks PASS; no scratch/spill. M-group1/2/4/5/8/16 alone does not close the large-M gap. Public selector and all1178 target/measurement CSV retained. See iteration_76_cta_order.md.
