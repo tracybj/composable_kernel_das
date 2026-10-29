@@ -412,3 +412,7 @@ All74 native-eligible originalM128 shapes,370 output/guard checks PASS. Four-wav
 ## Iteration95 native-domain resources and scope confirmation
 
 160 legal-domain full-range and84 performance checks PASS;198–201VGPR versus214 full kernel. Performance doesnot justify incomplete-domain promotion. User permits one-time static INT8 weight packing/reuse;FP16/BF16 existing ABI/layout/defaults must stay unchanged. Plan additive INT8-only cached API and344-shape comparison.
+
+## Iteration96 all344 large-M packed/raw screen launched
+
+User permits one-time INT8 weight preparation/reuse;FP16/BF16 ABI/layout/defaults protected. Freeze v90/v92,6 candidates per original344 shapes,2064 expected full-output records. Running,not final acceptance.
