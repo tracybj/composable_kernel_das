@@ -360,3 +360,7 @@ See current_public_v80_1178.csv; all rows share one library identity,all1178 new
 ## Iteration82 paired small-M recheck
 
 All12 whole-output/input-clone/guard checks PASS. v73/v80 match on identical allocations for both apparent small-M regressions;original formal v80 records and975/1178 count retained. Timing noise cause unproven. See iteration_82_paired_small_m.md.
+
+## Iteration83 wide-M structural trial
+
+216 full-range and56 performance checks PASS.512x256x64,twelve waves,four producers:all8 kernels spill and representative throughput collapses. No public promotion. Next compare an eight-wave cooperative allocation with the same mathematical tile. See iteration_83_wide_m.md.
