@@ -376,3 +376,7 @@ All12 whole-output/input-clone/guard checks PASS. v73/v80 match on identical all
 ## Iteration86 single-publication C/CP schedule
 
 360 full-range and84 performance checks PASS. CP variants spill;all-C controls remain fastest/no spill. Production assertion and formal v80 CSV retained. Next pair early/late B prefetch within all-C. See iteration_86_consumer_schedule.md.
+
+## Iteration87 early B prefetch and generated wait analysis
+
+240 full-range and56 performance checks PASS;214VGPR,no spill. All28 early/late pairs regress. Own ISA shows future loads issued before an additional generated first-MMAC vmcnt(0),blocking intended overlap. Next factorial builtin/asm wait experiment;production v80 retained. See iteration_87_early_b.md.
