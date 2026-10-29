@@ -1,0 +1,58 @@
+{
+  "status": "PASS",
+  "scope": "CPU harness checks,not GPU results",
+  "original_shapes": 1178,
+  "corrupt_resume_rejections": 15,
+  "pending_rows_not_marked_pass": true,
+  "torch_not_imported": true,
+  "snapshot": {
+    "api_library": "e39601a17a85e8392ae83197c71bdd1af86c2c2510fc71e35ac9231d5a159ac3",
+    "benchmark_library": "d9ba0b96c8674c66c7a210b052bd3172801a446c38ba3dde590348507d8e859f",
+    "target_csv": "608181f42831ccdcf078227b40d935370764dd617a6cd68b595171ac9c4daf18",
+    "runner": "ffb829698ecbc1a22e3a33317b4fd8baf7ceed857f7ac8cd0223d5609aba6fed",
+    "compiled_sources": {
+      "extension": {
+        "example_hcu/ck_tile/24_grouped_gemm_int8_nt/cached_weights/selector.hpp": "d399b75e2dbaae6b458aedaf18a95d05e1bd1f7a9afebb6aa360c807b9c28945",
+        "example_hcu/ck_tile/24_grouped_gemm_int8_nt/cached_weights/pack_kernel.hpp": "ed282e5aa558cf255c97c01a462f83df5de5504f701448c765119dfe07a91b60",
+        "example_hcu/ck_tile/24_grouped_gemm_int8_nt/cached_weights/ck_tile_int8_nt_cached.h": "f1bccd7bc784c8e16f3bc181b723c9df064c184b74f7217c59da331f192d5128",
+        "example_hcu/ck_tile/24_grouped_gemm_int8_nt/cached_weights/cached_dispatch.cpp": "31165499fe3255317adc9eadd5582cda68ce35c8360f6ab8f43ed27770ea957b",
+        "example_hcu/ck_tile/24_grouped_gemm_int8_nt/cached_weights/kernel.hpp": "30a50048d270b196215bded949b08a1e986e1321f5b94232fd49c7ff8c4357e4",
+        "example_hcu/ck_tile/24_grouped_gemm_int8_nt/cached_weights/benchmark_bridge.cpp": "d7e969452eb30cf9f0f794bec56917421d9cd94e015d057ec545791a24b71a1e",
+        "example_hcu/ck_tile/24_grouped_gemm_int8_nt/cached_weights/CMakeLists.txt": "73479c726e84defc12ba4644f6373fc243f543e9d5c3fb10ec1fa63779ee4c5e",
+        "example_hcu/ck_tile/24_grouped_gemm_int8_nt/cached_weights/cached_api.cpp": "d755c3d9d5bd734e0d714630a0b29e0b59b5bd48bd7995cb473bc3df3af1bd1f",
+        "example_hcu/ck_tile/24_grouped_gemm_int8_nt/cached_weights/pipeline.hpp": "fcbe1540ad4b86d9c5102ee41ad6672942c4fe40d802499fe37d7071d5843f20",
+        "example_hcu/ck_tile/24_grouped_gemm_int8_nt/cached_weights/epilogue.hpp": "d865680d8900b554464c053af076b376eb2166c2d738ba853d5946ee457ef3bb",
+        "example_hcu/ck_tile/24_grouped_gemm_int8_nt/cached_weights/README.md": "349c478ef8db11ccb8ebb9e81a945305bb9732b45034378ac3f9cccb5d9729dd",
+        "example_hcu/ck_tile/24_grouped_gemm_int8_nt/cached_weights/problem.hpp": "0f45ff0ca7416a5e9317d3f386b6ed0065bbaf9ed7ea783e1339d269246f431a"
+      },
+      "existing_public_context_unchanged": {
+        "include/ck_tile/ops/gemm/grouped_gemm_selector.hpp": "dcc344d49aa13c4e22f02567cf12081e261e99ffb5b243e50983890c1ac08b4f",
+        "include/ck_tile/ops/gemm/grouped_gemm_device_args.h": "45ef94020156023aee585dc56ed77d1bdee65533f350bff03bffcb3db9592a02",
+        "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args.cpp": "75a76d0029ad7a65e65be65d7238598e7cee199e59a4c0eae589565a826bf81c",
+        "example_hcu/ck_tile/24_grouped_gemm_int8_nt/instances.cpp": "349b08225b5f2d783278663dde4eb05823d0a0b1db38a37955993fff9822b91e",
+        "example_hcu/ck_tile/24_grouped_gemm_int8_nt/grouped_int8_nt_wasp_pipeline.hpp": "083291bb58f4e24d5304d97e659a1af2f67bf5d2dfbd320e69d22fd2140975a3",
+        "example_hcu/ck_tile/24_grouped_gemm_int8_nt/grouped_int8_nt_wasp_problem.hpp": "e0834d68ac775e959ae87f7d97a3c7c7505a12af6f51ae440bb4382ae7c6fb76",
+        "example_hcu/ck_tile/24_grouped_gemm_int8_nt/grouped_int8_nt_wasp_epilogue.hpp": "1e84f0545089a1386e6c51214b3c45f66726c702ff1c71eccf3183c2daeb39bc",
+        "example_hcu/ck_tile/24_grouped_gemm_int8_nt/grouped_int8_nt_wasp_kernel.hpp": "abcd76e0ea422feeef15982ac58bc263f7b8226182c6e3f20c49a1f14ccb20fe",
+        "example_hcu/ck_tile/24_grouped_gemm_int8_nt/grouped_int8_nt_wasp_fallback.hpp": "1611b7e11c0590c43e88335f1c9aa99e83d41df5947c6ab229787c00d0948e39"
+      }
+    },
+    "test_sources": {
+      "cached_weights/tests/test_lifetime.py": "75a3c3398b9b71ee0a046f7556f8fcfc7bee016a4dc1418e574d172faf46f2e8",
+      "cached_weights/tests/test_acceptance_host.py": "d7a4fd3f6c55062dd4bc9a112a865b0abc040dfcff3ff0df1cda355c0b3e5091",
+      "cached_weights/tests/bindings.py": "297bcc15c8d12855f36336f40d1d4c7806d359f54340ffbd4c1c5e3f543e3f8c",
+      "cached_weights/tests/test_cached_api.py": "6f8609b28a2369427aa04852fe680574078d5d74a7c109a68cfd00c5cf757925",
+      "cached_weights/tests/validate_all_1178.py": "ffb829698ecbc1a22e3a33317b4fd8baf7ceed857f7ac8cd0223d5609aba6fed"
+    }
+  },
+  "development_remaining_large_M_K_counts": {
+    "512": 6,
+    "768": 4,
+    "1536": 9,
+    "2048": 5,
+    "4096": 31,
+    "6144": 1,
+    "7168": 4
+  },
+  "gpu_state": "Native HIP device enumeration still returns100;no new GPU timings or PASS results generated"
+}
