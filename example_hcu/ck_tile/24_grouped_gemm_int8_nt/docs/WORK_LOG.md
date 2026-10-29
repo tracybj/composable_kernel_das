@@ -380,3 +380,7 @@ All12 whole-output/input-clone/guard checks PASS. v73/v80 match on identical all
 ## Iteration87 early B prefetch and generated wait analysis
 
 240 full-range and56 performance checks PASS;214VGPR,no spill. All28 early/late pairs regress. Own ISA shows future loads issued before an additional generated first-MMAC vmcnt(0),blocking intended overlap. Next factorial builtin/asm wait experiment;production v80 retained. See iteration_87_early_b.md.
+
+## Iteration88 compiler-visible wait
+
+480 full-range and112 performance checks PASS;214VGPR,no spill. Builtin removes redundant generated VMEM wait but no stable material performance gain. Keep v80. Shift structural analysis to provided DeepGEMM FP8. See iteration_88_compiler_wait.md.
