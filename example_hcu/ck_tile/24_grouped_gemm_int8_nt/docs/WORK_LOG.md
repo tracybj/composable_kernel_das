@@ -333,3 +333,7 @@ All6 fresh and2 profiled output/input/guard checks PASS. Fresh BLAS635.7TOPS vs 
 ## Iteration77 structured-buffer record address decomposition
 
 176 full-range and32 performance checks PASS;214VGPR,no scratch/spill. Independent quotient/remainder implementation improves representative K6144/K7168; regresses some power-of-two pitches. Validate paired same-allocation gains and all344 large-M domain before dimension-based promotion. Public CSV unchanged. See iteration_77_buffer_record_stride.md.
+
+## Iteration78 same-allocation record1024 confirmation
+
+All12 full-output/input/guard checks PASS. Fresh frozen BLAS635.6TOPS,publicCK500.2,record0control499.6,record1024 574.9. Representative improvement survives paired alternate order. Target remains636.6TOPS; no public promotion. See iteration_78_paired_buffer_record.md.
