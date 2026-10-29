@@ -1,0 +1,891 @@
+{
+  "library_sha256": "10f21a6d71ed11497c9a3c72b621d8e7a717cb3c7c7294fdc009f2576e1ee04e",
+  "sources": {
+    "include/ck_tile/ops/gemm/grouped_gemm_selector.hpp": "dcc344d49aa13c4e22f02567cf12081e261e99ffb5b243e50983890c1ac08b4f",
+    "include/ck_tile/ops/gemm/grouped_gemm_device_args.h": "45ef94020156023aee585dc56ed77d1bdee65533f350bff03bffcb3db9592a02",
+    "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args.cpp": "75a76d0029ad7a65e65be65d7238598e7cee199e59a4c0eae589565a826bf81c",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/instances.cpp": "349b08225b5f2d783278663dde4eb05823d0a0b1db38a37955993fff9822b91e",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/grouped_int8_nt_wasp_pipeline.hpp": "083291bb58f4e24d5304d97e659a1af2f67bf5d2dfbd320e69d22fd2140975a3",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/grouped_int8_nt_wasp_problem.hpp": "e0834d68ac775e959ae87f7d97a3c7c7505a12af6f51ae440bb4382ae7c6fb76",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/grouped_int8_nt_wasp_epilogue.hpp": "1e84f0545089a1386e6c51214b3c45f66726c702ff1c71eccf3183c2daeb39bc",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/grouped_int8_nt_wasp_kernel.hpp": "abcd76e0ea422feeef15982ac58bc263f7b8226182c6e3f20c49a1f14ccb20fe",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/grouped_int8_nt_wasp_fallback.hpp": "1611b7e11c0590c43e88335f1c9aa99e83d41df5947c6ab229787c00d0948e39"
+  },
+  "host_int8_checks": 45,
+  "host_original_checks": 80,
+  "registry_entries": 49,
+  "int8_entries": 29,
+  "floating_entries": 20,
+  "cpu_replay": {
+    "status": "PASS",
+    "rows": 1178,
+    "unique_shapes": 1178,
+    "instance_count": 17,
+    "shape_fields": [
+      "M",
+      "N",
+      "K",
+      "G"
+    ],
+    "formal_instances_match": true,
+    "relabelled_reversed_match": true,
+    "invalid_group_counts_rejected": true,
+    "gpu_work_performed": false,
+    "reference_csv_sha256": "e3e7d98ac692a6b32e1d6b382b3ff86f8610e8fedb63fd40bffe0d24de0e8dec"
+  },
+  "boundary_checks": [
+    {
+      "lengths": [
+        17,
+        17
+      ],
+      "N": 260,
+      "K": 528,
+      "status": "PASS",
+      "instance": 7501,
+      "native_record_profile": false,
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32
+      ],
+      "N": 260,
+      "K": 1232,
+      "status": "PASS",
+      "instance": 7502,
+      "native_record_profile": false,
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32
+      ],
+      "N": 260,
+      "K": 2064,
+      "status": "PASS",
+      "instance": 7504,
+      "native_record_profile": false,
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        33,
+        33
+      ],
+      "N": 260,
+      "K": 1232,
+      "status": "PASS",
+      "instance": 7603,
+      "native_record_profile": false,
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64
+      ],
+      "N": 260,
+      "K": 4112,
+      "status": "PASS",
+      "instance": 7604,
+      "native_record_profile": false,
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        32,
+        32,
+        32,
+        32
+      ],
+      "N": 260,
+      "K": 4112,
+      "status": "PASS",
+      "instance": 7501,
+      "native_record_profile": false,
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        64,
+        64,
+        64,
+        64
+      ],
+      "N": 260,
+      "K": 4112,
+      "status": "PASS",
+      "instance": 7603,
+      "native_record_profile": false,
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        1,
+        17,
+        0
+      ],
+      "N": 1236,
+      "K": 1232,
+      "status": "PASS",
+      "instance": 6004,
+      "native_record_profile": false,
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        0,
+        0
+      ],
+      "N": 128,
+      "K": 512,
+      "status": "PASS",
+      "instance": 6004,
+      "native_record_profile": false,
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        33,
+        0,
+        257
+      ],
+      "N": 300,
+      "K": 528,
+      "status": "PASS",
+      "instance": 6007,
+      "native_record_profile": false,
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        128,
+        256
+      ],
+      "N": 260,
+      "K": 256,
+      "status": "PASS",
+      "instance": 6007,
+      "native_record_profile": false,
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        128,
+        128
+      ],
+      "N": 256,
+      "K": 512,
+      "status": "PASS",
+      "instance": 6035,
+      "native_record_profile": false,
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        256,
+        256
+      ],
+      "N": 256,
+      "K": 2048,
+      "status": "PASS",
+      "instance": 19001,
+      "native_record_profile": false,
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        128
+      ],
+      "N": 256,
+      "K": 2048,
+      "status": "PASS",
+      "instance": 6042,
+      "native_record_profile": false,
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        257,
+        257
+      ],
+      "N": 260,
+      "K": 2064,
+      "status": "PASS",
+      "instance": 6043,
+      "native_record_profile": false,
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        129,
+        129
+      ],
+      "N": 260,
+      "K": 528,
+      "status": "PASS",
+      "instance": 6044,
+      "native_record_profile": false,
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        4096
+      ],
+      "N": 256,
+      "K": 2048,
+      "status": "PASS",
+      "instance": 19003,
+      "native_record_profile": false,
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        4096
+      ],
+      "N": 256,
+      "K": 4096,
+      "status": "PASS",
+      "instance": 19003,
+      "native_record_profile": false,
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        4097
+      ],
+      "N": 260,
+      "K": 1232,
+      "status": "PASS",
+      "instance": 6050,
+      "native_record_profile": false,
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        16,
+        16
+      ],
+      "N": 256,
+      "K": 4096,
+      "status": "PASS",
+      "instance": 8734,
+      "native_record_profile": false,
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        1
+      ],
+      "N": 260,
+      "K": 256,
+      "status": "PASS",
+      "instance": 6401,
+      "native_record_profile": false,
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        2,
+        2
+      ],
+      "N": 260,
+      "K": 768,
+      "status": "PASS",
+      "instance": 6401,
+      "native_record_profile": false,
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        3
+      ],
+      "N": 260,
+      "K": 1232,
+      "status": "PASS",
+      "instance": 6403,
+      "native_record_profile": false,
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8,
+        8
+      ],
+      "N": 260,
+      "K": 2064,
+      "status": "PASS",
+      "instance": 6404,
+      "native_record_profile": false,
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16
+      ],
+      "N": 260,
+      "K": 528,
+      "status": "PASS",
+      "instance": 6401,
+      "native_record_profile": false,
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        1
+      ],
+      "N": 260,
+      "K": 4112,
+      "status": "PASS",
+      "instance": 8734,
+      "native_record_profile": false,
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16
+      ],
+      "N": 260,
+      "K": 6160,
+      "status": "PASS",
+      "instance": 8734,
+      "native_record_profile": false,
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "N": 260,
+      "K": 4096,
+      "status": "PASS",
+      "instance": 8734,
+      "native_record_profile": false,
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        256
+      ],
+      "N": 256,
+      "K": 384,
+      "status": "PASS",
+      "instance": 19005,
+      "native_record_profile": true,
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        512
+      ],
+      "N": 256,
+      "K": 640,
+      "status": "PASS",
+      "instance": 19005,
+      "native_record_profile": true,
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        2048
+      ],
+      "N": 256,
+      "K": 768,
+      "status": "PASS",
+      "instance": 19005,
+      "native_record_profile": true,
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        2304
+      ],
+      "N": 256,
+      "K": 768,
+      "status": "PASS",
+      "instance": 19005,
+      "native_record_profile": true,
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        2304
+      ],
+      "N": 256,
+      "K": 896,
+      "status": "PASS",
+      "instance": 19005,
+      "native_record_profile": true,
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        256
+      ],
+      "N": 512,
+      "K": 4096,
+      "status": "PASS",
+      "instance": 19001,
+      "native_record_profile": false,
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        256
+      ],
+      "N": 512,
+      "K": 6144,
+      "status": "PASS",
+      "instance": 19005,
+      "native_record_profile": true,
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        512
+      ],
+      "N": 256,
+      "K": 6144,
+      "status": "PASS",
+      "instance": 19004,
+      "native_record_profile": true,
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        512
+      ],
+      "N": 256,
+      "K": 7168,
+      "status": "PASS",
+      "instance": 19004,
+      "native_record_profile": true,
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        512
+      ],
+      "N": 256,
+      "K": 1536,
+      "status": "PASS",
+      "instance": 19004,
+      "native_record_profile": true,
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        512
+      ],
+      "N": 256,
+      "K": 3072,
+      "status": "PASS",
+      "instance": 19004,
+      "native_record_profile": true,
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        256
+      ],
+      "N": 512,
+      "K": 7168,
+      "status": "PASS",
+      "instance": 19005,
+      "native_record_profile": true,
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        512
+      ],
+      "N": 256,
+      "K": 768,
+      "status": "PASS",
+      "instance": 19005,
+      "native_record_profile": true,
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        512
+      ],
+      "N": 256,
+      "K": 640,
+      "status": "PASS",
+      "instance": 19005,
+      "native_record_profile": true,
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        768
+      ],
+      "N": 512,
+      "K": 6144,
+      "status": "PASS",
+      "instance": 19004,
+      "native_record_profile": true,
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    },
+    {
+      "lengths": [
+        256
+      ],
+      "N": 768,
+      "K": 6144,
+      "status": "PASS",
+      "instance": 19005,
+      "native_record_profile": true,
+      "full_range_int8": true,
+      "nondefault_stream": true,
+      "padded_strides": true,
+      "guards": true
+    }
+  ],
+  "resources": {
+    "library_sha256": "10f21a6d71ed11497c9a3c72b621d8e7a717cb3c7c7294fdc009f2576e1ee04e",
+    "kernels": [
+      {
+        "version": 80,
+        "kind": "Wasp",
+        "params": [
+          1,
+          8,
+          4,
+          4,
+          1,
+          1,
+          0
+        ],
+        "kernel_symbol": "_ZN7ck_tile6kentryILi768ELi1ENS_23GroupedInt8NtWaspKernelINS_24GroupedInt8NtWaspProblemILb1ELi8ELi4ELi4ELb1ELb1ELi0EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEEEEvDpT2_",
+        "vgpr_count": 214,
+        "sgpr_count": 94,
+        "private_segment_fixed_size": 0,
+        "vgpr_spill_count": 0,
+        "sgpr_spill_count": 0,
+        "group_segment_fixed_size": 65536
+      },
+      {
+        "version": 80,
+        "kind": "Wasp",
+        "params": [
+          1,
+          8,
+          4,
+          8,
+          1,
+          1,
+          0
+        ],
+        "kernel_symbol": "_ZN7ck_tile6kentryILi768ELi1ENS_23GroupedInt8NtWaspKernelINS_24GroupedInt8NtWaspProblemILb1ELi8ELi4ELi8ELb1ELb1ELi0EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEEEEvDpT2_",
+        "vgpr_count": 232,
+        "sgpr_count": 94,
+        "private_segment_fixed_size": 0,
+        "vgpr_spill_count": 0,
+        "sgpr_spill_count": 0,
+        "group_segment_fixed_size": 65536
+      },
+      {
+        "version": 80,
+        "kind": "Wasp",
+        "params": [
+          0,
+          8,
+          4,
+          4,
+          1,
+          1,
+          0
+        ],
+        "kernel_symbol": "_ZN7ck_tile6kentryILi768ELi1ENS_23GroupedInt8NtWaspKernelINS_24GroupedInt8NtWaspProblemILb0ELi8ELi4ELi4ELb1ELb1ELi0EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEEEEvDpT2_",
+        "vgpr_count": 214,
+        "sgpr_count": 92,
+        "private_segment_fixed_size": 0,
+        "vgpr_spill_count": 0,
+        "sgpr_spill_count": 0,
+        "group_segment_fixed_size": 65536
+      },
+      {
+        "version": 80,
+        "kind": "Wasp",
+        "params": [
+          0,
+          8,
+          4,
+          4,
+          1,
+          1,
+          1024
+        ],
+        "kernel_symbol": "_ZN7ck_tile6kentryILi768ELi1ENS_23GroupedInt8NtWaspKernelINS_24GroupedInt8NtWaspProblemILb0ELi8ELi4ELi4ELb1ELb1ELi1024EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEEEEvDpT2_",
+        "vgpr_count": 214,
+        "sgpr_count": 92,
+        "private_segment_fixed_size": 0,
+        "vgpr_spill_count": 0,
+        "sgpr_spill_count": 0,
+        "group_segment_fixed_size": 65536
+      },
+      {
+        "version": 80,
+        "kind": "Wasp",
+        "params": [
+          1,
+          8,
+          4,
+          4,
+          1,
+          1,
+          1024
+        ],
+        "kernel_symbol": "_ZN7ck_tile6kentryILi768ELi1ENS_23GroupedInt8NtWaspKernelINS_24GroupedInt8NtWaspProblemILb1ELi8ELi4ELi4ELb1ELb1ELi1024EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEEEEvDpT2_",
+        "vgpr_count": 214,
+        "sgpr_count": 94,
+        "private_segment_fixed_size": 0,
+        "vgpr_spill_count": 0,
+        "sgpr_spill_count": 0,
+        "group_segment_fixed_size": 65536
+      }
+    ]
+  },
+  "selector_distribution": {
+    "6401": 40,
+    "7501": 11,
+    "7603": 30,
+    "6035": 21,
+    "19001": 71,
+    "19002": 10,
+    "19005": 35,
+    "6404": 210,
+    "7504": 37,
+    "7502": 56,
+    "6403": 120,
+    "19003": 95,
+    "6044": 4,
+    "19004": 133,
+    "7604": 62,
+    "6042": 53,
+    "8734": 190
+  },
+  "full1178_performance_status": "not yet measured for this library"
+}

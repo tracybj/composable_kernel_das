@@ -4,7 +4,7 @@
 #include "ck_tile/ops/gemm.hpp"
 #include "grouped_int8_nt_wasp_pipeline.hpp"
 namespace ck_tile {
-template<bool Transpose_=false,int Split_=8,int Group_=4,int Batch_=4,bool Prefetch_=true,bool OneBarrier_=true>
+template<bool Transpose_=false,int Split_=8,int Group_=4,int Batch_=4,bool Prefetch_=true,bool OneBarrier_=true,int RecordCap_=0>
 struct GroupedInt8NtWaspProblem : GroupedInt8NtTileProblem<256,256,128,1,8,true,true,true,false,1,true,Group_>
 {
     static constexpr bool Transpose=Transpose_;
@@ -15,7 +15,7 @@ struct GroupedInt8NtWaspProblem : GroupedInt8NtTileProblem<256,256,128,1,8,true,
         false,false,false,true,false,false>;
     using PipelineProblem=UniversalGemmPipelineProblem<int8_t,int8_t,int32_t,Shape,Traits,
         GemmPipelineScheduler::Intrawave,true,TailNumber::Full,null_type,null_type,false,2,2>;
-    using Pipeline=GemmPipelineInt8Wasp<PipelineProblem,GemmPipelineAgBgCrCompV4DefaultPolicy,Split_,Batch_,Prefetch_,OneBarrier_>;
+    using Pipeline=GemmPipelineInt8Wasp<PipelineProblem,GemmPipelineAgBgCrCompV4DefaultPolicy,Split_,Batch_,Prefetch_,OneBarrier_,RecordCap_>;
     static_assert(Pipeline::BlockSize==Threads && Pipeline::kWaspLdsBytes==65536);
 };
 }

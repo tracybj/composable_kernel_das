@@ -343,3 +343,7 @@ All12 full-output/input/guard checks PASS. Fresh frozen BLAS635.6TOPS,publicCK50
 176 full-range prerequisites and12 paired comparisons PASS. Five candidates per original shape,all dimensions and groups unchanged. Running; no completion claim. See iteration_79_large_record_screen.md.
 
 Iteration79 completed:344/344 shapes,1720 output/guard/input-sample checks PASS. Transparent non-power-K draft {'total': 344, 'ge1': 156, 'min_R': 0.2967098624867015, 'median_R': 0.9938498117828563}; >3% regression count=0. Independent5-candidate timing outlier recheck PASS; original records preserved. Current public CSV remains v73. See iteration_79_large_record_screen.md and audit/CSVs.
+
+## Iteration80 public record-stride integration
+
+RecordCap0/1024 typed policy,stable IDs19004/19005,registry49. Host45+80,CPU1178 dimension replay/relabel/reverse and44 public full-range boundaries PASS. Five WASP kernels,no scratch/spill.168 input shapes select new policy. Formal all1178 performance pending;v73 formal CSV retained. See iteration_80_public_record_policy.md.

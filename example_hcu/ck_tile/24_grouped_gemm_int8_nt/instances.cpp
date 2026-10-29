@@ -26,10 +26,10 @@ int launch(const void* args, int groups, int m, int n, hipStream_t stream)
                                static_cast<const ck_tile::GemmTransKernelArg*>(args)));
     return hipGetLastError() == hipSuccess ? 0 : -100;
 }
-template<int Batch,bool Transpose>
+template<int Batch,bool Transpose,int RecordCap=0>
 int launch_wasp(const void* args,int groups,int m,int n,hipStream_t stream)
 {
-    using P=ck_tile::GroupedInt8NtWaspProblem<Transpose,8,4,Batch,true,true>;
+    using P=ck_tile::GroupedInt8NtWaspProblem<Transpose,8,4,Batch,true,true,RecordCap>;
     const int mm=Transpose?n:m,nn=Transpose?m:n;
     const int mt=(mm+255)/256,nt=(nn+255)/256;
     dim3 grid(((mt+P::MGroup-1)/P::MGroup)*P::MGroup*nt,1,groups);
@@ -145,6 +145,8 @@ ck_tile_grouped_int8_nt_launch(unsigned instance_id, const void* args, int g, in
     case Instance::int8_nt_wasp_a4_transposed: return launch_wasp<4,true>(args,g,m,n,s);
     case Instance::int8_nt_wasp_a8_transposed: return launch_wasp<8,true>(args,g,m,n,s);
     case Instance::int8_nt_wasp_a4: return launch_wasp<4,false>(args,g,m,n,s);
+    case Instance::int8_nt_wasp_record1024_a4: return launch_wasp<4,false,1024>(args,g,m,n,s);
+    case Instance::int8_nt_wasp_record1024_a4_transposed: return launch_wasp<4,true,1024>(args,g,m,n,s);
     default: return -5;
     }
 }

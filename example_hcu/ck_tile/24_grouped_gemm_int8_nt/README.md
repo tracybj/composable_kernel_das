@@ -120,3 +120,7 @@ python3 "$e/test_shape_selection.py" --results "$e/docs/selector_contract_v26.cs
 ## 第73轮公共入口集成
 
 新增三个独立WASP实例（19001/19002/19003），统一非空大M按尺寸选择，宽stride等请求保留kernel内通用fallback。Host38+80、CPU1178重放/改标签/倒序、34项公共全范围边界检查PASS。新库全部1178条默认性能测试尚待完成；旧版及oracle数据不作为本版验收结果。详见docs/iteration_73_public_integration.md。
+
+## 第80轮公共 record-stride 策略
+
+在现有 WASP problem/pipeline 中增加可选 RecordCap0/1024，新增稳定实例19004/19005，非幂次 K 按 M/K 维度分流。原有数学、per-group stride、native guard 和 packed fallback 保留。Host45+80、CPU1178重放/改标签/倒序、44项公共全范围边界检查PASS；本版1178条正式性能待测，v73正式结果保留。详见docs/iteration_80_public_record_policy.md。

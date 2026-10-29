@@ -276,7 +276,7 @@ CK_TILE_DEVICE void take_a_stage_snapshot(int slot, const char* lds)
 
 }
 
-template <typename Problem, typename Policy = GemmPipelineAgBgCrCompV4DefaultPolicy, index_t ConsumerSplit = 4,index_t AReadBatch = 1,bool APrefetch = false,bool OneBarrier = false>
+template <typename Problem, typename Policy = GemmPipelineAgBgCrCompV4DefaultPolicy, index_t ConsumerSplit = 4,index_t AReadBatch = 1,bool APrefetch = false,bool OneBarrier = false,index_t RecordCap = 0>
 struct GemmPipelineInt8Wasp : public GemmPipelineAgBgCrCompV3<Problem, Policy>
 {
     using Base = GemmPipelineAgBgCrCompV3<Problem, Policy>;
@@ -907,6 +907,21 @@ struct GemmPipelineInt8Wasp : public GemmPipelineAgBgCrCompV3<Problem, Policy>
         return acc;
     }
 
+    // This is an addressing policy, not a tensor-layout conversion. Decompose
+    // each physical row pitch into record index and byte offset without copies.
+    static_assert(RecordCap == 0 || RecordCap == 1024);
+    CK_TILE_DEVICE static uint32_t record_stride(uint32_t physical_pitch)
+    {
+        if constexpr(RecordCap == 0)
+            return physical_pitch;
+        uint32_t stride = 1;
+        static_for<0, 11, 1>{}([&](auto ii) {
+            constexpr uint32_t width = 1u << decltype(ii)::value;
+            if(physical_pitch >= width)
+                stride = width;
+        });
+        return stride;
+    }
     CK_TILE_DEVICE void run_raw_into(const ADataType* a_base,
                                      index_t lda,
                                      index_t m_valid,
@@ -927,7 +942,7 @@ struct GemmPipelineInt8Wasp : public GemmPipelineAgBgCrCompV3<Problem, Policy>
         const uint32_t b_size_bytes =
             static_cast<uint32_t>(b_n_len - b_n_origin) * b_pitch_bytes;
         const grouped_int8_nt_wasp_detail::buffer_rsrc_t b_rsrc =
-            grouped_int8_nt_wasp_detail::wasp_make_buffer_rsrc(b_base, b_pitch_bytes, b_size_bytes,
+            grouped_int8_nt_wasp_detail::wasp_make_buffer_rsrc(b_base, record_stride(b_pitch_bytes), b_size_bytes,
                                                true);
 
         grouped_int8_nt_wasp_detail::wasp_sync_lds_maybe();
@@ -983,8 +998,16 @@ struct GemmPipelineInt8Wasp : public GemmPipelineAgBgCrCompV3<Problem, Policy>
                                   rowbase + (((colg + 4u) ^ r7) * 16u)};
             const uint32_t nrow  = static_cast<uint32_t>(consumer_id) * 32u + row;
             const uint32_t inrow = colg * 16u;
-            const BPairs b_pr{(static_cast<uint64_t>(inrow) << 32) | nrow,
-                              (static_cast<uint64_t>(inrow) << 32) | (nrow + 16u)};
+            const uint32_t record_pitch = record_stride(b_pitch_bytes);
+            const uint32_t quotient = b_pitch_bytes / record_pitch;
+            const uint32_t remainder = b_pitch_bytes % record_pitch;
+            // Low32 is the structured record index, high32 the byte offset.
+            // index*record_pitch+offset equals row*physical_pitch+inrow.
+            const BPairs b_pr{
+                (static_cast<uint64_t>(nrow * remainder + inrow) << 32) |
+                    (nrow * quotient),
+                (static_cast<uint64_t>((nrow + 16u) * remainder + inrow) << 32) |
+                    ((nrow + 16u) * quotient)};
 
             grouped_int8_nt_wasp_detail::stage16_t b_regs[2][2][Int8WaspAccTile::kNIters];
 
