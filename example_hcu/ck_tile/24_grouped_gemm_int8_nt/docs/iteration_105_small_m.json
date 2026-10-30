@@ -1,0 +1,15 @@
+{
+  "status": "DEVELOPMENT_NUMERIC_PASS_CANDIDATE_POLICY",
+  "shapes": 92,
+  "records": 884,
+  "full_range_checks": 108,
+  "library_sha256": "d9a49c0f5ae3d45a39c0b36c3eecec33e9ad2ac4383be94d664419b7c28ec3d6",
+  "control_target_pass": 90,
+  "dimension_draft_target_pass": 92,
+  "min_selected_R": 1.1686659804276325,
+  "min_speedup": 0.9964176452942209,
+  "median_speedup": 1.1561308341969627,
+  "policy": "M64/native packed:N>=4096,K>=4096,G<=12 useN256/A2;otherwiseN64/A2. Unsupported shapes retain existing provider.",
+  "not_independent_acceptance": true,
+  "production_unchanged_v103": true
+}
