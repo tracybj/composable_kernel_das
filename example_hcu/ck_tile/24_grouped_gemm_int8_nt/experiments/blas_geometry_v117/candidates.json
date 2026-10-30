@@ -1,0 +1,38 @@
+[
+  {
+    "id": 45001,
+    "tile_M": 256,
+    "tile_N": 1,
+    "internal_M": 192,
+    "internal_N": 256,
+    "A_batch": 4,
+    "prefetch": true
+  },
+  {
+    "id": 45002,
+    "tile_M": 256,
+    "tile_N": 1,
+    "internal_M": 192,
+    "internal_N": 256,
+    "A_batch": 12,
+    "prefetch": false
+  },
+  {
+    "id": 45003,
+    "tile_M": 256,
+    "tile_N": 256,
+    "internal_M": 256,
+    "internal_N": 256,
+    "A_batch": 16,
+    "split": 4
+  },
+  {
+    "id": 45004,
+    "tile_M": 256,
+    "tile_N": 256,
+    "internal_M": 256,
+    "internal_N": 256,
+    "A_batch": 16,
+    "split": 8
+  }
+]

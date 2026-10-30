@@ -655,3 +655,18 @@ Production remainsv112:1178numericalPASS,1170targets,all872decode targetsPASS,an
 6950一组应以实际256×256/K128的交错调度和直接输入映射作对照，不能照名字改成K32。2979一组重点对齐两批消费者的B预取、完整A片段读取、record1024及CTA映射，再与已验证packed N384同轮比较。已有v65/v87等批读/早B负结果保留，不能把旧布局的失败直接推广到新M192映射。首先检查生成ISA是否保留预期重叠，再测原始G及全输出；只有稳定解决差距才接入维度驱动selector并新跑正式1178。
 
 本轮没有推广新kernel，没有修改冻结Max目标，也没有更新正式全量CSV。当前正式状态1178数值PASS、1170达到目标、8条待解决；目标保持全部1178。
+
+
+# Iteration117:independent BLAS-geometry-inspired CK prototypes
+
+Implemented internalM192/N256/K128,4producer+8consumer waves,96INT32 accumulators/lane. Producer waves copy48 disjoint rows each(6vectors/lane);192x128payload occupies24KiB inside each32KiB ping-pong slot. Raw original weights are internalA/LDS,andraw activations internalB/record512-or1024 registers. Independent Problem/Pipeline/Kernel/Epilogue preserves original NT inputs. InternalM tail isexplicitly published withmasked source rows andguarded post-barrier outputs,including originalN2048's128-row finaltile. CPUbyte mapping PASS. Compare A4prefetch versus whole12-fragment A reads. Additional existing M256transpose/fullA16 variants compare4+4 consumers againstuniform8;they are controls,not aclaim ofinstruction-identical vendor scheduling.
+
+Generated M192/A4 andA12 use169/185VGPR;M256split4/uniform8 use249/233VGPR. All64KiB LDS,zero spill/private.240full-rangeINT8/FP64 checks PASS withsingle/odd/even/longK,padding,small/partial internalM,ragged/empty diagnostic fallbacks,guards andimmutable inputs. Same-module rotated development screen covers20original shapes and80timed outputs,allnumericPASS.
+
+No remaining target isclosed. M16384/N2048/K768/G4 current253.23TOPS;M192A4/A12 areabout11%slower. M256split4/fullA16 iscloser atabout1.4%slower. M2048/N3072/K4096/G8 current544.82TOPS;M192 variants about25-28%slower,M256split4 about15%slower. On1126,the control632.16TOPS islower thanv116's673.52;the apparent3.75%relative gainof45003 isnotaccepted andstilldoesnotreach the675.51target. Its cause isunproven;record this anomaly ratherthan changing formalCSV orselecting abetter-looking sample. No newfull1178run isjustified forthese defaults.
+
+This tests internalorientation,geometry,A-read batching andexisting consumer split,butdoesnotyet reproduce allofBLAS2972'sphysicalLDS mapping orschedule. Infull vendorISA,the4producer waves interleave source rows and theirLDS blocks;consumer fragment bases/offset progression differ fromthe repository'scurrent XOR row mapping. M192prototype intentionally reuses our already-proven XOR mapping. Itsuniform8consumer schedule alsodiffers fromthe vendor's4+4interleaving. The M256control usesexisting CP code(priority3 onits legacy path),whereasvendorMMAC segmentsusepriority1. Thereforea negative result cannot beclaimed asproofthat the observed BLAS design cannot improveCK.
+
+Next derive andvalidate the producer-to-LDS-to-MMAC mapping atbyte level withasm-independent CPUaudit andGPUstage readback,then make a compatible M1924+4stage schedule. Compare actual generated waits andload/MMAC ordering to thecomplete observed vendor loop. Include prologue/final odd/even stage,tail masks,andregisterpressure;do notcopy vendorinstruction blocks ormerelychange aTILEconstant. Reuse original8shapes andfixedMax targets;dimension-based production dispatch onlyafterstable benefit andindependent full acceptance. No FP16/BF16 interface changes,no dynamicA packing,noquantization.
+
+Formal production remainsv112:1178numericalPASS,1170targets,8remaining. The prior116analysis/replay andthis experiment areseparate fromformal acceptance. No hardware-ceiling claim.

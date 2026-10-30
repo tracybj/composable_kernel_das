@@ -1,0 +1,99 @@
+{
+  "library_sha256": "999e4b965e239f65c4a8a3d67edc20e5b8bfeabe442845dce32e68a0912589fa",
+  "kernels": [
+    {
+      "version": 117,
+      "kind": "WaspM192Transpose",
+      "params": [
+        1,
+        8,
+        4,
+        4,
+        1,
+        1,
+        1024,
+        0,
+        0,
+        0,
+        8
+      ],
+      "kernel_symbol": "_ZN7ck_tile6kentryILi768ELi1ENS_36GroupedInt8NtWaspM192TransposeKernelINS_37GroupedInt8NtWaspM192TransposeProblemILb1ELi8ELi4ELi4ELb1ELb1ELi1024ELb0ELb0ELi0ELi8EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEEEEvDpT2_",
+      "vgpr_count": 169,
+      "sgpr_count": 40,
+      "private_segment_fixed_size": 0,
+      "vgpr_spill_count": 0,
+      "sgpr_spill_count": 0,
+      "group_segment_fixed_size": 65536
+    },
+    {
+      "version": 117,
+      "kind": "WaspM192Transpose",
+      "params": [
+        1,
+        8,
+        4,
+        12,
+        0,
+        1,
+        1024,
+        0,
+        0,
+        0,
+        8
+      ],
+      "kernel_symbol": "_ZN7ck_tile6kentryILi768ELi1ENS_36GroupedInt8NtWaspM192TransposeKernelINS_37GroupedInt8NtWaspM192TransposeProblemILb1ELi8ELi4ELi12ELb0ELb1ELi1024ELb0ELb0ELi0ELi8EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEEEEvDpT2_",
+      "vgpr_count": 185,
+      "sgpr_count": 40,
+      "private_segment_fixed_size": 0,
+      "vgpr_spill_count": 0,
+      "sgpr_spill_count": 0,
+      "group_segment_fixed_size": 65536
+    },
+    {
+      "version": 117,
+      "kind": "WaspCached",
+      "params": [
+        1,
+        4,
+        4,
+        16,
+        0,
+        0,
+        1024,
+        0,
+        0,
+        0
+      ],
+      "kernel_symbol": "_ZN7ck_tile6kentryILi768ELi1ENS_29GroupedInt8NtWaspCachedKernelINS_30GroupedInt8NtWaspCachedProblemILb1ELi4ELi4ELi16ELb0ELb0ELi1024ELb0ELb0ELi0EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEEEEvDpT2_",
+      "vgpr_count": 249,
+      "sgpr_count": 94,
+      "private_segment_fixed_size": 0,
+      "vgpr_spill_count": 0,
+      "sgpr_spill_count": 0,
+      "group_segment_fixed_size": 65536
+    },
+    {
+      "version": 117,
+      "kind": "WaspCached",
+      "params": [
+        1,
+        8,
+        4,
+        16,
+        0,
+        1,
+        1024,
+        0,
+        0,
+        0
+      ],
+      "kernel_symbol": "_ZN7ck_tile6kentryILi768ELi1ENS_29GroupedInt8NtWaspCachedKernelINS_30GroupedInt8NtWaspCachedProblemILb1ELi8ELi4ELi16ELb0ELb1ELi1024ELb0ELb0ELi0EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEEEEvDpT2_",
+      "vgpr_count": 233,
+      "sgpr_count": 94,
+      "private_segment_fixed_size": 0,
+      "vgpr_spill_count": 0,
+      "sgpr_spill_count": 0,
+      "group_segment_fixed_size": 65536
+    }
+  ]
+}
