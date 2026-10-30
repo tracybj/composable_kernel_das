@@ -40,3 +40,8 @@ The two M128 packed routes(6/7)use the same weight format and lifetime contract.
 Route6 is128x256/A-batch2;route7 is128x128/A-batch4. Selection uses M/N/K/G
 from iterations101/102. Updated public-API acceptance is required;development
 screen counts do not replace the prior formal1178 result.
+
+Routes8/9 add M64 packed INT8 kernels using the same format1 and lifetime contract.
+Route8 is64x256/A2 forN>=4096,K>=4096,G<=12;route9 is64x64/A2 otherwise.
+Ragged,empty,or non-native N/K retain the existing provider. Integration106
+requires new boundary/lifetime and full1178 acceptance;iteration105 is screening.

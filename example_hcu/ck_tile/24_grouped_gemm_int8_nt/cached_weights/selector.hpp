@@ -4,6 +4,11 @@ namespace ck_tile {
 // Calibrated on all344 originalM>=256 requirements in iteration96.
 // Dimensions only;no case IDs,lookups or target workbook access at runtime.
 inline unsigned int8_cached_route(int m,int n,int k,int groups,bool packed_available){
+ // M64 consumer stripe width depends on workload dimensions,never case IDs.
+ if(m==64){
+  if(!packed_available)return 0u;
+  return n>=4096 && k>=4096 && groups<=12?8u:9u;
+ }
  // Two M128 packed variants,calibrated across all422 M>=128 requirements.
  // Only dimensions/availability are used;non-native plans are filtered above.
  if(m==128)return packed_available?7u:0u;

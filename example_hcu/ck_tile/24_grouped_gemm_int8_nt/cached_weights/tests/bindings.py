@@ -14,7 +14,7 @@ def init(kind,**fields):
  for k,v in fields.items():setattr(x,k,v)
  return x
 E=Path(__file__).resolve().parents[2]
-libpath=Path(os.environ.get('CK_INT8_CACHED_BENCH_LIB',str(E/'build/cached_v103/libck_tile_int8_nt_cached_benchmark.so')))
+libpath=Path(os.environ.get('CK_INT8_CACHED_BENCH_LIB',str(E/'build/cached_v106/libck_tile_int8_nt_cached_benchmark.so')))
 lib=C.CDLL(str(libpath))
 # Resolve the actual implementation,not merely the path whose hash we read.
 # This catches an older same-SONAME cached library already loaded in-process.

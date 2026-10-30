@@ -466,3 +466,14 @@ CPU A-address model PASS.108 full-rangeINT8/FP64 checks PASS,including native an
 The broad N64/A2 packed candidate has minimum speedup0.9964 and median1.1613 on88 native shapes. N256 can regress on other shapes,so it is restricted by dimensions toN>=4096,K>=4096,G<=12;remaining native M64 usesN64/A2. This dimension-only draft reaches all92 targets in the development screen. It is calibrated on this screen and must pass independent public-API acceptance before production claims.
 
 Previously failing M64/N4096/K6144/G8:108.50 to148.39TOPS,target114.48. M64/N4096/K7168/G8:110.38 to149.84TOPS,target116.60. These are new-run comparisons,not replacements of v103's frozen records. Main public API remains v103 until integration gates and full1178 measurements finish. Next integrate additive routes8/9 using unchanged packed format and ownership/lifetime contract.
+
+
+# Iteration106:integrate M64 packed routes into the isolated INT8 API
+
+Add routes8(M64xN256,A-batch2)and9(M64xN64,A-batch2)under `cached_weights/m64/`. UniformM64 native plans become eligible. Route8 requiresN>=4096,K>=4096,G<=12;all other native M64 usesroute9. The selection uses only dimensions and availability. Ragged/empty and unsupported N/K preserve the existing provider. Both routes explicitly bind owned packedB using existing format1;no new weight layout or activation packing is introduced.
+
+Build in `build/cached_v106/` passes. Exactly8 new C API symbols are exported,zero old grouped-GEMM ABI owners are added. C structs/tags/offsets and all9 old public-context source hashes are unchanged;original INT8 host45 tests pass. Same-process loading preserves all4 old C entrypoint addresses. This is ABI/loader evidence,not new FP16/BF16 numerical or performance evidence.
+
+55 full-rangeINT8/FP64 boundary checks PASS with route coverage0/1/3/4/5/6/7/8/9,including M64 native packed routes,wide padding,odd stage count,ragged/empty fallback,input immutability,packed-byte checks,guarded output and nondefault preparation/compute streams.20 shared-weight tests PASS across M64/128/256/512/2048,including explicit source-address refresh,two generations,two streams,and queued-work destruction. CPU input/CSV/resume corruption checks for1178 shapes PASS.
+
+The dimension policy was calibrated on iteration105's92-case screen and is not independent acceptance. A fresh full1178 run is required. Existing formal v103 record remains1178 numericPASS,1117 reach BLAS,61 remain until the new public-API run finishes and is audited. Pack preparation and persistent bytes are reported separately under the approved reusable static-weight contract. Full target completion remains unproven.

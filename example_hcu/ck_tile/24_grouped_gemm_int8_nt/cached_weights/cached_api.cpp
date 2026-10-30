@@ -136,7 +136,7 @@ extern "C" CK_TILE_INT8_CACHED_API int ck_tile_int8_nt_cached_plan_create_v1(
           (a.m==0 || (a.a && a.c && aligned(a.a,16) && aligned(a.c,16))),CK_TILE_INT8_CACHED_INVALID_ARGUMENT_V1,"invalid INT8 activation/INT32 output descriptor");
   require(int64_t(a.m)*a.a_row_stride<=std::numeric_limits<int32_t>::max() && int64_t(a.m)*a.c_row_stride<=std::numeric_limits<int32_t>::max(),CK_TILE_INT8_CACHED_UNSUPPORTED_V1,"plan matrix span exceeds supported domain");
   uniform&=a.m==groups[0].m;empty|=a.m==0;max_m=std::max(max_m,a.m);total_m+=a.m;
-  native&=a.m>0 && (a.m%256==0 || a.m==128) && int64_t(256)*a.a_row_stride<=std::numeric_limits<int32_t>::max();
+  native&=a.m>0 && (a.m%256==0 || a.m==128 || a.m==64) && int64_t(256)*a.a_row_stride<=std::numeric_limits<int32_t>::max();
   raw_original&=w->raw[i].row_stride<16384;
   raw_transposed&=a.a_row_stride<16384;
  }
@@ -152,7 +152,9 @@ extern "C" CK_TILE_INT8_CACHED_API int ck_tile_int8_nt_cached_plan_create_v1(
  for(int i=0;i<g;++i){
   const auto& a=groups[i];const bool packed=p->route==CK_TILE_INT8_CACHED_PACKED_WEIGHT_V1 ||
    p->route==CK_TILE_INT8_CACHED_PACKED_M128_N256_A2_V1 ||
-   p->route==CK_TILE_INT8_CACHED_PACKED_M128_N128_A4_V1;
+   p->route==CK_TILE_INT8_CACHED_PACKED_M128_N128_A4_V1 ||
+   p->route==CK_TILE_INT8_CACHED_PACKED_M64_N256_A2_V1 ||
+   p->route==CK_TILE_INT8_CACHED_PACKED_M64_N64_A2_V1;
   const void* b=packed?w->packed+uint64_t(i)*per_group:w->raw[i].data;
   ck_tile::UniversalGemmKernelArgs<1,1,0> arg{{a.a},{b},{},a.c,a.m,w->n,w->k,{a.a_row_stride},{packed?w->k:w->raw[i].row_stride},{},a.c_row_stride,1};args.emplace_back(std::move(arg));
  }
