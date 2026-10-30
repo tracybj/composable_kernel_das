@@ -21,21 +21,25 @@ implementation; v113–v120 experiments did not improve the remaining eight
 cases and are not enabled. The refactor preserves this production policy,
 rather than promoting the v120 experimental M192 candidate.
 
-The original full run had 1178/1178 numerical PASS and 1170/1178 at or above
-the frozen BLAS target. These are historical results; the new full run is
-reported separately after completion. `docs/REFACTOR_TWO_CORE_v121.md` records
-build identity, regression gates and measured performance.
+The reorganized version has completed one new full round on physical GPU7:
+1178/1178 numerical PASS, 1170/1178 at or above the frozen BLAS target;
+prefill 298/306, decode 872/872. Minimum ratio is 0.981198. Median speedup
+versus v112 is 1.000034x, so performance is effectively preserved.
+No OOM skips or missing metrics. The same eight prefill cases remain below
+the target; this refactor does not claim to close them.
+
+See [report](docs/REFACTOR_TWO_CORE_v121.md) and
+[1178-case CSV](docs/current_refactor_v121_1178.csv).
+BLAS numbers are the frozen tuned targets, not a new BLAS measurement.
 
 ## Build
 
 ```bash
 R=/workspace/GroupGemm/composable_kernel
 E=$R/example_hcu/ck_tile/24_grouped_gemm_int8_nt
-cmake -S "$E/cached_weights" -B "$E/build/refactor_v121" \
-  -DCMAKE_CXX_COMPILER=/opt/dtk/bin/aicc \
-  -DCMAKE_BUILD_TYPE=Release -DCK_INT8_CACHED_ARCH=gfx936
-cmake --build "$E/build/refactor_v121" \
-  --target ck_tile_int8_nt_cached_benchmark -j2
+python3 "$E/cached_weights/build_and_manifest.py" \
+  --build "$E/build/refactor_v121" --compiler /opt/dtk/bin/aicc \
+  --arch gfx936 --jobs 2
 ```
 
 The cached target is also available from the example/root CMake build.
@@ -45,9 +49,21 @@ INT8-only C symbols and does not define an old FP16/BF16 owner.
 ## Reproduce validation and performance
 
 Use physical GPU 7 in `ck_yyc`. Run the boundary and lifetime gates first,
-then `cached_weights/tests/validate_all_1178.py` for exactly one full round.
-Set `CK_INT8_CACHED_BUILD`, `CK_INT8_CACHED_BENCH_LIB`, and
-`CK_INT8_TEST_VERSION=v121`; report files use a fresh output directory.
+then the full suite, using a fresh output directory (one formal round):
+
+```bash
+export HIP_VISIBLE_DEVICES=7 CUDA_VISIBLE_DEVICES=7 DTK_VISIBLE_DEVICES=7
+export CK_INT8_CACHED_BUILD="$E/build/refactor_v121"
+export CK_INT8_CACHED_BENCH_LIB="$CK_INT8_CACHED_BUILD/libck_tile_int8_nt_cached_benchmark.so"
+export CK_INT8_TEST_VERSION=v121
+export LD_LIBRARY_PATH="$CK_INT8_CACHED_BUILD:/opt/dtk/lib:/opt/dtk/hip/lib:/opt/dtk/llvm/lib:$LD_LIBRARY_PATH"
+ulimit -c 0
+python3 "$E/cached_weights/tests/test_cached_api.py"
+python3 "$E/cached_weights/tests/test_lifetime.py"
+python3 "$E/cached_weights/tests/validate_all_1178.py" \
+  --output "$E/results/refactor_v121_new_run"
+```
+
 The acceptance runner freezes source/library/target hashes, validates all
 outputs and guards, and uses 10 warmups, 50 repetitions, three samples and
 the median. Static-weight preparation time and storage are reported separately.

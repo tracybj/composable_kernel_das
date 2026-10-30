@@ -1,0 +1,97 @@
+{
+  "status": "PASS",
+  "order": [
+    "old",
+    "new",
+    "new",
+    "old"
+  ],
+  "ID": 62,
+  "M": 16,
+  "N": 2048,
+  "K": 768,
+  "G": 16,
+  "records": [
+    {
+      "status": "PASS",
+      "samples_ms": [
+        0.02858560159802437,
+        0.028515201061964035,
+        0.02860799990594387
+      ],
+      "median_ms": 0.02858560159802437,
+      "route": 0,
+      "legacy_instance": 6401,
+      "library": "/workspace/GroupGemm/composable_kernel/example_hcu/ck_tile/24_grouped_gemm_int8_nt/build/cached_v112",
+      "M": 16,
+      "N": 2048,
+      "K": 768,
+      "G": 16,
+      "index": 0,
+      "version": "cached_v112",
+      "library_sha256": "174c12efbc6c2ad3f069cde19df41e14a710af89d9afc8593342fd9625d49245"
+    },
+    {
+      "status": "PASS",
+      "samples_ms": [
+        0.028617598116397858,
+        0.028668798506259918,
+        0.02855037897825241
+      ],
+      "median_ms": 0.028617598116397858,
+      "route": 0,
+      "legacy_instance": 6401,
+      "library": "/workspace/GroupGemm/composable_kernel/example_hcu/ck_tile/24_grouped_gemm_int8_nt/build/refactor_v121",
+      "M": 16,
+      "N": 2048,
+      "K": 768,
+      "G": 16,
+      "index": 1,
+      "version": "refactor_v121",
+      "library_sha256": "0052f228366c8dfb80afa9080d8227d604be6e8d404523709d3229bbe879bfb6"
+    },
+    {
+      "status": "PASS",
+      "samples_ms": [
+        0.02858560159802437,
+        0.028656000271439552,
+        0.028598379343748093
+      ],
+      "median_ms": 0.028598379343748093,
+      "route": 0,
+      "legacy_instance": 6401,
+      "library": "/workspace/GroupGemm/composable_kernel/example_hcu/ck_tile/24_grouped_gemm_int8_nt/build/refactor_v121",
+      "M": 16,
+      "N": 2048,
+      "K": 768,
+      "G": 16,
+      "index": 2,
+      "version": "refactor_v121",
+      "library_sha256": "0052f228366c8dfb80afa9080d8227d604be6e8d404523709d3229bbe879bfb6"
+    },
+    {
+      "status": "PASS",
+      "samples_ms": [
+        0.028857599943876266,
+        0.02932159975171089,
+        0.028995199128985405
+      ],
+      "median_ms": 0.028995199128985405,
+      "route": 0,
+      "legacy_instance": 6401,
+      "library": "/workspace/GroupGemm/composable_kernel/example_hcu/ck_tile/24_grouped_gemm_int8_nt/build/cached_v112",
+      "M": 16,
+      "N": 2048,
+      "K": 768,
+      "G": 16,
+      "index": 3,
+      "version": "cached_v112",
+      "library_sha256": "174c12efbc6c2ad3f069cde19df41e14a710af89d9afc8593342fd9625d49245"
+    }
+  ],
+  "old_median_ms": 0.028790400363504887,
+  "new_median_ms": 0.028607988730072975,
+  "speedup_old_over_new": 1.0063762480876595,
+  "formal_csv_modified": false,
+  "scope": "diagnostic only,not substituted into formal results"
+}
