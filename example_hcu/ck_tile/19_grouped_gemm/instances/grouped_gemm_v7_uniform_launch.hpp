@@ -88,7 +88,7 @@ struct GemmConfigV7Uniform : public GemmConfigBase
     static constexpr bool SupportsFastColumnMajorA = true;
 
     static constexpr ck_tile::index_t TileParitionerGroupNum = 1;
-    static constexpr ck_tile::index_t TileParitionerM01      = 4;
+    static constexpr ck_tile::index_t TileParitionerM01      = 8;
 
     static constexpr int kBlockPerCu = 1;   // 64 KB ring => one CTA per CU
 
