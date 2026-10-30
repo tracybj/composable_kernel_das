@@ -1,0 +1,14 @@
+{
+  "status": "ALL104_NUMERIC_PASS_DIMENSION_POLICY_PENDING_PUBLIC_ACCEPTANCE",
+  "shapes": 104,
+  "records": 904,
+  "full_range_checks": 96,
+  "library_sha256": "a6bbea7b5a38d94d1ab62fad24dce354f5763b7bd772c4bb12e759a5bed9531e",
+  "control_target_pass": 102,
+  "draft_target_pass": 104,
+  "native_promoted": 11,
+  "min_selected_R": 1.0394332360932486,
+  "min_speedup": 1.0,
+  "policy": "M32,packed available,K>=3072,G<=12;N>=4096 andK>=4096 usesN256/A2,otherwiseN64/A1. All other M32 keeps legacy.",
+  "not_independent_acceptance": true
+}
