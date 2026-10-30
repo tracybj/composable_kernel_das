@@ -45,3 +45,11 @@ Routes8/9 add M64 packed INT8 kernels using the same format1 and lifetime contra
 Route8 is64x256/A2 forN>=4096,K>=4096,G<=12;route9 is64x64/A2 otherwise.
 Ragged,empty,or non-native N/K retain the existing provider. Integration106
 requires new boundary/lifetime and full1178 acceptance;iteration105 is screening.
+
+Routes10/11 add the M32 packed paths from iteration110. Route12 is the validated
+M256/N384/A2 kernel from107/111,renamed in a private namespace;spilling107
+variants and the unhelpful109 mask are not integrated. Old routes remain the
+base policy. Device CU count is stored from the existing weights-create query.
+For old route1/5,K>=1024,M>=2048,the integer CTA-wave model selects12 when
+ratio>=1.47,or baseline>=24waves andratio>=1.44. All new routes bind owned
+format1 weights. This version requires fresh boundary/lifetime/full1178 tests.
