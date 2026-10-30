@@ -424,3 +424,7 @@ Verified process terminal afterOOM inboolean comparison reduction atID464.132 co
 ## Iteration96 completed all344
 
 2064 full-output records PASS;prior792-prefix hash preserved after validator-only OOM repair. Same-run control168/344,oracle284/344,dimension-only draft284/344,minR0.9054,no>3% regressions.60 large-M misses remain. No formal1178 update. Additive INT8-only API integration next;existing16bit ABI/layout/defaults protected.
+
+## Iteration99
+
+New isolated INT8 cached-weight API all1178 numerical PASS;1093/1178 reach frozen BLAS targets,minR=0.866067,medianR=1.215079;85 remain.46full-range and8weight/stream-lifetime checks PASS. No existing FP16/BF16 source/ABI/default changes. Preparation time/storage separate. See iteration_99_cached_api_1178.md and current_cached_v97_1178.csv.
