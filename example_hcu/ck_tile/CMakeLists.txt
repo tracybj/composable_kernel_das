@@ -1,0 +1,38 @@
+
+# Copyright (c) 2026 Hygon Information Technology Co., Ltd.
+# SPDX: SPDX-License-Identifier: MIT
+include_directories(AFTER
+  ${CMAKE_CURRENT_LIST_DIR}
+)
+
+add_compile_options(-Wno-bit-int-extension)
+add_subdirectory(01_fmha)
+add_subdirectory(02_layernorm2d)
+add_subdirectory(03_gemm)
+add_subdirectory(04_img2col)
+add_subdirectory(05_reduce)
+add_subdirectory(06_permute)
+add_subdirectory(09_topk_softmax)
+add_subdirectory(10_rmsnorm2d)
+add_subdirectory(11_add_rmsnorm2d_rdquant)
+add_subdirectory(12_smoothquant)
+add_subdirectory(13_moe_sorting)
+add_subdirectory(14_moe_smoothquant)
+add_subdirectory(14_conv)
+add_subdirectory(15_fused_conv)
+add_subdirectory(16_batched_gemm)
+add_subdirectory(16_conv3d_fwd)
+add_subdirectory(17_fused_moe)
+add_subdirectory(18_moe_quant)
+add_subdirectory(19_gemm_multi_d)
+add_subdirectory(19_grouped_gemm)
+add_subdirectory(20_jenga)
+add_subdirectory(21_elementwise)
+add_subdirectory(21_gdn)
+add_subdirectory(35_batched_transpose)
+add_subdirectory(38_block_scale_gemm)
+add_subdirectory(22_sla)
+
+add_subdirectory(23_unified_attention)
+
+add_subdirectory(24_grouped_gemm_int8_nt)

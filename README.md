@@ -1,23 +1,117 @@
-# Grouped GEMM optimization
+# Composable Kernel
 
-Own CK-Tile INT8 NT implementation, experiments and iteration logs.
+本仓库 `main` 为完整 CK 源码及整理后的 INT8 NT grouped GEMM 实现。
+优化入口：[24_grouped_gemm_int8_nt](example_hcu/ck_tile/24_grouped_gemm_int8_nt/README.md)。
+历史实验保存在 [`exp/int8_nt`](https://github.com/tracybj/composable_kernel_das/tree/exp/int8_nt)。
+源码快照与分支说明见 [REPOSITORY_LAYOUT.md](REPOSITORY_LAYOUT.md)。
 
-Code: example_hcu/ck_tile/24_grouped_gemm_int8_nt/
+## Methodology
+Composable Kernel (CK) library aims to provide a programming model for writing performance critical kernels for machine learning workloads across multiple architectures including GPUs, CPUs, etc, through general purpose kernel languages, like HIP C++.
 
-Upstream base: 9acdc34e1f733f3c5dbfc85b52d6273409ec2ce8. Integration changes: integration/ck_int8_nt.patch. Upstream history, binaries and vendor disassembly are not included.
+CK utilizes two concepts to achieve performance portability and code maintainability:
+* A tile-based programming model
+* Algorithm complexity reduction for complex ML operators, using innovative technique we call "Tensor Coordinate Transformation".
 
-Target: 1178 shapes from BlasLt_ggemm_tuning_baseline.xlsx, int8_NT column K; INT8 x INT8 -> INT32, NT, no scale. Dispatch uses matrix dimensions, group count and supported attributes, never benchmark case IDs.
+![ALT](/docs/data/ck_component.png "CK Components")
 
-Iteration 26 public-interface validation: all 560 shapes with M <= 16 pass numerical checks and reach the frozen target in this run (minimum throughput ratio 1.0034, median 1.3412). Eight have less than 3% margin. This does not establish completion of the remaining 618 shapes with M > 16.
+## upstream project
+composable_kernel
+Homepage: https://github.com/ROCm/composable_kernel.git
+Commit 4feebedd413212fcd455da4a2bfcb40e9e6cab5a
+<!-- Modified by Hygon Information Technology Co., Ltd. -->
 
-See `example_hcu/ck_tile/24_grouped_gemm_int8_nt/docs/iteration_26_public_audit.json` and `iteration_26_public_small_m.csv` for validation evidence. Native direct-to-LDS, ping-pong, LDS mapping and larger-M experiments are recorded separately in the iteration logs and are not yet default production paths.
+## Code Structure
+Current CK library are structured into 4 layers:
+* "Templated Tile Operators" layer
+* "Templated Kernel and Invoker" layer
+* "Instantiated Kernel and Invoker" layer
+* "Client API" layer
 
-Iteration 37 adds five dimension-based packed deep-K instances for M32/64. All 196 public-interface numerical checks pass; 192 reach the frozen target (minimum ratio 0.9442, median 1.3858). The four misses are retained in `docs/iteration_37_public_medium_m.csv` under the example. The registry now has 23 INT8 instances; original FP selector tests and 28 full-range INT8 boundary tests pass.
+![ALT](/docs/data/ck_layer.png "CK Layers")
 
-M128 iteration 40 screening covers all 78 shapes: every output check passes and the fastest available candidate reaches the target on 77 shapes. These are explicit development candidates, not default-selector acceptance. All 1178 target shapes have not yet been completed.
+## Documentation
 
-Current public default (iteration 47): 24 INT8 instances, 44 registry entries including FP. A reusable no-LDS vector epilogue is selected for uniform M<=16,K>=4096 at every G; all other dispatch rules are preserved. All560 small-M public numerical checks pass and all560 reach the frozen target in this run (minimum ratio1.0073, median1.3667;557 have at least3% margin). Host80+33,1178 CPU shape replay/relabel/reverse checks and28 full-range INT8/FP64 boundary profiles pass. Evidence: `docs/iteration_47_public_audit.json` and `docs/iteration_47_public_small_m.csv` under the example. This run does not accept the remaining618 shapes.
+Run the steps below to build documentation locally.
 
-Iteration48 separates producer and consumer loop/register lifetimes for larger M. All54 checks (48 boundary combinations plus six repeated smoke checks) and36 performance-output records pass; metadata shows233-234 VGPRs without spills. The four representatives reach about425-482 TOPS, below their frozen targets. This remains experimental and is not the public default. See `docs/iteration_48_split_roles.md` under the example.
+```
+cd docs
+pip3 install -r .sphinx/requirements.txt
+python3 -m sphinx -T -E -b html -d _build/doctrees -D language=en . _build/html
+```
 
-Upstream notices for adapted CK portions: `third_party_licenses/CK_TILE_NOTICE.md`.
+## Contributors
+The list of developers and contributors is here: [Contributors](/CONTRIBUTORS.md)
+
+## Citation
+If you use CK, please use following citations:
+* CK paper will be freely available on arXiv soon: [Realizing Tensor Operators Using Coordinate Transformations and Tile Based Programming](???)
+* [CITATION.cff](/CITATION.cff)
+
+## License
+CK is released under the MIT license. [License File](/LICENSE)
+
+
+# Build CK
+
+## Build docker image
+```bash
+DOCKER_BUILDKIT=1 docker build -t ck:latest -f Dockerfile .
+```
+
+## Launch docker
+```bash
+docker run                                     \
+-it                                            \
+--privileged                                   \
+--group-add sudo                               \
+-w /root/workspace                             \
+-v ${PATH_TO_LOCAL_WORKSPACE}:/root/workspace  \
+ck:latest                                      \
+/bin/bash
+```
+
+## Build CK
+```bash
+mkdir build && cd build
+
+# Need to specify target ID, example below is for gfx908 and gfx90a
+cmake                                                                                             \
+-D CMAKE_PREFIX_PATH=/opt/rocm                                                                    \
+-D CMAKE_CXX_COMPILER=/opt/rocm/bin/hipcc                                                         \
+-D CMAKE_CXX_FLAGS="-O3"                                                                          \
+-D CMAKE_BUILD_TYPE=Release                                                                       \
+-D GPU_TARGETS="gfx908;gfx90a"                                                                    \
+..
+```
+
+### Build examples and tests
+```bash
+ make -j examples tests
+ make test
+```
+
+Instructions for running each individual examples are under [example](/example)
+
+
+## Build ckProfiler
+```bash
+ make -j ckProfiler
+```
+Instructions for running ckProfiler are under [profiler](/profiler)
+
+## Install CK
+```bash
+make install
+```
+
+## Using CK as pre-built kernel library
+Instructions for using CK as a pre-built kernel library are under [client_example](/client_example)
+
+## Caveat
+### Kernel Timing and Verification
+CK's own kernel timer will warn up kernel once, and then run it multiple times
+to get average kernel time. For some kernels that use atomic add, this will cause
+output buffer to be accumulated multiple times, causing verification failure.
+To work around it, do not use CK's own timer and do verification at the same time.
+CK's own timer and verification in each example and ckProfiler can be enabled or
+disabled from command line.

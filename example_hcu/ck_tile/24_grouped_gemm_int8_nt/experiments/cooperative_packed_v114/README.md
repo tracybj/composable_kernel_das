@@ -1,5 +1,0 @@
-# Cooperative packed M256 pipeline experiment
-
-All8 or16 waves publish disjoint A slabs and compute a32-column output stripe each. Two32KiB A slots retain existing XOR LDS layout. B format1 is unchanged. No dedicated producer wave;one block publishesA once per stage and computesN256 orN512. Each stage overlaps next A copy with low MMAC and next B load with high MMAC;vmcnt0 and block LDS barriers protect publication and reuse. m0 is restored after VMEM-to-LDS issue before consumer DS reads. Original publicv112 production files remain frozen.
-
-Hypothesis:atN512 output,16 compute waves use the1024-thread block and A publication cost more efficiently than4producer+12consumer N384. Counterexample:copy/compute instruction pressure or synchronization may dominate despite greater useful work. N256 cooperative is a role-assignment control. No speedup or occupancy claim before generated-resource,full-range numerical and paired performance gates. M256/K128 native domain;complete packed scalar fallback for diagnostic tails. INT8 only,no dynamicA packing,no FP16/BF16 interface change.
