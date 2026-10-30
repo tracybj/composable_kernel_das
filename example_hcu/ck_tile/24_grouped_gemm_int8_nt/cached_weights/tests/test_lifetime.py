@@ -48,5 +48,5 @@ def check_configuration(g,n,k,lengths):
 check_configuration(2,256,4096,[32,64,128,256,512,2048])
 check_configuration(2,4096,4096,[32])
 check_configuration(4,1536,2048,[2048])
-report=dict(status='PASS',checks=checks,same_source_addresses_refreshed=True,plans_destroy_wait_for_queued_work=True,library_sha256=hashlib.sha256((E/'build/cached_v112/libck_tile_int8_nt_cached.so').read_bytes()).hexdigest())
-(E/'results/cached_api_v112_lifetime.json').write_text(json.dumps(report,indent=2)+'\n');print('CACHED_API_LIFETIME_PASS',len(checks))
+report=dict(status='PASS',checks=checks,same_source_addresses_refreshed=True,plans_destroy_wait_for_queued_work=True,library_sha256=hashlib.sha256((Path(os.environ.get('CK_INT8_CACHED_BUILD',E/'build/cached_v112'))/'libck_tile_int8_nt_cached.so').read_bytes()).hexdigest())
+(E/('results/cached_api_'+os.environ.get('CK_INT8_TEST_VERSION','v112')+'_lifetime.json')).write_text(json.dumps(report,indent=2)+'\n');print('CACHED_API_LIFETIME_PASS',len(checks))

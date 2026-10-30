@@ -20,7 +20,7 @@ import traceback
 
 E = Path(__file__).resolve().parents[2]
 ROOT = E.parents[2]
-BUILD = E / 'build/cached_v112'
+BUILD = Path(os.environ.get('CK_INT8_CACHED_BUILD', E / 'build/cached_v112'))
 FIELDS = ['ID', 'phase', 'M', 'N', 'K', 'G', 'dtype', 'layout', 'route',
           'legacy_instance', 'CK_ms', 'CK_TOPS', 'BLAS_target_ms',
           'BLAS_target_TOPS', 'R', 'prepare_submit_host_ms',
@@ -128,7 +128,7 @@ def main():
                 str(BUILD / 'libck_tile_int8_nt_cached_benchmark.so'))).resolve() == (
                 BUILD / 'libck_tile_int8_nt_cached_benchmark.so').resolve()
     for name in ['cached_api_v112_boundaries.json', 'cached_api_v112_lifetime.json']:
-        check = json.loads((E / 'results' / name).read_text())
+        check = json.loads((E / 'results' / name.replace('v112', os.environ.get('CK_INT8_TEST_VERSION','v112'))).read_text())
         assert check['status'] == 'PASS' and check['library_sha256'] == frozen['api_library']
     resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
     import torch

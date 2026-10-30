@@ -82,3 +82,6 @@ if(HIPBLASLT_INSTALL)
             ck_tile_grouped_int8_nt_benchmark_support)
     endif()
 endif()
+
+# The cached-weight API is additive and has no FP16/BF16 ABI owner.
+add_subdirectory(cached_weights EXCLUDE_FROM_ALL)

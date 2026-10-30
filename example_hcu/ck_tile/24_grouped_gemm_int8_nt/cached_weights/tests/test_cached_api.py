@@ -57,5 +57,5 @@ for index,(lengths,n,k) in enumerate(cases):
  del arrays,weights,groups,wd,gd,x,w,raw,y,oldx,oldw;gc.collect();torch.cuda.empty_cache()
 covered={x['route'] for x in results}
 assert {0,1,3,4,5,6,7,8,9,10,11,12}<=covered,('Missing production routes',{0,1,3,4,5,6,7,8,9,10,11,12}-covered,'observed',covered)
-report=dict(status='PASS',checks=results,library_sha256=hashlib.sha256((E/'build/cached_v112/libck_tile_int8_nt_cached.so').read_bytes()).hexdigest(),routes=sorted({x['route'] for x in results}),C_ABI_sizes=[C.sizeof(t) for t in [Weight,Group,WeightInfo,PlanInfo]])
-(E/'results/cached_api_v112_boundaries.json').write_text(json.dumps(report,indent=2)+'\n');print('CACHED_API_BOUNDARIES_PASS',len(results))
+report=dict(status='PASS',checks=results,library_sha256=hashlib.sha256((Path(os.environ.get('CK_INT8_CACHED_BUILD',E/'build/cached_v112'))/'libck_tile_int8_nt_cached.so').read_bytes()).hexdigest(),routes=sorted({x['route'] for x in results}),C_ABI_sizes=[C.sizeof(t) for t in [Weight,Group,WeightInfo,PlanInfo]])
+(E/('results/cached_api_'+os.environ.get('CK_INT8_TEST_VERSION','v112')+'_boundaries.json')).write_text(json.dumps(report,indent=2)+'\n');print('CACHED_API_BOUNDARIES_PASS',len(results))
