@@ -1,5 +1,5 @@
 {
-  "status": "BUILD_BOUNDARY_LIFETIME_COMPATIBILITY_PASS_FULL1178_PENDING",
+  "status": "PUBLIC1178_NUMERIC_PASS_PERFORMANCE_PARTIAL",
   "library_sha256": "174c12efbc6c2ad3f069cde19df41e14a710af89d9afc8593342fd9625d49245",
   "new_C_API_symbols": [
     "ck_tile_int8_nt_cached_last_error_v1",
@@ -129,7 +129,13 @@
     "example_hcu/ck_tile/24_grouped_gemm_int8_nt/grouped_int8_nt_wasp_kernel.hpp": "abcd76e0ea422feeef15982ac58bc263f7b8226182c6e3f20c49a1f14ccb20fe",
     "example_hcu/ck_tile/24_grouped_gemm_int8_nt/grouped_int8_nt_wasp_fallback.hpp": "1611b7e11c0590c43e88335f1c9aa99e83d41df5947c6ab229787c00d0948e39"
   },
-  "full_acceptance": "Not started at this checkpoint",
+  "full_acceptance": {
+    "numeric_pass": 1178,
+    "targets_met": 1170,
+    "remaining": 8,
+    "report": "iteration_112_cached_api_1178.md",
+    "csv": "current_cached_v112_1178.csv"
+  },
   "previous_formal_result": "v106:1178 numeric PASS,1115 reach BLAS,63 remain",
   "runtime_selection": "Only M/N/K/G,packed availability and device CU count;no case IDs or target table"
 }

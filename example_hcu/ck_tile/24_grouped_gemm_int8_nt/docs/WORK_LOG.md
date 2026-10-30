@@ -559,3 +559,7 @@ Build passes with exactly8 INT8 C API entries andzero old ABI owners. All9 old p
 65 full-rangeINT8/FP64 checks PASS,covering every selected route0/1/3/4/5/6/7/8/9/10/11/12,padding/wide raw strides,odd stages,ragged/empty groups,packed bytes,immutable inputs,guarded outputs andnondefault streams.32 lifetime checks PASS acrossshared weight plans,two generations ofexplicit same-address refresh,two streams,and destruction afterqueued work,including newroutes10/11/12.11 CPU selector checks verifydimension-only choice,device-CU dependence andunknown-device fallback. CPU1178 contract/CSV/resume-corruption checks PASS.
 
 Fresh full1178 public-interface acceptance is still required. DevelopmentM32 policy reaches104/104,andlargeM policy336/344,butthese are calibrated screens,not delivery counts. Previous formalv106 remains1178 numericalPASS/1115 targets until the newrun is complete and audited. Pack preparation time/storage remain separate underthe approved static-weight reuse contract. All-target completion remains unproven.
+
+## Iteration112
+
+New isolated INT8 cached-weight API all1178 numerical PASS;1170/1178 reach frozen BLAS targets,minR=0.982297,medianR=1.276317;8 remain.65full-range and32weight/stream-lifetime checks PASS. No existing FP16/BF16 source/ABI/default changes. Preparation time/storage separate. See iteration_112_cached_api_1178.md and current_cached_v112_1178.csv.

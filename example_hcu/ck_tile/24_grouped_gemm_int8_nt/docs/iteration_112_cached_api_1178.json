@@ -1,0 +1,231 @@
+{
+  "status": "PASS",
+  "scope": "All1178 new measurements through isolated cached-weight C API;latest frozen BLAS target remains unchanged",
+  "all": {
+    "count": 1178,
+    "ge1": 1170,
+    "ge099": 1177,
+    "ge095": 1178,
+    "ge05": 1178,
+    "min_R": 0.9822972955655935,
+    "median_R": 1.2763174927363798
+  },
+  "by_phase": {
+    "decode": {
+      "count": 872,
+      "ge1": 872,
+      "ge099": 872,
+      "ge095": 872,
+      "ge05": 872,
+      "min_R": 1.0075422175530886,
+      "median_R": 1.4253353481553952
+    },
+    "prefill": {
+      "count": 306,
+      "ge1": 298,
+      "ge099": 305,
+      "ge095": 306,
+      "ge05": 306,
+      "min_R": 0.9822972955655935,
+      "median_R": 1.0900548159464098
+    }
+  },
+  "by_M": {
+    "1": {
+      "count": 112,
+      "ge1": 112,
+      "ge099": 112,
+      "ge095": 112,
+      "ge05": 112,
+      "min_R": 1.0406025577618299,
+      "median_R": 1.3777642038143532
+    },
+    "2": {
+      "count": 112,
+      "ge1": 112,
+      "ge099": 112,
+      "ge095": 112,
+      "ge05": 112,
+      "min_R": 1.0405416722727048,
+      "median_R": 1.368538586576245
+    },
+    "4": {
+      "count": 112,
+      "ge1": 112,
+      "ge099": 112,
+      "ge095": 112,
+      "ge05": 112,
+      "min_R": 1.0400035276649722,
+      "median_R": 1.374115865113286
+    },
+    "8": {
+      "count": 112,
+      "ge1": 112,
+      "ge099": 112,
+      "ge095": 112,
+      "ge05": 112,
+      "min_R": 1.0363398580743757,
+      "median_R": 1.3691072253805707
+    },
+    "16": {
+      "count": 112,
+      "ge1": 112,
+      "ge099": 112,
+      "ge095": 112,
+      "ge05": 112,
+      "min_R": 1.0075422175530886,
+      "median_R": 1.3392188574357151
+    },
+    "32": {
+      "count": 104,
+      "ge1": 104,
+      "ge099": 104,
+      "ge095": 104,
+      "ge05": 104,
+      "min_R": 1.0397942616966434,
+      "median_R": 1.3997941922632935
+    },
+    "64": {
+      "count": 92,
+      "ge1": 92,
+      "ge099": 92,
+      "ge095": 92,
+      "ge05": 92,
+      "min_R": 1.1691145116775126,
+      "median_R": 1.6651733828699529
+    },
+    "128": {
+      "count": 78,
+      "ge1": 78,
+      "ge099": 78,
+      "ge095": 78,
+      "ge05": 78,
+      "min_R": 1.4392877416618453,
+      "median_R": 1.7413483628747823
+    },
+    "256": {
+      "count": 38,
+      "ge1": 38,
+      "ge099": 38,
+      "ge095": 38,
+      "ge05": 38,
+      "min_R": 1.0240580589058426,
+      "median_R": 1.1819896242876204
+    },
+    "2048": {
+      "count": 108,
+      "ge1": 107,
+      "ge099": 108,
+      "ge095": 108,
+      "ge05": 108,
+      "min_R": 0.9903114923575904,
+      "median_R": 1.126943788329673
+    },
+    "4096": {
+      "count": 88,
+      "ge1": 87,
+      "ge099": 88,
+      "ge095": 88,
+      "ge05": 88,
+      "min_R": 0.9917000932487723,
+      "median_R": 1.1202649453926599
+    },
+    "8192": {
+      "count": 72,
+      "ge1": 71,
+      "ge099": 72,
+      "ge095": 72,
+      "ge05": 72,
+      "min_R": 0.9993676369910655,
+      "median_R": 1.0725554996482392
+    },
+    "16384": {
+      "count": 38,
+      "ge1": 33,
+      "ge099": 37,
+      "ge095": 38,
+      "ge05": 38,
+      "min_R": 0.9822972955655935,
+      "median_R": 1.0499010993796491
+    }
+  },
+  "routes": {
+    "0": 661,
+    "9": 83,
+    "7": 98,
+    "3": 15,
+    "6": 20,
+    "4": 23,
+    "12": 220,
+    "5": 39,
+    "11": 6,
+    "1": 3,
+    "10": 5,
+    "8": 5
+  },
+  "remaining_by_NK": {
+    "(2048, 768)": 3,
+    "(3072, 4096)": 2,
+    "(4096, 7168)": 2,
+    "(1536, 2048)": 1
+  },
+  "remaining_IDs": [
+    100,
+    911,
+    920,
+    96,
+    1126,
+    92,
+    1130,
+    704
+  ],
+  "full_range_boundary_pass": 65,
+  "reuse_refresh_stream_lifetime_pass": 32,
+  "boundary_routes": [
+    0,
+    1,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ],
+  "warmup": 10,
+  "repeat": 50,
+  "samples": 3,
+  "median": true,
+  "api_library_sha256": "174c12efbc6c2ad3f069cde19df41e14a710af89d9afc8593342fd9625d49245",
+  "benchmark_library_sha256": "6e2c5e3391a79efdf576713741933edf4bdbff788a7798ec76a3e272b45362f2",
+  "source_revision": "ae91d2522f5cd0631d03d1dbdda74ba90704efc3",
+  "device_pci": "0000:f5:00.0",
+  "old_public_context_unchanged": {
+    "include/ck_tile/ops/gemm/grouped_gemm_selector.hpp": "dcc344d49aa13c4e22f02567cf12081e261e99ffb5b243e50983890c1ac08b4f",
+    "include/ck_tile/ops/gemm/grouped_gemm_device_args.h": "45ef94020156023aee585dc56ed77d1bdee65533f350bff03bffcb3db9592a02",
+    "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args.cpp": "75a76d0029ad7a65e65be65d7238598e7cee199e59a4c0eae589565a826bf81c",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/instances.cpp": "349b08225b5f2d783278663dde4eb05823d0a0b1db38a37955993fff9822b91e",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/grouped_int8_nt_wasp_pipeline.hpp": "083291bb58f4e24d5304d97e659a1af2f67bf5d2dfbd320e69d22fd2140975a3",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/grouped_int8_nt_wasp_problem.hpp": "e0834d68ac775e959ae87f7d97a3c7c7505a12af6f51ae440bb4382ae7c6fb76",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/grouped_int8_nt_wasp_epilogue.hpp": "1e84f0545089a1386e6c51214b3c45f66726c702ff1c71eccf3183c2daeb39bc",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/grouped_int8_nt_wasp_kernel.hpp": "abcd76e0ea422feeef15982ac58bc263f7b8226182c6e3f20c49a1f14ccb20fe",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/grouped_int8_nt_wasp_fallback.hpp": "1611b7e11c0590c43e88335f1c9aa99e83d41df5947c6ab229787c00d0948e39"
+  },
+  "historical_v80": {
+    "ge1": 975,
+    "warning": "Separate historical run;not a paired speedup measurement"
+  },
+  "still_incomplete_all_BLAS_targets": true,
+  "previous_cached_v106": {
+    "count": 1178,
+    "ge1": 1115,
+    "ge099": 1141,
+    "ge095": 1178,
+    "ge05": 1178,
+    "min_R": 0.9574141740711087,
+    "median_R": 1.2694135751642284
+  }
+}
