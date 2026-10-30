@@ -440,3 +440,7 @@ All422 M>=128 requirements screened(1523 numerical PASS),plus all38 M256(152 PAS
 ## Iteration103 integration gate
 
 Independent INT8 routes6/7 integrated by M/N/K/G only;K512/768 packing enabled;47full-range and16shared-weight/stream checks PASS;CPU ABI/oldsymbol-address/sourcehash checks PASS. Actual library owner verified bydladdr. New full1178 acceptance pending;old1093/1178 formal record unchanged. No FP16/BF16 source/default edits.
+
+## Iteration103
+
+New isolated INT8 cached-weight API all1178 numerical PASS;1117/1178 reach frozen BLAS targets,minR=0.944792,medianR=1.252105;61 remain.47full-range and16weight/stream-lifetime checks PASS. No existing FP16/BF16 source/ABI/default changes. Preparation time/storage separate. See iteration_103_cached_api_1178.md and current_cached_v103_1178.csv.

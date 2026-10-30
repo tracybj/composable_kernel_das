@@ -11,3 +11,7 @@ Build succeeds in `build/cached_v103/`,separate from frozenv97. SHA256 `985b3e3f
 47 full-range INT8/FP64 boundary cases PASS,including complete route coverage0/1/3/4/5/6/7,padded/raw/wide descriptors,packed bytes,guarded outputs,immutable inputs and nondefault streams. Initial46-case outputs were all correct,but the route-coverage gate failed because new selection consumed the oldraw route3 test profile. Added a dedicated raw route3 profile and reran47;the first log is preserved. Sixteen shared-weight,explicit same-address refresh,multiple-stream and queued-work destruction checks PASS across M128/256/512/2048. CPU1178 input/CSV/resume tests pass.
 
 A new full1178 public-interface acceptance is still required. Do not replace formal iteration99 counts with development-screen counts or claim all-target completion. Oldformal1093/1178 remains the accepted performance report until the new run is audited. Preparation costs and persistent bytes remain separate from steady-state GEMM time.
+
+## Completed public acceptance
+
+All1178 numerical checks PASS;1117/1178 targets met,61 still unmet. MinimumR=0.944792. See iteration_103_cached_api_1178.md and current_cached_v103_1178.csv. The above pending statement records the earlier integration checkpoint.
