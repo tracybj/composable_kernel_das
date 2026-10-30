@@ -432,3 +432,7 @@ New isolated INT8 cached-weight API all1178 numerical PASS;1093/1178 reach froze
 ## Iteration100
 
 Independent M128 WASP(2producer waves,N64/128/256,LDS32KiB)built;212full-range checks and194performance outputs PASS. Same-build screen closes7/14 selected gaps;M128 packedN128 improves five samples1.70--2.00x,while large long-K still prefers currentM256 packed. No production/API/16bit change. See iteration_100_split_m.md/JSON/CSV.
+
+## Iterations101/102
+
+All422 M>=128 requirements screened(1523 numerical PASS),plus all38 M256(152 PASS). Dimension-only draft reaches365/422 in calibration,all78M128 reach target(including4 unchangedtails),zero>3%regressions. No production promotion yet;formal1093/1178 unchanged. See iteration_101_102_policy.md and CSV/audits.
