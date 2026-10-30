@@ -1,0 +1,193 @@
+{
+  "status": "NUMERIC_PASS_NOT_PROMOTED",
+  "library_sha256": "a73f41ded0a6ffbf8bba2c94af3e87b1ba35a9a247a0638eec36670b5fe25d17",
+  "math_checks": 24,
+  "shapes": 16,
+  "records": 32,
+  "dependencies_unchanged_from_v107": {
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/experiments/wasp_wide_n_v107/kernel.hpp": "597eda5771d83921c081248e956d6545d3bcca71ac4ceb04318d141fd00521bc",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/experiments/wasp_wide_n_v107/pipeline.hpp": "d388fe81eb0d9b0be303d46e66ba36ea41c6a66c504cf4765cb8a3891dd49e12",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/experiments/wasp_wide_n_v107/epilogue.hpp": "295dee5c0e6996a8632bc13fc361dd51c5736af8d3b730ceda892006272ae90c",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/experiments/wasp_wide_n_v107/problem.hpp": "3f631a630525f29a3df7eb73c4ee1edfa9bc2fe73439f529c4a90fb810ccb202"
+  },
+  "paired": [
+    {
+      "ID": 48,
+      "M": 16384,
+      "N": 2048,
+      "K": 512,
+      "G": 8,
+      "control_TOPS": 163.15169755571318,
+      "masked_TOPS": 173.8184859585426,
+      "speedup": 1.0653795735051235,
+      "masked_R": 0.864728124404013
+    },
+    {
+      "ID": 96,
+      "M": 16384,
+      "N": 2048,
+      "K": 768,
+      "G": 8,
+      "control_TOPS": 221.95454542844482,
+      "masked_TOPS": 232.9537197961601,
+      "speedup": 1.0495559770874856,
+      "masked_R": 0.9023610951712067
+    },
+    {
+      "ID": 302,
+      "M": 16384,
+      "N": 4096,
+      "K": 1536,
+      "G": 4,
+      "control_TOPS": 400.99911271260004,
+      "masked_TOPS": 409.48014191785677,
+      "speedup": 1.0211497455639886,
+      "masked_R": 1.0388270193842088
+    },
+    {
+      "ID": 641,
+      "M": 4096,
+      "N": 1024,
+      "K": 2048,
+      "G": 64,
+      "control_TOPS": 434.02142947211684,
+      "masked_TOPS": 456.0926554615758,
+      "speedup": 1.0508528484787107,
+      "masked_R": 1.219290274675087
+    },
+    {
+      "ID": 705,
+      "M": 16384,
+      "N": 1536,
+      "K": 2048,
+      "G": 4,
+      "control_TOPS": 445.18208354387275,
+      "masked_TOPS": 450.6788121284167,
+      "speedup": 1.0123471469039977,
+      "masked_R": 1.0214849920187694
+    },
+    {
+      "ID": 902,
+      "M": 16384,
+      "N": 3072,
+      "K": 4096,
+      "G": 48,
+      "control_TOPS": 611.336767712011,
+      "masked_TOPS": 613.5290891515813,
+      "speedup": 1.0035861108890527,
+      "masked_R": 1.0670617518243357
+    },
+    {
+      "ID": 1038,
+      "M": 16384,
+      "N": 4096,
+      "K": 6144,
+      "G": 8,
+      "control_TOPS": 651.3736631491929,
+      "masked_TOPS": 650.9212016158287,
+      "speedup": 0.9993053733072709,
+      "masked_R": 1.022525495914246
+    },
+    {
+      "ID": 1126,
+      "M": 16384,
+      "N": 4096,
+      "K": 7168,
+      "G": 8,
+      "control_TOPS": 672.371972755703,
+      "masked_TOPS": 671.071867472778,
+      "speedup": 0.9980663898324069,
+      "masked_R": 0.993434007341799
+    },
+    {
+      "ID": 1164,
+      "M": 8192,
+      "N": 6144,
+      "K": 7168,
+      "G": 12,
+      "control_TOPS": 683.2989974158888,
+      "masked_TOPS": 685.7875697913131,
+      "speedup": 1.0036419962342042,
+      "masked_R": 1.0471083228190783
+    },
+    {
+      "ID": 896,
+      "M": 4096,
+      "N": 3072,
+      "K": 4096,
+      "G": 32,
+      "control_TOPS": 602.9119043413207,
+      "masked_TOPS": 603.1305835786895,
+      "speedup": 1.00036270512457,
+      "masked_R": 1.051339340985715
+    },
+    {
+      "ID": 900,
+      "M": 4096,
+      "N": 3072,
+      "K": 4096,
+      "G": 48,
+      "control_TOPS": 606.6458311386673,
+      "masked_TOPS": 608.644664893671,
+      "speedup": 1.003294894075596,
+      "masked_R": 1.0650867692980541
+    },
+    {
+      "ID": 1034,
+      "M": 8192,
+      "N": 4096,
+      "K": 6144,
+      "G": 16,
+      "control_TOPS": 650.5268072006579,
+      "masked_TOPS": 650.6479577726386,
+      "speedup": 1.000186234557346,
+      "masked_R": 1.0902946023769928
+    },
+    {
+      "ID": 1122,
+      "M": 8192,
+      "N": 4096,
+      "K": 7168,
+      "G": 24,
+      "control_TOPS": 675.4396835275508,
+      "masked_TOPS": 671.8998367533777,
+      "speedup": 0.9947591963272193,
+      "masked_R": 1.056362949742589
+    },
+    {
+      "ID": 298,
+      "M": 16384,
+      "N": 4096,
+      "K": 1536,
+      "G": 12,
+      "control_TOPS": 407.7307885666665,
+      "masked_TOPS": 415.8813084220004,
+      "speedup": 1.0199899543617645,
+      "masked_R": 1.0550275245036804
+    },
+    {
+      "ID": 699,
+      "M": 4096,
+      "N": 1536,
+      "K": 2048,
+      "G": 8,
+      "control_TOPS": 413.98605874604084,
+      "masked_TOPS": 419.8404077621676,
+      "speedup": 1.0141414158579627,
+      "masked_R": 0.994330069223155
+    },
+    {
+      "ID": 35,
+      "M": 2048,
+      "N": 2048,
+      "K": 512,
+      "G": 64,
+      "control_TOPS": 165.17843201711884,
+      "masked_TOPS": 172.20169321887596,
+      "speedup": 1.0425192388376059,
+      "masked_R": 1.083660845016742
+    }
+  ],
+  "reason": "Does not close remaining longK target gap;some shortK gains but not a universal improvement",
+  "production_unchanged": "v106:1178 numerical PASS,1115 targets,minimumR0.957414"
+}

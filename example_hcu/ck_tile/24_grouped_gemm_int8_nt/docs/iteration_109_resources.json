@@ -1,0 +1,53 @@
+{
+  "library_sha256": "a73f41ded0a6ffbf8bba2c94af3e87b1ba35a9a247a0638eec36670b5fe25d17",
+  "kernels": [
+    {
+      "version": 109,
+      "kind": "WaspWideN",
+      "params": [
+        0,
+        12,
+        4,
+        2,
+        1,
+        1,
+        0,
+        0,
+        1,
+        0,
+        12
+      ],
+      "kernel_symbol": "_ZN7ck_tile6kentryILi1024ELi1ENS_28GroupedInt8NtWaspWideNKernelINS_29GroupedInt8NtWaspWideNProblemILb0ELi12ELi4ELi2ELb1ELb1ELi0ELb0ELb1ELi0ELi12EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEEEEvDpT2_",
+      "vgpr_count": 182,
+      "sgpr_count": 30,
+      "private_segment_fixed_size": 0,
+      "vgpr_spill_count": 0,
+      "sgpr_spill_count": 0,
+      "group_segment_fixed_size": 65536
+    },
+    {
+      "version": 109,
+      "kind": "WaspMaskedN",
+      "params": [
+        0,
+        12,
+        4,
+        2,
+        1,
+        1,
+        0,
+        0,
+        1,
+        0,
+        12
+      ],
+      "kernel_symbol": "_ZN7ck_tile6kentryILi1024ELi1ENS_30GroupedInt8NtWaspMaskedNKernelINS_31GroupedInt8NtWaspMaskedNProblemILb0ELi12ELi4ELi2ELb1ELb1ELi0ELb0ELb1ELi0ELi12EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEEEEvDpT2_",
+      "vgpr_count": 182,
+      "sgpr_count": 32,
+      "private_segment_fixed_size": 0,
+      "vgpr_spill_count": 0,
+      "sgpr_spill_count": 0,
+      "group_segment_fixed_size": 65536
+    }
+  ]
+}
