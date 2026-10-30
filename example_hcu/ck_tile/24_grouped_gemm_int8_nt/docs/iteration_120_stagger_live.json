@@ -1,0 +1,220 @@
+{
+  "status": "NUMERIC_PASS_SPILL_FIXED_NO_PROMOTION_USER_REQUESTED_PAUSE",
+  "library_sha256": "f57593b19c776016e8a4a2595ea92b75bda7b9ba73e0ce0849307a7165fa3a38",
+  "math_checks": 240,
+  "screen_shapes": 20,
+  "screen_outputs": 80,
+  "paired": [
+    {
+      "ID": 92,
+      "new_candidate": 47004,
+      "new_TOPS": 238.54973088879245,
+      "new_R": 0.9234337030059887,
+      "speedup_to_uniform": 1.05065405975281,
+      "speedup_to_current": 0.9235006725229244
+    },
+    {
+      "ID": 96,
+      "new_candidate": 47004,
+      "new_TOPS": 239.00769698785166,
+      "new_R": 0.9258115620434096,
+      "speedup_to_uniform": 1.0503246690426713,
+      "speedup_to_current": 0.930290963829779
+    },
+    {
+      "ID": 100,
+      "new_candidate": 47003,
+      "new_TOPS": 234.4585566334625,
+      "new_R": 0.9093274357015165,
+      "speedup_to_uniform": 1.0367930447495874,
+      "speedup_to_current": 0.9276147535516213
+    },
+    {
+      "ID": 704,
+      "new_candidate": 47004,
+      "new_TOPS": 379.50345562799384,
+      "new_R": 0.8888575509925976,
+      "speedup_to_uniform": 1.0401150064829396,
+      "speedup_to_current": 0.888783762773454
+    },
+    {
+      "ID": 911,
+      "new_candidate": 47003,
+      "new_TOPS": 399.11113132233413,
+      "new_R": 0.7245616834843631,
+      "speedup_to_uniform": 1.0263283580091733,
+      "speedup_to_current": 0.7327467881136406
+    },
+    {
+      "ID": 920,
+      "new_candidate": 47004,
+      "new_TOPS": 395.849524572901,
+      "new_R": 0.7185482492051001,
+      "speedup_to_uniform": 1.0270044064862855,
+      "speedup_to_current": 0.7243009329591944
+    },
+    {
+      "ID": 1126,
+      "new_candidate": 47004,
+      "new_TOPS": 521.5289296851478,
+      "new_R": 0.7720552740691556,
+      "speedup_to_uniform": 1.1158984550034838,
+      "speedup_to_current": 0.7748834573925604
+    },
+    {
+      "ID": 1130,
+      "new_candidate": 47004,
+      "new_TOPS": 521.6311574408197,
+      "new_R": 0.7717213530817912,
+      "speedup_to_uniform": 1.1156654349303505,
+      "speedup_to_current": 0.7725151533902107
+    },
+    {
+      "ID": 48,
+      "new_candidate": 47004,
+      "new_TOPS": 185.6360269522007,
+      "new_R": 0.923519109736556,
+      "speedup_to_uniform": 1.0384454556813323,
+      "speedup_to_current": 0.8714369303339293
+    },
+    {
+      "ID": 302,
+      "new_candidate": 47003,
+      "new_TOPS": 325.73415851558906,
+      "new_R": 0.8263683885072342,
+      "speedup_to_uniform": 1.049991684219587,
+      "speedup_to_current": 0.8174636285846617
+    },
+    {
+      "ID": 641,
+      "new_candidate": 47003,
+      "new_TOPS": 300.58654988449496,
+      "new_R": 0.8035697408926576,
+      "speedup_to_uniform": 1.0657691257302528,
+      "speedup_to_current": 0.7203632573755286
+    },
+    {
+      "ID": 705,
+      "new_candidate": 47003,
+      "new_TOPS": 383.5820276890488,
+      "new_R": 0.8694069344907321,
+      "speedup_to_uniform": 1.0451905697384967,
+      "speedup_to_current": 0.8636836983950563
+    },
+    {
+      "ID": 902,
+      "new_candidate": 47003,
+      "new_TOPS": 401.08754197120226,
+      "new_R": 0.6975792716895416,
+      "speedup_to_uniform": 1.0246284594947832,
+      "speedup_to_current": 0.6557240948302453
+    },
+    {
+      "ID": 1038,
+      "new_candidate": 47003,
+      "new_TOPS": 478.0131808526228,
+      "new_R": 0.7509060445281835,
+      "speedup_to_uniform": 1.082604891752495,
+      "speedup_to_current": 0.732910228084751
+    },
+    {
+      "ID": 1164,
+      "new_candidate": 47004,
+      "new_TOPS": 568.8221391153942,
+      "new_R": 0.8685173402205716,
+      "speedup_to_uniform": 1.108289043438513,
+      "speedup_to_current": 0.8324097152749516
+    }
+  ],
+  "resource_gate": {
+    "eligible": [
+      47003,
+      47004,
+      46002,
+      45003
+    ],
+    "excluded": [
+      {
+        "candidate": {
+          "id": 47001,
+          "tile_M": 256,
+          "tile_N": 1,
+          "inplace": false,
+          "original_flow": false
+        },
+        "reason": "Actual generated spill/private allocation;not GPU-timed or accepted",
+        "resources": {
+          "version": 120,
+          "kind": "WaspM192Live",
+          "params": [
+            1,
+            4,
+            4,
+            12,
+            0,
+            0,
+            1024,
+            0,
+            0,
+            0,
+            8,
+            1,
+            0,
+            0
+          ],
+          "kernel_symbol": "_ZN7ck_tile6kentryILi768ELi1ENS_31GroupedInt8NtWaspM192LiveKernelINS_32GroupedInt8NtWaspM192LiveProblemILb1ELi4ELi4ELi12ELb0ELb0ELi1024ELb0ELb0ELi0ELi8ELi1ELb0ELb0EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEEEEvDpT2_",
+          "vgpr_count": 256,
+          "sgpr_count": 44,
+          "private_segment_fixed_size": 428,
+          "vgpr_spill_count": 106,
+          "sgpr_spill_count": 0,
+          "group_segment_fixed_size": 65536
+        }
+      },
+      {
+        "candidate": {
+          "id": 47002,
+          "tile_M": 256,
+          "tile_N": 1,
+          "inplace": true,
+          "original_flow": false
+        },
+        "reason": "Actual generated spill/private allocation;not GPU-timed or accepted",
+        "resources": {
+          "version": 120,
+          "kind": "WaspM192Live",
+          "params": [
+            1,
+            4,
+            4,
+            12,
+            0,
+            0,
+            1024,
+            0,
+            0,
+            0,
+            8,
+            1,
+            1,
+            0
+          ],
+          "kernel_symbol": "_ZN7ck_tile6kentryILi768ELi1ENS_31GroupedInt8NtWaspM192LiveKernelINS_32GroupedInt8NtWaspM192LiveProblemILb1ELi4ELi4ELi12ELb0ELb0ELi1024ELb0ELb0ELi0ELi8ELi1ELb1ELb0EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEEEEvDpT2_",
+          "vgpr_count": 256,
+          "sgpr_count": 44,
+          "private_segment_fixed_size": 428,
+          "vgpr_spill_count": 106,
+          "sgpr_spill_count": 0,
+          "group_segment_fixed_size": 65536
+        }
+      }
+    ]
+  },
+  "process_terminal": true,
+  "pid": {
+    "pid": 1622573,
+    "start_ticks": "381140141"
+  },
+  "scope": "Current experiment completed;no next experiment orfull1178retest started",
+  "production": "v112:1178 numeric PASS,1170 frozen targets,8 remaining"
+}
