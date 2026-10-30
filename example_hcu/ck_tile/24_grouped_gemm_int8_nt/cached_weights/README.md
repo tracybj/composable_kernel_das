@@ -1,3 +1,7 @@
+> 当前维护版已归一为两套核心流水，并完成新一轮 1178 条回归。
+> 构建、复测及最终 CSV 见 [example README](../README.md) 和
+> [v121 整理报告](../docs/REFACTOR_TWO_CORE_v121.md)。以下保留原 API 设计记录。
+
 # INT8 NT cached-weight extension
 
 This is an additive,standalone signed INT8×INT8→INT32/no-scale interface.

@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "change": "M32 compatibility alias default A-read batch restored from 4 to original 2; every selected production instance already passes an explicit batch",
+  "run_source_revision": "2a16d588b39d024e7f5646bde152fc0158bc313b",
+  "header": "example_hcu/ck_tile/24_grouped_gemm_int8_nt/cached_weights/m32/problem.hpp",
+  "old_sha256": "30f63836cc325381898b4d9cb8b15b3d627540720624b77c2ab3ff463b4ca129",
+  "new_sha256": "7ae93e177681327bbd3d03ba2dfe86b96ba3590fd04f818a07634e74c1ca782d",
+  "full_library_byte_identical": true,
+  "binaries": {
+    "libck_tile_int8_nt_cached.so": "0052f228366c8dfb80afa9080d8227d604be6e8d404523709d3229bbe879bfb6",
+    "libck_tile_int8_nt_cached_benchmark.so": "8bf4f227ff8825626d2bc1fbcf47c6f9147a5c679a0085dc2d465dbb584054c8"
+  },
+  "default_aliases_syntax_pass": true,
+  "formal_records_unchanged": true
+}
