@@ -1,0 +1,29 @@
+{
+  "status": "NUMERIC_PASS_NOT_PROMOTED",
+  "library_sha256": "86923a1171545148645335c60e36fc510547438b2fcdb39ea9ba36379a1d9e50",
+  "full_range_checks": 48,
+  "performance_records": 64,
+  "performance_shapes": 16,
+  "speedup_over_same_build_M256_format1": {
+    "37001": {
+      "min": 0.9783619854402139,
+      "median": 1.0002413608496188,
+      "max": 1.018637138908735
+    },
+    "37002": {
+      "min": 0.9672920999906968,
+      "median": 0.9849280741141733,
+      "max": 1.0361449265097664
+    },
+    "37008": {
+      "min": 0.8256081279086587,
+      "median": 0.8837369117337579,
+      "max": 1.0275334939914664
+    }
+  },
+  "format2": "G,K128,N32,Nsub2,Ksub2,Kgrp4,Nlane16,Kbyte16",
+  "context": "Same M256 comparison;current production already uses faster M128 routes for some shortK shapes. Not a substitute for full current-policy acceptance.",
+  "scope": "INT8-only experiment;existing format1 and FP16/BF16 API unchanged",
+  "hypothesis_rejected": "Wave-contiguous4KiB B packet alone does not remove remaining longK gaps",
+  "next": "Separate smallM64 geometry;continue investigating longK critical path"
+}
