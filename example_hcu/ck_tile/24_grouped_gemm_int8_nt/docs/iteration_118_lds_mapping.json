@@ -1,0 +1,1013 @@
+{
+  "status": "PASS",
+  "physical_gpu": 7,
+  "pci": "0000:f5:00.0",
+  "exact_dword_model_all_modes": true,
+  "mode2_logical_fragment_bad": 0,
+  "records": [
+    {
+      "mode": 0,
+      "valid_rows": 192,
+      "pitch": 256,
+      "payload_multiset": true,
+      "guards": true,
+      "inputs_unchanged": true,
+      "fragment_expected_linear_bad": 11904,
+      "first_bad": [
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 1,
+          "word": 0,
+          "got": 521,
+          "want": 65
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 1,
+          "word": 1,
+          "got": 522,
+          "want": 66
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 1,
+          "word": 2,
+          "got": 523,
+          "want": 67
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 1,
+          "word": 3,
+          "got": 524,
+          "want": 68
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 2,
+          "word": 0,
+          "got": 1041,
+          "want": 129
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 2,
+          "word": 1,
+          "got": 1042,
+          "want": 130
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 2,
+          "word": 2,
+          "got": 1043,
+          "want": 131
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 2,
+          "word": 3,
+          "got": 1044,
+          "want": 132
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 3,
+          "word": 0,
+          "got": 1561,
+          "want": 193
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 3,
+          "word": 1,
+          "got": 1562,
+          "want": 194
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 3,
+          "word": 2,
+          "got": 1563,
+          "want": 195
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 3,
+          "word": 3,
+          "got": 1564,
+          "want": 196
+        }
+      ],
+      "library_sha256": "ed28fff7d45ce9f988740c487a39fdeaf6fe6fb585286193892922b4c96a17f5"
+    },
+    {
+      "mode": 1,
+      "valid_rows": 192,
+      "pitch": 256,
+      "payload_multiset": true,
+      "guards": true,
+      "inputs_unchanged": true,
+      "fragment_expected_linear_bad": 9216,
+      "first_bad": [
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 1,
+          "word": 0,
+          "got": 73,
+          "want": 65
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 1,
+          "word": 1,
+          "got": 74,
+          "want": 66
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 1,
+          "word": 2,
+          "got": 75,
+          "want": 67
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 1,
+          "word": 3,
+          "got": 76,
+          "want": 68
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 2,
+          "word": 0,
+          "got": 145,
+          "want": 129
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 2,
+          "word": 1,
+          "got": 146,
+          "want": 130
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 2,
+          "word": 2,
+          "got": 147,
+          "want": 131
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 2,
+          "word": 3,
+          "got": 148,
+          "want": 132
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 3,
+          "word": 0,
+          "got": 217,
+          "want": 193
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 3,
+          "word": 1,
+          "got": 218,
+          "want": 194
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 3,
+          "word": 2,
+          "got": 219,
+          "want": 195
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 3,
+          "word": 3,
+          "got": 220,
+          "want": 196
+        }
+      ],
+      "library_sha256": "ed28fff7d45ce9f988740c487a39fdeaf6fe6fb585286193892922b4c96a17f5"
+    },
+    {
+      "mode": 2,
+      "valid_rows": 192,
+      "pitch": 256,
+      "payload_multiset": true,
+      "guards": true,
+      "inputs_unchanged": true,
+      "fragment_expected_linear_bad": 0,
+      "first_bad": [],
+      "library_sha256": "ed28fff7d45ce9f988740c487a39fdeaf6fe6fb585286193892922b4c96a17f5"
+    },
+    {
+      "mode": 0,
+      "valid_rows": 128,
+      "pitch": 256,
+      "payload_multiset": true,
+      "guards": true,
+      "inputs_unchanged": true,
+      "fragment_expected_linear_bad": 7936,
+      "first_bad": [
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 1,
+          "word": 0,
+          "got": 521,
+          "want": 65
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 1,
+          "word": 1,
+          "got": 522,
+          "want": 66
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 1,
+          "word": 2,
+          "got": 523,
+          "want": 67
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 1,
+          "word": 3,
+          "got": 524,
+          "want": 68
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 2,
+          "word": 0,
+          "got": 1041,
+          "want": 129
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 2,
+          "word": 1,
+          "got": 1042,
+          "want": 130
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 2,
+          "word": 2,
+          "got": 1043,
+          "want": 131
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 2,
+          "word": 3,
+          "got": 1044,
+          "want": 132
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 3,
+          "word": 0,
+          "got": 1561,
+          "want": 193
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 3,
+          "word": 1,
+          "got": 1562,
+          "want": 194
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 3,
+          "word": 2,
+          "got": 1563,
+          "want": 195
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 3,
+          "word": 3,
+          "got": 1564,
+          "want": 196
+        }
+      ],
+      "library_sha256": "ed28fff7d45ce9f988740c487a39fdeaf6fe6fb585286193892922b4c96a17f5"
+    },
+    {
+      "mode": 1,
+      "valid_rows": 128,
+      "pitch": 256,
+      "payload_multiset": true,
+      "guards": true,
+      "inputs_unchanged": true,
+      "fragment_expected_linear_bad": 6144,
+      "first_bad": [
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 1,
+          "word": 0,
+          "got": 73,
+          "want": 65
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 1,
+          "word": 1,
+          "got": 74,
+          "want": 66
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 1,
+          "word": 2,
+          "got": 75,
+          "want": 67
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 1,
+          "word": 3,
+          "got": 76,
+          "want": 68
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 2,
+          "word": 0,
+          "got": 145,
+          "want": 129
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 2,
+          "word": 1,
+          "got": 146,
+          "want": 130
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 2,
+          "word": 2,
+          "got": 147,
+          "want": 131
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 2,
+          "word": 3,
+          "got": 148,
+          "want": 132
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 3,
+          "word": 0,
+          "got": 217,
+          "want": 193
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 3,
+          "word": 1,
+          "got": 218,
+          "want": 194
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 3,
+          "word": 2,
+          "got": 219,
+          "want": 195
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 3,
+          "word": 3,
+          "got": 220,
+          "want": 196
+        }
+      ],
+      "library_sha256": "ed28fff7d45ce9f988740c487a39fdeaf6fe6fb585286193892922b4c96a17f5"
+    },
+    {
+      "mode": 2,
+      "valid_rows": 128,
+      "pitch": 256,
+      "payload_multiset": true,
+      "guards": true,
+      "inputs_unchanged": true,
+      "fragment_expected_linear_bad": 0,
+      "first_bad": [],
+      "library_sha256": "ed28fff7d45ce9f988740c487a39fdeaf6fe6fb585286193892922b4c96a17f5"
+    },
+    {
+      "mode": 0,
+      "valid_rows": 32,
+      "pitch": 256,
+      "payload_multiset": true,
+      "guards": true,
+      "inputs_unchanged": true,
+      "fragment_expected_linear_bad": 1984,
+      "first_bad": [
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 1,
+          "word": 0,
+          "got": 521,
+          "want": 65
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 1,
+          "word": 1,
+          "got": 522,
+          "want": 66
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 1,
+          "word": 2,
+          "got": 523,
+          "want": 67
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 1,
+          "word": 3,
+          "got": 524,
+          "want": 68
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 2,
+          "word": 0,
+          "got": 1041,
+          "want": 129
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 2,
+          "word": 1,
+          "got": 1042,
+          "want": 130
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 2,
+          "word": 2,
+          "got": 1043,
+          "want": 131
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 2,
+          "word": 3,
+          "got": 1044,
+          "want": 132
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 3,
+          "word": 0,
+          "got": 1561,
+          "want": 193
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 3,
+          "word": 1,
+          "got": 1562,
+          "want": 194
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 3,
+          "word": 2,
+          "got": 1563,
+          "want": 195
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 3,
+          "word": 3,
+          "got": 1564,
+          "want": 196
+        }
+      ],
+      "library_sha256": "ed28fff7d45ce9f988740c487a39fdeaf6fe6fb585286193892922b4c96a17f5"
+    },
+    {
+      "mode": 1,
+      "valid_rows": 32,
+      "pitch": 256,
+      "payload_multiset": true,
+      "guards": true,
+      "inputs_unchanged": true,
+      "fragment_expected_linear_bad": 1536,
+      "first_bad": [
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 1,
+          "word": 0,
+          "got": 73,
+          "want": 65
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 1,
+          "word": 1,
+          "got": 74,
+          "want": 66
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 1,
+          "word": 2,
+          "got": 75,
+          "want": 67
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 1,
+          "word": 3,
+          "got": 76,
+          "want": 68
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 2,
+          "word": 0,
+          "got": 145,
+          "want": 129
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 2,
+          "word": 1,
+          "got": 146,
+          "want": 130
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 2,
+          "word": 2,
+          "got": 147,
+          "want": 131
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 2,
+          "word": 3,
+          "got": 148,
+          "want": 132
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 3,
+          "word": 0,
+          "got": 217,
+          "want": 193
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 3,
+          "word": 1,
+          "got": 218,
+          "want": 194
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 3,
+          "word": 2,
+          "got": 219,
+          "want": 195
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 3,
+          "word": 3,
+          "got": 220,
+          "want": 196
+        }
+      ],
+      "library_sha256": "ed28fff7d45ce9f988740c487a39fdeaf6fe6fb585286193892922b4c96a17f5"
+    },
+    {
+      "mode": 2,
+      "valid_rows": 32,
+      "pitch": 256,
+      "payload_multiset": true,
+      "guards": true,
+      "inputs_unchanged": true,
+      "fragment_expected_linear_bad": 0,
+      "first_bad": [],
+      "library_sha256": "ed28fff7d45ce9f988740c487a39fdeaf6fe6fb585286193892922b4c96a17f5"
+    },
+    {
+      "mode": 0,
+      "valid_rows": 192,
+      "pitch": 272,
+      "payload_multiset": true,
+      "guards": true,
+      "inputs_unchanged": true,
+      "fragment_expected_linear_bad": 11904,
+      "first_bad": [
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 1,
+          "word": 0,
+          "got": 553,
+          "want": 69
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 1,
+          "word": 1,
+          "got": 554,
+          "want": 70
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 1,
+          "word": 2,
+          "got": 555,
+          "want": 71
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 1,
+          "word": 3,
+          "got": 556,
+          "want": 72
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 2,
+          "word": 0,
+          "got": 1105,
+          "want": 137
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 2,
+          "word": 1,
+          "got": 1106,
+          "want": 138
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 2,
+          "word": 2,
+          "got": 1107,
+          "want": 139
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 2,
+          "word": 3,
+          "got": 1108,
+          "want": 140
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 3,
+          "word": 0,
+          "got": 1657,
+          "want": 205
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 3,
+          "word": 1,
+          "got": 1658,
+          "want": 206
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 3,
+          "word": 2,
+          "got": 1659,
+          "want": 207
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 3,
+          "word": 3,
+          "got": 1660,
+          "want": 208
+        }
+      ],
+      "library_sha256": "ed28fff7d45ce9f988740c487a39fdeaf6fe6fb585286193892922b4c96a17f5"
+    },
+    {
+      "mode": 1,
+      "valid_rows": 192,
+      "pitch": 272,
+      "payload_multiset": true,
+      "guards": true,
+      "inputs_unchanged": true,
+      "fragment_expected_linear_bad": 9216,
+      "first_bad": [
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 1,
+          "word": 0,
+          "got": 77,
+          "want": 69
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 1,
+          "word": 1,
+          "got": 78,
+          "want": 70
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 1,
+          "word": 2,
+          "got": 79,
+          "want": 71
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 1,
+          "word": 3,
+          "got": 80,
+          "want": 72
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 2,
+          "word": 0,
+          "got": 153,
+          "want": 137
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 2,
+          "word": 1,
+          "got": 154,
+          "want": 138
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 2,
+          "word": 2,
+          "got": 155,
+          "want": 139
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 2,
+          "word": 3,
+          "got": 156,
+          "want": 140
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 3,
+          "word": 0,
+          "got": 229,
+          "want": 205
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 3,
+          "word": 1,
+          "got": 230,
+          "want": 206
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 3,
+          "word": 2,
+          "got": 231,
+          "want": 207
+        },
+        {
+          "stage": 0,
+          "half": 0,
+          "mi": 0,
+          "lane": 3,
+          "word": 3,
+          "got": 232,
+          "want": 208
+        }
+      ],
+      "library_sha256": "ed28fff7d45ce9f988740c487a39fdeaf6fe6fb585286193892922b4c96a17f5"
+    },
+    {
+      "mode": 2,
+      "valid_rows": 192,
+      "pitch": 272,
+      "payload_multiset": true,
+      "guards": true,
+      "inputs_unchanged": true,
+      "fragment_expected_linear_bad": 0,
+      "first_bad": [],
+      "library_sha256": "ed28fff7d45ce9f988740c487a39fdeaf6fe6fb585286193892922b4c96a17f5"
+    }
+  ]
+}
