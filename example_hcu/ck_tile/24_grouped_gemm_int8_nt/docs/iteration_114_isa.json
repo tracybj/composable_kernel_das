@@ -1,0 +1,56 @@
+[
+  {
+    "params": [
+      0,
+      16,
+      4,
+      2,
+      1,
+      1,
+      0,
+      0,
+      1,
+      0,
+      16
+    ],
+    "static_instruction_counts": {
+      "s_waitcnt": 172,
+      "s_mov_b32": 15,
+      "buffer_load_dwordx4": 18,
+      "s_barrier": 4,
+      "ds_read_b128": 64,
+      "v_mmac_i32_16x16x32_i8": 256,
+      "ds_bpermute_b32": 128
+    },
+    "m0_restores": 3,
+    "scope": "Static disassembly counts including fallback/prologue/epilogue;not dynamic performance counters",
+    "isa_sha256": "19796c4017f1dbdbf3e396e87657734332e1d31caedd7614be996d53fcff8720"
+  },
+  {
+    "params": [
+      0,
+      8,
+      4,
+      2,
+      1,
+      1,
+      0,
+      0,
+      1,
+      0,
+      8
+    ],
+    "static_instruction_counts": {
+      "s_waitcnt": 172,
+      "s_mov_b32": 21,
+      "buffer_load_dwordx4": 24,
+      "s_barrier": 4,
+      "ds_read_b128": 64,
+      "v_mmac_i32_16x16x32_i8": 256,
+      "ds_bpermute_b32": 128
+    },
+    "m0_restores": 3,
+    "scope": "Static disassembly counts including fallback/prologue/epilogue;not dynamic performance counters",
+    "isa_sha256": "ff05c1d733ddbdb185f5a01616aae5ff88b59123cbb414c4f1f4e3516d278d93"
+  }
+]
