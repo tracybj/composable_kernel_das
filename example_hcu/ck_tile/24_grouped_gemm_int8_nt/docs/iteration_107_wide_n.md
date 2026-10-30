@@ -9,3 +9,7 @@ Remaining control plus4 candidates pass60 full-rangeINT8/FP64 checks,including o
 Valid N384/A2 improves important longK cases: M16384/N3072/K4096/G48 goes570.36 to611.46TOPS(R1.06346);M16384/N4096/K6144/G8 goes625.29 to651.01(R1.02266);M8192/N6144/K7168/G12 goes644.25 to685.07(R1.04602). M16384/N4096/K7168/G8 improves647.68 to672.83 but remains below675.51 target(R0.99604). Not universal:shortK regresses,andM4096/N1536/K2048/G8 drops2.36%. Cache MGroup8/16 variants do not improve the tested longK cases. The control is the same-build old M256 packed route;shortK production already uses M128,so these are not universal gains over current policy.
 
 All344 M>=256 original shapes are now screened with just the old M256 and valid N384/A2 candidates. No production promotion or target-completion claim until the broad screen defines a dimension policy and a fresh public-API validation passes. The current formal report is v106:1178 numericPASS,1115 targets,minimumR0.957414. M64's92 cases all meet target. Additional exact device-code inspection finds all36 shared kernels byte-identical between v103/v106;only2 M64 kernels are added. This is not a paired timing or equal-cache-placement claim.
+
+## Broad screen completed
+
+344 shapes,688 outputs PASS. Route5 subset:196 control targets,241 wide targets,245 oracle out of250;dimension-only policy and public acceptance still required. See iteration_107_108_broad.md.

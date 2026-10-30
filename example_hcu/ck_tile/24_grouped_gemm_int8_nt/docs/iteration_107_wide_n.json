@@ -1,5 +1,5 @@
 {
-  "status": "REPRESENTATIVE_NUMERIC_PASS_ALL344_SCREEN_RUNNING",
+  "status": "ALL344_NUMERIC_PASS_POLICY_NOT_PROMOTED",
   "library_sha256": "75791a7c286acddc156285957547bed8d46ba4939ec4dd96d584400ef8c4bd45",
   "full_range_checks": 60,
   "quarantined": [
@@ -191,5 +191,19 @@
   "wide_spill": 0,
   "LDS_bytes": 65536,
   "all344": "results/wasp_wide_n_all_v107",
-  "not_formal_acceptance": true
+  "not_formal_acceptance": true,
+  "all344_summary": {
+    "status": "ALL344_NUMERIC_PASS_POLICY_NOT_PROMOTED",
+    "shapes": 344,
+    "records": 688,
+    "old_M256_target_pass": 220,
+    "wide_target_pass": 267,
+    "oracle_target_pass": 281,
+    "production_route5_shapes": 250,
+    "route5_old_target_pass": 196,
+    "route5_wide_target_pass": 241,
+    "route5_oracle_target_pass": 245,
+    "library_sha256": "75791a7c286acddc156285957547bed8d46ba4939ec4dd96d584400ef8c4bd45",
+    "warning": "OldM256 control is not the current selected path on94 other requirements;oracle is per-shape analysis,not deliverable runtime selection"
+  }
 }
