@@ -1,0 +1,9 @@
+# Iteration115:M128 cooperative A publication and earlier B prefetch
+
+Native M128/N128,N256,N512 cooperative copy-compute variants use32KiB LDS and64INT32 accumulators/lane. Compare late versus early next-B onM128/N256,andearlyB onM256/N512 againstv114 late-B evidence. Format1 andrawA unchanged;full-stage publication/reuse barriers remain. CPU byte mapping PASS. M128 uses118-121VGPR/32KiB LDS;M256183VGPR/64KiB;allzero spill/private.255 full-rangeINT8/FP64 checks PASS.20representative original shapes/115timed outputs PASS,includingall8 remaining frozen targets. Same-module controls,rotated2warm/5repeat/3sample median development screen.
+
+Every tested shape retains the current selected v112 path asbest. M16384/N2048/K768/G4 current253.69TOPS;M128/N128 earlyB isabout6.8%slower,M128/N256 about16%slower. M2048/N3072/K4096/G8 current544.17TOPS;M128/N256 lateB about0.7%slower,earlyB about3.4%slower. M16384/N4096/K7168/G8 current673.42TOPS;M128/N256 lateB about4.4%slower,earlyB about21%slower. Earlier B andlower resource declarations do not establish better latency hiding or residency. Do notpromote.
+
+The native M128 small-M examples have fewer validCTAs than theirpadded launch grid,sothe small-M regressions alone do not isolate the instruction path. Large-M controls also regress,which rulesout this particular configuration asareplacement. These experiments refute their predictions,notall cooperative architectures or ahardware ceiling. Stop further same-family tile scanning;inspectactual wait/issue andmemory evidence ofthe current production routes before choosing another rewrite.
+
+Production remainsv112:1178numericalPASS,1170targets,all872decode targetsPASS,and8prefill gaps. Original FP16/BF16 source/default/ABI unchanged. No target substitution or tolerance relaxation. Raw paired data,resource metadata andfull numerical checks accompanythis log.
