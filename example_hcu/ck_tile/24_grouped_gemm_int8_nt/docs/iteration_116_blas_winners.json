@@ -1,0 +1,1742 @@
+{
+  "status": "FROZEN_WINNERS_REPLAY_NUMERIC_PASS_AND_ISA_ANALYZED",
+  "frozen_source": {
+    "workbook": "D:\\yyc_workspace\\GroupGemm\\BlasLt_ggemm_tuning_baseline.xlsx",
+    "workbook_sha256": "76688202fe08a1f9c9011e2637c1da125e1fe0210ffe97bc71a2c705f3d2a393",
+    "sheet": "int8_NT",
+    "column": "K"
+  },
+  "kernels": [
+    {
+      "algorithm_id": 2972,
+      "kernel": "Custom_Cijk_Alik_Bljk_I8II_BH_Bias_AI_MT192x256x128_TT12_8_WG16_32_1_MFWGS768_WGM1_ccyBlockSize768_gfx936",
+      "object": "/workspace/GroupGemm/baseline/hipblaslt-install/lib/hipblaslt/library_gfx936/TensileLibrary_gfx936.co",
+      "object_sha256": "0100605e307ec45ab645712246805a04ccff6a402c2b86de77f6a3db88a52454",
+      "metadata": {
+        ".args": [
+          {
+            ".name": "SizesFree0",
+            ".offset": 0,
+            ".size": 4,
+            ".value_kind": "by_value",
+            ".value_type": "u32"
+          },
+          {
+            ".name": "SizesFree1",
+            ".offset": 4,
+            ".size": 4,
+            ".value_kind": "by_value",
+            ".value_type": "u32"
+          },
+          {
+            ".name": "SizesFree2",
+            ".offset": 8,
+            ".size": 4,
+            ".value_kind": "by_value",
+            ".value_type": "u32"
+          },
+          {
+            ".name": "SizesSum0",
+            ".offset": 12,
+            ".size": 4,
+            ".value_kind": "by_value",
+            ".value_type": "u32"
+          },
+          {
+            ".address_space": "generic",
+            ".name": "D",
+            ".offset": 16,
+            ".size": 8,
+            ".value_kind": "global_buffer",
+            ".value_type": "i32"
+          },
+          {
+            ".address_space": "generic",
+            ".name": "C",
+            ".offset": 24,
+            ".size": 8,
+            ".value_kind": "global_buffer",
+            ".value_type": "i32"
+          },
+          {
+            ".address_space": "generic",
+            ".name": "A",
+            ".offset": 32,
+            ".size": 8,
+            ".value_kind": "global_buffer",
+            ".value_type": "i8"
+          },
+          {
+            ".address_space": "generic",
+            ".name": "B",
+            ".offset": 40,
+            ".size": 8,
+            ".value_kind": "global_buffer",
+            ".value_type": "i8"
+          },
+          {
+            ".name": "strideD0",
+            ".offset": 48,
+            ".size": 4,
+            ".value_kind": "by_value",
+            ".value_type": "u32"
+          },
+          {
+            ".name": "strideD1",
+            ".offset": 52,
+            ".size": 4,
+            ".value_kind": "by_value",
+            ".value_type": "u32"
+          },
+          {
+            ".name": "strideC0",
+            ".offset": 56,
+            ".size": 4,
+            ".value_kind": "by_value",
+            ".value_type": "u32"
+          },
+          {
+            ".name": "strideC1",
+            ".offset": 60,
+            ".size": 4,
+            ".value_kind": "by_value",
+            ".value_type": "u32"
+          },
+          {
+            ".name": "strideA0",
+            ".offset": 64,
+            ".size": 4,
+            ".value_kind": "by_value",
+            ".value_type": "u32"
+          },
+          {
+            ".name": "strideA1",
+            ".offset": 68,
+            ".size": 4,
+            ".value_kind": "by_value",
+            ".value_type": "u32"
+          },
+          {
+            ".name": "strideB0",
+            ".offset": 72,
+            ".size": 4,
+            ".value_kind": "by_value",
+            ".value_type": "u32"
+          },
+          {
+            ".name": "strideB1",
+            ".offset": 76,
+            ".size": 4,
+            ".value_kind": "by_value",
+            ".value_type": "u32"
+          },
+          {
+            ".name": "alpha",
+            ".offset": 80,
+            ".size": 4,
+            ".value_kind": "by_value",
+            ".value_type": "i32"
+          },
+          {
+            ".name": "beta",
+            ".offset": 84,
+            ".size": 4,
+            ".value_kind": "by_value",
+            ".value_type": "i32"
+          },
+          {
+            ".name": "gsu",
+            ".offset": 88,
+            ".size": 4,
+            ".value_kind": "by_value",
+            ".value_type": "u32"
+          },
+          {
+            ".address_space": "generic",
+            ".name": "bias",
+            ".offset": 92,
+            ".size": 8,
+            ".value_kind": "global_buffer",
+            ".value_type": "void"
+          },
+          {
+            ".name": "biasType",
+            ".offset": 100,
+            ".size": 4,
+            ".value_kind": "by_value",
+            ".value_type": "u32"
+          },
+          {
+            ".name": "StrideBias",
+            ".offset": 104,
+            ".size": 4,
+            ".value_kind": "by_value",
+            ".value_type": "u32"
+          },
+          {
+            ".name": "activationAlpha",
+            ".offset": 108,
+            ".size": 4,
+            ".value_kind": "by_value",
+            ".value_type": "i32"
+          },
+          {
+            ".name": "activationBeta",
+            ".offset": 112,
+            ".size": 4,
+            ".value_kind": "by_value",
+            ".value_type": "i32"
+          },
+          {
+            ".name": "activationType",
+            ".offset": 116,
+            ".size": 4,
+            ".value_kind": "by_value",
+            ".value_type": "u32"
+          }
+        ],
+        ".group_segment_fixed_size": 65536,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 120,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 768,
+        ".name": "Custom_Cijk_Alik_Bljk_I8II_BH_Bias_AI_MT192x256x128_TT12_8_WG16_32_1_MFWGS768_WGM1_ccyBlockSize768_gfx936",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 102,
+        ".sgpr_spill_count": 0,
+        ".symbol": "Custom_Cijk_Alik_Bljk_I8II_BH_Bias_AI_MT192x256x128_TT12_8_WG16_32_1_MFWGS768_WGM1_ccyBlockSize768_gfx936.kd",
+        ".vgpr_count": 255,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      },
+      "address_start": 88336384,
+      "address_span": 51712,
+      "bounds": "Zero-size ELF global FUNC;bounded by next global FUNC in same text section (includes final alignment padding)",
+      "isa_sha256": "a1dec8f742bdff284d2f98c3449522154fc8ba5efc67ae74b83a350da0258c68",
+      "static_instruction_counts": {
+        "s_mov_b32": 152,
+        "v_mov_b32_e32": 477,
+        "s_load_dwordx2": 8,
+        "s_load_dwordx8": 1,
+        "s_load_dwordx4": 4,
+        "s_waitcnt": 219,
+        "s_sub_u32": 21,
+        "s_mul_hi_u32": 17,
+        "s_mul_i32": 79,
+        "s_add_u32": 66,
+        "s_addc_u32": 48,
+        "v_cvt_f32_u32_e32": 4,
+        "v_rcp_iflag_f32_e32": 2,
+        "v_mul_f32_e32": 2,
+        "v_cvt_u32_f32_e32": 2,
+        "v_mul_u32_u24_e32": 3,
+        "v_sub_u32_e32": 2,
+        "v_cmp_ne_u32_e64": 2,
+        "v_addc_co_u32_e64": 2,
+        "v_readfirstlane_b32": 4,
+        "s_cmp_eq_u32": 14,
+        "s_cbranch_scc0": 12,
+        "v_lshrrev_b32_e32": 21,
+        "v_and_b32_e32": 25,
+        "v_lshlrev_b32_e32": 200,
+        "v_add_co_u32_e32": 627,
+        "v_sub_co_u32_e32": 1,
+        "v_cmp_eq_u32_e64": 6,
+        "s_or_b64": 4,
+        "v_cndmask_b32_e64": 401,
+        "v_sub_i32": 6,
+        "v_mul_lo_u32": 610,
+        "v_add_u32_e32": 216,
+        "s_cmp_ge_u32": 13,
+        "s_cmov_b32": 19,
+        "s_lshl_b32": 6,
+        "s_cmp_lt_u32": 3,
+        "s_cbranch_scc1": 194,
+        "s_lshr_b32": 9,
+        "s_branch": 31,
+        "s_subb_u32": 9,
+        "s_lshl_b64": 10,
+        "s_cselect_b32": 11,
+        "s_mov_b64": 21,
+        "s_or_b32": 3,
+        "v_add_lshl_u32": 303,
+        "s_and_b32": 9,
+        "s_cmp_le_i32": 7,
+        "buffer_load_dwordx4": 26,
+        "s_barrier": 24,
+        "s_cmp_lt_i32": 2,
+        "s_endpgm": 5,
+        "s_getpc_b64": 19,
+        "s_setpc_b64": 7,
+        "s_cmp_le_u32": 1,
+        "ds_read_b128": 120,
+        "v_mmac_i32_16x16x32_i8": 480,
+        "s_setprio": 20,
+        "s_cmp_eq_i32": 4,
+        "s_cmpk_eq_u32": 178,
+        "s_lshr_b64": 3,
+        "s_cmpk_gt_u32": 6,
+        "s_load_dword": 3,
+        "s_cmp_eq_u64": 3,
+        "buffer_load_dword": 195,
+        "ds_write_b32": 3,
+        "v_sub_u32_e64": 3,
+        "ds_read_b32": 36,
+        "v_add_i32": 576,
+        "s_add_i32": 18,
+        "v_mov_b64_e32": 458,
+        "s_swappc_b64": 147,
+        "buffer_store_dword": 576,
+        "v_add_co_u32_e64": 416,
+        "v_cmp_lt_u32_e64": 504,
+        "v_add_u32_e64": 7,
+        "v_and_b32_e64": 48,
+        "buffer_load_ubyte_d16": 56,
+        "buffer_load_ubyte_d16_hi": 56,
+        "v_or_b32_e32": 84,
+        "ds_write_b128": 3,
+        "s_and_b64": 192,
+        "v_max_i32_e32": 8,
+        "v_cmp_gt_i32_e64": 4,
+        "v_min_i32_e32": 8,
+        "v_cndmask_b32_e32": 8,
+        "v_cmp_ge_i32_e64": 4,
+        "v_max_i32_e64": 4
+      },
+      "extraction_note": "llvm-objdump --disassemble-symbols truncated at the next local label;an explicit address range is required. No evidence of a wrapper or separate compute-function call from this truncation."
+    },
+    {
+      "algorithm_id": 2979,
+      "kernel": "Custom_Cijk_Alik_Bljk_I8II_BH_Bias_AI_MT256x256x128_SE_K1_USSB1_WGM5_0521_structbuffer1024_ccyBlockSize768_gfx936",
+      "object": "/workspace/GroupGemm/baseline/hipblaslt-install/lib/hipblaslt/library_gfx936/TensileLibrary_gfx936.co",
+      "object_sha256": "0100605e307ec45ab645712246805a04ccff6a402c2b86de77f6a3db88a52454",
+      "metadata": {
+        ".args": [
+          {
+            ".name": "SizesFree0",
+            ".offset": 0,
+            ".size": 4,
+            ".value_kind": "by_value",
+            ".value_type": "u32"
+          },
+          {
+            ".name": "SizesFree1",
+            ".offset": 4,
+            ".size": 4,
+            ".value_kind": "by_value",
+            ".value_type": "u32"
+          },
+          {
+            ".name": "SizesFree2",
+            ".offset": 8,
+            ".size": 4,
+            ".value_kind": "by_value",
+            ".value_type": "u32"
+          },
+          {
+            ".name": "SizesSum0",
+            ".offset": 12,
+            ".size": 4,
+            ".value_kind": "by_value",
+            ".value_type": "u32"
+          },
+          {
+            ".address_space": "generic",
+            ".name": "D",
+            ".offset": 16,
+            ".size": 8,
+            ".value_kind": "global_buffer",
+            ".value_type": "i32"
+          },
+          {
+            ".address_space": "generic",
+            ".name": "C",
+            ".offset": 24,
+            ".size": 8,
+            ".value_kind": "global_buffer",
+            ".value_type": "i32"
+          },
+          {
+            ".address_space": "generic",
+            ".name": "A",
+            ".offset": 32,
+            ".size": 8,
+            ".value_kind": "global_buffer",
+            ".value_type": "i8"
+          },
+          {
+            ".address_space": "generic",
+            ".name": "B",
+            ".offset": 40,
+            ".size": 8,
+            ".value_kind": "global_buffer",
+            ".value_type": "i8"
+          },
+          {
+            ".name": "strideD0",
+            ".offset": 48,
+            ".size": 4,
+            ".value_kind": "by_value",
+            ".value_type": "u32"
+          },
+          {
+            ".name": "strideD1",
+            ".offset": 52,
+            ".size": 4,
+            ".value_kind": "by_value",
+            ".value_type": "u32"
+          },
+          {
+            ".name": "strideC0",
+            ".offset": 56,
+            ".size": 4,
+            ".value_kind": "by_value",
+            ".value_type": "u32"
+          },
+          {
+            ".name": "strideC1",
+            ".offset": 60,
+            ".size": 4,
+            ".value_kind": "by_value",
+            ".value_type": "u32"
+          },
+          {
+            ".name": "strideA0",
+            ".offset": 64,
+            ".size": 4,
+            ".value_kind": "by_value",
+            ".value_type": "u32"
+          },
+          {
+            ".name": "strideA1",
+            ".offset": 68,
+            ".size": 4,
+            ".value_kind": "by_value",
+            ".value_type": "u32"
+          },
+          {
+            ".name": "strideB0",
+            ".offset": 72,
+            ".size": 4,
+            ".value_kind": "by_value",
+            ".value_type": "u32"
+          },
+          {
+            ".name": "strideB1",
+            ".offset": 76,
+            ".size": 4,
+            ".value_kind": "by_value",
+            ".value_type": "u32"
+          },
+          {
+            ".name": "alpha",
+            ".offset": 80,
+            ".size": 4,
+            ".value_kind": "by_value",
+            ".value_type": "i32"
+          },
+          {
+            ".name": "beta",
+            ".offset": 84,
+            ".size": 4,
+            ".value_kind": "by_value",
+            ".value_type": "i32"
+          },
+          {
+            ".name": "gsu",
+            ".offset": 88,
+            ".size": 4,
+            ".value_kind": "by_value",
+            ".value_type": "u32"
+          },
+          {
+            ".address_space": "generic",
+            ".name": "bias",
+            ".offset": 92,
+            ".size": 8,
+            ".value_kind": "global_buffer",
+            ".value_type": "void"
+          },
+          {
+            ".name": "biasType",
+            ".offset": 100,
+            ".size": 4,
+            ".value_kind": "by_value",
+            ".value_type": "u32"
+          },
+          {
+            ".name": "StrideBias",
+            ".offset": 104,
+            ".size": 4,
+            ".value_kind": "by_value",
+            ".value_type": "u32"
+          },
+          {
+            ".name": "activationAlpha",
+            ".offset": 108,
+            ".size": 4,
+            ".value_kind": "by_value",
+            ".value_type": "i32"
+          },
+          {
+            ".name": "activationBeta",
+            ".offset": 112,
+            ".size": 4,
+            ".value_kind": "by_value",
+            ".value_type": "i32"
+          },
+          {
+            ".name": "activationType",
+            ".offset": 116,
+            ".size": 4,
+            ".value_kind": "by_value",
+            ".value_type": "u32"
+          }
+        ],
+        ".group_segment_fixed_size": 65536,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 120,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 768,
+        ".name": "Custom_Cijk_Alik_Bljk_I8II_BH_Bias_AI_MT256x256x128_SE_K1_USSB1_WGM5_0521_structbuffer1024_ccyBlockSize768_gfx936",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 102,
+        ".sgpr_spill_count": 0,
+        ".symbol": "Custom_Cijk_Alik_Bljk_I8II_BH_Bias_AI_MT256x256x128_SE_K1_USSB1_WGM5_0521_structbuffer1024_ccyBlockSize768_gfx936.kd",
+        ".vgpr_count": 255,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      },
+      "address_start": 88710656,
+      "address_span": 66560,
+      "bounds": "Zero-size ELF global FUNC;bounded by next global FUNC in same text section (includes final alignment padding)",
+      "isa_sha256": "ac45d4e29196f968593da0afa1f814dfcea805c85b458941a489621a87a485b5",
+      "static_instruction_counts": {
+        "s_mov_b32": 192,
+        "v_mov_b32_e32": 669,
+        "s_load_dwordx2": 8,
+        "s_load_dwordx8": 1,
+        "s_load_dwordx4": 4,
+        "s_waitcnt": 264,
+        "s_sub_u32": 21,
+        "s_mul_hi_u32": 20,
+        "s_mul_i32": 77,
+        "s_add_u32": 69,
+        "s_addc_u32": 45,
+        "v_cvt_f32_u32_e32": 4,
+        "v_rcp_iflag_f32_e32": 2,
+        "v_mul_f32_e32": 2,
+        "v_cvt_u32_f32_e32": 2,
+        "v_mul_u32_u24_e32": 3,
+        "v_sub_u32_e32": 2,
+        "v_cmp_ne_u32_e64": 2,
+        "v_addc_co_u32_e64": 2,
+        "v_readfirstlane_b32": 4,
+        "s_lshr_b64": 3,
+        "s_cmp_eq_u32": 15,
+        "s_cmov_b32": 23,
+        "s_cmpk_eq_u32": 238,
+        "s_cbranch_scc0": 13,
+        "v_lshrrev_b32_e32": 21,
+        "v_and_b32_e32": 25,
+        "v_lshlrev_b32_e32": 224,
+        "v_add_co_u32_e32": 787,
+        "v_sub_co_u32_e32": 1,
+        "v_cmp_eq_u32_e64": 6,
+        "s_or_b64": 4,
+        "v_cndmask_b32_e64": 514,
+        "v_sub_i32": 6,
+        "s_cmp_ge_u32": 12,
+        "s_cselect_b32": 12,
+        "v_mul_lo_u32": 804,
+        "v_add_u32_e32": 282,
+        "s_lshl_b32": 7,
+        "s_cmp_lt_u32": 3,
+        "s_cbranch_scc1": 250,
+        "s_lshr_b32": 10,
+        "s_branch": 30,
+        "s_subb_u32": 9,
+        "s_lshl_b64": 7,
+        "s_mov_b64": 21,
+        "s_or_b32": 3,
+        "v_add_lshl_u32": 402,
+        "s_and_b32": 12,
+        "s_cmp_le_i32": 8,
+        "buffer_load_dwordx4": 28,
+        "s_barrier": 25,
+        "s_cmp_lt_i32": 2,
+        "s_endpgm": 5,
+        "s_getpc_b64": 19,
+        "s_setpc_b64": 7,
+        "s_cmp_le_u32": 1,
+        "ds_read_b128": 160,
+        "v_mmac_i32_16x16x32_i8": 640,
+        "s_setprio": 20,
+        "s_cmp_eq_i32": 4,
+        "s_cmpk_gt_u32": 6,
+        "s_load_dword": 3,
+        "s_cmp_eq_u64": 3,
+        "buffer_load_dword": 259,
+        "ds_write_b32": 3,
+        "v_sub_u32_e64": 3,
+        "ds_read_b32": 48,
+        "v_add_i32": 768,
+        "s_add_i32": 18,
+        "v_mov_b64_e32": 582,
+        "s_swappc_b64": 198,
+        "buffer_store_dword": 768,
+        "v_add_co_u32_e64": 552,
+        "v_cmp_lt_u32_e64": 648,
+        "v_add_u32_e64": 7,
+        "v_and_b32_e64": 64,
+        "buffer_load_ubyte_d16": 64,
+        "buffer_load_ubyte_d16_hi": 64,
+        "v_or_b32_e32": 96,
+        "ds_write_b128": 4,
+        "s_sub_i32": 1,
+        "s_and_b64": 256,
+        "v_max_i32_e32": 8,
+        "v_cmp_gt_i32_e64": 4,
+        "v_min_i32_e32": 8,
+        "v_cndmask_b32_e32": 8,
+        "v_cmp_ge_i32_e64": 4,
+        "v_max_i32_e64": 4
+      },
+      "extraction_note": "llvm-objdump --disassemble-symbols truncated at the next local label;an explicit address range is required. No evidence of a wrapper or separate compute-function call from this truncation."
+    },
+    {
+      "algorithm_id": 6950,
+      "kernel": "Custom_Cijk_Alik_Bljk_I8II_BH_Bias_GG_AI_SAV_MT256x256x32_MI16x16x1_SN_GSU1_K1_MIWT8_4_WGM8",
+      "object": "/workspace/GroupGemm/baseline/hipblaslt-install/lib/hipblaslt/library_gfx936/TensileLibrary_gfx936.co",
+      "object_sha256": "0100605e307ec45ab645712246805a04ccff6a402c2b86de77f6a3db88a52454",
+      "metadata": {
+        ".args": [
+          {
+            ".name": "GroupedSizes",
+            ".offset": 0,
+            ".size": 4,
+            ".value_kind": "by_value",
+            ".value_type": "u32"
+          },
+          {
+            ".address_space": "generic",
+            ".name": "DeviceArguments",
+            ".offset": 4,
+            ".size": 8,
+            ".value_kind": "global_buffer",
+            ".value_type": "void"
+          },
+          {
+            ".address_space": "generic",
+            ".name": "argsPtr",
+            ".offset": 12,
+            ".size": 8,
+            ".value_kind": "global_buffer",
+            ".value_type": "void"
+          },
+          {
+            ".name": "WgTable",
+            ".offset": 20,
+            ".size": 4,
+            ".value_kind": "by_value",
+            ".value_type": "u32"
+          },
+          {
+            ".name": "GSU",
+            ".offset": 24,
+            ".size": 4,
+            ".value_kind": "by_value",
+            ".value_type": "u32"
+          }
+        ],
+        ".group_segment_fixed_size": 65536,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 32,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 768,
+        ".name": "Custom_Cijk_Alik_Bljk_I8II_BH_Bias_GG_AI_SAV_MT256x256x32_MI16x16x1_SN_GSU1_K1_MIWT8_4_WGM8",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 100,
+        ".sgpr_spill_count": 0,
+        ".symbol": "Custom_Cijk_Alik_Bljk_I8II_BH_Bias_GG_AI_SAV_MT256x256x32_MI16x16x1_SN_GSU1_K1_MIWT8_4_WGM8.kd",
+        ".vgpr_count": 255,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      },
+      "address_start": 158295040,
+      "address_span": 78848,
+      "bounds": "Zero-size ELF global FUNC;bounded by next global FUNC in same text section (includes final alignment padding)",
+      "isa_sha256": "7ef83b908d94dfd9e42b9ee459495f82ac9ccd71b6c292254de8cdbd19eef620",
+      "static_instruction_counts": {
+        "s_load_dword": 8,
+        "s_load_dwordx2": 7,
+        "s_waitcnt": 389,
+        "s_mov_b32": 577,
+        "v_mov_b32_e32": 866,
+        "s_cmp_eq_u64": 8,
+        "s_cbranch_scc0": 19,
+        "s_mul_i32": 114,
+        "s_mov_b64": 10,
+        "s_branch": 27,
+        "s_load_dwordx4": 6,
+        "s_cmpk_eq_u32": 11,
+        "s_cbranch_scc1": 30,
+        "s_lshr_b32": 14,
+        "s_and_b32": 16,
+        "s_addc_u32": 93,
+        "s_add_u32": 115,
+        "s_cmp_lt_u32": 5,
+        "s_sub_u32": 25,
+        "s_lshl2_add_u32": 1,
+        "s_load_dwordx16": 2,
+        "v_lshrrev_b32_e32": 18,
+        "v_readfirstlane_b32": 8,
+        "v_and_b32_e32": 22,
+        "v_lshlrev_b32_e32": 215,
+        "v_add_co_u32_e32": 287,
+        "v_sub_co_u32_e32": 1,
+        "v_cmp_eq_u32_e64": 6,
+        "s_or_b64": 4,
+        "v_cndmask_b32_e64": 1154,
+        "v_sub_i32": 3,
+        "v_mul_u32_u24_e32": 3,
+        "v_add_lshl_u32": 407,
+        "s_lshl_b32": 7,
+        "s_or_b32": 3,
+        "v_cvt_f32_u32_e32": 10,
+        "v_rcp_iflag_f32_e32": 5,
+        "v_mul_f32_e32": 5,
+        "v_cvt_u32_f32_e32": 5,
+        "v_sub_u32_e32": 5,
+        "v_cmp_ne_u32_e64": 2,
+        "v_addc_co_u32_e64": 2,
+        "s_cmp_eq_u32": 15,
+        "s_endpgm": 7,
+        "v_mul_u32_u24_e64": 3,
+        "v_cmpx_eq_u32_e64": 3,
+        "v_add_u32_e32": 289,
+        "s_cmp_ge_u32": 16,
+        "s_subb_u32": 9,
+        "s_mul_hi_u32": 21,
+        "s_lshr_b64": 2,
+        "s_cmov_b32": 21,
+        "s_cselect_b32": 11,
+        "v_mul_lo_u32": 1437,
+        "s_lshl_b64": 6,
+        "s_cmp_le_i32": 8,
+        "buffer_load_dwordx4": 28,
+        "s_barrier": 28,
+        "s_cmp_lt_i32": 2,
+        "s_getpc_b64": 16,
+        "s_setpc_b64": 11,
+        "s_cmp_le_u32": 1,
+        "ds_read_b128": 160,
+        "v_mmac_i32_16x16x32_i8": 640,
+        "s_setprio": 20,
+        "s_cmp_eq_i32": 4,
+        "s_add_i32": 15,
+        "s_cmpk_gt_u32": 6,
+        "s_load_dwordx8": 2,
+        "buffer_load_dword": 260,
+        "ds_write_b32": 4,
+        "v_sub_u32_e64": 2,
+        "ds_read_b32": 64,
+        "v_add_co_u32_e64": 514,
+        "v_cmp_gt_u32_e64": 640,
+        "v_add_i32": 640,
+        "s_swappc_b64": 640,
+        "buffer_store_dword": 640,
+        "s_nop": 5,
+        "v_and_b32_e64": 64,
+        "v_cmp_lt_u32_e64": 640,
+        "buffer_load_ubyte_d16": 64,
+        "buffer_load_ubyte_d16_hi": 64,
+        "v_or_b32_e32": 96,
+        "ds_write_b128": 4,
+        "v_mov_b64_e32": 8,
+        "s_sub_i32": 1,
+        "s_and_b64": 256,
+        "v_max_i32_e32": 1,
+        "v_cmp_gt_i32_e64": 1,
+        "v_min_i32_e32": 1,
+        "v_cndmask_b32_e32": 2,
+        "v_cmp_ge_i32_e64": 1,
+        "v_max_i32_e64": 1
+      },
+      "extraction_note": "llvm-objdump --disassemble-symbols truncated at the next local label;an explicit address range is required. No evidence of a wrapper or separate compute-function call from this truncation."
+    }
+  ],
+  "counters": [
+    {
+      "ID": 100,
+      "all_profile_rows": 1611,
+      "BLAS_total_launches": 12,
+      "CK_total_launches": 3,
+      "complete_call": {
+        "BLAS": {
+          "launches_per_complete_call": 4,
+          "resources": {
+            "wgr": [
+              "768"
+            ],
+            "grd": [
+              "540672"
+            ],
+            "lds": [
+              "65536"
+            ],
+            "scr": [
+              "0"
+            ],
+            "arch_vgpr": [
+              "256"
+            ],
+            "accum_vgpr": [
+              "0"
+            ],
+            "sig": [
+              "0x0"
+            ],
+            "sgpr": [
+              "112"
+            ]
+          },
+          "counters": {
+            "SQ_INSTS_VALU": 22750208,
+            "SQ_INSTS_LDS": 3244032,
+            "SQ_INSTS_VMEM_RD": 1036288,
+            "SQ_INSTS_VMEM_WR": 2162688,
+            "SQ_LDS_BANK_CONFLICT": 0,
+            "SQ_WAIT_INST_LDS": 2725550,
+            "TCC_HIT": 10597886,
+            "TCC_MISS": 9672660
+          },
+          "kernel": "Custom_Cijk_Alik_Bljk_I8II_BH_Bias_AI_MT192x256x128_TT12_8_WG16_32_1_MFWGS768_WGM1_ccyBlockSize768_gfx936"
+        },
+        "CK": {
+          "launches_per_complete_call": 1,
+          "resources": {
+            "wgr": [
+              "384"
+            ],
+            "grd": [
+              "3145728"
+            ],
+            "lds": [
+              "32768"
+            ],
+            "scr": [
+              "0"
+            ],
+            "arch_vgpr": [
+              "136"
+            ],
+            "accum_vgpr": [
+              "0"
+            ],
+            "sig": [
+              "0x0"
+            ],
+            "sgpr": [
+              "32"
+            ]
+          },
+          "counters": {
+            "SQ_INSTS_VALU": 29310976,
+            "SQ_INSTS_LDS": 5242880,
+            "SQ_INSTS_VMEM_RD": 1572864,
+            "SQ_INSTS_VMEM_WR": 524288,
+            "SQ_LDS_BANK_CONFLICT": 0,
+            "SQ_WAIT_INST_LDS": 578328,
+            "TCC_HIT": 11720565,
+            "TCC_MISS": 9185688
+          },
+          "kernel": "_ZN7ck_tile6kentryILi384ELi1ENS_29GroupedInt8NtWaspSplitMKernelINS_30GroupedInt8NtWaspSplitMProblemILb0ELi4ELi1ELi4ELb1ELb1ELi0ELb0ELb1ELi0ELi4EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEEEEvDpT2_"
+        }
+      },
+      "scope": "Aggregate last complete G-expert invocation;setup/reference kernels excluded. Counter values are reported aggregates,not HBM bytes or stall percentages;profile times not used for ranking."
+    },
+    {
+      "ID": 911,
+      "all_profile_rows": 482,
+      "BLAS_total_launches": 3,
+      "CK_total_launches": 3,
+      "complete_call": {
+        "BLAS": {
+          "launches_per_complete_call": 1,
+          "resources": {
+            "wgr": [
+              "768"
+            ],
+            "grd": [
+              "589824"
+            ],
+            "lds": [
+              "65536"
+            ],
+            "scr": [
+              "0"
+            ],
+            "arch_vgpr": [
+              "256"
+            ],
+            "accum_vgpr": [
+              "0"
+            ],
+            "sig": [
+              "0x0"
+            ],
+            "sgpr": [
+              "112"
+            ]
+          },
+          "counters": {
+            "SQ_INSTS_VALU": 31706112,
+            "SQ_INSTS_LDS": 6500352,
+            "SQ_INSTS_VMEM_RD": 1609728,
+            "SQ_INSTS_VMEM_WR": 786432,
+            "SQ_LDS_BANK_CONFLICT": 0,
+            "SQ_WAIT_INST_LDS": 9609104,
+            "TCC_HIT": 16012601,
+            "TCC_MISS": 6031464
+          },
+          "kernel": "Custom_Cijk_Alik_Bljk_I8II_BH_Bias_GG_AI_SAV_MT256x256x32_MI16x16x1_SN_GSU1_K1_MIWT8_4_WGM8"
+        },
+        "CK": {
+          "launches_per_complete_call": 1,
+          "resources": {
+            "wgr": [
+              "768"
+            ],
+            "grd": [
+              "589824"
+            ],
+            "lds": [
+              "65536"
+            ],
+            "scr": [
+              "0"
+            ],
+            "arch_vgpr": [
+              "200"
+            ],
+            "accum_vgpr": [
+              "0"
+            ],
+            "sig": [
+              "0x0"
+            ],
+            "sgpr": [
+              "32"
+            ]
+          },
+          "counters": {
+            "SQ_INSTS_VALU": 30950400,
+            "SQ_INSTS_LDS": 7077888,
+            "SQ_INSTS_VMEM_RD": 1572864,
+            "SQ_INSTS_VMEM_WR": 196608,
+            "SQ_LDS_BANK_CONFLICT": 0,
+            "SQ_WAIT_INST_LDS": 1831694,
+            "TCC_HIT": 10591673,
+            "TCC_MISS": 5156183
+          },
+          "kernel": "_ZN7ck_tile6kentryILi768ELi1ENS_29GroupedInt8NtWaspCachedKernelINS_30GroupedInt8NtWaspCachedProblemILb0ELi8ELi4ELi4ELb1ELb1ELi0ELb0ELb1ELi0EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEEEEvDpT2_"
+        }
+      },
+      "scope": "Aggregate last complete G-expert invocation;setup/reference kernels excluded. Counter values are reported aggregates,not HBM bytes or stall percentages;profile times not used for ranking."
+    },
+    {
+      "ID": 1126,
+      "all_profile_rows": 3194,
+      "BLAS_total_launches": 24,
+      "CK_total_launches": 3,
+      "complete_call": {
+        "BLAS": {
+          "launches_per_complete_call": 8,
+          "resources": {
+            "wgr": [
+              "768"
+            ],
+            "grd": [
+              "786432"
+            ],
+            "lds": [
+              "65536"
+            ],
+            "scr": [
+              "0"
+            ],
+            "arch_vgpr": [
+              "256"
+            ],
+            "accum_vgpr": [
+              "0"
+            ],
+            "sig": [
+              "0x0"
+            ],
+            "sgpr": [
+              "112"
+            ]
+          },
+          "counters": {
+            "SQ_INSTS_VALU": 497385472,
+            "SQ_INSTS_LDS": 117440512,
+            "SQ_INSTS_VMEM_RD": 29622272,
+            "SQ_INSTS_VMEM_WR": 8388608,
+            "SQ_LDS_BANK_CONFLICT": 0,
+            "SQ_WAIT_INST_LDS": 178797050,
+            "TCC_HIT": 311819946,
+            "TCC_MISS": 74161796
+          },
+          "kernel": "Custom_Cijk_Alik_Bljk_I8II_BH_Bias_AI_MT256x256x128_SE_K1_USSB1_WGM5_0521_structbuffer1024_ccyBlockSize768_gfx936"
+        },
+        "CK": {
+          "launches_per_complete_call": 1,
+          "resources": {
+            "wgr": [
+              "1024"
+            ],
+            "grd": [
+              "5767168"
+            ],
+            "lds": [
+              "65536"
+            ],
+            "scr": [
+              "0"
+            ],
+            "arch_vgpr": [
+              "184"
+            ],
+            "accum_vgpr": [
+              "0"
+            ],
+            "sig": [
+              "0x0"
+            ],
+            "sgpr": [
+              "32"
+            ]
+          },
+          "counters": {
+            "SQ_INSTS_VALU": 546308096,
+            "SQ_INSTS_LDS": 129499136,
+            "SQ_INSTS_VMEM_RD": 25231360,
+            "SQ_INSTS_VMEM_WR": 2097152,
+            "SQ_LDS_BANK_CONFLICT": 0,
+            "SQ_WAIT_INST_LDS": 21451314,
+            "TCC_HIT": 158963069,
+            "TCC_MISS": 76419555
+          },
+          "kernel": "_ZN7ck_tile6kentryILi1024ELi1ENS_34GroupedInt8NtWaspPublicWideNKernelINS_35GroupedInt8NtWaspPublicWideNProblemILb0ELi12ELi4ELi2ELb1ELb1ELi0ELb0ELb1ELi0ELi12EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEEEEvDpT2_"
+        }
+      },
+      "scope": "Aggregate last complete G-expert invocation;setup/reference kernels excluded. Counter values are reported aggregates,not HBM bytes or stall percentages;profile times not used for ranking."
+    }
+  ],
+  "normal_results": [
+    {
+      "ID": 100,
+      "M": 16384,
+      "N": 2048,
+      "K": 768,
+      "G": 4,
+      "winner": "matmul",
+      "algorithm_id": 2972,
+      "selected": {
+        "candidate_index": 2972,
+        "algorithm_id": 2972,
+        "support_status": 0,
+        "workspace_bytes": 11264,
+        "origin": "solution_index",
+        "kernel_name": "Custom_Cijk_Alik_Bljk_I8II_BH_Bias_AI_MT192x256x128_TT12_8_WG16_32_1_MFWGS768_WGM1_ccyBlockSize768_gfx936",
+        "solution_name": "Custom_Cijk_Alik_Bljk_I8II_BH_Bias_AI_MT192x256x128_TT12_8_WG16_32_1_MFWGS768_WGM1_ccyBlockSize768_gfx936"
+      },
+      "target_TOPS": 257.837328368505,
+      "times_ms": {
+        "BLAS": [
+          0.8015711307525635,
+          0.7970942854881287,
+          0.8001949787139893
+        ],
+        "CK": [
+          0.814124584197998,
+          0.8143517971038818,
+          0.8135614991188049
+        ]
+      },
+      "throughput": {
+        "BLAS": 257.635246023815,
+        "CK": 253.22712789847594
+      },
+      "checks": [
+        {
+          "sample": 0,
+          "backend": "BLAS",
+          "full_output": true,
+          "guards": true,
+          "full_inputs_unchanged": true
+        },
+        {
+          "sample": 0,
+          "backend": "CK",
+          "full_output": true,
+          "guards": true,
+          "full_inputs_unchanged": true
+        },
+        {
+          "sample": 1,
+          "backend": "CK",
+          "full_output": true,
+          "guards": true,
+          "full_inputs_unchanged": true
+        },
+        {
+          "sample": 1,
+          "backend": "BLAS",
+          "full_output": true,
+          "guards": true,
+          "full_inputs_unchanged": true
+        },
+        {
+          "sample": 2,
+          "backend": "BLAS",
+          "full_output": true,
+          "guards": true,
+          "full_inputs_unchanged": true
+        },
+        {
+          "sample": 2,
+          "backend": "CK",
+          "full_output": true,
+          "guards": true,
+          "full_inputs_unchanged": true
+        }
+      ],
+      "profile": false,
+      "physical_gpu": 7,
+      "pci": "0000:f5:00.0",
+      "ck_module_sha256": "6ef4e295c783ccddc58f63d8657f6a6eaaff85dc6744f863a8e12a39a244376f",
+      "blas_sha256": "05524e5b1032409d3b4ba3926e26a4e989f2cccb4b867e0f1a2cfaa1e63ed5a5",
+      "bridge_sha256": "47a02606c849b7053695e6a58f3bec499fcc275f526598888fb916902974339f",
+      "scope": "Frozen winner replay versus same-module actual v112 CK control;not new full1178 acceptance"
+    },
+    {
+      "ID": 911,
+      "M": 2048,
+      "N": 3072,
+      "K": 4096,
+      "G": 8,
+      "winner": "groupgemm",
+      "algorithm_id": 6950,
+      "selected": {
+        "candidate_index": 5,
+        "algorithm_id": 6950,
+        "support_status": 0,
+        "workspace_bytes": 25600,
+        "origin": "heuristic",
+        "kernel_name": "Custom_Cijk_Alik_Bljk_I8II_BH_Bias_GG_AI_SAV_MT256x256x32_MI16x16x1_SN_GSU1_K1_MIWT8_4_WGM8",
+        "solution_name": "Custom_Cijk_Alik_Bljk_I8II_BH_Bias_GG_AI_SAV_MT256x256x32_MI16x16x1_SN_GSU1_K1_MIWT8_4_WGM8"
+      },
+      "target_TOPS": 550.831130626503,
+      "times_ms": {
+        "BLAS": [
+          0.7506207227706909,
+          0.7500062584877014,
+          0.7486206293106079
+        ],
+        "CK": [
+          0.7557950615882874,
+          0.755878210067749,
+          0.7558046579360962
+        ]
+      },
+      "throughput": {
+        "BLAS": 549.7512264062809,
+        "CK": 545.5336323831729
+      },
+      "checks": [
+        {
+          "sample": 0,
+          "backend": "BLAS",
+          "full_output": true,
+          "guards": true,
+          "full_inputs_unchanged": true
+        },
+        {
+          "sample": 0,
+          "backend": "CK",
+          "full_output": true,
+          "guards": true,
+          "full_inputs_unchanged": true
+        },
+        {
+          "sample": 1,
+          "backend": "CK",
+          "full_output": true,
+          "guards": true,
+          "full_inputs_unchanged": true
+        },
+        {
+          "sample": 1,
+          "backend": "BLAS",
+          "full_output": true,
+          "guards": true,
+          "full_inputs_unchanged": true
+        },
+        {
+          "sample": 2,
+          "backend": "BLAS",
+          "full_output": true,
+          "guards": true,
+          "full_inputs_unchanged": true
+        },
+        {
+          "sample": 2,
+          "backend": "CK",
+          "full_output": true,
+          "guards": true,
+          "full_inputs_unchanged": true
+        }
+      ],
+      "profile": false,
+      "physical_gpu": 7,
+      "pci": "0000:f5:00.0",
+      "ck_module_sha256": "6ef4e295c783ccddc58f63d8657f6a6eaaff85dc6744f863a8e12a39a244376f",
+      "blas_sha256": "05524e5b1032409d3b4ba3926e26a4e989f2cccb4b867e0f1a2cfaa1e63ed5a5",
+      "bridge_sha256": "c71adaa59a88799b81c01943aa851a88e381915211b765859d956cca669703cc",
+      "scope": "Frozen winner replay versus same-module actual v112 CK control;not new full1178 acceptance"
+    },
+    {
+      "ID": 920,
+      "M": 4096,
+      "N": 3072,
+      "K": 4096,
+      "G": 4,
+      "winner": "groupgemm",
+      "algorithm_id": 6950,
+      "selected": {
+        "candidate_index": 5,
+        "algorithm_id": 6950,
+        "support_status": 0,
+        "workspace_bytes": 25088,
+        "origin": "heuristic",
+        "kernel_name": "Custom_Cijk_Alik_Bljk_I8II_BH_Bias_GG_AI_SAV_MT256x256x32_MI16x16x1_SN_GSU1_K1_MIWT8_4_WGM8",
+        "solution_name": "Custom_Cijk_Alik_Bljk_I8II_BH_Bias_GG_AI_SAV_MT256x256x32_MI16x16x1_SN_GSU1_K1_MIWT8_4_WGM8"
+      },
+      "target_TOPS": 550.901800972743,
+      "times_ms": {
+        "BLAS": [
+          0.7489215135574341,
+          0.747577428817749,
+          0.7474973797798157
+        ],
+        "CK": [
+          0.7542014122009277,
+          0.7538654208183289,
+          0.7536126971244812
+        ]
+      },
+      "throughput": {
+        "BLAS": 551.5373318159907,
+        "CK": 546.9369585468262
+      },
+      "checks": [
+        {
+          "sample": 0,
+          "backend": "BLAS",
+          "full_output": true,
+          "guards": true,
+          "full_inputs_unchanged": true
+        },
+        {
+          "sample": 0,
+          "backend": "CK",
+          "full_output": true,
+          "guards": true,
+          "full_inputs_unchanged": true
+        },
+        {
+          "sample": 1,
+          "backend": "CK",
+          "full_output": true,
+          "guards": true,
+          "full_inputs_unchanged": true
+        },
+        {
+          "sample": 1,
+          "backend": "BLAS",
+          "full_output": true,
+          "guards": true,
+          "full_inputs_unchanged": true
+        },
+        {
+          "sample": 2,
+          "backend": "BLAS",
+          "full_output": true,
+          "guards": true,
+          "full_inputs_unchanged": true
+        },
+        {
+          "sample": 2,
+          "backend": "CK",
+          "full_output": true,
+          "guards": true,
+          "full_inputs_unchanged": true
+        }
+      ],
+      "profile": false,
+      "physical_gpu": 7,
+      "pci": "0000:f5:00.0",
+      "ck_module_sha256": "6ef4e295c783ccddc58f63d8657f6a6eaaff85dc6744f863a8e12a39a244376f",
+      "blas_sha256": "05524e5b1032409d3b4ba3926e26a4e989f2cccb4b867e0f1a2cfaa1e63ed5a5",
+      "bridge_sha256": "c71adaa59a88799b81c01943aa851a88e381915211b765859d956cca669703cc",
+      "scope": "Frozen winner replay versus same-module actual v112 CK control;not new full1178 acceptance"
+    },
+    {
+      "ID": 96,
+      "M": 16384,
+      "N": 2048,
+      "K": 768,
+      "G": 8,
+      "winner": "matmul",
+      "algorithm_id": 2972,
+      "selected": {
+        "candidate_index": 2972,
+        "algorithm_id": 2972,
+        "support_status": 0,
+        "workspace_bytes": 11264,
+        "origin": "solution_index",
+        "kernel_name": "Custom_Cijk_Alik_Bljk_I8II_BH_Bias_AI_MT192x256x128_TT12_8_WG16_32_1_MFWGS768_WGM1_ccyBlockSize768_gfx936",
+        "solution_name": "Custom_Cijk_Alik_Bljk_I8II_BH_Bias_AI_MT192x256x128_TT12_8_WG16_32_1_MFWGS768_WGM1_ccyBlockSize768_gfx936"
+      },
+      "target_TOPS": 258.160198885748,
+      "times_ms": {
+        "BLAS": [
+          1.6056574583053589,
+          1.6026142835617065,
+          1.599807858467102
+        ],
+        "CK": [
+          1.60332453250885,
+          1.6040574312210083,
+          1.604543924331665
+        ]
+      },
+      "throughput": {
+        "BLAS": 257.277664778859,
+        "CK": 257.04619572264596
+      },
+      "checks": [
+        {
+          "sample": 0,
+          "backend": "BLAS",
+          "full_output": true,
+          "guards": true,
+          "full_inputs_unchanged": true
+        },
+        {
+          "sample": 0,
+          "backend": "CK",
+          "full_output": true,
+          "guards": true,
+          "full_inputs_unchanged": true
+        },
+        {
+          "sample": 1,
+          "backend": "CK",
+          "full_output": true,
+          "guards": true,
+          "full_inputs_unchanged": true
+        },
+        {
+          "sample": 1,
+          "backend": "BLAS",
+          "full_output": true,
+          "guards": true,
+          "full_inputs_unchanged": true
+        },
+        {
+          "sample": 2,
+          "backend": "BLAS",
+          "full_output": true,
+          "guards": true,
+          "full_inputs_unchanged": true
+        },
+        {
+          "sample": 2,
+          "backend": "CK",
+          "full_output": true,
+          "guards": true,
+          "full_inputs_unchanged": true
+        }
+      ],
+      "profile": false,
+      "physical_gpu": 7,
+      "pci": "0000:f5:00.0",
+      "ck_module_sha256": "6ef4e295c783ccddc58f63d8657f6a6eaaff85dc6744f863a8e12a39a244376f",
+      "blas_sha256": "05524e5b1032409d3b4ba3926e26a4e989f2cccb4b867e0f1a2cfaa1e63ed5a5",
+      "bridge_sha256": "47a02606c849b7053695e6a58f3bec499fcc275f526598888fb916902974339f",
+      "scope": "Frozen winner replay versus same-module actual v112 CK control;not new full1178 acceptance"
+    },
+    {
+      "ID": 1126,
+      "M": 16384,
+      "N": 4096,
+      "K": 7168,
+      "G": 8,
+      "winner": "matmul",
+      "algorithm_id": 2979,
+      "selected": {
+        "candidate_index": 2979,
+        "algorithm_id": 2979,
+        "support_status": 0,
+        "workspace_bytes": 16384,
+        "origin": "solution_index",
+        "kernel_name": "Custom_Cijk_Alik_Bljk_I8II_BH_Bias_AI_MT256x256x128_SE_K1_USSB1_WGM5_0521_structbuffer1024_ccyBlockSize768_gfx936",
+        "solution_name": "Custom_Cijk_Alik_Bljk_I8II_BH_Bias_AI_MT256x256x128_SE_K1_USSB1_WGM5_0521_structbuffer1024_ccyBlockSize768_gfx936"
+      },
+      "target_TOPS": 675.507243071346,
+      "times_ms": {
+        "BLAS": [
+          11.396794319152832,
+          11.383282661437988,
+          11.388941764831543
+        ],
+        "CK": [
+          11.427316665649414,
+          11.437796592712402,
+          11.422672271728516
+        ]
+      },
+      "throughput": {
+        "BLAS": 675.7942531762382,
+        "CK": 673.5248194852228
+      },
+      "checks": [
+        {
+          "sample": 0,
+          "backend": "BLAS",
+          "full_output": true,
+          "guards": true,
+          "full_inputs_unchanged": true
+        },
+        {
+          "sample": 0,
+          "backend": "CK",
+          "full_output": true,
+          "guards": true,
+          "full_inputs_unchanged": true
+        },
+        {
+          "sample": 1,
+          "backend": "CK",
+          "full_output": true,
+          "guards": true,
+          "full_inputs_unchanged": true
+        },
+        {
+          "sample": 1,
+          "backend": "BLAS",
+          "full_output": true,
+          "guards": true,
+          "full_inputs_unchanged": true
+        },
+        {
+          "sample": 2,
+          "backend": "BLAS",
+          "full_output": true,
+          "guards": true,
+          "full_inputs_unchanged": true
+        },
+        {
+          "sample": 2,
+          "backend": "CK",
+          "full_output": true,
+          "guards": true,
+          "full_inputs_unchanged": true
+        }
+      ],
+      "profile": false,
+      "physical_gpu": 7,
+      "pci": "0000:f5:00.0",
+      "ck_module_sha256": "6ef4e295c783ccddc58f63d8657f6a6eaaff85dc6744f863a8e12a39a244376f",
+      "blas_sha256": "05524e5b1032409d3b4ba3926e26a4e989f2cccb4b867e0f1a2cfaa1e63ed5a5",
+      "bridge_sha256": "47a02606c849b7053695e6a58f3bec499fcc275f526598888fb916902974339f",
+      "scope": "Frozen winner replay versus same-module actual v112 CK control;not new full1178 acceptance"
+    },
+    {
+      "ID": 92,
+      "M": 16384,
+      "N": 2048,
+      "K": 768,
+      "G": 16,
+      "winner": "matmul",
+      "algorithm_id": 2972,
+      "selected": {
+        "candidate_index": 2972,
+        "algorithm_id": 2972,
+        "support_status": 0,
+        "workspace_bytes": 11264,
+        "origin": "solution_index",
+        "kernel_name": "Custom_Cijk_Alik_Bljk_I8II_BH_Bias_AI_MT192x256x128_TT12_8_WG16_32_1_MFWGS768_WGM1_ccyBlockSize768_gfx936",
+        "solution_name": "Custom_Cijk_Alik_Bljk_I8II_BH_Bias_AI_MT192x256x128_TT12_8_WG16_32_1_MFWGS768_WGM1_ccyBlockSize768_gfx936"
+      },
+      "target_TOPS": 258.329027966229,
+      "times_ms": {
+        "BLAS": [
+          3.1993978023529053,
+          3.1975481510162354,
+          3.1991610527038574
+        ],
+        "CK": [
+          3.1970202922821045,
+          3.1944570541381836,
+          3.195957660675049
+        ]
+      },
+      "throughput": {
+        "BLAS": 257.76561643717145,
+        "CK": 258.02398166245456
+      },
+      "checks": [
+        {
+          "sample": 0,
+          "backend": "BLAS",
+          "full_output": true,
+          "guards": true,
+          "full_inputs_unchanged": true
+        },
+        {
+          "sample": 0,
+          "backend": "CK",
+          "full_output": true,
+          "guards": true,
+          "full_inputs_unchanged": true
+        },
+        {
+          "sample": 1,
+          "backend": "CK",
+          "full_output": true,
+          "guards": true,
+          "full_inputs_unchanged": true
+        },
+        {
+          "sample": 1,
+          "backend": "BLAS",
+          "full_output": true,
+          "guards": true,
+          "full_inputs_unchanged": true
+        },
+        {
+          "sample": 2,
+          "backend": "BLAS",
+          "full_output": true,
+          "guards": true,
+          "full_inputs_unchanged": true
+        },
+        {
+          "sample": 2,
+          "backend": "CK",
+          "full_output": true,
+          "guards": true,
+          "full_inputs_unchanged": true
+        }
+      ],
+      "profile": false,
+      "physical_gpu": 7,
+      "pci": "0000:f5:00.0",
+      "ck_module_sha256": "6ef4e295c783ccddc58f63d8657f6a6eaaff85dc6744f863a8e12a39a244376f",
+      "blas_sha256": "05524e5b1032409d3b4ba3926e26a4e989f2cccb4b867e0f1a2cfaa1e63ed5a5",
+      "bridge_sha256": "47a02606c849b7053695e6a58f3bec499fcc275f526598888fb916902974339f",
+      "scope": "Frozen winner replay versus same-module actual v112 CK control;not new full1178 acceptance"
+    },
+    {
+      "ID": 1130,
+      "M": 16384,
+      "N": 4096,
+      "K": 7168,
+      "G": 12,
+      "winner": "matmul",
+      "algorithm_id": 2979,
+      "selected": {
+        "candidate_index": 2979,
+        "algorithm_id": 2979,
+        "support_status": 0,
+        "workspace_bytes": 16384,
+        "origin": "solution_index",
+        "kernel_name": "Custom_Cijk_Alik_Bljk_I8II_BH_Bias_AI_MT256x256x128_SE_K1_USSB1_WGM5_0521_structbuffer1024_ccyBlockSize768_gfx936",
+        "solution_name": "Custom_Cijk_Alik_Bljk_I8II_BH_Bias_AI_MT256x256x128_SE_K1_USSB1_WGM5_0521_structbuffer1024_ccyBlockSize768_gfx936"
+      },
+      "target_TOPS": 675.931999753199,
+      "times_ms": {
+        "BLAS": [
+          17.077367782592773,
+          17.071683883666992,
+          17.0786190032959
+        ],
+        "CK": [
+          17.1170597076416,
+          17.096176147460938,
+          17.114585876464844
+        ]
+      },
+      "throughput": {
+        "BLAS": 676.0334636240526,
+        "CK": 674.5633329944579
+      },
+      "checks": [
+        {
+          "sample": 0,
+          "backend": "BLAS",
+          "full_output": true,
+          "guards": true,
+          "full_inputs_unchanged": true
+        },
+        {
+          "sample": 0,
+          "backend": "CK",
+          "full_output": true,
+          "guards": true,
+          "full_inputs_unchanged": true
+        },
+        {
+          "sample": 1,
+          "backend": "CK",
+          "full_output": true,
+          "guards": true,
+          "full_inputs_unchanged": true
+        },
+        {
+          "sample": 1,
+          "backend": "BLAS",
+          "full_output": true,
+          "guards": true,
+          "full_inputs_unchanged": true
+        },
+        {
+          "sample": 2,
+          "backend": "BLAS",
+          "full_output": true,
+          "guards": true,
+          "full_inputs_unchanged": true
+        },
+        {
+          "sample": 2,
+          "backend": "CK",
+          "full_output": true,
+          "guards": true,
+          "full_inputs_unchanged": true
+        }
+      ],
+      "profile": false,
+      "physical_gpu": 7,
+      "pci": "0000:f5:00.0",
+      "ck_module_sha256": "6ef4e295c783ccddc58f63d8657f6a6eaaff85dc6744f863a8e12a39a244376f",
+      "blas_sha256": "05524e5b1032409d3b4ba3926e26a4e989f2cccb4b867e0f1a2cfaa1e63ed5a5",
+      "bridge_sha256": "47a02606c849b7053695e6a58f3bec499fcc275f526598888fb916902974339f",
+      "scope": "Frozen winner replay versus same-module actual v112 CK control;not new full1178 acceptance"
+    },
+    {
+      "ID": 704,
+      "M": 8192,
+      "N": 1536,
+      "K": 2048,
+      "G": 4,
+      "winner": "groupgemm",
+      "algorithm_id": 6950,
+      "selected": {
+        "candidate_index": 5,
+        "algorithm_id": 6950,
+        "support_status": 0,
+        "workspace_bytes": 25088,
+        "origin": "heuristic",
+        "kernel_name": "Custom_Cijk_Alik_Bljk_I8II_BH_Bias_GG_AI_SAV_MT256x256x32_MI16x16x1_SN_GSU1_K1_MIWT8_4_WGM8",
+        "solution_name": "Custom_Cijk_Alik_Bljk_I8II_BH_Bias_GG_AI_SAV_MT256x256x32_MI16x16x1_SN_GSU1_K1_MIWT8_4_WGM8"
+      },
+      "target_TOPS": 426.95643998771,
+      "times_ms": {
+        "BLAS": [
+          0.48496949672698975,
+          0.4845726490020752,
+          0.48578232526779175
+        ],
+        "CK": [
+          0.48267513513565063,
+          0.48213109374046326,
+          0.482502281665802
+        ]
+      },
+      "throughput": {
+        "BLAS": 425.0956639527691,
+        "CK": 427.26933745526316
+      },
+      "checks": [
+        {
+          "sample": 0,
+          "backend": "BLAS",
+          "full_output": true,
+          "guards": true,
+          "full_inputs_unchanged": true
+        },
+        {
+          "sample": 0,
+          "backend": "CK",
+          "full_output": true,
+          "guards": true,
+          "full_inputs_unchanged": true
+        },
+        {
+          "sample": 1,
+          "backend": "CK",
+          "full_output": true,
+          "guards": true,
+          "full_inputs_unchanged": true
+        },
+        {
+          "sample": 1,
+          "backend": "BLAS",
+          "full_output": true,
+          "guards": true,
+          "full_inputs_unchanged": true
+        },
+        {
+          "sample": 2,
+          "backend": "BLAS",
+          "full_output": true,
+          "guards": true,
+          "full_inputs_unchanged": true
+        },
+        {
+          "sample": 2,
+          "backend": "CK",
+          "full_output": true,
+          "guards": true,
+          "full_inputs_unchanged": true
+        }
+      ],
+      "profile": false,
+      "physical_gpu": 7,
+      "pci": "0000:f5:00.0",
+      "ck_module_sha256": "6ef4e295c783ccddc58f63d8657f6a6eaaff85dc6744f863a8e12a39a244376f",
+      "blas_sha256": "05524e5b1032409d3b4ba3926e26a4e989f2cccb4b867e0f1a2cfaa1e63ed5a5",
+      "bridge_sha256": "c71adaa59a88799b81c01943aa851a88e381915211b765859d956cca669703cc",
+      "scope": "Frozen winner replay versus same-module actual v112 CK control;not new full1178 acceptance"
+    }
+  ],
+  "production": "Unchanged v112:1178 numeric PASS,1170 targets,8 remain",
+  "raw_vendor_isa": "Only build/blas_winners_v116 and authorized local analysis copies;not copied into the own-code repository"
+}
