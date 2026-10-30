@@ -436,3 +436,7 @@ Independent M128 WASP(2producer waves,N64/128/256,LDS32KiB)built;212full-range c
 ## Iterations101/102
 
 All422 M>=128 requirements screened(1523 numerical PASS),plus all38 M256(152 PASS). Dimension-only draft reaches365/422 in calibration,all78M128 reach target(including4 unchangedtails),zero>3%regressions. No production promotion yet;formal1093/1178 unchanged. See iteration_101_102_policy.md and CSV/audits.
+
+## Iteration103 integration gate
+
+Independent INT8 routes6/7 integrated by M/N/K/G only;K512/768 packing enabled;47full-range and16shared-weight/stream checks PASS;CPU ABI/oldsymbol-address/sourcehash checks PASS. Actual library owner verified bydladdr. New full1178 acceptance pending;old1093/1178 formal record unchanged. No FP16/BF16 source/default edits.

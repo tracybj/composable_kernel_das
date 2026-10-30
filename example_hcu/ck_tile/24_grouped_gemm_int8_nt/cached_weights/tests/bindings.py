@@ -14,8 +14,15 @@ def init(kind,**fields):
  for k,v in fields.items():setattr(x,k,v)
  return x
 E=Path(__file__).resolve().parents[2]
-libpath=Path(os.environ.get('CK_INT8_CACHED_BENCH_LIB',str(E/'build/cached_v97/libck_tile_int8_nt_cached_benchmark.so')))
+libpath=Path(os.environ.get('CK_INT8_CACHED_BENCH_LIB',str(E/'build/cached_v103/libck_tile_int8_nt_cached_benchmark.so')))
 lib=C.CDLL(str(libpath))
+# Resolve the actual implementation,not merely the path whose hash we read.
+# This catches an older same-SONAME cached library already loaded in-process.
+class DlInfo(C.Structure):
+ _fields_=[('filename',C.c_char_p),('base',C.c_void_p),('symbol',C.c_char_p),('address',C.c_void_p)]
+_loader=C.CDLL(None);_loader.dladdr.argtypes=[C.c_void_p,C.POINTER(DlInfo)];_loader.dladdr.restype=C.c_int
+_owner=DlInfo();assert _loader.dladdr(C.cast(lib.ck_tile_int8_nt_cached_run_v1,C.c_void_p),C.byref(_owner))==1
+assert Path(_owner.filename.decode()).resolve()==(libpath.parent/'libck_tile_int8_nt_cached.so').resolve(), 'Wrong cached API implementation loaded'
 lib.ck_tile_int8_nt_cached_weights_create_v1.argtypes=[C.POINTER(Weight),C.c_int32,C.c_void_p,C.POINTER(C.c_void_p)]
 lib.ck_tile_int8_nt_cached_weights_query_v1.argtypes=[C.c_void_p,C.POINTER(WeightInfo)]
 lib.ck_tile_int8_nt_cached_weights_destroy_v1.argtypes=[C.c_void_p]

@@ -20,7 +20,7 @@ import traceback
 
 E = Path(__file__).resolve().parents[2]
 ROOT = E.parents[2]
-BUILD = E / 'build/cached_v97'
+BUILD = E / 'build/cached_v103'
 FIELDS = ['ID', 'phase', 'M', 'N', 'K', 'G', 'dtype', 'layout', 'route',
           'legacy_instance', 'CK_ms', 'CK_TOPS', 'BLAS_target_ms',
           'BLAS_target_TOPS', 'R', 'prepare_submit_host_ms',
@@ -127,7 +127,7 @@ def main():
     assert Path(os.environ.get('CK_INT8_CACHED_BENCH_LIB',
                 str(BUILD / 'libck_tile_int8_nt_cached_benchmark.so'))).resolve() == (
                 BUILD / 'libck_tile_int8_nt_cached_benchmark.so').resolve()
-    for name in ['cached_api_v97_boundaries.json', 'cached_api_v97_lifetime.json']:
+    for name in ['cached_api_v103_boundaries.json', 'cached_api_v103_lifetime.json']:
         check = json.loads((E / 'results' / name).read_text())
         assert check['status'] == 'PASS' and check['library_sha256'] == frozen['api_library']
     resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
@@ -172,7 +172,7 @@ def main():
                 idx, g, m, n, k = [int(t[x]) for x in ['ID', 'G', 'M', 'N', 'K']]
                 active = dict(ID=idx, M=m, N=n, K=k, G=g, phase=t['phase'])
                 atomic(out / 'active.json', dict(**active, stage='allocate'))
-                packable = n % 256 == 0 and k % 128 == 0 and 1024 <= k < 16384
+                packable = n % 256 == 0 and k % 128 == 0 and 512 <= k < 16384
                 estimate = g * (m*k + n*k*(1 + int(packable)) + 4*(m*n+32))
                 estimate += 4*n*k + 16*128*(k+n) + 1024**3
                 free, _ = torch.cuda.mem_get_info()

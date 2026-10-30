@@ -7,6 +7,7 @@ from bindings import *
 assert os.environ.get('HIP_VISIBLE_DEVICES')=='7'
 torch.set_num_threads(4)
 cases=[([17,17],260,528),([32]*8,260,1232),([33,33],260,1232),([64]*8,260,4112),([1,17,0],1236,1232),([0,0],128,512),([33,0,257],300,528),([128,256],260,256),([128,128],256,512),([256,256],256,2048),([128],256,2048),([257,257],260,2064),([129,129],260,528),([4096],256,2048),([4096],256,4096),([4097],260,1232),([16,16],256,4096),([1],260,256),([2,2],260,768),([3],260,1232),([8]*17,260,2064),([16]*17,260,528),([1],260,4112),([16]*8,260,6160),([3]*8,260,4096),([256],256,384),([512],256,640),([2048],256,768),([2304],256,768),([2304],256,896),([256],512,4096),([256],512,6144),([512],256,6144),([512],256,7168),([512],256,1536),([512],256,3072),([256],512,7168),([512],256,768),([512],256,640),([768],512,6144),([256],768,6144),([2048],256,1536),([2048],512,3072),([4096],1280,2048),([8192],1024,2048),([4096],1024,2048)]
+cases.append(([256],512,512)) # Keep raw route3 covered after M128 promotion.
 results=[]
 for index,(lengths,n,k) in enumerate(cases):
  torch.manual_seed(20261029+index);g=len(lengths)
@@ -52,6 +53,7 @@ for index,(lengths,n,k) in enumerate(cases):
   if plan.value:ok(lib.ck_tile_int8_nt_cached_plan_destroy_v1(plan))
   ok(lib.ck_tile_int8_nt_cached_weights_destroy_v1(handle))
  del arrays,weights,groups,wd,gd,x,w,raw,y,oldx,oldw;gc.collect();torch.cuda.empty_cache()
-assert {0,1,3,4,5}<={x['route'] for x in results},'Exercise every production route in this policy'
-report=dict(status='PASS',checks=results,library_sha256=hashlib.sha256((E/'build/cached_v97/libck_tile_int8_nt_cached.so').read_bytes()).hexdigest(),routes=sorted({x['route'] for x in results}),C_ABI_sizes=[C.sizeof(t) for t in [Weight,Group,WeightInfo,PlanInfo]])
-(E/'results/cached_api_v97_boundaries.json').write_text(json.dumps(report,indent=2)+'\n');print('CACHED_API_BOUNDARIES_PASS',len(results))
+covered={x['route'] for x in results}
+assert {0,1,3,4,5,6,7}<=covered,('Missing production routes',{0,1,3,4,5,6,7}-covered,'observed',covered)
+report=dict(status='PASS',checks=results,library_sha256=hashlib.sha256((E/'build/cached_v103/libck_tile_int8_nt_cached.so').read_bytes()).hexdigest(),routes=sorted({x['route'] for x in results}),C_ABI_sizes=[C.sizeof(t) for t in [Weight,Group,WeightInfo,PlanInfo]])
+(E/'results/cached_api_v103_boundaries.json').write_text(json.dumps(report,indent=2)+'\n');print('CACHED_API_BOUNDARIES_PASS',len(results))

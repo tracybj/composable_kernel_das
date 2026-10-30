@@ -21,7 +21,7 @@ with other operations on the same handle.
 
 For the calibrated native N/K family,weights are packed to
 `[G,K/64,N/16,4,16,16]` by a vector16 copy kernel. Families which never use the
-packed path(K<1024,non-native N/K or K>=16384)avoid allocating an unused copy.
+packed path(K<512,non-native N/K or K>=16384)avoid allocating an unused copy.
 Preparation time and extra storage are separate from steady-state GEMM timing.
 The M/N/K/G rule comes from iteration96 development screening;new-API full-domain
 acceptance is required before treating those screening numbers as delivered.
@@ -35,3 +35,8 @@ cmake --build build_cached --target ck_tile_int8_nt_cached_benchmark -j2
 
 The C header uses fixed INT8 inputs and INT32 outputs. It has no FP16/BF16 or
 quantized-output parameter,and does not reinterpret or extend the old structs.
+
+The two M128 packed routes(6/7)use the same weight format and lifetime contract.
+Route6 is128x256/A-batch2;route7 is128x128/A-batch4. Selection uses M/N/K/G
+from iterations101/102. Updated public-API acceptance is required;development
+screen counts do not replace the prior formal1178 result.

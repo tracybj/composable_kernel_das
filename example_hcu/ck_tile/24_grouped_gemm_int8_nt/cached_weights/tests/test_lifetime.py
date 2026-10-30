@@ -19,7 +19,7 @@ for generation in range(2):
  wi=weight_info(h);assert wi.format==1;packed_ptr=wi.packed_device_data
  plans=[];storage=[]
  try:
-  for m in [256,512]:
+  for m in [128,256,512,2048]:
    a=[torch.randint(-128,128,(m,k),device='cuda',dtype=torch.int8) for _ in range(g)]
    c=[torch.empty((m,n),device='cuda',dtype=torch.int32) for _ in range(g)]
    gd=(Group*g)(*[init(Group,a=x.data_ptr(),c=y.data_ptr(),m=m,a_row_stride=k,c_row_stride=n) for x,y in zip(a,c)])
@@ -43,5 +43,5 @@ for generation in range(2):
   for p in plans:
    if p.value:ok(lib.ck_tile_int8_nt_cached_plan_destroy_v1(p))
   ok(lib.ck_tile_int8_nt_cached_weights_destroy_v1(h))
-report=dict(status='PASS',checks=checks,same_source_addresses_refreshed=True,plans_destroy_wait_for_queued_work=True,library_sha256=hashlib.sha256((E/'build/cached_v97/libck_tile_int8_nt_cached.so').read_bytes()).hexdigest())
-(E/'results/cached_api_v97_lifetime.json').write_text(json.dumps(report,indent=2)+'\n');print('CACHED_API_LIFETIME_PASS',len(checks))
+report=dict(status='PASS',checks=checks,same_source_addresses_refreshed=True,plans_destroy_wait_for_queued_work=True,library_sha256=hashlib.sha256((E/'build/cached_v103/libck_tile_int8_nt_cached.so').read_bytes()).hexdigest())
+(E/'results/cached_api_v103_lifetime.json').write_text(json.dumps(report,indent=2)+'\n');print('CACHED_API_LIFETIME_PASS',len(checks))
