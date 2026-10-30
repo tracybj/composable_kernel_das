@@ -1,0 +1,80 @@
+{
+  "eligible": [
+    46001,
+    46002,
+    45002,
+    45003
+  ],
+  "excluded": [
+    {
+      "candidate": {
+        "id": 46003,
+        "tile_M": 256,
+        "tile_N": 1,
+        "split": 4,
+        "priority": 0
+      },
+      "reason": "Actual generated spill/private allocation;not GPU-timed or accepted",
+      "resources": {
+        "version": 119,
+        "kind": "WaspM192Rotated",
+        "params": [
+          1,
+          4,
+          4,
+          12,
+          0,
+          0,
+          1024,
+          0,
+          0,
+          0,
+          8,
+          0
+        ],
+        "kernel_symbol": "_ZN7ck_tile6kentryILi768ELi1ENS_34GroupedInt8NtWaspM192RotatedKernelINS_35GroupedInt8NtWaspM192RotatedProblemILb1ELi4ELi4ELi12ELb0ELb0ELi1024ELb0ELb0ELi0ELi8ELi0EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEEEEvDpT2_",
+        "vgpr_count": 256,
+        "sgpr_count": 44,
+        "private_segment_fixed_size": 428,
+        "vgpr_spill_count": 106,
+        "sgpr_spill_count": 0,
+        "group_segment_fixed_size": 65536
+      }
+    },
+    {
+      "candidate": {
+        "id": 46004,
+        "tile_M": 256,
+        "tile_N": 1,
+        "split": 4,
+        "priority": 1
+      },
+      "reason": "Actual generated spill/private allocation;not GPU-timed or accepted",
+      "resources": {
+        "version": 119,
+        "kind": "WaspM192Rotated",
+        "params": [
+          1,
+          4,
+          4,
+          12,
+          0,
+          0,
+          1024,
+          0,
+          0,
+          0,
+          8,
+          1
+        ],
+        "kernel_symbol": "_ZN7ck_tile6kentryILi768ELi1ENS_34GroupedInt8NtWaspM192RotatedKernelINS_35GroupedInt8NtWaspM192RotatedProblemILb1ELi4ELi4ELi12ELb0ELb0ELi1024ELb0ELb0ELi0ELi8ELi1EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEEEEvDpT2_",
+        "vgpr_count": 256,
+        "sgpr_count": 44,
+        "private_segment_fixed_size": 428,
+        "vgpr_spill_count": 106,
+        "sgpr_spill_count": 0,
+        "group_segment_fixed_size": 65536
+      }
+    }
+  ]
+}
