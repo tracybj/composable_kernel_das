@@ -481,3 +481,16 @@ The dimension policy was calibrated on iteration105's92-case screen and is not i
 ## Iteration106
 
 New isolated INT8 cached-weight API all1178 numerical PASS;1115/1178 reach frozen BLAS targets,minR=0.957414,medianR=1.269414;63 remain.55full-range and20weight/stream-lifetime checks PASS. No existing FP16/BF16 source/ABI/default changes. Preparation time/storage separate. See iteration_106_cached_api_1178.md and current_cached_v106_1178.csv.
+
+
+# Iteration107:more consumer waves sharing M256 A publication
+
+Keep packed format1,M256/K128,A's two32KiB slots,and the all-consumer publication protocol. Increase N256 toN384,with12 consumer and4 producer waves(1024threads). Each consumer still owns256x32 output/128INT32 accumulators. For divisible N,total B loads and MMAC work are unchanged,but A publications/CTA count decrease by one third. Native N multiples32 support a partial final block by skipping out-of-N consumer epilogue stripes;buffer resource bounds protect unused B reads. M/stride diagnostic fallback remains complete. MGroup8/16 variants separately probe cache scheduling.
+
+The initial C12/A4 variants39001/39008 spill:192VGPR,440private bytes,241VGPR spill metadata count. They pass single-stageK128 but fail multi-stageK384 numerically. A three-shape diagnostic finds these two fail while C12/A2 and C8 controls pass. This is correlation with spilling,not a proved root mechanism. Both are quarantined entirely before performance measurement;their code is experimental and must not be selected. First failure and diagnostic logs are preserved.
+
+Remaining control plus4 candidates pass60 full-rangeINT8/FP64 checks,including odd stages,padding,ragged/empty groups,N tails,guards and input immutability. C12/A2 uses182VGPR,zero spill,64KiB LDS. All80 representative performance outputs PASS on16 original shapes,with balanced order,2warmups/5repeats/3sample median. It is a development screen,not public-API acceptance.
+
+Valid N384/A2 improves important longK cases: M16384/N3072/K4096/G48 goes570.36 to611.46TOPS(R1.06346);M16384/N4096/K6144/G8 goes625.29 to651.01(R1.02266);M8192/N6144/K7168/G12 goes644.25 to685.07(R1.04602). M16384/N4096/K7168/G8 improves647.68 to672.83 but remains below675.51 target(R0.99604). Not universal:shortK regresses,andM4096/N1536/K2048/G8 drops2.36%. Cache MGroup8/16 variants do not improve the tested longK cases. The control is the same-build old M256 packed route;shortK production already uses M128,so these are not universal gains over current policy.
+
+All344 M>=256 original shapes are now screened with just the old M256 and valid N384/A2 candidates. No production promotion or target-completion claim until the broad screen defines a dimension policy and a fresh public-API validation passes. The current formal report is v106:1178 numericPASS,1115 targets,minimumR0.957414. M64's92 cases all meet target. Additional exact device-code inspection finds all36 shared kernels byte-identical between v103/v106;only2 M64 kernels are added. This is not a paired timing or equal-cache-placement claim.

@@ -1,0 +1,12 @@
+{"profile": 0, "lengths": [256], "N": 256, "K": 128, "candidate": 32001, "status": "PASS", "full_range_int8": true, "FP64": true, "guards": true, "inputs_unchanged": true}
+{"profile": 0, "lengths": [256], "N": 256, "K": 128, "candidate": 39001, "status": "PASS", "full_range_int8": true, "FP64": true, "guards": true, "inputs_unchanged": true}
+{"profile": 0, "lengths": [256], "N": 256, "K": 128, "candidate": 39002, "status": "PASS", "full_range_int8": true, "FP64": true, "guards": true, "inputs_unchanged": true}
+{"profile": 0, "lengths": [256], "N": 256, "K": 128, "candidate": 39008, "status": "PASS", "full_range_int8": true, "FP64": true, "guards": true, "inputs_unchanged": true}
+{"profile": 0, "lengths": [256], "N": 256, "K": 128, "candidate": 39101, "status": "PASS", "full_range_int8": true, "FP64": true, "guards": true, "inputs_unchanged": true}
+{"profile": 0, "lengths": [256], "N": 256, "K": 128, "candidate": 39108, "status": "PASS", "full_range_int8": true, "FP64": true, "guards": true, "inputs_unchanged": true}
+{"profile": 0, "lengths": [256], "N": 256, "K": 128, "candidate": 39116, "status": "PASS", "full_range_int8": true, "FP64": true, "guards": true, "inputs_unchanged": true}
+{"profile": 1, "lengths": [256, 256], "N": 512, "K": 384, "candidate": 32001, "status": "PASS", "full_range_int8": true, "FP64": true, "guards": true, "inputs_unchanged": true}
+Traceback (most recent call last):
+  File "/workspace/GroupGemm/composable_kernel/example_hcu/ck_tile/24_grouped_gemm_int8_nt/experiments/wasp_wide_n_v107/check_math.py", line 23, in <module>
+    assert torch.equal(c,ref),(pi,lengths,n,k,cid,int((c!=ref).sum()))
+AssertionError: (1, [256, 256], 512, 384, 39001, 65600)
