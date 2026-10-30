@@ -428,3 +428,7 @@ Verified process terminal afterOOM inboolean comparison reduction atID464.132 co
 ## Iteration99
 
 New isolated INT8 cached-weight API all1178 numerical PASS;1093/1178 reach frozen BLAS targets,minR=0.866067,medianR=1.215079;85 remain.46full-range and8weight/stream-lifetime checks PASS. No existing FP16/BF16 source/ABI/default changes. Preparation time/storage separate. See iteration_99_cached_api_1178.md and current_cached_v97_1178.csv.
+
+## Iteration100
+
+Independent M128 WASP(2producer waves,N64/128/256,LDS32KiB)built;212full-range checks and194performance outputs PASS. Same-build screen closes7/14 selected gaps;M128 packedN128 improves five samples1.70--2.00x,while large long-K still prefers currentM256 packed. No production/API/16bit change. See iteration_100_split_m.md/JSON/CSV.
