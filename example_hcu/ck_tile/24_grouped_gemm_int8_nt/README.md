@@ -32,6 +32,26 @@ See [report](docs/REFACTOR_TWO_CORE_v121.md) and
 [1178-case CSV](docs/current_refactor_v121_1178.csv).
 BLAS numbers are the frozen tuned targets, not a new BLAS measurement.
 
+## Maintained Python entry points
+
+Only six Python files are kept for the current implementation:
+
+| File | Purpose |
+| --- | --- |
+| `cached_weights/build_and_manifest.py` | Build the cached API and benchmark bridge; freeze source/library hashes. |
+| `cached_weights/tests/bindings.py` | Shared ctypes descriptors and API bindings used by the GPU tests. |
+| `cached_weights/tests/test_acceptance_host.py` | CPU checks for the 1178-shape contract, CSV export and resume rejection rules. |
+| `cached_weights/tests/test_cached_api.py` | Full-range INT8 numerical, stride, tail, guard and API boundary tests. |
+| `cached_weights/tests/test_lifetime.py` | Prepared-weight reuse, refresh, stream ordering and destruction tests. |
+| `cached_weights/tests/validate_all_1178.py` | Full-output correctness and one-round performance measurement for all shapes. |
+
+The 17 root-level Python scripts from earlier raw-API experiments and v23–v80
+validation have been removed from `main`. They are preserved at
+[`exp/int8_nt` revision 40e78fd](https://github.com/tracybj/composable_kernel_das/tree/40e78fd0341731c3a8e18a19218f076f000e2e1f/example_hcu/ck_tile/24_grouped_gemm_int8_nt).
+Historical documents may mention those scripts; replay them from their recorded
+revision with the matching build environment. C++ kernels, pipelines, public ABI,
+frozen targets and the published v121 performance results are unchanged.
+
 ## Build
 
 ```bash
@@ -58,6 +78,7 @@ export CK_INT8_CACHED_BENCH_LIB="$CK_INT8_CACHED_BUILD/libck_tile_int8_nt_cached
 export CK_INT8_TEST_VERSION=v121
 export LD_LIBRARY_PATH="$CK_INT8_CACHED_BUILD:/opt/dtk/lib:/opt/dtk/hip/lib:/opt/dtk/llvm/lib:$LD_LIBRARY_PATH"
 ulimit -c 0
+python3 "$E/cached_weights/tests/test_acceptance_host.py"
 python3 "$E/cached_weights/tests/test_cached_api.py"
 python3 "$E/cached_weights/tests/test_lifetime.py"
 python3 "$E/cached_weights/tests/validate_all_1178.py" \
