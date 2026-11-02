@@ -32,6 +32,7 @@ inline bool ck_tile_hcu_grouped_gemm_bf16_tn_logical_k_tail_enabled()
 // disable side still wins, which is what makes a same-process A/B able to pin
 // either state:
 //   CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN=1  -> route BF16 NN to instance 5000
+//                                               (5002 for K > 4096)
 //   CK_TILE_GROUPED_GEMM_ENABLE_BF16_V8_TN=1  -> route BF16 TN to instance 5001
 //   CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_V8*=1  -> force the route off
 inline bool ck_tile_hcu_grouped_gemm_bf16_v7_nn_enabled()
@@ -41,6 +42,14 @@ inline bool ck_tile_hcu_grouped_gemm_bf16_v7_nn_enabled()
         return false;
     const char* enable = std::getenv("CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN");
     return enable != nullptr && enable[0] == '1' && enable[1] == '\0';
+}
+
+// Inside the v7 NN route, the large-K tile walk (5002) is on by default:
+//   CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8=1 -> keep every v7 NN problem on 5000
+inline bool ck_tile_hcu_grouped_gemm_bf16_v7_nn_m01_8_enabled()
+{
+    const char* disable = std::getenv("CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8");
+    return !(disable != nullptr && disable[0] == '1' && disable[1] == '\0');
 }
 
 inline bool ck_tile_hcu_grouped_gemm_bf16_v8_tn_enabled()
@@ -65,6 +74,13 @@ inline bool ck_tile_hcu_grouped_gemm_bf16_v8_tn_enabled()
 // NN also takes `tiles_per_group`: the common per-group tile count when the
 // problem states one (the O(1) group lookup), else 0.
 extern "C" int ck_tile_hcu_grouped_gemm_v7_bf16_nn_device_args(
+    void* device_args,
+    int group_count,
+    std::uint32_t num_cu,
+    hipStream_t stream,
+    std::uint64_t tile_slots,
+    std::int32_t tiles_per_group);
+extern "C" int ck_tile_hcu_grouped_gemm_v7_bf16_nn_m01_8_device_args(
     void* device_args,
     int group_count,
     std::uint32_t num_cu,

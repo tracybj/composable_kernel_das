@@ -739,6 +739,7 @@ int run_v7_bound_tests()
     {
         const auto actual = select_grouped_gemm_candidate(test.problem, v7).instance_id;
         const bool is_v7  = actual == GroupedGemmInstanceId::v7_bf16_nn ||
+                           actual == GroupedGemmInstanceId::v7_bf16_nn_m01_8 ||
                            actual == GroupedGemmInstanceId::v8_bf16_tn;
         if(is_v7 != test.expect_v7)
         {
@@ -753,12 +754,72 @@ int run_v7_bound_tests()
     return failures;
 }
 
+// The v7 NN tile-walk split: K past kGroupedGemmV7NnM01_8KThreshold takes 5002,
+// everything else (and the policy rollback) stays on 5000.
+int run_v7_m01_8_tests()
+{
+    GroupedGemmSelectorPolicy v7 = {};
+    v7.enable_bf16_v7_nn         = true;
+    GroupedGemmSelectorPolicy rollback = v7;
+    rollback.enable_bf16_v7_nn_m01_8   = false;
+
+    auto nn = [](std::int32_t groups, std::int64_t m, std::int64_t n, std::int64_t k) {
+        return make_fixed_m_problem(GroupedGemmArch::gfx936, GroupedGemmDataType::bf16,
+                                    GroupedGemmLayout::nn, groups, m, n, k);
+    };
+    auto nn_device_m = [](std::int32_t groups, std::int64_t capacity, std::int64_t k) {
+        auto problem = make_problem(GroupedGemmArch::gfx936, GroupedGemmDataType::bf16,
+                                    GroupedGemmLayout::nn, groups, capacity, 4096, k);
+        problem.group_lengths_are_ragged = true;
+        return problem;
+    };
+    struct WalkCase
+    {
+        const char* name;
+        GroupedGemmProblem problem;
+        GroupedGemmSelectorPolicy policy;
+        GroupedGemmInstanceId expected;
+    };
+    const std::vector<WalkCase> cases{
+        {"K=4096 stays on 5000", nn(8, 8192, 4096, 4096), v7, GroupedGemmInstanceId::v7_bf16_nn},
+        {"K=4112 takes 5002", nn(8, 8192, 4096, 4112), v7,
+         GroupedGemmInstanceId::v7_bf16_nn_m01_8},
+        {"K=7168 takes 5002", nn(8, 16384, 4096, 7168), v7,
+         GroupedGemmInstanceId::v7_bf16_nn_m01_8},
+        {"K=7168 G=96 takes 5002", nn(96, 2048, 6144, 7168), v7,
+         GroupedGemmInstanceId::v7_bf16_nn_m01_8},
+        {"K=7168 decode M=1 takes 5002", nn(16, 1, 4096, 7168), v7,
+         GroupedGemmInstanceId::v7_bf16_nn_m01_8},
+        {"ragged device M K=7168 takes 5002", nn_device_m(16, 16 * 4096, 7168), v7,
+         GroupedGemmInstanceId::v7_bf16_nn_m01_8},
+        {"K=3584 stays on 5000", nn(12, 2048, 6144, 3584), v7, GroupedGemmInstanceId::v7_bf16_nn},
+        {"K=7168 rollback stays on 5000", nn(8, 16384, 4096, 7168), rollback,
+         GroupedGemmInstanceId::v7_bf16_nn},
+    };
+    int failures = 0;
+    for(const auto& test : cases)
+    {
+        const auto actual = select_grouped_gemm_candidate(test.problem, test.policy).instance_id;
+        if(actual != test.expected)
+        {
+            std::cerr << "V7_M01_8_MISMATCH name=" << test.name
+                      << " expected=" << static_cast<int>(test.expected)
+                      << " actual=" << static_cast<int>(actual) << '\n';
+            ++failures;
+        }
+    }
+    if(failures == 0)
+        std::cout << "SELECTOR_V7_M01_8_PASS cases=" << cases.size() << '\n';
+    return failures;
+}
+
 int main(int argc, char* argv[])
 {
     try
     {
         int failures = run_table_tests();
         failures += run_v7_bound_tests();
+        failures += run_v7_m01_8_tests();
         std::string golden_path;
         std::string diff_path;
         for(int i = 1; i < argc; ++i)

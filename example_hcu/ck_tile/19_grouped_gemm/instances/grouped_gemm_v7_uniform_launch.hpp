@@ -59,7 +59,7 @@
 // kPadM/N/K stay false: ragged M and the N tail are handled by the epilogue's
 // store mask and the selector's shape gates, not by padding the operands.
 // -----------------------------------------------------------------------------
-template <typename PrecType, ck_tile::index_t PipelineId>
+template <typename PrecType, ck_tile::index_t PipelineId, ck_tile::index_t M01 = 1>
 struct GemmConfigV7Uniform : public GemmConfigBase
 {
     static_assert(std::is_same_v<PrecType, ck_tile::bf16_t>,
@@ -87,8 +87,14 @@ struct GemmConfigV7Uniform : public GemmConfigBase
     static constexpr bool SupportsFastRowMajorB    = true;
     static constexpr bool SupportsFastColumnMajorA = true;
 
+    // Tile walk inside a group (GemmSpatiallyLocalTilePartitioner): M01 = 1 is
+    // row-major (n fastest); M01 = 8 walks 8-tile-tall column strips, so the
+    // ~80 CTAs in flight cover an 8m x 10n patch instead of 5m x 16n. Past
+    // K = 4096 the row-major walk loses L2 reuse of the A/B panels as the CTAs
+    // drift apart in k (measured: L2 hit 35% vs 74%, HBM reads 43 vs 13 GB on
+    // M16384 N4096 K7168 G8); at K <= 4096 the column strip costs 3-8%.
     static constexpr ck_tile::index_t TileParitionerGroupNum = 1;
-    static constexpr ck_tile::index_t TileParitionerM01      = 1;
+    static constexpr ck_tile::index_t TileParitionerM01      = M01;
 
     static constexpr int kBlockPerCu = 1;   // 64 KB ring => one CTA per CU
 
@@ -97,6 +103,8 @@ struct GemmConfigV7Uniform : public GemmConfigBase
 
 using GemmConfigV7NnBf16 =
     GemmConfigV7Uniform<ck_tile::bf16_t, CK_TILE_PIPELINE_COMPUTE_V7>;
+using GemmConfigV7NnBf16M01_8 =
+    GemmConfigV7Uniform<ck_tile::bf16_t, CK_TILE_PIPELINE_COMPUTE_V7, 8>;
 using GemmConfigV8TnBf16 =
     GemmConfigV7Uniform<ck_tile::bf16_t, CK_TILE_PIPELINE_COMPUTE_V8>;
 

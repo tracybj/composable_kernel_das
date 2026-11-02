@@ -67,7 +67,9 @@ typedef enum ck_tile_hcu_grouped_gemm_instance_id_v1
     // v7: the uniform Direct-to-LDS NN / TN kernels driven through the
     // device-args ABI.
     CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V7_BF16_NN_V1 = 5000,
-    CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V8_BF16_TN_V1 = 5001
+    CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V8_BF16_TN_V1 = 5001,
+    // 5000 with the M01 = 8 tile walk, selected for large K.
+    CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V7_BF16_NN_M01_8_V1 = 5002
 } ck_tile_hcu_grouped_gemm_instance_id_v1;
 
 typedef enum ck_tile_hcu_grouped_gemm_candidate_family_v1

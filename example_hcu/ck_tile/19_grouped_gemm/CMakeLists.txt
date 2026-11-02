@@ -342,7 +342,7 @@ set_source_files_properties(
 # ---------------------------------------------------------------------------
 # v7 BF16 NN / TN kernels as precompiled CK instances.
 #
-# These two translation units are the instance entries (see their headers): the
+# These translation units are the instance entries (see their headers): the
 # whole kernel body lives in ck_tile headers (gemm_pipeline_v7_uniform.hpp +
 # grouped_gemm_v7_uniform_epilogue.hpp, instantiated through GroupedGemmKernel by
 # grouped_gemm_v7_uniform_launch.hpp). They are NOT part of
@@ -356,6 +356,7 @@ set_source_files_properties(
 if(GPU_TARGETS MATCHES "gfx936")
     add_library(ck_tile_hcu_grouped_gemm_v7_v8_bf16 STATIC EXCLUDE_FROM_ALL
         instances/grouped_gemm_v7_bf16_nn_device_args.cpp
+        instances/grouped_gemm_v7_bf16_nn_m01_8_device_args.cpp
         instances/grouped_gemm_v8_bf16_tn_device_args.cpp)
     target_include_directories(ck_tile_hcu_grouped_gemm_v7_v8_bf16
         PRIVATE ${CMAKE_CURRENT_LIST_DIR})
@@ -430,7 +431,7 @@ target_link_libraries(ck_tile_hcu_grouped_gemm
 if(TARGET ck_tile_hcu_grouped_gemm_v7_v8_bf16)
     # Pair the dispatch (grouped_gemm_device_args.cpp) and the selector route
     # with the entries this archive actually provides: an arch build without
-    # them must not name InstanceId 5000/5001, exactly like the promoted-NN
+    # them must not name InstanceId 5000/5001/5002, exactly like the promoted-NN
     # instances above.
     target_link_libraries(ck_tile_hcu_grouped_gemm
         PUBLIC ck_tile_hcu_grouped_gemm_v7_v8_bf16)

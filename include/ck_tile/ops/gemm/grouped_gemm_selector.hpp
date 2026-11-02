@@ -111,6 +111,10 @@ struct GroupedGemmSelectorPolicy
     // need a rebuild; the disable side of those switches wins.
     bool enable_bf16_v7_nn = false;
     bool enable_bf16_v8_tn = false;
+    // Inside the v7 NN route: K past kGroupedGemmV7NnM01_8KThreshold takes
+    // 5002 (the same kernel with the M01 = 8 tile walk). Set false to keep
+    // every v7 NN problem on 5000.
+    bool enable_bf16_v7_nn_m01_8 = true;
 };
 
 // Group-count bounds of the v7 instances. The kernels read the group table
@@ -125,6 +129,14 @@ constexpr std::int32_t kGroupedGemmV8TnMaxGroups = 16;
 // sums. The gate leaves headroom below INT32_MAX for the launcher's round-up to
 // whole CTA slots.
 constexpr std::int64_t kGroupedGemmV7MaxTiles = std::int64_t{1} << 30;
+
+// v7 NN tile walk. Past this K the row-major walk of 5000 loses L2 reuse of the
+// A/B panels (the CTAs in flight drift apart in k): measured on gfx936,
+// M8192 N4096 G8, L2 hit 84% at K4096 vs 51% at K7168. 5002's M01 = 8 walk
+// was faster at 39 of the 40 K>4096 grid points (K 4352..6144, N 3072..7168,
+// M 2048/8192), up to 2.3x; at K4096 it is 2-4% slower for N <= 4096, so the
+// threshold is exclusive. The one K>4096 loss was M8192 N3072 K6144 (+3.8%).
+constexpr std::int64_t kGroupedGemmV7NnM01_8KThreshold = 4096;
 
 enum class GroupedGemmInstanceId
 {
@@ -153,6 +165,7 @@ enum class GroupedGemmInstanceId
     // instances).
     v7_bf16_nn                                     = 5000,
     v8_bf16_tn                                     = 5001,
+    v7_bf16_nn_m01_8                               = 5002,
 };
 
 enum class GroupedGemmCandidateFamily
@@ -171,7 +184,7 @@ struct GroupedGemmCandidateIdentity
     GroupedGemmCandidateFamily family;
 };
 
-inline constexpr std::array<GroupedGemmCandidateIdentity, 20>
+inline constexpr std::array<GroupedGemmCandidateIdentity, 21>
     grouped_gemm_candidate_registry{{
         {GroupedGemmInstanceId::bw_family_selected,
          "bw_family.selected",
@@ -238,6 +251,10 @@ inline constexpr std::array<GroupedGemmCandidateIdentity, 20>
         {GroupedGemmInstanceId::v8_bf16_tn,
          "v8.tn_ab.uniform_d2l.256x256x16",
          GroupedGemmCandidateFamily::v7},
+        // 5000 with the M01 = 8 tile walk (see kGroupedGemmV7NnM01_8KThreshold).
+        {GroupedGemmInstanceId::v7_bf16_nn_m01_8,
+         "v7.nn_b.uniform_d2l.256x256x16.m01_8",
+         GroupedGemmCandidateFamily::v7},
     }};
 
 constexpr const GroupedGemmCandidateIdentity*
@@ -272,6 +289,9 @@ enum class GroupedGemmSelectionReason
     v8_bf16_tn,
     v4_n_aligned,
     v4_fallback,
+    // Appended: the reason is reported as its integer value, so existing
+    // entries keep their numbers.
+    v7_bf16_nn_m01_8,
 };
 
 struct GroupedGemmSelection
@@ -411,6 +431,12 @@ constexpr GroupedGemmSelection select_grouped_gemm_candidate(
     if(v7_contract && problem.group_count <= kGroupedGemmV7NnMaxGroups && is_bf16 &&
        is_nn && policy.enable_bf16_v7_nn)
     {
+        // K is common here (v7_contract), so k is every group's K.
+        if(policy.enable_bf16_v7_nn_m01_8 && k > kGroupedGemmV7NnM01_8KThreshold)
+        {
+            return {GroupedGemmInstanceId::v7_bf16_nn_m01_8,
+                    GroupedGemmSelectionReason::v7_bf16_nn_m01_8};
+        }
         return {GroupedGemmInstanceId::v7_bf16_nn,
                 GroupedGemmSelectionReason::v7_bf16_nn};
     }

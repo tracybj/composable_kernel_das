@@ -13,6 +13,8 @@
 
 #include "ck_tile/ops/gemm.hpp"
 #include "ck_tile/ops/gemm/grouped_gemm_device_args.h"
+#include "ck_tile/ops/gemm/grouped_gemm_bw_family_selected.hpp"
+#include "ck_tile/ops/gemm/grouped_gemm_selector.hpp"
 #include "ck_tile/host/device_prop.hpp"
 #include "ck_tile/ops/gemm/kernel/grouped_gemm_kernel.hpp"
 
@@ -42,6 +44,7 @@ using Bf16 = ck_tile::bf16_t;
 
 constexpr std::uint32_t kV7NnInstance = 5000;
 constexpr std::uint32_t kV8TnInstance = 5001;
+constexpr std::uint32_t kV7NnM01_8Instance = 5002;
 
 // Slack the TN A panel needs past the last group's columns (see the header).
 constexpr std::size_t kAtailPad = 1024;
@@ -1133,7 +1136,11 @@ int run(int argc, char* argv[])
         std::printf("layout=%s result=FAIL reason=select_status\n", options.layout.c_str());
         return 1;
     }
-    const std::uint32_t expected = c.tn ? kV8TnInstance : kV7NnInstance;
+    // NN past the K threshold takes the M01 = 8 walk unless it is rolled back.
+    const bool nn_m01_8 = !c.tn && c.k > ck_tile::kGroupedGemmV7NnM01_8KThreshold &&
+                          ck_tile_hcu_grouped_gemm_bf16_v7_nn_m01_8_enabled();
+    const std::uint32_t expected =
+        c.tn ? kV8TnInstance : (nn_m01_8 ? kV7NnM01_8Instance : kV7NnInstance);
     std::printf("select layout=%s instance_id=%u expected=%u name=%s\n",
                 options.layout.c_str(),
                 v7_id,
