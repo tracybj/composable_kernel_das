@@ -1,0 +1,2102 @@
+[
+  {
+    "id": 76,
+    "backend": "ck",
+    "shape": [
+      1,
+      2048,
+      768,
+      4
+    ],
+    "timing": {
+      "rounds": 3,
+      "cv": 0.59701836,
+      "cv_range": [
+        0.023685929,
+        0.77482107
+      ],
+      "instance_id": 5000,
+      "instance_id_range": [
+        5000,
+        5000
+      ],
+      "max_ms": 0.28369099,
+      "max_ms_range": [
+        0.035999998,
+        0.67231899
+      ],
+      "mean_ms": 0.1015666,
+      "mean_ms_range": [
+        0.035504066,
+        0.2166879
+      ],
+      "median_ms": 0.062161997,
+      "median_ms_range": [
+        0.03568,
+        0.2572
+      ],
+      "min_ms": 0.036961,
+      "min_ms_range": [
+        0.03104,
+        0.038240001
+      ]
+    },
+    "gc": {
+      "rounds": 3,
+      "aql_last_dispatch_ms": 0.03808,
+      "aql_last_dispatch_ms_range": [
+        0.0304,
+        0.03984
+      ],
+      "aql_replay_median_ms": 0.0304,
+      "aql_replay_median_ms_range": [
+        0.02992,
+        0.0387995
+      ],
+      "busy_cu_frac": 0.29694858069612273,
+      "busy_cu_frac_range": [
+        0.21199357180131884,
+        0.31093008415426954
+      ],
+      "ctas": 32,
+      "ctas_range": [
+        32,
+        32
+      ],
+      "dispatch_count": 2,
+      "dispatch_count_range": [
+        2,
+        2
+      ],
+      "dram_credit_stall_frac": 0.0,
+      "dram_credit_stall_frac_range": [
+        0.0,
+        0.0
+      ],
+      "gui_cycles": 75219,
+      "gui_cycles_range": [
+        59501,
+        105395
+      ],
+      "hbm_GBps": 273.5376965926162,
+      "hbm_GBps_range": [
+        195.23573604060914,
+        345.7981277625586
+      ],
+      "hbm_read_MB": 12.8432,
+      "hbm_read_MB_range": [
+        12.843136,
+        12.84416
+      ],
+      "hbm_write_MB": 0.016384,
+      "hbm_write_MB_range": [
+        0.016384,
+        0.016384
+      ],
+      "l2_hit_pct": 1.2528451455929674,
+      "l2_hit_pct_range": [
+        1.2363850456284957,
+        1.3069524379124058
+      ],
+      "lds_bank_conflict_frac": 0.27586206896551724,
+      "lds_bank_conflict_frac_range": [
+        0.27586206896551724,
+        0.27586206896551724
+      ],
+      "mean_resident_waves_per_cu": 2.3524764289675804,
+      "mean_resident_waves_per_cu_range": [
+        1.6829541249584894,
+        2.4692099070713516
+      ],
+      "mean_wave_lifetime_cycles": 10875.96875,
+      "mean_wave_lifetime_cycles_range": [
+        10754.703125,
+        13552.76953125
+      ],
+      "mmop_active_per_busy_simd_cycle": 0.10999387393737989,
+      "mmop_active_per_busy_simd_cycle_range": [
+        0.10508020189970434,
+        0.13909312988548278
+      ],
+      "mmop_active_per_simd_cycle": 0.032672596019622704,
+      "mmop_active_per_simd_cycle_range": [
+        0.023317994212249157,
+        0.04130350750407556
+      ],
+      "mmop_cycles_per_inst": 2.0,
+      "mmop_cycles_per_inst_range": [
+        2.0,
+        2.0
+      ],
+      "mmop_insts": 393216,
+      "mmop_insts_range": [
+        393216,
+        393216
+      ],
+      "mmop_insts_expected_padded": 393216.0,
+      "mmop_insts_expected_padded_range": [
+        393216.0,
+        393216.0
+      ],
+      "ms_from_gui": 0.047011875,
+      "ms_from_gui_range": [
+        0.037188125,
+        0.065871875
+      ],
+      "sq_insts_branch_per_wave": 108.5,
+      "sq_insts_branch_per_wave_range": [
+        108.5,
+        108.5
+      ],
+      "sq_insts_lds_per_wave": 528.0,
+      "sq_insts_lds_per_wave_range": [
+        528.0,
+        528.0
+      ],
+      "sq_insts_mmop_per_wave": 1536.0,
+      "sq_insts_mmop_per_wave_range": [
+        1536.0,
+        1536.0
+      ],
+      "sq_insts_salu_per_wave": 779.5,
+      "sq_insts_salu_per_wave_range": [
+        779.5,
+        779.5
+      ],
+      "sq_insts_smem_per_wave": 10.5,
+      "sq_insts_smem_per_wave_range": [
+        10.5,
+        10.5
+      ],
+      "sq_insts_valu_per_wave": 2245.75,
+      "sq_insts_valu_per_wave_range": [
+        2245.75,
+        2245.75
+      ],
+      "sq_insts_vmem_per_wave": 106.25,
+      "sq_insts_vmem_per_wave_range": [
+        106.25,
+        106.25
+      ],
+      "tcp_alloc_stall_frac": 0.0,
+      "tcp_alloc_stall_frac_range": [
+        0.0,
+        0.0
+      ],
+      "tcp_alloc_stall_per_busy_cu": 0.0,
+      "tcp_alloc_stall_per_busy_cu_range": [
+        0.0,
+        0.0
+      ],
+      "tcp_pending_stall_frac": 0.07829853494462835,
+      "tcp_pending_stall_frac_range": [
+        0.056427842876796815,
+        0.0985239743869851
+      ],
+      "tcp_pending_stall_per_busy_cu": 0.2661771411148315,
+      "tcp_pending_stall_per_busy_cu_range": [
+        0.251820389646761,
+        0.33178799560523214
+      ],
+      "tcp_read_requests": 201504,
+      "tcp_read_requests_range": [
+        201504,
+        201504
+      ],
+      "tcp_tcc_read_latency": 344.48311199777675,
+      "tcp_tcc_read_latency_range": [
+        338.91974352866447,
+        345.0139203191996
+      ],
+      "valu_minus_mmop_count_fraction": 0.31604141155515975,
+      "valu_minus_mmop_count_fraction_range": [
+        0.31604141155515975,
+        0.31604141155515975
+      ],
+      "valu_minus_mmop_insts_per_wave": 709.75,
+      "valu_minus_mmop_insts_per_wave_range": [
+        709.75,
+        709.75
+      ],
+      "vmem_above_two_loads_per_kstage_per_wave": 10.25,
+      "vmem_above_two_loads_per_kstage_per_wave_range": [
+        10.25,
+        10.25
+      ],
+      "wait_any_frac": 0.18060029135335645,
+      "wait_any_frac_range": [
+        0.15331564206923803,
+        0.18228870799257882
+      ],
+      "waves": 256,
+      "waves_range": [
+        256,
+        256
+      ],
+      "waves_per_cta": 8.0,
+      "waves_per_cta_range": [
+        8.0,
+        8.0
+      ],
+      "all_mmop_count_matches_padded": true
+    },
+    "tlb": {
+      "rounds": 1,
+      "dispatch_count": 2,
+      "umc_page_hit_mean": 89.96875,
+      "utcl2_hit": 220,
+      "utcl2_miss": 0
+    },
+    "frozen_blas_card0_ms": 0.017047999426722527
+  },
+  {
+    "id": 76,
+    "backend": "blas",
+    "shape": [
+      1,
+      2048,
+      768,
+      4
+    ],
+    "timing": {
+      "rounds": 3,
+      "algorithm_id": 11285,
+      "algorithm_id_range": [
+        11285,
+        11285
+      ],
+      "checked": 8192,
+      "checked_range": [
+        8192,
+        8192
+      ],
+      "cv": 0.05297467751042316,
+      "cv_range": [
+        0.04018833707117612,
+        0.4021827049089314
+      ],
+      "failed": 0,
+      "failed_range": [
+        0,
+        0
+      ],
+      "gpu": 4,
+      "gpu_range": [
+        4,
+        4
+      ],
+      "max_abs": 0.0,
+      "max_abs_range": [
+        0.0,
+        0.0
+      ],
+      "max_ms": 0.024800000712275505,
+      "max_ms_range": [
+        0.02304000034928322,
+        0.08671999722719193
+      ],
+      "median_ms": 0.024320000782608986,
+      "median_ms_range": [
+        0.022319999523460865,
+        0.026240000501275063
+      ],
+      "min_ms": 0.019039999693632126,
+      "min_ms_range": [
+        0.018880000337958336,
+        0.019039999693632126
+      ],
+      "repeat": 1,
+      "repeat_range": [
+        1,
+        1
+      ],
+      "samples": 30,
+      "samples_range": [
+        30,
+        30
+      ],
+      "warmup": 10,
+      "warmup_range": [
+        10,
+        10
+      ]
+    },
+    "gc": {
+      "rounds": 3,
+      "aql_last_dispatch_ms": 0.02656,
+      "aql_last_dispatch_ms_range": [
+        0.0208,
+        0.0296
+      ],
+      "aql_replay_median_ms": 0.02488,
+      "aql_replay_median_ms_range": [
+        0.02056,
+        0.03088
+      ],
+      "busy_cu_frac": 0.49178051001821493,
+      "busy_cu_frac_range": [
+        0.3491041282179944,
+        0.6196573952222693
+      ],
+      "ctas": 128,
+      "ctas_range": [
+        128,
+        128
+      ],
+      "dispatch_count": 2,
+      "dispatch_count_range": [
+        2,
+        2
+      ],
+      "dram_credit_stall_frac": 0.0025796046980379483,
+      "dram_credit_stall_frac_range": [
+        0.002446403532911376,
+        0.002874556688153815
+      ],
+      "gui_cycles": 76311,
+      "gui_cycles_range": [
+        44833,
+        117581
+      ],
+      "hbm_GBps": 264.3297034503545,
+      "hbm_GBps_range": [
+        171.54945782056623,
+        449.9222983070506
+      ],
+      "hbm_read_MB": 12.590656,
+      "hbm_read_MB_range": [
+        12.590464,
+        12.59072
+      ],
+      "hbm_write_MB": 0.016384,
+      "hbm_write_MB_range": [
+        0.016384,
+        0.016384
+      ],
+      "l2_hit_pct": 4.607145619054984,
+      "l2_hit_pct_range": [
+        4.483289294114231,
+        4.76438628489814
+      ],
+      "lds_bank_conflict_frac": 0.32989690721649484,
+      "lds_bank_conflict_frac_range": [
+        0.32989690721649484,
+        0.32989690721649484
+      ],
+      "mean_resident_waves_per_cu": 3.140275975940559,
+      "mean_resident_waves_per_cu_range": [
+        2.230890620083177,
+        3.958722369683046
+      ],
+      "mean_wave_lifetime_cycles": 9179.755859375,
+      "mean_wave_lifetime_cycles_range": [
+        6602.66015625,
+        11144.35546875
+      ],
+      "mmop_active_per_busy_simd_cycle": 0.016371661224657014,
+      "mmop_active_per_busy_simd_cycle_range": [
+        0.01496783796779442,
+        0.0221157549557073
+      ],
+      "mmop_active_per_simd_cycle": 0.00805126390690726,
+      "mmop_active_per_simd_cycle_range": [
+        0.005225334025055068,
+        0.013704191109227578
+      ],
+      "mmop_cycles_per_inst": 2.0,
+      "mmop_cycles_per_inst_range": [
+        2.0,
+        2.0
+      ],
+      "mmop_insts": 98304,
+      "mmop_insts_range": [
+        98304,
+        98304
+      ],
+      "mmop_insts_expected_padded": 98304.0,
+      "mmop_insts_expected_padded_range": [
+        98304.0,
+        98304.0
+      ],
+      "ms_from_gui": 0.047694375,
+      "ms_from_gui_range": [
+        0.028020625,
+        0.073488125
+      ],
+      "sq_insts_branch_per_wave": 80.75,
+      "sq_insts_branch_per_wave_range": [
+        80.75,
+        80.75
+      ],
+      "sq_insts_lds_per_wave": 102.0,
+      "sq_insts_lds_per_wave_range": [
+        102.0,
+        102.0
+      ],
+      "sq_insts_mmop_per_wave": 192.0,
+      "sq_insts_mmop_per_wave_range": [
+        192.0,
+        192.0
+      ],
+      "sq_insts_salu_per_wave": 731.75,
+      "sq_insts_salu_per_wave_range": [
+        731.75,
+        731.75
+      ],
+      "sq_insts_smem_per_wave": 14.5,
+      "sq_insts_smem_per_wave_range": [
+        14.5,
+        14.5
+      ],
+      "sq_insts_valu_per_wave": 723.0,
+      "sq_insts_valu_per_wave_range": [
+        723.0,
+        723.0
+      ],
+      "sq_insts_vmem_per_wave": 66.0,
+      "sq_insts_vmem_per_wave_range": [
+        66.0,
+        66.0
+      ],
+      "tcp_alloc_stall_frac": 0.026925508773309223,
+      "tcp_alloc_stall_frac_range": [
+        0.017705773041562838,
+        0.05419919478955234
+      ],
+      "tcp_alloc_stall_per_busy_cu": 0.05475106927745456,
+      "tcp_alloc_stall_per_busy_cu_range": [
+        0.050717741815148785,
+        0.08746638901987322
+      ],
+      "tcp_pending_stall_frac": 0.10950419991875353,
+      "tcp_pending_stall_frac_range": [
+        0.08047792585536778,
+        0.21649621930274573
+      ],
+      "tcp_pending_stall_per_busy_cu": 0.23052699567366386,
+      "tcp_pending_stall_per_busy_cu_range": [
+        0.22266884857778854,
+        0.3493805140905148
+      ],
+      "tcp_read_requests": 199680,
+      "tcp_read_requests_range": [
+        199680,
+        199680
+      ],
+      "tcp_tcc_read_latency": 638.512359775641,
+      "tcp_tcc_read_latency_range": [
+        636.693053886218,
+        653.1791466346153
+      ],
+      "valu_minus_mmop_count_fraction": 0.7344398340248963,
+      "valu_minus_mmop_count_fraction_range": [
+        0.7344398340248963,
+        0.7344398340248963
+      ],
+      "valu_minus_mmop_insts_per_wave": 531.0,
+      "valu_minus_mmop_insts_per_wave_range": [
+        531.0,
+        531.0
+      ],
+      "wait_any_frac": 0.14766373812415548,
+      "wait_any_frac_range": [
+        0.14599231707848984,
+        0.2244579451582311
+      ],
+      "waves": 512,
+      "waves_range": [
+        512,
+        512
+      ],
+      "waves_per_cta": 4.0,
+      "waves_per_cta_range": [
+        4.0,
+        4.0
+      ],
+      "all_mmop_count_matches_padded": true
+    },
+    "tlb": {
+      "rounds": 1,
+      "dispatch_count": 2,
+      "umc_page_hit_mean": 86.34375,
+      "utcl2_hit": 2273,
+      "utcl2_miss": 0
+    },
+    "frozen_blas_card0_ms": 0.017047999426722527
+  },
+  {
+    "id": 681,
+    "backend": "ck",
+    "shape": [
+      1,
+      1536,
+      2048,
+      4
+    ],
+    "timing": {
+      "rounds": 3,
+      "cv": 0.12365885,
+      "cv_range": [
+        0.020636433,
+        0.63687071
+      ],
+      "instance_id": 5000,
+      "instance_id_range": [
+        5000,
+        5000
+      ],
+      "max_ms": 0.088482,
+      "max_ms_range": [
+        0.073122002,
+        0.344001
+      ],
+      "mean_ms": 0.070919134,
+      "mean_ms_range": [
+        0.066588233,
+        0.1439896
+      ],
+      "median_ms": 0.071121499,
+      "median_ms_range": [
+        0.062641501,
+        0.090319999
+      ],
+      "min_ms": 0.060959999,
+      "min_ms_range": [
+        0.059841,
+        0.065921001
+      ]
+    },
+    "gc": {
+      "rounds": 3,
+      "aql_last_dispatch_ms": 0.06176,
+      "aql_last_dispatch_ms_range": [
+        0.0592,
+        0.06928
+      ],
+      "aql_replay_median_ms": 0.0592005,
+      "aql_replay_median_ms_range": [
+        0.05904,
+        0.06936
+      ],
+      "busy_cu_frac": 0.2263059732577998,
+      "busy_cu_frac_range": [
+        0.18829849752349154,
+        0.25519327213537846
+      ],
+      "ctas": 24,
+      "ctas_range": [
+        24,
+        24
+      ],
+      "dispatch_count": 2,
+      "dispatch_count_range": [
+        2,
+        2
+      ],
+      "dram_credit_stall_frac": 0.0,
+      "dram_credit_stall_frac_range": [
+        0.0,
+        0.0
+      ],
+      "gui_cycles": 120035,
+      "gui_cycles_range": [
+        102291,
+        162931
+      ],
+      "hbm_GBps": 338.4689598866997,
+      "hbm_GBps_range": [
+        249.3572076523191,
+        397.181781388392
+      ],
+      "hbm_read_MB": 25.380288,
+      "hbm_read_MB_range": [
+        25.380224,
+        25.380288
+      ],
+      "hbm_write_MB": 0.012288,
+      "hbm_write_MB_range": [
+        0.012288,
+        0.012288
+      ],
+      "l2_hit_pct": 0.894180343001991,
+      "l2_hit_pct_range": [
+        0.8808264297834114,
+        0.8991298099952101
+      ],
+      "lds_bank_conflict_frac": 0.2608695652173913,
+      "lds_bank_conflict_frac_range": [
+        0.2608695652173913,
+        0.2608695652173913
+      ],
+      "mean_resident_waves_per_cu": 1.801845295122256,
+      "mean_resident_waves_per_cu_range": [
+        1.5000972804438688,
+        2.03145389134919
+      ],
+      "mean_wave_lifetime_cycles": 21801.40625,
+      "mean_wave_lifetime_cycles_range": [
+        21655.026041666668,
+        24913.375
+      ],
+      "mmop_active_per_busy_simd_cycle": 0.1809411224427346,
+      "mmop_active_per_busy_simd_cycle_range": [
+        0.16021036737284838,
+        0.1882931622482783
+      ],
+      "mmop_active_per_simd_cycle": 0.04094805681676178,
+      "mmop_active_per_simd_cycle_range": [
+        0.03016737146399396,
+        0.048051148194855856
+      ],
+      "mmop_cycles_per_inst": 2.0,
+      "mmop_cycles_per_inst_range": [
+        2.0,
+        2.0
+      ],
+      "mmop_insts": 786432,
+      "mmop_insts_range": [
+        786432,
+        786432
+      ],
+      "mmop_insts_expected_padded": 786432.0,
+      "mmop_insts_expected_padded_range": [
+        786432.0,
+        786432.0
+      ],
+      "ms_from_gui": 0.075021875,
+      "ms_from_gui_range": [
+        0.063931875,
+        0.10183187499999999
+      ],
+      "sq_insts_branch_per_wave": 199.5,
+      "sq_insts_branch_per_wave_range": [
+        199.5,
+        199.5
+      ],
+      "sq_insts_lds_per_wave": 1168.0,
+      "sq_insts_lds_per_wave_range": [
+        1168.0,
+        1168.0
+      ],
+      "sq_insts_mmop_per_wave": 4096.0,
+      "sq_insts_mmop_per_wave_range": [
+        4096.0,
+        4096.0
+      ],
+      "sq_insts_salu_per_wave": 1675.5,
+      "sq_insts_salu_per_wave_range": [
+        1675.5,
+        1675.5
+      ],
+      "sq_insts_smem_per_wave": 10.5,
+      "sq_insts_smem_per_wave_range": [
+        10.5,
+        10.5
+      ],
+      "sq_insts_valu_per_wave": 4805.75,
+      "sq_insts_valu_per_wave_range": [
+        4805.75,
+        4805.75
+      ],
+      "sq_insts_vmem_per_wave": 266.25,
+      "sq_insts_vmem_per_wave_range": [
+        266.25,
+        266.25
+      ],
+      "tcp_alloc_stall_frac": 0.0,
+      "tcp_alloc_stall_frac_range": [
+        0.0,
+        0.0
+      ],
+      "tcp_alloc_stall_per_busy_cu": 0.0,
+      "tcp_alloc_stall_per_busy_cu_range": [
+        0.0,
+        0.0
+      ],
+      "tcp_pending_stall_frac": 0.0926269421418753,
+      "tcp_pending_stall_frac_range": [
+        0.06851044307099324,
+        0.10864885473795348
+      ],
+      "tcp_pending_stall_per_busy_cu": 0.40929959032216057,
+      "tcp_pending_stall_per_busy_cu_range": [
+        0.3638395630981925,
+        0.42575125052793683
+      ],
+      "tcp_read_requests": 397848,
+      "tcp_read_requests_range": [
+        397848,
+        397848
+      ],
+      "tcp_tcc_read_latency": 347.4450468520641,
+      "tcp_tcc_read_latency_range": [
+        342.1648393356257,
+        353.9951086847238
+      ],
+      "valu_minus_mmop_count_fraction": 0.14768766581699005,
+      "valu_minus_mmop_count_fraction_range": [
+        0.14768766581699005,
+        0.14768766581699005
+      ],
+      "valu_minus_mmop_insts_per_wave": 709.75,
+      "valu_minus_mmop_insts_per_wave_range": [
+        709.75,
+        709.75
+      ],
+      "vmem_above_two_loads_per_kstage_per_wave": 10.25,
+      "vmem_above_two_loads_per_kstage_per_wave_range": [
+        10.25,
+        10.25
+      ],
+      "wait_any_frac": 0.18627573240449416,
+      "wait_any_frac_range": [
+        0.1629956131328386,
+        0.18856020001130416
+      ],
+      "waves": 192,
+      "waves_range": [
+        192,
+        192
+      ],
+      "waves_per_cta": 8.0,
+      "waves_per_cta_range": [
+        8.0,
+        8.0
+      ],
+      "all_mmop_count_matches_padded": true
+    },
+    "tlb": {
+      "rounds": 1,
+      "dispatch_count": 2,
+      "umc_page_hit_mean": 87,
+      "utcl2_hit": 321,
+      "utcl2_miss": 0
+    },
+    "frozen_blas_card0_ms": 0.027664000168442726
+  },
+  {
+    "id": 681,
+    "backend": "blas",
+    "shape": [
+      1,
+      1536,
+      2048,
+      4
+    ],
+    "timing": {
+      "rounds": 3,
+      "algorithm_id": 11278,
+      "algorithm_id_range": [
+        11278,
+        11278
+      ],
+      "checked": 6144,
+      "checked_range": [
+        6144,
+        6144
+      ],
+      "cv": 0.5634418980236731,
+      "cv_range": [
+        0.07628557063831126,
+        1.5715573275362658
+      ],
+      "failed": 0,
+      "failed_range": [
+        0,
+        0
+      ],
+      "gpu": 4,
+      "gpu_range": [
+        4,
+        4
+      ],
+      "max_abs": 0.0,
+      "max_abs_range": [
+        0.0,
+        0.0
+      ],
+      "max_ms": 0.14639900624752045,
+      "max_ms_range": [
+        0.046720001846551895,
+        0.6316789984703064
+      ],
+      "median_ms": 0.03399999998509884,
+      "median_ms_range": [
+        0.03399999998509884,
+        0.036399999633431435
+      ],
+      "min_ms": 0.028960000723600388,
+      "min_ms_range": [
+        0.02864000014960766,
+        0.028960000723600388
+      ],
+      "repeat": 1,
+      "repeat_range": [
+        1,
+        1
+      ],
+      "samples": 30,
+      "samples_range": [
+        30,
+        30
+      ],
+      "warmup": 10,
+      "warmup_range": [
+        10,
+        10
+      ]
+    },
+    "gc": {
+      "rounds": 3,
+      "aql_last_dispatch_ms": 0.03008,
+      "aql_last_dispatch_ms_range": [
+        0.0296,
+        0.03088
+      ],
+      "aql_replay_median_ms": 0.02992,
+      "aql_replay_median_ms_range": [
+        0.0299195,
+        0.03008
+      ],
+      "busy_cu_frac": 0.2234500668074652,
+      "busy_cu_frac_range": [
+        0.19538069507103528,
+        0.3023712055507372
+      ],
+      "ctas": 48,
+      "ctas_range": [
+        48,
+        48
+      ],
+      "dispatch_count": 2,
+      "dispatch_count_range": [
+        2,
+        2
+      ],
+      "dram_credit_stall_frac": 0.0,
+      "dram_credit_stall_frac_range": [
+        0.0,
+        0.0
+      ],
+      "gui_cycles": 116005,
+      "gui_cycles_range": [
+        86475,
+        136763
+      ],
+      "hbm_GBps": 347.5191448644455,
+      "hbm_GBps_range": [
+        294.7709073360485,
+        466.19442844752825
+      ],
+      "hbm_read_MB": 25.183936,
+      "hbm_read_MB_range": [
+        25.183808,
+        25.184064
+      ],
+      "hbm_write_MB": 0.012288,
+      "hbm_write_MB_range": [
+        0.012288,
+        0.012288
+      ],
+      "l2_hit_pct": 1.9813896583793784,
+      "l2_hit_pct_range": [
+        1.9623936725861812,
+        2.01450723621738
+      ],
+      "lds_bank_conflict_frac": 0.2487852283770651,
+      "lds_bank_conflict_frac_range": [
+        0.2487852283770651,
+        0.2487852283770651
+      ],
+      "mean_resident_waves_per_cu": 0.8946200594801949,
+      "mean_resident_waves_per_cu_range": [
+        0.7822005951902196,
+        1.2105972824515756
+      ],
+      "mean_wave_lifetime_cycles": 10641.291666666666,
+      "mean_wave_lifetime_cycles_range": [
+        10445.3125,
+        13010.583333333334
+      ],
+      "mmop_active_per_busy_simd_cycle": 0.0469948427290511,
+      "mmop_active_per_busy_simd_cycle_range": [
+        0.04598656105625383,
+        0.04740498412021761
+      ],
+      "mmop_active_per_simd_cycle": 0.010592646868669453,
+      "mmop_active_per_simd_cycle_range": [
+        0.008984886263097475,
+        0.014209887250650477
+      ],
+      "mmop_cycles_per_inst": 2.0,
+      "mmop_cycles_per_inst_range": [
+        2.0,
+        2.0
+      ],
+      "mmop_insts": 196608,
+      "mmop_insts_range": [
+        196608,
+        196608
+      ],
+      "mmop_insts_expected_padded": 196608.0,
+      "mmop_insts_expected_padded_range": [
+        196608.0,
+        196608.0
+      ],
+      "ms_from_gui": 0.072503125,
+      "ms_from_gui_range": [
+        0.054046874999999994,
+        0.08547687500000001
+      ],
+      "sq_insts_branch_per_wave": 122.75,
+      "sq_insts_branch_per_wave_range": [
+        122.75,
+        122.75
+      ],
+      "sq_insts_lds_per_wave": 394.0,
+      "sq_insts_lds_per_wave_range": [
+        394.0,
+        394.0
+      ],
+      "sq_insts_mmop_per_wave": 1024.0,
+      "sq_insts_mmop_per_wave_range": [
+        1024.0,
+        1024.0
+      ],
+      "sq_insts_salu_per_wave": 1502.75,
+      "sq_insts_salu_per_wave_range": [
+        1502.75,
+        1502.75
+      ],
+      "sq_insts_smem_per_wave": 14.5,
+      "sq_insts_smem_per_wave_range": [
+        14.5,
+        14.5
+      ],
+      "sq_insts_valu_per_wave": 1798.0,
+      "sq_insts_valu_per_wave_range": [
+        1798.0,
+        1798.0
+      ],
+      "sq_insts_vmem_per_wave": 226.0,
+      "sq_insts_vmem_per_wave_range": [
+        226.0,
+        226.0
+      ],
+      "tcp_alloc_stall_frac": 0.0,
+      "tcp_alloc_stall_frac_range": [
+        0.0,
+        0.0
+      ],
+      "tcp_alloc_stall_per_busy_cu": 0.0,
+      "tcp_alloc_stall_per_busy_cu_range": [
+        0.0,
+        0.0
+      ],
+      "tcp_pending_stall_frac": 0.07700799534502824,
+      "tcp_pending_stall_frac_range": [
+        0.06936278452505429,
+        0.10524443480774791
+      ],
+      "tcp_pending_stall_per_busy_cu": 0.34806368091847995,
+      "tcp_pending_stall_per_busy_cu_range": [
+        0.3446317848335299,
+        0.35501350069327886
+      ],
+      "tcp_read_requests": 396288,
+      "tcp_read_requests_range": [
+        396288,
+        396288
+      ],
+      "tcp_tcc_read_latency": 460.88342569040697,
+      "tcp_tcc_read_latency_range": [
+        459.9657875080749,
+        495.064372375646
+      ],
+      "valu_minus_mmop_count_fraction": 0.43047830923248054,
+      "valu_minus_mmop_count_fraction_range": [
+        0.43047830923248054,
+        0.43047830923248054
+      ],
+      "valu_minus_mmop_insts_per_wave": 774.0,
+      "valu_minus_mmop_insts_per_wave_range": [
+        774.0,
+        774.0
+      ],
+      "wait_any_frac": 0.07419554721975324,
+      "wait_any_frac_range": [
+        0.05643562612488551,
+        0.08781849912739965
+      ],
+      "waves": 192,
+      "waves_range": [
+        192,
+        192
+      ],
+      "waves_per_cta": 4.0,
+      "waves_per_cta_range": [
+        4.0,
+        4.0
+      ],
+      "all_mmop_count_matches_padded": true
+    },
+    "tlb": {
+      "rounds": 1,
+      "dispatch_count": 2,
+      "umc_page_hit_mean": 85.25,
+      "utcl2_hit": 1009,
+      "utcl2_miss": 0
+    },
+    "frozen_blas_card0_ms": 0.027664000168442726
+  },
+  {
+    "id": 633,
+    "backend": "ck",
+    "shape": [
+      4,
+      1024,
+      2048,
+      8
+    ],
+    "timing": {
+      "rounds": 3,
+      "cv": 0.021504443,
+      "cv_range": [
+        0.012798107,
+        0.42466098
+      ],
+      "instance_id": 5000,
+      "instance_id_range": [
+        5000,
+        5000
+      ],
+      "max_ms": 0.068320997,
+      "max_ms_range": [
+        0.065920003,
+        0.211841
+      ],
+      "mean_ms": 0.066565766,
+      "mean_ms_range": [
+        0.065600001,
+        0.089882967
+      ],
+      "median_ms": 0.066241004,
+      "median_ms_range": [
+        0.065760002,
+        0.069119997
+      ],
+      "min_ms": 0.061919998,
+      "min_ms_range": [
+        0.06112,
+        0.061921
+      ]
+    },
+    "gc": {
+      "rounds": 3,
+      "aql_last_dispatch_ms": 0.05968,
+      "aql_last_dispatch_ms_range": [
+        0.05968,
+        0.0656
+      ],
+      "aql_replay_median_ms": 0.059842,
+      "aql_replay_median_ms_range": [
+        0.05968,
+        0.0664
+      ],
+      "busy_cu_frac": 0.28073688685510767,
+      "busy_cu_frac_range": [
+        0.23990141444365903,
+        0.3356378476130013
+      ],
+      "ctas": 32,
+      "ctas_range": [
+        32,
+        32
+      ],
+      "dispatch_count": 2,
+      "dispatch_count_range": [
+        2,
+        2
+      ],
+      "dram_credit_stall_frac": 0.0,
+      "dram_credit_stall_frac_range": [
+        0.0,
+        0.0
+      ],
+      "gui_cycles": 137019,
+      "gui_cycles_range": [
+        103959,
+        145711
+      ],
+      "hbm_GBps": 397.21879155445595,
+      "hbm_GBps_range": [
+        373.5230641475249,
+        523.5393183851326
+      ],
+      "hbm_read_MB": 33.95104,
+      "hbm_read_MB_range": [
+        33.950976,
+        33.951104
+      ],
+      "hbm_write_MB": 0.065536,
+      "hbm_write_MB_range": [
+        0.065536,
+        0.065536
+      ],
+      "l2_hit_pct": 2.4315820978326728,
+      "l2_hit_pct_range": [
+        2.423729184765548,
+        2.4472398302332286
+      ],
+      "lds_bank_conflict_frac": 0.2608695652173913,
+      "lds_bank_conflict_frac_range": [
+        0.2608695652173913,
+        0.2608695652173913
+      ],
+      "mean_resident_waves_per_cu": 2.235859625307439,
+      "mean_resident_waves_per_cu_range": [
+        1.9097532101214048,
+        2.6719706807491415
+      ],
+      "mean_wave_lifetime_cycles": 21760.546875,
+      "mean_wave_lifetime_cycles_range": [
+        21710.5703125,
+        24061.9765625
+      ],
+      "mmop_active_per_busy_simd_cycle": 0.18747993028433377,
+      "mmop_active_per_busy_simd_cycle_range": [
+        0.170372563247753,
+        0.1878221942633927
+      ],
+      "mmop_active_per_simd_cycle": 0.04782986301169911,
+      "mmop_active_per_simd_cycle_range": [
+        0.04497670045501026,
+        0.06304023701651612
+      ],
+      "mmop_cycles_per_inst": 2.0,
+      "mmop_cycles_per_inst_range": [
+        2.0,
+        2.0
+      ],
+      "mmop_insts": 1048576,
+      "mmop_insts_range": [
+        1048576,
+        1048576
+      ],
+      "mmop_insts_expected_padded": 1048576.0,
+      "mmop_insts_expected_padded_range": [
+        1048576.0,
+        1048576.0
+      ],
+      "ms_from_gui": 0.085636875,
+      "ms_from_gui_range": [
+        0.064974375,
+        0.091069375
+      ],
+      "sq_insts_branch_per_wave": 203.5,
+      "sq_insts_branch_per_wave_range": [
+        203.5,
+        203.5
+      ],
+      "sq_insts_lds_per_wave": 1168.0,
+      "sq_insts_lds_per_wave_range": [
+        1168.0,
+        1168.0
+      ],
+      "sq_insts_mmop_per_wave": 4096.0,
+      "sq_insts_mmop_per_wave_range": [
+        4096.0,
+        4096.0
+      ],
+      "sq_insts_salu_per_wave": 1723.5,
+      "sq_insts_salu_per_wave_range": [
+        1723.5,
+        1723.5
+      ],
+      "sq_insts_smem_per_wave": 12.5,
+      "sq_insts_smem_per_wave_range": [
+        12.5,
+        12.5
+      ],
+      "sq_insts_valu_per_wave": 4805.75,
+      "sq_insts_valu_per_wave_range": [
+        4805.75,
+        4805.75
+      ],
+      "sq_insts_vmem_per_wave": 266.25,
+      "sq_insts_vmem_per_wave_range": [
+        266.25,
+        266.25
+      ],
+      "tcp_alloc_stall_frac": 0.0,
+      "tcp_alloc_stall_frac_range": [
+        0.0,
+        0.0
+      ],
+      "tcp_alloc_stall_per_busy_cu": 0.0,
+      "tcp_alloc_stall_per_busy_cu_range": [
+        0.0,
+        0.0
+      ],
+      "tcp_pending_stall_frac": 0.12245283472078292,
+      "tcp_pending_stall_frac_range": [
+        0.10674459381545626,
+        0.14100366490635732
+      ],
+      "tcp_pending_stall_per_busy_cu": 0.42010656995077034,
+      "tcp_pending_stall_per_busy_cu_range": [
+        0.3802300260975276,
+        0.5104298155338348
+      ],
+      "tcp_read_requests": 536704,
+      "tcp_read_requests_range": [
+        536704,
+        536704
+      ],
+      "tcp_tcc_read_latency": 369.71992755783447,
+      "tcp_tcc_read_latency_range": [
+        362.28748062246603,
+        371.3612233186263
+      ],
+      "valu_minus_mmop_count_fraction": 0.14768766581699005,
+      "valu_minus_mmop_count_fraction_range": [
+        0.14768766581699005,
+        0.14768766581699005
+      ],
+      "valu_minus_mmop_insts_per_wave": 709.75,
+      "valu_minus_mmop_insts_per_wave_range": [
+        709.75,
+        709.75
+      ],
+      "vmem_above_two_loads_per_kstage_per_wave": 10.25,
+      "vmem_above_two_loads_per_kstage_per_wave_range": [
+        10.25,
+        10.25
+      ],
+      "wait_any_frac": 0.186888371267884,
+      "wait_any_frac_range": [
+        0.16843678092997477,
+        0.18702963720896834
+      ],
+      "waves": 256,
+      "waves_range": [
+        256,
+        256
+      ],
+      "waves_per_cta": 8.0,
+      "waves_per_cta_range": [
+        8.0,
+        8.0
+      ],
+      "all_mmop_count_matches_padded": true
+    },
+    "tlb": {
+      "rounds": 1,
+      "dispatch_count": 2,
+      "umc_page_hit_mean": 84,
+      "utcl2_hit": 140,
+      "utcl2_miss": 0
+    },
+    "frozen_blas_card0_ms": 0.032816000282764435
+  },
+  {
+    "id": 633,
+    "backend": "blas",
+    "shape": [
+      4,
+      1024,
+      2048,
+      8
+    ],
+    "timing": {
+      "rounds": 3,
+      "algorithm_id": 11285,
+      "algorithm_id_range": [
+        11285,
+        11285
+      ],
+      "checked": 32768,
+      "checked_range": [
+        32768,
+        32768
+      ],
+      "cv": 0.11882632789996862,
+      "cv_range": [
+        0.039413823162417164,
+        0.21027979361614446
+      ],
+      "failed": 0,
+      "failed_range": [
+        0,
+        0
+      ],
+      "gpu": 4,
+      "gpu_range": [
+        4,
+        4
+      ],
+      "max_abs": 0.0,
+      "max_abs_range": [
+        0.0,
+        0.0
+      ],
+      "max_ms": 0.06943999975919724,
+      "max_ms_range": [
+        0.04416000097990036,
+        0.14159999787807465
+      ],
+      "median_ms": 0.041600000113248825,
+      "median_ms_range": [
+        0.040880000218749046,
+        0.09496000036597252
+      ],
+      "min_ms": 0.04016000032424927,
+      "min_ms_range": [
+        0.03440000116825104,
+        0.06304000318050385
+      ],
+      "repeat": 1,
+      "repeat_range": [
+        1,
+        1
+      ],
+      "samples": 30,
+      "samples_range": [
+        30,
+        30
+      ],
+      "warmup": 10,
+      "warmup_range": [
+        10,
+        10
+      ]
+    },
+    "gc": {
+      "rounds": 3,
+      "aql_last_dispatch_ms": 0.04704,
+      "aql_last_dispatch_ms_range": [
+        0.03696,
+        0.048
+      ],
+      "aql_replay_median_ms": 0.03664,
+      "aql_replay_median_ms_range": [
+        0.03656,
+        0.04176
+      ],
+      "busy_cu_frac": 0.46904032342933316,
+      "busy_cu_frac_range": [
+        0.43219813045605543,
+        0.5149463332674442
+      ],
+      "ctas": 128,
+      "ctas_range": [
+        128,
+        128
+      ],
+      "dispatch_count": 2,
+      "dispatch_count_range": [
+        2,
+        2
+      ],
+      "dram_credit_stall_frac": 0.0036931647481952636,
+      "dram_credit_stall_frac_range": [
+        0.0030496895499351035,
+        0.005279699545364697
+      ],
+      "gui_cycles": 126475,
+      "gui_cycles_range": [
+        116499,
+        142535
+      ],
+      "hbm_GBps": 427.0118458193319,
+      "hbm_GBps_range": [
+        378.8986789209668,
+        463.58020583867676
+      ],
+      "hbm_read_MB": 33.688256,
+      "hbm_read_MB_range": [
+        33.688128,
+        33.688384
+      ],
+      "hbm_write_MB": 0.065696,
+      "hbm_write_MB_range": [
+        0.065568,
+        0.066016
+      ],
+      "l2_hit_pct": 11.34242857715806,
+      "l2_hit_pct_range": [
+        11.332132220465493,
+        11.355092247593142
+      ],
+      "lds_bank_conflict_frac": 0.3320363164721141,
+      "lds_bank_conflict_frac_range": [
+        0.3320363164721141,
+        0.3320363164721141
+      ],
+      "mean_resident_waves_per_cu": 3.014246325463921,
+      "mean_resident_waves_per_cu_range": [
+        2.7881788684881417,
+        3.327195888515517
+      ],
+      "mean_wave_lifetime_cycles": 12543.5234375,
+      "mean_wave_lifetime_cycles_range": [
+        12148.078125,
+        15929.744140625
+      ],
+      "mmop_active_per_busy_simd_cycle": 0.02515667743459162,
+      "mmop_active_per_busy_simd_cycle_range": [
+        0.024506892095970116,
+        0.03253979839386383
+      ],
+      "mmop_active_per_simd_cycle": 0.01295433880213481,
+      "mmop_active_per_simd_cycle_range": [
+        0.011494720594941592,
+        0.014063640031244903
+      ],
+      "mmop_cycles_per_inst": 2.0,
+      "mmop_cycles_per_inst_range": [
+        2.0,
+        2.0
+      ],
+      "mmop_insts": 262144,
+      "mmop_insts_range": [
+        262144,
+        262144
+      ],
+      "mmop_insts_expected_padded": 262144.0,
+      "mmop_insts_expected_padded_range": [
+        262144.0,
+        262144.0
+      ],
+      "ms_from_gui": 0.079046875,
+      "ms_from_gui_range": [
+        0.072811875,
+        0.089084375
+      ],
+      "sq_insts_branch_per_wave": 124.875,
+      "sq_insts_branch_per_wave_range": [
+        124.875,
+        124.875
+      ],
+      "sq_insts_lds_per_wave": 262.0,
+      "sq_insts_lds_per_wave_range": [
+        262.0,
+        262.0
+      ],
+      "sq_insts_mmop_per_wave": 512.0,
+      "sq_insts_mmop_per_wave_range": [
+        512.0,
+        512.0
+      ],
+      "sq_insts_salu_per_wave": 1399.875,
+      "sq_insts_salu_per_wave_range": [
+        1399.875,
+        1399.875
+      ],
+      "sq_insts_smem_per_wave": 16.5,
+      "sq_insts_smem_per_wave_range": [
+        16.5,
+        16.5
+      ],
+      "sq_insts_valu_per_wave": 1043.0,
+      "sq_insts_valu_per_wave_range": [
+        1043.0,
+        1043.0
+      ],
+      "sq_insts_vmem_per_wave": 146.0,
+      "sq_insts_vmem_per_wave_range": [
+        146.0,
+        146.0
+      ],
+      "tcp_alloc_stall_frac": 0.06643684522632931,
+      "tcp_alloc_stall_frac_range": [
+        0.06200950643701547,
+        0.08018062386801604
+      ],
+      "tcp_alloc_stall_per_busy_cu": 0.13220506497957416,
+      "tcp_alloc_stall_per_busy_cu_range": [
+        0.12901702747308322,
+        0.18551821078774555
+      ],
+      "tcp_pending_stall_frac": 0.16133603478948408,
+      "tcp_pending_stall_frac_range": [
+        0.145540218192023,
+        0.1740674812659336
+      ],
+      "tcp_pending_stall_per_busy_cu": 0.3133065027684974,
+      "tcp_pending_stall_per_busy_cu_range": [
+        0.3102936163951168,
+        0.40274926937388095
+      ],
+      "tcp_read_requests": 557056,
+      "tcp_read_requests_range": [
+        557056,
+        557056
+      ],
+      "tcp_tcc_read_latency": 686.5216638901654,
+      "tcp_tcc_read_latency_range": [
+        576.1551495720358,
+        688.492769129136
+      ],
+      "valu_minus_mmop_count_fraction": 0.5091083413231065,
+      "valu_minus_mmop_count_fraction_range": [
+        0.5091083413231065,
+        0.5091083413231065
+      ],
+      "valu_minus_mmop_insts_per_wave": 531.0,
+      "valu_minus_mmop_insts_per_wave_range": [
+        531.0,
+        531.0
+      ],
+      "wait_any_frac": 0.17860966596930314,
+      "wait_any_frac_range": [
+        0.15863271207103358,
+        0.19880121855694766
+      ],
+      "waves": 512,
+      "waves_range": [
+        512,
+        512
+      ],
+      "waves_per_cta": 4.0,
+      "waves_per_cta_range": [
+        4.0,
+        4.0
+      ],
+      "all_mmop_count_matches_padded": true
+    },
+    "tlb": {
+      "rounds": 1,
+      "dispatch_count": 2,
+      "umc_page_hit_mean": 83.25,
+      "utcl2_hit": 1458,
+      "utcl2_miss": 455
+    },
+    "frozen_blas_card0_ms": 0.032816000282764435
+  },
+  {
+    "id": 358,
+    "backend": "ck",
+    "shape": [
+      8,
+      6144,
+      2048,
+      32
+    ],
+    "timing": {
+      "rounds": 3,
+      "cv": 0.0077219398,
+      "cv_range": [
+        0.0036521202,
+        0.050103408
+      ],
+      "instance_id": 5000,
+      "instance_id_range": [
+        5000,
+        5000
+      ],
+      "max_ms": 0.68319798,
+      "max_ms_range": [
+        0.66880399,
+        0.92207801
+      ],
+      "mean_ms": 0.66639436,
+      "mean_ms_range": [
+        0.66301167,
+        0.7469326
+      ],
+      "median_ms": 0.6648795,
+      "median_ms_range": [
+        0.66312301,
+        0.73983949
+      ],
+      "min_ms": 0.66079998,
+      "min_ms_range": [
+        0.65808398,
+        0.69999897
+      ]
+    },
+    "gc": {
+      "rounds": 3,
+      "aql_last_dispatch_ms": 0.663199,
+      "aql_last_dispatch_ms_range": [
+        0.658077,
+        0.665279
+      ],
+      "aql_replay_median_ms": 0.66192,
+      "aql_replay_median_ms_range": [
+        0.656718,
+        0.6621595
+      ],
+      "busy_cu_frac": 0.9162228587493151,
+      "busy_cu_frac_range": [
+        0.9004208784008957,
+        0.9375678717886416
+      ],
+      "ctas": 768,
+      "ctas_range": [
+        768,
+        768
+      ],
+      "dispatch_count": 2,
+      "dispatch_count_range": [
+        2,
+        2
+      ],
+      "dram_credit_stall_frac": 0.12626562352083948,
+      "dram_credit_stall_frac_range": [
+        0.12174488141341915,
+        0.13444412660739793
+      ],
+      "gui_cycles": 1045779,
+      "gui_cycles_range": [
+        1008335,
+        1059243
+      ],
+      "hbm_GBps": 1249.7452253296346,
+      "hbm_GBps_range": [
+        1233.9630049006696,
+        1296.4979329290366
+      ],
+      "hbm_read_MB": 813.770944,
+      "hbm_read_MB_range": [
+        813.702592,
+        813.919424
+      ],
+      "hbm_write_MB": 3.145728,
+      "hbm_write_MB_range": [
+        3.145728,
+        3.145728
+      ],
+      "l2_hit_pct": 5.650166610339197,
+      "l2_hit_pct_range": [
+        5.586304241114751,
+        5.662098109172415
+      ],
+      "lds_bank_conflict_frac": 0.2608695652173913,
+      "lds_bank_conflict_frac_range": [
+        0.2608695652173913,
+        0.2608695652173913
+      ],
+      "mean_resident_waves_per_cu": 7.29869661754539,
+      "mean_resident_waves_per_cu_range": [
+        7.172639139460917,
+        7.468277854086192
+      ],
+      "mean_wave_lifetime_cycles": 24661.958658854168,
+      "mean_wave_lifetime_cycles_range": [
+        24570.273763020832,
+        24822.574544270832
+      ],
+      "mmop_active_per_busy_simd_cycle": 0.16491114728909567,
+      "mmop_active_per_busy_simd_cycle_range": [
+        0.16415349470140436,
+        0.16637329334951728
+      ],
+      "mmop_active_per_simd_cycle": 0.15040118418901124,
+      "mmop_active_per_simd_cycle_range": [
+        0.148489440100147,
+        0.15598625456817428
+      ],
+      "mmop_cycles_per_inst": 2.0,
+      "mmop_cycles_per_inst_range": [
+        2.0,
+        2.0
+      ],
+      "mmop_insts": 25165824,
+      "mmop_insts_range": [
+        25165824,
+        25165824
+      ],
+      "mmop_insts_expected_padded": 25165824.0,
+      "mmop_insts_expected_padded_range": [
+        25165824.0,
+        25165824.0
+      ],
+      "ms_from_gui": 0.653611875,
+      "ms_from_gui_range": [
+        0.630209375,
+        0.662026875
+      ],
+      "sq_insts_branch_per_wave": 189.5,
+      "sq_insts_branch_per_wave_range": [
+        189.5,
+        189.5
+      ],
+      "sq_insts_lds_per_wave": 1168.0,
+      "sq_insts_lds_per_wave_range": [
+        1168.0,
+        1168.0
+      ],
+      "sq_insts_mmop_per_wave": 4096.0,
+      "sq_insts_mmop_per_wave_range": [
+        4096.0,
+        4096.0
+      ],
+      "sq_insts_salu_per_wave": 1640.5,
+      "sq_insts_salu_per_wave_range": [
+        1640.5,
+        1640.5
+      ],
+      "sq_insts_smem_per_wave": 8.0,
+      "sq_insts_smem_per_wave_range": [
+        8.0,
+        8.0
+      ],
+      "sq_insts_valu_per_wave": 4812.5,
+      "sq_insts_valu_per_wave_range": [
+        4812.5,
+        4812.5
+      ],
+      "sq_insts_vmem_per_wave": 266.5,
+      "sq_insts_vmem_per_wave_range": [
+        266.5,
+        266.5
+      ],
+      "tcp_alloc_stall_frac": 0.0,
+      "tcp_alloc_stall_frac_range": [
+        0.0,
+        0.0
+      ],
+      "tcp_alloc_stall_per_busy_cu": 0.0,
+      "tcp_alloc_stall_per_busy_cu_range": [
+        0.0,
+        0.0
+      ],
+      "tcp_pending_stall_frac": 0.4659377722252981,
+      "tcp_pending_stall_frac_range": [
+        0.4629980679598544,
+        0.4841308816018486
+      ],
+      "tcp_pending_stall_per_busy_cu": 0.5142018350153282,
+      "tcp_pending_stall_per_busy_cu_range": [
+        0.5085419641912491,
+        0.516368890369771
+      ],
+      "tcp_read_requests": 13080576,
+      "tcp_read_requests_range": [
+        13080576,
+        13080576
+      ],
+      "tcp_tcc_read_latency": 702.8647784317754,
+      "tcp_tcc_read_latency_range": [
+        694.6383836613923,
+        712.866408941013
+      ],
+      "valu_minus_mmop_count_fraction": 0.1488831168831169,
+      "valu_minus_mmop_count_fraction_range": [
+        0.1488831168831169,
+        0.1488831168831169
+      ],
+      "valu_minus_mmop_insts_per_wave": 716.5,
+      "valu_minus_mmop_insts_per_wave_range": [
+        716.5,
+        716.5
+      ],
+      "vmem_above_two_loads_per_kstage_per_wave": 10.5,
+      "vmem_above_two_loads_per_kstage_per_wave_range": [
+        10.5,
+        10.5
+      ],
+      "wait_any_frac": 0.17294636434310223,
+      "wait_any_frac_range": [
+        0.17187431992118965,
+        0.17366726601652763
+      ],
+      "waves": 6144,
+      "waves_range": [
+        6144,
+        6144
+      ],
+      "waves_per_cta": 8.0,
+      "waves_per_cta_range": [
+        8.0,
+        8.0
+      ],
+      "all_mmop_count_matches_padded": true
+    },
+    "tlb": {
+      "rounds": 1,
+      "dispatch_count": 2,
+      "umc_page_hit_mean": 84.5,
+      "utcl2_hit": 33696,
+      "utcl2_miss": 0
+    },
+    "frozen_blas_card0_ms": 0.670039713382721
+  },
+  {
+    "id": 358,
+    "backend": "blas",
+    "shape": [
+      8,
+      6144,
+      2048,
+      32
+    ],
+    "timing": {
+      "rounds": 3,
+      "algorithm_id": 11289,
+      "algorithm_id_range": [
+        11289,
+        11289
+      ],
+      "checked": 1572864,
+      "checked_range": [
+        1572864,
+        1572864
+      ],
+      "cv": 0.029739635539061147,
+      "cv_range": [
+        0.0017541944213061646,
+        2.6385414592998004
+      ],
+      "failed": 0,
+      "failed_range": [
+        0,
+        0
+      ],
+      "gpu": 4,
+      "gpu_range": [
+        4,
+        4
+      ],
+      "max_abs": 0.0,
+      "max_abs_range": [
+        0.0,
+        0.0
+      ],
+      "max_ms": 0.7703989744186401,
+      "max_ms_range": [
+        0.6751989722251892,
+        38.20109176635742
+      ],
+      "median_ms": 0.6996794939041138,
+      "median_ms_range": [
+        0.6719184815883636,
+        0.9430390000343323
+      ],
+      "min_ms": 0.6767979860305786,
+      "min_ms_range": [
+        0.6699190139770508,
+        0.6777600049972534
+      ],
+      "repeat": 1,
+      "repeat_range": [
+        1,
+        1
+      ],
+      "samples": 30,
+      "samples_range": [
+        30,
+        30
+      ],
+      "warmup": 10,
+      "warmup_range": [
+        10,
+        10
+      ]
+    },
+    "gc": {
+      "rounds": 3,
+      "aql_last_dispatch_ms": 0.670399,
+      "aql_last_dispatch_ms_range": [
+        0.66752,
+        0.68128
+      ],
+      "aql_replay_median_ms": 0.67144,
+      "aql_replay_median_ms_range": [
+        0.6704795,
+        0.6718395
+      ],
+      "busy_cu_frac": 0.9277841911932317,
+      "busy_cu_frac_range": [
+        0.927022887408738,
+        0.9620253453176904
+      ],
+      "ctas": 1536,
+      "ctas_range": [
+        1536,
+        1536
+      ],
+      "dispatch_count": 2,
+      "dispatch_count_range": [
+        2,
+        2
+      ],
+      "dram_credit_stall_frac": 0.17985233038782664,
+      "dram_credit_stall_frac_range": [
+        0.16302299897561098,
+        0.1801711502833237
+      ],
+      "gui_cycles": 1058901,
+      "gui_cycles_range": [
+        1014211,
+        1074787
+      ],
+      "hbm_GBps": 1223.4860648918075,
+      "hbm_GBps_range": [
+        1205.4509836832788,
+        1277.399793139692
+      ],
+      "hbm_read_MB": 806.570112,
+      "hbm_read_MB_range": [
+        806.569792,
+        806.602048
+      ],
+      "hbm_write_MB": 3.149856,
+      "hbm_write_MB_range": [
+        3.149344,
+        3.150464
+      ],
+      "l2_hit_pct": 11.438769462439666,
+      "l2_hit_pct_range": [
+        11.429597906224304,
+        11.489740681728046
+      ],
+      "lds_bank_conflict_frac": 0.33225178455548343,
+      "lds_bank_conflict_frac_range": [
+        0.33225178455548343,
+        0.33225178455548343
+      ],
+      "mean_resident_waves_per_cu": 7.292203292373279,
+      "mean_resident_waves_per_cu_range": [
+        7.291587173871778,
+        7.579119926721363
+      ],
+      "mean_wave_lifetime_cycles": 25104.7255859375,
+      "mean_wave_lifetime_cycles_range": [
+        25100.331868489582,
+        25189.733072916668
+      ],
+      "mmop_active_per_busy_simd_cycle": 0.08011528123945745,
+      "mmop_active_per_busy_simd_cycle_range": [
+        0.07886636124159875,
+        0.08060209797524806
+      ],
+      "mmop_active_per_simd_cycle": 0.07426869934016495,
+      "mmop_active_per_simd_cycle_range": [
+        0.07317096317688994,
+        0.07754126113796833
+      ],
+      "mmop_cycles_per_inst": 2.0,
+      "mmop_cycles_per_inst_range": [
+        2.0,
+        2.0
+      ],
+      "mmop_insts": 12582912,
+      "mmop_insts_range": [
+        12582912,
+        12582912
+      ],
+      "mmop_insts_expected_padded": 12582912.0,
+      "mmop_insts_expected_padded_range": [
+        12582912.0,
+        12582912.0
+      ],
+      "ms_from_gui": 0.661813125,
+      "ms_from_gui_range": [
+        0.6338818749999999,
+        0.6717418749999999
+      ],
+      "sq_insts_branch_per_wave": 266.96875,
+      "sq_insts_branch_per_wave_range": [
+        266.96875,
+        266.96875
+      ],
+      "sq_insts_lds_per_wave": 778.0,
+      "sq_insts_lds_per_wave_range": [
+        778.0,
+        778.0
+      ],
+      "sq_insts_mmop_per_wave": 2048.0,
+      "sq_insts_mmop_per_wave_range": [
+        2048.0,
+        2048.0
+      ],
+      "sq_insts_salu_per_wave": 2637.96875,
+      "sq_insts_salu_per_wave_range": [
+        2637.96875,
+        2637.96875
+      ],
+      "sq_insts_smem_per_wave": 28.5,
+      "sq_insts_smem_per_wave_range": [
+        28.5,
+        28.5
+      ],
+      "sq_insts_valu_per_wave": 2923.0,
+      "sq_insts_valu_per_wave_range": [
+        2923.0,
+        2923.0
+      ],
+      "sq_insts_vmem_per_wave": 322.0,
+      "sq_insts_vmem_per_wave_range": [
+        322.0,
+        322.0
+      ],
+      "tcp_alloc_stall_frac": 0.0,
+      "tcp_alloc_stall_frac_range": [
+        0.0,
+        0.0
+      ],
+      "tcp_alloc_stall_per_busy_cu": 0.0,
+      "tcp_alloc_stall_per_busy_cu_range": [
+        0.0,
+        0.0
+      ],
+      "tcp_pending_stall_frac": 0.5077454360700386,
+      "tcp_pending_stall_frac_range": [
+        0.5049570519554107,
+        0.5371361827075432
+      ],
+      "tcp_pending_stall_per_busy_cu": 0.5477161815166341,
+      "tcp_pending_stall_per_busy_cu_range": [
+        0.5442613236446514,
+        0.5583389100109044
+      ],
+      "tcp_read_requests": 13353444,
+      "tcp_read_requests_range": [
+        13350340,
+        13357148
+      ],
+      "tcp_tcc_read_latency": 780.7703698932012,
+      "tcp_tcc_read_latency_range": [
+        765.4853625776242,
+        791.917530898063
+      ],
+      "valu_minus_mmop_count_fraction": 0.2993499828942867,
+      "valu_minus_mmop_count_fraction_range": [
+        0.2993499828942867,
+        0.2993499828942867
+      ],
+      "valu_minus_mmop_insts_per_wave": 875.0,
+      "valu_minus_mmop_insts_per_wave_range": [
+        875.0,
+        875.0
+      ],
+      "wait_any_frac": 0.17161246043374462,
+      "wait_any_frac_range": [
+        0.16970880588667392,
+        0.17298815984202567
+      ],
+      "waves": 6144,
+      "waves_range": [
+        6144,
+        6144
+      ],
+      "waves_per_cta": 4.0,
+      "waves_per_cta_range": [
+        4.0,
+        4.0
+      ],
+      "all_mmop_count_matches_padded": true
+    },
+    "tlb": {
+      "rounds": 1,
+      "dispatch_count": 2,
+      "umc_page_hit_mean": 82,
+      "utcl2_hit": 77785,
+      "utcl2_miss": 0
+    },
+    "frozen_blas_card0_ms": 0.670039713382721
+  }
+]
