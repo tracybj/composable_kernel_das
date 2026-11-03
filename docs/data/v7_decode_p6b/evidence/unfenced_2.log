@@ -1,0 +1,6 @@
+CONFIG arch=gfx936 dtype=bf16 layout=NN groups=4 m=1 n=2048 k=768 variable_axis=none effective_length=4 variable_capacity=4 timing=off warmup=0 samples=0 include_args_build=0 num_cu=0 blas_streams=1
+GROUP_LENGTHS values=1,1,1,1
+SELECT instance_id=5004 instance_name=ck.gg.gfx936.bf16.NN.v7.nn_b.small_m.64x64x16.s4 contract_flags=0
+BLAS library=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so mode=hipblaslt_sequential_per_group streams=1 workspace_bytes=33554432
+BLAS dependency=/workspace/Grouped_Geem/hipblaslt-install/lib/liborigami.so.1 load_mode=RTLD_GLOBAL
+ACCURACY backend=ck repeat=0 checked=1028 failed=8 max_abs=0.49609375 max_rel=4.56

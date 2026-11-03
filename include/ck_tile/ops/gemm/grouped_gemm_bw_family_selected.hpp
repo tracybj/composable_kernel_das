@@ -52,6 +52,22 @@ inline bool ck_tile_hcu_grouped_gemm_bf16_v7_nn_m01_8_enabled()
     return !(disable != nullptr && disable[0] == '1' && disable[1] == '\0');
 }
 
+// Experimental value 64/128 selects the logical N tile; disable wins.
+inline int ck_tile_hcu_grouped_gemm_bf16_v7_nn_small_m_tile_n()
+{
+    const char* disable = std::getenv("CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_SMALL_M");
+    if(disable != nullptr && disable[0] == '1' && disable[1] == '\0')
+        return 0;
+    const char* value = std::getenv("CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M");
+    if(value == nullptr)
+        return 0;
+    if(value[0] == '6' && value[1] == '4' && value[2] == '\0')
+        return 64;
+    if(value[0] == '1' && value[1] == '2' && value[2] == '8' && value[3] == '\0')
+        return 128;
+    return 0;
+}
+
 inline bool ck_tile_hcu_grouped_gemm_bf16_v8_tn_enabled()
 {
     const char* disable = std::getenv("CK_TILE_GROUPED_GEMM_DISABLE_BF16_V8_TN");
@@ -87,6 +103,10 @@ extern "C" int ck_tile_hcu_grouped_gemm_v7_bf16_nn_m01_8_device_args(
     hipStream_t stream,
     std::uint64_t tile_slots,
     std::int32_t tiles_per_group);
+extern "C" int ck_tile_hcu_grouped_gemm_v7_bf16_nn_small_m128_device_args(
+    void*, int, std::uint32_t, hipStream_t, std::uint64_t, std::int32_t);
+extern "C" int ck_tile_hcu_grouped_gemm_v7_bf16_nn_small_m64_device_args(
+    void*, int, std::uint32_t, hipStream_t, std::uint64_t, std::int32_t);
 extern "C" int ck_tile_hcu_grouped_gemm_v8_bf16_tn_device_args(
     void* device_args,
     int group_count,

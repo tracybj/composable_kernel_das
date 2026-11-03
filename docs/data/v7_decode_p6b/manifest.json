@@ -1,0 +1,97 @@
+{
+  "source_files": [
+    "example_hcu/ck_tile/19_grouped_gemm/CMakeLists.txt",
+    "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args.cpp",
+    "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args_provider_sources.txt",
+    "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_v7_v8_device_args_provider_sources.txt",
+    "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args_query_test.cpp",
+    "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_selector_test.cpp",
+    "example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_device_args_provider.hpp",
+    "example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_v7_small_m_launch.hpp",
+    "example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_v7_bf16_nn_small_m128_device_args.cpp",
+    "example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_v7_bf16_nn_small_m64_device_args.cpp",
+    "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_v7_small_m_epilogue.hpp",
+    "include/ck_tile/ops/gemm/grouped_gemm_bw_family_selected.hpp",
+    "include/ck_tile/ops/gemm/grouped_gemm_device_args.h",
+    "include/ck_tile/ops/gemm/grouped_gemm_selector.hpp",
+    "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_small_m.hpp"
+  ],
+  "files": {
+    "/workspace/composable_kernel/example_hcu/ck_tile/19_grouped_gemm/CMakeLists.txt": {
+      "bytes": 46002,
+      "sha256": "396da48e9710abcb8273f4351029cfe92bda338706c8226e8d824ed43593a4ee"
+    },
+    "/workspace/composable_kernel/example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args.cpp": {
+      "bytes": 34348,
+      "sha256": "2daf23f48abe8b348708af8856c08a7cb59aebc77fae8f25dd9846269797dfed"
+    },
+    "/workspace/composable_kernel/example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args_provider_sources.txt": {
+      "bytes": 644,
+      "sha256": "d914ae98a25e90f647d0e5b506fa1de4abfb1bdd1c4fd9308b77d8a32c00c765"
+    },
+    "/workspace/composable_kernel/example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_v7_v8_device_args_provider_sources.txt": {
+      "bytes": 488,
+      "sha256": "f8b4d8684cc7615404131b02e192f58e02da694505d89f1e03a26356c1e641c0"
+    },
+    "/workspace/composable_kernel/example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args_query_test.cpp": {
+      "bytes": 23857,
+      "sha256": "e46abb8b98569d009fa49431da88ea1491e6c8317560b8ca3415ed3499762457"
+    },
+    "/workspace/composable_kernel/example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_selector_test.cpp": {
+      "bytes": 42228,
+      "sha256": "6c2b90439ddd549beb8096aa4cea53c03a44108e22c74cc32f41a7089ae83767"
+    },
+    "/workspace/composable_kernel/example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_device_args_provider.hpp": {
+      "bytes": 12732,
+      "sha256": "797805e83a2a07100c838dbccc115114350c92077cdb1c39334153d51da95b22"
+    },
+    "/workspace/composable_kernel/example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_v7_small_m_launch.hpp": {
+      "bytes": 5328,
+      "sha256": "aee55d045340e45775e57ce78008c88cdd5f64b324b6ab251802a2d270ec3627"
+    },
+    "/workspace/composable_kernel/example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_v7_bf16_nn_small_m128_device_args.cpp": {
+      "bytes": 1475,
+      "sha256": "db6a2dfcba73d46f09cd28b25912fc49d120a60662e4c84e01d1b18b1621a763"
+    },
+    "/workspace/composable_kernel/example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_v7_bf16_nn_small_m64_device_args.cpp": {
+      "bytes": 1471,
+      "sha256": "3d34d3fb3105f21278a80ab1427ca773366ea313287b29878bd0707b7239fca1"
+    },
+    "/workspace/composable_kernel/example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_v7_small_m_epilogue.hpp": {
+      "bytes": 6767,
+      "sha256": "7a02cfbafd19c20d4609e7d1fab8dc768e74ac6c2f283a76e6ce927674adae53"
+    },
+    "/workspace/composable_kernel/include/ck_tile/ops/gemm/grouped_gemm_bw_family_selected.hpp": {
+      "bytes": 6813,
+      "sha256": "5aed847121e56eb808dfa8f32d3d99791110a10b34a3e951401565da41659a03"
+    },
+    "/workspace/composable_kernel/include/ck_tile/ops/gemm/grouped_gemm_device_args.h": {
+      "bytes": 9604,
+      "sha256": "6364dc5aeea884814c92530ccf50f23834878fba549a4ca8306fd79ef90a80a2"
+    },
+    "/workspace/composable_kernel/include/ck_tile/ops/gemm/grouped_gemm_selector.hpp": {
+      "bytes": 30420,
+      "sha256": "502efd64e2552ead042df84609eb2aa1995db7efa2fff9ca7fe699dde64a0254"
+    },
+    "/workspace/composable_kernel/include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_small_m.hpp": {
+      "bytes": 23563,
+      "sha256": "97c3d965d74db976b7487ce459609a7143bd04410998b8245ad8c9b70459dea2"
+    },
+    "/workspace/v7_coverage/p6b/bench_base": {
+      "bytes": 57326960,
+      "sha256": "85b1d8a1eb5018a00060e031450260f5f88038c5b7f86bac3c80745e86851c44"
+    },
+    "/workspace/v7_coverage/p6b/bench_small_m": {
+      "bytes": 57434928,
+      "sha256": "72e701492a3419ce552aeb0376e2c6c95151a375080a76939507fc8d1a38f548"
+    },
+    "/workspace/composable_kernel/include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_uniform.hpp": {
+      "bytes": 38069,
+      "sha256": "eacd5ccc4bf73676c64c3edd5035f5c39e000ef4741385b1054c025c27907e65"
+    },
+    "/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so": {
+      "bytes": 8045056,
+      "sha256": "05524e5b1032409d3b4ba3926e26a4e989f2cccb4b867e0f1a2cfaa1e63ed5a5"
+    }
+  }
+}

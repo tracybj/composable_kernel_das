@@ -1,0 +1,23 @@
+DEVICE_ARGS_CASE name=fp16_nt_regular_parity dtype=fp16 layout=1 groups=1 instance_id=4002 instance_name=ck.gg.gfx936.fp16.NT.v4.64x128x64.nonpadding parity=old_c_abi_exact result=PASS
+DEVICE_ARGS_CASE name=fp16_nn_padding dtype=fp16 layout=2 groups=1 instance_id=4003 instance_name=ck.gg.gfx936.fp16.NN.v4.64x128x64.full_padding parity=not_requested result=PASS
+DEVICE_ARGS_CASE name=fp16_tn_regular dtype=fp16 layout=3 groups=1 instance_id=4002 instance_name=ck.gg.gfx936.fp16.TN.v4.64x128x64.nonpadding parity=not_requested result=PASS
+DEVICE_ARGS_CASE name=bf16_nt_padding dtype=bf16 layout=1 groups=1 instance_id=4003 instance_name=ck.gg.gfx936.bf16.NT.v4.64x128x64.full_padding parity=not_requested result=PASS
+DEVICE_ARGS_CASE name=bf16_nn_regular dtype=bf16 layout=2 groups=1 instance_id=4002 instance_name=ck.gg.gfx936.bf16.NN.v4.64x128x64.nonpadding parity=not_requested result=PASS
+DEVICE_ARGS_CASE name=bf16_tn_padding dtype=bf16 layout=3 groups=1 instance_id=4003 instance_name=ck.gg.gfx936.bf16.TN.v4.64x128x64.full_padding parity=not_requested result=PASS
+DEVICE_ARGS_CASE name=bf16_nt_ragged_empty dtype=bf16 layout=1 groups=3 instance_id=4003 instance_name=ck.gg.gfx936.bf16.NT.v4.64x128x64.full_padding parity=not_requested result=PASS
+DEVICE_ARGS_CASE name=v4_m_only_fallback dtype=fp16 layout=3 groups=1 instance_id=4000 instance_name=ck.gg.gfx936.fp16.TN.v4.128x128x64.m_only_padding parity=not_requested result=PASS
+DEVICE_ARGS_CASE name=v4_full_padding_fallback dtype=bf16 layout=2 groups=1 instance_id=4001 instance_name=ck.gg.gfx936.bf16.NN.v4.128x128x64.full_padding parity=not_requested result=PASS
+DEVICE_ARGS_CASE name=gfx936_v3 dtype=fp16 layout=1 groups=1 instance_id=2000 instance_name=ck.gg.gfx936.fp16.NT.v3.256x256x64.m_only_padding parity=not_requested result=PASS
+DEVICE_ARGS_CASE name=gfx936_dsreadm dtype=fp16 layout=2 groups=1 instance_id=2001 instance_name=ck.gg.gfx936.fp16.NN.v3.dsreadm_stage_backward_hybrid.m_only_padding parity=not_requested result=PASS
+DEVICE_ARGS_CASE name=gfx936_dsreadm_m128_mod_tail dtype=fp16 layout=2 groups=1 instance_id=2001 instance_name=ck.gg.gfx936.fp16.NN.v3.dsreadm_stage_backward_hybrid.m_only_padding parity=not_requested result=PASS
+DEVICE_ARGS_CASE name=gfx936_dsreadm_mixed_m_tail dtype=fp16 layout=2 groups=3 instance_id=2001 instance_name=ck.gg.gfx936.fp16.NN.v3.dsreadm_stage_backward_hybrid.m_only_padding parity=not_requested result=PASS
+DEVICE_ARGS_CASE name=gfx936_dsreadm_k128_tn dtype=fp16 layout=3 groups=1 instance_id=2001 instance_name=ck.gg.gfx936.fp16.TN.v3.dsreadm_stage_backward_hybrid.m_only_padding parity=not_requested result=PASS
+DEVICE_ARGS_CASE name=gfx936_dsreadm_k192_tn dtype=fp16 layout=3 groups=1 instance_id=2001 instance_name=ck.gg.gfx936.fp16.TN.v3.dsreadm_stage_backward_hybrid.m_only_padding parity=not_requested result=PASS
+DEVICE_ARGS_CASE name=gfx936_dsreadm_k192_tn_ragged dtype=fp16 layout=3 groups=2 instance_id=2001 instance_name=ck.gg.gfx936.fp16.TN.v3.dsreadm_stage_backward_hybrid.m_only_padding parity=not_requested result=PASS
+DEVICE_ARGS_CASE name=gfx936_dsreadm_k192_nn dtype=fp16 layout=2 groups=1 instance_id=2001 instance_name=ck.gg.gfx936.fp16.NN.v3.dsreadm_stage_backward_hybrid.m_only_padding parity=not_requested result=PASS
+DEVICE_ARGS_CASE name=gfx936_v3_default_backward dtype=bf16 layout=2 groups=1 instance_id=2002 instance_name=ck.gg.gfx936.bf16.NN.v3.default_backward_hybrid.m_only_padding parity=not_requested result=PASS
+DEVICE_ARGS_CASE name=gfx936_bw_selected dtype=fp16 layout=1 groups=1 instance_id=1000 instance_name=ck.gg.gfx936.fp16.NT.bw_family.selected parity=not_requested result=PASS
+DEVICE_ARGS_CASE name=bw_bf16_tn_transposed dtype=bf16 layout=3 groups=1 instance_id=1003 instance_name=ck.gg.gfx936.bf16.TN.bw_family.blas_transposed parity=not_requested result=PASS
+DEVICE_ARGS_CASE name=bw_bf16_tn_logical_k_tail dtype=bf16 layout=3 groups=1 instance_id=1004 instance_name=ck.gg.gfx936.bf16.TN.bw_family.logical_k_tail parity=not_requested result=PASS
+DEVICE_ARGS_NEGATIVE mismatch=-6 unsupported=-5 result=PASS
+DEVICE_ARGS_SMOKE arch=gfx936:sramecc+:xnack- passed=21 cases=21 negative=1 pmd_correctness=0 result=PASS

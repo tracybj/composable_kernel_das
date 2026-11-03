@@ -161,6 +161,8 @@ int launch_registry_candidate(ck_tile::GroupedGemmInstanceId instance_id,
     // one of them is a caller error and falls through to unsupported.
     case ck_tile::GroupedGemmInstanceId::v7_bf16_nn:
     case ck_tile::GroupedGemmInstanceId::v7_bf16_nn_m01_8:
+    case ck_tile::GroupedGemmInstanceId::v7_bf16_nn_small_m128:
+    case ck_tile::GroupedGemmInstanceId::v7_bf16_nn_small_m64:
     case ck_tile::GroupedGemmInstanceId::v8_bf16_tn: break;
 #if defined(CK_TILE_GROUPED_GEMM_DEVICE_ARGS_REGISTRY_GFX936)
     case ck_tile::GroupedGemmInstanceId::gfx936_v3_256_m_only_padding:

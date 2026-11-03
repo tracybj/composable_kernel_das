@@ -1,0 +1,107 @@
+CONFIG arch=gfx936 dtype=bf16 layout=NN groups=4 m=1 n=2048 k=64 variable_axis=none effective_length=4 variable_capacity=4 timing=off warmup=0 samples=0 include_args_build=0 num_cu=0 blas_streams=1
+GROUP_LENGTHS values=1,1,1,1
+SELECT instance_id=5004 instance_name=ck.gg.gfx936.bf16.NN.v7.nn_b.small_m.64x64x16.s4 contract_flags=0
+BLAS library=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so mode=hipblaslt_sequential_per_group streams=1 workspace_bytes=33554432
+BLAS dependency=/workspace/Grouped_Geem/hipblaslt-install/lib/liborigami.so.1 load_mode=RTLD_GLOBAL
+ACCURACY backend=ck repeat=0 checked=1028 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=ck_guard repeat=0 checked=0 failed=0 max_abs=0
+ACCURACY backend=blas repeat=0 checked=1028 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=blas_guard repeat=0 checked=0 failed=0 max_abs=0
+ACCURACY backend=ck_vs_blas repeat=0 checked=8192 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=ck repeat=1 checked=1028 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=ck_guard repeat=1 checked=0 failed=0 max_abs=0
+ACCURACY backend=blas repeat=1 checked=1028 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=blas_guard repeat=1 checked=0 failed=0 max_abs=0
+ACCURACY backend=ck_vs_blas repeat=1 checked=8192 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=ck repeat=2 checked=1028 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=ck_guard repeat=2 checked=0 failed=0 max_abs=0
+ACCURACY backend=blas repeat=2 checked=1028 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=blas_guard repeat=2 checked=0 failed=0 max_abs=0
+ACCURACY backend=ck_vs_blas repeat=2 checked=8192 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=ck repeat=3 checked=1028 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=ck_guard repeat=3 checked=0 failed=0 max_abs=0
+ACCURACY backend=blas repeat=3 checked=1028 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=blas_guard repeat=3 checked=0 failed=0 max_abs=0
+ACCURACY backend=ck_vs_blas repeat=3 checked=8192 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=ck repeat=4 checked=1028 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=ck_guard repeat=4 checked=0 failed=0 max_abs=0
+ACCURACY backend=blas repeat=4 checked=1028 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=blas_guard repeat=4 checked=0 failed=0 max_abs=0
+ACCURACY backend=ck_vs_blas repeat=4 checked=8192 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=ck repeat=5 checked=1028 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=ck_guard repeat=5 checked=0 failed=0 max_abs=0
+ACCURACY backend=blas repeat=5 checked=1028 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=blas_guard repeat=5 checked=0 failed=0 max_abs=0
+ACCURACY backend=ck_vs_blas repeat=5 checked=8192 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=ck repeat=6 checked=1028 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=ck_guard repeat=6 checked=0 failed=0 max_abs=0
+ACCURACY backend=blas repeat=6 checked=1028 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=blas_guard repeat=6 checked=0 failed=0 max_abs=0
+ACCURACY backend=ck_vs_blas repeat=6 checked=8192 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=ck repeat=7 checked=1028 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=ck_guard repeat=7 checked=0 failed=0 max_abs=0
+ACCURACY backend=blas repeat=7 checked=1028 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=blas_guard repeat=7 checked=0 failed=0 max_abs=0
+ACCURACY backend=ck_vs_blas repeat=7 checked=8192 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=ck repeat=8 checked=1028 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=ck_guard repeat=8 checked=0 failed=0 max_abs=0
+ACCURACY backend=blas repeat=8 checked=1028 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=blas_guard repeat=8 checked=0 failed=0 max_abs=0
+ACCURACY backend=ck_vs_blas repeat=8 checked=8192 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=ck repeat=9 checked=1028 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=ck_guard repeat=9 checked=0 failed=0 max_abs=0
+ACCURACY backend=blas repeat=9 checked=1028 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=blas_guard repeat=9 checked=0 failed=0 max_abs=0
+ACCURACY backend=ck_vs_blas repeat=9 checked=8192 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=ck repeat=10 checked=1028 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=ck_guard repeat=10 checked=0 failed=0 max_abs=0
+ACCURACY backend=blas repeat=10 checked=1028 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=blas_guard repeat=10 checked=0 failed=0 max_abs=0
+ACCURACY backend=ck_vs_blas repeat=10 checked=8192 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=ck repeat=11 checked=1028 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=ck_guard repeat=11 checked=0 failed=0 max_abs=0
+ACCURACY backend=blas repeat=11 checked=1028 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=blas_guard repeat=11 checked=0 failed=0 max_abs=0
+ACCURACY backend=ck_vs_blas repeat=11 checked=8192 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=ck repeat=12 checked=1028 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=ck_guard repeat=12 checked=0 failed=0 max_abs=0
+ACCURACY backend=blas repeat=12 checked=1028 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=blas_guard repeat=12 checked=0 failed=0 max_abs=0
+ACCURACY backend=ck_vs_blas repeat=12 checked=8192 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=ck repeat=13 checked=1028 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=ck_guard repeat=13 checked=0 failed=0 max_abs=0
+ACCURACY backend=blas repeat=13 checked=1028 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=blas_guard repeat=13 checked=0 failed=0 max_abs=0
+ACCURACY backend=ck_vs_blas repeat=13 checked=8192 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=ck repeat=14 checked=1028 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=ck_guard repeat=14 checked=0 failed=0 max_abs=0
+ACCURACY backend=blas repeat=14 checked=1028 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=blas_guard repeat=14 checked=0 failed=0 max_abs=0
+ACCURACY backend=ck_vs_blas repeat=14 checked=8192 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=ck repeat=15 checked=1028 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=ck_guard repeat=15 checked=0 failed=0 max_abs=0
+ACCURACY backend=blas repeat=15 checked=1028 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=blas_guard repeat=15 checked=0 failed=0 max_abs=0
+ACCURACY backend=ck_vs_blas repeat=15 checked=8192 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=ck repeat=16 checked=1028 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=ck_guard repeat=16 checked=0 failed=0 max_abs=0
+ACCURACY backend=blas repeat=16 checked=1028 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=blas_guard repeat=16 checked=0 failed=0 max_abs=0
+ACCURACY backend=ck_vs_blas repeat=16 checked=8192 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=ck repeat=17 checked=1028 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=ck_guard repeat=17 checked=0 failed=0 max_abs=0
+ACCURACY backend=blas repeat=17 checked=1028 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=blas_guard repeat=17 checked=0 failed=0 max_abs=0
+ACCURACY backend=ck_vs_blas repeat=17 checked=8192 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=ck repeat=18 checked=1028 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=ck_guard repeat=18 checked=0 failed=0 max_abs=0
+ACCURACY backend=blas repeat=18 checked=1028 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=blas_guard repeat=18 checked=0 failed=0 max_abs=0
+ACCURACY backend=ck_vs_blas repeat=18 checked=8192 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=ck repeat=19 checked=1028 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=ck_guard repeat=19 checked=0 failed=0 max_abs=0
+ACCURACY backend=blas repeat=19 checked=1028 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=blas_guard repeat=19 checked=0 failed=0 max_abs=0
+ACCURACY backend=ck_vs_blas repeat=19 checked=8192 failed=0 max_abs=0 max_rel=0
+TIMING status=off warmup=0 samples=0
+SUMMARY result=PASS

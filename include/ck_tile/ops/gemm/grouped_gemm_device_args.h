@@ -69,7 +69,9 @@ typedef enum ck_tile_hcu_grouped_gemm_instance_id_v1
     CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V7_BF16_NN_V1 = 5000,
     CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V8_BF16_TN_V1 = 5001,
     // 5000 with the M01 = 8 tile walk, selected for large K.
-    CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V7_BF16_NN_M01_8_V1 = 5002
+    CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V7_BF16_NN_M01_8_V1 = 5002,
+    CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V7_BF16_NN_SMALL_M128_V1 = 5003,
+    CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V7_BF16_NN_SMALL_M64_V1 = 5004
 } ck_tile_hcu_grouped_gemm_instance_id_v1;
 
 typedef enum ck_tile_hcu_grouped_gemm_candidate_family_v1

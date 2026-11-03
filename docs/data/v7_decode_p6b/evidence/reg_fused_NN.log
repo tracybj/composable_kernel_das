@@ -1,0 +1,6 @@
+grid   num_cu=80 (device=80)
+select layout=NN instance_id=5000 expected=5000 name=v7.nn_b.uniform_d2l.256x256x16
+check  port_vs_cpu max_err=0.1875 bad=0/8388608
+perf   layout=NN m=256 n=2048 k=512 groups=16 v7_ms=0.0634 v7_tf=135.6
+ref    layout=NN instance_id=4002 name=v4.64x128x64.nonpadding ref_ms=0.2237 ref_tf=38.4
+layout=NN result=PASS

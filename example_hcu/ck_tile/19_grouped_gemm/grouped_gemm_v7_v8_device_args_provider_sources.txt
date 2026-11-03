@@ -1,0 +1,8 @@
+# V7/V8 providers for ck_tile_hcu_grouped_gemm_v7_v8_bf16 only.
+# Paths are relative to this directory. Retain the target-local codegen flags
+# in CMakeLists.txt when building these sources outside the archive.
+instances/grouped_gemm_v7_bf16_nn_device_args.cpp
+instances/grouped_gemm_v7_bf16_nn_m01_8_device_args.cpp
+instances/grouped_gemm_v7_bf16_nn_small_m128_device_args.cpp
+instances/grouped_gemm_v7_bf16_nn_small_m64_device_args.cpp
+instances/grouped_gemm_v8_bf16_tn_device_args.cpp

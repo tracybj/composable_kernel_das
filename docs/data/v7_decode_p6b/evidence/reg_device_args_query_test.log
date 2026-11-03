@@ -1,0 +1,10 @@
+QUERY_CASE name=gfx936_default instance=ck.gg.gfx936.fp16.NT.bw_family.selected result=PASS
+QUERY_CASE name=gfx936_v3_rollback instance=ck.gg.gfx936.fp16.NT.v3.256x256x64.m_only_padding result=PASS
+QUERY_CASE name=gfx936_p1_family_a_default instance=ck.gg.gfx936.fp16.NN.v3.128x128x64.m4.full_padding.single_lds.gfx936 result=PASS
+QUERY_CASE name=gfx936_p1_family_b_default instance=ck.gg.gfx936.fp16.NN.v6.32x128x64.nonpadding.selector_m_le_8.family_b.gfx936 result=PASS
+QUERY_CASE name=gfx936_p2_fixed_m_default instance=ck.gg.gfx936.bf16.NT.v4.64x128x64.nonpadding.m01_4.gfx936 result=PASS
+QUERY_CASE name=gfx936_p2_fc2_nn_fast_vmem3_default instance=ck.gg.gfx936.bf16.NN.bw_family.rr_fast_vmem3_m1920_2304_n2048_k7168 result=PASS
+QUERY_CASE name=gfx936_p3_homogeneous_default instance=ck.gg.gfx936.fp16.TN.v3.dsreadm_stage_backward_hybrid.m_only_padding result=PASS
+QUERY_CASE name=gfx936_p3_ragged_rejected instance=ck.gg.gfx936.fp16.TN.v4.128x128x64.m_only_padding result=PASS
+QUERY_CASE name=gfx936_p3_empty_rejected instance=ck.gg.gfx936.fp16.TN.v4.128x128x64.m_only_padding result=PASS
+DEVICE_ARGS_QUERY_PASS registry=23

@@ -813,6 +813,70 @@ int run_v7_m01_8_tests()
     return failures;
 }
 
+// Attribute gates and fallbacks for experimental 5003/5004.
+int run_v7_small_m_tests()
+{
+    int failures=0, checked=0;
+    auto nn=[](int groups, std::int64_t m, std::int64_t n, std::int64_t k) {
+        auto p=make_fixed_m_problem(GroupedGemmArch::gfx936, GroupedGemmDataType::bf16,
+                                   GroupedGemmLayout::nn, groups,m,n,k);
+        p.group_lengths_are_ragged=false;
+        return p;
+    };
+    for(const int tile_n : {128,64})
+    {
+        GroupedGemmSelectorPolicy policy{};
+        policy.enable_bf16_v7_nn=true;
+        auto experimental=policy;
+        experimental.enable_bf16_v7_nn_small_m=true;
+        experimental.bf16_v7_nn_small_m_tile_n=tile_n;
+        const auto id=tile_n==128 ? GroupedGemmInstanceId::v7_bf16_nn_small_m128
+                                  : GroupedGemmInstanceId::v7_bf16_nn_small_m64;
+        auto check=[&](const GroupedGemmProblem& p, GroupedGemmInstanceId expected) {
+            ++checked;
+            const auto actual=select_grouped_gemm_candidate(p,experimental).instance_id;
+            if(actual!=expected)
+            {
+                ++failures;
+                std::cerr<<"V7_SMALL_M_MISMATCH tile_n="<<tile_n<<" M="<<p.m.extent
+                         <<" N="<<p.n.extent<<" K="<<p.k.extent
+                         <<" expected="<<static_cast<int>(expected)
+                         <<" actual="<<static_cast<int>(actual)<<'\n';
+            }
+        };
+        for(const auto m : {1,63,64,65,128,256}) check(nn(4,m,2048,768),id);
+        check(nn(32,8,6144,2048),id);
+        check(nn(1024,1,tile_n,64),id);
+        check(nn(4,1,tile_n,80),id);
+        check(nn(4,1,2048,4096),id);
+        auto base=nn(4,1,2048,768);
+        std::vector<GroupedGemmProblem> rejected;
+        auto p=base;p.m=GroupedGemmDimensionSummary::Common(257);rejected.push_back(p);
+        p=base;p.k=GroupedGemmDimensionSummary::Common(4112);rejected.push_back(p);
+        p=base;p.k=GroupedGemmDimensionSummary::Common(48);rejected.push_back(p);
+        p=base;p.n=GroupedGemmDimensionSummary::Common(1232);rejected.push_back(p);
+        p=base;p.n=GroupedGemmDimensionSummary::Common(tile_n+8);rejected.push_back(p);
+        p=base;p.group_lengths_are_ragged=true;rejected.push_back(p);
+        p=base;p.may_have_empty_groups=true;rejected.push_back(p);
+        p=base;p.m=GroupedGemmDimensionSummary::DeviceLengthsWithCapacity(4);rejected.push_back(p);
+        p=base;p.arch=GroupedGemmArch::gfx938;rejected.push_back(p);
+        p=base;p.data_type=GroupedGemmDataType::fp16;rejected.push_back(p);
+        p=base;p.layout=GroupedGemmLayout::nt;rejected.push_back(p);
+        p=base;p.group_count=1025;rejected.push_back(p);
+        p=nn(1024,256,2147483392,64);rejected.push_back(p);
+        for(const auto& rejected_problem : rejected)
+            check(rejected_problem,select_grouped_gemm_candidate(rejected_problem,policy).instance_id);
+        auto disabled=experimental;disabled.enable_bf16_v7_nn_small_m=false;
+        ++checked;
+        failures+=select_grouped_gemm_candidate(base,disabled).instance_id!=GroupedGemmInstanceId::v7_bf16_nn;
+        disabled=experimental;disabled.enable_bf16_v7_nn=false;
+        ++checked;
+        failures+=select_grouped_gemm_candidate(base,disabled).instance_id==id;
+    }
+    if(failures==0) std::cout<<"SELECTOR_V7_SMALL_M_PASS cases="<<checked<<'\n';
+    return failures;
+}
+
 int main(int argc, char* argv[])
 {
     try
@@ -820,6 +884,7 @@ int main(int argc, char* argv[])
         int failures = run_table_tests();
         failures += run_v7_bound_tests();
         failures += run_v7_m01_8_tests();
+        failures += run_v7_small_m_tests();
         std::string golden_path;
         std::string diff_path;
         for(int i = 1; i < argc; ++i)

@@ -1,0 +1,144 @@
+CK compiled with USE_BITINT_EXTENSION_INT4 set to 
+CMAKE_CXX_COMPILER_ID: Clang
+OpenMP_CXX_LIB_NAMES: libomp;libgomp;libiomp5
+OpenMP_gomp_LIBRARY: 
+OpenMP_pthread_LIBRARY: 
+OpenMP_CXX_FLAGS: -fopenmp=libomp -Wno-unused-command-line-argument
+-- Build with HIP 5.3.26113
+-- Clang tidy not found
+-- Clang tidy checks: *,-abseil-*,-android-cloexec-fopen,-cert-msc30-c,-bugprone-exception-escape,-bugprone-macro-parentheses,-cert-env33-c,-cert-msc32-c,-cert-msc50-cpp,-cert-msc51-cpp,-cert-dcl37-c,-cert-dcl51-cpp,-clang-analyzer-alpha.core.CastToStruct,-clang-analyzer-optin.performance.Padding,-clang-diagnostic-deprecated-declarations,-clang-diagnostic-extern-c-compat,-clang-diagnostic-unused-command-line-argument,-cppcoreguidelines-avoid-c-arrays,-cppcoreguidelines-avoid-magic-numbers,-cppcoreguidelines-explicit-virtual-functions,-cppcoreguidelines-init-variables,-cppcoreguidelines-macro-usage,-cppcoreguidelines-non-private-member-variables-in-classes,-cppcoreguidelines-pro-bounds-array-to-pointer-decay,-cppcoreguidelines-pro-bounds-constant-array-index,-cppcoreguidelines-pro-bounds-pointer-arithmetic,-cppcoreguidelines-pro-type-member-init,-cppcoreguidelines-pro-type-reinterpret-cast,-cppcoreguidelines-pro-type-union-access,-cppcoreguidelines-pro-type-vararg,-cppcoreguidelines-special-member-functions,-fuchsia-*,-google-explicit-constructor,-google-readability-braces-around-statements,-google-readability-todo,-google-runtime-int,-google-runtime-references,-hicpp-vararg,-hicpp-braces-around-statements,-hicpp-explicit-conversions,-hicpp-named-parameter,-hicpp-no-array-decay,-hicpp-avoid-c-arrays,-hicpp-signed-bitwise,-hicpp-special-member-functions,-hicpp-uppercase-literal-suffix,-hicpp-use-auto,-hicpp-use-equals-default,-hicpp-use-override,-llvm-header-guard,-llvm-include-order,-llvmlibc-restrict-system-libc-headers,-llvmlibc-callee-namespace,-llvmlibc-implementation-in-namespace,-llvm-else-after-return,-llvm-qualified-auto,-misc-misplaced-const,-misc-non-private-member-variables-in-classes,-misc-no-recursion,-modernize-avoid-bind,-modernize-avoid-c-arrays,-modernize-pass-by-value,-modernize-use-auto,-modernize-use-default-member-init,-modernize-use-equals-default,-modernize-use-trailing-return-type,-modernize-use-transparent-functors,-performance-unnecessary-value-param,-readability-braces-around-statements,-readability-else-after-return,-readability-function-cognitive-complexity,-readability-isolate-declaration,-readability-magic-numbers,-readability-named-parameter,-readability-uppercase-literal-suffix,-readability-convert-member-functions-to-static,-readability-qualified-auto,-readability-redundant-string-init,-bugprone-narrowing-conversions,-cppcoreguidelines-narrowing-conversions,-altera-struct-pack-align,-cppcoreguidelines-prefer-member-initializer
+CMAKE_CXX_FLAGS: 
+adding instance device_batchnorm_instance for device: gfx936;gfx938
+adding instance device_contraction_bilinear_gfx936_instance for device: gfx936
+adding instance device_contraction_scale_gfx936_instance for device: gfx936
+adding instance device_fused_conv2d_cb_gfx928_instance for device: gfx936;gfx938
+adding instance device_fused_conv2d_cb_gfx936_instance for device: gfx936;gfx938
+adding instance device_fused_conv2d_cb_gfx938_instance for device: gfx938
+adding instance device_fused_conv2d_cba_gfx928_instance for device: gfx936;gfx938
+adding instance device_fused_conv2d_cba_gfx936_instance for device: gfx936;gfx938
+adding instance device_fused_conv2d_cba_gfx938_instance for device: gfx938
+adding instance device_fused_conv2d_cbra_gfx928_instance for device: gfx936;gfx938
+adding instance device_fused_conv2d_cbra_gfx936_instance for device: gfx936;gfx938
+adding instance device_fused_conv2d_cbra_gfx938_instance for device: gfx938
+adding instance device_gemm_ab_scale_instance
+adding instance device_grouped_conv2d_bwd_gfx928_instance for device: gfx936;gfx938
+adding instance device_grouped_conv2d_bwd_gfx936_instance for device: gfx936;gfx938
+adding instance device_grouped_conv2d_fwd_bias_add_relu_gfx928_instance for device: gfx936;gfx938
+adding instance device_grouped_conv2d_fwd_bias_gfx928_instance for device: gfx936;gfx938
+adding instance device_grouped_conv2d_fwd_bias_relu_gfx928_instance for device: gfx936;gfx938
+adding instance device_grouped_conv2d_fwd_gfx928_instance for device: gfx936;gfx938
+adding instance device_grouped_conv2d_fwd_gfx936_instance for device: gfx936;gfx938
+adding instance device_grouped_conv2d_fwd_relu_gfx936_instance for device: gfx936;gfx938
+adding instance device_grouped_conv2d_wrw_gfx928_instance for device: gfx936;gfx938
+adding instance device_grouped_conv2d_wrw_gfx936_instance for device: gfx936;gfx938
+adding instance device_grouped_conv3d_bwd_gfx936_instance for device: gfx936;gfx938
+adding instance device_grouped_conv3d_fwd_gfx928_instance for device: gfx936;gfx938
+adding instance device_grouped_conv3d_wrw_gfx936_instance for device: gfx936;gfx938
+adding instance device_grouped_gemm_tile_loop_instance
+adding instance device_layout_transform_instance for device: gfx936;gfx938
+adding instance device_permute_scale_gfx936_instance for device: gfx936
+adding instance device_reduce_gfx936_instance for device: gfx936
+adding instance device_softmax_gfx936_instance for device: gfx936
+adding example example_grouped_conv_fwd_mmac_nhwc_fp16
+adding example example_grouped_conv_fwd_mmac_nchwc32_fp16
+adding example example_grouped_conv_fwd_mmac_nchwc_fp16
+adding example example_grouped_conv_fwd_mmac_nhwc_v2_fp16_cshuffle
+adding example example_grouped_conv_fwd_mmac_nchw_v2_fp16_cshuffle
+adding example example_grouped_conv_fwd_mmac_nhwc_v2_fp16_cshuffle_mixed
+adding example example_grouped_conv_fwd_mmac_nhwc_fp8
+adding example example_grouped_conv_fwd_mmac_nhwc_int4
+adding example example_grouped_conv_bwd_data_mmac_nhwc_fp16
+adding example example_grouped_conv_bwd_data_mmac_nchwc32_fp16
+adding example example_grouped_conv_bwd_data_mmac_nhwc_v2_fp16_cshuffle
+adding example example_grouped_conv_bwd_data_mmac_nchw_v2_fp16_cshuffle
+adding example example_grouped_conv_bwd_data_mmac_nhwc_v2_fp16_cshuffle_mixed
+adding example example_grouped_conv_bwd_weight_mmac_nhwc_fp16
+adding example example_grouped_conv_bwd_weight_mmac_nchwc32_fp16
+adding example example_grouped_conv_bwd_weight_mmac_nhwc_v2_fp16
+adding example example_grouped_conv_bwd_weight_mmac_nhwc_v2_fp16_wavelet
+adding example example_grouped_conv_bwd_weight_mmac_nchw_v2_fp16
+adding example example_tensor_layout_transform_ngchw_ngchwc32_fp16
+adding example example_gemm_mmac_nt_fp16
+adding example example_gemm_mmac_tn_v2_fp16
+adding example example_gemm_mmac_tn_v2_fp16_cshuffle
+adding example example_gemm_mmac_tt_v2_fp16_cshuffle
+adding example example_gemm_mmac_nn_v1_fp16_cshuffle
+adding example example_gemm_mmac_nt_fp16_cshuffle
+adding example example_gemm_mmac_tn_v2_fp16_cshuffle_nm
+adding example example_gemm_mmac_tt_v2_fp16_cshuffle_nm
+adding example example_gemm_bias_relu_mmac_fp16
+adding example example_gemm_bias_relu_mmac_fp16_wavelet
+adding example example_grouped_conv_fwd_bias_relu_mmac_nchw_fp16_cshuffle
+adding example example_batchnorm_forward_inferring_nhwc
+adding example example_batchnorm_forward_training_nhwc
+adding example example_batchnorm_backward_nhwc
+adding example example_batchnorm_backward
+adding example example_batchnorm_forward_training
+adding example example_hcu_grouped_gemm_multiple_d_xdl_fp16
+adding example example_hcu_batched_gemm_xdl_bf16_v3
+adding example example_hcu_batched_gemm_multi_d_xdl_bf16_v3
+adding example example_hcu_gemm_xdl_bf16_v3
+adding example example_hcu_gemm_multi_d_xdl_bf16_v3
+adding example example_hcu_gemm_multi_abd_xdl_bf16_v3
+adding example example_hcu_gemm_add_xdl_bf16_v3
+adding example example_hcu_gemm_add_relu_xdl_bf16_v3
+adding example example_hcu_gemm_xdl_bf16_mk_nk_mn_v3
+adding example example_hcu_gemm_xdl_bf16_mk_kn_mn_v3
+adding example example_hcu_gemm_xdl_bf16_km_nk_mn_v3
+adding example example_hcu_gemm_xdl_bf16_km_kn_mn_v3
+adding example example_hcu_gemm_multi_d_xdl_f16_mk_kn_mn_v3
+adding example example_hcu_gemm_multi_d_xdl_f16_mk_nk_mn_v3
+adding example example_hcu_gemm_multi_d_xdl_f16_km_kn_mn_v3
+adding example example_hcu_gemm_multi_d_xdl_f16_km_nk_mn_v3
+adding example example_mmac_fp32_fp64
+adding example example_hcu_grouped_conv_fwd_multiple_d_f16
+adding example example_hcu_grouped_conv_fwd_multiple_d_bf16
+adding example example_hcu_grouped_conv_fwd_multiple_d_f32
+adding example example_hcu_gemm_ab_scale_xdl_bf16
+adding example tile_example_layernorm2d_fwd
+adding example tile_example_gemm_basic
+adding tile_rmsnorm2d_fwd
+adding tile_add_rmsnorm2d_rdquant_fwd
+adding example tile_example_conv_fwd
+adding example tile_example_conv_fwd_dsreadm
+adding example tile_example_conv_fwd_lds_direct
+adding example tile_example_conv_fwd_bf16_f32
+adding example tile_example_conv_fwd_fp32
+adding example tile_example_fused_conv_mls
+adding example tile_example_conv3d_fwd
+adding example example_hcu_ck_tile_fused_moe_flatmm_uk
+adding tile_example_fused_moe
+adding tile_example_moe_quant
+adding tile_example_grouped_gemm
+adding example tile_example_jenga_fwd
+adding example tile_example_jenga_bwd
+adding example tile_example_gdn_prefill
+adding example tile_example_gdn_decode
+adding example tile_example_gemm_quant_tensor
+adding example tile_example_gemm_quant_rowcol
+adding example tile_example_gemm_quant_blockwise
+adding example tile_example_sla_fwd
+adding example tile_example_sla_bwd
+adding example tile_example_sla_sizes
+adding example tile_example_unified_attention_args
+RPM version 4.17.0
+-- Configuring done (0.7s)
+-- Generating done (1.2s)
+-- Build files have been written to: /workspace/composable_kernel/build
+[  0%] Built target ck_tile_hcu_grouped_gemm_v7_v8_bf16
+[100%] Built target ck_tile_hcu_grouped_gemm_device_args_providers
+[100%] Built target ck_tile_hcu_grouped_gemm
+[100%] Built target tile_example_grouped_gemm_device_args_benchmark
+Built target tile_example_grouped_gemm_selector_test
+[  0%] Built target ck_tile_hcu_grouped_gemm_v7_v8_bf16
+[100%] Built target ck_tile_hcu_grouped_gemm_device_args_providers
+[100%] Built target ck_tile_hcu_grouped_gemm
+[100%] Built target tile_example_grouped_gemm_device_args_query_test
+[  0%] Built target ck_tile_hcu_grouped_gemm_v7_v8_bf16
+[100%] Built target ck_tile_hcu_grouped_gemm_device_args_providers
+[100%] Built target ck_tile_hcu_grouped_gemm
+[100%] Built target tile_example_grouped_gemm_device_args_smoke
+[  0%] Built target ck_tile_hcu_grouped_gemm_v7_v8_bf16
+[100%] Built target ck_tile_hcu_grouped_gemm_device_args_providers
+[100%] Built target ck_tile_hcu_grouped_gemm
+[100%] Built target tile_example_grouped_gemm_fused_test

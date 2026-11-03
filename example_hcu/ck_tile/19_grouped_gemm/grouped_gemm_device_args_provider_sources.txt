@@ -7,3 +7,6 @@ providers/grouped_gemm_bw_bf16_nn_fixed.cu
 providers/grouped_gemm_bw_bf16_nn_fast.cu
 providers/grouped_gemm_bw_bf16_tn_transposed.cu
 providers/grouped_gemm_bw_bf16_tn_logical_k_tail.cu
+# V7/V8 entries (including experimental 5003/5004) have a separate manifest:
+# grouped_gemm_v7_v8_device_args_provider_sources.txt. Build it with the
+# ck_tile_hcu_grouped_gemm_v7_v8_bf16 target's codegen flags from CMakeLists.txt.

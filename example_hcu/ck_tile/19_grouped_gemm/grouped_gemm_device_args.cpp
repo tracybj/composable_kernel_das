@@ -8,6 +8,7 @@
 // Header-only: the tile bound the v7 instances are launched with. Nothing from
 // it is instantiated unless the v7 route runs (see grouped_gemm_v7_uniform_launch).
 #include "instances/grouped_gemm_v7_uniform_launch.hpp"
+#include "instances/grouped_gemm_v7_small_m_launch.hpp"
 
 #include <hip/hip_runtime.h>
 
@@ -307,6 +308,9 @@ int convert_problem(const ck_tile_hcu_grouped_gemm_problem_v1* source,
     policy.enable_bf16_v7_nn = ck_tile_hcu_grouped_gemm_bf16_v7_nn_enabled();
     policy.enable_bf16_v8_tn = ck_tile_hcu_grouped_gemm_bf16_v8_tn_enabled();
     policy.enable_bf16_v7_nn_m01_8 = ck_tile_hcu_grouped_gemm_bf16_v7_nn_m01_8_enabled();
+    const int small_n = ck_tile_hcu_grouped_gemm_bf16_v7_nn_small_m_tile_n();
+    policy.enable_bf16_v7_nn_small_m = small_n != 0;
+    policy.bf16_v7_nn_small_m_tile_n = small_n;
 
 #if !defined(CK_TILE_GROUPED_GEMM_DEVICE_ARGS_HAS_GFX936_PROMOTED)
     // Do not name InstanceId 1001/1002 when this TU cannot dispatch them.
@@ -320,6 +324,7 @@ int convert_problem(const ck_tile_hcu_grouped_gemm_problem_v1* source,
     policy.enable_bf16_v7_nn = false;
     policy.enable_bf16_v8_tn = false;
     policy.enable_bf16_v7_nn_m01_8 = false;
+    policy.enable_bf16_v7_nn_small_m = false;
 #endif
 
 #if defined(CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V3_128_GFX938_DISABLE)
@@ -475,6 +480,24 @@ int dispatch_registry_candidate(const ck_tile::GroupedGemmProblem& problem,
                 v7_uniform_launch::tiles_per_group(problem));
 #endif
         break;
+    case ck_tile::GroupedGemmInstanceId::v7_bf16_nn_small_m128:
+#if defined(CK_TILE_GROUPED_GEMM_DEVICE_ARGS_HAS_V7_V8_BF16)
+        if(dtype == ck_tile::GroupedGemmDataType::bf16 && layout == ck_tile::GroupedGemmLayout::nn)
+            return ck_tile_hcu_grouped_gemm_v7_bf16_nn_small_m128_device_args(
+                device_args, groups, launch.num_cu, stream,
+                v7_small_m_launch::block_id_range(problem, launch.num_cu, 128),
+                v7_small_m_launch::tiles_per_group(problem, 128));
+#endif
+        break;
+    case ck_tile::GroupedGemmInstanceId::v7_bf16_nn_small_m64:
+#if defined(CK_TILE_GROUPED_GEMM_DEVICE_ARGS_HAS_V7_V8_BF16)
+        if(dtype == ck_tile::GroupedGemmDataType::bf16 && layout == ck_tile::GroupedGemmLayout::nn)
+            return ck_tile_hcu_grouped_gemm_v7_bf16_nn_small_m64_device_args(
+                device_args, groups, launch.num_cu, stream,
+                v7_small_m_launch::block_id_range(problem, launch.num_cu, 64),
+                v7_small_m_launch::tiles_per_group(problem, 64));
+#endif
+        break;
     case ck_tile::GroupedGemmInstanceId::v8_bf16_tn:
 #if defined(CK_TILE_GROUPED_GEMM_DEVICE_ARGS_HAS_V7_V8_BF16)
         if(dtype == ck_tile::GroupedGemmDataType::bf16 &&
@@ -598,6 +621,8 @@ void candidate_masks(ck_tile::GroupedGemmInstanceId id,
         break;
     case ck_tile::GroupedGemmInstanceId::v7_bf16_nn:
     case ck_tile::GroupedGemmInstanceId::v7_bf16_nn_m01_8:
+    case ck_tile::GroupedGemmInstanceId::v7_bf16_nn_small_m128:
+    case ck_tile::GroupedGemmInstanceId::v7_bf16_nn_small_m64:
         architecture_mask = ArchGfx936;
         data_type_mask     = DTypeBf16;
         layout_mask        = LayoutNn;

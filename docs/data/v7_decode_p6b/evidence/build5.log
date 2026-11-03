@@ -1,0 +1,81 @@
+[100%] Built target ck_tile_hcu_grouped_gemm_device_args_providers
+In file included from /workspace/composable_kernel/example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_v7_bf16_nn_small_m64_device_args.cpp:6:
+In file included from /workspace/composable_kernel/example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_v7_small_m_launch.hpp:4:
+In file included from /workspace/composable_kernel/example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_v7_uniform_launch.hpp:33:
+In file included from /workspace/composable_kernel/include/ck_tile/host.hpp:17:
+/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark: Function Name: _ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi64ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_20GemmPipelineV7SmallMINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi64EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi64EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_ [-Rpass-analysis=kernel-resource-usage]
+   34 | {
+      | ^
+/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     SGPRs: 51 [-Rpass-analysis=kernel-resource-usage]
+/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     VGPRs: 55 [-Rpass-analysis=kernel-resource-usage]
+/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     ScratchSize [bytes/lane]: 0 [-Rpass-analysis=kernel-resource-usage]
+/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     Dynamic Stack: False [-Rpass-analysis=kernel-resource-usage]
+/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     Occupancy [waves/SIMD]: 10 [-Rpass-analysis=kernel-resource-usage]
+/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     SGPRs Spill: 0 [-Rpass-analysis=kernel-resource-usage]
+/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     VGPRs Spill: 0 [-Rpass-analysis=kernel-resource-usage]
+/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     LDS Size [bytes/block]: 0 [-Rpass-analysis=kernel-resource-usage]
+/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     Instructions: 2415 [-Rpass-analysis=kernel-resource-usage]
+In file included from /workspace/composable_kernel/example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_v7_bf16_nn_small_m128_device_args.cpp:6:
+In file included from /workspace/composable_kernel/example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_v7_small_m_launch.hpp:4:
+In file included from /workspace/composable_kernel/example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_v7_uniform_launch.hpp:33:
+In file included from /workspace/composable_kernel/include/ck_tile/host.hpp:17:
+/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark: Function Name: _ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_20GemmPipelineV7SmallMINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_ [-Rpass-analysis=kernel-resource-usage]
+   34 | {
+      | ^
+/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     SGPRs: 47 [-Rpass-analysis=kernel-resource-usage]
+/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     VGPRs: 80 [-Rpass-analysis=kernel-resource-usage]
+/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     ScratchSize [bytes/lane]: 0 [-Rpass-analysis=kernel-resource-usage]
+/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     Dynamic Stack: False [-Rpass-analysis=kernel-resource-usage]
+/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     Occupancy [waves/SIMD]: 9 [-Rpass-analysis=kernel-resource-usage]
+/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     SGPRs Spill: 0 [-Rpass-analysis=kernel-resource-usage]
+/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     VGPRs Spill: 0 [-Rpass-analysis=kernel-resource-usage]
+/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     LDS Size [bytes/block]: 0 [-Rpass-analysis=kernel-resource-usage]
+/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     Instructions: 2804 [-Rpass-analysis=kernel-resource-usage]
+In file included from /workspace/composable_kernel/example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_v7_bf16_nn_small_m64_device_args.cpp:6:
+In file included from /workspace/composable_kernel/example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_v7_small_m_launch.hpp:4:
+In file included from /workspace/composable_kernel/example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_v7_uniform_launch.hpp:33:
+In file included from /workspace/composable_kernel/include/ck_tile/host.hpp:17:
+/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark: Function Name: _ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi64ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_20GemmPipelineV7SmallMINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi64EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi64EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_ [-Rpass-analysis=kernel-resource-usage]
+   34 | {
+      | ^
+/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     SGPRs: 51 [-Rpass-analysis=kernel-resource-usage]
+/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     VGPRs: 55 [-Rpass-analysis=kernel-resource-usage]
+/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     ScratchSize [bytes/lane]: 0 [-Rpass-analysis=kernel-resource-usage]
+/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     Dynamic Stack: False [-Rpass-analysis=kernel-resource-usage]
+/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     Occupancy [waves/SIMD]: 10 [-Rpass-analysis=kernel-resource-usage]
+/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     SGPRs Spill: 0 [-Rpass-analysis=kernel-resource-usage]
+/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     VGPRs Spill: 0 [-Rpass-analysis=kernel-resource-usage]
+/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     LDS Size [bytes/block]: 0 [-Rpass-analysis=kernel-resource-usage]
+/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     Instructions: 2413 [-Rpass-analysis=kernel-resource-usage]
+In file included from /workspace/composable_kernel/example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_v7_bf16_nn_small_m128_device_args.cpp:6:
+In file included from /workspace/composable_kernel/example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_v7_small_m_launch.hpp:4:
+In file included from /workspace/composable_kernel/example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_v7_uniform_launch.hpp:33:
+In file included from /workspace/composable_kernel/include/ck_tile/host.hpp:17:
+/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark: Function Name: _ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_20GemmPipelineV7SmallMINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_ [-Rpass-analysis=kernel-resource-usage]
+   34 | {
+      | ^
+/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     SGPRs: 47 [-Rpass-analysis=kernel-resource-usage]
+/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     VGPRs: 80 [-Rpass-analysis=kernel-resource-usage]
+/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     ScratchSize [bytes/lane]: 0 [-Rpass-analysis=kernel-resource-usage]
+/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     Dynamic Stack: False [-Rpass-analysis=kernel-resource-usage]
+/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     Occupancy [waves/SIMD]: 9 [-Rpass-analysis=kernel-resource-usage]
+/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     SGPRs Spill: 0 [-Rpass-analysis=kernel-resource-usage]
+/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     VGPRs Spill: 0 [-Rpass-analysis=kernel-resource-usage]
+/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     LDS Size [bytes/block]: 0 [-Rpass-analysis=kernel-resource-usage]
+/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     Instructions: 2799 [-Rpass-analysis=kernel-resource-usage]
+[100%] Built target ck_tile_hcu_grouped_gemm_v7_v8_bf16
+[100%] Built target ck_tile_hcu_grouped_gemm
+[100%] Built target tile_example_grouped_gemm_device_args_benchmark
+Built target tile_example_grouped_gemm_selector_test
+[100%] Built target ck_tile_hcu_grouped_gemm_device_args_providers
+[100%] Built target ck_tile_hcu_grouped_gemm_v7_v8_bf16
+[100%] Built target ck_tile_hcu_grouped_gemm
+[100%] Built target tile_example_grouped_gemm_device_args_query_test
+[  0%] Built target ck_tile_hcu_grouped_gemm_v7_v8_bf16
+[100%] Built target ck_tile_hcu_grouped_gemm_device_args_providers
+[100%] Built target ck_tile_hcu_grouped_gemm
+[100%] Built target tile_example_grouped_gemm_device_args_smoke
+[  0%] Built target ck_tile_hcu_grouped_gemm_v7_v8_bf16
+[100%] Built target ck_tile_hcu_grouped_gemm_device_args_providers
+[100%] Built target ck_tile_hcu_grouped_gemm
+[100%] Built target tile_example_grouped_gemm_fused_test

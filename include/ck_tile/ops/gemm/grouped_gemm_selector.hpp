@@ -115,6 +115,9 @@ struct GroupedGemmSelectorPolicy
     // 5002 (the same kernel with the M01 = 8 tile walk). Set false to keep
     // every v7 NN problem on 5000.
     bool enable_bf16_v7_nn_m01_8 = true;
+    // Experimental small-M candidates; default routes stay unchanged.
+    bool enable_bf16_v7_nn_small_m = false;
+    std::int32_t bf16_v7_nn_small_m_tile_n = 128;
 };
 
 // Group-count bounds of the v7 instances. The kernels read the group table
@@ -166,6 +169,8 @@ enum class GroupedGemmInstanceId
     v7_bf16_nn                                     = 5000,
     v8_bf16_tn                                     = 5001,
     v7_bf16_nn_m01_8                               = 5002,
+    v7_bf16_nn_small_m128                          = 5003,
+    v7_bf16_nn_small_m64                           = 5004,
 };
 
 enum class GroupedGemmCandidateFamily
@@ -184,7 +189,7 @@ struct GroupedGemmCandidateIdentity
     GroupedGemmCandidateFamily family;
 };
 
-inline constexpr std::array<GroupedGemmCandidateIdentity, 21>
+inline constexpr std::array<GroupedGemmCandidateIdentity, 23>
     grouped_gemm_candidate_registry{{
         {GroupedGemmInstanceId::bw_family_selected,
          "bw_family.selected",
@@ -255,6 +260,10 @@ inline constexpr std::array<GroupedGemmCandidateIdentity, 21>
         {GroupedGemmInstanceId::v7_bf16_nn_m01_8,
          "v7.nn_b.uniform_d2l.256x256x16.m01_8",
          GroupedGemmCandidateFamily::v7},
+        {GroupedGemmInstanceId::v7_bf16_nn_small_m128,
+         "v7.nn_b.small_m.64x128x16.s4", GroupedGemmCandidateFamily::v7},
+        {GroupedGemmInstanceId::v7_bf16_nn_small_m64,
+         "v7.nn_b.small_m.64x64x16.s4", GroupedGemmCandidateFamily::v7},
     }};
 
 constexpr const GroupedGemmCandidateIdentity*
@@ -292,6 +301,8 @@ enum class GroupedGemmSelectionReason
     // Appended: the reason is reported as its integer value, so existing
     // entries keep their numbers.
     v7_bf16_nn_m01_8,
+    v7_bf16_nn_small_m128,
+    v7_bf16_nn_small_m64,
 };
 
 struct GroupedGemmSelection
@@ -350,6 +361,16 @@ constexpr std::int64_t grouped_gemm_v7_tile_bound(const GroupedGemmProblem& prob
     const std::int64_t m_tiles = device_m ? (problem.m.extent + 255) / 256 + groups
                                           : (problem.m.extent + 255) / 256 * groups;
     return m_tiles * n_tiles;
+}
+
+// Common-M prototype bound. No device length read or allocation is needed.
+constexpr std::int64_t grouped_gemm_v7_small_m_tile_bound(
+    const GroupedGemmProblem& problem, std::int32_t tile_n)
+{
+    if(tile_n != 64 && tile_n != 128)
+        return kGroupedGemmV7MaxTiles + 1;
+    return ((problem.m.extent + 63) / 64) *
+           ((problem.n.extent + tile_n - 1) / tile_n) * problem.group_count;
 }
 
 constexpr GroupedGemmSelection select_grouped_gemm_candidate(
@@ -424,6 +445,24 @@ constexpr GroupedGemmSelection select_grouped_gemm_candidate(
     // columns must land in storage the caller owns -- the reference kernel's
     // documented tail-pad obligation, which the selector cannot verify. Ragged M
     // is therefore allowed; the caller owns the pad.
+    // Experimental small-M NN route. Whole N tiles only, so N=1232 stays
+    // on its original fallback. Ragged/device M and empty groups fall back.
+    const auto small_n = policy.bf16_v7_nn_small_m_tile_n;
+    if(policy.enable_bf16_v7_nn && policy.enable_bf16_v7_nn_small_m &&
+       problem.arch == GroupedGemmArch::gfx936 && is_bf16 && is_nn &&
+       problem.m.kind == GroupedGemmDimensionKind::common && !has_variable_k &&
+       !problem.group_lengths_are_ragged && !problem.may_have_empty_groups &&
+       problem.group_count <= kGroupedGemmV7NnMaxGroups && m <= 256 &&
+       k >= 64 && k <= 4096 && k % 16 == 0 &&
+       (small_n == 64 || small_n == 128) && n % small_n == 0 &&
+       grouped_gemm_v7_small_m_tile_bound(problem, small_n) <= kGroupedGemmV7MaxTiles)
+    {
+        return small_n == 128
+            ? GroupedGemmSelection{GroupedGemmInstanceId::v7_bf16_nn_small_m128,
+                                   GroupedGemmSelectionReason::v7_bf16_nn_small_m128}
+            : GroupedGemmSelection{GroupedGemmInstanceId::v7_bf16_nn_small_m64,
+                                   GroupedGemmSelectionReason::v7_bf16_nn_small_m64};
+    }
     const bool v7_contract =
         problem.arch == GroupedGemmArch::gfx936 && !has_variable_k &&
         grouped_gemm_v7_tile_bound(problem) <= kGroupedGemmV7MaxTiles &&
