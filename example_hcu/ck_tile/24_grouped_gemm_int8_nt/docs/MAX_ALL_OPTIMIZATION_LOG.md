@@ -128,3 +128,33 @@ ISA已确认8-byte候选使用global_load_dwordx2，shuffle候选使用global_lo
 源码复查发现v126的shuffle放在Load(next)内部，随后的sched_barrier把当前MMAC隔开；shuffle可能迫使下一块VMEM提前等待完成，削弱原Cooperative的load-next/compute-current重叠。不能只将结果归因于shuffle指令数量。
 
 新增9022/9023/9024，与9013/9016/9019保持同tile/同搬运分布，仅把下一块16B寄存器重排延后到当前块MMAC之后；prologue先重排当前块。9031/9032分别检验BN128/BK128和BN64/BK64的A-LDS/B-shuffle几何。9034/9035/9036为新Problem特化下A/B双LDS对照，检查通用模板本身是否引入额外差异。所有候选仍属Cooperative家族、实验构建；先做full-range/尾部/scale门禁，再同轮计时。未取得结果，不改生产选择。
+
+### v127结果
+
+代码7084458，隔离库`build/max_all_v127_deferred`的API SHA256为`039e98a2fc2f337de02bea38a2a16580e4543b665598cbcbaca931409018ac91`。432项full-range INT8/FP64参考完整输出门禁全部PASS，0拒绝；19个shape、608项同轮正式记录完整输出PASS，0错误。计时为10次预热、50次重复、3样本中位数，无其它卡7实验并行。
+
+| BF16测试shape M/N/K/G | 相同几何双LDS | 即时shuffle | 延后shuffle | 现有默认最优 |
+|---|---:|---:|---:|---:|
+| 32/2048/512/64；BM16/BN128/BK256 | 23.432 | 34.662 | 36.061 | 41.885 |
+| 1/4096/7168/8；BM16/BN64/BK256 | 2.137 | 1.593 | 1.787 | 2.319 |
+| 1/6144/7168/12；BM16/BN64/BK256 | 2.290 | 1.312 | 1.795 | 2.424 |
+
+以上单位均TOPS，全部取自同轮记录。第一行延后shuffle相对同几何双LDS提升53.9%，相对即时shuffle提升4.0%；第三行延后shuffle相对即时版提升36.8%，但仍落后原双LDS。说明重排时机是重要因素，且去掉LDS并非通用收益。
+
+新增BN128/BK128及BN64/BK64也未超过当前已测样本的全局最优。9034/9035/9036只是原双LDS的模板对照，部分以约1%波动成为计时最优，不视为新数据路径的收益。BF16/FP16下这三组模板对照的完整kernel机器码与对应原实例逐字节相同（6/6），排除了新Problem封装本身引入代码差异的混杂因素。
+
+实际ISA中，即时版在当前块MMAC前出现下一块VMEM等待及shuffle；延后版的steady-state MMAC可位于该等待/重排之前。BM16/BN64/BK128静态VMEM/shuffle/MMAC条数不变，VGPR为69对即时70，LDS仍4096B；不能把计时变化仅归因于静态指令数。控制码等价及ISA摘要见[max_all_v127_control_equivalence.json](max_all_v127_control_equivalence.json)、[max_all_v127_isa_summary.json](max_all_v127_isa_summary.json)，完整记录见[max_all_v127_deferred_formal.csv](max_all_v127_deferred_formal.csv)。分支内保留所有候选，默认生产选择不变。
+
+### 操作数路径的当前判断
+
+- 双LDS：连续向量搬运后共享分发，适合跨wave复用；代价是LDS读写和barrier。
+- 单边LDS：有明确的同几何正收益，应作为Cooperative的搬运策略参数继续研究。优先保留跨wave复用多的一侧，另侧在本wave内完成加载/重排；不能只根据原始M小或大硬切。
+- 双寄存器：去掉操作数LDS和相关CTA barrier，仍有输出LDS；本轮8B/16B实现均未胜过现有最优，且存在跨wave重复加载、shuffle和VGPR代价，暂不推广。
+- shuffle只能在wave内交换，不能替代跨wave共享。WASP原方向已是A-LDS/B-register，逻辑转置可交换原始操作数角色；不需要新增第三套核心流水。
+- 后续继续以M/N/K/G、tile/wave布局、stride和准备好的权重布局选择实例；不按case ID或目标表决定运行分流。本轮仅代表shape路径对照，不能报告为1191条全量改进，更未宣称达到硬件上限。
+
+### 补归档v124已完成的正式对照
+
+低N边界正式对照27个shape、270条记录全部完整输出PASS；N2048/K768族16个shape、128条记录全部完整输出PASS。均为10次预热、50次重复、3样本中位数。此前仅r2初筛表已提交，本次补存正式CSV，避免与实验结论丢失。
+
+N256/K512/G64，M256选route8为119.336 TOPS（目标84.961）；M2048选route6为194.079（目标139.329）；M4096选route6为205.879（目标146.975）。N2048/K768、M>=2048的16条选route6，BF16/FP16均超过固定目标，最小R约1.0329。相邻G测试及负结果保留在[max_all_v124_low_n_formal.csv](max_all_v124_low_n_formal.csv)、[max_all_v124_k768_formal.csv](max_all_v124_k768_formal.csv)。这两类已有候选可供后续独立的scaled selector改动及全量回归使用，本轮仍未修改默认selector。
