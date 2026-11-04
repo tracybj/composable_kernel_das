@@ -39,6 +39,7 @@ def main():
     parser.add_argument('--compiler', default='/opt/dtk/bin/aicc')
     parser.add_argument('--arch', default='gfx936')
     parser.add_argument('--jobs', type=int, default=2)
+    parser.add_argument('--tuning', action='store_true', help='Isolated instance-tuning build only')
     args = parser.parse_args()
     assert args.jobs > 0
     build = args.build.resolve()
@@ -47,7 +48,8 @@ def main():
     commands = [
         ['cmake', '-S', str(E / 'cached_weights'), '-B', str(build),
          '-DCMAKE_CXX_COMPILER=' + args.compiler, '-DCMAKE_BUILD_TYPE=Release',
-         '-DCK_INT8_CACHED_ARCH=' + args.arch],
+         '-DCK_INT8_CACHED_ARCH=' + args.arch,
+         '-DCK_INT8_CACHED_TUNING=' + ('ON' if args.tuning else 'OFF')],
         ['cmake', '--build', str(build), '--target',
          'ck_tile_int8_nt_cached_benchmark', '-j' + str(args.jobs)],
     ]
@@ -66,7 +68,8 @@ def main():
                    or name == 'ck_tile_grouped_int8_nt_launch' for name in names)
     (build / 'sources.json').write_text(json.dumps(before, indent=2) + '\n')
     identity = dict(symbols=api, library_sha256=digest(library),
-                    benchmark_sha256=digest(build / 'libck_tile_int8_nt_cached_benchmark.so'))
+                    benchmark_sha256=digest(build / 'libck_tile_int8_nt_cached_benchmark.so'),
+                    experimental_tuning=args.tuning)
     (build / 'exported_api_symbols.json').write_text(json.dumps(identity, indent=2) + '\n')
     print(json.dumps(dict(status='BUILD_PASS_GPU_NOT_RUN', build=str(build), **identity), indent=2))
 

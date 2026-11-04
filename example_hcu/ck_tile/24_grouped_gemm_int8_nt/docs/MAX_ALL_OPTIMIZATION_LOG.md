@@ -1,0 +1,51 @@
+# INT8 NT 带scale：Max ALL目标迭代记录
+
+## 固定目标与验证口径
+
+- 来源：用户提供的`BlasLt_ggemm_tuning_baseline.xlsx`第三页`int8_NT`，P3:P1193，共1191条。文件SHA256：`adbb420c4e4d9a3a7a30520c8af55369b94ae79f54ba3b8c0410c1fe2a6478ae`。
+- P列实际标题`Max ALL Tops`，每行公式为`MAX(K行,O行)`；K为INT32最优，O为带scale最优。已逐行检查缓存值与公式输入一致。只提取所需shape/目标，原工作簿不修改、不提交。
+- 原1191条ID/M/N/K/G逐条匹配。后13条phase按本次工作簿更新为9条decode、4条prefill；总计881条decode、310条prefill。旧版归档中的supplemental标签不改写。
+- 实现仍是INT8×INT8、INT32累加、group标量激活scale、per-channel权重scale，在kernel内反量化写BF16或FP16。原无scale INT32接口及其它16位输入接口保留。
+- P列作为固定的工程吞吐目标。它来自不同BLAS模式的最大值，不代表原生BLAS与本实现的输出/scale语义完全相同。
+- `R = CK_TOPS / P目标`；严格达标为数值校验PASS且`R>=1`。`R>=0.99`仅作波动观察，不能替代严格达标。TOPS按`2GMNK/(ms×10^9)`计算。
+- 权重准备只做一次并复用，时间/额外存储单列，GEMM事件计时不含准备。每轮保留原始样本、库SHA、编译选项、完整输出验证和失败原因。正确性不放宽。
+- Runtime分流仅由M/N/K/G、dtype、stride/对齐及设备资源决定，不读取case ID、Excel或目标表。
+
+目标提取见[1191条目标](targets_max_all_1191.csv)、[来源及基线统计](max_all_target_manifest.json)。
+
+## v123：本轮起点
+
+代码`e565e9dd`，结果归档`ac59e6b`。已在卡7完成两种输出各1191条完整校验。
+
+| 输出 | 严格达标 | R>=0.99 | R>=0.5 | 未严格达标 | 最小R |
+|---|---:|---:|---:|---:|---:|
+| BF16 | 1093/1191 | 1103/1191 | 1189/1191 | 98 | 0.4780 |
+| FP16 | 1108/1191 | 1128/1191 | 1191/1191 | 83 | 0.5913 |
+
+BF16剩余98条按route计：route12为62条、route0为13条、route5为9条、route7为8条、route3为3条、route4为2条、route1为1条。最大差距是N256/K512/G64下M256、2048、4096三条，之后的未达标项大多在目标的91%以上。完整差距见[max_all_v123_baseline.csv](max_all_v123_baseline.csv)。
+
+## v124：现有实例受控筛选（进行中）
+
+### 假设和方法
+
+先检查实例选择是否已限制性能，而不是直接重写第三条主流水。
+
+1. N256/K512低算术强度族目前在M256/2048/4096使用逻辑转置M256×N256 WASP，LDS64KiB、4个producer wave和8个consumer wave。候选为现有packed M128×N256/M128×N128及较小Cooperative tile；评估更低LDS、更少producer、连续16位写回与并行任务数量的组合收益。
+2. 大M窄差距族比较现有packed几何/方向，先测代表shape和相邻尺寸；若现有实例均无收益，再设计有数据流依据的新实例或主循环。
+3. 小M剩余项独立分析，不能用大M的选择规则覆盖；同时保留已达标样本作回归对照。
+
+新增隔离构建开关`CK_INT8_CACHED_TUNING`，默认OFF。仅在ON的实验库中，通过`CK_INT8_TUNE_ROUTE`与`CK_INT8_TUNE_LEGACY`选择预编译实例，且在launch前检查uniform/native、完整tile、stride和packed-weight约束。环境参数只用于实验，不进入默认部署选择。
+
+构建示例：
+
+```sh
+python3 cached_weights/build_and_manifest.py --build build/max_all_v124_tune --tuning --jobs 2
+```
+
+### 本轮结果
+
+尚未完成，待编译、数值和性能筛选后补充。负结果同样保留，未验证候选不改默认分流。
+
+## 分支与提交
+
+本地与服务器基于`ac59e6b`创建`exp/int8_nt`，main保留v123。每轮用明确说明改动的commit提交方法、结果与必要实现。GitHub连接目前从Windows/服务器均有超时或重置；本地/服务器先记录，连接恢复后正常推送，不强推覆盖远端历史。

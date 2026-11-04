@@ -3,6 +3,9 @@
 #include "pack_kernel.hpp"
 #include "selector.hpp"
 #include "scale_args.hpp"
+#ifdef CK_INT8_CACHED_TUNING
+#include "tuning_selector.hpp"
+#endif
 #include "ck_tile/ops/gemm/grouped_gemm_selector.hpp"
 #include "ck_tile/ops/gemm/kernel/gemm_tile_partitioner.hpp"
 #include "ck_tile/ops/gemm/kernel/grouped_gemm_kernel.hpp"
@@ -154,6 +157,10 @@ extern "C" CK_TILE_INT8_CACHED_API int ck_tile_int8_nt_cached_plan_create_v1(
  const bool native_domain=uniform && !empty && native && w->n%256==0 && w->k%128==0 && w->k<16384;
  p->route=native_domain?ck_tile::int8_cached_route(groups[0].m,w->n,w->k,g,w->packable,w->compute_units):0;
  if(((p->route==1 || p->route==2) && !raw_original) || ((p->route==3 || p->route==4) && !raw_transposed))p->route=0;
+#ifdef CK_INT8_CACHED_TUNING
+ ck_tile::int8_tuning_override(uniform,empty,native_domain,w->packable,raw_original,raw_transposed,
+                             max_m,w->n,w->k,p->route,p->legacy_instance);
+#endif
  std::vector<KArg> args;args.reserve(g);const uint64_t per_group=uint64_t(w->n)*w->k;
  for(int i=0;i<g;++i){
   const auto& a=groups[i];const bool packed=p->route==CK_TILE_INT8_CACHED_PACKED_WEIGHT_V1 ||

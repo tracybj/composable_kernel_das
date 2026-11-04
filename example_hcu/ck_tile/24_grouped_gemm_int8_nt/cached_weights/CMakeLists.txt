@@ -5,6 +5,7 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
 endif()
 get_filename_component(CK_INT8_CACHED_ROOT "${CMAKE_CURRENT_LIST_DIR}/../../../.." ABSOLUTE)
 set(CK_INT8_CACHED_ARCH gfx936 CACHE STRING "Architecture for the INT8-only extension")
+option(CK_INT8_CACHED_TUNING "Enable explicit instance overrides in isolated tuning builds" OFF)
 add_library(ck_tile_int8_nt_cached SHARED cached_api.cpp cached_dispatch.cpp scaled_dispatch.cpp)
 find_package(Threads REQUIRED)
 target_link_libraries(ck_tile_int8_nt_cached PRIVATE Threads::Threads)
@@ -12,6 +13,9 @@ target_include_directories(ck_tile_int8_nt_cached PRIVATE
  ${CK_INT8_CACHED_ROOT}/include ${CK_INT8_CACHED_ROOT}/library/include)
 target_compile_features(ck_tile_int8_nt_cached PRIVATE cxx_std_17)
 target_compile_definitions(ck_tile_int8_nt_cached PRIVATE CK_ENABLE_INT8 CK_EXPERIMENTAL_BIT_INT_EXTENSION)
+if(CK_INT8_CACHED_TUNING)
+ target_compile_definitions(ck_tile_int8_nt_cached PRIVATE CK_INT8_CACHED_TUNING=1)
+endif()
 target_compile_options(ck_tile_int8_nt_cached PRIVATE -xhip --offload-arch=${CK_INT8_CACHED_ARCH}
  "SHELL: -mllvm -support-768-vgprs=true" -fno-offload-uniform-block
  "SHELL: -mllvm --lsr-drop-solution=1" "SHELL: -mllvm -enable-post-misched=0"
