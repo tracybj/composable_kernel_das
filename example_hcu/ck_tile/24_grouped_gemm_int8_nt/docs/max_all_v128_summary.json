@@ -1,0 +1,104 @@
+{
+  "status": "FULL_AUDIT_PASS",
+  "cases": 1191,
+  "formal_rounds": 1,
+  "numeric_PASS": {
+    "BF16": 1191,
+    "FP16": 1191
+  },
+  "failures": 0,
+  "skips": 0,
+  "source_commit": "32027d2af8dc4cb1d7536c7747f3bc2e2a74bb68",
+  "library_sha256": "270194f6808e60f58b4cc6e78bc566b648ee8c7a18685753d309d697348dc92c",
+  "phase_counts": {
+    "decode": 881,
+    "prefill": 310
+  },
+  "outputs": {
+    "BF16": {
+      "all": {
+        "cases": 1191,
+        "strict": 1109,
+        "at_least_099": 1119,
+        "at_least_05": 1191,
+        "min_R": 0.9233494075501495
+      },
+      "prefill": {
+        "cases": 310,
+        "strict": 241,
+        "at_least_099": 249,
+        "at_least_05": 310,
+        "min_R": 0.9233494075501495
+      },
+      "decode": {
+        "cases": 881,
+        "strict": 868,
+        "at_least_099": 870,
+        "at_least_05": 881,
+        "min_R": 0.9524617555150768
+      },
+      "v123_strict": 1093,
+      "newly_strict_ids": [
+        87,
+        88,
+        91,
+        92,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        1161,
+        1163,
+        1164,
+        1187,
+        1188,
+        1189
+      ],
+      "lost_strict_ids": []
+    },
+    "FP16": {
+      "all": {
+        "cases": 1191,
+        "strict": 1123,
+        "at_least_099": 1142,
+        "at_least_05": 1191,
+        "min_R": 0.940608465718061
+      },
+      "prefill": {
+        "cases": 310,
+        "strict": 255,
+        "at_least_099": 272,
+        "at_least_05": 310,
+        "min_R": 0.940608465718061
+      },
+      "decode": {
+        "cases": 881,
+        "strict": 868,
+        "at_least_099": 870,
+        "at_least_05": 881,
+        "min_R": 0.9522939365738542
+      },
+      "v123_strict": 1108,
+      "newly_strict_ids": [
+        87,
+        88,
+        91,
+        92,
+        95,
+        96,
+        97,
+        99,
+        100,
+        743,
+        1161,
+        1163,
+        1187,
+        1188,
+        1189
+      ],
+      "lost_strict_ids": []
+    }
+  }
+}
