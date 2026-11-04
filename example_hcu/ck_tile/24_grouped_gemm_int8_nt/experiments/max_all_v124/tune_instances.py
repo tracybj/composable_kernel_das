@@ -1,6 +1,6 @@
 """Screen existing instances;case IDs identify fixtures,never runtime dispatch."""
 from pathlib import Path
-import argparse,csv,ctypes as C,datetime,hashlib,json,os,resource,statistics,sys,traceback
+import argparse,csv,ctypes as C,datetime,hashlib,json,os,resource,statistics,subprocess,sys,traceback
 resource.setrlimit(resource.RLIMIT_CORE,(0,0))
 E=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(E/'cached_weights/tests'))
@@ -19,6 +19,12 @@ def main():
     from bindings import Weight,init,lib,ok,plan_info,weight_info
     from test_scaled_api import Group2
     torch.set_num_threads(4);torch.backends.cuda.matmul.allow_tf32=False
+    def sample_indices(size,count):
+        count=min(size,count)
+        # Float linspace rounds large tensor endpoints up to size (OOB).
+        ix=torch.arange(count,device='cuda',dtype=torch.int64)*(size-1)//max(count-1,1)
+        assert bool(((ix>=0)&(ix<size)).all())
+        return ix
     prop=torch.cuda.get_device_properties(0);assert prop.gcnArchName.startswith('gfx936')
     lib.hipDeviceGetPCIBusId.argtypes=[C.c_void_p,C.c_int,C.c_int];lib.hipDeviceGetPCIBusId.restype=C.c_int
     bus=C.create_string_buffer(64);assert lib.hipDeviceGetPCIBusId(bus,64,0)==0
@@ -45,7 +51,7 @@ def main():
     assert not (out/'records.jsonl').exists(),'Existing run;inspect before restarting'
     build=Path(os.environ['CK_INT8_CACHED_BUILD']);identity=json.loads((build/'exported_api_symbols.json').read_text())
     assert identity['experimental_tuning']
-    atomic(out/'manifest.json',dict(suite=args.suite,cases=cases,candidates=candidates,validation=args.validation,warmup=args.warmup,repeat=args.repeat,samples=args.samples,library=identity,gpu=7,pci=bus.value.decode(),input_range=[-8,8],scale='FP32 scalar A + FP32 channel B',target_sha256=hashlib.sha256((E/'docs/targets_max_all_1191.csv').read_bytes()).hexdigest()))
+    atomic(out/'manifest.json',dict(suite=args.suite,cases=cases,candidates=candidates,validation=args.validation,warmup=args.warmup,repeat=args.repeat,samples=args.samples,library=identity,gpu=7,pci=bus.value.decode(),input_range=[-8,8],scale='FP32 scalar A + FP32 channel B',target_sha256=hashlib.sha256((E/'docs/targets_max_all_1191.csv').read_bytes()).hexdigest(),runner_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),source_revision=subprocess.check_output(['git','-C',str(E.parents[2]),'rev-parse','HEAD'],text=True).strip()))
     records=[];best=[]
     try:
         with (out/'records.jsonl').open('w') as stream:
@@ -58,7 +64,7 @@ def main():
                 span=m*n;capacity=(span+7)//8*8
                 raw={kind:torch.full((g,capacity+32),117,device='cuda',dtype=dtype) for kind,dtype in [('BF16',torch.bfloat16),('FP16',torch.float16)]}
                 output={kind:v[:,16:16+span].view(g,m,n) for kind,v in raw.items()}
-                indices=torch.arange(m,device='cuda') if args.validation=='full' else torch.linspace(0,m-1,min(m,8),device='cuda').long()
+                indices=torch.arange(m,device='cuda') if args.validation=='full' else sample_indices(m,8)
                 refs={'BF16':[],'FP16':[]}
                 for i in range(g):
                     scaled=(a[i,indices].float()@b[i].float().T)*(sa[i]*sb[i])[None,:]
@@ -66,7 +72,7 @@ def main():
                 del scaled
                 sampled=[]
                 for x in [a,b,sa,sb]:
-                    ix=torch.linspace(0,x.numel()-1,min(x.numel(),128),device='cuda').long();sampled.append((ix,x.reshape(-1)[ix].clone()))
+                    ix=sample_indices(x.numel(),128);sampled.append((ix,x.reshape(-1)[ix].clone()))
                 wd=(Weight*g)(*[init(Weight,data=b[i].data_ptr(),n=n,k=k,row_stride=k) for i in range(g)])
                 weights=C.c_void_p();ok(lib.ck_tile_int8_nt_cached_weights_create_v1(wd,g,None,C.byref(weights)));torch.cuda.synchronize()
                 wi=weight_info(weights);plans={};benches={};metadata={};timings={}

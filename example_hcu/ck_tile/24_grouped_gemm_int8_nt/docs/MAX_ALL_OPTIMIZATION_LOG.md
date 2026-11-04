@@ -46,6 +46,10 @@ python3 cached_weights/build_and_manifest.py --build build/max_all_v124_tune --t
 
 尚未完成，待编译、数值和性能筛选后补充。负结果同样保留，未验证候选不改默认分流。
 
+首轮筛选在ID1188进入测试数据准备时异常退出。首个故障符号为Torch的`index_elementwise_kernel`，而非GEMM。原因是新测试脚本用FP32 `linspace`产生大tensor采样索引：`64×2048×512-1=67108863`在FP32中舍入为`67108864`，成为越界位置。已将采样改为INT64整数等距计算，并在取样前检查边界；失败原始目录`results/max_all_v124_low_n`保留，使用新目录`results/max_all_v124_low_n_r2`复测。没有据此将GEMM候选记为失败，也没有重启共享服务。
+
+退出前154项已完成候选完整输出校验无错误。M256/N256/K512/G64的暂选M64×N256 packed WASP（route8）BF16约118.8 TOPS、FP16约120.9 TOPS，均高于84.96目标；仍需独立正式复测后才能写入默认几何分流。
+
 ## 分支与提交
 
 本地与服务器基于`ac59e6b`创建`exp/int8_nt`，main保留v123。每轮用明确说明改动的commit提交方法、结果与必要实现。GitHub连接通过当前系统代理恢复；已正常推送main的v123归档和实验分支起点`2364ef5`，保留远端原实验历史，没有强推。
