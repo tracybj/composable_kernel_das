@@ -1,0 +1,470 @@
+[
+  {
+    "id": 1178,
+    "variant": "base",
+    "geometry": [
+      {
+        "grid_work_items": [
+          4194304,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 8192,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          4194304,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 8192,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      }
+    ],
+    "source": "/workspace/v7_coverage/p6e/runs/profile_cache_id1178_base/1/profile/636796_tile_example_grouped_gemm_device_args_benchmark.perf",
+    "ctas": 8192,
+    "gui_cycles": 77332539,
+    "ms_from_gui": 48.332836875,
+    "busy_cu_frac": 0.9923689260351325,
+    "mmop_active_per_simd_cycle": 0.08677959480937254,
+    "mmop_active_per_busy_simd_cycle": 0.0874469086371819,
+    "mmop_insts": 1073741824,
+    "mmop_insts_expected_padded": 1073741824.0,
+    "mmop_count_matches_padded": true,
+    "mmop_cycles_per_inst": 2.0,
+    "waves": 65536,
+    "waves_per_cta": 8.0,
+    "mean_resident_waves_per_cu": 7.937485074685056,
+    "mean_wave_lifetime_cycles": 182487.22178649902,
+    "wait_any_frac": 0.44379109357499347,
+    "l2_hit_pct": 52.91968306613516,
+    "tcp_tcc_read_latency": 695.6087848991474,
+    "tcp_read_requests": 1548538688,
+    "hbm_read_MB": 40306.307968,
+    "hbm_write_MB": 1073.741824,
+    "hbm_GBps": 856.147755179744,
+    "dram_credit_stall_frac": 8.922424621283933e-05,
+    "tcp_alloc_stall_frac": 0.7826729913135272,
+    "tcp_pending_stall_frac": 0.7260830187212656,
+    "tcp_alloc_stall_per_busy_cu": 0.7886915549044695,
+    "tcp_pending_stall_per_busy_cu": 0.7316664192844349,
+    "lds_bank_conflict_frac": 0.25287356321839083,
+    "sq_insts_salu_per_wave": 5944.5,
+    "sq_insts_smem_per_wave": 8.0,
+    "sq_insts_valu_per_wave": 17219.0,
+    "sq_insts_vmem_per_wave": 1050.0,
+    "sq_insts_lds_per_wave": 4240.0,
+    "sq_insts_branch_per_wave": 623.5,
+    "sq_insts_mmop_per_wave": 16384.0,
+    "valu_minus_mmop_insts_per_wave": 835.0,
+    "valu_minus_mmop_count_fraction": 0.04849294384110576,
+    "vmem_above_two_loads_per_kstage_per_wave": 26.0
+  },
+  {
+    "id": 1178,
+    "variant": "noslc",
+    "geometry": [
+      {
+        "grid_work_items": [
+          4194304,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 8192,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          4194304,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 8192,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      }
+    ],
+    "source": "/workspace/v7_coverage/p6e/runs/profile_cache_id1178_noslc/1/profile/637028_tile_example_grouped_gemm_device_args_benchmark.perf",
+    "ctas": 8192,
+    "gui_cycles": 44645935,
+    "ms_from_gui": 27.903709375,
+    "busy_cu_frac": 0.9915938783116537,
+    "mmop_active_per_simd_cycle": 0.15031349214659745,
+    "mmop_active_per_busy_simd_cycle": 0.15158775728076304,
+    "mmop_insts": 1073741824,
+    "mmop_insts_expected_padded": 1073741824.0,
+    "mmop_count_matches_padded": true,
+    "mmop_cycles_per_inst": 2.0,
+    "waves": 65536,
+    "waves_per_cta": 8.0,
+    "mean_resident_waves_per_cu": 7.92112308656992,
+    "mean_wave_lifetime_cycles": 107948.84913635254,
+    "wait_any_frac": 0.2918848960681424,
+    "l2_hit_pct": 87.74743676924508,
+    "tcp_tcc_read_latency": 371.6754007513473,
+    "tcp_read_requests": 1593121032,
+    "hbm_read_MB": 11595.108224,
+    "hbm_write_MB": 1073.741824,
+    "hbm_GBps": 454.02028374587746,
+    "dram_credit_stall_frac": 0.0,
+    "tcp_alloc_stall_frac": 0.6402755323636967,
+    "tcp_pending_stall_frac": 0.669986796110329,
+    "tcp_alloc_stall_per_busy_cu": 0.6457033936654265,
+    "tcp_pending_stall_per_busy_cu": 0.675666531192274,
+    "lds_bank_conflict_frac": 0.25287356321839083,
+    "sq_insts_salu_per_wave": 5944.5,
+    "sq_insts_smem_per_wave": 8.0,
+    "sq_insts_valu_per_wave": 17219.0,
+    "sq_insts_vmem_per_wave": 1050.0,
+    "sq_insts_lds_per_wave": 4240.0,
+    "sq_insts_branch_per_wave": 623.5,
+    "sq_insts_mmop_per_wave": 16384.0,
+    "valu_minus_mmop_insts_per_wave": 835.0,
+    "valu_minus_mmop_count_fraction": 0.04849294384110576,
+    "vmem_above_two_loads_per_kstage_per_wave": 26.0
+  },
+  {
+    "id": 1126,
+    "variant": "base",
+    "geometry": [
+      {
+        "grid_work_items": [
+          4194304,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 8192,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          4194304,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 8192,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      }
+    ],
+    "source": "/workspace/v7_coverage/p6e/runs/profile_cache_id1126_base/1/profile/637228_tile_example_grouped_gemm_device_args_benchmark.perf",
+    "ctas": 8192,
+    "gui_cycles": 29727699,
+    "ms_from_gui": 18.579811875,
+    "busy_cu_frac": 0.9822933028721799,
+    "mmop_active_per_simd_cycle": 0.19752708072024008,
+    "mmop_active_per_busy_simd_cycle": 0.20108767935471014,
+    "mmop_insts": 939524096,
+    "mmop_insts_expected_padded": 939524096.0,
+    "mmop_count_matches_padded": true,
+    "mmop_cycles_per_inst": 2.0,
+    "waves": 65536,
+    "waves_per_cta": 8.0,
+    "mean_resident_waves_per_cu": 7.843432663590949,
+    "mean_wave_lifetime_cycles": 70853.83473205566,
+    "wait_any_frac": 0.18736872246833114,
+    "l2_hit_pct": 73.93254098085231,
+    "tcp_tcc_read_latency": 381.8693756616951,
+    "tcp_read_requests": 942669824,
+    "hbm_read_MB": 12889.666752,
+    "hbm_write_MB": 1073.741824,
+    "hbm_GBps": 751.5365962767586,
+    "dram_credit_stall_frac": 0.0,
+    "tcp_alloc_stall_frac": 0.24048243651484766,
+    "tcp_pending_stall_frac": 0.49534265374861336,
+    "tcp_alloc_stall_per_busy_cu": 0.24481734306004957,
+    "tcp_pending_stall_per_busy_cu": 0.5042716389292836,
+    "lds_bank_conflict_frac": 0.25327510917030566,
+    "sq_insts_salu_per_wave": 5323.5,
+    "sq_insts_smem_per_wave": 12.5,
+    "sq_insts_valu_per_wave": 15166.0,
+    "sq_insts_vmem_per_wave": 922.0,
+    "sq_insts_lds_per_wave": 3728.0,
+    "sq_insts_branch_per_wave": 566.0,
+    "sq_insts_mmop_per_wave": 14336.0,
+    "valu_minus_mmop_insts_per_wave": 830.0,
+    "valu_minus_mmop_count_fraction": 0.054727680337597256,
+    "vmem_above_two_loads_per_kstage_per_wave": 26.0
+  },
+  {
+    "id": 1126,
+    "variant": "noslc",
+    "geometry": [
+      {
+        "grid_work_items": [
+          4194304,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 8192,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          4194304,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 8192,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      }
+    ],
+    "source": "/workspace/v7_coverage/p6e/runs/profile_cache_id1126_noslc/1/profile/637335_tile_example_grouped_gemm_device_args_benchmark.perf",
+    "ctas": 8192,
+    "gui_cycles": 28774539,
+    "ms_from_gui": 17.984086875,
+    "busy_cu_frac": 0.9770189928151412,
+    "mmop_active_per_simd_cycle": 0.20407018857886827,
+    "mmop_active_per_busy_simd_cycle": 0.20887023699597596,
+    "mmop_insts": 939524096,
+    "mmop_insts_expected_padded": 939524096.0,
+    "mmop_count_matches_padded": true,
+    "mmop_cycles_per_inst": 2.0,
+    "waves": 65536,
+    "waves_per_cta": 8.0,
+    "mean_resident_waves_per_cu": 7.801498173437288,
+    "mean_wave_lifetime_cycles": 69208.95280456543,
+    "wait_any_frac": 0.18694462457413843,
+    "l2_hit_pct": 83.5988125668856,
+    "tcp_tcc_read_latency": 273.1206564760049,
+    "tcp_read_requests": 942669824,
+    "hbm_read_MB": 8415.18144,
+    "hbm_write_MB": 1073.741824,
+    "hbm_GBps": 527.6288604449927,
+    "dram_credit_stall_frac": 0.0,
+    "tcp_alloc_stall_frac": 0.17753757280003687,
+    "tcp_pending_stall_frac": 0.4790471534574368,
+    "tcp_alloc_stall_per_busy_cu": 0.18171353280296795,
+    "tcp_pending_stall_per_busy_cu": 0.4903150880180237,
+    "lds_bank_conflict_frac": 0.25327510917030566,
+    "sq_insts_salu_per_wave": 5323.5,
+    "sq_insts_smem_per_wave": 12.5,
+    "sq_insts_valu_per_wave": 15166.0,
+    "sq_insts_vmem_per_wave": 922.0,
+    "sq_insts_lds_per_wave": 3728.0,
+    "sq_insts_branch_per_wave": 566.0,
+    "sq_insts_mmop_per_wave": 14336.0,
+    "valu_minus_mmop_insts_per_wave": 830.0,
+    "valu_minus_mmop_count_fraction": 0.054727680337597256,
+    "vmem_above_two_loads_per_kstage_per_wave": 26.0
+  },
+  {
+    "id": 962,
+    "variant": "base",
+    "geometry": [
+      {
+        "grid_work_items": [
+          1048576,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 2048,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          1048576,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 2048,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      }
+    ],
+    "source": "/workspace/v7_coverage/p6e/runs/profile_cache_id962_base/1/profile/637455_tile_example_grouped_gemm_device_args_benchmark.perf",
+    "ctas": 2048,
+    "gui_cycles": 4237331,
+    "ms_from_gui": 2.648331875,
+    "busy_cu_frac": 0.9762777441743399,
+    "mmop_active_per_simd_cycle": 0.19796914614411762,
+    "mmop_active_per_busy_simd_cycle": 0.20277953412893232,
+    "mmop_insts": 134217728,
+    "mmop_insts_expected_padded": 134217728.0,
+    "mmop_count_matches_padded": true,
+    "mmop_cycles_per_inst": 2.0,
+    "waves": 16384,
+    "waves_per_cta": 8.0,
+    "mean_resident_waves_per_cu": 7.784247560551678,
+    "mean_wave_lifetime_cycles": 39662.10418701172,
+    "wait_any_frac": 0.20180201739728215,
+    "l2_hit_pct": 78.84507337862455,
+    "tcp_tcc_read_latency": 316.33950076056914,
+    "tcp_read_requests": 135004160,
+    "hbm_read_MB": 1875.43776,
+    "hbm_write_MB": 268.435456,
+    "hbm_GBps": 809.5183372741002,
+    "dram_credit_stall_frac": 0.0,
+    "tcp_alloc_stall_frac": 0.0719719765814849,
+    "tcp_pending_stall_frac": 0.30657114997624685,
+    "tcp_alloc_stall_per_busy_cu": 0.07372080026504468,
+    "tcp_pending_stall_per_busy_cu": 0.3140204227799139,
+    "lds_bank_conflict_frac": 0.2556390977443609,
+    "sq_insts_salu_per_wave": 3269.5,
+    "sq_insts_smem_per_wave": 16.5,
+    "sq_insts_valu_per_wave": 9017.0,
+    "sq_insts_vmem_per_wave": 538.0,
+    "sq_insts_lds_per_wave": 2192.0,
+    "sq_insts_branch_per_wave": 358.0,
+    "sq_insts_mmop_per_wave": 8192.0,
+    "valu_minus_mmop_insts_per_wave": 825.0,
+    "valu_minus_mmop_count_fraction": 0.0914938449595209,
+    "vmem_above_two_loads_per_kstage_per_wave": 26.0
+  },
+  {
+    "id": 962,
+    "variant": "noslc",
+    "geometry": [
+      {
+        "grid_work_items": [
+          1048576,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 2048,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          1048576,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 2048,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      }
+    ],
+    "source": "/workspace/v7_coverage/p6e/runs/profile_cache_id962_noslc/1/profile/637514_tile_example_grouped_gemm_device_args_benchmark.perf",
+    "ctas": 2048,
+    "gui_cycles": 4177737,
+    "ms_from_gui": 2.611085625,
+    "busy_cu_frac": 0.9753447769689667,
+    "mmop_active_per_simd_cycle": 0.20079310880507797,
+    "mmop_active_per_busy_simd_cycle": 0.20586885124773346,
+    "mmop_insts": 134217728,
+    "mmop_insts_expected_padded": 134217728.0,
+    "mmop_count_matches_padded": true,
+    "mmop_cycles_per_inst": 2.0,
+    "waves": 16384,
+    "waves_per_cta": 8.0,
+    "mean_resident_waves_per_cu": 7.778731811025922,
+    "mean_wave_lifetime_cycles": 39650.74914550781,
+    "wait_any_frac": 0.20095286655038835,
+    "l2_hit_pct": 82.52879428377618,
+    "tcp_tcc_read_latency": 311.9970033516004,
+    "tcp_read_requests": 135004160,
+    "hbm_read_MB": 1552.687808,
+    "hbm_write_MB": 268.435456,
+    "hbm_GBps": 697.4582704464163,
+    "dram_credit_stall_frac": 0.0,
+    "tcp_alloc_stall_frac": 0.06498931419091244,
+    "tcp_pending_stall_frac": 0.3080852205392537,
+    "tcp_alloc_stall_per_busy_cu": 0.06663214457648166,
+    "tcp_pending_stall_per_busy_cu": 0.3158731433377597,
+    "lds_bank_conflict_frac": 0.2556390977443609,
+    "sq_insts_salu_per_wave": 3269.5,
+    "sq_insts_smem_per_wave": 16.5,
+    "sq_insts_valu_per_wave": 9017.0,
+    "sq_insts_vmem_per_wave": 538.0,
+    "sq_insts_lds_per_wave": 2192.0,
+    "sq_insts_branch_per_wave": 358.0,
+    "sq_insts_mmop_per_wave": 8192.0,
+    "valu_minus_mmop_insts_per_wave": 825.0,
+    "valu_minus_mmop_count_fraction": 0.0914938449595209,
+    "vmem_above_two_loads_per_kstage_per_wave": 26.0
+  }
+]

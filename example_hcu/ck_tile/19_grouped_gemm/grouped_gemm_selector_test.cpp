@@ -877,6 +877,50 @@ int run_v7_small_m_tests()
     return failures;
 }
 
+// Cache-only experiments must preserve the original walk and all fallbacks.
+int run_v7_cache_tests()
+{
+    int failures=0, checked=0;
+    auto p=make_fixed_m_problem(GroupedGemmArch::gfx936, GroupedGemmDataType::bf16,
+                               GroupedGemmLayout::nn,64,2048,4096,8192);
+    p.group_lengths_are_ragged=false;
+    GroupedGemmSelectorPolicy base{};base.enable_bf16_v7_nn=true;
+    auto experiment=base;experiment.enable_bf16_v7_nn_a_noslc=true;
+    auto check=[&](const GroupedGemmProblem& problem,
+                   const GroupedGemmSelectorPolicy& policy, GroupedGemmInstanceId expected) {
+        ++checked;
+        const auto actual=select_grouped_gemm_candidate(problem,policy).instance_id;
+        if(actual!=expected) { ++failures;std::cerr<<"V7_CACHE_MISMATCH expected="
+            <<static_cast<int>(expected)<<" actual="<<static_cast<int>(actual)<<'\n'; }
+    };
+    check(p,base,GroupedGemmInstanceId::v7_bf16_nn_m01_8);
+    check(p,experiment,GroupedGemmInstanceId::v7_bf16_nn_a_noslc_m01_8);
+    auto policy=experiment;policy.enable_bf16_v7_nn_m01_8=false;
+    check(p,policy,GroupedGemmInstanceId::v7_bf16_nn_a_noslc);
+    for(const auto k : {64,80,4096}) {
+        auto q=p;q.k=GroupedGemmDimensionSummary::Common(k);
+        check(q,experiment,GroupedGemmInstanceId::v7_bf16_nn_a_noslc);
+    }
+    std::vector<GroupedGemmProblem> rejected;
+    auto q=p;q.n=GroupedGemmDimensionSummary::Common(1232);rejected.push_back(q);
+    q=p;q.k=GroupedGemmDimensionSummary::Common(8193);rejected.push_back(q);
+    q=p;q.arch=GroupedGemmArch::gfx938;rejected.push_back(q);
+    q=p;q.data_type=GroupedGemmDataType::fp16;rejected.push_back(q);
+    q=p;q.layout=GroupedGemmLayout::tn;rejected.push_back(q);
+    q=p;q.may_have_empty_groups=true;rejected.push_back(q);
+    q=p;q.group_lengths_are_ragged=true;rejected.push_back(q);
+    q=p;q.m=GroupedGemmDimensionSummary::DeviceLengthsWithCapacity(2048);rejected.push_back(q);
+    q=p;q.k=GroupedGemmDimensionSummary::DeviceLengthsWithCapacity(8192);rejected.push_back(q);
+    q=p;q.group_count=1025;rejected.push_back(q);
+    for(const auto& rejected_problem : rejected)
+        check(rejected_problem,experiment,select_grouped_gemm_candidate(rejected_problem,base).instance_id);
+    policy=experiment;policy.enable_bf16_v7_nn=false;
+    auto disabled=base;disabled.enable_bf16_v7_nn=false;
+    check(p,policy,select_grouped_gemm_candidate(p,disabled).instance_id);
+    if(!failures) std::cout<<"SELECTOR_V7_CACHE_PASS cases="<<checked<<'\n';
+    return failures;
+}
+
 int main(int argc, char* argv[])
 {
     try
@@ -885,6 +929,7 @@ int main(int argc, char* argv[])
         failures += run_v7_bound_tests();
         failures += run_v7_m01_8_tests();
         failures += run_v7_small_m_tests();
+        failures += run_v7_cache_tests();
         std::string golden_path;
         std::string diff_path;
         for(int i = 1; i < argc; ++i)

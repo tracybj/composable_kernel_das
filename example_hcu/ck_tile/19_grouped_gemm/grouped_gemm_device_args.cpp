@@ -62,6 +62,10 @@ extern "C" int ck_tile_hcu_grouped_gemm_v7_bf16_nn_device_args(
     void*, int, std::uint32_t, hipStream_t, std::uint64_t, std::int32_t);
 extern "C" int ck_tile_hcu_grouped_gemm_v7_bf16_nn_m01_8_device_args(
     void*, int, std::uint32_t, hipStream_t, std::uint64_t, std::int32_t);
+extern "C" int ck_tile_hcu_grouped_gemm_v7_bf16_nn_a_noslc_device_args(
+    void*, int, std::uint32_t, hipStream_t, std::uint64_t, std::int32_t);
+extern "C" int ck_tile_hcu_grouped_gemm_v7_bf16_nn_a_noslc_m01_8_device_args(
+    void*, int, std::uint32_t, hipStream_t, std::uint64_t, std::int32_t);
 extern "C" int ck_tile_hcu_grouped_gemm_v8_bf16_tn_device_args(
     void*, int, std::uint32_t, hipStream_t, std::uint64_t);
 #endif
@@ -311,6 +315,7 @@ int convert_problem(const ck_tile_hcu_grouped_gemm_problem_v1* source,
     const int small_n = ck_tile_hcu_grouped_gemm_bf16_v7_nn_small_m_tile_n();
     policy.enable_bf16_v7_nn_small_m = small_n != 0;
     policy.bf16_v7_nn_small_m_tile_n = small_n;
+    policy.enable_bf16_v7_nn_a_noslc = ck_tile_hcu_grouped_gemm_bf16_v7_nn_a_noslc_enabled();
 
 #if !defined(CK_TILE_GROUPED_GEMM_DEVICE_ARGS_HAS_GFX936_PROMOTED)
     // Do not name InstanceId 1001/1002 when this TU cannot dispatch them.
@@ -325,6 +330,7 @@ int convert_problem(const ck_tile_hcu_grouped_gemm_problem_v1* source,
     policy.enable_bf16_v8_tn = false;
     policy.enable_bf16_v7_nn_m01_8 = false;
     policy.enable_bf16_v7_nn_small_m = false;
+    policy.enable_bf16_v7_nn_a_noslc = false;
 #endif
 
 #if defined(CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V3_128_GFX938_DISABLE)
@@ -480,6 +486,24 @@ int dispatch_registry_candidate(const ck_tile::GroupedGemmProblem& problem,
                 v7_uniform_launch::tiles_per_group(problem));
 #endif
         break;
+    case ck_tile::GroupedGemmInstanceId::v7_bf16_nn_a_noslc:
+#if defined(CK_TILE_GROUPED_GEMM_DEVICE_ARGS_HAS_V7_V8_BF16)
+        if(dtype == ck_tile::GroupedGemmDataType::bf16 && layout == ck_tile::GroupedGemmLayout::nn)
+            return ck_tile_hcu_grouped_gemm_v7_bf16_nn_a_noslc_device_args(
+                device_args, groups, launch.num_cu, stream,
+                v7_uniform_launch::block_id_range(problem, launch.num_cu),
+                v7_uniform_launch::tiles_per_group(problem));
+#endif
+        break;
+    case ck_tile::GroupedGemmInstanceId::v7_bf16_nn_a_noslc_m01_8:
+#if defined(CK_TILE_GROUPED_GEMM_DEVICE_ARGS_HAS_V7_V8_BF16)
+        if(dtype == ck_tile::GroupedGemmDataType::bf16 && layout == ck_tile::GroupedGemmLayout::nn)
+            return ck_tile_hcu_grouped_gemm_v7_bf16_nn_a_noslc_m01_8_device_args(
+                device_args, groups, launch.num_cu, stream,
+                v7_uniform_launch::block_id_range(problem, launch.num_cu),
+                v7_uniform_launch::tiles_per_group(problem));
+#endif
+        break;
     case ck_tile::GroupedGemmInstanceId::v7_bf16_nn_small_m128:
 #if defined(CK_TILE_GROUPED_GEMM_DEVICE_ARGS_HAS_V7_V8_BF16)
         if(dtype == ck_tile::GroupedGemmDataType::bf16 && layout == ck_tile::GroupedGemmLayout::nn)
@@ -623,6 +647,8 @@ void candidate_masks(ck_tile::GroupedGemmInstanceId id,
     case ck_tile::GroupedGemmInstanceId::v7_bf16_nn_m01_8:
     case ck_tile::GroupedGemmInstanceId::v7_bf16_nn_small_m128:
     case ck_tile::GroupedGemmInstanceId::v7_bf16_nn_small_m64:
+    case ck_tile::GroupedGemmInstanceId::v7_bf16_nn_a_noslc:
+    case ck_tile::GroupedGemmInstanceId::v7_bf16_nn_a_noslc_m01_8:
         architecture_mask = ArchGfx936;
         data_type_mask     = DTypeBf16;
         layout_mask        = LayoutNn;

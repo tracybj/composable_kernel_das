@@ -118,6 +118,7 @@ struct GroupedGemmSelectorPolicy
     // Experimental small-M candidates; default routes stay unchanged.
     bool enable_bf16_v7_nn_small_m = false;
     std::int32_t bf16_v7_nn_small_m_tile_n = 128;
+    bool enable_bf16_v7_nn_a_noslc = false; // Independent cache-policy experiment.
 };
 
 // Group-count bounds of the v7 instances. The kernels read the group table
@@ -171,6 +172,8 @@ enum class GroupedGemmInstanceId
     v7_bf16_nn_m01_8                               = 5002,
     v7_bf16_nn_small_m128                          = 5003,
     v7_bf16_nn_small_m64                           = 5004,
+    v7_bf16_nn_a_noslc                             = 5005,
+    v7_bf16_nn_a_noslc_m01_8                       = 5006,
 };
 
 enum class GroupedGemmCandidateFamily
@@ -189,7 +192,7 @@ struct GroupedGemmCandidateIdentity
     GroupedGemmCandidateFamily family;
 };
 
-inline constexpr std::array<GroupedGemmCandidateIdentity, 23>
+inline constexpr std::array<GroupedGemmCandidateIdentity, 25>
     grouped_gemm_candidate_registry{{
         {GroupedGemmInstanceId::bw_family_selected,
          "bw_family.selected",
@@ -264,6 +267,10 @@ inline constexpr std::array<GroupedGemmCandidateIdentity, 23>
          "v7.nn_b.small_m.64x128x16.s4", GroupedGemmCandidateFamily::v7},
         {GroupedGemmInstanceId::v7_bf16_nn_small_m64,
          "v7.nn_b.small_m.64x64x16.s4", GroupedGemmCandidateFamily::v7},
+        {GroupedGemmInstanceId::v7_bf16_nn_a_noslc,
+         "v7.nn_b.uniform_d2l.256x256x16.a_noslc", GroupedGemmCandidateFamily::v7},
+        {GroupedGemmInstanceId::v7_bf16_nn_a_noslc_m01_8,
+         "v7.nn_b.uniform_d2l.256x256x16.a_noslc.m01_8", GroupedGemmCandidateFamily::v7},
     }};
 
 constexpr const GroupedGemmCandidateIdentity*
@@ -303,6 +310,8 @@ enum class GroupedGemmSelectionReason
     v7_bf16_nn_m01_8,
     v7_bf16_nn_small_m128,
     v7_bf16_nn_small_m64,
+    v7_bf16_nn_a_noslc,
+    v7_bf16_nn_a_noslc_m01_8,
 };
 
 struct GroupedGemmSelection
@@ -470,6 +479,17 @@ constexpr GroupedGemmSelection select_grouped_gemm_candidate(
     if(v7_contract && problem.group_count <= kGroupedGemmV7NnMaxGroups && is_bf16 &&
        is_nn && policy.enable_bf16_v7_nn)
     {
+        // Experimental cache-only variant: keep the original tile walk.
+        if(policy.enable_bf16_v7_nn_a_noslc &&
+           problem.m.kind == GroupedGemmDimensionKind::common &&
+           !problem.group_lengths_are_ragged)
+        {
+            if(policy.enable_bf16_v7_nn_m01_8 && k > kGroupedGemmV7NnM01_8KThreshold)
+                return {GroupedGemmInstanceId::v7_bf16_nn_a_noslc_m01_8,
+                        GroupedGemmSelectionReason::v7_bf16_nn_a_noslc_m01_8};
+            return {GroupedGemmInstanceId::v7_bf16_nn_a_noslc,
+                    GroupedGemmSelectionReason::v7_bf16_nn_a_noslc};
+        }
         // K is common here (v7_contract), so k is every group's K.
         if(policy.enable_bf16_v7_nn_m01_8 && k > kGroupedGemmV7NnM01_8KThreshold)
         {

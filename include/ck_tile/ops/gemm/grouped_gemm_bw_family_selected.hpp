@@ -68,6 +68,15 @@ inline int ck_tile_hcu_grouped_gemm_bf16_v7_nn_small_m_tile_n()
     return 0;
 }
 
+// Experimental A-load cache policy, default off; disable wins.
+inline bool ck_tile_hcu_grouped_gemm_bf16_v7_nn_a_noslc_enabled()
+{
+    const char* disable = std::getenv("CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_A_NOSLC");
+    if(disable != nullptr && disable[0] == '1' && disable[1] == '\0') return false;
+    const char* enable = std::getenv("CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC");
+    return enable != nullptr && enable[0] == '1' && enable[1] == '\0';
+}
+
 inline bool ck_tile_hcu_grouped_gemm_bf16_v8_tn_enabled()
 {
     const char* disable = std::getenv("CK_TILE_GROUPED_GEMM_DISABLE_BF16_V8_TN");
