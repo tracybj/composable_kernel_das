@@ -138,7 +138,7 @@ template<bool BF> int dispatch(unsigned route,unsigned legacy,const void* args,c
 }
 extern "C" int ck_tile_int8_scaled_launch_private(unsigned output,unsigned route,unsigned legacy,const void* args,const void* scales,int g,int m,int n,hipStream_t stream){
 #ifdef CK_INT8_CACHED_TUNING
- if(route==0 && legacy>=9001 && legacy<=9021)return ck_tile_int8_operand_launch_private(output,legacy,args,scales,g,m,n,stream);
+ if(route==0 && legacy>=9001 && legacy<=9036)return ck_tile_int8_operand_launch_private(output,legacy,args,scales,g,m,n,stream);
  if(route>=13 && route<=17)return ck_tile_int8_wide128_launch_private(output,route,args,scales,g,m,n,stream);
 #endif
  return output==1?dispatch<true>(route,legacy,args,scales,g,m,n,stream):dispatch<false>(route,legacy,args,scales,g,m,n,stream);

@@ -114,3 +114,17 @@ v124代表形状筛选显示：K768/N2048族可由现有packed M128×N256改善�
 保持Cooperative调度和同一BM/BN/BK，增加9013–9021，与9001–9009逐项配对。每64B K stripe，四组lane分别连续加载16B，再用两级butterfly、共4条ds_bpermute交换4个word，产生两次MMAC所需的8B/lane fragment。CPU映射证明覆盖四个lane quad；GPU全范围数值门禁和独立计时尚待执行。shuffle使用wave交换指令，不分配操作数LDS，但仍消耗交换指令及寄存器，跨wave重复加载仍在，输出LDS也保留。
 
 反证条件：若新向量化shuffle仍落后原双LDS，则本轮不推广此路径，保留负结果，再从任务划分、加载复用或预排布局寻找证据。没有以“省LDS”为成功标准。
+
+### v126结果与边界
+
+API库SHA256为`057cff2a38793f61c621c0bb38e402403a716536d670c0ca002a8a935aa9de44`，代码7f387d7。486项full-range INT8/FP64参考完整输出门禁全部PASS，无prelaunch拒绝；BF16/FP16同轮正式对照19个shape、874项完整输出检查均PASS，10次预热、50次重复、3样本中位数。
+
+连续16-byte+shuffle能够改善部分同几何候选，但未超过已测shape的全局默认最优。例M32/N2048/K512/G64，在BM16/BN128/BK256下：双LDS为23.444 TOPS、B按8B直取22.825、A LDS+B16B/shuffle为34.733（同tile提升48.1%）；现有另一BM16/BN64/BK128双LDS实例仍为41.684 TOPS。不能以跨tile比较否定单边LDS，也不能把48%收益报成当前默认性能提升。
+
+ISA已确认8-byte候选使用global_load_dwordx2，shuffle候选使用global_load_dwordx4。BM16/BN64/BK128静态函数中，仅A LDS+shuffle相比双LDS，ds_write_b128为2比10条，但新增32条ds_bpermute；双寄存器+shuffle仍有输出重排的LDS和barrier。静态指令数量包含prologue/steady/epilogue，不能当成动态执行次数。该组元数据见[max_all_v126_isa_summary.json](max_all_v126_isa_summary.json)，性能明细见[max_all_v126_shuffle_formal.csv](max_all_v126_shuffle_formal.csv)。
+
+## v127：延后shuffle，恢复下一块加载的计算重叠
+
+源码复查发现v126的shuffle放在Load(next)内部，随后的sched_barrier把当前MMAC隔开；shuffle可能迫使下一块VMEM提前等待完成，削弱原Cooperative的load-next/compute-current重叠。不能只将结果归因于shuffle指令数量。
+
+新增9022/9023/9024，与9013/9016/9019保持同tile/同搬运分布，仅把下一块16B寄存器重排延后到当前块MMAC之后；prologue先重排当前块。9031/9032分别检验BN128/BK128和BN64/BK64的A-LDS/B-shuffle几何。9034/9035/9036为新Problem特化下A/B双LDS对照，检查通用模板本身是否引入额外差异。所有候选仍属Cooperative家族、实验构建；先做full-range/尾部/scale门禁，再同轮计时。未取得结果，不改生产选择。

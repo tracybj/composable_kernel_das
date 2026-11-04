@@ -36,7 +36,8 @@ inline void int8_tuning_override(bool uniform,bool empty,bool native,bool packed
         case 9001:case 9002:case 9003:case 9004:case 9005:case 9006:
         case 9007:case 9008:case 9009:case 9010:case 9011:case 9012:
         case 9013:case 9014:case 9015:case 9016:case 9017:case 9018:
-        case 9019:case 9020:case 9021:break;
+        case 9019:case 9020:case 9021:case 9022:case 9023:case 9024:
+        case 9031:case 9032:case 9034:case 9035:case 9036:break;
         case 6035:case 6049:bm=128;bn=128;bk=64;aligned=true;break;
         case 6041:case 6048:bm=256;bn=256;bk=64;aligned=true;break;
         case 6042:bm=128;bn=256;bk=64;aligned=true;break;

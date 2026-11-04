@@ -1,0 +1,129 @@
+[
+  {
+    "type": "baseline",
+    "path": ", true",
+    "static_instructions": {
+      "global_load_dwordx4": 10,
+      "ds_write_b128": 10,
+      "s_barrier": 6,
+      "ds_read2_b64": 12,
+      "v_mmac_i32_16x16x32_i8": 16,
+      "ds_write_b32": 8,
+      "global_load_dword": 5,
+      "ds_read_b128": 1
+    },
+    "vgpr": 76,
+    "lds": 11520,
+    "size": 2876,
+    "isa": "baseline_0.isa.txt"
+  },
+  {
+    "type": "direct8",
+    "path": ", true, false, false>, true",
+    "static_instructions": {
+      "global_load_dwordx4": 2,
+      "global_load_dwordx2": 16,
+      "ds_write_b128": 2,
+      "s_barrier": 6,
+      "ds_read2_b64": 4,
+      "v_mmac_i32_16x16x32_i8": 16,
+      "ds_write_b32": 8,
+      "global_load_dword": 5,
+      "ds_read_b128": 1
+    },
+    "vgpr": 66,
+    "lds": 4096,
+    "size": 3044,
+    "isa": "direct8_1.isa.txt"
+  },
+  {
+    "type": "direct8",
+    "path": ", false, true, false>, true",
+    "static_instructions": {
+      "global_load_dwordx2": 8,
+      "global_load_dwordx4": 8,
+      "ds_write_b128": 8,
+      "s_barrier": 6,
+      "ds_read2_b64": 8,
+      "v_mmac_i32_16x16x32_i8": 16,
+      "ds_write_b32": 8,
+      "global_load_dword": 5,
+      "ds_read_b128": 1
+    },
+    "vgpr": 78,
+    "lds": 9216,
+    "size": 3156,
+    "isa": "direct8_2.isa.txt"
+  },
+  {
+    "type": "direct8",
+    "path": ", false, false, false>, true",
+    "static_instructions": {
+      "global_load_dwordx2": 24,
+      "v_mmac_i32_16x16x32_i8": 16,
+      "s_barrier": 3,
+      "ds_write_b32": 8,
+      "flat_load_dword": 5,
+      "ds_read_b128": 1
+    },
+    "vgpr": 66,
+    "lds": 4096,
+    "size": 3324,
+    "isa": "direct8_3.isa.txt"
+  },
+  {
+    "type": "shuffle",
+    "path": ", true, false, true>, true",
+    "static_instructions": {
+      "global_load_dwordx4": 10,
+      "ds_bpermute_b32": 32,
+      "ds_write_b128": 2,
+      "s_barrier": 6,
+      "ds_read2_b64": 4,
+      "v_mmac_i32_16x16x32_i8": 16,
+      "ds_write_b32": 8,
+      "global_load_dword": 5,
+      "ds_read_b128": 1
+    },
+    "vgpr": 70,
+    "lds": 4096,
+    "size": 3764,
+    "isa": "shuffle_4.isa.txt"
+  },
+  {
+    "type": "shuffle",
+    "path": ", false, true, true>, true",
+    "static_instructions": {
+      "global_load_dwordx4": 12,
+      "ds_bpermute_b32": 16,
+      "ds_write_b128": 8,
+      "s_barrier": 6,
+      "ds_read2_b64": 8,
+      "v_mmac_i32_16x16x32_i8": 16,
+      "ds_write_b32": 8,
+      "global_load_dword": 5,
+      "ds_read_b128": 1
+    },
+    "vgpr": 82,
+    "lds": 9216,
+    "size": 3560,
+    "isa": "shuffle_5.isa.txt"
+  },
+  {
+    "type": "shuffle",
+    "path": ", false, false, true>, true",
+    "static_instructions": {
+      "global_load_dwordx4": 12,
+      "ds_bpermute_b32": 48,
+      "v_mmac_i32_16x16x32_i8": 16,
+      "s_barrier": 3,
+      "ds_write_b32": 8,
+      "flat_load_dword": 5,
+      "ds_read_b128": 1
+    },
+    "vgpr": 79,
+    "lds": 4096,
+    "size": 4368,
+    "isa": "shuffle_6.isa.txt"
+  }
+]

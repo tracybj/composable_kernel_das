@@ -3,18 +3,18 @@
 #include "../../grouped_int8_nt_pipeline.hpp"
 
 namespace ck_tile {
-template<class Base,bool ALds_,bool BLds_,bool Shuffle_=false>
+template<class Base,bool ALds_,bool BLds_,bool Shuffle_=false,bool Deferred_=false>
 struct GroupedInt8NtOperandProblem : Base {
-    static constexpr bool ALds=ALds_,BLds=BLds_,Shuffle=Shuffle_;
+    static constexpr bool ALds=ALds_,BLds=BLds_,Shuffle=Shuffle_,Deferred=Deferred_;
 };
 
 // Keep the normal Cooperative problem/policy and code generation untouched.
 // Only experimental problem types replace operand storage;C exchange is shared
 // with the existing epilogue and remains part of the LDS allocation.
-template<class Base,bool A,bool B,bool S>
-struct GroupedInt8NtTilePolicy<GroupedInt8NtOperandProblem<Base,A,B,S>>
+template<class Base,bool A,bool B,bool S,bool D>
+struct GroupedInt8NtTilePolicy<GroupedInt8NtOperandProblem<Base,A,B,S,D>>
     : GroupedInt8NtTilePolicy<Base> {
-    using P=GroupedInt8NtOperandProblem<Base,A,B,S>;
+    using P=GroupedInt8NtOperandProblem<Base,A,B,S,D>;
     using Parent=GroupedInt8NtTilePolicy<Base>;
     static constexpr index_t BPitchOffset=A?P::BM*Parent::OperandPitch:0;
     static constexpr index_t OperandBytes=(A?P::BM*Parent::OperandPitch:0)+(B?P::BN*Parent::OperandPitch:0);
@@ -25,9 +25,9 @@ struct GroupedInt8NtTilePolicy<GroupedInt8NtOperandProblem<Base,A,B,S>>
 // Same load-next/compute-current Cooperative schedule. Direct operands load
 // the exact MMAC 8-byte lane fragment;this first prototype trades narrower
 // VMEM requests and cross-wave duplication for fewer LDS operations/barriers.
-template<class Base,bool A,bool B,bool S,class Policy>
-struct GroupedInt8NtTilePipeline<GroupedInt8NtOperandProblem<Base,A,B,S>,Policy> {
-    using P=GroupedInt8NtOperandProblem<Base,A,B,S>;
+template<class Base,bool A,bool B,bool S,bool D,class Policy>
+struct GroupedInt8NtTilePipeline<GroupedInt8NtOperandProblem<Base,A,B,S,D>,Policy> {
+    using P=GroupedInt8NtOperandProblem<Base,A,B,S,D>;
     using Mmac=typename P::Mmac;using Copy=typename P::CopyVector;
     using AVec=typename Mmac::AVecType;using BVec=typename Mmac::BVecType;using Acc=typename Mmac::CVecType;
     struct GlobalTile {
@@ -35,6 +35,33 @@ struct GroupedInt8NtTilePipeline<GroupedInt8NtOperandProblem<Base,A,B,S>,Policy>
         AVec ad[A?1:P::MR][P::BK/32];
         BVec bd[B?1:P::NR][P::BK/32];
     };
+    CK_TILE_DEVICE Copy Permute(Copy x) const {
+        const index_t lane=get_thread_id()%64,q=lane/16;
+        int32_t r0=x[0],r1=x[1],r2=x[2],r3=x[3];
+        const bool p0=q&1,p1=q&2;
+        int32_t t0=__builtin_amdgcn_ds_bpermute((lane^16)*4,p0?r0:r2);
+        int32_t t1=__builtin_amdgcn_ds_bpermute((lane^16)*4,p0?r1:r3);
+        r0=p0?t0:r0;r1=p0?t1:r1;r2=p0?r2:t0;r3=p0?r3:t1;
+        t0=__builtin_amdgcn_ds_bpermute((lane^32)*4,p1?r0:r2);
+        t1=__builtin_amdgcn_ds_bpermute((lane^32)*4,p1?r1:r3);
+        r0=p1?t0:r0;r1=p1?t1:r1;r2=p1?r2:t0;r3=p1?r3:t1;
+        return Copy{r0,r1,r2,r3};
+    }
+    template<class Vec,index_t Rows>
+    CK_TILE_DEVICE void PrepareDirect(Vec (&v)[Rows][P::BK/32]) const {
+        static_for<0,Rows,1>{}([&](auto i){static_for<0,P::BK/64,1>{}([&](auto j){
+            constexpr index_t ri=decltype(i)::value,ki=decltype(j)::value;
+            const auto lo=bit_cast<ext_vector_t<int32_t,2>>(v[ri][ki*2]);
+            const auto hi=bit_cast<ext_vector_t<int32_t,2>>(v[ri][ki*2+1]);
+            const auto x=Permute(Copy{lo[0],lo[1],hi[0],hi[1]});
+            v[ri][ki*2]=bit_cast<Vec>(ext_vector_t<int32_t,2>{x[0],x[1]});
+            v[ri][ki*2+1]=bit_cast<Vec>(ext_vector_t<int32_t,2>{x[2],x[3]});
+        });});
+    }
+    CK_TILE_DEVICE void Prepare(GlobalTile& v) const {
+        if constexpr(S && D && !A)PrepareDirect<AVec,P::MR>(v.ad);
+        if constexpr(S && D && !B)PrepareDirect<BVec,P::NR>(v.bd);
+    }
     // Four lane quads load contiguous16B chunks of one64B K stripe.
     // Two butterfly exchanges move the fragment into MMAC's8B/lane layout.
     // ds_bpermute uses the wave exchange network,not an addressable LDS buffer.
@@ -52,16 +79,9 @@ struct GroupedInt8NtTilePipeline<GroupedInt8NtOperandProblem<Base,A,B,S>,Policy>
                 Copy x{};
                 if(P::Aligned || (row<limit && kb+ko+16<=k))
                     x=*reinterpret_cast<const Copy*>(ptr+static_cast<long long>(row)*stride+kb+ko);
-                int32_t r0=x[0],r1=x[1],r2=x[2],r3=x[3];
-                const bool p0=q&1,p1=q&2;
-                int32_t t0=__builtin_amdgcn_ds_bpermute((lane^16)*4,p0?r0:r2);
-                int32_t t1=__builtin_amdgcn_ds_bpermute((lane^16)*4,p0?r1:r3);
-                r0=p0?t0:r0;r1=p0?t1:r1;r2=p0?r2:t0;r3=p0?r3:t1;
-                t0=__builtin_amdgcn_ds_bpermute((lane^32)*4,p1?r0:r2);
-                t1=__builtin_amdgcn_ds_bpermute((lane^32)*4,p1?r1:r3);
-                r0=p1?t0:r0;r1=p1?t1:r1;r2=p1?r2:t0;r3=p1?r3:t1;
-                v[ri][ki*2]=bit_cast<Vec>(ext_vector_t<int32_t,2>{r0,r1});
-                v[ri][ki*2+1]=bit_cast<Vec>(ext_vector_t<int32_t,2>{r2,r3});
+                if constexpr(!D)x=Permute(x);
+                v[ri][ki*2]=bit_cast<Vec>(ext_vector_t<int32_t,2>{x[0],x[1]});
+                v[ri][ki*2+1]=bit_cast<Vec>(ext_vector_t<int32_t,2>{x[2],x[3]});
             });
         });
     }
@@ -130,14 +150,14 @@ struct GroupedInt8NtTilePipeline<GroupedInt8NtOperandProblem<Base,A,B,S>,Policy>
         });
     }
     CK_TILE_DEVICE void operator()(const UniversalGemmKernelArgs<>& arg,index_t mb,index_t nb,int8_t* smem,Acc (&c)[P::MR][P::NR]) const {
-        auto current=Load(arg,mb,nb,0);Stage(current,smem);if constexpr(A || B)block_sync_lds();
+        auto current=Load(arg,mb,nb,0);Prepare(current);Stage(current,smem);if constexpr(A || B)block_sync_lds();
         for(index_t kb=0;kb+P::BK<arg.K;kb+=P::BK){
             auto next=Load(arg,mb,nb,kb+P::BK);
             __builtin_amdgcn_sched_barrier(0);Compute(smem,c,current);__builtin_amdgcn_sched_barrier(0);
             // All shared reads finish before overwrite;the following barrier
             // publishes the next A/B stage. No cross-wave operand dependency
             // remains when both operands are private registers.
-            if constexpr(A || B)block_sync_lds();Stage(next,smem);if constexpr(A || B)block_sync_lds();
+            if constexpr(A || B)block_sync_lds();Prepare(next);Stage(next,smem);if constexpr(A || B)block_sync_lds();
             current=next;
         }
         Compute(smem,c,current);
