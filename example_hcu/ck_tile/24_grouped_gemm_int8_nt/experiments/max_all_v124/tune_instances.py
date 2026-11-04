@@ -10,7 +10,7 @@ def atomic(path,value):
 
 def main():
     ap=argparse.ArgumentParser();ap.add_argument('--output',type=Path,required=True)
-    ap.add_argument('--suite',choices=['low_n','low_n_refine','prefill','decode'],default='low_n')
+    ap.add_argument('--suite',choices=['low_n','low_n_refine','k768_formal','prefill','decode'],default='low_n')
     ap.add_argument('--warmup',type=int,default=3);ap.add_argument('--repeat',type=int,default=10);ap.add_argument('--samples',type=int,default=2)
     ap.add_argument('--validation',choices=['full','sample'],default='full');args=ap.parse_args()
     assert args.repeat>0 and args.samples>0
@@ -31,7 +31,9 @@ def main():
     assert bus.value.decode().lower()==Path('/sys/class/drm/renderD135/device').resolve().name.lower()
     targets=list(csv.DictReader((E/'docs/targets_max_all_1191.csv').open()))
     targets=[dict(**{k:int(r[k]) for k in ['ID','M','N','K','G']},phase=r['phase'],target_TOPS=float(r['target_TOPS'])) for r in targets]
-    if args.suite=='low_n_refine':
+    if args.suite=='k768_formal':
+        cases=[r for r in targets if r['N']==2048 and r['K']==768 and r['M']>=2048]
+    elif args.suite=='low_n_refine':
         lookup={(r['M'],r['N'],r['K'],r['G']):r for r in targets}
         shapes=[(m,g) for g in [4,16,32,64,128] for m in [256,512,1024,2048,4096]]+[(8192,64),(16384,64)]
         cases=[lookup.get((m,256,512,g),dict(ID=f'extra_M{m}_G{g}',M=m,N=256,K=512,G=g,phase='synthetic',target_TOPS=None)) for m,g in shapes]
@@ -52,6 +54,7 @@ def main():
     candidates += [(f'cooperative_{i}',0,i) for i in [6005,6006,6035,6041,6042,6061,7501,7603]]
     if args.suite=='low_n_refine':candidates=[('default',None,None)]+[(f'route_{r}',r,None) for r in [6,7,8,11]]
     if args.suite=='prefill':candidates=[('default',None,None)]+[(f'route_{r}',r,None) for r in [1,2,3,4,5,6,7,8,12]]
+    if args.suite=='k768_formal':candidates=[('default',None,None)]+[(f'route_{r}',r,None) for r in [4,6,7]]
     if args.suite=='decode':candidates += [(f'cooperative_{i}',0,i) for i in [6401,6403,6404,6505,7502,7504,7604]]
     out=args.output.resolve();out.mkdir(parents=True,exist_ok=True)
     assert not (out/'records.jsonl').exists(),'Existing run;inspect before restarting'
