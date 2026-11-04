@@ -250,3 +250,13 @@ v129输出重排初筛22个shape、396项输出检查PASS；参考每组8行，3
 初筛同时发现已有实例还有可验证的分流机会：M2048/N4096/K1536/G4选route6约399.8 TOPS、R1.040；M8192/N1536/K2048/G4选route12约469.5、R1.003。需对相邻M/G做独立正式复测后才能改生产selector，避免单条初筛跨线即推广。
 
 数据见[max_all_v129_packed_screen.csv](max_all_v129_packed_screen.csv)、[max_all_v130_compact_formal.csv](max_all_v130_compact_formal.csv)、[门禁/资源及驻留](max_all_v130_validation_resources.json)。当前正式结果仍是v128的1109 BF16/1123 FP16严格达标。
+
+## v131：相同K64片段顺序，直接读取预排B
+
+v130已证明减少LDS能提高静态驻留但仍未越过小M目标；v126/127把16B加载重排回原8B/lane顺序也有交换代价。新的组合利用INT32整数点积对共同K排列不变：每lane先读16B，在两次MMAC中分别用低8B和高8B；四组lane的K序为q*16+part*8，不必对A和B分别shuffle回q*8。A和B必须同时使用同一个顺序，不能只改一侧。
+
+实验32/33/34/35复用已有prepared-weight格式[K/64,N/16,4,16,16]，每wave连续读取1024B的N16/K64块；A仍读原始MK，不预排动态激活。四种tile为BM16/BN32/BK512、BN64/BK256、BN128/BK256、BN64/BK512。它们仍是Cooperative的load-next/compute-current流程，无输入LDS/CTA barrier，保留原C的LDS epilogue。仅在tuning开关ON可选，M允许masked，不套用WASP整M限制；必须已有合法pack，非pack域在launch前拒绝。
+
+9051/9052/9053把同一K64顺序用于原始B的紧凑LDS、A16B寄存器旁路，去掉旧A shuffle；9054–9057是A/B均原始NT、16B寄存器直取的相同tile对照，用来区分K顺序与B物理预排的组合收益。所有选择仍是实例参数，非case ID分流。CPU已完成454656个贡献位置及144个精确整数点积的预排/排列模型检查；GPU门禁、实际资源和时间未测，不报收益。
+
+同时为v130初筛发现的已有实例机会增加neighbor_formal：N1536/K2048的四档M、四档G，以及N4096/K1536的三档M、三档G，比较默认、route1/5/6/12。正式计时与完整输出验证，用于确定稳定的尺寸分流边界，不直接照抄初筛赢家。

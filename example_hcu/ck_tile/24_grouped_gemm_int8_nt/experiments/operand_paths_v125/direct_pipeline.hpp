@@ -3,19 +3,20 @@
 #include "../../grouped_int8_nt_pipeline.hpp"
 
 namespace ck_tile {
-template<class Base,bool ALds_,bool BLds_,bool Shuffle_=false,bool Deferred_=false,bool Compact_=false>
+template<class Base,bool ALds_,bool BLds_,bool Shuffle_=false,bool Deferred_=false,bool Compact_=false,bool K64_=false>
 struct GroupedInt8NtOperandProblem : Base {
-    static constexpr bool ALds=ALds_,BLds=BLds_,Shuffle=Shuffle_,Deferred=Deferred_,Compact=Compact_;
+    static constexpr bool ALds=ALds_,BLds=BLds_,Shuffle=Shuffle_,Deferred=Deferred_,Compact=Compact_,K64=K64_;
 };
 
 // Keep the normal Cooperative problem/policy and code generation untouched.
 // Only experimental problem types replace operand storage;C exchange is shared
 // with the existing epilogue and remains part of the LDS allocation.
-template<class Base,bool A,bool B,bool S,bool D,bool C>
-struct GroupedInt8NtTilePolicy<GroupedInt8NtOperandProblem<Base,A,B,S,D,C>>
+template<class Base,bool A,bool B,bool S,bool D,bool C,bool K>
+struct GroupedInt8NtTilePolicy<GroupedInt8NtOperandProblem<Base,A,B,S,D,C,K>>
     : GroupedInt8NtTilePolicy<Base> {
-    using P=GroupedInt8NtOperandProblem<Base,A,B,S,D,C>;
+    using P=GroupedInt8NtOperandProblem<Base,A,B,S,D,C,K>;
     using Parent=GroupedInt8NtTilePolicy<Base>;
+    static_assert(!K || (A && B) || (S && D),"direct K64 requires raw16B staging");
     static_assert(!C || P::BK>=128,"compact XOR requires a full128-byte K span");
     static constexpr index_t OperandPitch=C?P::BK:Parent::OperandPitch;
     CK_TILE_HOST_DEVICE static constexpr index_t KOffset(index_t row,index_t k){return C?(k^((row&7)*16)):k;}
@@ -28,9 +29,9 @@ struct GroupedInt8NtTilePolicy<GroupedInt8NtOperandProblem<Base,A,B,S,D,C>>
 // Same load-next/compute-current Cooperative schedule. Direct operands load
 // the exact MMAC 8-byte lane fragment;this first prototype trades narrower
 // VMEM requests and cross-wave duplication for fewer LDS operations/barriers.
-template<class Base,bool A,bool B,bool S,bool D,bool C,class Policy>
-struct GroupedInt8NtTilePipeline<GroupedInt8NtOperandProblem<Base,A,B,S,D,C>,Policy> {
-    using P=GroupedInt8NtOperandProblem<Base,A,B,S,D,C>;
+template<class Base,bool A,bool B,bool S,bool D,bool C,bool K,class Policy>
+struct GroupedInt8NtTilePipeline<GroupedInt8NtOperandProblem<Base,A,B,S,D,C,K>,Policy> {
+    using P=GroupedInt8NtOperandProblem<Base,A,B,S,D,C,K>;
     using Mmac=typename P::Mmac;using Copy=typename P::CopyVector;
     using AVec=typename Mmac::AVecType;using BVec=typename Mmac::BVecType;using Acc=typename Mmac::CVecType;
     struct GlobalTile {
@@ -62,8 +63,8 @@ struct GroupedInt8NtTilePipeline<GroupedInt8NtOperandProblem<Base,A,B,S,D,C>,Pol
         });});
     }
     CK_TILE_DEVICE void Prepare(GlobalTile& v) const {
-        if constexpr(S && D && !A)PrepareDirect<AVec,P::MR>(v.ad);
-        if constexpr(S && D && !B)PrepareDirect<BVec,P::NR>(v.bd);
+        if constexpr(S && D && !K && !A)PrepareDirect<AVec,P::MR>(v.ad);
+        if constexpr(S && D && !K && !B)PrepareDirect<BVec,P::NR>(v.bd);
     }
     // Four lane quads load contiguous16B chunks of one64B K stripe.
     // Two butterfly exchanges move the fragment into MMAC's8B/lane layout.
@@ -139,14 +140,15 @@ struct GroupedInt8NtTilePipeline<GroupedInt8NtOperandProblem<Base,A,B,S,D,C>,Pol
         const index_t lane=get_thread_id()%64,wave=get_thread_id()/64,wm=wave/P::WN,wn=wave%P::WN,ko=(lane/16)*8;
         static_for<0,P::BK/32,1>{}([&](auto k){
             constexpr index_t kk=decltype(k)::value;AVec av[P::MR];BVec bv[P::NR];
+            const index_t fragmentK=K?(kk/2)*64+(lane/16)*16+(kk%2)*8:kk*32+ko;
             static_for<0,P::MR,1>{}([&](auto i){
                 constexpr index_t mi=decltype(i)::value;
-                if constexpr(A){const index_t row=wm*(P::BM/P::WM)+mi*16+lane%16;av[mi]=*reinterpret_cast<const AVec*>(smem+row*Policy::OperandPitch+Policy::KOffset(row,kk*32+ko));}
+                if constexpr(A){const index_t row=wm*(P::BM/P::WM)+mi*16+lane%16;av[mi]=*reinterpret_cast<const AVec*>(smem+row*Policy::OperandPitch+Policy::KOffset(row,fragmentK));}
                 else av[mi]=current.ad[mi][kk];
             });
             static_for<0,P::NR,1>{}([&](auto j){
                 constexpr index_t ni=decltype(j)::value;
-                if constexpr(B){const index_t row=wn*(P::BN/P::WN)+ni*16+lane%16;bv[ni]=*reinterpret_cast<const BVec*>(smem+Policy::BPitchOffset+row*Policy::OperandPitch+Policy::KOffset(row,kk*32+ko));}
+                if constexpr(B){const index_t row=wn*(P::BN/P::WN)+ni*16+lane%16;bv[ni]=*reinterpret_cast<const BVec*>(smem+Policy::BPitchOffset+row*Policy::OperandPitch+Policy::KOffset(row,fragmentK));}
                 else bv[ni]=current.bd[ni][kk];
             });
             static_for<0,P::MR,1>{}([&](auto i){static_for<0,P::NR,1>{}([&](auto j){Mmac{}(c[decltype(i)::value][decltype(j)::value],av[decltype(i)::value],bv[decltype(j)::value]);});});

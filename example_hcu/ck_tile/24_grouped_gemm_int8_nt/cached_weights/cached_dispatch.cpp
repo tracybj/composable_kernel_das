@@ -9,6 +9,7 @@
 #include "pack_kernel.hpp"
 #ifdef CK_INT8_CACHED_TUNING
 extern "C" int ck_tile_int8_operand_launch_private(unsigned,unsigned,const void*,const void*,int,int,int,hipStream_t);
+extern "C" int ck_tile_int8_packed_small_launch_private(unsigned,unsigned,const void*,const void*,int,int,int,hipStream_t);
 extern "C" int ck_tile_int8_experimental_wasp_launch_private(unsigned,unsigned,const void*,const void*,int,int,int,hipStream_t);
 #endif
 namespace {
@@ -24,7 +25,8 @@ template<class P> int run(const void* args,int g,int m,int n,hipStream_t stream)
 }
 extern "C" int ck_tile_int8_cached_launch_private(unsigned route,unsigned legacy,const void* args,int g,int m,int n,hipStream_t stream){
 #ifdef CK_INT8_CACHED_TUNING
- if(route==0 && legacy>=9001 && legacy<=9049)return ck_tile_int8_operand_launch_private(0,legacy,args,nullptr,g,m,n,stream);
+ if(route==0 && legacy>=9001 && legacy<=9057)return ck_tile_int8_operand_launch_private(0,legacy,args,nullptr,g,m,n,stream);
+ if(route>=32 && route<=35)return ck_tile_int8_packed_small_launch_private(0,route,args,nullptr,g,m,n,stream);
  if(route>=13 && route<=21)return ck_tile_int8_experimental_wasp_launch_private(0,route,args,nullptr,g,m,n,stream);
 #endif
  switch(route){

@@ -22,7 +22,7 @@ inline void int8_tuning_override(bool uniform,bool empty,bool native,bool packed
     const char* legacy_value=std::getenv("CK_INT8_TUNE_LEGACY");
     if(!route_value && !legacy_value)return;
     if(!uniform || empty)throw std::invalid_argument("tuning requires nonempty uniform groups");
-    route=route_value?int8_tuning_uint(route_value,21):0;
+    route=route_value?int8_tuning_uint(route_value,35):0;
     if(legacy_value) {
         if(route)throw std::invalid_argument("legacy tuning requires route0");
         legacy=int8_tuning_uint(legacy_value,10000);
@@ -39,7 +39,8 @@ inline void int8_tuning_override(bool uniform,bool empty,bool native,bool packed
         case 9019:case 9020:case 9021:case 9022:case 9023:case 9024:
         case 9031:case 9032:case 9034:case 9035:case 9036:
         case 9041:case 9042:case 9043:case 9044:case 9045:case 9046:
-        case 9047:case 9048:case 9049:break;
+        case 9047:case 9048:case 9049:
+        case 9051:case 9052:case 9053:case 9054:case 9055:case 9056:case 9057:break;
         case 6035:case 6049:bm=128;bn=128;bk=64;aligned=true;break;
         case 6041:case 6048:bm=256;bn=256;bk=64;aligned=true;break;
         case 6042:bm=128;bn=256;bk=64;aligned=true;break;
@@ -48,6 +49,11 @@ inline void int8_tuning_override(bool uniform,bool empty,bool native,bool packed
         }
         if(aligned && (m%bm || n%bn || k%bk))
             throw std::invalid_argument("aligned tuning instance has a partial tile");
+    }
+    if(route>21 && route<32)throw std::invalid_argument("unlisted tuning route");
+    if(route>=32){
+        if(!packed)throw std::invalid_argument("packed cooperative requires prepared weights");
+        return; // Masked M;no WASP full-M/native-domain requirement.
     }
     if(!route)return;
     if(!native)throw std::invalid_argument("WASP tuning requires the native domain");
