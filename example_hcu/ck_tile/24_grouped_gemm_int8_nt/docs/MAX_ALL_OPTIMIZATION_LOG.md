@@ -98,3 +98,19 @@ v124代表形状筛选显示：K768/N2048族可由现有packed M128×N256改善�
 隔离库`build/max_all_v125_paths`编译通过，API SHA256为`b73e8fe8e636ad1ce3b64fc153dc059346d21d9310842fb5581c54bad68c1920`。全范围INT8/FP64参考的783项完整输出检查通过；另外135项不满足WASP native域的选择在launch前被拒绝。覆盖INT32/BF16/FP16、NULL/per-channel/per-token scale、NaN/Inf/零、M/N/K尾部、padding和输入/输出guard。
 
 实际资源元数据：BM16/BN64/BK128仅A LDS和双寄存器均占4096B LDS、约66 VGPR；仅B LDS占9216B、约78 VGPR。BK256双寄存器约114 VGPR，说明减少LDS可能增加寄存器压力；C重排的LDS仍保留。M128/BN384 WASP batch2为119 VGPR、batch4为135 VGPR，LDS均32768B。所查新候选均无spill/private segment。没有把这些静态资源直接当作性能结论，下面继续实测。
+
+### v125完整kernel筛选结果
+
+操作数路径筛选完成19个shape、646项有效输出检查，完整输出校验0错误；宽N WASP筛选完成16个shape、256项检查，8行/group采样校验0错误。初筛均为3次预热、10次重复、2样本，不作为全量最终验收。
+
+在本轮19个小M/回归样本中，9001–9012没有一项成为最快候选。例：M1/N4096/K7168/G8，原最优2.322 TOPS，BM16/BN64/BK256仅B LDS为2.053、仅A LDS为1.446、双寄存器为1.311。M32/N2048/K512/G64，原6401为41.67，仅B LDS为31.45、仅A LDS为22.50、双寄存器为16.37。该结果否定的是当前8-byte直读组合的收益，不能推导寄存器直取整体无效；窄VMEM和跨wave重复请求的相对贡献尚未独立测量。
+
+新BM128/BN384 WASP route13–17也未在16个代表prefill中获胜，减少LDS/producer不足以抵消额外CTA/权重加载等代价；动态驻留和请求代价尚未采counter。原route12仍主导大M。所有新路径仍只在实验构建启用，生产选择不变。
+
+明细见[max_all_v125_operand_screen.csv](max_all_v125_operand_screen.csv)、[max_all_v125_wide_screen.csv](max_all_v125_wide_screen.csv)。这两项均使用API库b73e8fe8，完整SHA见上述编译门禁，原始samples/manifest分别保存在同名results目录。
+
+## v126：连续16-byte直读与wave shuffle配对实验
+
+保持Cooperative调度和同一BM/BN/BK，增加9013–9021，与9001–9009逐项配对。每64B K stripe，四组lane分别连续加载16B，再用两级butterfly、共4条ds_bpermute交换4个word，产生两次MMAC所需的8B/lane fragment。CPU映射证明覆盖四个lane quad；GPU全范围数值门禁和独立计时尚待执行。shuffle使用wave交换指令，不分配操作数LDS，但仍消耗交换指令及寄存器，跨wave重复加载仍在，输出LDS也保留。
+
+反证条件：若新向量化shuffle仍落后原双LDS，则本轮不推广此路径，保留负结果，再从任务划分、加载复用或预排布局寻找证据。没有以“省LDS”为成功标准。

@@ -24,7 +24,7 @@ template<class P> int run(const void* args,int g,int m,int n,hipStream_t stream)
 }
 extern "C" int ck_tile_int8_cached_launch_private(unsigned route,unsigned legacy,const void* args,int g,int m,int n,hipStream_t stream){
 #ifdef CK_INT8_CACHED_TUNING
- if(route==0 && legacy>=9001 && legacy<=9012)return ck_tile_int8_operand_launch_private(0,legacy,args,nullptr,g,m,n,stream);
+ if(route==0 && legacy>=9001 && legacy<=9021)return ck_tile_int8_operand_launch_private(0,legacy,args,nullptr,g,m,n,stream);
  if(route>=13 && route<=17)return ck_tile_int8_wide128_launch_private(0,route,args,nullptr,g,m,n,stream);
 #endif
  switch(route){

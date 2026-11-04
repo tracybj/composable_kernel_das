@@ -3,18 +3,18 @@
 #include "../../grouped_int8_nt_pipeline.hpp"
 
 namespace ck_tile {
-template<class Base,bool ALds_,bool BLds_>
+template<class Base,bool ALds_,bool BLds_,bool Shuffle_=false>
 struct GroupedInt8NtOperandProblem : Base {
-    static constexpr bool ALds=ALds_,BLds=BLds_;
+    static constexpr bool ALds=ALds_,BLds=BLds_,Shuffle=Shuffle_;
 };
 
 // Keep the normal Cooperative problem/policy and code generation untouched.
 // Only experimental problem types replace operand storage;C exchange is shared
 // with the existing epilogue and remains part of the LDS allocation.
-template<class Base,bool A,bool B>
-struct GroupedInt8NtTilePolicy<GroupedInt8NtOperandProblem<Base,A,B>>
+template<class Base,bool A,bool B,bool S>
+struct GroupedInt8NtTilePolicy<GroupedInt8NtOperandProblem<Base,A,B,S>>
     : GroupedInt8NtTilePolicy<Base> {
-    using P=GroupedInt8NtOperandProblem<Base,A,B>;
+    using P=GroupedInt8NtOperandProblem<Base,A,B,S>;
     using Parent=GroupedInt8NtTilePolicy<Base>;
     static constexpr index_t BPitchOffset=A?P::BM*Parent::OperandPitch:0;
     static constexpr index_t OperandBytes=(A?P::BM*Parent::OperandPitch:0)+(B?P::BN*Parent::OperandPitch:0);
@@ -25,9 +25,9 @@ struct GroupedInt8NtTilePolicy<GroupedInt8NtOperandProblem<Base,A,B>>
 // Same load-next/compute-current Cooperative schedule. Direct operands load
 // the exact MMAC 8-byte lane fragment;this first prototype trades narrower
 // VMEM requests and cross-wave duplication for fewer LDS operations/barriers.
-template<class Base,bool A,bool B,class Policy>
-struct GroupedInt8NtTilePipeline<GroupedInt8NtOperandProblem<Base,A,B>,Policy> {
-    using P=GroupedInt8NtOperandProblem<Base,A,B>;
+template<class Base,bool A,bool B,bool S,class Policy>
+struct GroupedInt8NtTilePipeline<GroupedInt8NtOperandProblem<Base,A,B,S>,Policy> {
+    using P=GroupedInt8NtOperandProblem<Base,A,B,S>;
     using Mmac=typename P::Mmac;using Copy=typename P::CopyVector;
     using AVec=typename Mmac::AVecType;using BVec=typename Mmac::BVecType;using Acc=typename Mmac::CVecType;
     struct GlobalTile {
@@ -35,6 +35,36 @@ struct GroupedInt8NtTilePipeline<GroupedInt8NtOperandProblem<Base,A,B>,Policy> {
         AVec ad[A?1:P::MR][P::BK/32];
         BVec bd[B?1:P::NR][P::BK/32];
     };
+    // Four lane quads load contiguous16B chunks of one64B K stripe.
+    // Two butterfly exchanges move the fragment into MMAC's8B/lane layout.
+    // ds_bpermute uses the wave exchange network,not an addressable LDS buffer.
+    template<class Vec,index_t Rows>
+    CK_TILE_DEVICE void LoadShuffle(const int8_t* ptr,long long stride,index_t limit,
+                                    index_t k,index_t rowbase,index_t kb,
+                                    Vec (&v)[Rows][P::BK/32]) const {
+        const index_t lane=get_thread_id()%64,q=lane/16;
+        static_for<0,Rows,1>{}([&](auto i){
+            constexpr index_t ri=decltype(i)::value;
+            const index_t row=rowbase+ri*16+lane%16;
+            static_for<0,P::BK/64,1>{}([&](auto j){
+                constexpr index_t ki=decltype(j)::value;
+                const index_t ko=ki*64+q*16;
+                Copy x{};
+                if(P::Aligned || (row<limit && kb+ko+16<=k))
+                    x=*reinterpret_cast<const Copy*>(ptr+static_cast<long long>(row)*stride+kb+ko);
+                int32_t r0=x[0],r1=x[1],r2=x[2],r3=x[3];
+                const bool p0=q&1,p1=q&2;
+                int32_t t0=__builtin_amdgcn_ds_bpermute((lane^16)*4,p0?r0:r2);
+                int32_t t1=__builtin_amdgcn_ds_bpermute((lane^16)*4,p0?r1:r3);
+                r0=p0?t0:r0;r1=p0?t1:r1;r2=p0?r2:t0;r3=p0?r3:t1;
+                t0=__builtin_amdgcn_ds_bpermute((lane^32)*4,p1?r0:r2);
+                t1=__builtin_amdgcn_ds_bpermute((lane^32)*4,p1?r1:r3);
+                r0=p1?t0:r0;r1=p1?t1:r1;r2=p1?r2:t0;r3=p1?r3:t1;
+                v[ri][ki*2]=bit_cast<Vec>(ext_vector_t<int32_t,2>{r0,r1});
+                v[ri][ki*2+1]=bit_cast<Vec>(ext_vector_t<int32_t,2>{r2,r3});
+            });
+        });
+    }
     CK_TILE_DEVICE GlobalTile Load(const UniversalGemmKernelArgs<>& arg,index_t mb,index_t nb,index_t kb) const {
         GlobalTile v{};const index_t tid=get_thread_id(),lane=tid%64,wave=tid/64,wm=wave/P::WN,wn=wave%P::WN;
         if constexpr(A) {
@@ -43,6 +73,8 @@ struct GroupedInt8NtTilePipeline<GroupedInt8NtOperandProblem<Base,A,B>,Policy> {
                 if(row<P::BM && (P::Aligned || (mb+row<arg.M && kb+ko+16<=arg.K)))
                     v.a[j]=*reinterpret_cast<const Copy*>(static_cast<const int8_t*>(arg.as_ptr[0])+static_cast<long long>(mb+row)*arg.stride_As[0]+kb+ko);
             });
+        } else if constexpr(S) {
+            LoadShuffle<AVec,P::MR>(static_cast<const int8_t*>(arg.as_ptr[0]),arg.stride_As[0],arg.M,arg.K,mb+wm*(P::BM/P::WM),kb,v.ad);
         } else {
             static_for<0,P::MR,1>{}([&](auto i){static_for<0,P::BK/32,1>{}([&](auto k){
                 constexpr index_t mi=decltype(i)::value,ki=decltype(k)::value;
@@ -57,6 +89,8 @@ struct GroupedInt8NtTilePipeline<GroupedInt8NtOperandProblem<Base,A,B>,Policy> {
                 if(row<P::BN && (P::Aligned || (nb+row<arg.N && kb+ko+16<=arg.K)))
                     v.b[j]=*reinterpret_cast<const Copy*>(static_cast<const int8_t*>(arg.bs_ptr[0])+static_cast<long long>(nb+row)*arg.stride_Bs[0]+kb+ko);
             });
+        } else if constexpr(S) {
+            LoadShuffle<BVec,P::NR>(static_cast<const int8_t*>(arg.bs_ptr[0]),arg.stride_Bs[0],arg.N,arg.K,nb+wn*(P::BN/P::WN),kb,v.bd);
         } else {
             static_for<0,P::NR,1>{}([&](auto j){static_for<0,P::BK/32,1>{}([&](auto k){
                 constexpr index_t ni=decltype(j)::value,ki=decltype(k)::value;

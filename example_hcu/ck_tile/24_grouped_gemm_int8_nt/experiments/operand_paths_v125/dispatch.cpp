@@ -33,6 +33,15 @@ extern "C" int ck_tile_int8_operand_launch_private(unsigned output,unsigned id,c
     case 9010:return run<Path<M128,true,false>>(output,args,scales,g,m,n,stream);
     case 9011:return run<Path<M128,false,true>>(output,args,scales,g,m,n,stream);
     case 9012:return run<Path<M128,false,false>>(output,args,scales,g,m,n,stream);
+    case 9013:return run<ck_tile::GroupedInt8NtOperandProblem<B128,true,false,true>>(output,args,scales,g,m,n,stream);
+    case 9014:return run<ck_tile::GroupedInt8NtOperandProblem<B128,false,true,true>>(output,args,scales,g,m,n,stream);
+    case 9015:return run<ck_tile::GroupedInt8NtOperandProblem<B128,false,false,true>>(output,args,scales,g,m,n,stream);
+    case 9016:return run<ck_tile::GroupedInt8NtOperandProblem<B256,true,false,true>>(output,args,scales,g,m,n,stream);
+    case 9017:return run<ck_tile::GroupedInt8NtOperandProblem<B256,false,true,true>>(output,args,scales,g,m,n,stream);
+    case 9018:return run<ck_tile::GroupedInt8NtOperandProblem<B256,false,false,true>>(output,args,scales,g,m,n,stream);
+    case 9019:return run<ck_tile::GroupedInt8NtOperandProblem<N128,true,false,true>>(output,args,scales,g,m,n,stream);
+    case 9020:return run<ck_tile::GroupedInt8NtOperandProblem<N128,false,true,true>>(output,args,scales,g,m,n,stream);
+    case 9021:return run<ck_tile::GroupedInt8NtOperandProblem<N128,false,false,true>>(output,args,scales,g,m,n,stream);
     default:return -5;
     }
 }
