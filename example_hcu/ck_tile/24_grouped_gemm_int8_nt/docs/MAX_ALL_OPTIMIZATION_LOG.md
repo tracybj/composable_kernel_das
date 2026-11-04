@@ -92,3 +92,9 @@ v124代表形状筛选显示：K768/N2048族可由现有packed M128×N256改善�
 增加BM128/BN384 packed候选，复用同一WASP流程。相比BM256/BN384，A双缓冲LDS从64KiB降到32KiB，producer从4个wave降到2个，consumer仍12个；假设两个CTA的实际驻留能改善MMAC/搬运延迟隐藏。代价是B请求与CTA数量增加，必须用实测资源与时间判断。
 
 私有route13/14为A读取batch2/4、M tile cluster4；route16/17把cluster改为8作配对对照。route15为BM128/BN256、batch4，用于区别宽N与batch变化。尚未取得编译、资源和数值/性能结果，不进入默认选择。
+
+### 编译、资源和数值门禁
+
+隔离库`build/max_all_v125_paths`编译通过，API SHA256为`b73e8fe8e636ad1ce3b64fc153dc059346d21d9310842fb5581c54bad68c1920`。全范围INT8/FP64参考的783项完整输出检查通过；另外135项不满足WASP native域的选择在launch前被拒绝。覆盖INT32/BF16/FP16、NULL/per-channel/per-token scale、NaN/Inf/零、M/N/K尾部、padding和输入/输出guard。
+
+实际资源元数据：BM16/BN64/BK128仅A LDS和双寄存器均占4096B LDS、约66 VGPR；仅B LDS占9216B、约78 VGPR。BK256双寄存器约114 VGPR，说明减少LDS可能增加寄存器压力；C重排的LDS仍保留。M128/BN384 WASP batch2为119 VGPR、batch4为135 VGPR，LDS均32768B。所查新候选均无spill/private segment。没有把这些静态资源直接当作性能结论，下面继续实测。
