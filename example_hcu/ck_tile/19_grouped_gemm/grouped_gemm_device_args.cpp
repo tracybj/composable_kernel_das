@@ -15,6 +15,7 @@
 #include <algorithm>
 #include <array>
 #include <cstdint>
+#include <cstdlib>
 #include <cstring>
 #include <string>
 
@@ -62,6 +63,14 @@ extern "C" int ck_tile_hcu_grouped_gemm_v7_bf16_nn_device_args(
     void*, int, std::uint32_t, hipStream_t, std::uint64_t, std::int32_t);
 extern "C" int ck_tile_hcu_grouped_gemm_v7_bf16_nn_m01_8_device_args(
     void*, int, std::uint32_t, hipStream_t, std::uint64_t, std::int32_t);
+extern "C" int ck_tile_hcu_grouped_gemm_v7_bf16_nn_small_m_drain_device_args(
+    void*, int, std::uint32_t, hipStream_t, std::uint64_t, ck_tile::index_t);
+extern "C" int ck_tile_hcu_grouped_gemm_v7_bf16_nn_small_m_k32_device_args(
+    void*, int, std::uint32_t, hipStream_t, std::uint64_t, ck_tile::index_t);
+extern "C" int ck_tile_hcu_grouped_gemm_v7_bf16_nn_small_m_square128_device_args(
+    void*, int, std::uint32_t, hipStream_t, std::uint64_t, ck_tile::index_t);
+extern "C" int ck_tile_hcu_grouped_gemm_v7_bf16_nn_small_m_k32n64_device_args(
+    void*, int, std::uint32_t, hipStream_t, std::uint64_t, ck_tile::index_t);
 extern "C" int ck_tile_hcu_grouped_gemm_v7_bf16_nn_a_noslc_device_args(
     void*, int, std::uint32_t, hipStream_t, std::uint64_t, std::int32_t);
 extern "C" int ck_tile_hcu_grouped_gemm_v7_bf16_nn_a_noslc_m01_8_device_args(
@@ -316,6 +325,15 @@ int convert_problem(const ck_tile_hcu_grouped_gemm_problem_v1* source,
     policy.enable_bf16_v7_nn_small_m = small_n != 0;
     policy.bf16_v7_nn_small_m_tile_n = small_n;
     policy.enable_bf16_v7_nn_a_noslc = ck_tile_hcu_grouped_gemm_bf16_v7_nn_a_noslc_enabled();
+    // Local experimental adapter: no public ABI flags or shared provider header.
+    const char* experiment = std::getenv("CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT");
+    const char* experiment_disable = std::getenv("CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_SMALL_M_EXPERIMENT");
+    const char* small_disable = std::getenv("CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_SMALL_M");
+    const auto experiment_is_disabled = [](const char* v) { return v != nullptr && v[0] == '1' && v[1] == '\0'; };
+    if(experiment != nullptr && experiment[0] >= '1' && experiment[0] <= '4' &&
+       experiment[1] == '\0' && !experiment_is_disabled(experiment_disable) && !experiment_is_disabled(small_disable))
+        policy.bf16_v7_nn_small_m_experiment = experiment[0] - '0';
+
 
 #if !defined(CK_TILE_GROUPED_GEMM_DEVICE_ARGS_HAS_GFX936_PROMOTED)
     // Do not name InstanceId 1001/1002 when this TU cannot dispatch them.
@@ -331,6 +349,7 @@ int convert_problem(const ck_tile_hcu_grouped_gemm_problem_v1* source,
     policy.enable_bf16_v7_nn_m01_8 = false;
     policy.enable_bf16_v7_nn_small_m = false;
     policy.enable_bf16_v7_nn_a_noslc = false;
+    policy.bf16_v7_nn_small_m_experiment = 0;
 #endif
 
 #if defined(CK_TILE_GROUPED_GEMM_P1_FAMILY_A_V3_128_GFX938_DISABLE)
@@ -504,6 +523,66 @@ int dispatch_registry_candidate(const ck_tile::GroupedGemmProblem& problem,
                 v7_uniform_launch::tiles_per_group(problem));
 #endif
         break;
+    case ck_tile::GroupedGemmInstanceId::v7_bf16_nn_small_m_drain:
+#if defined(CK_TILE_GROUPED_GEMM_DEVICE_ARGS_HAS_V7_V8_BF16)
+        if(dtype == ck_tile::GroupedGemmDataType::bf16 && layout == ck_tile::GroupedGemmLayout::nn)
+        {
+            const auto tiles = static_cast<std::uint64_t>(
+                ck_tile::grouped_gemm_v7_experiment_tile_bound(problem, 64, 128));
+            const std::uint64_t slots = launch.num_cu > 0 ? launch.num_cu : 1;
+            const auto tile_slots = (tiles + slots - 1) / slots * slots;
+            const auto tpg = groups > ck_tile::kGroupedGemmV7ScalarScanMaxGroups
+                ? static_cast<ck_tile::index_t>(tiles / groups) : 0;
+            return ck_tile_hcu_grouped_gemm_v7_bf16_nn_small_m_drain_device_args(
+                device_args, groups, launch.num_cu, stream, tile_slots, tpg);
+        }
+#endif
+        break;
+    case ck_tile::GroupedGemmInstanceId::v7_bf16_nn_small_m_k32:
+#if defined(CK_TILE_GROUPED_GEMM_DEVICE_ARGS_HAS_V7_V8_BF16)
+        if(dtype == ck_tile::GroupedGemmDataType::bf16 && layout == ck_tile::GroupedGemmLayout::nn)
+        {
+            const auto tiles = static_cast<std::uint64_t>(
+                ck_tile::grouped_gemm_v7_experiment_tile_bound(problem, 64, 128));
+            const std::uint64_t slots = launch.num_cu > 0 ? launch.num_cu : 1;
+            const auto tile_slots = (tiles + slots - 1) / slots * slots;
+            const auto tpg = groups > ck_tile::kGroupedGemmV7ScalarScanMaxGroups
+                ? static_cast<ck_tile::index_t>(tiles / groups) : 0;
+            return ck_tile_hcu_grouped_gemm_v7_bf16_nn_small_m_k32_device_args(
+                device_args, groups, launch.num_cu, stream, tile_slots, tpg);
+        }
+#endif
+        break;
+    case ck_tile::GroupedGemmInstanceId::v7_bf16_nn_small_m_square128:
+#if defined(CK_TILE_GROUPED_GEMM_DEVICE_ARGS_HAS_V7_V8_BF16)
+        if(dtype == ck_tile::GroupedGemmDataType::bf16 && layout == ck_tile::GroupedGemmLayout::nn)
+        {
+            const auto tiles = static_cast<std::uint64_t>(
+                ck_tile::grouped_gemm_v7_experiment_tile_bound(problem, 128, 128));
+            const std::uint64_t slots = launch.num_cu > 0 ? launch.num_cu : 1;
+            const auto tile_slots = (tiles + slots - 1) / slots * slots;
+            const auto tpg = groups > ck_tile::kGroupedGemmV7ScalarScanMaxGroups
+                ? static_cast<ck_tile::index_t>(tiles / groups) : 0;
+            return ck_tile_hcu_grouped_gemm_v7_bf16_nn_small_m_square128_device_args(
+                device_args, groups, launch.num_cu, stream, tile_slots, tpg);
+        }
+#endif
+        break;
+    case ck_tile::GroupedGemmInstanceId::v7_bf16_nn_small_m_k32n64:
+#if defined(CK_TILE_GROUPED_GEMM_DEVICE_ARGS_HAS_V7_V8_BF16)
+        if(dtype == ck_tile::GroupedGemmDataType::bf16 && layout == ck_tile::GroupedGemmLayout::nn)
+        {
+            const auto tiles = static_cast<std::uint64_t>(
+                ck_tile::grouped_gemm_v7_experiment_tile_bound(problem, 64, 64));
+            const std::uint64_t slots = launch.num_cu > 0 ? launch.num_cu : 1;
+            const auto tile_slots = (tiles + slots - 1) / slots * slots;
+            const auto tpg = groups > ck_tile::kGroupedGemmV7ScalarScanMaxGroups
+                ? static_cast<ck_tile::index_t>(tiles / groups) : 0;
+            return ck_tile_hcu_grouped_gemm_v7_bf16_nn_small_m_k32n64_device_args(
+                device_args, groups, launch.num_cu, stream, tile_slots, tpg);
+        }
+#endif
+        break;
     case ck_tile::GroupedGemmInstanceId::v7_bf16_nn_small_m128:
 #if defined(CK_TILE_GROUPED_GEMM_DEVICE_ARGS_HAS_V7_V8_BF16)
         if(dtype == ck_tile::GroupedGemmDataType::bf16 && layout == ck_tile::GroupedGemmLayout::nn)
@@ -649,6 +728,10 @@ void candidate_masks(ck_tile::GroupedGemmInstanceId id,
     case ck_tile::GroupedGemmInstanceId::v7_bf16_nn_small_m64:
     case ck_tile::GroupedGemmInstanceId::v7_bf16_nn_a_noslc:
     case ck_tile::GroupedGemmInstanceId::v7_bf16_nn_a_noslc_m01_8:
+    case ck_tile::GroupedGemmInstanceId::v7_bf16_nn_small_m_drain:
+    case ck_tile::GroupedGemmInstanceId::v7_bf16_nn_small_m_k32:
+    case ck_tile::GroupedGemmInstanceId::v7_bf16_nn_small_m_square128:
+    case ck_tile::GroupedGemmInstanceId::v7_bf16_nn_small_m_k32n64:
         architecture_mask = ArchGfx936;
         data_type_mask     = DTypeBf16;
         layout_mask        = LayoutNn;

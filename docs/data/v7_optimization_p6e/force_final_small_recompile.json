@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-04T11:10:30.444792+00:00",
+  "reason": "Force the four own small-M TUs to compile after final wait/config edits; do not rely on header edits overlapping a long earlier build",
+  "sources": [
+    "/workspace/composable_kernel/example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_v7_bf16_nn_small_m_drain_device_args.cpp",
+    "/workspace/composable_kernel/example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_v7_bf16_nn_small_m_k32_device_args.cpp",
+    "/workspace/composable_kernel/example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_v7_bf16_nn_small_m_square128_device_args.cpp",
+    "/workspace/composable_kernel/example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_v7_bf16_nn_small_m_k32n64_device_args.cpp"
+  ]
+}

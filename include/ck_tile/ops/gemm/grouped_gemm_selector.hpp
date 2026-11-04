@@ -119,6 +119,8 @@ struct GroupedGemmSelectorPolicy
     bool enable_bf16_v7_nn_small_m = false;
     std::int32_t bf16_v7_nn_small_m_tile_n = 128;
     bool enable_bf16_v7_nn_a_noslc = false; // Independent cache-policy experiment.
+    // 0=off, 1=K16 drain, 2=K32 N128, 3=square128, 4=K32 N64.
+    std::int32_t bf16_v7_nn_small_m_experiment = 0;
 };
 
 // Group-count bounds of the v7 instances. The kernels read the group table
@@ -174,6 +176,11 @@ enum class GroupedGemmInstanceId
     v7_bf16_nn_small_m64                           = 5004,
     v7_bf16_nn_a_noslc                             = 5005,
     v7_bf16_nn_a_noslc_m01_8                       = 5006,
+    v7_bf16_nn_small_m_drain = 5007,
+    v7_bf16_nn_small_m_k32 = 5008,
+    v7_bf16_nn_small_m_square128 = 5009,
+    v7_bf16_nn_small_m_k32n64 = 5010,
+
 };
 
 enum class GroupedGemmCandidateFamily
@@ -192,7 +199,7 @@ struct GroupedGemmCandidateIdentity
     GroupedGemmCandidateFamily family;
 };
 
-inline constexpr std::array<GroupedGemmCandidateIdentity, 25>
+inline constexpr std::array<GroupedGemmCandidateIdentity, 29>
     grouped_gemm_candidate_registry{{
         {GroupedGemmInstanceId::bw_family_selected,
          "bw_family.selected",
@@ -271,6 +278,15 @@ inline constexpr std::array<GroupedGemmCandidateIdentity, 25>
          "v7.nn_b.uniform_d2l.256x256x16.a_noslc", GroupedGemmCandidateFamily::v7},
         {GroupedGemmInstanceId::v7_bf16_nn_a_noslc_m01_8,
          "v7.nn_b.uniform_d2l.256x256x16.a_noslc.m01_8", GroupedGemmCandidateFamily::v7},
+        {GroupedGemmInstanceId::v7_bf16_nn_small_m_drain,
+         "v7.nn_b.small_m.64x128x16.drain", GroupedGemmCandidateFamily::v7},
+        {GroupedGemmInstanceId::v7_bf16_nn_small_m_k32,
+         "v7.nn_b.small_m.64x128x32", GroupedGemmCandidateFamily::v7},
+        {GroupedGemmInstanceId::v7_bf16_nn_small_m_square128,
+         "v7.nn_b.small_m.128x128x16", GroupedGemmCandidateFamily::v7},
+        {GroupedGemmInstanceId::v7_bf16_nn_small_m_k32n64,
+         "v7.nn_b.small_m.64x64x32", GroupedGemmCandidateFamily::v7},
+
     }};
 
 constexpr const GroupedGemmCandidateIdentity*
@@ -312,6 +328,10 @@ enum class GroupedGemmSelectionReason
     v7_bf16_nn_small_m64,
     v7_bf16_nn_a_noslc,
     v7_bf16_nn_a_noslc_m01_8,
+    v7_bf16_nn_small_m_drain,
+    v7_bf16_nn_small_m_k32,
+    v7_bf16_nn_small_m_square128,
+    v7_bf16_nn_small_m_k32n64,
 };
 
 struct GroupedGemmSelection
@@ -379,6 +399,14 @@ constexpr std::int64_t grouped_gemm_v7_small_m_tile_bound(
     if(tile_n != 64 && tile_n != 128)
         return kGroupedGemmV7MaxTiles + 1;
     return ((problem.m.extent + 63) / 64) *
+           ((problem.n.extent + tile_n - 1) / tile_n) * problem.group_count;
+}
+
+// Experimental geometry is host-visible; no device length inspection.
+constexpr std::int64_t grouped_gemm_v7_experiment_tile_bound(
+    const GroupedGemmProblem& problem, std::int32_t tile_m, std::int32_t tile_n)
+{
+    return ((problem.m.extent + tile_m - 1) / tile_m) *
            ((problem.n.extent + tile_n - 1) / tile_n) * problem.group_count;
 }
 
@@ -456,6 +484,35 @@ constexpr GroupedGemmSelection select_grouped_gemm_candidate(
     // is therefore allowed; the caller owns the pad.
     // Experimental small-M NN route. Whole N tiles only, so N=1232 stays
     // on its original fallback. Ragged/device M and empty groups fall back.
+    const auto experiment = policy.bf16_v7_nn_small_m_experiment;
+    const bool k32_experiment = experiment == 2 || experiment == 4;
+    const auto experiment_m = experiment == 3 ? 128 : 64;
+    const auto experiment_n = experiment == 4 ? 64 : 128;
+    if(policy.enable_bf16_v7_nn && experiment >= 1 && experiment <= 4 &&
+       problem.arch == GroupedGemmArch::gfx936 && is_bf16 && is_nn &&
+       problem.m.kind == GroupedGemmDimensionKind::common && !has_variable_k &&
+       !problem.group_lengths_are_ragged && !problem.may_have_empty_groups &&
+       problem.group_count <= kGroupedGemmV7NnMaxGroups && m <= 256 &&
+       k >= (k32_experiment ? 128 : 64) && k <= 4096 &&
+       k % (k32_experiment ? 32 : 16) == 0 && n % experiment_n == 0 &&
+       // The D2L SRD/soffset path uses 32-bit byte ranges and signed arithmetic.
+       // Limit the contiguous per-group B span before narrowing to those fields.
+       n <= std::int64_t{2147483647} / (2 * k) &&
+       grouped_gemm_v7_experiment_tile_bound(problem, experiment_m, experiment_n) <=
+           kGroupedGemmV7MaxTiles)
+    {
+        switch(experiment)
+        {
+        case 1: return {GroupedGemmInstanceId::v7_bf16_nn_small_m_drain,
+                         GroupedGemmSelectionReason::v7_bf16_nn_small_m_drain};
+        case 2: return {GroupedGemmInstanceId::v7_bf16_nn_small_m_k32,
+                         GroupedGemmSelectionReason::v7_bf16_nn_small_m_k32};
+        case 3: return {GroupedGemmInstanceId::v7_bf16_nn_small_m_square128,
+                         GroupedGemmSelectionReason::v7_bf16_nn_small_m_square128};
+        case 4: return {GroupedGemmInstanceId::v7_bf16_nn_small_m_k32n64,
+                         GroupedGemmSelectionReason::v7_bf16_nn_small_m_k32n64};
+        }
+    }
     const auto small_n = policy.bf16_v7_nn_small_m_tile_n;
     if(policy.enable_bf16_v7_nn && policy.enable_bf16_v7_nn_small_m &&
        problem.arch == GroupedGemmArch::gfx936 && is_bf16 && is_nn &&
@@ -482,7 +539,11 @@ constexpr GroupedGemmSelection select_grouped_gemm_candidate(
         // Experimental cache-only variant: keep the original tile walk.
         if(policy.enable_bf16_v7_nn_a_noslc &&
            problem.m.kind == GroupedGemmDimensionKind::common &&
-           !problem.group_lengths_are_ragged)
+           !problem.group_lengths_are_ragged &&
+           // Preserve representable per-group A/B ranges in this new instance.
+           k <= 1073741823 &&
+           m <= std::int64_t{2147483647} / (2 * k) &&
+           n <= std::int64_t{2147483647} / (2 * k))
         {
             if(policy.enable_bf16_v7_nn_m01_8 && k > kGroupedGemmV7NnM01_8KThreshold)
                 return {GroupedGemmInstanceId::v7_bf16_nn_a_noslc_m01_8,

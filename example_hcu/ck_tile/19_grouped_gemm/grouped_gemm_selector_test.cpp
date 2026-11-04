@@ -917,7 +917,72 @@ int run_v7_cache_tests()
     policy=experiment;policy.enable_bf16_v7_nn=false;
     auto disabled=base;disabled.enable_bf16_v7_nn=false;
     check(p,policy,select_grouped_gemm_candidate(p,disabled).instance_id);
+    for(bool large_a : {false,true}) {
+        q=p;
+        if(large_a) q.m=GroupedGemmDimensionSummary::Common(131072);
+        else q.n=GroupedGemmDimensionSummary::Common(131072);
+        check(q,experiment,select_grouped_gemm_candidate(q,base).instance_id);
+    }
+    q=p;q.k=GroupedGemmDimensionSummary::Common(std::int64_t{1} << 60);
+    check(q,experiment,select_grouped_gemm_candidate(q,base).instance_id);
     if(!failures) std::cout<<"SELECTOR_V7_CACHE_PASS cases="<<checked<<'\n';
+    return failures;
+}
+
+int run_v7_small_experiment_tests()
+{
+    int failures=0, checked=0;
+    using Id=GroupedGemmInstanceId;
+    const std::array<Id,4> ids{{Id::v7_bf16_nn_small_m_drain,Id::v7_bf16_nn_small_m_k32,
+                              Id::v7_bf16_nn_small_m_square128,Id::v7_bf16_nn_small_m_k32n64}};
+    auto p=make_fixed_m_problem(GroupedGemmArch::gfx936,GroupedGemmDataType::bf16,
+                               GroupedGemmLayout::nn,64,128,256,512);
+    p.group_lengths_are_ragged=false;
+    GroupedGemmSelectorPolicy base{};base.enable_bf16_v7_nn=true;
+    auto check=[&](const GroupedGemmProblem& q,const GroupedGemmSelectorPolicy& policy,Id expected) {
+        ++checked;auto actual=select_grouped_gemm_candidate(q,policy).instance_id;
+        if(actual!=expected) {++failures;std::cerr<<"SMALL_EXPERIMENT_MISMATCH expected="
+          <<static_cast<int>(expected)<<" actual="<<static_cast<int>(actual)<<'\n';}
+    };
+    for(int e=1;e<=4;++e) {
+        auto policy=base;policy.bf16_v7_nn_small_m_experiment=e;
+        for(int m : {1,64,65,128,129,256}) {auto q=p;q.m=GroupedGemmDimensionSummary::Common(m);check(q,policy,ids[e-1]);}
+        for(int k : {64,80,96,128,160,192,4096,4112}) {
+            auto q=p;q.k=GroupedGemmDimensionSummary::Common(k);
+            const bool accepted=k<=4096 && ((e==2||e==4)?k>=128&&k%32==0:k>=64&&k%16==0);
+            check(q,policy,accepted?ids[e-1]:select_grouped_gemm_candidate(q,base).instance_id);
+        }
+        std::vector<GroupedGemmProblem> rejected;
+        auto q=p;q.n=GroupedGemmDimensionSummary::Common(1232);rejected.push_back(q);
+        q=p;q.m=GroupedGemmDimensionSummary::Common(257);rejected.push_back(q);
+        q=p;q.m=GroupedGemmDimensionSummary::DeviceLengthsWithCapacity(128);rejected.push_back(q);
+        q=p;q.k=GroupedGemmDimensionSummary::DeviceLengthsWithCapacity(512);rejected.push_back(q);
+        q=p;q.group_lengths_are_ragged=true;rejected.push_back(q);
+        q=p;q.may_have_empty_groups=true;rejected.push_back(q);
+        q=p;q.group_count=1025;rejected.push_back(q);
+        q=p;q.arch=GroupedGemmArch::gfx938;rejected.push_back(q);
+        q=p;q.layout=GroupedGemmLayout::tn;rejected.push_back(q);
+        q=p;q.data_type=GroupedGemmDataType::fp16;rejected.push_back(q);
+        for(const auto& r:rejected)check(r,policy,select_grouped_gemm_candidate(r,base).instance_id);
+        q=p;q.n=GroupedGemmDimensionSummary::Common(64);
+        check(q,policy,e==4?ids[e-1]:select_grouped_gemm_candidate(q,base).instance_id);
+        auto disabled=policy;disabled.enable_bf16_v7_nn=false;
+        auto baseline=base;baseline.enable_bf16_v7_nn=false;
+        check(p,disabled,select_grouped_gemm_candidate(p,baseline).instance_id);
+    }
+    // No allocation: verify the descriptor/soffset narrowing boundary on the host.
+    for(int e=1;e<=4;++e) {
+        auto q=p;q.k=GroupedGemmDimensionSummary::Common(4096);
+        auto policy=base;policy.bf16_v7_nn_small_m_experiment=e;
+        q.n=GroupedGemmDimensionSummary::Common(262016);
+        check(q,policy,ids[e-1]);
+        q.n=GroupedGemmDimensionSummary::Common(262144);
+        check(q,policy,select_grouped_gemm_candidate(q,base).instance_id);
+        q.n=GroupedGemmDimensionSummary::Common(1048576);
+        check(q,policy,select_grouped_gemm_candidate(q,base).instance_id);
+    }
+    for(int invalid : {-1,0,5,128}) {auto policy=base;policy.bf16_v7_nn_small_m_experiment=invalid;check(p,policy,select_grouped_gemm_candidate(p,base).instance_id);}
+    if(!failures)std::cout<<"SELECTOR_V7_SMALL_EXPERIMENT_PASS cases="<<checked<<'\n';
     return failures;
 }
 
@@ -930,6 +995,7 @@ int main(int argc, char* argv[])
         failures += run_v7_m01_8_tests();
         failures += run_v7_small_m_tests();
         failures += run_v7_cache_tests();
+        failures += run_v7_small_experiment_tests();
         std::string golden_path;
         std::string diff_path;
         for(int i = 1; i < argc; ++i)

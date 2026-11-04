@@ -6,6 +6,7 @@
 
 #include <array>
 #include <cstdint>
+#include <cstdlib>
 #include <cstring>
 #include <iostream>
 #include <set>
@@ -120,7 +121,7 @@ int main()
     constexpr std::uint32_t all_layout = CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NT_V1 |
                                          CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NN_V1 |
                                          CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_TN_V1;
-    constexpr std::array<CandidateExpected, 25> expected{{
+    constexpr std::array<CandidateExpected, 29> expected{{
         {CK_TILE_HCU_GROUPED_GEMM_INSTANCE_BW_FAMILY_SELECTED_V1,
          CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_FAMILY_BW_V1,
          CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX936_V1,
@@ -251,6 +252,27 @@ int main()
          CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX936_V1,
          CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_MASK_BF16_V1,
          CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NN_V1},
+        {CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V7_BF16_NN_SMALL_M_DRAIN_V1,
+         CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_FAMILY_V7_V1,
+         CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX936_V1,
+         CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_MASK_BF16_V1,
+         CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NN_V1},
+        {CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V7_BF16_NN_SMALL_M_K32_V1,
+         CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_FAMILY_V7_V1,
+         CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX936_V1,
+         CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_MASK_BF16_V1,
+         CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NN_V1},
+        {CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V7_BF16_NN_SMALL_M_SQUARE128_V1,
+         CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_FAMILY_V7_V1,
+         CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX936_V1,
+         CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_MASK_BF16_V1,
+         CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NN_V1},
+        {CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V7_BF16_NN_SMALL_M_K32N64_V1,
+         CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_FAMILY_V7_V1,
+         CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX936_V1,
+         CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_MASK_BF16_V1,
+         CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NN_V1},
+
     }};
     std::set<std::string> names;
     bool passed = true;
@@ -488,6 +510,49 @@ int main()
     passed &= ck_tile_hcu_grouped_gemm_run_device_args_v1(
                   &run_problem, &launch, nullptr) ==
               CK_TILE_HCU_GROUPED_GEMM_DEVICE_ARGS_INSTANCE_MISMATCH_V1;
+
+    // Query-only boundary checks: no giant buffers or GEMM launch is needed.
+    // This block is last so its process-local opt-ins cannot affect default cases.
+    if(target == ck_tile::hcu_target_enum::gfx936)
+    {
+        for(const char* key : {"CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN",
+                               "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8",
+                               "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_SMALL_M",
+                               "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_SMALL_M_EXPERIMENT",
+                               "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_A_NOSLC",
+                               "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M",
+                               "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC"})
+            passed &= ::setenv(key, "0", 1) == 0;
+        passed &= ::setenv("CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN", "1", 1) == 0;
+        passed &= ::setenv("CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT", "2", 1) == 0;
+        auto probe = make_fixed_m_problem(CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_BF16_V1,
+                                          CK_TILE_HCU_GROUPED_GEMM_LAYOUT_NN_V1,4,1,256,512);
+        auto selected = make_selection();
+        const int status = ck_tile_hcu_grouped_gemm_select_device_args_v1(&probe, &selected);
+        if(status == 0 && selected.instance_id == 5008)
+        {
+            bool boundaries = expect_selection(probe, 5008, "v7_k32_byte_normal");
+            probe.k.extent = 4096;
+            probe.n.extent = 262016;
+            boundaries &= expect_selection(probe, 5008, "v7_k32_byte_below_limit");
+            probe.n.extent = 262144;
+            boundaries &= expect_selection(probe, 5000, "v7_k32_byte_limit_rejected");
+            probe.n.extent = 1048576;
+            boundaries &= expect_selection(probe, 5000, "v7_k32_byte_overflow_rejected");
+            passed &= ::setenv("CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT", "0", 1) == 0;
+            passed &= ::setenv("CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC", "1", 1) == 0;
+            probe.m.extent = 2048;probe.n.extent = 4096;probe.k.extent = 8192;
+            boundaries &= expect_selection(probe, 5006, "v7_cache_byte_normal");
+            probe.m.extent = 131072;
+            boundaries &= expect_selection(probe, 5002, "v7_cache_a_byte_limit_rejected");
+            probe.m.extent = 2048;probe.n.extent = 131072;
+            boundaries &= expect_selection(probe, 5002, "v7_cache_b_byte_limit_rejected");
+            passed &= boundaries;
+            std::cout << "QUERY_V7_BYTE_RANGE_" << (boundaries ? "PASS" : "FAIL") << " cases=7\n";
+        }
+        else
+            std::cout << "QUERY_V7_BYTE_RANGE_SKIP reason=v7_not_available_in_this_build\n";
+    }
 
     std::cout << "DEVICE_ARGS_QUERY_" << (passed ? "PASS" : "FAIL")
               << " registry=" << expected.size() << "\n";

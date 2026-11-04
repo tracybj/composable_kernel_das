@@ -1,0 +1,9 @@
+# Small-M correctness checkpoint (experiment only, not for merge)
+
+Default-off new IDs5007K16drain,5008K32N128,5009square128,5010K32N64 are wired through the default selector/API/provider/CMake manifest. GlobalNN opt-in is required; no forced ID. N1232/empty/ragged/prefill/largeK fallback checks passed, with all15 new shapes reserved in the representative timing plan. Publicv1 header andGemmTransKernelArg layout stay unchanged; no hotGPUallocation/readback/sync.
+
+Official benchmark SHA6e96b7aa83bd5b65812a0c737971756dfee780df23acb6a9d0fa92c097daa1ab.161 accuracy jobs plus8stress jobs,643 full CK-vs-per-group-BLAS comparisons,160,611,840 elements, failures0,max_abs values['0']. Stress20repeats each; required LGKM0/barriers retained. K32 reconstructed physical panels/operand permutation/DS reads/wait budgets. K16drain suppresses future loads and usesVMEM4→2→0; no stage4repeat atminimumK. Four freshly recompiled ownTUs, originalfive shaders unchanged, NoSLConly51hintbits.
+
+Selector table80/registry29,bounds11,M01=8,oldSmall50,cache20,newSmall120 allPASS; actualCAPI byte-range query7PASS; smokePASS. Rawaccepted precision spans environmentepochs2/3; no individual job crosses the known service window. A gate before an unstarted K32K416 test caughtMKFD and stopped; full recovery/probe preceded the remaining104 accuracy jobs. No implementation precision failures observed. All earlier measurements and environment failures remain in the raw journal.
+
+New resource counts:drainVGPR80/SGPR64,LDS32KB; K32N128116/52,48KB; square123/47,32KB; K32N6479/51,32KB; no scratch/spills. Performance603jobs/three rounds and17profiles plus frozenNative reference are ongoing. This commit is a correctness checkpoint, not a performance recommendation or complete goal. Defaults remain off, no1193full replay, N1232 implementation unchanged.
