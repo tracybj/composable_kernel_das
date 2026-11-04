@@ -113,7 +113,9 @@ plus7 invalid-descriptor checks. It covers20 production route/legacy-instance
 families,the13 added low-N shapes,and the special boundary/rounding cases.
 All6 native BLASLt comparisons have zero mismatched16-bit output patterns.
 The same final library passes65 old INT32 boundary checks and32 lifetime checks.
-See [validation identity and coverage](scale_v122_validation.json).
+The initial v122 validation is archived in [validation identity and coverage](scale_v122_validation.json).
+The optimized v123 scalar-A epilogue, current validation, and performance
+evidence are described in [scale epilogue optimization](SCALE_EPILOGUE_V123.md).
 
 ## Build and gates
 
@@ -121,12 +123,12 @@ Use the existing DTK toolchain and physical GPU7:
 
 ```sh
 E=/workspace/GroupGemm/composable_kernel/example_hcu/ck_tile/24_grouped_gemm_int8_nt
-B=$E/build/scale_v122
+B=$E/build/scale_v123
 python3 "$E/cached_weights/build_and_manifest.py" --build "$B" --jobs 2
 export HIP_VISIBLE_DEVICES=7 CUDA_VISIBLE_DEVICES=7 DTK_VISIBLE_DEVICES=7
 export CK_INT8_CACHED_BUILD="$B"
 export CK_INT8_CACHED_BENCH_LIB="$B/libck_tile_int8_nt_cached_benchmark.so"
-export CK_INT8_TEST_VERSION=v122
+export CK_INT8_TEST_VERSION=v123
 export LD_LIBRARY_PATH="$B:/workspace/GroupGemm/baseline/hipblaslt-install/lib:/opt/dtk/lib:/opt/dtk/hip/lib:/opt/dtk/llvm/lib:$LD_LIBRARY_PATH"
 ulimit -c 0
 python3 "$E/cached_weights/tests/test_acceptance_host.py"

@@ -35,7 +35,7 @@ def sources():
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--build', type=Path, default=E / 'build/scale_v122')
+    parser.add_argument('--build', type=Path, default=E / 'build/scale_v123')
     parser.add_argument('--compiler', default='/opt/dtk/bin/aicc')
     parser.add_argument('--arch', default='gfx936')
     parser.add_argument('--jobs', type=int, default=2)
