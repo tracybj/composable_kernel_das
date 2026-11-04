@@ -46,6 +46,9 @@ def main():
    x=paired(*groups,blas,id=i,**{k:cs[i][k] for k in ['M','N','K','G']},policy_applies=cs[i]['K']>4096,variant=variants[1])
    if x:rows.append(x)
   write(name,rows);out[name]=aggregate([x for x in rows if x['policy_applies']]);out[name+'_diagnostic']=aggregate([x for x in rows if not x['policy_applies']])
+  if name=='cache_expanded':
+   out['cache_decode']=aggregate([x for x in rows if x['policy_applies'] and x['M']<=256])
+   out['cache_prefill']=aggregate([x for x in rows if x['policy_applies'] and x['M']>256])
  rows=[]
  for i in sorted({x['id'] for x in good.values() if x.get('logical_key',x['key']).startswith('smallperf_')}):
   for v in ['drain','k32','square','k32n64']:
@@ -65,12 +68,16 @@ def main():
    if x:
     original=[good[f'smallexpand_{name}_r{n}_id{i}_original'] for n in [1,2,3] if f'smallexpand_{name}_r{n}_id{i}_original' in good]
     if len(original)==3:
+     assert all(o.get('environment_epoch',0)==z.get('environment_epoch',0) for o,z in zip(original,groups[1])), 'Original/variant crosses environment epoch'
      x['original_ms']=median(z['result']['median_ms'] for z in original)
      x['original_round_ms']=[z['result']['median_ms'] for z in original]
-     x['after_vs_original_pct']=100*(x['after_ms']/x['original_ms']-1)
+     x['original_commands']=[z['key'] for z in original]
+     x['original_cv']=[z['result']['cv'] for z in original]
+     x['after_vs_original_round_delta_pct']=[100*(a/b-1) for a,b in zip(x['after_round_ms'],x['original_round_ms'])]
+     x['after_vs_original_pct']=median(x['after_vs_original_round_delta_pct'])
      x['original_source']='current interleaved original5000 + baseline + variant; same benchmark/card4'
     elif x['baseline_variant']=='base':
-     x['original_ms']=x['before_ms'];x['original_round_ms']=x['before_round_ms'];x['after_vs_original_pct']=x['delta_pct'];x['original_source']='current adjacent original5000/variant A/B; same benchmark/card4'
+     x['original_ms']=x['before_ms'];x['original_round_ms']=x['before_round_ms'];x['after_vs_original_pct']=x['delta_pct'];x['after_vs_original_round_delta_pct']=x['paired_round_delta_pct'];x['original_source']='current adjacent original5000/variant A/B; same benchmark/card4'
     rows.append(x)
   out['small_expand_'+name]=aggregate([x for x in rows if x['strategy']==name])
  write('small_expanded',rows)
@@ -126,6 +133,6 @@ def main():
     assert g['lds']==(49152 if x['variant']=='k32' else 32768) and g['scratch']==0,(x['key'],'LDS/private',g)
    profiles.append(dict(id=x['id'],variant=x['variant'],tile=tile,geometry=gi,source=x['perf_files'][0],**metric));raw.append(dict(key=x['key'],source=x['perf_files'][0],dispatches=ds))
  write('small_profiles',profiles);(P/'small_raw_counters.json').write_text(json.dumps(raw,indent=2))
- out['jobs']=dict(attempts=len(jobs),success=len(good),raw_success=sum(x.get('ok',False) for x in jobs),excluded_raw_keys=json.loads((P/'invalidations.json').read_text()).get('raw_keys',[]) if (P/'invalidations.json').exists() else [],failures=[dict(key=x['key'],path=x['path'],rc=x.get('rc'),error=x.get('error')) for x in jobs if not x.get('ok')],by_kind=dict(collections.Counter(x.get('kind') for x in jobs if x.get('ok'))))
+ out['jobs']=dict(attempts=len(jobs),success=len(good),raw_success=sum(x.get('ok',False) for x in jobs),excluded_raw_keys=json.loads((P/'invalidations.json').read_text()).get('raw_keys',[]) if (P/'invalidations.json').exists() else [],failures=[dict(key=x['key'],path=x['path'],rc=x.get('rc'),error=x.get('error')) for x in jobs if not x.get('ok')],by_kind=dict(collections.Counter(x.get('kind') for x in good.values())),raw_success_by_kind=dict(collections.Counter(x.get('kind') for x in jobs if x.get('ok'))))
  (P/'summary.json').write_text(json.dumps(out,indent=2));print(json.dumps(out,indent=2))
 if __name__=='__main__':main()

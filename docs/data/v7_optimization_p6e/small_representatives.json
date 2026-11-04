@@ -1,0 +1,5714 @@
+[
+  {
+    "id": 1,
+    "M": 1,
+    "N": 2048,
+    "K": 512,
+    "G": 64,
+    "variant": "drain",
+    "baseline_variant": "old128",
+    "before_ms": 0.13496,
+    "after_ms": 0.12464,
+    "delta_pct": -7.591940421712595,
+    "before_round_ms": [
+      0.13488001,
+      0.13496,
+      0.136242
+    ],
+    "after_round_ms": [
+      0.12464,
+      0.12632149,
+      0.124639
+    ],
+    "paired_round_delta_pct": [
+      -7.591940421712595,
+      -6.400792827504443,
+      -8.516463351976633
+    ],
+    "before_cv": [
+      0.018641834,
+      0.013575893,
+      0.033126626
+    ],
+    "after_cv": [
+      0.012627978,
+      0.017853482,
+      0.016248802
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id1_drain_before",
+      "rec3_smallperf_r1_id1_drain_after",
+      "rec3_smallperf_r2_id1_drain_before",
+      "rec3_smallperf_r2_id1_drain_after",
+      "rec3_smallperf_r3_id1_drain_before",
+      "rec3_smallperf_r3_id1_drain_after"
+    ],
+    "unpaired_median_delta_pct": -7.646710136336687,
+    "observational_label": "stable_improvement",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.14167995750904083,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 0.14167995750904083,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 1.0497922162792,
+    "R_after": 1.1367133946489156,
+    "original_ms": 0.16232,
+    "after_vs_original_pct": -23.21340561853129
+  },
+  {
+    "id": 1,
+    "M": 1,
+    "N": 2048,
+    "K": 512,
+    "G": 64,
+    "variant": "k32",
+    "baseline_variant": "old128",
+    "before_ms": 0.13504,
+    "after_ms": 0.13711999,
+    "delta_pct": 1.7799618310269771,
+    "before_round_ms": [
+      0.13504,
+      0.13512,
+      0.13472199
+    ],
+    "after_round_ms": [
+      0.1383225,
+      0.13703999,
+      0.13711999
+    ],
+    "paired_round_delta_pct": [
+      2.430761255924163,
+      1.4209517465956223,
+      1.7799618310269771
+    ],
+    "before_cv": [
+      0.033218438,
+      0.019511798,
+      0.023388078
+    ],
+    "after_cv": [
+      0.014696199,
+      0.013721353,
+      0.018464052
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id1_k32_before",
+      "rec3_smallperf_r1_id1_k32_after",
+      "rec3_smallperf_r2_id1_k32_before",
+      "rec3_smallperf_r2_id1_k32_after",
+      "rec3_smallperf_r3_id1_k32_before",
+      "rec3_smallperf_r3_id1_k32_after"
+    ],
+    "unpaired_median_delta_pct": 1.5402769549763162,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.14167995750904083,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 0.14167995750904083,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 1.0491703014591294,
+    "R_after": 1.033255308062966,
+    "original_ms": 0.16232,
+    "after_vs_original_pct": -15.52489526860522
+  },
+  {
+    "id": 1,
+    "M": 1,
+    "N": 2048,
+    "K": 512,
+    "G": 64,
+    "variant": "square",
+    "baseline_variant": "old128",
+    "before_ms": 0.13464001,
+    "after_ms": 0.14616099,
+    "delta_pct": 8.661490112528725,
+    "before_round_ms": [
+      0.13392049,
+      0.13496,
+      0.13464001
+    ],
+    "after_round_ms": [
+      0.14552,
+      0.14776251,
+      0.14616099
+    ],
+    "paired_round_delta_pct": [
+      8.661490112528725,
+      9.486151452282176,
+      8.556876963987147
+    ],
+    "before_cv": [
+      0.022074022,
+      0.020214451,
+      0.021160466
+    ],
+    "after_cv": [
+      0.01235652,
+      0.016724065,
+      0.14703693
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id1_square_before",
+      "rec3_smallperf_r1_id1_square_after",
+      "rec3_smallperf_r2_id1_square_before",
+      "rec3_smallperf_r2_id1_square_after",
+      "rec3_smallperf_r3_id1_square_before",
+      "rec3_smallperf_r3_id1_square_after"
+    ],
+    "unpaired_median_delta_pct": 8.556876963987147,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.14167995750904083,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 0.14167995750904083,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 1.0522871879543148,
+    "R_after": 0.9693418025496464,
+    "original_ms": 0.16232,
+    "after_vs_original_pct": -9.955033267619518
+  },
+  {
+    "id": 1,
+    "M": 1,
+    "N": 2048,
+    "K": 512,
+    "G": 64,
+    "variant": "k32n64",
+    "baseline_variant": "old64",
+    "before_ms": 0.15112001,
+    "after_ms": 0.14688,
+    "delta_pct": -2.9645379192338672,
+    "before_round_ms": [
+      0.15184,
+      0.15112001,
+      0.15104
+    ],
+    "after_round_ms": [
+      0.14688,
+      0.14664,
+      0.14752001
+    ],
+    "paired_round_delta_pct": [
+      -3.266596417281342,
+      -2.9645379192338672,
+      -2.3305018538135602
+    ],
+    "before_cv": [
+      0.014412146,
+      0.011871731,
+      0.010495132
+    ],
+    "after_cv": [
+      0.0056474033,
+      0.0057693505,
+      0.15432235
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id1_k32n64_before",
+      "rec3_smallperf_r1_id1_k32n64_after",
+      "rec3_smallperf_r2_id1_k32n64_before",
+      "rec3_smallperf_r2_id1_k32n64_after",
+      "rec3_smallperf_r3_id1_k32n64_before",
+      "rec3_smallperf_r3_id1_k32n64_after"
+    ],
+    "unpaired_median_delta_pct": -2.8057237423422587,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.14167995750904083,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 0.14167995750904083,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 0.9375327430764518,
+    "R_after": 0.9645966606007681,
+    "original_ms": 0.16232,
+    "after_vs_original_pct": -9.5120749137506
+  },
+  {
+    "id": 33,
+    "M": 128,
+    "N": 2048,
+    "K": 512,
+    "G": 8,
+    "variant": "drain",
+    "baseline_variant": "old128",
+    "before_ms": 0.038720001,
+    "after_ms": 0.037999999,
+    "delta_pct": -1.666669184027647,
+    "before_round_ms": [
+      0.038720001,
+      0.038400002,
+      0.038720999
+    ],
+    "after_round_ms": [
+      0.037999999,
+      0.037760001,
+      0.038240001
+    ],
+    "paired_round_delta_pct": [
+      -1.8595092494961385,
+      -1.666669184027647,
+      -1.2422148509133146
+    ],
+    "before_cv": [
+      0.035884086,
+      0.025628333,
+      0.088827872
+    ],
+    "after_cv": [
+      0.023852737,
+      0.024552329,
+      0.0058528544
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id33_drain_before",
+      "rec3_smallperf_r1_id33_drain_after",
+      "rec3_smallperf_r2_id33_drain_before",
+      "rec3_smallperf_r2_id33_drain_after",
+      "rec3_smallperf_r3_id33_drain_before",
+      "rec3_smallperf_r3_id33_drain_after"
+    ],
+    "unpaired_median_delta_pct": -1.8595092494961385,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.024847950786352158,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 0.024847950786352158,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 0.6417342496027353,
+    "R_after": 0.653893458953832,
+    "original_ms": 0.03472,
+    "after_vs_original_pct": 9.447001728110592
+  },
+  {
+    "id": 33,
+    "M": 128,
+    "N": 2048,
+    "K": 512,
+    "G": 8,
+    "variant": "k32",
+    "baseline_variant": "old128",
+    "before_ms": 0.038880002,
+    "after_ms": 0.051199999,
+    "delta_pct": 33.333323784722715,
+    "before_round_ms": [
+      0.039042,
+      0.038400002,
+      0.038880002
+    ],
+    "after_round_ms": [
+      0.04992,
+      0.051199999,
+      0.052160501
+    ],
+    "paired_round_delta_pct": [
+      27.862302136161055,
+      33.333323784722715,
+      34.15766027995575
+    ],
+    "before_cv": [
+      0.038679455,
+      0.010516766,
+      0.025175181
+    ],
+    "after_cv": [
+      0.0072862252,
+      0.027068074,
+      0.039889172
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id33_k32_before",
+      "rec3_smallperf_r1_id33_k32_after",
+      "rec3_smallperf_r2_id33_k32_before",
+      "rec3_smallperf_r2_id33_k32_after",
+      "rec3_smallperf_r3_id33_k32_before",
+      "rec3_smallperf_r3_id33_k32_after"
+    ],
+    "unpaired_median_delta_pct": 31.68723345230282,
+    "observational_label": "stable_regression",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.024847950786352158,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 0.024847950786352158,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 0.6390933515474655,
+    "R_after": 0.4853115482746817,
+    "original_ms": 0.03472,
+    "after_vs_original_pct": 47.4654349078341
+  },
+  {
+    "id": 33,
+    "M": 128,
+    "N": 2048,
+    "K": 512,
+    "G": 8,
+    "variant": "square",
+    "baseline_variant": "old128",
+    "before_ms": 0.038561001,
+    "after_ms": 0.031199999,
+    "delta_pct": -19.08923992922279,
+    "before_round_ms": [
+      0.038561001,
+      0.038400002,
+      0.040800001
+    ],
+    "after_round_ms": [
+      0.031199999,
+      0.031199999,
+      0.031679999
+    ],
+    "paired_round_delta_pct": [
+      -19.08923992922279,
+      -18.75000683593715,
+      -22.35294553056506
+    ],
+    "before_cv": [
+      0.028502669,
+      0.013616061,
+      0.11030395
+    ],
+    "after_cv": [
+      0.0098177233,
+      0.037712272,
+      0.0085944096
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id33_square_before",
+      "rec3_smallperf_r1_id33_square_after",
+      "rec3_smallperf_r2_id33_square_before",
+      "rec3_smallperf_r2_id33_square_after",
+      "rec3_smallperf_r3_id33_square_before",
+      "rec3_smallperf_r3_id33_square_after"
+    ],
+    "unpaired_median_delta_pct": -19.08923992922279,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.024847950786352158,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 0.024847950786352158,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 0.6443803361420042,
+    "R_after": 0.7964087045756687,
+    "original_ms": 0.03472,
+    "after_vs_original_pct": -10.138251728110603
+  },
+  {
+    "id": 33,
+    "M": 128,
+    "N": 2048,
+    "K": 512,
+    "G": 8,
+    "variant": "k32n64",
+    "baseline_variant": "old64",
+    "before_ms": 0.057440002,
+    "after_ms": 0.05376,
+    "delta_pct": -6.40668849558883,
+    "before_round_ms": [
+      0.057440002,
+      0.057360001,
+      0.05776
+    ],
+    "after_round_ms": [
+      0.05376,
+      0.05384,
+      0.0536015
+    ],
+    "paired_round_delta_pct": [
+      -6.40668849558883,
+      -6.136682250057845,
+      -7.199619113573396
+    ],
+    "before_cv": [
+      0.028382837,
+      0.026744484,
+      0.028739012
+    ],
+    "after_cv": [
+      0.047493728,
+      0.023971727,
+      0.039600041
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id33_k32n64_before",
+      "rec3_smallperf_r1_id33_k32n64_after",
+      "rec3_smallperf_r2_id33_k32n64_before",
+      "rec3_smallperf_r2_id33_k32n64_after",
+      "rec3_smallperf_r3_id33_k32n64_before",
+      "rec3_smallperf_r3_id33_k32n64_after"
+    ],
+    "unpaired_median_delta_pct": -6.40668849558883,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.024847950786352158,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 0.024847950786352158,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 0.4325896574020342,
+    "R_after": 0.4622014655199434,
+    "original_ms": 0.03472,
+    "after_vs_original_pct": 54.83870967741935
+  },
+  {
+    "id": 76,
+    "M": 1,
+    "N": 2048,
+    "K": 768,
+    "G": 4,
+    "variant": "drain",
+    "baseline_variant": "old128",
+    "before_ms": 0.022880999,
+    "after_ms": 0.023360001,
+    "delta_pct": 1.7262931034482731,
+    "before_round_ms": [
+      0.022880999,
+      0.0232,
+      0.02272
+    ],
+    "after_round_ms": [
+      0.02304,
+      0.0236005,
+      0.023360001
+    ],
+    "paired_round_delta_pct": [
+      0.6949040992484834,
+      1.7262931034482731,
+      2.816905809859138
+    ],
+    "before_cv": [
+      0.13731923,
+      0.057995369,
+      0.079038129
+    ],
+    "after_cv": [
+      0.06901442,
+      0.065457922,
+      0.062070254
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id76_drain_before",
+      "rec3_smallperf_r1_id76_drain_after",
+      "rec3_smallperf_r2_id76_drain_before",
+      "rec3_smallperf_r2_id76_drain_after",
+      "rec3_smallperf_r3_id76_drain_before",
+      "rec3_smallperf_r3_id76_drain_after"
+    ],
+    "unpaired_median_delta_pct": 2.0934488043987898,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.017047999426722527,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 0.017047999426722527,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 0.7450723382629634,
+    "R_after": 0.7297944647657562,
+    "original_ms": 0.035840001,
+    "after_vs_original_pct": -34.821427599848576
+  },
+  {
+    "id": 76,
+    "M": 1,
+    "N": 2048,
+    "K": 768,
+    "G": 4,
+    "variant": "k32",
+    "baseline_variant": "old128",
+    "before_ms": 0.022880999,
+    "after_ms": 0.021919999,
+    "delta_pct": -3.5211311619718355,
+    "before_round_ms": [
+      0.02272,
+      0.022880999,
+      0.02304
+    ],
+    "after_round_ms": [
+      0.021919999,
+      0.02208,
+      0.021919999
+    ],
+    "paired_round_delta_pct": [
+      -3.5211311619718355,
+      -3.5007169048868914,
+      -4.861115451388898
+    ],
+    "before_cv": [
+      0.063327786,
+      0.10417913,
+      0.086709656
+    ],
+    "after_cv": [
+      0.10126171,
+      0.060967213,
+      0.067660705
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id76_k32_before",
+      "rec3_smallperf_r1_id76_k32_after",
+      "rec3_smallperf_r2_id76_k32_before",
+      "rec3_smallperf_r2_id76_k32_after",
+      "rec3_smallperf_r3_id76_k32_before",
+      "rec3_smallperf_r3_id76_k32_after"
+    ],
+    "unpaired_median_delta_pct": -4.199991442681328,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.017047999426722527,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 0.017047999426722527,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 0.7450723382629634,
+    "R_after": 0.7777372356049161,
+    "original_ms": 0.035840001,
+    "after_vs_original_pct": -38.83929021095731
+  },
+  {
+    "id": 76,
+    "M": 1,
+    "N": 2048,
+    "K": 768,
+    "G": 4,
+    "variant": "square",
+    "baseline_variant": "old128",
+    "before_ms": 0.02304,
+    "after_ms": 0.025119999,
+    "delta_pct": 9.027773437499986,
+    "before_round_ms": [
+      0.02272,
+      0.0232,
+      0.02304
+    ],
+    "after_round_ms": [
+      0.025119999,
+      0.025119999,
+      0.025119999
+    ],
+    "paired_round_delta_pct": [
+      10.56337588028169,
+      8.275857758620697,
+      9.027773437499986
+    ],
+    "before_cv": [
+      0.068081707,
+      0.057637667,
+      0.055983757
+    ],
+    "after_cv": [
+      0.12786298,
+      0.058827372,
+      0.050623345
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id76_square_before",
+      "rec3_smallperf_r1_id76_square_after",
+      "rec3_smallperf_r2_id76_square_before",
+      "rec3_smallperf_r2_id76_square_after",
+      "rec3_smallperf_r3_id76_square_before",
+      "rec3_smallperf_r3_id76_square_after"
+    ],
+    "unpaired_median_delta_pct": 9.027773437499986,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.017047999426722527,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 0.017047999426722527,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 0.7399305306737207,
+    "R_after": 0.6786624245774264,
+    "original_ms": 0.035840001,
+    "after_vs_original_pct": -29.910719031508957
+  },
+  {
+    "id": 76,
+    "M": 1,
+    "N": 2048,
+    "K": 768,
+    "G": 4,
+    "variant": "k32n64",
+    "baseline_variant": "old64",
+    "before_ms": 0.024,
+    "after_ms": 0.023680501,
+    "delta_pct": -1.3163259092775048,
+    "before_round_ms": [
+      0.02376,
+      0.024157999,
+      0.024
+    ],
+    "after_round_ms": [
+      0.02352,
+      0.023840001,
+      0.023680501
+    ],
+    "paired_round_delta_pct": [
+      -1.0101010101010166,
+      -1.3163259092775048,
+      -1.3312458333333388
+    ],
+    "before_cv": [
+      0.061187353,
+      0.0599435,
+      0.057556783
+    ],
+    "after_cv": [
+      0.067311003,
+      0.061318842,
+      0.067798817
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id76_k32n64_before",
+      "rec3_smallperf_r1_id76_k32n64_after",
+      "rec3_smallperf_r2_id76_k32n64_before",
+      "rec3_smallperf_r2_id76_k32n64_after",
+      "rec3_smallperf_r3_id76_k32n64_before",
+      "rec3_smallperf_r3_id76_k32n64_after"
+    ],
+    "unpaired_median_delta_pct": -1.3312458333333388,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.017047999426722527,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 0.017047999426722527,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 0.710333309446772,
+    "R_after": 0.7199171768672684,
+    "original_ms": 0.035840001,
+    "after_vs_original_pct": -33.92717539265694
+  },
+  {
+    "id": 84,
+    "M": 256,
+    "N": 2048,
+    "K": 768,
+    "G": 4,
+    "variant": "drain",
+    "baseline_variant": "old128",
+    "before_ms": 0.044640001,
+    "after_ms": 0.04448,
+    "delta_pct": -0.35954300269841477,
+    "before_round_ms": [
+      0.044799998,
+      0.044240497,
+      0.044640001
+    ],
+    "after_round_ms": [
+      0.04448,
+      0.04448,
+      0.044479501
+    ],
+    "paired_round_delta_pct": [
+      -0.7142812818875632,
+      0.5413659796814629,
+      -0.35954300269841477
+    ],
+    "before_cv": [
+      0.021565601,
+      0.011112032,
+      0.022276106
+    ],
+    "after_cv": [
+      0.007933601,
+      0.019958327,
+      0.0058234982
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id84_drain_before",
+      "rec3_smallperf_r1_id84_drain_after",
+      "rec3_smallperf_r2_id84_drain_before",
+      "rec3_smallperf_r2_id84_drain_after",
+      "rec3_smallperf_r3_id84_drain_before",
+      "rec3_smallperf_r3_id84_drain_after"
+    ],
+    "unpaired_median_delta_pct": -0.3584251711822306,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.026655998080968857,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 0.026655998080968857,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 0.5971325601217808,
+    "R_after": 0.5992805323958826,
+    "original_ms": 0.03968,
+    "after_vs_original_pct": 12.096774193548377
+  },
+  {
+    "id": 84,
+    "M": 256,
+    "N": 2048,
+    "K": 768,
+    "G": 4,
+    "variant": "k32",
+    "baseline_variant": "old128",
+    "before_ms": 0.044319998,
+    "after_ms": 0.057597999,
+    "delta_pct": 29.959389889864152,
+    "before_round_ms": [
+      0.0443995,
+      0.044160001,
+      0.044319998
+    ],
+    "after_round_ms": [
+      0.05776,
+      0.057119999,
+      0.057597999
+    ],
+    "paired_round_delta_pct": [
+      30.09155508507979,
+      29.34782089339174,
+      29.959389889864152
+    ],
+    "before_cv": [
+      0.013990526,
+      0.019420322,
+      0.023430691
+    ],
+    "after_cv": [
+      0.02313388,
+      0.015470403,
+      0.022826448
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id84_k32_before",
+      "rec3_smallperf_r1_id84_k32_after",
+      "rec3_smallperf_r2_id84_k32_before",
+      "rec3_smallperf_r2_id84_k32_after",
+      "rec3_smallperf_r3_id84_k32_before",
+      "rec3_smallperf_r3_id84_k32_after"
+    ],
+    "unpaired_median_delta_pct": 29.959389889864152,
+    "observational_label": "stable_regression",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.026655998080968857,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 0.026655998080968857,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 0.6014440271628364,
+    "R_after": 0.4627938217258009,
+    "original_ms": 0.03968,
+    "after_vs_original_pct": 45.156247479838704
+  },
+  {
+    "id": 84,
+    "M": 256,
+    "N": 2048,
+    "K": 768,
+    "G": 4,
+    "variant": "square",
+    "baseline_variant": "old128",
+    "before_ms": 0.044239499,
+    "after_ms": 0.034719501,
+    "delta_pct": -21.661535369376793,
+    "before_round_ms": [
+      0.044320501,
+      0.044239499,
+      0.044160001
+    ],
+    "after_round_ms": [
+      0.03472,
+      0.034400001,
+      0.034719501
+    ],
+    "paired_round_delta_pct": [
+      -21.661535369376793,
+      -22.241431802833034,
+      -21.377943356477726
+    ],
+    "before_cv": [
+      0.012127474,
+      0.022149065,
+      0.009040838
+    ],
+    "after_cv": [
+      0.034803203,
+      0.024432076,
+      0.027163589
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id84_square_before",
+      "rec3_smallperf_r1_id84_square_after",
+      "rec3_smallperf_r2_id84_square_before",
+      "rec3_smallperf_r2_id84_square_after",
+      "rec3_smallperf_r3_id84_square_before",
+      "rec3_smallperf_r3_id84_square_after"
+    ],
+    "unpaired_median_delta_pct": -21.51922651746124,
+    "observational_label": "stable_improvement",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.026655998080968857,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 0.026655998080968857,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 0.6025384256943971,
+    "R_after": 0.767752914449112,
+    "original_ms": 0.03968,
+    "after_vs_original_pct": -12.50125756048387
+  },
+  {
+    "id": 84,
+    "M": 256,
+    "N": 2048,
+    "K": 768,
+    "G": 4,
+    "variant": "k32n64",
+    "baseline_variant": "old64",
+    "before_ms": 0.065279998,
+    "after_ms": 0.06208,
+    "delta_pct": -4.656858292183164,
+    "before_round_ms": [
+      0.065279998,
+      0.064960003,
+      0.065279998
+    ],
+    "after_round_ms": [
+      0.062240001,
+      0.061999999,
+      0.06208
+    ],
+    "paired_round_delta_pct": [
+      -4.656858292183164,
+      -4.556656193504183,
+      -4.901957870770768
+    ],
+    "before_cv": [
+      0.024754342,
+      0.025391466,
+      0.01898128
+    ],
+    "after_cv": [
+      0.041781552,
+      0.031855544,
+      0.037996774
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id84_k32n64_before",
+      "rec3_smallperf_r1_id84_k32n64_after",
+      "rec3_smallperf_r2_id84_k32n64_before",
+      "rec3_smallperf_r2_id84_k32n64_after",
+      "rec3_smallperf_r3_id84_k32n64_before",
+      "rec3_smallperf_r3_id84_k32n64_after"
+    ],
+    "unpaired_median_delta_pct": -4.901957870770768,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.026655998080968857,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 0.026655998080968857,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 0.4083333164466221,
+    "R_after": 0.4293814123867406,
+    "original_ms": 0.03968,
+    "after_vs_original_pct": 56.45161290322582
+  },
+  {
+    "id": 358,
+    "M": 8,
+    "N": 6144,
+    "K": 2048,
+    "G": 32,
+    "variant": "drain",
+    "baseline_variant": "old128",
+    "before_ms": 0.63911802,
+    "after_ms": 0.64911997,
+    "delta_pct": 1.6151915103254533,
+    "before_round_ms": [
+      0.63911802,
+      0.63808399,
+      0.64319903
+    ],
+    "after_round_ms": [
+      0.649441,
+      0.64911997,
+      0.64824098
+    ],
+    "paired_round_delta_pct": [
+      1.6151915103254533,
+      1.729549741563008,
+      0.7838864433610704
+    ],
+    "before_cv": [
+      0.0080430549,
+      0.007642668,
+      0.0056332516
+    ],
+    "after_cv": [
+      0.0061789444,
+      0.004257666,
+      0.0054757729
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id358_drain_before",
+      "rec3_smallperf_r1_id358_drain_after",
+      "rec3_smallperf_r2_id358_drain_before",
+      "rec3_smallperf_r2_id358_drain_after",
+      "rec3_smallperf_r3_id358_drain_before",
+      "rec3_smallperf_r3_id358_drain_after"
+    ],
+    "unpaired_median_delta_pct": 1.5649613509567617,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.670039713382721,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 0.670039713382721,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 1.0483818205950772,
+    "R_after": 1.0322278536319272,
+    "original_ms": 0.66176099,
+    "after_vs_original_pct": -1.910209303815269
+  },
+  {
+    "id": 358,
+    "M": 8,
+    "N": 6144,
+    "K": 2048,
+    "G": 32,
+    "variant": "k32",
+    "baseline_variant": "old128",
+    "before_ms": 0.63856,
+    "after_ms": 0.67559898,
+    "delta_pct": 5.800391505888247,
+    "before_round_ms": [
+      0.63839996,
+      0.63856,
+      0.64128053
+    ],
+    "after_round_ms": [
+      0.67688501,
+      0.67559898,
+      0.67552102
+    ],
+    "paired_round_delta_pct": [
+      6.02836034012284,
+      5.800391505888247,
+      5.33939335410667
+    ],
+    "before_cv": [
+      0.00816042,
+      0.0060616023,
+      0.0051083299
+    ],
+    "after_cv": [
+      0.002898013,
+      0.019008994,
+      0.0037157453
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id358_k32_before",
+      "rec3_smallperf_r1_id358_k32_after",
+      "rec3_smallperf_r2_id358_k32_before",
+      "rec3_smallperf_r2_id358_k32_after",
+      "rec3_smallperf_r3_id358_k32_before",
+      "rec3_smallperf_r3_id358_k32_after"
+    ],
+    "unpaired_median_delta_pct": 5.800391505888247,
+    "observational_label": "stable_regression",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.670039713382721,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 0.670039713382721,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 1.049297972598849,
+    "R_after": 0.9917713513758132,
+    "original_ms": 0.66176099,
+    "after_vs_original_pct": 2.09108578612347
+  },
+  {
+    "id": 358,
+    "M": 8,
+    "N": 6144,
+    "K": 2048,
+    "G": 32,
+    "variant": "square",
+    "baseline_variant": "old128",
+    "before_ms": 0.63736355,
+    "after_ms": 0.64016002,
+    "delta_pct": 0.42619788972870776,
+    "before_round_ms": [
+      0.63696003,
+      0.6376,
+      0.63736355
+    ],
+    "after_round_ms": [
+      0.64048004,
+      0.64016002,
+      0.64007998
+    ],
+    "paired_round_delta_pct": [
+      0.5526265125301633,
+      0.4015087829360331,
+      0.42619788972870776
+    ],
+    "before_cv": [
+      0.010469613,
+      0.010473709,
+      0.0068450026
+    ],
+    "after_cv": [
+      0.0048133187,
+      0.0033255565,
+      0.0041317354
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id358_square_before",
+      "rec3_smallperf_r1_id358_square_after",
+      "rec3_smallperf_r2_id358_square_before",
+      "rec3_smallperf_r2_id358_square_after",
+      "rec3_smallperf_r3_id358_square_before",
+      "rec3_smallperf_r3_id358_square_after"
+    ],
+    "unpaired_median_delta_pct": 0.4387558717469986,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.670039713382721,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 0.670039713382721,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 1.0512677001731916,
+    "R_after": 1.0466753506142432,
+    "original_ms": 0.66176099,
+    "after_vs_original_pct": -3.2641649064264033
+  },
+  {
+    "id": 358,
+    "M": 8,
+    "N": 6144,
+    "K": 2048,
+    "G": 32,
+    "variant": "k32n64",
+    "baseline_variant": "old64",
+    "before_ms": 0.8453595,
+    "after_ms": 0.73295999,
+    "delta_pct": -13.378084681125134,
+    "before_round_ms": [
+      0.84615999,
+      0.84528697,
+      0.8453595
+    ],
+    "after_round_ms": [
+      0.73295999,
+      0.7338385,
+      0.73183954
+    ],
+    "paired_round_delta_pct": [
+      -13.378084681125134,
+      -13.18469040165141,
+      -13.428601677747764
+    ],
+    "before_cv": [
+      0.0052624434,
+      0.0082741069,
+      0.0082337806
+    ],
+    "after_cv": [
+      0.0070904593,
+      0.0063448883,
+      0.025058791
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id358_k32n64_before",
+      "rec3_smallperf_r1_id358_k32n64_after",
+      "rec3_smallperf_r2_id358_k32n64_before",
+      "rec3_smallperf_r2_id358_k32n64_after",
+      "rec3_smallperf_r3_id358_k32n64_before",
+      "rec3_smallperf_r3_id358_k32n64_after"
+    ],
+    "unpaired_median_delta_pct": -13.296060433460566,
+    "observational_label": "stable_improvement",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.670039713382721,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 0.670039713382721,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 0.7926091957122632,
+    "R_after": 0.9141559191828751,
+    "original_ms": 0.66176099,
+    "after_vs_original_pct": 10.759020413095065
+  },
+  {
+    "id": 556,
+    "M": 1,
+    "N": 7168,
+    "K": 3072,
+    "G": 96,
+    "variant": "drain",
+    "baseline_variant": "old128",
+    "before_ms": 3.4754429,
+    "after_ms": 3.4869576,
+    "delta_pct": 0.416496556453283,
+    "before_round_ms": [
+      3.4704776,
+      3.4754429,
+      3.4767981
+    ],
+    "after_round_ms": [
+      3.4869576,
+      3.489918,
+      3.4864786
+    ],
+    "paired_round_delta_pct": [
+      0.47486259528084496,
+      0.416496556453283,
+      0.27843146830988097
+    ],
+    "before_cv": [
+      0.0037169683,
+      0.002994264,
+      0.0038410676
+    ],
+    "after_cv": [
+      0.0019822934,
+      0.0022198423,
+      0.0020957441
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id556_drain_before",
+      "rec3_smallperf_r1_id556_drain_after",
+      "rec3_smallperf_r2_id556_drain_before",
+      "rec3_smallperf_r2_id556_drain_after",
+      "rec3_smallperf_r3_id556_drain_before",
+      "rec3_smallperf_r3_id556_drain_after"
+    ],
+    "unpaired_median_delta_pct": 0.3313160460786113,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 3.509734630584717,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 3.509734630584717,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 1.0098668663452122,
+    "R_after": 1.0065320641078963,
+    "original_ms": 3.4494369,
+    "after_vs_original_pct": 1.0877340588546724
+  },
+  {
+    "id": 556,
+    "M": 1,
+    "N": 7168,
+    "K": 3072,
+    "G": 96,
+    "variant": "k32",
+    "baseline_variant": "old128",
+    "before_ms": 3.4747925,
+    "after_ms": 3.4900794,
+    "delta_pct": 0.4445013623115779,
+    "before_round_ms": [
+      3.4800775,
+      3.4747925,
+      3.472558
+    ],
+    "after_round_ms": [
+      3.488719,
+      3.490238,
+      3.4900794
+    ],
+    "paired_round_delta_pct": [
+      0.24831343554849727,
+      0.4445013623115779,
+      0.5045675263019467
+    ],
+    "before_cv": [
+      0.020178501,
+      0.002637494,
+      0.0027293777
+    ],
+    "after_cv": [
+      0.0026392826,
+      0.0022927395,
+      0.0021240016
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id556_k32_before",
+      "rec3_smallperf_r1_id556_k32_after",
+      "rec3_smallperf_r2_id556_k32_before",
+      "rec3_smallperf_r2_id556_k32_after",
+      "rec3_smallperf_r3_id556_k32_before",
+      "rec3_smallperf_r3_id556_k32_after"
+    ],
+    "unpaired_median_delta_pct": 0.43993706098997,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 3.509734630584717,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 3.509734630584717,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 1.010055889836506,
+    "R_after": 1.0056317431015227,
+    "original_ms": 3.4494369,
+    "after_vs_original_pct": 1.1782357868323379
+  },
+  {
+    "id": 556,
+    "M": 1,
+    "N": 7168,
+    "K": 3072,
+    "G": 96,
+    "variant": "square",
+    "baseline_variant": "old128",
+    "before_ms": 3.475199,
+    "after_ms": 3.4671268,
+    "delta_pct": -0.18415923807528767,
+    "before_round_ms": [
+      3.475199,
+      3.4759164,
+      3.4700825
+    ],
+    "after_round_ms": [
+      3.4687991,
+      3.4671268,
+      3.4663255
+    ],
+    "paired_round_delta_pct": [
+      -0.18415923807528767,
+      -0.25287144420389485,
+      -0.1082683192690781
+    ],
+    "before_cv": [
+      0.077173009,
+      0.0022748098,
+      0.0025813295
+    ],
+    "after_cv": [
+      0.002155655,
+      0.0025145608,
+      0.0024515849
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id556_square_before",
+      "rec3_smallperf_r1_id556_square_after",
+      "rec3_smallperf_r2_id556_square_before",
+      "rec3_smallperf_r2_id556_square_after",
+      "rec3_smallperf_r3_id556_square_before",
+      "rec3_smallperf_r3_id556_square_after"
+    ],
+    "unpaired_median_delta_pct": -0.23228022337713483,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 3.509734630584717,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 3.509734630584717,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 1.0099377418630464,
+    "R_after": 1.0122890892207106,
+    "original_ms": 3.4494369,
+    "after_vs_original_pct": 0.5128344281352115
+  },
+  {
+    "id": 556,
+    "M": 1,
+    "N": 7168,
+    "K": 3072,
+    "G": 96,
+    "variant": "k32n64",
+    "baseline_variant": "old64",
+    "before_ms": 4.6568756,
+    "after_ms": 3.985837,
+    "delta_pct": -14.423178922795366,
+    "before_round_ms": [
+      4.6610365,
+      4.6568756,
+      4.6524763
+    ],
+    "after_round_ms": [
+      3.985837,
+      3.9852061,
+      3.9889674
+    ],
+    "paired_round_delta_pct": [
+      -14.486037601293189,
+      -14.423178922795366,
+      -14.261413862548855
+    ],
+    "before_cv": [
+      0.0070995318,
+      0.0028755912,
+      0.0020534979
+    ],
+    "after_cv": [
+      0.0070090521,
+      0.0068737736,
+      0.010321902
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id556_k32n64_before",
+      "rec3_smallperf_r1_id556_k32n64_after",
+      "rec3_smallperf_r2_id556_k32n64_before",
+      "rec3_smallperf_r2_id556_k32n64_after",
+      "rec3_smallperf_r3_id556_k32n64_before",
+      "rec3_smallperf_r3_id556_k32n64_after"
+    ],
+    "unpaired_median_delta_pct": -14.409631212824326,
+    "observational_label": "stable_improvement",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 3.509734630584717,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 3.509734630584717,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 0.7536672507602987,
+    "R_after": 0.8805514702645183,
+    "original_ms": 3.4494369,
+    "after_vs_original_pct": 15.550367075855199
+  },
+  {
+    "id": 633,
+    "M": 4,
+    "N": 1024,
+    "K": 2048,
+    "G": 8,
+    "variant": "drain",
+    "baseline_variant": "old128",
+    "before_ms": 0.041919999,
+    "after_ms": 0.042480499,
+    "delta_pct": 1.5279103417917606,
+    "before_round_ms": [
+      0.041919999,
+      0.041919999,
+      0.041280501
+    ],
+    "after_round_ms": [
+      0.042480499,
+      0.042560499,
+      0.042240001
+    ],
+    "paired_round_delta_pct": [
+      1.3370706425827938,
+      1.5279103417917606,
+      2.324341945365438
+    ],
+    "before_cv": [
+      0.026544523,
+      0.053832508,
+      0.028911518
+    ],
+    "after_cv": [
+      0.090843711,
+      0.097717432,
+      0.042687155
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id633_drain_before",
+      "rec3_smallperf_r1_id633_drain_after",
+      "rec3_smallperf_r2_id633_drain_before",
+      "rec3_smallperf_r2_id633_drain_after",
+      "rec3_smallperf_r3_id633_drain_before",
+      "rec3_smallperf_r3_id633_drain_after"
+    ],
+    "unpaired_median_delta_pct": 1.3370706425827938,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.032816000282764435,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 0.032816000282764435,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 0.7828244529004983,
+    "R_after": 0.7724956404764557,
+    "original_ms": 0.066239998,
+    "after_vs_original_pct": -35.86880995980706
+  },
+  {
+    "id": 633,
+    "M": 4,
+    "N": 1024,
+    "K": 2048,
+    "G": 8,
+    "variant": "k32",
+    "baseline_variant": "old128",
+    "before_ms": 0.041758001,
+    "after_ms": 0.03664,
+    "delta_pct": -12.260538499508177,
+    "before_round_ms": [
+      0.041760001,
+      0.041758001,
+      0.0416
+    ],
+    "after_round_ms": [
+      0.03664,
+      0.036880501,
+      0.036479998
+    ],
+    "paired_round_delta_pct": [
+      -12.260538499508177,
+      -11.680396291000616,
+      -12.307697115384608
+    ],
+    "before_cv": [
+      0.023243816,
+      0.031061243,
+      0.029743662
+    ],
+    "after_cv": [
+      0.072335012,
+      0.044834825,
+      0.020807362
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id633_k32_before",
+      "rec3_smallperf_r1_id633_k32_after",
+      "rec3_smallperf_r2_id633_k32_before",
+      "rec3_smallperf_r2_id633_k32_after",
+      "rec3_smallperf_r3_id633_k32_before",
+      "rec3_smallperf_r3_id633_k32_after"
+    ],
+    "unpaired_median_delta_pct": -12.256336216860586,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.032816000282764435,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 0.032816000282764435,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 0.7858613797811929,
+    "R_after": 0.8956331954902957,
+    "original_ms": 0.066239998,
+    "after_vs_original_pct": -44.68598866805521
+  },
+  {
+    "id": 633,
+    "M": 4,
+    "N": 1024,
+    "K": 2048,
+    "G": 8,
+    "variant": "square",
+    "baseline_variant": "old128",
+    "before_ms": 0.0416,
+    "after_ms": 0.04448,
+    "delta_pct": 7.129094412331405,
+    "before_round_ms": [
+      0.04152,
+      0.0416,
+      0.041760001
+    ],
+    "after_round_ms": [
+      0.04448,
+      0.044640999,
+      0.044319998
+    ],
+    "paired_round_delta_pct": [
+      7.129094412331405,
+      7.310093750000002,
+      6.130260868528237
+    ],
+    "before_cv": [
+      0.024914266,
+      0.022049677,
+      0.0095855691
+    ],
+    "after_cv": [
+      0.028306829,
+      0.020854833,
+      0.050830843
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id633_square_before",
+      "rec3_smallperf_r1_id633_square_after",
+      "rec3_smallperf_r2_id633_square_before",
+      "rec3_smallperf_r2_id633_square_after",
+      "rec3_smallperf_r3_id633_square_before",
+      "rec3_smallperf_r3_id633_square_after"
+    ],
+    "unpaired_median_delta_pct": 6.923076923076921,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.032816000282764435,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 0.032816000282764435,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 0.7888461606433759,
+    "R_after": 0.737769790529776,
+    "original_ms": 0.066239998,
+    "after_vs_original_pct": -32.850239518425106
+  },
+  {
+    "id": 633,
+    "M": 4,
+    "N": 1024,
+    "K": 2048,
+    "G": 8,
+    "variant": "k32n64",
+    "baseline_variant": "old64",
+    "before_ms": 0.043839999,
+    "after_ms": 0.041280001,
+    "delta_pct": -5.4945053687155525,
+    "before_round_ms": [
+      0.043839999,
+      0.044,
+      0.043680001
+    ],
+    "after_round_ms": [
+      0.0416,
+      0.041120999,
+      0.041280001
+    ],
+    "paired_round_delta_pct": [
+      -5.1094868866215055,
+      -6.543184090909094,
+      -5.4945053687155525
+    ],
+    "before_cv": [
+      0.036073032,
+      0.034596037,
+      0.016001173
+    ],
+    "after_cv": [
+      0.09842062,
+      0.055794728,
+      0.048816075
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id633_k32n64_before",
+      "rec3_smallperf_r1_id633_k32n64_after",
+      "rec3_smallperf_r2_id633_k32n64_before",
+      "rec3_smallperf_r2_id633_k32n64_after",
+      "rec3_smallperf_r3_id633_k32n64_before",
+      "rec3_smallperf_r3_id633_k32n64_after"
+    ],
+    "unpaired_median_delta_pct": -5.83941162954863,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.032816000282764435,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 0.032816000282764435,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 0.7485401695096854,
+    "R_after": 0.7949612279022096,
+    "original_ms": 0.066239998,
+    "after_vs_original_pct": -37.681156029020414
+  },
+  {
+    "id": 639,
+    "M": 256,
+    "N": 1024,
+    "K": 2048,
+    "G": 8,
+    "variant": "drain",
+    "baseline_variant": "old128",
+    "before_ms": 0.083198003,
+    "after_ms": 0.084480502,
+    "delta_pct": 1.7274435973195335,
+    "before_round_ms": [
+      0.083360001,
+      0.082960501,
+      0.083198003
+    ],
+    "after_round_ms": [
+      0.084799998,
+      0.084480502,
+      0.08416
+    ],
+    "paired_round_delta_pct": [
+      1.7274435973195335,
+      1.8321984338064645,
+      1.1562741475898086
+    ],
+    "before_cv": [
+      0.023698196,
+      0.01788184,
+      0.022214767
+    ],
+    "after_cv": [
+      0.044054521,
+      0.027505377,
+      0.025601896
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id639_drain_before",
+      "rec3_smallperf_r1_id639_drain_after",
+      "rec3_smallperf_r2_id639_drain_before",
+      "rec3_smallperf_r2_id639_drain_after",
+      "rec3_smallperf_r3_id639_drain_before",
+      "rec3_smallperf_r3_id639_drain_after"
+    ],
+    "unpaired_median_delta_pct": 1.5415021439877608,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.05414394661784172,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 0.05414394661784172,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 0.6507842095421655,
+    "R_after": 0.6409046506120634,
+    "original_ms": 0.069920003,
+    "after_vs_original_pct": 20.82451140627097
+  },
+  {
+    "id": 639,
+    "M": 256,
+    "N": 1024,
+    "K": 2048,
+    "G": 8,
+    "variant": "k32",
+    "baseline_variant": "old128",
+    "before_ms": 0.083679996,
+    "after_ms": 0.10832,
+    "delta_pct": 29.923524374929443,
+    "before_round_ms": [
+      0.083921,
+      0.0832,
+      0.083679996
+    ],
+    "after_round_ms": [
+      0.10832,
+      0.1081605,
+      0.10872
+    ],
+    "paired_round_delta_pct": [
+      29.07377176153765,
+      30.00060096153847,
+      29.923524374929443
+    ],
+    "before_cv": [
+      0.033519958,
+      0.01350425,
+      0.01336358
+    ],
+    "after_cv": [
+      0.012489548,
+      0.0092107516,
+      0.0096787063
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id639_k32_before",
+      "rec3_smallperf_r1_id639_k32_after",
+      "rec3_smallperf_r2_id639_k32_before",
+      "rec3_smallperf_r2_id639_k32_after",
+      "rec3_smallperf_r3_id639_k32_before",
+      "rec3_smallperf_r3_id639_k32_after"
+    ],
+    "unpaired_median_delta_pct": 29.445512879804614,
+    "observational_label": "stable_regression",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.05414394661784172,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 0.05414394661784172,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 0.6470357218688408,
+    "R_after": 0.49985179669351665,
+    "original_ms": 0.069920003,
+    "after_vs_original_pct": 54.91990181979827
+  },
+  {
+    "id": 639,
+    "M": 256,
+    "N": 1024,
+    "K": 2048,
+    "G": 8,
+    "variant": "square",
+    "baseline_variant": "old128",
+    "before_ms": 0.083279997,
+    "after_ms": 0.062880002,
+    "delta_pct": -24.42307451923076,
+    "before_round_ms": [
+      0.0836,
+      0.0832,
+      0.083279997
+    ],
+    "after_round_ms": [
+      0.062720999,
+      0.062880002,
+      0.06312
+    ],
+    "paired_round_delta_pct": [
+      -24.97488157894736,
+      -24.42307451923076,
+      -24.207490065111315
+    ],
+    "before_cv": [
+      0.050109233,
+      0.016460662,
+      0.022796467
+    ],
+    "after_cv": [
+      0.020617529,
+      0.0098756753,
+      0.0097149983
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id639_square_before",
+      "rec3_smallperf_r1_id639_square_after",
+      "rec3_smallperf_r2_id639_square_before",
+      "rec3_smallperf_r2_id639_square_after",
+      "rec3_smallperf_r3_id639_square_before",
+      "rec3_smallperf_r3_id639_square_after"
+    ],
+    "unpaired_median_delta_pct": -24.49567211199586,
+    "observational_label": "stable_improvement",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.05414394661784172,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 0.05414394661784172,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 0.6501434746430373,
+    "R_after": 0.8610678259495239,
+    "original_ms": 0.069920003,
+    "after_vs_original_pct": -10.068650883782126
+  },
+  {
+    "id": 639,
+    "M": 256,
+    "N": 1024,
+    "K": 2048,
+    "G": 8,
+    "variant": "k32n64",
+    "baseline_variant": "old64",
+    "before_ms": 0.13648,
+    "after_ms": 0.12640101,
+    "delta_pct": -6.948608657243804,
+    "before_round_ms": [
+      0.13584,
+      0.13832,
+      0.13648
+    ],
+    "after_round_ms": [
+      0.12640101,
+      0.125756,
+      0.12952
+    ],
+    "paired_round_delta_pct": [
+      -6.948608657243804,
+      -9.083285135916707,
+      -5.099648300117233
+    ],
+    "before_cv": [
+      0.026881647,
+      0.027687992,
+      0.024025083
+    ],
+    "after_cv": [
+      0.040250312,
+      0.035079173,
+      0.039506825
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id639_k32n64_before",
+      "rec3_smallperf_r1_id639_k32n64_after",
+      "rec3_smallperf_r2_id639_k32n64_before",
+      "rec3_smallperf_r2_id639_k32n64_after",
+      "rec3_smallperf_r3_id639_k32n64_before",
+      "rec3_smallperf_r3_id639_k32n64_after"
+    ],
+    "unpaired_median_delta_pct": -7.384957502930822,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.05414394661784172,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 0.05414394661784172,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 0.39671707662545225,
+    "R_after": 0.42835058531448217,
+    "original_ms": 0.069920003,
+    "after_vs_original_pct": 80.7794687880663
+  },
+  {
+    "id": 681,
+    "M": 1,
+    "N": 1536,
+    "K": 2048,
+    "G": 4,
+    "variant": "drain",
+    "baseline_variant": "old128",
+    "before_ms": 0.038559999,
+    "after_ms": 0.039519001,
+    "delta_pct": 2.4896266205816087,
+    "before_round_ms": [
+      0.038559999,
+      0.038720001,
+      0.038079999
+    ],
+    "after_round_ms": [
+      0.039519999,
+      0.039360002,
+      0.039519001
+    ],
+    "paired_round_delta_pct": [
+      2.4896266205816087,
+      1.6528951019396887,
+      3.7788919059582815
+    ],
+    "before_cv": [
+      0.023858752,
+      0.032720427,
+      0.005313396
+    ],
+    "after_cv": [
+      0.029168041,
+      0.024621394,
+      0.038572317
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id681_drain_before",
+      "rec3_smallperf_r1_id681_drain_after",
+      "rec3_smallperf_r2_id681_drain_before",
+      "rec3_smallperf_r2_id681_drain_after",
+      "rec3_smallperf_r3_id681_drain_before",
+      "rec3_smallperf_r3_id681_drain_after"
+    ],
+    "unpaired_median_delta_pct": 2.4870384462406303,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.027664000168442726,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 0.027664000168442726,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 0.7174274088659268,
+    "R_after": 0.7000176995476867,
+    "original_ms": 0.064800002,
+    "after_vs_original_pct": -39.01388922796638
+  },
+  {
+    "id": 681,
+    "M": 1,
+    "N": 1536,
+    "K": 2048,
+    "G": 4,
+    "variant": "k32",
+    "baseline_variant": "old128",
+    "before_ms": 0.038559999,
+    "after_ms": 0.0339205,
+    "delta_pct": -12.031896058918468,
+    "before_round_ms": [
+      0.038720001,
+      0.038559999,
+      0.038159497
+    ],
+    "after_round_ms": [
+      0.034079999,
+      0.0339205,
+      0.03328
+    ],
+    "paired_round_delta_pct": [
+      -11.983475930178821,
+      -12.031896058918468,
+      -12.78711037517083
+    ],
+    "before_cv": [
+      0.024507713,
+      0.041037129,
+      0.022646448
+    ],
+    "after_cv": [
+      0.066879226,
+      0.072003733,
+      0.022616368
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id681_k32_before",
+      "rec3_smallperf_r1_id681_k32_after",
+      "rec3_smallperf_r2_id681_k32_before",
+      "rec3_smallperf_r2_id681_k32_after",
+      "rec3_smallperf_r3_id681_k32_before",
+      "rec3_smallperf_r3_id681_k32_after"
+    ],
+    "unpaired_median_delta_pct": -12.031896058918468,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.027664000168442726,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 0.027664000168442726,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 0.7174274088659268,
+    "R_after": 0.8155540209738278,
+    "original_ms": 0.064800002,
+    "after_vs_original_pct": -47.65355099834719
+  },
+  {
+    "id": 681,
+    "M": 1,
+    "N": 1536,
+    "K": 2048,
+    "G": 4,
+    "variant": "square",
+    "baseline_variant": "old128",
+    "before_ms": 0.038401,
+    "after_ms": 0.042241,
+    "delta_pct": 10.123966680682672,
+    "before_round_ms": [
+      0.038401,
+      0.038720001,
+      0.038079999
+    ],
+    "after_round_ms": [
+      0.0421605,
+      0.042640001,
+      0.042241
+    ],
+    "paired_round_delta_pct": [
+      9.790109632561661,
+      10.123966680682672,
+      10.926998711318237
+    ],
+    "before_cv": [
+      0.044238395,
+      0.035370926,
+      0.0047812614
+    ],
+    "after_cv": [
+      0.020025908,
+      0.021190856,
+      0.027957202
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id681_square_before",
+      "rec3_smallperf_r1_id681_square_after",
+      "rec3_smallperf_r2_id681_square_before",
+      "rec3_smallperf_r2_id681_square_after",
+      "rec3_smallperf_r3_id681_square_before",
+      "rec3_smallperf_r3_id681_square_after"
+    ],
+    "unpaired_median_delta_pct": 9.999739590114842,
+    "observational_label": "stable_regression",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.027664000168442726,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 0.027664000168442726,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 0.7203979106909385,
+    "R_after": 0.6549087419436738,
+    "original_ms": 0.064800002,
+    "after_vs_original_pct": -34.81327361687426
+  },
+  {
+    "id": 681,
+    "M": 1,
+    "N": 1536,
+    "K": 2048,
+    "G": 4,
+    "variant": "k32n64",
+    "baseline_variant": "old64",
+    "before_ms": 0.040959999,
+    "after_ms": 0.0401605,
+    "delta_pct": -1.567404373347936,
+    "before_round_ms": [
+      0.040800001,
+      0.04112,
+      0.040959999
+    ],
+    "after_round_ms": [
+      0.0401605,
+      0.04064,
+      0.04016
+    ],
+    "paired_round_delta_pct": [
+      -1.567404373347936,
+      -1.167315175097261,
+      -1.953122606277402
+    ],
+    "before_cv": [
+      0.043326718,
+      0.064535767,
+      0.038899842
+    ],
+    "after_cv": [
+      0.044538231,
+      0.14392924,
+      0.024479504
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id681_k32n64_before",
+      "rec3_smallperf_r1_id681_k32n64_after",
+      "rec3_smallperf_r2_id681_k32n64_before",
+      "rec3_smallperf_r2_id681_k32n64_after",
+      "rec3_smallperf_r3_id681_k32n64_before",
+      "rec3_smallperf_r3_id681_k32n64_after"
+    ],
+    "unpaired_median_delta_pct": -1.9519019031225882,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.027664000168442726,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 0.027664000168442726,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 0.6753906456014007,
+    "R_after": 0.6888360495621998,
+    "original_ms": 0.064800002,
+    "after_vs_original_pct": -38.02392166592834
+  },
+  {
+    "id": 689,
+    "M": 256,
+    "N": 1536,
+    "K": 2048,
+    "G": 4,
+    "variant": "drain",
+    "baseline_variant": "old128",
+    "before_ms": 0.073119998,
+    "after_ms": 0.07536,
+    "delta_pct": 3.0634601494381686,
+    "before_round_ms": [
+      0.073601,
+      0.073119998,
+      0.073119998
+    ],
+    "after_round_ms": [
+      0.074879996,
+      0.07536,
+      0.07536
+    ],
+    "paired_round_delta_pct": [
+      1.7377426937134066,
+      3.0634601494381686,
+      3.0634601494381686
+    ],
+    "before_cv": [
+      0.012816792,
+      0.0036140896,
+      0.010956259
+    ],
+    "after_cv": [
+      0.013467179,
+      0.023695516,
+      0.038973246
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id689_drain_before",
+      "rec3_smallperf_r1_id689_drain_after",
+      "rec3_smallperf_r2_id689_drain_before",
+      "rec3_smallperf_r2_id689_drain_after",
+      "rec3_smallperf_r3_id689_drain_before",
+      "rec3_smallperf_r3_id689_drain_after"
+    ],
+    "unpaired_median_delta_pct": 3.0634601494381686,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.047384001314640045,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 0.047384001314640045,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 0.6480306702776447,
+    "R_after": 0.6287685949394911,
+    "original_ms": 0.067362003,
+    "after_vs_original_pct": 11.87315792851349
+  },
+  {
+    "id": 689,
+    "M": 256,
+    "N": 1536,
+    "K": 2048,
+    "G": 4,
+    "variant": "k32",
+    "baseline_variant": "old128",
+    "before_ms": 0.073760502,
+    "after_ms": 0.083999999,
+    "delta_pct": 14.192818152194553,
+    "before_round_ms": [
+      0.073760502,
+      0.073279999,
+      0.073919997
+    ],
+    "after_round_ms": [
+      0.083999999,
+      0.083680496,
+      0.084797002
+    ],
+    "paired_round_delta_pct": [
+      13.882086919636194,
+      14.192818152194553,
+      14.7145636383075
+    ],
+    "before_cv": [
+      0.023127436,
+      0.026425223,
+      0.012323301
+    ],
+    "after_cv": [
+      0.015570849,
+      0.001954755,
+      0.015190165
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id689_k32_before",
+      "rec3_smallperf_r1_id689_k32_after",
+      "rec3_smallperf_r2_id689_k32_before",
+      "rec3_smallperf_r2_id689_k32_after",
+      "rec3_smallperf_r3_id689_k32_before",
+      "rec3_smallperf_r3_id689_k32_after"
+    ],
+    "unpaired_median_delta_pct": 13.882086919636194,
+    "observational_label": "stable_regression",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.047384001314640045,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 0.047384001314640045,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 0.6424034548278975,
+    "R_after": 0.5640952604611346,
+    "original_ms": 0.067362003,
+    "after_vs_original_pct": 24.699378372106896
+  },
+  {
+    "id": 689,
+    "M": 256,
+    "N": 1536,
+    "K": 2048,
+    "G": 4,
+    "variant": "square",
+    "baseline_variant": "old128",
+    "before_ms": 0.073599502,
+    "after_ms": 0.055041,
+    "delta_pct": -25.2155265941881,
+    "before_round_ms": [
+      0.073119998,
+      0.073599502,
+      0.07384
+    ],
+    "after_round_ms": [
+      0.055679999,
+      0.055041,
+      0.055039998
+    ],
+    "paired_round_delta_pct": [
+      -23.851202785864412,
+      -25.2155265941881,
+      -25.46045774647888
+    ],
+    "before_cv": [
+      0.0033925138,
+      0.01806343,
+      0.0058956751
+    ],
+    "after_cv": [
+      0.11240712,
+      0.024161578,
+      0.016933231
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id689_square_before",
+      "rec3_smallperf_r1_id689_square_after",
+      "rec3_smallperf_r2_id689_square_before",
+      "rec3_smallperf_r2_id689_square_after",
+      "rec3_smallperf_r3_id689_square_before",
+      "rec3_smallperf_r3_id689_square_after"
+    ],
+    "unpaired_median_delta_pct": -25.2155265941881,
+    "observational_label": "stable_improvement",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.047384001314640045,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 0.047384001314640045,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 0.6438087218937982,
+    "R_after": 0.8608855455867452,
+    "original_ms": 0.067362003,
+    "after_vs_original_pct": -18.290731348947574
+  },
+  {
+    "id": 689,
+    "M": 256,
+    "N": 1536,
+    "K": 2048,
+    "G": 4,
+    "variant": "k32n64",
+    "baseline_variant": "old64",
+    "before_ms": 0.11008,
+    "after_ms": 0.10576,
+    "delta_pct": -4.215116279069764,
+    "before_round_ms": [
+      0.10992,
+      0.112,
+      0.11008
+    ],
+    "after_round_ms": [
+      0.10576,
+      0.1060805,
+      0.10544
+    ],
+    "paired_round_delta_pct": [
+      -3.784570596797665,
+      -5.285267857142861,
+      -4.215116279069764
+    ],
+    "before_cv": [
+      0.012523735,
+      0.010124413,
+      0.0090347756
+    ],
+    "after_cv": [
+      0.021695729,
+      0.0045331053,
+      0.0048609859
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id689_k32n64_before",
+      "rec3_smallperf_r1_id689_k32n64_after",
+      "rec3_smallperf_r2_id689_k32n64_before",
+      "rec3_smallperf_r2_id689_k32n64_after",
+      "rec3_smallperf_r3_id689_k32n64_before",
+      "rec3_smallperf_r3_id689_k32n64_after"
+    ],
+    "unpaired_median_delta_pct": -3.9244186046511587,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.047384001314640045,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 0.047384001314640045,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 0.43045059333793645,
+    "R_after": 0.4480332953350987,
+    "original_ms": 0.067362003,
+    "after_vs_original_pct": 57.00245730519622
+  },
+  {
+    "id": 772,
+    "M": 64,
+    "N": 6144,
+    "K": 3584,
+    "G": 56,
+    "variant": "drain",
+    "baseline_variant": "old128",
+    "before_ms": 2.3646395,
+    "after_ms": 2.4059191,
+    "delta_pct": 1.5138967984228868,
+    "before_round_ms": [
+      2.3646395,
+      2.3624794,
+      2.3709586
+    ],
+    "after_round_ms": [
+      2.4063978,
+      2.3982449,
+      2.4059191
+    ],
+    "paired_round_delta_pct": [
+      1.7659478326400357,
+      1.5138967984228868,
+      1.474530175263311
+    ],
+    "before_cv": [
+      0.017116264,
+      0.019411518,
+      0.017907966
+    ],
+    "after_cv": [
+      0.010277347,
+      0.012568747,
+      0.012665736
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id772_drain_before",
+      "rec3_smallperf_r1_id772_drain_after",
+      "rec3_smallperf_r2_id772_drain_before",
+      "rec3_smallperf_r2_id772_drain_after",
+      "rec3_smallperf_r3_id772_drain_before",
+      "rec3_smallperf_r3_id772_drain_after"
+    ],
+    "unpaired_median_delta_pct": 1.7457037320065094,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 2.0357272624969482,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 2.0357272624969482,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 0.8609038555335594,
+    "R_after": 0.8461328822307235,
+    "original_ms": 1.9923185,
+    "after_vs_original_pct": 20.759763059972602
+  },
+  {
+    "id": 772,
+    "M": 64,
+    "N": 6144,
+    "K": 3584,
+    "G": 56,
+    "variant": "k32",
+    "baseline_variant": "old128",
+    "before_ms": 2.3573589,
+    "after_ms": 2.445843,
+    "delta_pct": 4.229995535167941,
+    "before_round_ms": [
+      2.3573589,
+      2.3622389,
+      2.3427246
+    ],
+    "after_round_ms": [
+      2.4412789,
+      2.4621615,
+      2.445843
+    ],
+    "paired_round_delta_pct": [
+      3.5599161417465996,
+      4.229995535167941,
+      4.401644136916483
+    ],
+    "before_cv": [
+      0.01780782,
+      0.01953692,
+      0.10947114
+    ],
+    "after_cv": [
+      0.011782855,
+      0.012472834,
+      0.013412439
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id772_k32_before",
+      "rec3_smallperf_r1_id772_k32_after",
+      "rec3_smallperf_r2_id772_k32_before",
+      "rec3_smallperf_r2_id772_k32_after",
+      "rec3_smallperf_r3_id772_k32_before",
+      "rec3_smallperf_r3_id772_k32_after"
+    ],
+    "unpaired_median_delta_pct": 3.7535268812907585,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 2.0357272624969482,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 2.0357272624969482,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 0.863562719489573,
+    "R_after": 0.8323213151853771,
+    "original_ms": 1.9923185,
+    "after_vs_original_pct": 22.763654506044073
+  },
+  {
+    "id": 772,
+    "M": 64,
+    "N": 6144,
+    "K": 3584,
+    "G": 56,
+    "variant": "square",
+    "baseline_variant": "old128",
+    "before_ms": 2.3481596,
+    "after_ms": 2.2248778,
+    "delta_pct": -5.2790779936168875,
+    "before_round_ms": [
+      2.3481596,
+      2.365679,
+      2.3413634
+    ],
+    "after_round_ms": [
+      2.2248778,
+      2.2250328,
+      2.217761
+    ],
+    "paired_round_delta_pct": [
+      -5.250145688563935,
+      -5.945278290080768,
+      -5.2790779936168875
+    ],
+    "before_cv": [
+      0.021010136,
+      0.014976427,
+      0.018009996
+    ],
+    "after_cv": [
+      0.023109425,
+      0.023099414,
+      0.027032415
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id772_square_before",
+      "rec3_smallperf_r1_id772_square_after",
+      "rec3_smallperf_r2_id772_square_before",
+      "rec3_smallperf_r2_id772_square_after",
+      "rec3_smallperf_r3_id772_square_before",
+      "rec3_smallperf_r3_id772_square_after"
+    ],
+    "unpaired_median_delta_pct": -5.250145688563935,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 2.0357272624969482,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 2.0357272624969482,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 0.8669458679456662,
+    "R_after": 0.9149838532691317,
+    "original_ms": 1.9923185,
+    "after_vs_original_pct": 11.672797296215421
+  },
+  {
+    "id": 772,
+    "M": 64,
+    "N": 6144,
+    "K": 3584,
+    "G": 56,
+    "variant": "k32n64",
+    "baseline_variant": "old64",
+    "before_ms": 3.1031966,
+    "after_ms": 3.2172771,
+    "delta_pct": 3.629895701741881,
+    "before_round_ms": [
+      3.0985575,
+      3.1095185,
+      3.1031966
+    ],
+    "after_round_ms": [
+      3.2223995,
+      3.2172771,
+      3.2158394
+    ],
+    "paired_round_delta_pct": [
+      3.99676300988443,
+      3.4654432832607274,
+      3.629895701741881
+    ],
+    "before_cv": [
+      0.012317649,
+      0.012728622,
+      0.0098339306
+    ],
+    "after_cv": [
+      0.0054395272,
+      0.005935448,
+      0.0055353216
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id772_k32n64_before",
+      "rec3_smallperf_r1_id772_k32n64_after",
+      "rec3_smallperf_r2_id772_k32n64_before",
+      "rec3_smallperf_r2_id772_k32n64_after",
+      "rec3_smallperf_r3_id772_k32n64_before",
+      "rec3_smallperf_r3_id772_k32n64_after"
+    ],
+    "unpaired_median_delta_pct": 3.6762253477591544,
+    "observational_label": "stable_regression",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 2.0357272624969482,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 2.0357272624969482,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 0.6560097618362137,
+    "R_after": 0.6327485010529396,
+    "original_ms": 1.9923185,
+    "after_vs_original_pct": 61.484074960906085
+  },
+  {
+    "id": 942,
+    "M": 1,
+    "N": 4096,
+    "K": 4096,
+    "G": 16,
+    "variant": "drain",
+    "baseline_variant": "old128",
+    "before_ms": 0.44143999,
+    "after_ms": 0.44095999,
+    "delta_pct": -0.07252084679747473,
+    "before_round_ms": [
+      0.4424825,
+      0.44143999,
+      0.44128001
+    ],
+    "after_round_ms": [
+      0.4400005,
+      0.44176,
+      0.44095999
+    ],
+    "paired_round_delta_pct": [
+      -0.5609261383218489,
+      0.07249229957619896,
+      -0.07252084679747473
+    ],
+    "before_cv": [
+      0.0064474734,
+      0.0059692292,
+      0.0088017037
+    ],
+    "after_cv": [
+      0.006091541,
+      0.0068241856,
+      0.0078836167
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id942_drain_before",
+      "rec3_smallperf_r1_id942_drain_after",
+      "rec3_smallperf_r2_id942_drain_before",
+      "rec3_smallperf_r2_id942_drain_after",
+      "rec3_smallperf_r3_id942_drain_before",
+      "rec3_smallperf_r3_id942_drain_after"
+    ],
+    "unpaired_median_delta_pct": -0.10873505139396,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.43203988671302795,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 0.43203988671302795,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 0.9787058184579697,
+    "R_after": 0.9797711731466339,
+    "original_ms": 0.475041,
+    "after_vs_original_pct": -7.174330215707691
+  },
+  {
+    "id": 942,
+    "M": 1,
+    "N": 4096,
+    "K": 4096,
+    "G": 16,
+    "variant": "k32",
+    "baseline_variant": "old128",
+    "before_ms": 0.440961,
+    "after_ms": 0.4348,
+    "delta_pct": -1.5793261059884878,
+    "before_round_ms": [
+      0.44208199,
+      0.440961,
+      0.44088298
+    ],
+    "after_round_ms": [
+      0.4348,
+      0.43560001,
+      0.43392
+    ],
+    "paired_round_delta_pct": [
+      -1.6472034972517147,
+      -1.215751506369045,
+      -1.5793261059884878
+    ],
+    "before_cv": [
+      0.0083999151,
+      0.0051275622,
+      0.011094806
+    ],
+    "after_cv": [
+      0.0097368717,
+      0.060922057,
+      0.0096676391
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id942_k32_before",
+      "rec3_smallperf_r1_id942_k32_after",
+      "rec3_smallperf_r2_id942_k32_before",
+      "rec3_smallperf_r2_id942_k32_after",
+      "rec3_smallperf_r3_id942_k32_before",
+      "rec3_smallperf_r3_id942_k32_after"
+    ],
+    "unpaired_median_delta_pct": -1.3971757139520258,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.43203988671302795,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 0.43203988671302795,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 0.9797689290278006,
+    "R_after": 0.9936519933602298,
+    "original_ms": 0.475041,
+    "after_vs_original_pct": -8.47105828760043
+  },
+  {
+    "id": 942,
+    "M": 1,
+    "N": 4096,
+    "K": 4096,
+    "G": 16,
+    "variant": "square",
+    "baseline_variant": "old128",
+    "before_ms": 0.44127899,
+    "after_ms": 0.46384001,
+    "delta_pct": 5.1125275644779755,
+    "before_round_ms": [
+      0.44095999,
+      0.44152051,
+      0.44127899
+    ],
+    "after_round_ms": [
+      0.46416,
+      0.46384001,
+      0.4638395
+    ],
+    "paired_round_delta_pct": [
+      5.261250572869436,
+      5.055144550363022,
+      5.1125275644779755
+    ],
+    "before_cv": [
+      0.0077318694,
+      0.0041397194,
+      0.0071467034
+    ],
+    "after_cv": [
+      0.016095497,
+      0.013871715,
+      0.011355956
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id942_square_before",
+      "rec3_smallperf_r1_id942_square_after",
+      "rec3_smallperf_r2_id942_square_before",
+      "rec3_smallperf_r2_id942_square_after",
+      "rec3_smallperf_r3_id942_square_before",
+      "rec3_smallperf_r3_id942_square_after"
+    ],
+    "unpaired_median_delta_pct": 5.112643137621409,
+    "observational_label": "stable_regression",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.43203988671302795,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 0.43203988671302795,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 0.9790628978574937,
+    "R_after": 0.9314416121908671,
+    "original_ms": 0.475041,
+    "after_vs_original_pct": -2.3578996339263303
+  },
+  {
+    "id": 942,
+    "M": 1,
+    "N": 4096,
+    "K": 4096,
+    "G": 16,
+    "variant": "k32n64",
+    "baseline_variant": "old64",
+    "before_ms": 0.53711951,
+    "after_ms": 0.48335999,
+    "delta_pct": -10.008761364859009,
+    "before_round_ms": [
+      0.5371995,
+      0.53711951,
+      0.5364005
+    ],
+    "after_round_ms": [
+      0.48335999,
+      0.4833605,
+      0.48320299
+    ],
+    "paired_round_delta_pct": [
+      -10.022256163678488,
+      -10.008761364859009,
+      -9.917498212622833
+    ],
+    "before_cv": [
+      0.0069699861,
+      0.0051109239,
+      0.0064587804
+    ],
+    "after_cv": [
+      0.0047321824,
+      0.0084576885,
+      0.0044706194
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id942_k32n64_before",
+      "rec3_smallperf_r1_id942_k32n64_after",
+      "rec3_smallperf_r2_id942_k32n64_before",
+      "rec3_smallperf_r2_id942_k32n64_after",
+      "rec3_smallperf_r3_id942_k32n64_before",
+      "rec3_smallperf_r3_id942_k32n64_after"
+    ],
+    "unpaired_median_delta_pct": -10.008856315794601,
+    "observational_label": "stable_improvement",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.43203988671302795,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 0.43203988671302795,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 0.8043645383743888,
+    "R_after": 0.8938263316188582,
+    "original_ms": 0.475041,
+    "after_vs_original_pct": 1.751215158270547
+  },
+  {
+    "id": 1179,
+    "M": 1,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "variant": "drain",
+    "baseline_variant": "old128",
+    "before_ms": 0.032000002,
+    "after_ms": 0.032159001,
+    "delta_pct": 0.0,
+    "before_round_ms": [
+      0.03184,
+      0.032000002,
+      0.032159001
+    ],
+    "after_round_ms": [
+      0.031679999,
+      0.033760998,
+      0.032159001
+    ],
+    "paired_round_delta_pct": [
+      -0.502515703517592,
+      5.503112156055501,
+      0.0
+    ],
+    "before_cv": [
+      0.048449091,
+      0.054326317,
+      0.034307816
+    ],
+    "after_cv": [
+      0.063215949,
+      0.074083815,
+      0.044615916
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id1179_drain_before",
+      "rec3_smallperf_r1_id1179_drain_after",
+      "rec3_smallperf_r2_id1179_drain_before",
+      "rec3_smallperf_r2_id1179_drain_after",
+      "rec3_smallperf_r3_id1179_drain_before",
+      "rec3_smallperf_r3_id1179_drain_after"
+    ],
+    "unpaired_median_delta_pct": 0.4968718439455122,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.03193599730730057,
+      "gpu": 4,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/v7_coverage/p6c/native_new15.json"
+    },
+    "blas_ms": 0.03193599730730057,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "R_before": 0.9979998534781519,
+    "R_after": 0.9930655901686923,
+    "original_ms": 0.039360501,
+    "after_vs_original_pct": -18.29626101558006
+  },
+  {
+    "id": 1179,
+    "M": 1,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "variant": "k32",
+    "baseline_variant": "old128",
+    "before_ms": 0.032000002,
+    "after_ms": 0.034959,
+    "delta_pct": 9.246868172070721,
+    "before_round_ms": [
+      0.032000002,
+      0.032159999,
+      0.032000002
+    ],
+    "after_round_ms": [
+      0.034959,
+      0.034880001,
+      0.034960002
+    ],
+    "paired_round_delta_pct": [
+      9.246868172070721,
+      8.457717924680285,
+      9.249999421875032
+    ],
+    "before_cv": [
+      0.081913971,
+      0.06088995,
+      0.061139658
+    ],
+    "after_cv": [
+      0.042371788,
+      0.03078976,
+      0.034200645
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id1179_k32_before",
+      "rec3_smallperf_r1_id1179_k32_after",
+      "rec3_smallperf_r2_id1179_k32_before",
+      "rec3_smallperf_r2_id1179_k32_after",
+      "rec3_smallperf_r3_id1179_k32_before",
+      "rec3_smallperf_r3_id1179_k32_after"
+    ],
+    "unpaired_median_delta_pct": 9.246868172070721,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.03193599730730057,
+      "gpu": 4,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/v7_coverage/p6c/native_new15.json"
+    },
+    "blas_ms": 0.03193599730730057,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "R_before": 0.9979998534781519,
+    "R_after": 0.9135271977831336,
+    "original_ms": 0.039360501,
+    "after_vs_original_pct": -11.182532966234348
+  },
+  {
+    "id": 1179,
+    "M": 1,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "variant": "square",
+    "baseline_variant": "old128",
+    "before_ms": 0.032159999,
+    "after_ms": 0.033440001,
+    "delta_pct": 3.9801058451525373,
+    "before_round_ms": [
+      0.032000002,
+      0.032159999,
+      0.033280998
+    ],
+    "after_round_ms": [
+      0.03328,
+      0.033440001,
+      0.033440001
+    ],
+    "paired_round_delta_pct": [
+      3.9999935000003983,
+      3.9801058451525373,
+      0.47775911046896713
+    ],
+    "before_cv": [
+      0.059524871,
+      0.054432787,
+      0.065061361
+    ],
+    "after_cv": [
+      0.027446993,
+      0.047417382,
+      0.03902607
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id1179_square_before",
+      "rec3_smallperf_r1_id1179_square_after",
+      "rec3_smallperf_r2_id1179_square_before",
+      "rec3_smallperf_r2_id1179_square_after",
+      "rec3_smallperf_r3_id1179_square_before",
+      "rec3_smallperf_r3_id1179_square_after"
+    ],
+    "unpaired_median_delta_pct": 3.9801058451525373,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.03193599730730057,
+      "gpu": 4,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/v7_coverage/p6c/native_new15.json"
+    },
+    "blas_ms": 0.03193599730730057,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "R_before": 0.9930347730203775,
+    "R_after": 0.9550238143623432,
+    "original_ms": 0.039360501,
+    "after_vs_original_pct": -15.041729270671633
+  },
+  {
+    "id": 1179,
+    "M": 1,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "variant": "k32n64",
+    "baseline_variant": "old64",
+    "before_ms": 0.0382405,
+    "after_ms": 0.03472,
+    "delta_pct": -8.783758499614503,
+    "before_round_ms": [
+      0.0382405,
+      0.037919998,
+      0.038240999
+    ],
+    "after_round_ms": [
+      0.034479998,
+      0.03472,
+      0.034882002
+    ],
+    "paired_round_delta_pct": [
+      -9.833820164485296,
+      -8.43881373622436,
+      -8.783758499614503
+    ],
+    "before_cv": [
+      0.04091681,
+      0.046813584,
+      0.024232434
+    ],
+    "after_cv": [
+      0.03521793,
+      0.026872307,
+      0.038832156
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id1179_k32n64_before",
+      "rec3_smallperf_r1_id1179_k32n64_after",
+      "rec3_smallperf_r2_id1179_k32n64_before",
+      "rec3_smallperf_r2_id1179_k32n64_after",
+      "rec3_smallperf_r3_id1179_k32n64_before",
+      "rec3_smallperf_r3_id1179_k32n64_after"
+    ],
+    "unpaired_median_delta_pct": -9.206208077823241,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.03193599730730057,
+      "gpu": 4,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/v7_coverage/p6c/native_new15.json"
+    },
+    "blas_ms": 0.03193599730730057,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "R_before": 0.8351354534407388,
+    "R_after": 0.9198155906480578,
+    "original_ms": 0.039360501,
+    "after_vs_original_pct": -11.789740684449113
+  },
+  {
+    "id": 1180,
+    "M": 2,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "variant": "drain",
+    "baseline_variant": "old128",
+    "before_ms": 0.031679999,
+    "after_ms": 0.03232,
+    "delta_pct": 2.0202052405367876,
+    "before_round_ms": [
+      0.031679999,
+      0.031679999,
+      0.031679001
+    ],
+    "after_round_ms": [
+      0.03232,
+      0.033041,
+      0.032160498
+    ],
+    "paired_round_delta_pct": [
+      2.0202052405367876,
+      4.296089150760385,
+      1.5199248233869644
+    ],
+    "before_cv": [
+      0.044553052,
+      0.04653564,
+      0.033750205
+    ],
+    "after_cv": [
+      0.040628921,
+      0.060823768,
+      0.047143261
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id1180_drain_before",
+      "rec3_smallperf_r1_id1180_drain_after",
+      "rec3_smallperf_r2_id1180_drain_before",
+      "rec3_smallperf_r2_id1180_drain_after",
+      "rec3_smallperf_r3_id1180_drain_before",
+      "rec3_smallperf_r3_id1180_drain_after"
+    ],
+    "unpaired_median_delta_pct": 2.0202052405367876,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.03202399984002113,
+      "gpu": 4,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/v7_coverage/p6c/native_new15.json"
+    },
+    "blas_ms": 0.03202399984002113,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "R_before": 1.0108586127171637,
+    "R_after": 0.9908415792085746,
+    "original_ms": 0.0387205,
+    "after_vs_original_pct": -16.530003486525214
+  },
+  {
+    "id": 1180,
+    "M": 2,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "variant": "k32",
+    "baseline_variant": "old128",
+    "before_ms": 0.03184,
+    "after_ms": 0.03472,
+    "delta_pct": 9.045226130653262,
+    "before_round_ms": [
+      0.031520002,
+      0.03184,
+      0.032159999
+    ],
+    "after_round_ms": [
+      0.034559999,
+      0.03472,
+      0.034720998
+    ],
+    "paired_round_delta_pct": [
+      9.644659921024124,
+      9.045226130653262,
+      7.963305595873926
+    ],
+    "before_cv": [
+      0.069644907,
+      0.02960316,
+      0.055482589
+    ],
+    "after_cv": [
+      0.031595628,
+      0.029072522,
+      0.026575516
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id1180_k32_before",
+      "rec3_smallperf_r1_id1180_k32_after",
+      "rec3_smallperf_r2_id1180_k32_before",
+      "rec3_smallperf_r2_id1180_k32_after",
+      "rec3_smallperf_r3_id1180_k32_before",
+      "rec3_smallperf_r3_id1180_k32_after"
+    ],
+    "unpaired_median_delta_pct": 9.045226130653262,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.03202399984002113,
+      "gpu": 4,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/v7_coverage/p6c/native_new15.json"
+    },
+    "blas_ms": 0.03202399984002113,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "R_before": 1.0057788894478998,
+    "R_after": 0.9223502258070603,
+    "original_ms": 0.0387205,
+    "after_vs_original_pct": -10.331736418692937
+  },
+  {
+    "id": 1180,
+    "M": 2,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "variant": "square",
+    "baseline_variant": "old128",
+    "before_ms": 0.031679999,
+    "after_ms": 0.033441,
+    "delta_pct": 4.7995677020065575,
+    "before_round_ms": [
+      0.031679999,
+      0.031679999,
+      0.032000002
+    ],
+    "after_round_ms": [
+      0.033200502,
+      0.033597998,
+      0.033441
+    ],
+    "paired_round_delta_pct": [
+      4.7995677020065575,
+      6.054289963834902,
+      4.50311846855509
+    ],
+    "before_cv": [
+      0.034930528,
+      0.03389011,
+      0.019989306
+    ],
+    "after_cv": [
+      0.0068589595,
+      0.04228762,
+      0.0276979
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id1180_square_before",
+      "rec3_smallperf_r1_id1180_square_after",
+      "rec3_smallperf_r2_id1180_square_before",
+      "rec3_smallperf_r2_id1180_square_after",
+      "rec3_smallperf_r3_id1180_square_before",
+      "rec3_smallperf_r3_id1180_square_after"
+    ],
+    "unpaired_median_delta_pct": 5.558715453242269,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.03202399984002113,
+      "gpu": 4,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/v7_coverage/p6c/native_new15.json"
+    },
+    "blas_ms": 0.03202399984002113,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "R_before": 1.0108586127171637,
+    "R_after": 0.9576268604414083,
+    "original_ms": 0.0387205,
+    "after_vs_original_pct": -13.634896243591898
+  },
+  {
+    "id": 1180,
+    "M": 2,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "variant": "k32n64",
+    "baseline_variant": "old64",
+    "before_ms": 0.038240999,
+    "after_ms": 0.03472,
+    "delta_pct": -9.130992216721745,
+    "before_round_ms": [
+      0.038240999,
+      0.037919998,
+      0.038561001
+    ],
+    "after_round_ms": [
+      0.03472,
+      0.034479998,
+      0.035039999
+    ],
+    "paired_round_delta_pct": [
+      -9.207392829878735,
+      -9.071730436272718,
+      -9.130992216721745
+    ],
+    "before_cv": [
+      0.043984404,
+      0.050121307,
+      0.041345129
+    ],
+    "after_cv": [
+      0.028436262,
+      0.036269837,
+      0.010810572
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id1180_k32n64_before",
+      "rec3_smallperf_r1_id1180_k32n64_after",
+      "rec3_smallperf_r2_id1180_k32n64_before",
+      "rec3_smallperf_r2_id1180_k32n64_after",
+      "rec3_smallperf_r3_id1180_k32n64_before",
+      "rec3_smallperf_r3_id1180_k32n64_after"
+    ],
+    "unpaired_median_delta_pct": -9.207392829878735,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.03202399984002113,
+      "gpu": 4,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/v7_coverage/p6c/native_new15.json"
+    },
+    "blas_ms": 0.03202399984002113,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "R_before": 0.8374258172497308,
+    "R_after": 0.9223502258070603,
+    "original_ms": 0.0387205,
+    "after_vs_original_pct": -10.331736418692937
+  },
+  {
+    "id": 1181,
+    "M": 4,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "variant": "drain",
+    "baseline_variant": "old128",
+    "before_ms": 0.032159001,
+    "after_ms": 0.032480001,
+    "delta_pct": 0.9981653348000608,
+    "before_round_ms": [
+      0.03176,
+      0.032159999,
+      0.032159001
+    ],
+    "after_round_ms": [
+      0.032480001,
+      0.0319205,
+      0.032480001
+    ],
+    "paired_round_delta_pct": [
+      2.2670056675063055,
+      -0.7447108440519656,
+      0.9981653348000608
+    ],
+    "before_cv": [
+      0.091288418,
+      0.058759222,
+      0.068790612
+    ],
+    "after_cv": [
+      0.035945643,
+      0.059444341,
+      0.04444181
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id1181_drain_before",
+      "rec3_smallperf_r1_id1181_drain_after",
+      "rec3_smallperf_r2_id1181_drain_before",
+      "rec3_smallperf_r2_id1181_drain_after",
+      "rec3_smallperf_r3_id1181_drain_before",
+      "rec3_smallperf_r3_id1181_drain_after"
+    ],
+    "unpaired_median_delta_pct": 0.9981653348000608,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.0321200005710125,
+      "gpu": 4,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/v7_coverage/p6c/native_new15.json"
+    },
+    "blas_ms": 0.0321200005710125,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "R_before": 0.9987872624218799,
+    "R_after": 0.9889162432911408,
+    "original_ms": 0.039120503,
+    "after_vs_original_pct": -16.974480108295133
+  },
+  {
+    "id": 1181,
+    "M": 4,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "variant": "k32",
+    "baseline_variant": "old128",
+    "before_ms": 0.032159999,
+    "after_ms": 0.034559999,
+    "delta_pct": 7.462686799212892,
+    "before_round_ms": [
+      0.032480001,
+      0.03184,
+      0.032159999
+    ],
+    "after_round_ms": [
+      0.034400001,
+      0.034639999,
+      0.034559999
+    ],
+    "paired_round_delta_pct": [
+      5.911329867262016,
+      8.793966708542712,
+      7.462686799212892
+    ],
+    "before_cv": [
+      0.048526131,
+      0.065433276,
+      0.047590317
+    ],
+    "after_cv": [
+      0.052140042,
+      0.032002865,
+      0.051718424
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id1181_k32_before",
+      "rec3_smallperf_r1_id1181_k32_after",
+      "rec3_smallperf_r2_id1181_k32_before",
+      "rec3_smallperf_r2_id1181_k32_after",
+      "rec3_smallperf_r3_id1181_k32_before",
+      "rec3_smallperf_r3_id1181_k32_after"
+    ],
+    "unpaired_median_delta_pct": 7.462686799212892,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.0321200005710125,
+      "gpu": 4,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/v7_coverage/p6c/native_new15.json"
+    },
+    "blas_ms": 0.0321200005710125,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "R_before": 0.9987562677166903,
+    "R_after": 0.9293981915628092,
+    "original_ms": 0.039120503,
+    "after_vs_original_pct": -11.65758016966193
+  },
+  {
+    "id": 1181,
+    "M": 4,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "variant": "square",
+    "baseline_variant": "old128",
+    "before_ms": 0.032160498,
+    "after_ms": 0.033360001,
+    "delta_pct": 3.4755532809131795,
+    "before_round_ms": [
+      0.0322395,
+      0.032160498,
+      0.031998999
+    ],
+    "after_round_ms": [
+      0.033360001,
+      0.033199999,
+      0.033599999
+    ],
+    "paired_round_delta_pct": [
+      3.4755532809131795,
+      3.232229177545687,
+      5.003281508899704
+    ],
+    "before_cv": [
+      0.05752255,
+      0.056174508,
+      0.050324591
+    ],
+    "after_cv": [
+      0.037394197,
+      0.013058526,
+      0.039614276
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id1181_square_before",
+      "rec3_smallperf_r1_id1181_square_after",
+      "rec3_smallperf_r2_id1181_square_before",
+      "rec3_smallperf_r2_id1181_square_after",
+      "rec3_smallperf_r3_id1181_square_before",
+      "rec3_smallperf_r3_id1181_square_after"
+    ],
+    "unpaired_median_delta_pct": 3.729740130267878,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.0321200005710125,
+      "gpu": 4,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/v7_coverage/p6c/native_new15.json"
+    },
+    "blas_ms": 0.0321200005710125,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "R_before": 0.9987407710854631,
+    "R_after": 0.9628297244659104,
+    "original_ms": 0.039120503,
+    "after_vs_original_pct": -14.725020279008172
+  },
+  {
+    "id": 1181,
+    "M": 4,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "variant": "k32n64",
+    "baseline_variant": "old64",
+    "before_ms": 0.038560502,
+    "after_ms": 0.034880001,
+    "delta_pct": -9.544743478702644,
+    "before_round_ms": [
+      0.038320001,
+      0.038560502,
+      0.038720001
+    ],
+    "after_round_ms": [
+      0.035360999,
+      0.034880001,
+      0.034878999
+    ],
+    "paired_round_delta_pct": [
+      -7.721821301622622,
+      -9.544743478702644,
+      -9.919942925621294
+    ],
+    "before_cv": [
+      0.035297241,
+      0.030295596,
+      0.049780693
+    ],
+    "after_cv": [
+      0.048008534,
+      0.038417065,
+      0.037079823
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id1181_k32n64_before",
+      "rec3_smallperf_r1_id1181_k32n64_after",
+      "rec3_smallperf_r2_id1181_k32n64_before",
+      "rec3_smallperf_r2_id1181_k32n64_after",
+      "rec3_smallperf_r3_id1181_k32n64_before",
+      "rec3_smallperf_r3_id1181_k32n64_after"
+    ],
+    "unpaired_median_delta_pct": -9.544743478702644,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.0321200005710125,
+      "gpu": 4,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/v7_coverage/p6c/native_new15.json"
+    },
+    "blas_ms": 0.0321200005710125,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "R_before": 0.8329767224247364,
+    "R_after": 0.9208715496026647,
+    "original_ms": 0.039120503,
+    "after_vs_original_pct": -10.839589664785244
+  },
+  {
+    "id": 1182,
+    "M": 8,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "variant": "drain",
+    "baseline_variant": "old128",
+    "before_ms": 0.03184,
+    "after_ms": 0.03232,
+    "delta_pct": 1.0050219849246256,
+    "before_round_ms": [
+      0.032480001,
+      0.03184,
+      0.03184
+    ],
+    "after_round_ms": [
+      0.03232,
+      0.032480001,
+      0.032159999
+    ],
+    "paired_round_delta_pct": [
+      -0.4926139010894781,
+      2.0100533919598096,
+      1.0050219849246256
+    ],
+    "before_cv": [
+      0.050321388,
+      0.051271513,
+      0.042615164
+    ],
+    "after_cv": [
+      0.056515522,
+      0.044898755,
+      0.062761853
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id1182_drain_before",
+      "rec3_smallperf_r1_id1182_drain_after",
+      "rec3_smallperf_r2_id1182_drain_before",
+      "rec3_smallperf_r2_id1182_drain_after",
+      "rec3_smallperf_r3_id1182_drain_before",
+      "rec3_smallperf_r3_id1182_drain_after"
+    ],
+    "unpaired_median_delta_pct": 1.5075376884422065,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.03261595219373703,
+      "gpu": 4,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/v7_coverage/p6c/native_new15.json"
+    },
+    "blas_ms": 0.03261595219373703,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "R_before": 1.0243703578434997,
+    "R_after": 1.009156936687408,
+    "original_ms": 0.03968,
+    "after_vs_original_pct": -18.54838709677419
+  },
+  {
+    "id": 1182,
+    "M": 8,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "variant": "k32",
+    "baseline_variant": "old128",
+    "before_ms": 0.03232,
+    "after_ms": 0.034880001,
+    "delta_pct": 8.999996312500237,
+    "before_round_ms": [
+      0.032481,
+      0.03232,
+      0.032000002
+    ],
+    "after_round_ms": [
+      0.037039999,
+      0.034479998,
+      0.034880001
+    ],
+    "paired_round_delta_pct": [
+      14.035894830824148,
+      6.6831621287128495,
+      8.999996312500237
+    ],
+    "before_cv": [
+      0.047127285,
+      0.047259816,
+      0.022436283
+    ],
+    "after_cv": [
+      0.043212817,
+      0.031037981,
+      0.070221231
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id1182_k32_before",
+      "rec3_smallperf_r1_id1182_k32_after",
+      "rec3_smallperf_r2_id1182_k32_before",
+      "rec3_smallperf_r2_id1182_k32_after",
+      "rec3_smallperf_r3_id1182_k32_before",
+      "rec3_smallperf_r3_id1182_k32_after"
+    ],
+    "unpaired_median_delta_pct": 7.920795173267314,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.03261595219373703,
+      "gpu": 4,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/v7_coverage/p6c/native_new15.json"
+    },
+    "blas_ms": 0.03261595219373703,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "R_before": 1.009156936687408,
+    "R_after": 0.9350903457180815,
+    "original_ms": 0.03968,
+    "after_vs_original_pct": -12.096771673387096
+  },
+  {
+    "id": 1182,
+    "M": 8,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "variant": "square",
+    "baseline_variant": "old128",
+    "before_ms": 0.032241002,
+    "after_ms": 0.033599999,
+    "delta_pct": 4.215120237268066,
+    "before_round_ms": [
+      0.032639999,
+      0.0319205,
+      0.032241002
+    ],
+    "after_round_ms": [
+      0.033920001,
+      0.0334405,
+      0.033599999
+    ],
+    "paired_round_delta_pct": [
+      3.921574875048228,
+      4.761830171833159,
+      4.215120237268066
+    ],
+    "before_cv": [
+      0.37894451,
+      0.042750046,
+      0.05906572
+    ],
+    "after_cv": [
+      0.047868277,
+      0.10309915,
+      0.036972098
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id1182_square_before",
+      "rec3_smallperf_r1_id1182_square_after",
+      "rec3_smallperf_r2_id1182_square_before",
+      "rec3_smallperf_r2_id1182_square_after",
+      "rec3_smallperf_r3_id1182_square_before",
+      "rec3_smallperf_r3_id1182_square_after"
+    ],
+    "unpaired_median_delta_pct": 4.215120237268066,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.03261595219373703,
+      "gpu": 4,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/v7_coverage/p6c/native_new15.json"
+    },
+    "blas_ms": 0.03261595219373703,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "R_before": 1.011629607347099,
+    "R_after": 0.9707128917991049,
+    "original_ms": 0.03968,
+    "after_vs_original_pct": -15.32258316532259
+  },
+  {
+    "id": 1182,
+    "M": 8,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "variant": "k32n64",
+    "baseline_variant": "old64",
+    "before_ms": 0.038880002,
+    "after_ms": 0.03528,
+    "delta_pct": -9.391579081632651,
+    "before_round_ms": [
+      0.0392,
+      0.038880002,
+      0.038880002
+    ],
+    "after_round_ms": [
+      0.035518501,
+      0.03472,
+      0.03528
+    ],
+    "paired_round_delta_pct": [
+      -9.391579081632651,
+      -10.699593071008573,
+      -9.259263926992588
+    ],
+    "before_cv": [
+      0.029970038,
+      0.04757088,
+      0.041865556
+    ],
+    "after_cv": [
+      0.028161674,
+      0.028473904,
+      0.037880165
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id1182_k32n64_before",
+      "rec3_smallperf_r1_id1182_k32n64_after",
+      "rec3_smallperf_r2_id1182_k32n64_before",
+      "rec3_smallperf_r2_id1182_k32n64_after",
+      "rec3_smallperf_r3_id1182_k32n64_before",
+      "rec3_smallperf_r3_id1182_k32n64_after"
+    ],
+    "unpaired_median_delta_pct": -9.259263926992588,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.03261595219373703,
+      "gpu": 4,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/v7_coverage/p6c/native_new15.json"
+    },
+    "blas_ms": 0.03261595219373703,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "R_before": 0.8388876161512808,
+    "R_after": 0.9244884408655621,
+    "original_ms": 0.03968,
+    "after_vs_original_pct": -11.088709677419361
+  },
+  {
+    "id": 1183,
+    "M": 16,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "variant": "drain",
+    "baseline_variant": "old128",
+    "before_ms": 0.033599999,
+    "after_ms": 0.03328,
+    "delta_pct": -0.9523780045350594,
+    "before_round_ms": [
+      0.033599999,
+      0.033599999,
+      0.033119999
+    ],
+    "after_round_ms": [
+      0.033040002,
+      0.03328,
+      0.033440001
+    ],
+    "paired_round_delta_pct": [
+      -1.6666577876981448,
+      -0.9523780045350594,
+      0.9661896426989669
+    ],
+    "before_cv": [
+      0.040303616,
+      0.038545108,
+      0.02646394
+    ],
+    "after_cv": [
+      0.039481573,
+      0.059231454,
+      0.052511327
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id1183_drain_before",
+      "rec3_smallperf_r1_id1183_drain_after",
+      "rec3_smallperf_r2_id1183_drain_before",
+      "rec3_smallperf_r2_id1183_drain_after",
+      "rec3_smallperf_r3_id1183_drain_before",
+      "rec3_smallperf_r3_id1183_drain_after"
+    ],
+    "unpaired_median_delta_pct": -0.9523780045350594,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.0329599492251873,
+      "gpu": 4,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/v7_coverage/p6c/native_new15.json"
+    },
+    "blas_ms": 0.0329599492251873,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "R_before": 0.9809508989922084,
+    "R_after": 0.9903830896991378,
+    "original_ms": 0.040640499,
+    "after_vs_original_pct": -18.111241695137647
+  },
+  {
+    "id": 1183,
+    "M": 16,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "variant": "k32",
+    "baseline_variant": "old128",
+    "before_ms": 0.033440001,
+    "after_ms": 0.036320001,
+    "delta_pct": 8.612439933838512,
+    "before_round_ms": [
+      0.034400001,
+      0.033440001,
+      0.033440001
+    ],
+    "after_round_ms": [
+      0.035840001,
+      0.036320001,
+      0.036561001
+    ],
+    "paired_round_delta_pct": [
+      4.186046389940512,
+      8.612439933838512,
+      9.333133692190998
+    ],
+    "before_cv": [
+      0.020824711,
+      0.028832349,
+      0.047531262
+    ],
+    "after_cv": [
+      0.027763654,
+      0.060208603,
+      0.03400649
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id1183_k32_before",
+      "rec3_smallperf_r1_id1183_k32_after",
+      "rec3_smallperf_r2_id1183_k32_before",
+      "rec3_smallperf_r2_id1183_k32_after",
+      "rec3_smallperf_r3_id1183_k32_before",
+      "rec3_smallperf_r3_id1183_k32_after"
+    ],
+    "unpaired_median_delta_pct": 8.612439933838512,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.0329599492251873,
+      "gpu": 4,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/v7_coverage/p6c/native_new15.json"
+    },
+    "blas_ms": 0.0329599492251873,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "R_before": 0.9856443851537955,
+    "R_after": 0.9074875638133189,
+    "original_ms": 0.040640499,
+    "after_vs_original_pct": -10.631016120151472
+  },
+  {
+    "id": 1183,
+    "M": 16,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "variant": "square",
+    "baseline_variant": "old128",
+    "before_ms": 0.033119999,
+    "after_ms": 0.034559999,
+    "delta_pct": 4.554790845460954,
+    "before_round_ms": [
+      0.032880001,
+      0.0333605,
+      0.033119999
+    ],
+    "after_round_ms": [
+      0.034400001,
+      0.034880001,
+      0.034559999
+    ],
+    "paired_round_delta_pct": [
+      4.62287090563045,
+      4.554790845460954,
+      4.3478262182314875
+    ],
+    "before_cv": [
+      0.024869336,
+      0.037165574,
+      0.006430428
+    ],
+    "after_cv": [
+      0.0099563326,
+      0.028699733,
+      0.010348141
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id1183_square_before",
+      "rec3_smallperf_r1_id1183_square_after",
+      "rec3_smallperf_r2_id1183_square_before",
+      "rec3_smallperf_r2_id1183_square_after",
+      "rec3_smallperf_r3_id1183_square_before",
+      "rec3_smallperf_r3_id1183_square_after"
+    ],
+    "unpaired_median_delta_pct": 4.3478262182314875,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.0329599492251873,
+      "gpu": 4,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/v7_coverage/p6c/native_new15.json"
+    },
+    "blas_ms": 0.0329599492251873,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "R_before": 0.9951675791169953,
+    "R_after": 0.9537022621206471,
+    "original_ms": 0.040640499,
+    "after_vs_original_pct": -14.961676528627255
+  },
+  {
+    "id": 1183,
+    "M": 16,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "variant": "k32n64",
+    "baseline_variant": "old64",
+    "before_ms": 0.0396805,
+    "after_ms": 0.03568,
+    "delta_pct": -10.081778203399649,
+    "before_round_ms": [
+      0.0396805,
+      0.039999999,
+      0.03968
+    ],
+    "after_round_ms": [
+      0.03568,
+      0.03568,
+      0.03568
+    ],
+    "paired_round_delta_pct": [
+      -10.081778203399649,
+      -10.799997769999937,
+      -10.080645161290313
+    ],
+    "before_cv": [
+      0.046033607,
+      0.045287527,
+      0.011923331
+    ],
+    "after_cv": [
+      0.031081452,
+      0.032256747,
+      0.038809147
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id1183_k32n64_before",
+      "rec3_smallperf_r1_id1183_k32n64_after",
+      "rec3_smallperf_r2_id1183_k32n64_before",
+      "rec3_smallperf_r2_id1183_k32n64_after",
+      "rec3_smallperf_r3_id1183_k32n64_before",
+      "rec3_smallperf_r3_id1183_k32n64_after"
+    ],
+    "unpaired_median_delta_pct": -10.081778203399649,
+    "observational_label": "stable_improvement",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.0329599492251873,
+      "gpu": 4,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/v7_coverage/p6c/native_new15.json"
+    },
+    "blas_ms": 0.0329599492251873,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "R_before": 0.8306334150322526,
+    "R_after": 0.9237653930826036,
+    "original_ms": 0.040640499,
+    "after_vs_original_pct": -12.20580239430622
+  },
+  {
+    "id": 1184,
+    "M": 32,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "variant": "drain",
+    "baseline_variant": "old128",
+    "before_ms": 0.034559999,
+    "after_ms": 0.034880001,
+    "delta_pct": 0.4637201265174751,
+    "before_round_ms": [
+      0.034559999,
+      0.034719002,
+      0.034559999
+    ],
+    "after_round_ms": [
+      0.034560502,
+      0.034880001,
+      0.035039999
+    ],
+    "paired_round_delta_pct": [
+      0.001455439856923313,
+      0.4637201265174751,
+      1.3888889290766482
+    ],
+    "before_cv": [
+      0.060433615,
+      0.050529128,
+      0.07598193
+    ],
+    "after_cv": [
+      0.040587775,
+      0.10173196,
+      0.063971705
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id1184_drain_before",
+      "rec3_smallperf_r1_id1184_drain_after",
+      "rec3_smallperf_r2_id1184_drain_before",
+      "rec3_smallperf_r2_id1184_drain_after",
+      "rec3_smallperf_r3_id1184_drain_before",
+      "rec3_smallperf_r3_id1184_drain_after"
+    ],
+    "unpaired_median_delta_pct": 0.9259317397549705,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.033504001796245575,
+      "gpu": 4,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/v7_coverage/p6c/native_new15.json"
+    },
+    "blas_ms": 0.033504001796245575,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "R_before": 0.9694445244701996,
+    "R_after": 0.9605504826747446,
+    "original_ms": 0.0416805,
+    "after_vs_original_pct": -16.315780760787423
+  },
+  {
+    "id": 1184,
+    "M": 32,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "variant": "k32",
+    "baseline_variant": "old128",
+    "before_ms": 0.034880001,
+    "after_ms": 0.038079999,
+    "delta_pct": 9.174305929635729,
+    "before_round_ms": [
+      0.034320001,
+      0.034880001,
+      0.035039999
+    ],
+    "after_round_ms": [
+      0.038240001,
+      0.038079999,
+      0.038079999
+    ],
+    "paired_round_delta_pct": [
+      11.421911089105151,
+      9.174305929635729,
+      8.675799334355005
+    ],
+    "before_cv": [
+      0.060452234,
+      0.11519451,
+      0.053641479
+    ],
+    "after_cv": [
+      0.013276443,
+      0.039246011,
+      0.043174018
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id1184_k32_before",
+      "rec3_smallperf_r1_id1184_k32_after",
+      "rec3_smallperf_r2_id1184_k32_before",
+      "rec3_smallperf_r2_id1184_k32_after",
+      "rec3_smallperf_r3_id1184_k32_before",
+      "rec3_smallperf_r3_id1184_k32_after"
+    ],
+    "unpaired_median_delta_pct": 9.174305929635729,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.033504001796245575,
+      "gpu": 4,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/v7_coverage/p6c/native_new15.json"
+    },
+    "blas_ms": 0.033504001796245575,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "R_before": 0.9605504826747446,
+    "R_after": 0.8798320030482556,
+    "original_ms": 0.0416805,
+    "after_vs_original_pct": -8.638334472954979
+  },
+  {
+    "id": 1184,
+    "M": 32,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "variant": "square",
+    "baseline_variant": "old128",
+    "before_ms": 0.03472,
+    "after_ms": 0.03616,
+    "delta_pct": 4.150351382488471,
+    "before_round_ms": [
+      0.034400001,
+      0.03472,
+      0.034880001
+    ],
+    "after_round_ms": [
+      0.035840001,
+      0.036161002,
+      0.03616
+    ],
+    "paired_round_delta_pct": [
+      4.186046389940512,
+      4.150351382488471,
+      3.669721798459813
+    ],
+    "before_cv": [
+      0.027894575,
+      0.12638628,
+      0.04412932
+    ],
+    "after_cv": [
+      0.0091861076,
+      0.038444812,
+      0.027138011
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id1184_square_before",
+      "rec3_smallperf_r1_id1184_square_after",
+      "rec3_smallperf_r2_id1184_square_before",
+      "rec3_smallperf_r2_id1184_square_after",
+      "rec3_smallperf_r3_id1184_square_before",
+      "rec3_smallperf_r3_id1184_square_after"
+    ],
+    "unpaired_median_delta_pct": 4.147465437788012,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.033504001796245575,
+      "gpu": 4,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/v7_coverage/p6c/native_new15.json"
+    },
+    "blas_ms": 0.033504001796245575,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "R_before": 0.9649770102605292,
+    "R_after": 0.9265487222413047,
+    "original_ms": 0.0416805,
+    "after_vs_original_pct": -13.244802725495141
+  },
+  {
+    "id": 1184,
+    "M": 32,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "variant": "k32n64",
+    "baseline_variant": "old64",
+    "before_ms": 0.041120999,
+    "after_ms": 0.037200503,
+    "delta_pct": -9.534048528344352,
+    "before_round_ms": [
+      0.04112,
+      0.041120999,
+      0.0416
+    ],
+    "after_round_ms": [
+      0.03664,
+      0.037200503,
+      0.038400002
+    ],
+    "paired_round_delta_pct": [
+      -10.89494163424124,
+      -9.534048528344352,
+      -7.692302884615376
+    ],
+    "before_cv": [
+      0.023785747,
+      0.01140962,
+      0.031745139
+    ],
+    "after_cv": [
+      0.015160951,
+      0.027898796,
+      0.0373294
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id1184_k32n64_before",
+      "rec3_smallperf_r1_id1184_k32n64_after",
+      "rec3_smallperf_r2_id1184_k32n64_before",
+      "rec3_smallperf_r2_id1184_k32n64_after",
+      "rec3_smallperf_r3_id1184_k32n64_before",
+      "rec3_smallperf_r3_id1184_k32n64_after"
+    ],
+    "unpaired_median_delta_pct": -9.534048528344352,
+    "observational_label": "stable_improvement",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.033504001796245575,
+      "gpu": 4,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/v7_coverage/p6c/native_new15.json"
+    },
+    "blas_ms": 0.033504001796245575,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "R_before": 0.8147662413611493,
+    "R_after": 0.9006330316621142,
+    "original_ms": 0.0416805,
+    "after_vs_original_pct": -10.748424323124716
+  },
+  {
+    "id": 1185,
+    "M": 64,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "variant": "drain",
+    "baseline_variant": "old128",
+    "before_ms": 0.03616,
+    "after_ms": 0.03616,
+    "delta_pct": -0.8771875480914293,
+    "before_round_ms": [
+      0.03616,
+      0.036479998,
+      0.03616
+    ],
+    "after_round_ms": [
+      0.03576,
+      0.03616,
+      0.036320001
+    ],
+    "paired_round_delta_pct": [
+      -1.106194690265483,
+      -0.8771875480914293,
+      0.4424806415929128
+    ],
+    "before_cv": [
+      0.056959331,
+      0.029848548,
+      0.054214435
+    ],
+    "after_cv": [
+      0.045906167,
+      0.063115704,
+      0.043668527
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id1185_drain_before",
+      "rec3_smallperf_r1_id1185_drain_after",
+      "rec3_smallperf_r2_id1185_drain_before",
+      "rec3_smallperf_r2_id1185_drain_after",
+      "rec3_smallperf_r3_id1185_drain_before",
+      "rec3_smallperf_r3_id1185_drain_after"
+    ],
+    "unpaired_median_delta_pct": 0.0,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.03164000064134598,
+      "gpu": 4,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/v7_coverage/p6c/native_new15.json"
+    },
+    "blas_ms": 0.03164000064134598,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "R_before": 0.875000017736338,
+    "R_after": 0.875000017736338,
+    "original_ms": 0.043761,
+    "after_vs_original_pct": -17.36934713557735
+  },
+  {
+    "id": 1185,
+    "M": 64,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "variant": "k32",
+    "baseline_variant": "old128",
+    "before_ms": 0.036159001,
+    "after_ms": 0.041600998,
+    "delta_pct": 14.830321224859034,
+    "before_round_ms": [
+      0.036159001,
+      0.036479998,
+      0.036158502
+    ],
+    "after_round_ms": [
+      0.041521497,
+      0.041600998,
+      0.0416805
+    ],
+    "paired_round_delta_pct": [
+      14.830321224859034,
+      14.037829716986284,
+      15.271644826436681
+    ],
+    "before_cv": [
+      0.030527373,
+      0.040362965,
+      0.025275566
+    ],
+    "after_cv": [
+      0.04276623,
+      0.052304092,
+      0.029179385
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id1185_k32_before",
+      "rec3_smallperf_r1_id1185_k32_after",
+      "rec3_smallperf_r2_id1185_k32_before",
+      "rec3_smallperf_r2_id1185_k32_after",
+      "rec3_smallperf_r3_id1185_k32_before",
+      "rec3_smallperf_r3_id1185_k32_after"
+    ],
+    "unpaired_median_delta_pct": 15.05018625929404,
+    "observational_label": "stable_regression",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.03164000064134598,
+      "gpu": 4,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/v7_coverage/p6c/native_new15.json"
+    },
+    "blas_ms": 0.03164000064134598,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "R_before": 0.875024192215542,
+    "R_after": 0.7605586923983405,
+    "original_ms": 0.043761,
+    "after_vs_original_pct": -4.935906400676404
+  },
+  {
+    "id": 1185,
+    "M": 64,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "variant": "square",
+    "baseline_variant": "old128",
+    "before_ms": 0.03664,
+    "after_ms": 0.037760001,
+    "delta_pct": 3.4934443231441126,
+    "before_round_ms": [
+      0.03664,
+      0.03664,
+      0.036320001
+    ],
+    "after_round_ms": [
+      0.037599999,
+      0.037919998,
+      0.037760001
+    ],
+    "paired_round_delta_pct": [
+      2.6200846069869055,
+      3.4934443231441126,
+      3.964757600089275
+    ],
+    "before_cv": [
+      0.034891427,
+      0.058961822,
+      0.15046663
+    ],
+    "after_cv": [
+      0.0068035782,
+      0.023875935,
+      0.0080695573
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id1185_square_before",
+      "rec3_smallperf_r1_id1185_square_after",
+      "rec3_smallperf_r2_id1185_square_before",
+      "rec3_smallperf_r2_id1185_square_after",
+      "rec3_smallperf_r3_id1185_square_before",
+      "rec3_smallperf_r3_id1185_square_after"
+    ],
+    "unpaired_median_delta_pct": 3.056771288209603,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.03164000064134598,
+      "gpu": 4,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/v7_coverage/p6c/native_new15.json"
+    },
+    "blas_ms": 0.03164000064134598,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "R_before": 0.8635371354079142,
+    "R_after": 0.8379237236075808,
+    "original_ms": 0.043761,
+    "after_vs_original_pct": -13.713121272365802
+  },
+  {
+    "id": 1185,
+    "M": 64,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "variant": "k32n64",
+    "baseline_variant": "old64",
+    "before_ms": 0.044160001,
+    "after_ms": 0.039999999,
+    "delta_pct": -9.420294170736089,
+    "before_round_ms": [
+      0.043839999,
+      0.045441002,
+      0.044160001
+    ],
+    "after_round_ms": [
+      0.039999999,
+      0.039840002,
+      0.039999999
+    ],
+    "paired_round_delta_pct": [
+      -8.759124287388776,
+      -12.32587256768678,
+      -9.420294170736089
+    ],
+    "before_cv": [
+      0.017378273,
+      0.029231058,
+      0.028052673
+    ],
+    "after_cv": [
+      0.040115725,
+      0.026815509,
+      0.034291221
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id1185_k32n64_before",
+      "rec3_smallperf_r1_id1185_k32n64_after",
+      "rec3_smallperf_r2_id1185_k32n64_before",
+      "rec3_smallperf_r2_id1185_k32n64_after",
+      "rec3_smallperf_r3_id1185_k32n64_before",
+      "rec3_smallperf_r3_id1185_k32n64_after"
+    ],
+    "unpaired_median_delta_pct": -9.420294170736089,
+    "observational_label": "stable_improvement",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.03164000064134598,
+      "gpu": 4,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/v7_coverage/p6c/native_new15.json"
+    },
+    "blas_ms": 0.03164000064134598,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "R_before": 0.7164855055448477,
+    "R_after": 0.7910000358086503,
+    "original_ms": 0.043761,
+    "after_vs_original_pct": -8.594412833344755
+  },
+  {
+    "id": 1186,
+    "M": 128,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "variant": "drain",
+    "baseline_variant": "old128",
+    "before_ms": 0.047760502,
+    "after_ms": 0.046560001,
+    "delta_pct": -2.5135853890313142,
+    "before_round_ms": [
+      0.047760502,
+      0.047839999,
+      0.047518998
+    ],
+    "after_round_ms": [
+      0.046560001,
+      0.046560001,
+      0.046881001
+    ],
+    "paired_round_delta_pct": [
+      -2.5135853890313142,
+      -2.6755811596066437,
+      -1.3426145896426545
+    ],
+    "before_cv": [
+      0.033359884,
+      0.052189907,
+      0.023884397
+    ],
+    "after_cv": [
+      0.020704826,
+      0.030903443,
+      0.037410911
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id1186_drain_before",
+      "rec3_smallperf_r1_id1186_drain_after",
+      "rec3_smallperf_r2_id1186_drain_before",
+      "rec3_smallperf_r2_id1186_drain_after",
+      "rec3_smallperf_r3_id1186_drain_before",
+      "rec3_smallperf_r3_id1186_drain_after"
+    ],
+    "unpaired_median_delta_pct": -2.5135853890313142,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.038439951837062836,
+      "gpu": 4,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/v7_coverage/p6c/native_new15.json"
+    },
+    "blas_ms": 0.038439951837062836,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "R_before": 0.8048481533352148,
+    "R_after": 0.8256003224111366,
+    "original_ms": 0.048,
+    "after_vs_original_pct": -2.9999979166666746
+  },
+  {
+    "id": 1186,
+    "M": 128,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "variant": "k32",
+    "baseline_variant": "old128",
+    "before_ms": 0.04752,
+    "after_ms": 0.052240498,
+    "delta_pct": 9.933707912457912,
+    "before_round_ms": [
+      0.047200002,
+      0.04752,
+      0.0476785
+    ],
+    "after_round_ms": [
+      0.05232,
+      0.052240498,
+      0.052080497
+    ],
+    "paired_round_delta_pct": [
+      10.84745293019267,
+      9.933707912457912,
+      9.232666715605585
+    ],
+    "before_cv": [
+      0.016159436,
+      0.030464508,
+      0.051335852
+    ],
+    "after_cv": [
+      0.027316082,
+      0.018146163,
+      0.034390487
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id1186_k32_before",
+      "rec3_smallperf_r1_id1186_k32_after",
+      "rec3_smallperf_r2_id1186_k32_before",
+      "rec3_smallperf_r2_id1186_k32_after",
+      "rec3_smallperf_r3_id1186_k32_before",
+      "rec3_smallperf_r3_id1186_k32_after"
+    ],
+    "unpaired_median_delta_pct": 9.933707912457912,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.038439951837062836,
+      "gpu": 4,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/v7_coverage/p6c/native_new15.json"
+    },
+    "blas_ms": 0.038439951837062836,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "R_before": 0.8089215453927364,
+    "R_after": 0.7358266729590295,
+    "original_ms": 0.048,
+    "after_vs_original_pct": 8.834370833333338
+  },
+  {
+    "id": 1186,
+    "M": 128,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "variant": "square",
+    "baseline_variant": "old128",
+    "before_ms": 0.04752,
+    "after_ms": 0.042319998,
+    "delta_pct": -10.336137800989443,
+    "before_round_ms": [
+      0.0471985,
+      0.047680002,
+      0.04752
+    ],
+    "after_round_ms": [
+      0.042319998,
+      0.042080499,
+      0.042721
+    ],
+    "paired_round_delta_pct": [
+      -10.336137800989443,
+      -11.743923584566963,
+      -10.098905723905716
+    ],
+    "before_cv": [
+      0.036714819,
+      0.058795039,
+      0.030721357
+    ],
+    "after_cv": [
+      0.066337669,
+      0.0068965246,
+      0.020502436
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id1186_square_before",
+      "rec3_smallperf_r1_id1186_square_after",
+      "rec3_smallperf_r2_id1186_square_before",
+      "rec3_smallperf_r2_id1186_square_after",
+      "rec3_smallperf_r3_id1186_square_before",
+      "rec3_smallperf_r3_id1186_square_after"
+    ],
+    "unpaired_median_delta_pct": -10.942765151515154,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.038439951837062836,
+      "gpu": 4,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/v7_coverage/p6c/native_new15.json"
+    },
+    "blas_ms": 0.038439951837062836,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "R_before": 0.8089215453927364,
+    "R_after": 0.9083164852007516,
+    "original_ms": 0.048,
+    "after_vs_original_pct": -11.833337500000008
+  },
+  {
+    "id": 1186,
+    "M": 128,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "variant": "k32n64",
+    "baseline_variant": "old64",
+    "before_ms": 0.0616,
+    "after_ms": 0.055199999,
+    "delta_pct": -10.705691043643583,
+    "before_round_ms": [
+      0.0616,
+      0.0612805,
+      0.061839499
+    ],
+    "after_round_ms": [
+      0.055520002,
+      0.054719999,
+      0.055199999
+    ],
+    "paired_round_delta_pct": [
+      -9.87012662337663,
+      -10.705691043643583,
+      -10.736665250150235
+    ],
+    "before_cv": [
+      0.017197165,
+      0.011109578,
+      0.018306836
+    ],
+    "after_cv": [
+      0.031465863,
+      0.020663376,
+      0.050233271
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id1186_k32n64_before",
+      "rec3_smallperf_r1_id1186_k32n64_after",
+      "rec3_smallperf_r2_id1186_k32n64_before",
+      "rec3_smallperf_r2_id1186_k32n64_after",
+      "rec3_smallperf_r3_id1186_k32n64_before",
+      "rec3_smallperf_r3_id1186_k32n64_after"
+    ],
+    "unpaired_median_delta_pct": -10.389612012987016,
+    "observational_label": "stable_improvement",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.038439951837062836,
+      "gpu": 4,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/v7_coverage/p6c/native_new15.json"
+    },
+    "blas_ms": 0.038439951837062836,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "R_before": 0.624025192160111,
+    "R_after": 0.6963759516927317,
+    "original_ms": 0.048,
+    "after_vs_original_pct": 14.999997916666663
+  },
+  {
+    "id": 1187,
+    "M": 256,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "variant": "drain",
+    "baseline_variant": "old128",
+    "before_ms": 0.069760002,
+    "after_ms": 0.067358002,
+    "delta_pct": -3.5516738667385805,
+    "before_round_ms": [
+      0.069840506,
+      0.069760002,
+      0.069760002
+    ],
+    "after_round_ms": [
+      0.067359999,
+      0.067279994,
+      0.067358002
+    ],
+    "paired_round_delta_pct": [
+      -3.5516738667385805,
+      -3.5550572375270373,
+      -3.443233846237559
+    ],
+    "before_cv": [
+      0.061621325,
+      0.038291092,
+      0.02288558
+    ],
+    "after_cv": [
+      0.27503947,
+      0.058515067,
+      0.04416197
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id1187_drain_before",
+      "rec3_smallperf_r1_id1187_drain_after",
+      "rec3_smallperf_r2_id1187_drain_before",
+      "rec3_smallperf_r2_id1187_drain_after",
+      "rec3_smallperf_r3_id1187_drain_before",
+      "rec3_smallperf_r3_id1187_drain_after"
+    ],
+    "unpaired_median_delta_pct": -3.443233846237559,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.05039994791150093,
+      "gpu": 4,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/v7_coverage/p6c/native_new15.json"
+    },
+    "blas_ms": 0.05039994791150093,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "R_before": 0.7224762968255208,
+    "R_after": 0.7482399479649193,
+    "original_ms": 0.058079999,
+    "after_vs_original_pct": 15.9745233466688
+  },
+  {
+    "id": 1187,
+    "M": 256,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "variant": "k32",
+    "baseline_variant": "old128",
+    "before_ms": 0.069920003,
+    "after_ms": 0.078400001,
+    "delta_pct": 12.128143072305075,
+    "before_round_ms": [
+      0.069920003,
+      0.07,
+      0.069760002
+    ],
+    "after_round_ms": [
+      0.078400001,
+      0.078077003,
+      0.079123005
+    ],
+    "paired_round_delta_pct": [
+      12.128143072305075,
+      11.538575714285715,
+      13.421735567037384
+    ],
+    "before_cv": [
+      0.019257868,
+      0.032604957,
+      0.052375938
+    ],
+    "after_cv": [
+      0.019332272,
+      0.022754507,
+      0.019480045
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id1187_k32_before",
+      "rec3_smallperf_r1_id1187_k32_after",
+      "rec3_smallperf_r2_id1187_k32_before",
+      "rec3_smallperf_r2_id1187_k32_after",
+      "rec3_smallperf_r3_id1187_k32_before",
+      "rec3_smallperf_r3_id1187_k32_after"
+    ],
+    "unpaired_median_delta_pct": 12.128143072305075,
+    "observational_label": "stable_regression",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.05039994791150093,
+      "gpu": 4,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/v7_coverage/p6c/native_new15.json"
+    },
+    "blas_ms": 0.05039994791150093,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "R_before": 0.7208230227264283,
+    "R_after": 0.6428564702633223,
+    "original_ms": 0.058079999,
+    "after_vs_original_pct": 34.98622994122296
+  },
+  {
+    "id": 1187,
+    "M": 256,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "variant": "square",
+    "baseline_variant": "old128",
+    "before_ms": 0.069840506,
+    "after_ms": 0.060800001,
+    "delta_pct": -12.742092611063683,
+    "before_round_ms": [
+      0.069840997,
+      0.0696785,
+      0.069840506
+    ],
+    "after_round_ms": [
+      0.06072,
+      0.060800001,
+      0.061602
+    ],
+    "paired_round_delta_pct": [
+      -13.059660359659532,
+      -12.742092611063683,
+      -11.796171694403245
+    ],
+    "before_cv": [
+      0.03041699,
+      0.032887658,
+      0.048660768
+    ],
+    "after_cv": [
+      0.022148495,
+      0.021717615,
+      0.020296733
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id1187_square_before",
+      "rec3_smallperf_r1_id1187_square_after",
+      "rec3_smallperf_r2_id1187_square_before",
+      "rec3_smallperf_r2_id1187_square_after",
+      "rec3_smallperf_r3_id1187_square_before",
+      "rec3_smallperf_r3_id1187_square_after"
+    ],
+    "unpaired_median_delta_pct": -12.944501003472109,
+    "observational_label": "stable_improvement",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.05039994791150093,
+      "gpu": 4,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/v7_coverage/p6c/native_new15.json"
+    },
+    "blas_ms": 0.05039994791150093,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "R_before": 0.7216435103076276,
+    "R_after": 0.8289464980683295,
+    "original_ms": 0.058079999,
+    "after_vs_original_pct": 4.683199116446257
+  },
+  {
+    "id": 1187,
+    "M": 256,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "variant": "k32n64",
+    "baseline_variant": "old64",
+    "before_ms": 0.091519997,
+    "after_ms": 0.083839998,
+    "delta_pct": -8.391607574025606,
+    "before_round_ms": [
+      0.091519997,
+      0.091201,
+      0.091519997
+    ],
+    "after_round_ms": [
+      0.083762005,
+      0.083999999,
+      0.083839998
+    ],
+    "paired_round_delta_pct": [
+      -8.476827200944948,
+      -7.8957478536419545,
+      -8.391607574025606
+    ],
+    "before_cv": [
+      0.0055182217,
+      0.013684106,
+      0.017075529
+    ],
+    "after_cv": [
+      0.027087443,
+      0.029875833,
+      0.013248657
+    ],
+    "commands": [
+      "rec3_smallperf_r1_id1187_k32n64_before",
+      "rec3_smallperf_r1_id1187_k32n64_after",
+      "rec3_smallperf_r2_id1187_k32n64_before",
+      "rec3_smallperf_r2_id1187_k32n64_after",
+      "rec3_smallperf_r3_id1187_k32n64_before",
+      "rec3_smallperf_r3_id1187_k32n64_after"
+    ],
+    "unpaired_median_delta_pct": -8.391607574025606,
+    "observational_label": "stable_improvement",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      3,
+      3,
+      3
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 0.05039994791150093,
+      "gpu": 4,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/v7_coverage/p6c/native_new15.json"
+    },
+    "blas_ms": 0.05039994791150093,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "R_before": 0.5506987496022419,
+    "R_after": 0.6011444312236378,
+    "original_ms": 0.058079999,
+    "after_vs_original_pct": 44.35261612177368
+  }
+]

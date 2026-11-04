@@ -10,6 +10,13 @@
       "began_at": "2026-11-04T10:49:06.185676+00:00",
       "classification": "suspected environment startup failure",
       "service_evidence": "kernel_environment_events.log"
+    },
+    {
+      "environment_epoch": 2,
+      "began_at": "2026-11-04T11:18:33.878388+00:00",
+      "classification": "MKFD gate; healthy retry stopped before more GPU commands",
+      "evidence_key": "smallacc_k32_k416",
+      "service_evidence": "kernel_environment_events.log (hymgr unregister11:18:50, after gate warning)"
     }
   ]
 }

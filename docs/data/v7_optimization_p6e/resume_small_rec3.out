@@ -1,0 +1,13 @@
+STAGE ['/usr/bin/python3', '/workspace/v7_coverage/p6e/small_run.py', 'accuracy', '--repair-epoch', 'rec3']
+STAGE_PASS /workspace/v7_coverage/p6e/small_accuracy_rec3.out
+STAGE ['/usr/bin/python3', '/workspace/v7_coverage/p6e/small_run.py', 'stress', '--repair-epoch', 'rec3']
+STAGE_PASS /workspace/v7_coverage/p6e/small_stress_rec3.out
+STAGE ['/usr/bin/python3', '/workspace/v7_coverage/p6e/small_run.py', 'perf', '--repair-epoch', 'rec3']
+STAGE_PASS /workspace/v7_coverage/p6e/small_perf_rec3.out
+STAGE ['/usr/bin/python3', '/workspace/v7_coverage/p6e/small_run.py', 'profile', '--repair-epoch', 'rec3']
+STAGE_PASS /workspace/v7_coverage/p6e/small_profile_rec3.out
+STAGE ['/usr/bin/python3', '/workspace/v7_coverage/p6e/run_native.py', '--repair-epoch', 'rec3']
+STAGE_PASS /workspace/v7_coverage/p6e/native_reference_rec3.out
+STAGE ['/usr/bin/python3', '/workspace/v7_coverage/p6e/analyze_all.py']
+STAGE_PASS /workspace/v7_coverage/p6e/analysis_rec3.out
+FORMAL_SMALL_CAMPAIGN_PASS 2026-11-04T11:53:13.602511+00:00

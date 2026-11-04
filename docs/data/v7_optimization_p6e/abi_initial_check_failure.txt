@@ -1,0 +1,11 @@
+CPU-only initial ABI text audit, transcribed from the retained tool output:
+Traceback (most recent call last):
+  File "<stdin>", line 5, in <module>
+AssertionError: Unexpected public header ABI change
+
+Inspection: only enum IDs5005..5010, the required trailing comma on5004,
+and a blank line inside that enum differ. The original check stripped new
+rows but incorrectly demanded byte identity for that comma/blank line.
+Corrected audit_abi.py compares the complete header outside that enum exactly,
+all existing ID values, and the GemmTransKernelArgImpl defining header.
+The corrected audit passes. No ABI/kernel implementation failure occurred.

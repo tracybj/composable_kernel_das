@@ -1,0 +1,15 @@
+{
+  "at": "2026-11-04T10:22:30.266657+00:00",
+  "first_failure": {
+    "key": "expand_cache_r3_id1052_base",
+    "at": "2026-11-04T10:15:58.155404+00:00",
+    "attempt": 1,
+    "rc": -13,
+    "hcu4": null,
+    "mem_available_kib": 453809204,
+    "seconds": 0.23479276150465012,
+    "output": "\n================================= System Management Interface ==================================\nError: [2026-11-04 18:15:57.966] MKFD file descriptor not valid in this process\n================================================================================================\n"
+  },
+  "observed_by_agent_at": "2026-11-04T10:18:18+00:00",
+  "reason": "Old runner resumed after only one recovery check; requires full recovery and affected-pair remeasurement"
+}

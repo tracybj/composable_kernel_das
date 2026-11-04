@@ -53,7 +53,14 @@ def main():
   pairs.append(dict(m01=m01,original=b,experiment=r,only_slc_machine_bits_differ=isolated))
   print('CACHE_ISA',m01,'only_slc_bits',isolated,'bytes',b['bytes'],r['bytes'],'slc_loads',b['slc_idxen_loads'],r['slc_idxen_loads'])
  assert len(pairs)==2,len(pairs)
- (ROOT/'cache_isa.json').write_text(json.dumps(dict(original_shaders_unchanged=preserved,cache_pairs=pairs),indent=2))
+ resources=[]
+ for row in new.values():
+  if not any(x in row['demangled'] for x in ['GemmPipelineV7SmallMDrain<','GemmPipelineV7SmallMK32<','GemmPipelineV7Square128<']):continue
+  v='drain' if 'SmallMDrain<' in row['demangled'] else 'square128' if 'Square128<' in row['demangled'] else 'k32n64' if 'V7SmallMK32Geometry<64>' in row['demangled'] else 'k32n128'
+  resources.append(dict(variant=v,declared_dynamic_lds_bytes=49152 if v=='k32n128' else 32768,**row))
+ (ROOT/'small_resources.json').write_text(json.dumps(resources,indent=2))
+ print('SMALL_SHADER_RESOURCES',len(resources))
+ (ROOT/'cache_isa.json').write_text(json.dumps(dict(original_shaders_unchanged=preserved,cache_pairs=pairs,small_resources=resources),indent=2))
  print('ORIGINAL_SHADER_PRESERVATION_PASS',len(preserved))
 
 if __name__=='__main__':main()

@@ -1,0 +1,629 @@
+[
+  {
+    "id": 1179,
+    "M": 1,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "phase": "decode",
+    "original_ms": 0.039360501,
+    "blas_ms": 0.03193599730730057,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "original_round_ms": [
+      0.0392,
+      0.039360501,
+      0.039440498
+    ],
+    "drain_ms": 0.032159001,
+    "drain_delta_vs_original_pct": -18.29626101558006,
+    "drain_R_frozen": 0.9930655901686923,
+    "drain_round_ms": [
+      0.031679999,
+      0.033760998,
+      0.032159001
+    ],
+    "k32_ms": 0.034959,
+    "k32_delta_vs_original_pct": -11.182532966234348,
+    "k32_R_frozen": 0.9135271977831336,
+    "k32_round_ms": [
+      0.034959,
+      0.034880001,
+      0.034960002
+    ],
+    "square_ms": 0.033440001,
+    "square_delta_vs_original_pct": -15.041729270671633,
+    "square_R_frozen": 0.9550238143623432,
+    "square_round_ms": [
+      0.03328,
+      0.033440001,
+      0.033440001
+    ],
+    "k32n64_ms": 0.03472,
+    "k32n64_delta_vs_original_pct": -11.789740684449113,
+    "k32n64_R_frozen": 0.9198155906480578,
+    "k32n64_round_ms": [
+      0.034479998,
+      0.03472,
+      0.034882002
+    ],
+    "old128_ms": 0.032000002,
+    "old64_ms": 0.0382405,
+    "applicability": "Within default-off small-M experiment correctness contract; no per-shape winner selected"
+  },
+  {
+    "id": 1180,
+    "M": 2,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "phase": "decode",
+    "original_ms": 0.0387205,
+    "blas_ms": 0.03202399984002113,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "original_round_ms": [
+      0.0387205,
+      0.038720001,
+      0.038880002
+    ],
+    "drain_ms": 0.03232,
+    "drain_delta_vs_original_pct": -16.530003486525214,
+    "drain_R_frozen": 0.9908415792085746,
+    "drain_round_ms": [
+      0.03232,
+      0.033041,
+      0.032160498
+    ],
+    "k32_ms": 0.03472,
+    "k32_delta_vs_original_pct": -10.331736418692937,
+    "k32_R_frozen": 0.9223502258070603,
+    "k32_round_ms": [
+      0.034559999,
+      0.03472,
+      0.034720998
+    ],
+    "square_ms": 0.033441,
+    "square_delta_vs_original_pct": -13.634896243591898,
+    "square_R_frozen": 0.9576268604414083,
+    "square_round_ms": [
+      0.033200502,
+      0.033597998,
+      0.033441
+    ],
+    "k32n64_ms": 0.03472,
+    "k32n64_delta_vs_original_pct": -10.331736418692937,
+    "k32n64_R_frozen": 0.9223502258070603,
+    "k32n64_round_ms": [
+      0.03472,
+      0.034479998,
+      0.035039999
+    ],
+    "old128_ms": 0.031679999,
+    "old64_ms": 0.038240999,
+    "applicability": "Within default-off small-M experiment correctness contract; no per-shape winner selected"
+  },
+  {
+    "id": 1181,
+    "M": 4,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "phase": "decode",
+    "original_ms": 0.039120503,
+    "blas_ms": 0.0321200005710125,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "original_round_ms": [
+      0.039520502,
+      0.039120503,
+      0.039120503
+    ],
+    "drain_ms": 0.032480001,
+    "drain_delta_vs_original_pct": -16.974480108295133,
+    "drain_R_frozen": 0.9889162432911408,
+    "drain_round_ms": [
+      0.032480001,
+      0.0319205,
+      0.032480001
+    ],
+    "k32_ms": 0.034559999,
+    "k32_delta_vs_original_pct": -11.65758016966193,
+    "k32_R_frozen": 0.9293981915628092,
+    "k32_round_ms": [
+      0.034400001,
+      0.034639999,
+      0.034559999
+    ],
+    "square_ms": 0.033360001,
+    "square_delta_vs_original_pct": -14.725020279008172,
+    "square_R_frozen": 0.9628297244659104,
+    "square_round_ms": [
+      0.033360001,
+      0.033199999,
+      0.033599999
+    ],
+    "k32n64_ms": 0.034880001,
+    "k32n64_delta_vs_original_pct": -10.839589664785244,
+    "k32n64_R_frozen": 0.9208715496026647,
+    "k32n64_round_ms": [
+      0.035360999,
+      0.034880001,
+      0.034878999
+    ],
+    "old128_ms": 0.032159001,
+    "old64_ms": 0.038560502,
+    "applicability": "Within default-off small-M experiment correctness contract; no per-shape winner selected"
+  },
+  {
+    "id": 1182,
+    "M": 8,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "phase": "decode",
+    "original_ms": 0.03968,
+    "blas_ms": 0.03261595219373703,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "original_round_ms": [
+      0.03968,
+      0.03968,
+      0.0392
+    ],
+    "drain_ms": 0.03232,
+    "drain_delta_vs_original_pct": -18.54838709677419,
+    "drain_R_frozen": 1.009156936687408,
+    "drain_round_ms": [
+      0.03232,
+      0.032480001,
+      0.032159999
+    ],
+    "k32_ms": 0.034880001,
+    "k32_delta_vs_original_pct": -12.096771673387096,
+    "k32_R_frozen": 0.9350903457180815,
+    "k32_round_ms": [
+      0.037039999,
+      0.034479998,
+      0.034880001
+    ],
+    "square_ms": 0.033599999,
+    "square_delta_vs_original_pct": -15.32258316532259,
+    "square_R_frozen": 0.9707128917991049,
+    "square_round_ms": [
+      0.033920001,
+      0.0334405,
+      0.033599999
+    ],
+    "k32n64_ms": 0.03528,
+    "k32n64_delta_vs_original_pct": -11.088709677419361,
+    "k32n64_R_frozen": 0.9244884408655621,
+    "k32n64_round_ms": [
+      0.035518501,
+      0.03472,
+      0.03528
+    ],
+    "old128_ms": 0.03184,
+    "old64_ms": 0.038880002,
+    "applicability": "Within default-off small-M experiment correctness contract; no per-shape winner selected"
+  },
+  {
+    "id": 1183,
+    "M": 16,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "phase": "decode",
+    "original_ms": 0.040640499,
+    "blas_ms": 0.0329599492251873,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "original_round_ms": [
+      0.040800001,
+      0.04016,
+      0.040640499
+    ],
+    "drain_ms": 0.03328,
+    "drain_delta_vs_original_pct": -18.111241695137647,
+    "drain_R_frozen": 0.9903830896991378,
+    "drain_round_ms": [
+      0.033040002,
+      0.03328,
+      0.033440001
+    ],
+    "k32_ms": 0.036320001,
+    "k32_delta_vs_original_pct": -10.631016120151472,
+    "k32_R_frozen": 0.9074875638133189,
+    "k32_round_ms": [
+      0.035840001,
+      0.036320001,
+      0.036561001
+    ],
+    "square_ms": 0.034559999,
+    "square_delta_vs_original_pct": -14.961676528627255,
+    "square_R_frozen": 0.9537022621206471,
+    "square_round_ms": [
+      0.034400001,
+      0.034880001,
+      0.034559999
+    ],
+    "k32n64_ms": 0.03568,
+    "k32n64_delta_vs_original_pct": -12.20580239430622,
+    "k32n64_R_frozen": 0.9237653930826036,
+    "k32n64_round_ms": [
+      0.03568,
+      0.03568,
+      0.03568
+    ],
+    "old128_ms": 0.033599999,
+    "old64_ms": 0.0396805,
+    "applicability": "Within default-off small-M experiment correctness contract; no per-shape winner selected"
+  },
+  {
+    "id": 1184,
+    "M": 32,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "phase": "decode",
+    "original_ms": 0.0416805,
+    "blas_ms": 0.033504001796245575,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "original_round_ms": [
+      0.0416805,
+      0.0416,
+      0.041919999
+    ],
+    "drain_ms": 0.034880001,
+    "drain_delta_vs_original_pct": -16.315780760787423,
+    "drain_R_frozen": 0.9605504826747446,
+    "drain_round_ms": [
+      0.034560502,
+      0.034880001,
+      0.035039999
+    ],
+    "k32_ms": 0.038079999,
+    "k32_delta_vs_original_pct": -8.638334472954979,
+    "k32_R_frozen": 0.8798320030482556,
+    "k32_round_ms": [
+      0.038240001,
+      0.038079999,
+      0.038079999
+    ],
+    "square_ms": 0.03616,
+    "square_delta_vs_original_pct": -13.244802725495141,
+    "square_R_frozen": 0.9265487222413047,
+    "square_round_ms": [
+      0.035840001,
+      0.036161002,
+      0.03616
+    ],
+    "k32n64_ms": 0.037200503,
+    "k32n64_delta_vs_original_pct": -10.748424323124716,
+    "k32n64_R_frozen": 0.9006330316621142,
+    "k32n64_round_ms": [
+      0.03664,
+      0.037200503,
+      0.038400002
+    ],
+    "old128_ms": 0.034559999,
+    "old64_ms": 0.041120999,
+    "applicability": "Within default-off small-M experiment correctness contract; no per-shape winner selected"
+  },
+  {
+    "id": 1185,
+    "M": 64,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "phase": "decode",
+    "original_ms": 0.043761,
+    "blas_ms": 0.03164000064134598,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "original_round_ms": [
+      0.043761,
+      0.044482,
+      0.042879999
+    ],
+    "drain_ms": 0.03616,
+    "drain_delta_vs_original_pct": -17.36934713557735,
+    "drain_R_frozen": 0.875000017736338,
+    "drain_round_ms": [
+      0.03576,
+      0.03616,
+      0.036320001
+    ],
+    "k32_ms": 0.041600998,
+    "k32_delta_vs_original_pct": -4.935906400676404,
+    "k32_R_frozen": 0.7605586923983405,
+    "k32_round_ms": [
+      0.041521497,
+      0.041600998,
+      0.0416805
+    ],
+    "square_ms": 0.037760001,
+    "square_delta_vs_original_pct": -13.713121272365802,
+    "square_R_frozen": 0.8379237236075808,
+    "square_round_ms": [
+      0.037599999,
+      0.037919998,
+      0.037760001
+    ],
+    "k32n64_ms": 0.039999999,
+    "k32n64_delta_vs_original_pct": -8.594412833344755,
+    "k32n64_R_frozen": 0.7910000358086503,
+    "k32n64_round_ms": [
+      0.039999999,
+      0.039840002,
+      0.039999999
+    ],
+    "old128_ms": 0.03616,
+    "old64_ms": 0.044160001,
+    "applicability": "Within default-off small-M experiment correctness contract; no per-shape winner selected"
+  },
+  {
+    "id": 1186,
+    "M": 128,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "phase": "decode",
+    "original_ms": 0.048,
+    "blas_ms": 0.038439951837062836,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "original_round_ms": [
+      0.048,
+      0.048,
+      0.048160002
+    ],
+    "drain_ms": 0.046560001,
+    "drain_delta_vs_original_pct": -2.9999979166666746,
+    "drain_R_frozen": 0.8256003224111366,
+    "drain_round_ms": [
+      0.046560001,
+      0.046560001,
+      0.046881001
+    ],
+    "k32_ms": 0.052240498,
+    "k32_delta_vs_original_pct": 8.834370833333338,
+    "k32_R_frozen": 0.7358266729590295,
+    "k32_round_ms": [
+      0.05232,
+      0.052240498,
+      0.052080497
+    ],
+    "square_ms": 0.042319998,
+    "square_delta_vs_original_pct": -11.833337500000008,
+    "square_R_frozen": 0.9083164852007516,
+    "square_round_ms": [
+      0.042319998,
+      0.042080499,
+      0.042721
+    ],
+    "k32n64_ms": 0.055199999,
+    "k32n64_delta_vs_original_pct": 14.999997916666663,
+    "k32n64_R_frozen": 0.6963759516927317,
+    "k32n64_round_ms": [
+      0.055520002,
+      0.054719999,
+      0.055199999
+    ],
+    "old128_ms": 0.047760502,
+    "old64_ms": 0.0616,
+    "applicability": "Within default-off small-M experiment correctness contract; no per-shape winner selected"
+  },
+  {
+    "id": 1187,
+    "M": 256,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "phase": "decode",
+    "original_ms": 0.058079999,
+    "blas_ms": 0.05039994791150093,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "original_round_ms": [
+      0.058079999,
+      0.057518497,
+      0.05816
+    ],
+    "drain_ms": 0.067358002,
+    "drain_delta_vs_original_pct": 15.9745233466688,
+    "drain_R_frozen": 0.7482399479649193,
+    "drain_round_ms": [
+      0.067359999,
+      0.067279994,
+      0.067358002
+    ],
+    "k32_ms": 0.078400001,
+    "k32_delta_vs_original_pct": 34.98622994122296,
+    "k32_R_frozen": 0.6428564702633223,
+    "k32_round_ms": [
+      0.078400001,
+      0.078077003,
+      0.079123005
+    ],
+    "square_ms": 0.060800001,
+    "square_delta_vs_original_pct": 4.683199116446257,
+    "square_R_frozen": 0.8289464980683295,
+    "square_round_ms": [
+      0.06072,
+      0.060800001,
+      0.061602
+    ],
+    "k32n64_ms": 0.083839998,
+    "k32n64_delta_vs_original_pct": 44.35261612177368,
+    "k32n64_R_frozen": 0.6011444312236378,
+    "k32n64_round_ms": [
+      0.083762005,
+      0.083999999,
+      0.083839998
+    ],
+    "old128_ms": 0.069760002,
+    "old64_ms": 0.091519997,
+    "applicability": "Within default-off small-M experiment correctness contract; no per-shape winner selected"
+  },
+  {
+    "id": 1188,
+    "M": 512,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "phase": "prefill",
+    "original_ms": 0.085759997,
+    "blas_ms": 0.08038390427827835,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "original_round_ms": [
+      0.085759997,
+      0.085360005,
+      0.085997999
+    ],
+    "prefill_switch_on_ms": 0.085920997,
+    "prefill_selected": [
+      5000,
+      5000,
+      5000
+    ],
+    "applicability": "Outside small-M contract: M>256; measured K32 switch-on selector fallback to5000"
+  },
+  {
+    "id": 1189,
+    "M": 1024,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "phase": "prefill",
+    "original_ms": 0.15096,
+    "blas_ms": 0.13751189410686493,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "original_round_ms": [
+      0.15023699,
+      0.15096,
+      0.1514405
+    ],
+    "prefill_switch_on_ms": 0.15096,
+    "prefill_selected": [
+      5000,
+      5000,
+      5000
+    ],
+    "applicability": "Outside small-M contract: M>256; measured K32 switch-on selector fallback to5000"
+  },
+  {
+    "id": 1190,
+    "M": 2048,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "phase": "prefill",
+    "original_ms": 0.25167951,
+    "blas_ms": 0.25936776399612427,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "original_round_ms": [
+      0.25135601,
+      0.25167951,
+      0.25176001
+    ],
+    "prefill_switch_on_ms": 0.25136051,
+    "prefill_selected": [
+      5000,
+      5000,
+      5000
+    ],
+    "applicability": "Outside small-M contract: M>256; measured K32 switch-on selector fallback to5000"
+  },
+  {
+    "id": 1191,
+    "M": 4096,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "phase": "prefill",
+    "original_ms": 0.46496052,
+    "blas_ms": 0.4744716286659241,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "original_round_ms": [
+      0.46487999,
+      0.46496052,
+      0.46599448
+    ],
+    "prefill_switch_on_ms": 0.46608198,
+    "prefill_selected": [
+      5000,
+      5000,
+      5000
+    ],
+    "applicability": "Outside small-M contract: M>256; measured K32 switch-on selector fallback to5000"
+  },
+  {
+    "id": 1192,
+    "M": 8192,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "phase": "prefill",
+    "original_ms": 0.90504003,
+    "blas_ms": 0.9020551443099976,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "original_round_ms": [
+      0.90519851,
+      0.90432203,
+      0.90504003
+    ],
+    "prefill_switch_on_ms": 0.90583253,
+    "prefill_selected": [
+      5000,
+      5000,
+      5000
+    ],
+    "applicability": "Outside small-M contract: M>256; measured K32 switch-on selector fallback to5000"
+  },
+  {
+    "id": 1193,
+    "M": 16384,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "phase": "prefill",
+    "original_ms": 1.7875216,
+    "blas_ms": 1.7686866521835327,
+    "blas_gpu": 4,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "original_round_ms": [
+      1.7851995,
+      1.790319,
+      1.7875216
+    ],
+    "prefill_switch_on_ms": 1.786799,
+    "prefill_selected": [
+      5000,
+      5000,
+      5000
+    ],
+    "applicability": "Outside small-M contract: M>256; measured K32 switch-on selector fallback to5000"
+  }
+]

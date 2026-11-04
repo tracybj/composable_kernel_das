@@ -1,0 +1,345 @@
+{
+  "cache": {
+    "disposition": "已验证，建议下一阶段以属性范围集成；本轮保持默认关闭",
+    "scope": "gfx936/BF16/NN，common非ragged/nonempty，G<=1024，N%256=0，K>4096且K%16=0，并满足原tile上限及新增字节范围守卫；保留M01=8",
+    "metrics": {
+      "before_round_total_ms": [
+        1697.64592423,
+        1698.1263372100002,
+        1697.0071286200005
+      ],
+      "after_round_total_ms": [
+        1563.9582323600002,
+        1563.0206263199998,
+        1563.9925921700003
+      ],
+      "paired_round_total_delta_pct": [
+        -7.874886627530198,
+        -7.956163680493722,
+        -7.838183718071178
+      ],
+      "count": 212,
+      "median_delta_pct": -1.7884910153848965,
+      "sum_before_ms": 1697.64592423,
+      "sum_after_ms": 1563.9582323600002,
+      "sum_delta_pct": -7.874886627530198,
+      "improve_gt2": 96,
+      "regress_gt2": 0,
+      "regress_all_rounds_gt2": 0,
+      "max_regress_pct": 0.240561982813281,
+      "R_ge099_before": 125,
+      "R_ge099_after": 163,
+      "observational_labels": {
+        "uncertain": 158,
+        "stable_improvement": 54
+      }
+    },
+    "evidence": [
+      "cache_expanded.json",
+      "cache_profiles.json",
+      "cache_isa.json",
+      "native_reference.json"
+    ],
+    "next": "优先保留缓存提示隔离结果；1178同卡单launch仍比Native慢约2.8%，地址组织/推进节奏尚未验证，不能称全部达标。"
+  },
+  "cache_walk": {
+    "disposition": "不采用M01=1，保留既有M01=8",
+    "metrics": {
+      "before_round_total_ms": [
+        70.859612,
+        70.850061,
+        70.84569
+      ],
+      "after_round_total_ms": [
+        80.08124000000001,
+        79.850416,
+        80.124371
+      ],
+      "paired_round_total_delta_pct": [
+        13.013940860980178,
+        12.703383558131298,
+        13.09702961464556
+      ],
+      "count": 3,
+      "median_delta_pct": 11.643288697570231,
+      "sum_before_ms": 70.850061,
+      "sum_after_ms": 80.08124000000001,
+      "sum_delta_pct": 13.013940860980178,
+      "improve_gt2": 0,
+      "regress_gt2": 3,
+      "regress_all_rounds_gt2": 2,
+      "max_regress_pct": 20.426574668072185,
+      "R_ge099_before": 0,
+      "R_ge099_after": 0,
+      "observational_labels": {
+        "uncertain": 1,
+        "stable_regression": 2
+      }
+    },
+    "evidence": [
+      "cache_walk.json"
+    ],
+    "next": "去SLC后改回M01=1在三个代表长K对照均更慢；未继续重复遍历调参。"
+  },
+  "drain": {
+    "disposition": "不整体提升为默认；保留独立实验及全部回退",
+    "scope": "已完整验证M<=64、64<=K<2048、K%16=0、N%128=0、G<=1024，共189条",
+    "metrics": {
+      "before_round_total_ms": [
+        59.24932073399997,
+        59.226984867,
+        59.26245498499999
+      ],
+      "after_round_total_ms": [
+        59.941081151,
+        59.962463709999994,
+        59.948994813000006
+      ],
+      "paired_round_total_delta_pct": [
+        1.1675415151267021,
+        1.2417968678493096,
+        1.158473485740319
+      ],
+      "count": 189,
+      "median_delta_pct": -0.6134931216830175,
+      "sum_before_ms": 59.24932073399997,
+      "sum_after_ms": 59.948994813000006,
+      "sum_delta_pct": 1.1675415151267021,
+      "improve_gt2": 41,
+      "regress_gt2": 13,
+      "regress_all_rounds_gt2": 10,
+      "max_regress_pct": 10.166245309955112,
+      "R_ge099_before": 121,
+      "R_ge099_after": 143,
+      "observational_labels": {
+        "stable_improvement": 10,
+        "uncertain": 169,
+        "stable_regression": 10
+      },
+      "median_delta_vs_original_pct": -13.924048730171346,
+      "regress_vs_original_gt2": 1
+    },
+    "evidence": [
+      "small_expand_plan_drain_shortk.json",
+      "small_expanded.json",
+      "small_profiles.json"
+    ],
+    "next": "先将稳态与尾段分开，减少每stage动态判断；当前76的VMEM/wave106.5→96.5，但分支103.5→258.5。控制开销解释尚未用独立实验量化，不直接删除LGKM0。"
+  },
+  "k32": {
+    "disposition": "低CTA范围有额外收益，建议继续以属性门限验证集成；不全面开启",
+    "scope": "gfx936/BF16/NN，common非ragged/nonempty，M<=64，128<=K<=4096，K%32=0，N%128=0，G<=1024，ceil(M/64)*ceil(N/128)*G<80，共21条",
+    "metrics": {
+      "before_round_total_ms": [
+        0.733441009,
+        0.7319165090000002,
+        0.7331160069999999
+      ],
+      "after_round_total_ms": [
+        0.6578375049999999,
+        0.6579200030000001,
+        0.6648785050000001
+      ],
+      "paired_round_total_delta_pct": [
+        -10.308055190843579,
+        -10.109965425031842,
+        -9.307872335135059
+      ],
+      "count": 21,
+      "median_delta_pct": -11.241241733485142,
+      "sum_before_ms": 0.7331160069999999,
+      "sum_after_ms": 0.6579200030000001,
+      "sum_delta_pct": -10.109965425031842,
+      "improve_gt2": 21,
+      "regress_gt2": 0,
+      "regress_all_rounds_gt2": 0,
+      "max_regress_pct": -3.3599033825543856,
+      "R_ge099_before": 0,
+      "R_ge099_after": 0,
+      "observational_labels": {
+        "uncertain": 16,
+        "stable_improvement": 5
+      },
+      "median_delta_vs_original_pct": -44.17560346208943,
+      "regress_vs_original_gt2": 0
+    },
+    "evidence": [
+      "small_expand_plan_k32_lowcta.json",
+      "small_expanded.json",
+      "small_representatives.json",
+      "small_profiles.json"
+    ],
+    "dense_control": {
+      "id": 358,
+      "M": 8,
+      "N": 6144,
+      "K": 2048,
+      "G": 32,
+      "delta_pct": 5.800391505888247,
+      "observational_label": "stable_regression"
+    },
+    "next": "48KB LDS使其LDS允许驻留从两CTA降到一CTA，低CTA收益与高CTA回退并存。21条中的高CV结果仍标为不确定；相对原5000的收益含此前5003的累计收益。K32+drain尚未组合验证。"
+  },
+  "k32n64": {
+    "disposition": "不扩大、不采用全局N64策略；胜过旧5004不能等同胜过原路线",
+    "metrics": {
+      "before_round_total_ms": [
+        10.203435485999998,
+        10.214162593000001,
+        10.199914398
+      ],
+      "after_round_total_ms": [
+        9.416559495000001,
+        9.409840200999998,
+        9.41633234
+      ],
+      "paired_round_total_delta_pct": [
+        -7.711873045893802,
+        -7.874579875507592,
+        -7.682241511297827
+      ],
+      "count": 21,
+      "median_delta_pct": -8.783758499614503,
+      "sum_before_ms": 10.203435485999998,
+      "sum_after_ms": 9.41633234,
+      "sum_delta_pct": -7.711873045893802,
+      "improve_gt2": 18,
+      "regress_gt2": 1,
+      "regress_all_rounds_gt2": 1,
+      "max_regress_pct": 3.629895701741881,
+      "R_ge099_before": 0,
+      "R_ge099_after": 0,
+      "observational_labels": {
+        "uncertain": 12,
+        "stable_improvement": 8,
+        "stable_regression": 1
+      },
+      "median_delta_vs_original_pct": -8.594412833344755,
+      "regress_vs_original_gt2": 9
+    },
+    "evidence": [
+      "small_representatives.json",
+      "small_profiles.json"
+    ],
+    "next": "当前代表数据多数仍慢于N128或原5000；没有证据支持为扩大CTA而一概改N64。Native76/633虽是逻辑64x64x32，但不能只按tile照搬。"
+  },
+  "square": {
+    "disposition": "扩大后以回退为主，不采用本版作为M128或M256通用策略；保留失败实验",
+    "scope": "已完整验证128<=M<=256、64<=K<=4096、K%16=0、N%128=0、G<=1024，共100条，直接与原5000比较",
+    "metrics": {
+      "before_round_total_ms": [
+        40.917617738000004,
+        41.00134068,
+        40.99148639699999
+      ],
+      "after_round_total_ms": [
+        53.578326424999986,
+        53.66776894200001,
+        53.55425405999999
+      ],
+      "paired_round_total_delta_pct": [
+        30.94194967084323,
+        30.892717291506887,
+        30.647260607557335
+      ],
+      "count": 100,
+      "median_delta_pct": 15.52399892061931,
+      "sum_before_ms": 40.99148639699999,
+      "sum_after_ms": 53.578326424999986,
+      "sum_delta_pct": 30.892717291506887,
+      "improve_gt2": 18,
+      "regress_gt2": 74,
+      "regress_all_rounds_gt2": 72,
+      "max_regress_pct": 128.1553014207164,
+      "R_ge099_before": 51,
+      "R_ge099_after": 2,
+      "observational_labels": {
+        "uncertain": 21,
+        "stable_regression": 65,
+        "stable_improvement": 14
+      },
+      "median_delta_vs_original_pct": 15.52399892061931,
+      "regress_vs_original_gt2": 74
+    },
+    "by_m": {
+      "128": {
+        "before_round_total_ms": [
+          30.616138732,
+          30.662505789000004,
+          30.707694450999995
+        ],
+        "after_round_total_ms": [
+          36.086766138,
+          36.14522108799999,
+          36.145535562
+        ],
+        "paired_round_total_delta_pct": [
+          17.868443352335927,
+          17.880845540571833,
+          17.70839917557836
+        ],
+        "count": 64,
+        "median_delta_pct": 5.182311639892312,
+        "sum_before_ms": 30.662505789000004,
+        "sum_after_ms": 36.14522108799999,
+        "sum_delta_pct": 17.868443352335927,
+        "improve_gt2": 15,
+        "regress_gt2": 41,
+        "regress_all_rounds_gt2": 39,
+        "max_regress_pct": 49.632225090668136,
+        "R_ge099_before": 28,
+        "R_ge099_after": 2,
+        "observational_labels": {
+          "uncertain": 20,
+          "stable_improvement": 11,
+          "stable_regression": 33
+        },
+        "median_delta_vs_original_pct": 5.182311639892312,
+        "regress_vs_original_gt2": 41
+      },
+      "256": {
+        "before_round_total_ms": [
+          10.301479006,
+          10.338834891000001,
+          10.283791946000003
+        ],
+        "after_round_total_ms": [
+          17.491560287000002,
+          17.522547854,
+          17.408718497999995
+        ],
+        "paired_round_total_delta_pct": [
+          69.796592089468,
+          69.4828096080096,
+          69.28306785486178
+        ],
+        "count": 36,
+        "median_delta_pct": 45.14804519160744,
+        "sum_before_ms": 10.301479006,
+        "sum_after_ms": 17.491560287000002,
+        "sum_delta_pct": 69.4828096080096,
+        "improve_gt2": 3,
+        "regress_gt2": 33,
+        "regress_all_rounds_gt2": 33,
+        "max_regress_pct": 128.1553014207164,
+        "R_ge099_before": 23,
+        "R_ge099_after": 0,
+        "observational_labels": {
+          "stable_regression": 32,
+          "stable_improvement": 3,
+          "uncertain": 1
+        },
+        "median_delta_vs_original_pct": 45.14804519160744,
+        "regress_vs_original_gt2": 33
+      }
+    },
+    "evidence": [
+      "small_expand_plan_square_m128_256.json",
+      "small_expanded.json",
+      "scope_subgroups.json",
+      "small_profiles.json",
+      "square_diagnostic_profiles.json"
+    ],
+    "next": "M128也不能一概提升：少数代表收益不能覆盖完整64条分层的多数回退。分层数据仅用于提出后续假设；所有100条回退计入，不逐shape挑最快。新增M128改善约12%、新增M256回退约5%，现有生产路径保持不变。square的A缓存提示和地址组织尚未独立验证。"
+  }
+}
