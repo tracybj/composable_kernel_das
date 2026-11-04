@@ -238,3 +238,15 @@ BF16剩余69条prefill、13条decode；FP16剩余55条prefill、13条decode。�
 9041/9042为BM16/BN32/BK512仅B走紧凑LDS（A8B直取/16B延后shuffle）；9043/9044对应BN64/BK256，9045/9046对应BN128/BK256；9047/9048/9049保留两操作数紧凑LDS，作为去padding与A旁路的消融对照。9项都是实例ID，不是case ID，仍仅在实验开关ON编译/选择。
 
 预测：BN32/BK512仅B占16KiB，BN128/BK256仅B占32KiB；需用实际寄存器与HIP occupancy计算验证最大CTA数是否由2→4、1→2，再看完整kernel。混合路径保留读完成/发布的同步，输出C重排的LDS仍存在。候选有可能因A重复加载、地址算术或bank访问变慢；反证成立即不推广。全范围INT8/FP64、guard、tail/padding、scale与两种16bit输出门禁通过后，做同几何对照，再决定下一步，不启动并行卡7任务。
+
+### v129/v130结果
+
+源码15663b9，隔离库build/max_all_v130_output_compact，API SHA256为924dc278f39b3f9509d228a56218e0f4bce7864db7919520d2e649f40f60c6ab。576项full-range INT8/FP64完整输出门禁PASS，126项不满足WASP/pack域的配置在launch前拒绝。整库261个kernel的资源元数据无private/spill。四种packed-output几何的VGPR/LDS峰值与各自对照相同。
+
+v130紧凑LDS正式对照19个shape、608项完整输出检查PASS，10 warm/50 repeat/3样本中位数。HIP API确认：BM16/BN32/BK512仅B紧凑LDS16KiB，最大4 CTA（旧25KiB、2 CTA）；BN128/BK256仅B32KiB，最大2 CTA（旧约39KiB、1 CTA）。但没有填平13条小M目标：例如M1/N4096/K8192/G64，原默认2.3424 TOPS，原同tile6404为2.3641，紧凑9045为2.3803（R0.9680）；M1/N6144/K7168/G12默认2.4240，紧凑B512为2.3633，仍回退。只能说部分shape约1–2%改善，不能把静态最大驻留翻倍解释为已达到动态驻留或性能翻倍。没有推广。
+
+v129输出重排初筛22个shape、396项输出检查PASS；参考每组8行，3 warm/10 repeat/2样本，非全量验收。对照为相同tile/Problem：route18对12、19对5、20对6、21对7。大部分最优仍是旧路径；route19部分约1%的同tile收益不构成稳定且超过默认最优的证据，route18大多波动内或略慢。当前不推广该epilogue，更不把初筛最快值写入v128正式CSV。
+
+初筛同时发现已有实例还有可验证的分流机会：M2048/N4096/K1536/G4选route6约399.8 TOPS、R1.040；M8192/N1536/K2048/G4选route12约469.5、R1.003。需对相邻M/G做独立正式复测后才能改生产selector，避免单条初筛跨线即推广。
+
+数据见[max_all_v129_packed_screen.csv](max_all_v129_packed_screen.csv)、[max_all_v130_compact_formal.csv](max_all_v130_compact_formal.csv)、[门禁/资源及驻留](max_all_v130_validation_resources.json)。当前正式结果仍是v128的1109 BF16/1123 FP16严格达标。
