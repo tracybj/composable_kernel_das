@@ -226,3 +226,15 @@ BF16剩余69条prefill、13条decode；FP16剩余55条prefill、13条decode。�
 已对原方向四种几何、BF16/FP16及逻辑转置fallback进行gfx936编译器语法检查，返回0；仍未构建完整GEMM候选库、未执行GPU数值/计时，因此不报收益。先按相同主流水/相同tile对照该输出交换方案。
 
 小M的13条未达标集中于M1/2、长K。此前单边LDS没有跨过当前最优，但那组B的padding仍占用额外共享内存。下一可验证组合是A寄存器+B紧凑XOR LDS：BM16/BN32/BK512下仅B需16KiB（原双LDS约25KiB），假设驻留上限可从2变4；这是尚未实现的资源/访存假设，需要先做逐byte映射、实际occupancy及全范围数值门禁，再测VMEM请求/时间。不能因单边LDS旧候选失败而排除这个组合，也不能以省LDS预报性能。
+
+### v129接入隔离构建
+
+为ScaledWaspKernel增加默认值为原epilogue的可选类型参数，原有调用仍使用原实现；实验route18/19/20/21分别对照已有12/5/6/7的相同Problem/tile，只替换输出重排。INT32调度仍调用同一个原kernel。新epilogue头文件加入tuning构建的source hash集合，避免验证遗漏实际依赖。未改默认selector，等待编译、资源和GPU数值/计时。
+
+## v130：A寄存器+B紧凑XOR LDS，检验小M实际驻留
+
+在既有Cooperative实验Problem/Policy上增加Compact策略；K片段映射为k XOR ((local_row&7)*16)，去掉每行16B padding，保持连续16B GMEM搬运及完整的8B MMAC fragment内容。静态限制BK>=128，避免XOR越出短K行。CPU逐byte写入/读取证明通过184320个byte检查、8个完整tile，无覆盖或遗漏；这不是bank-counter或GPU性能证明。
+
+9041/9042为BM16/BN32/BK512仅B走紧凑LDS（A8B直取/16B延后shuffle）；9043/9044对应BN64/BK256，9045/9046对应BN128/BK256；9047/9048/9049保留两操作数紧凑LDS，作为去padding与A旁路的消融对照。9项都是实例ID，不是case ID，仍仅在实验开关ON编译/选择。
+
+预测：BN32/BK512仅B占16KiB，BN128/BK256仅B占32KiB；需用实际寄存器与HIP occupancy计算验证最大CTA数是否由2→4、1→2，再看完整kernel。混合路径保留读完成/发布的同步，输出C重排的LDS仍存在。候选有可能因A重复加载、地址算术或bank访问变慢；反证成立即不推广。全范围INT8/FP64、guard、tail/padding、scale与两种16bit输出门禁通过后，做同几何对照，再决定下一步，不启动并行卡7任务。

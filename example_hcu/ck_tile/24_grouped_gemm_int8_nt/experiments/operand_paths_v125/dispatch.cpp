@@ -13,6 +13,7 @@ template<class P>int run(unsigned output,const void* args,const void* scales,int
     else ck_tile::launch_kernel(config,ck_tile::make_kernel<P::Threads,P::MinBlocks>(ck_tile::GroupedInt8NtScaledTileKernel<P,false>{},grid,dim3(P::Threads),0,a,s));
     return hipGetLastError()==hipSuccess?0:-100;
 }
+using B512=ck_tile::GroupedInt8NtTileProblem<16,32,512,1,2,false,false,true,true,1,true>;
 using B128=ck_tile::GroupedInt8NtTileProblem<16,64,128,1,2,false,false,true,true,1,true>;
 using B256=ck_tile::GroupedInt8NtTileProblem<16,64,256,1,2,false,false,true,true,1,true>;
 using N128=ck_tile::GroupedInt8NtTileProblem<16,128,256,1,4,false,false,true,true,1,true>;
@@ -50,6 +51,15 @@ extern "C" int ck_tile_int8_operand_launch_private(unsigned output,unsigned id,c
     case 9034:return run<Path<B128,true,true>>(output,args,scales,g,m,n,stream);
     case 9035:return run<Path<B256,true,true>>(output,args,scales,g,m,n,stream);
     case 9036:return run<Path<N128,true,true>>(output,args,scales,g,m,n,stream);
+    case 9041:return run<ck_tile::GroupedInt8NtOperandProblem<B512,false,true,false,false,true>>(output,args,scales,g,m,n,stream);
+    case 9042:return run<ck_tile::GroupedInt8NtOperandProblem<B512,false,true,true,true,true>>(output,args,scales,g,m,n,stream);
+    case 9043:return run<ck_tile::GroupedInt8NtOperandProblem<B256,false,true,false,false,true>>(output,args,scales,g,m,n,stream);
+    case 9044:return run<ck_tile::GroupedInt8NtOperandProblem<B256,false,true,true,true,true>>(output,args,scales,g,m,n,stream);
+    case 9045:return run<ck_tile::GroupedInt8NtOperandProblem<N128,false,true,false,false,true>>(output,args,scales,g,m,n,stream);
+    case 9046:return run<ck_tile::GroupedInt8NtOperandProblem<N128,false,true,true,true,true>>(output,args,scales,g,m,n,stream);
+    case 9047:return run<ck_tile::GroupedInt8NtOperandProblem<B512,true,true,false,false,true>>(output,args,scales,g,m,n,stream);
+    case 9048:return run<ck_tile::GroupedInt8NtOperandProblem<N128,true,true,false,false,true>>(output,args,scales,g,m,n,stream);
+    case 9049:return run<ck_tile::GroupedInt8NtOperandProblem<B256,true,true,false,false,true>>(output,args,scales,g,m,n,stream);
     default:return -5;
     }
 }

@@ -10,7 +10,7 @@ def atomic(path,value):
 
 def main():
     ap=argparse.ArgumentParser();ap.add_argument('--output',type=Path,required=True)
-    ap.add_argument('--suite',choices=['low_n','low_n_refine','k768_formal','prefill','decode','operand_decode','shuffle_decode','deferred_decode','wide_prefill'],default='low_n')
+    ap.add_argument('--suite',choices=['low_n','low_n_refine','k768_formal','prefill','decode','operand_decode','shuffle_decode','deferred_decode','compact_decode','packed_output_prefill','wide_prefill'],default='low_n')
     ap.add_argument('--warmup',type=int,default=3);ap.add_argument('--repeat',type=int,default=10);ap.add_argument('--samples',type=int,default=2)
     ap.add_argument('--validation',choices=['full','sample'],default='full');args=ap.parse_args()
     assert args.repeat>0 and args.samples>0
@@ -43,32 +43,36 @@ def main():
     else:
         baseline=list(csv.DictReader((E/'docs/max_all_v123_baseline.csv').open()))
         # One representative per dimension/route family,then largest absolute misses.
-        phase='decode' if args.suite in ['operand_decode','shuffle_decode','deferred_decode'] else 'prefill' if args.suite=='wide_prefill' else args.suite
+        phase='decode' if args.suite in ['operand_decode','shuffle_decode','deferred_decode','compact_decode'] else 'prefill' if args.suite in ['wide_prefill','packed_output_prefill'] else args.suite
         missed=[r for r in baseline if r['phase']==phase and float(r['BF16_R'])<1]
-        if args.suite in ['operand_decode','shuffle_decode','deferred_decode']:missed=[r for r in missed if int(r['route'])==0]
+        if args.suite in ['operand_decode','shuffle_decode','deferred_decode','compact_decode']:missed=[r for r in missed if int(r['route'])==0]
+        if args.suite=='packed_output_prefill':missed=[r for r in missed if int(r['K'])>=1024]
         if args.suite=='wide_prefill':missed=[r for r in missed if int(r['K'])>=1024]
         selected={}
         for r in sorted(missed,key=lambda r:float(r['BF16_R'])):
             key=(r['route'],r['N'],r['K'])
             if key not in selected:selected[key]=r
         ids={int(r['ID']) for r in list(selected.values())[:16]}
-        if args.suite in ['operand_decode','shuffle_decode','deferred_decode']:ids={int(r['ID']) for r in missed}|{1,6,23,25,1179,1186}
+        if args.suite in ['operand_decode','shuffle_decode','deferred_decode','compact_decode']:ids={int(r['ID']) for r in missed}|{1,6,23,25,1179,1186}
+        if args.suite=='packed_output_prefill':ids|={36,97,100,1187,1188,1189}
         cases=[r for r in targets if r['ID'] in ids]
     candidates=[('default',None,None)]+[(f'route_{r}',r,None) for r in [1,3,5,6,7,8,9,10,11,12]]
     candidates += [(f'cooperative_{i}',0,i) for i in [6005,6006,6035,6041,6042,6061,7501,7603]]
     if args.suite=='low_n_refine':candidates=[('default',None,None)]+[(f'route_{r}',r,None) for r in [6,7,8,11]]
     if args.suite=='prefill':candidates=[('default',None,None)]+[(f'route_{r}',r,None) for r in [1,2,3,4,5,6,7,8,12]]
     if args.suite=='k768_formal':candidates=[('default',None,None)]+[(f'route_{r}',r,None) for r in [4,6,7]]
-    if args.suite in ['operand_decode','shuffle_decode','deferred_decode']:candidates=[('default',None,None)]+[(f'cooperative_{i}',0,i) for i in [6401,6403,6404,6505,*range(9001,9013)]]
+    if args.suite in ['operand_decode','shuffle_decode','deferred_decode','compact_decode']:candidates=[('default',None,None)]+[(f'cooperative_{i}',0,i) for i in [6401,6403,6404,6505,*range(9001,9013)]]
     if args.suite=='shuffle_decode':candidates=[('default',None,None)]+[(f'cooperative_{i}',0,i) for i in [6401,6403,6404,6505,*range(9001,9010),*range(9013,9022)]]
     if args.suite=='deferred_decode':candidates=[('default',None,None)]+[(f'cooperative_{i}',0,i) for i in [6401,6403,6404,6505,9013,9016,9019,9022,9023,9024,9031,9032,9034,9035,9036]]
+    if args.suite=='compact_decode':candidates=[('default',None,None)]+[(f'cooperative_{i}',0,i) for i in [6401,6403,6404,6505,9005,9008,*range(9041,9050)]]
+    if args.suite=='packed_output_prefill':candidates=[('default',None,None)]+[(f'route_{r}',r,None) for r in [5,6,7,12,18,19,20,21]]
     if args.suite=='wide_prefill':candidates=[('default',None,None)]+[(f'route_{r}',r,None) for r in [6,12,13,14,15,16,17]]
     if args.suite=='decode':candidates += [(f'cooperative_{i}',0,i) for i in [6401,6403,6404,6505,7502,7504,7604]]
     out=args.output.resolve();out.mkdir(parents=True,exist_ok=True)
     assert not (out/'records.jsonl').exists(),'Existing run;inspect before restarting'
     build=Path(os.environ['CK_INT8_CACHED_BUILD']);identity=json.loads((build/'exported_api_symbols.json').read_text())
     assert identity['experimental_tuning']
-    if args.suite in ['operand_decode','shuffle_decode','deferred_decode','wide_prefill']:assert identity.get('operand_paths')
+    if args.suite in ['operand_decode','shuffle_decode','deferred_decode','compact_decode','packed_output_prefill','wide_prefill']:assert identity.get('operand_paths')
     atomic(out/'manifest.json',dict(suite=args.suite,cases=cases,candidates=candidates,validation=args.validation,warmup=args.warmup,repeat=args.repeat,samples=args.samples,library=identity,compiled_sources=json.loads((build/'sources.json').read_text()),gpu=7,pci=bus.value.decode(),input_range=[-8,8],scale='FP32 scalar A + FP32 channel B',target_sha256=hashlib.sha256((E/'docs/targets_max_all_1191.csv').read_bytes()).hexdigest(),runner_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),runner_revision=os.environ.get('CK_INT8_RUNNER_REVISION') or subprocess.check_output(['git','-C',str(E.parents[2]),'rev-parse','HEAD'],text=True).strip()))
     records=[];best=[]
     try:
