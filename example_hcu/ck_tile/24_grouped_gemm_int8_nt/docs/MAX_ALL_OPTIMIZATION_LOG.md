@@ -166,3 +166,26 @@ v124正式对照已证实两类实例收益，本轮将其接入生产构建，�
 为在生成kernel参数前决定raw/packed指针，把原plan构造提取为内部make_plan，v1传INT32、v2传实际输出类型；不先创建旧plan再重分配参数。9个公共ABI函数及结构不变，无scale INT32继续使用原selector，其它BF16/FP16输入算子不修改。
 
 新增host policy断言及三组production API数值用例（NULL scale、scalar/per-channel/per-token、BF16/FP16及INT32旧route），同时复跑边界/生命周期/epilogue门禁。通过后在卡7对1191条按Max ALL固定目标跑一轮正式计时、两种输出完整校验；最终R>=1才计达标。编译和全量结果待补。
+
+### v128门禁及全量启动
+
+实现提交32027d2；生产构建`build/max_all_v128_scaled_policy`，实验开关OFF，API SHA256为`270194f6808e60f58b4cc6e78bc566b648ee8c7a18685753d309d697348dc92c`，公共导出仍9项。host分流24项断言PASS；39配置355项完整输出scale门禁、7项无效参数拒绝、6项原生BLAS标量scale逐位对照PASS；native epilogue18项、原INT32边界65项、生命周期32项PASS。
+
+两个设备代码对象与v123均逐字节相同，SHA为`687e11d7...`和`a2255eb4...`，完整值见[max_all_v128_validation_summary.json](max_all_v128_validation_summary.json)。本轮收益来自按输出类型选择已有实例；未改计算设备码，也未让新scale选择覆盖原INT32策略。
+
+随后启动`results/max_all_v128_full_1191`的一轮全量BF16/FP16回归，代码和目标快照冻结。使用Max ALL P列1191条原始M/N/K/G及881 decode/310 prefill；每条10次预热、50次重复、3样本中位数。每组完整输出参考按128行分块检查，另查guard及输入/scale抽样不变，失败保留现场。新增正式CSV直接包含BLAS目标时间/TOPS及双输出R，不用后续最快样本拼接正式数据。正在运行，尚不更新全量达标数。
+
+### 对v125大M驻留假设的核实
+
+只在卡7、无其它本任务GEMM计时运行时，加载已测代码对象并调用HIP module occupancy计算API。实际设备报告80个CU、wave64、每block最多1024线程、每CU最多2560线程、LDS每CU64KiB。regsPerBlock为196608，不能把这个字段直接当成per-CU寄存器总量。
+
+| packed WASP BM/BN | 线程 | VGPR | LDS bytes | API每CU最大CTA |
+|---|---:|---:|---:|---:|
+| 256/256 | 768 | 199 | 65536 | 1 |
+| 256/384 | 1024 | 183 | 65536 | 1 |
+| 128/256 | 640 | 119 | 32768 | 2 |
+| 128/128 | 384 | 135 | 32768 | 2 |
+| 64/256 | 576 | 87 | 16384 | 3 |
+| 128/384 | 896 | 119 | 32768 | 1 |
+
+v125 BM128/BN384虽把LDS减半，资源组合下API最大驻留仍只有1 CTA，未满足原假设的2 CTA前提；这会改变后续设计，不能继续仅按LDS估计驻留。该查询是静态可行上限，不是动态achieved occupancy，也不能单独证明性能瓶颈。数据及精确Problem参数见[max_all_wasp_occupancy.json](max_all_wasp_occupancy.json)。
