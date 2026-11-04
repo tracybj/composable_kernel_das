@@ -170,7 +170,11 @@ extern "C" CK_TILE_INT8_CACHED_API int ck_tile_int8_nt_cached_plan_create_v1(
    p->route==CK_TILE_INT8_CACHED_PACKED_M64_N64_A2_V1 ||
    p->route==CK_TILE_INT8_CACHED_PACKED_M32_N256_A2_V1 ||
    p->route==CK_TILE_INT8_CACHED_PACKED_M32_N64_A1_V1 ||
-   p->route==CK_TILE_INT8_CACHED_PACKED_M256_N384_A2_V1;
+   p->route==CK_TILE_INT8_CACHED_PACKED_M256_N384_A2_V1
+#ifdef CK_INT8_CACHED_TUNING
+   || (p->route>=13 && p->route<=17)
+#endif
+   ;
   const void* b=packed?w->packed+uint64_t(i)*per_group:w->raw[i].data;
   ck_tile::UniversalGemmKernelArgs<1,1,0> arg{{a.a},{b},{},a.c,a.m,w->n,w->k,{a.a_row_stride},{packed?w->k:w->raw[i].row_stride},{},a.c_row_stride,1};args.emplace_back(std::move(arg));
  }

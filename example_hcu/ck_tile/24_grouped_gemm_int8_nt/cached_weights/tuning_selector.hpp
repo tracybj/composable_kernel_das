@@ -22,7 +22,7 @@ inline void int8_tuning_override(bool uniform,bool empty,bool native,bool packed
     const char* legacy_value=std::getenv("CK_INT8_TUNE_LEGACY");
     if(!route_value && !legacy_value)return;
     if(!uniform || empty)throw std::invalid_argument("tuning requires nonempty uniform groups");
-    route=route_value?int8_tuning_uint(route_value,12):0;
+    route=route_value?int8_tuning_uint(route_value,17):0;
     if(legacy_value) {
         if(route)throw std::invalid_argument("legacy tuning requires route0");
         legacy=int8_tuning_uint(legacy_value,10000);
@@ -33,6 +33,8 @@ inline void int8_tuning_override(bool uniform,bool empty,bool native,bool packed
         case 6043:case 6044:case 6050:
         case 6401:case 6403:case 6404:case 6505:
         case 7501:case 7502:case 7504:case 7603:case 7604:case 8734:break;
+        case 9001:case 9002:case 9003:case 9004:case 9005:case 9006:
+        case 9007:case 9008:case 9009:case 9010:case 9011:case 9012:break;
         case 6035:case 6049:bm=128;bn=128;bk=64;aligned=true;break;
         case 6041:case 6048:bm=256;bn=256;bk=64;aligned=true;break;
         case 6042:bm=128;bn=256;bk=64;aligned=true;break;
@@ -44,7 +46,7 @@ inline void int8_tuning_override(bool uniform,bool empty,bool native,bool packed
     }
     if(!route)return;
     if(!native)throw std::invalid_argument("WASP tuning requires the native domain");
-    const int bm=route==6 || route==7?128:route==8 || route==9?64:route==10 || route==11?32:256;
+    const int bm=route==6 || route==7 || route>=13?128:route==8 || route==9?64:route==10 || route==11?32:256;
     if(m%bm)throw std::invalid_argument("WASP tuning requires complete M tiles");
     if((route==1 || route==2) && !raw_original)
         throw std::invalid_argument("raw WASP weight stride is unsupported");

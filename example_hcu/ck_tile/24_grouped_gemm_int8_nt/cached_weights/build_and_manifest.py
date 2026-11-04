@@ -16,12 +16,13 @@ def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def sources():
+def sources(tuning=False):
     extension = {}
     for path in E.rglob('*'):
         if not path.is_file():
             continue
-        if any(part in ['experiments', 'docs', 'tests', 'build', 'results', '__pycache__']
+        compiled_experiment = tuning and path.relative_to(E).parts[:2] == ('experiments', 'operand_paths_v125')
+        if not compiled_experiment and any(part in ['experiments', 'docs', 'tests', 'build', 'results', '__pycache__']
                or part.startswith('build_') for part in path.relative_to(E).parts):
             continue
         if path.suffix in ['.cpp', '.hpp', '.h', '.txt']:
@@ -44,7 +45,7 @@ def main():
     assert args.jobs > 0
     build = args.build.resolve()
     build.mkdir(parents=True, exist_ok=True)
-    before = sources()
+    before = sources(args.tuning)
     commands = [
         ['cmake', '-S', str(E / 'cached_weights'), '-B', str(build),
          '-DCMAKE_CXX_COMPILER=' + args.compiler, '-DCMAKE_BUILD_TYPE=Release',
@@ -58,7 +59,7 @@ def main():
         with (build / (phase + '.log')).open('w') as log:
             result = subprocess.run(command, stdout=log, stderr=subprocess.STDOUT)
         assert result.returncode == 0, (phase, build / (phase + '.log'))
-    assert before == sources(), 'Source changed during compilation'
+    assert before == sources(args.tuning), 'Source changed during compilation'
     library = build / 'libck_tile_int8_nt_cached.so'
     exports = subprocess.check_output(['nm', '-D', '--defined-only', str(library)], text=True)
     names = [line.split()[-1] for line in exports.splitlines() if line.split()]
@@ -69,7 +70,7 @@ def main():
     (build / 'sources.json').write_text(json.dumps(before, indent=2) + '\n')
     identity = dict(symbols=api, library_sha256=digest(library),
                     benchmark_sha256=digest(build / 'libck_tile_int8_nt_cached_benchmark.so'),
-                    experimental_tuning=args.tuning)
+                    experimental_tuning=args.tuning,operand_paths=args.tuning)
     (build / 'exported_api_symbols.json').write_text(json.dumps(identity, indent=2) + '\n')
     print(json.dumps(dict(status='BUILD_PASS_GPU_NOT_RUN', build=str(build), **identity), indent=2))
 

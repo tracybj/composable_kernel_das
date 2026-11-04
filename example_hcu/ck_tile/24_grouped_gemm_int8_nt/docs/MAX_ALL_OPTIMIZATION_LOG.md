@@ -73,3 +73,22 @@ python3 cached_weights/build_and_manifest.py --build build/max_all_v124_tune --t
 当前Cooperative的LDS负责物理连续K方向加载后的MMAC寄存器分发，并提供跨wave复用。wave内shuffle不能直接取其它wave的寄存器；直读方案需明确重复GMEM请求、向量宽度、缓存流量、VGPR和有效驻留的代价。不能以LDS占用减少直接判断成功。
 
 WASP原方向已有A走LDS、B走寄存器的实现，逻辑转置方向可交换原操作数角色；这些是可借鉴的已有数据路径，不把它们未经测量推广为所有Cooperative几何的最优解。保留数值/scale/输出规则，先比较完整kernel时间，再用ISA/资源和受控消融解释差异。
+
+## v125：Cooperative操作数路径与WASP驻留候选（准备验证）
+
+v124代表形状筛选显示：K768/N2048族可由现有packed M128×N256改善约13–14%，但大部分其余prefill最优仍是现有route12，距目标约2–7%；小M代表族现有实例的最佳收益也不足以补齐目标。该负结果仅针对已测几何，不据此认定硬件上限。
+
+### Cooperative数据路径
+
+实验类型继承现有Problem，特化Policy和Cooperative的load-next/compute-current阶段，复用原Kernel与反量化epilogue；不是新增第三种producer/consumer调度。
+
+- 对照为原A/B均走LDS的实例；私有9001–9003为BM16/BN64/BK128下仅A LDS、仅B LDS、A/B操作数都直入寄存器；9004–9006对应BK256；9007–9009对应BM16/BN128/BK256；9010–9012对应BM128/BN128/BK64。
+- 首个直读候选按MMAC要求直接读取每lane的8-byte片段，不先强制加入shuffle。代价是较窄VMEM请求、A按WN和B按WM的跨wave重复加载；后续若请求开销占主导，再比较连续16-byte读取后wave内shuffle的配对方案。
+- 混合路径仍保留LDS读完后可覆盖、下一stage可读的两次跨wave同步。两操作数都私有时去掉主循环的操作数barrier；输出epilogue仍有LDS重排，不能把它描述为整个kernel完全不使用LDS。
+- 默认Problem及生产构建不变，这些私有实例只在`CK_INT8_CACHED_TUNING=ON`的隔离库编译、选择。
+
+### WASP几何与驻留
+
+增加BM128/BN384 packed候选，复用同一WASP流程。相比BM256/BN384，A双缓冲LDS从64KiB降到32KiB，producer从4个wave降到2个，consumer仍12个；假设两个CTA的实际驻留能改善MMAC/搬运延迟隐藏。代价是B请求与CTA数量增加，必须用实测资源与时间判断。
+
+私有route13/14为A读取batch2/4、M tile cluster4；route16/17把cluster改为8作配对对照。route15为BM128/BN256、batch4，用于区别宽N与batch变化。尚未取得编译、资源和数值/性能结果，不进入默认选择。

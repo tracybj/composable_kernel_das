@@ -15,6 +15,7 @@ target_compile_features(ck_tile_int8_nt_cached PRIVATE cxx_std_17)
 target_compile_definitions(ck_tile_int8_nt_cached PRIVATE CK_ENABLE_INT8 CK_EXPERIMENTAL_BIT_INT_EXTENSION)
 if(CK_INT8_CACHED_TUNING)
  target_compile_definitions(ck_tile_int8_nt_cached PRIVATE CK_INT8_CACHED_TUNING=1)
+ target_sources(ck_tile_int8_nt_cached PRIVATE ../experiments/operand_paths_v125/dispatch.cpp ../experiments/operand_paths_v125/wasp_dispatch.cpp)
 endif()
 target_compile_options(ck_tile_int8_nt_cached PRIVATE -xhip --offload-arch=${CK_INT8_CACHED_ARCH}
  "SHELL: -mllvm -support-768-vgprs=true" -fno-offload-uniform-block

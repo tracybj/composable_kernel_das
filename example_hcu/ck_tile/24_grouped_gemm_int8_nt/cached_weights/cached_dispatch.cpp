@@ -7,6 +7,10 @@
 #include "core_kernel.hpp"
 #include "instances.hpp"
 #include "pack_kernel.hpp"
+#ifdef CK_INT8_CACHED_TUNING
+extern "C" int ck_tile_int8_operand_launch_private(unsigned,unsigned,const void*,const void*,int,int,int,hipStream_t);
+extern "C" int ck_tile_int8_wide128_launch_private(unsigned,unsigned,const void*,const void*,int,int,int,hipStream_t);
+#endif
 namespace {
 template<class P> int run(const void* args,int g,int m,int n,hipStream_t stream){
  const int mm=P::Transpose?n:m, nn=P::Transpose?m:n;
@@ -19,6 +23,10 @@ template<class P> int run(const void* args,int g,int m,int n,hipStream_t stream)
 
 }
 extern "C" int ck_tile_int8_cached_launch_private(unsigned route,unsigned legacy,const void* args,int g,int m,int n,hipStream_t stream){
+#ifdef CK_INT8_CACHED_TUNING
+ if(route==0 && legacy>=9001 && legacy<=9012)return ck_tile_int8_operand_launch_private(0,legacy,args,nullptr,g,m,n,stream);
+ if(route>=13 && route<=17)return ck_tile_int8_wide128_launch_private(0,route,args,nullptr,g,m,n,stream);
+#endif
  switch(route){
  case 0:return ck_tile_int8_cached_legacy_dispatch_private(legacy,args,g,m,n,stream);
  case 1:return run<ck_tile::int8_nt_instances::RawM256N256>(args,g,m,n,stream);
