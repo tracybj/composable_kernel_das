@@ -1,0 +1,110 @@
+[
+  {
+    "id": 76,
+    "M": 1,
+    "N": 2048,
+    "K": 768,
+    "G": 4,
+    "phase": "decode",
+    "algorithm_id": 11285,
+    "kernel_name": "Custom_Cijk_Ailk_Bljk_BBS_BH_Bias_GG_AS_SAV_UserArgs_MT64x64x32_MI16x16x1_SN_GSU1_K1_MIWT2_2",
+    "frozen_blas_ms": 0.017047999426722527,
+    "blas_reference_gpu": 0
+  },
+  {
+    "id": 633,
+    "M": 4,
+    "N": 1024,
+    "K": 2048,
+    "G": 8,
+    "phase": "decode",
+    "algorithm_id": 11285,
+    "kernel_name": "Custom_Cijk_Ailk_Bljk_BBS_BH_Bias_GG_AS_SAV_UserArgs_MT64x64x32_MI16x16x1_SN_GSU1_K1_MIWT2_2",
+    "frozen_blas_ms": 0.032816000282764435,
+    "blas_reference_gpu": 0
+  },
+  {
+    "id": 681,
+    "M": 1,
+    "N": 1536,
+    "K": 2048,
+    "G": 4,
+    "phase": "decode",
+    "algorithm_id": 11278,
+    "kernel_name": "Custom_Cijk_Ailk_Bljk_BBS_BH_Bias_GG_AS_SAV_UserArgs_MT128x64x32_MI16x16x1_SN_GSU1_K1_MIWT4_2_WGM1",
+    "frozen_blas_ms": 0.027664000168442726,
+    "blas_reference_gpu": 0
+  },
+  {
+    "id": 358,
+    "M": 8,
+    "N": 6144,
+    "K": 2048,
+    "G": 32,
+    "phase": "decode",
+    "algorithm_id": 11289,
+    "kernel_name": "Custom_Cijk_Ailk_Bljk_BBS_BH_Bias_GG_AS_SAV_UserArgs_MT128x128x16_SE_EPS1_K1_WGM1_struct_buffer",
+    "frozen_blas_ms": 0.670039713382721,
+    "blas_reference_gpu": 0
+  },
+  {
+    "id": 146,
+    "M": 128,
+    "N": 1232,
+    "K": 1536,
+    "G": 196,
+    "phase": "decode",
+    "algorithm_id": 313,
+    "kernel_name": "Cijk_Ailk_Bljk_BBS_BH_GG_AS_UserArgs_MT128x128x16_MI16x16x1_SN_AFC1_DTL1_EPS1_GRVWA8_GRVWB8_GSU1_GSUAMB_K1_LRVW4_MIWT8_2_NLCA1_NLCB1_OBAFM1_OLDSR0_ONLL1_PGR4_PLR1_SU0_SUS0_TLDS1_ULDSWM1_USFGRO0_USSB1_WSS0_WG16_16_1_WGM1",
+    "frozen_blas_ms": 0.8211677670478821,
+    "blas_reference_gpu": 0
+  },
+  {
+    "id": 772,
+    "M": 64,
+    "N": 6144,
+    "K": 3584,
+    "G": 56,
+    "phase": "decode",
+    "algorithm_id": 11288,
+    "kernel_name": "Custom_Cijk_Ailk_Bljk_BBS_BH_Bias_GG_AS_SAV_UserArgs_MT128x128x16_SE_EPS1_K1_WGM8_struct_buffer",
+    "frozen_blas_ms": 2.0357272624969482,
+    "blas_reference_gpu": 0
+  },
+  {
+    "id": 1186,
+    "M": 128,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "phase": "decode",
+    "algorithm_id": 313,
+    "kernel_name": "Cijk_Ailk_Bljk_BBS_BH_GG_AS_UserArgs_MT128x128x16_MI16x16x1_SN_AFC1_DTL1_EPS1_GRVWA8_GRVWB8_GSU1_GSUAMB_K1_LRVW4_MIWT8_2_NLCA1_NLCB1_OBAFM1_OLDSR0_ONLL1_PGR4_PLR1_SU0_SUS0_TLDS1_ULDSWM1_USFGRO0_USSB1_WSS0_WG16_16_1_WGM1",
+    "frozen_blas_ms": 0.038439951837062836,
+    "blas_reference_gpu": 4
+  },
+  {
+    "id": 1187,
+    "M": 256,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "phase": "decode",
+    "algorithm_id": 313,
+    "kernel_name": "Cijk_Ailk_Bljk_BBS_BH_GG_AS_UserArgs_MT128x128x16_MI16x16x1_SN_AFC1_DTL1_EPS1_GRVWA8_GRVWB8_GSU1_GSUAMB_K1_LRVW4_MIWT8_2_NLCA1_NLCB1_OBAFM1_OLDSR0_ONLL1_PGR4_PLR1_SU0_SUS0_TLDS1_ULDSWM1_USFGRO0_USSB1_WSS0_WG16_16_1_WGM1",
+    "frozen_blas_ms": 0.05039994791150093,
+    "blas_reference_gpu": 4
+  },
+  {
+    "id": 1178,
+    "M": 2048,
+    "N": 4096,
+    "K": 8192,
+    "G": 64,
+    "phase": "prefill",
+    "algorithm_id": 11284,
+    "kernel_name": "Custom_Cijk_Ailk_Bljk_BBS_BH_Bias_GG_AS_SAV_UserArgs_MT256x256x16_MI16x16x1_SN_GSU1_K1_MIWT8_4_WGM8",
+    "frozen_blas_ms": 29.023935317993164,
+    "blas_reference_gpu": 0
+  }
+]

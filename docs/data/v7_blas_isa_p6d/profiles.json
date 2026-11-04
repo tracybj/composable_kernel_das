@@ -1,0 +1,1140 @@
+[
+  {
+    "id": 146,
+    "backend": "base",
+    "tile": [
+      64,
+      128,
+      64
+    ],
+    "source": "/workspace/v7_coverage/p6d/runs/profile_r1_id146_base/1/profile/565702_tile_example_grouped_gemm_device_args_benchmark.perf",
+    "dispatch_count": 2,
+    "dispatch_geometries": [
+      {
+        "grid_work_items": [
+          20480,
+          1,
+          1
+        ],
+        "block_threads": [
+          256,
+          1,
+          1
+        ],
+        "ctas": 80,
+        "lds": 49152,
+        "scratch": 132,
+        "vgpr": 256,
+        "sgpr": 112
+      },
+      {
+        "grid_work_items": [
+          20480,
+          1,
+          1
+        ],
+        "block_threads": [
+          256,
+          1,
+          1
+        ],
+        "ctas": 80,
+        "lds": 49152,
+        "scratch": 132,
+        "vgpr": 256,
+        "sgpr": 112
+      }
+    ],
+    "aql_dispatch_ms": [
+      5.282397,
+      5.279203
+    ],
+    "gui_cycles": 7933589,
+    "ms_from_gui": 4.958493125,
+    "busy_cu_frac": 0.9979491548528667,
+    "mmop_active_per_simd_cycle": 0.009486753094973788,
+    "mmop_active_per_busy_simd_cycle": 0.009506248939478759,
+    "mmop_insts": 12042240,
+    "mmop_insts_expected_padded": 12042240.0,
+    "mmop_count_matches_padded": true,
+    "mmop_cycles_per_inst": 2.0,
+    "waves": 320,
+    "mean_resident_waves_per_cu": 3.991817404455915,
+    "mean_wave_lifetime_cycles": 1981254.128125,
+    "wait_any_frac": 0.3174009963931921,
+    "l2_hit_pct": 69.90331455876998,
+    "tcp_tcc_read_latency": 218.74992498226635,
+    "tcp_read_requests": 49668256,
+    "hbm_read_MB": 895.189952,
+    "hbm_write_MB": 117.046336,
+    "hbm_GBps": 204.14191619959138,
+    "dram_credit_stall_frac": 0.00011044024337535004,
+    "tcp_alloc_stall_frac": 0.0,
+    "tcp_pending_stall_frac": 0.2266303986127842,
+    "tcp_alloc_stall_per_busy_cu": 0.0,
+    "tcp_pending_stall_per_busy_cu": 0.22709613762456426,
+    "lds_bank_conflict_frac": 0.4084507042253521,
+    "sq_insts_salu_per_wave": 95477.0,
+    "sq_insts_smem_per_wave": 690.0,
+    "sq_insts_valu_per_wave": 388417.0,
+    "sq_insts_vmem_per_wave": 68960.0,
+    "sq_insts_lds_per_wave": 35084.0,
+    "sq_insts_branch_per_wave": 3285.0,
+    "sq_insts_mmop_per_wave": 37632.0,
+    "valu_minus_mmop_insts_per_wave": 350785.0,
+    "valu_minus_mmop_count_fraction": 0.9031144362888339,
+    "logical_tiles": 3920,
+    "physical_ctas": 80,
+    "waves_per_physical_cta": 4,
+    "logical_tiles_per_physical_cta": 49.0
+  },
+  {
+    "id": 146,
+    "backend": "blas",
+    "tile": [
+      128,
+      128,
+      16
+    ],
+    "source": "/workspace/v7_coverage/p6d/runs/profile_r1_id146_blas/1/profile/565765_python3.10.perf",
+    "dispatch_count": 2,
+    "dispatch_geometries": [
+      {
+        "grid_work_items": [
+          501760,
+          1,
+          1
+        ],
+        "block_threads": [
+          256,
+          1,
+          1
+        ],
+        "ctas": 1960,
+        "lds": 32768,
+        "scratch": 0,
+        "vgpr": 256,
+        "sgpr": 96
+      },
+      {
+        "grid_work_items": [
+          501760,
+          1,
+          1
+        ],
+        "block_threads": [
+          256,
+          1,
+          1
+        ],
+        "ctas": 1960,
+        "lds": 32768,
+        "scratch": 0,
+        "vgpr": 256,
+        "sgpr": 96
+      }
+    ],
+    "aql_dispatch_ms": [
+      0.84064,
+      0.824959
+    ],
+    "ctas": 1960,
+    "gui_cycles": 1252603,
+    "ms_from_gui": 0.782876875,
+    "busy_cu_frac": 0.9643444191814965,
+    "mmop_active_per_simd_cycle": 0.06008607675376795,
+    "mmop_active_per_busy_simd_cycle": 0.06230769376439905,
+    "mmop_insts": 12042240,
+    "mmop_insts_expected_padded": 12042240.0,
+    "mmop_count_matches_padded": true,
+    "mmop_cycles_per_inst": 2.0,
+    "waves": 7840,
+    "waves_per_cta": 4.0,
+    "mean_resident_waves_per_cu": 7.4951336137627,
+    "mean_wave_lifetime_cycles": 24019.904591836734,
+    "wait_any_frac": 0.21211904973453882,
+    "l2_hit_pct": 55.43702710491625,
+    "tcp_tcc_read_latency": 627.2798229112713,
+    "tcp_read_requests": 25422736,
+    "hbm_read_MB": 821.09024,
+    "hbm_write_MB": 62.43616,
+    "hbm_GBps": 1128.5636710114857,
+    "dram_credit_stall_frac": 0.012977126431918173,
+    "tcp_alloc_stall_frac": 0.35365890070517153,
+    "tcp_pending_stall_frac": 0.5696009130586467,
+    "tcp_alloc_stall_per_busy_cu": 0.36673505199039313,
+    "tcp_pending_stall_per_busy_cu": 0.5906612842143112,
+    "lds_bank_conflict_frac": 0.16666666666666666,
+    "sq_insts_salu_per_wave": 3187.794897959184,
+    "sq_insts_smem_per_wave": 108.5,
+    "sq_insts_valu_per_wave": 2173.4,
+    "sq_insts_vmem_per_wave": 256.0,
+    "sq_insts_lds_per_wave": 576.0,
+    "sq_insts_branch_per_wave": 343.89489795918365,
+    "sq_insts_mmop_per_wave": 1536.0,
+    "valu_minus_mmop_insts_per_wave": 637.4,
+    "valu_minus_mmop_count_fraction": 0.29327321247814486
+  },
+  {
+    "id": 772,
+    "backend": "base",
+    "tile": [
+      256,
+      256,
+      16
+    ],
+    "source": "/workspace/v7_coverage/p6d/runs/profile_r1_id772_base/1/profile/566152_tile_example_grouped_gemm_device_args_benchmark.perf",
+    "dispatch_count": 2,
+    "dispatch_geometries": [
+      {
+        "grid_work_items": [
+          688128,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 1344,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          688128,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 1344,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      }
+    ],
+    "aql_dispatch_ms": [
+      1.944315,
+      1.922076
+    ],
+    "ctas": 1344,
+    "gui_cycles": 2897747,
+    "ms_from_gui": 1.811091875,
+    "busy_cu_frac": 0.9793263223117822,
+    "mmop_active_per_simd_cycle": 0.16622900480959862,
+    "mmop_active_per_busy_simd_cycle": 0.16973811590931312,
+    "mmop_insts": 77070336,
+    "mmop_insts_expected_padded": 77070336.0,
+    "mmop_count_matches_padded": true,
+    "mmop_cycles_per_inst": 2.0,
+    "waves": 10752,
+    "waves_per_cta": 8.0,
+    "mean_resident_waves_per_cu": 7.821156229305043,
+    "mean_wave_lifetime_cycles": 42232.37211681547,
+    "wait_any_frac": 0.16930579779159718,
+    "l2_hit_pct": 30.20287658477955,
+    "tcp_tcc_read_latency": 701.6808887924689,
+    "tcp_read_requests": 48427008,
+    "hbm_read_MB": 2527.341376,
+    "hbm_write_MB": 44.040192,
+    "hbm_GBps": 1419.79631375686,
+    "dram_credit_stall_frac": 0.12454525015468915,
+    "tcp_alloc_stall_frac": 0.0,
+    "tcp_pending_stall_frac": 0.5859224209359892,
+    "tcp_alloc_stall_per_busy_cu": 0.0,
+    "tcp_pending_stall_per_busy_cu": 0.5982913024872751,
+    "lds_bank_conflict_frac": 0.2564102564102564,
+    "sq_insts_salu_per_wave": 2696.5,
+    "sq_insts_smem_per_wave": 8.0,
+    "sq_insts_valu_per_wave": 7909.0,
+    "sq_insts_vmem_per_wave": 462.0,
+    "sq_insts_lds_per_wave": 1936.0,
+    "sq_insts_branch_per_wave": 297.5,
+    "sq_insts_mmop_per_wave": 7168.0,
+    "valu_minus_mmop_insts_per_wave": 741.0,
+    "valu_minus_mmop_count_fraction": 0.0936907320773802,
+    "vmem_above_two_loads_per_kstage_per_wave": 14.0
+  },
+  {
+    "id": 772,
+    "backend": "small128",
+    "tile": [
+      64,
+      128,
+      16
+    ],
+    "source": "/workspace/v7_coverage/p6d/runs/profile_r1_id772_small128/1/profile/566253_tile_example_grouped_gemm_device_args_benchmark.perf",
+    "dispatch_count": 2,
+    "dispatch_geometries": [
+      {
+        "grid_work_items": [
+          688128,
+          1,
+          1
+        ],
+        "block_threads": [
+          256,
+          1,
+          1
+        ],
+        "ctas": 2688,
+        "lds": 32768,
+        "scratch": 0,
+        "vgpr": 80,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          688128,
+          1,
+          1
+        ],
+        "block_threads": [
+          256,
+          1,
+          1
+        ],
+        "ctas": 2688,
+        "lds": 32768,
+        "scratch": 0,
+        "vgpr": 80,
+        "sgpr": 48
+      }
+    ],
+    "aql_dispatch_ms": [
+      2.331358,
+      2.256798
+    ],
+    "ctas": 2688,
+    "gui_cycles": 3399207,
+    "ms_from_gui": 2.124504375,
+    "busy_cu_frac": 0.9874124648778377,
+    "mmop_active_per_simd_cycle": 0.03542661567830379,
+    "mmop_active_per_busy_simd_cycle": 0.035878234211563005,
+    "mmop_insts": 19267584,
+    "mmop_insts_expected_padded": 19267584.0,
+    "mmop_count_matches_padded": true,
+    "mmop_cycles_per_inst": 2.0,
+    "waves": 10752,
+    "waves_per_cta": 4.0,
+    "mean_resident_waves_per_cu": 7.7760326158424595,
+    "mean_wave_lifetime_cycles": 49285.224609375,
+    "wait_any_frac": 0.13901710055297858,
+    "l2_hit_pct": 42.22680527540255,
+    "tcp_tcc_read_latency": 879.3600341825103,
+    "tcp_read_requests": 57843616,
+    "hbm_read_MB": 2644.272,
+    "hbm_write_MB": 44.040192,
+    "hbm_GBps": 1265.3832223809848,
+    "dram_credit_stall_frac": 0.23849033024467178,
+    "tcp_alloc_stall_frac": 0.008614619527436841,
+    "tcp_pending_stall_frac": 0.6429749129723491,
+    "tcp_alloc_stall_per_busy_cu": 0.008724438706070658,
+    "tcp_pending_stall_per_busy_cu": 0.6511715578270503,
+    "lds_bank_conflict_frac": 0.25327510917030566,
+    "sq_insts_salu_per_wave": 2737.5,
+    "sq_insts_smem_per_wave": 8.0,
+    "sq_insts_valu_per_wave": 2065.0,
+    "sq_insts_vmem_per_wave": 462.0,
+    "sq_insts_lds_per_wave": 932.0,
+    "sq_insts_branch_per_wave": 293.5,
+    "sq_insts_mmop_per_wave": 1792.0,
+    "valu_minus_mmop_insts_per_wave": 273.0,
+    "valu_minus_mmop_count_fraction": 0.13220338983050847
+  },
+  {
+    "id": 772,
+    "backend": "blas",
+    "tile": [
+      128,
+      128,
+      16
+    ],
+    "source": "/workspace/v7_coverage/p6d/runs/profile_r1_id772_blas/1/profile/566346_python3.10.perf",
+    "dispatch_count": 2,
+    "dispatch_geometries": [
+      {
+        "grid_work_items": [
+          688128,
+          1,
+          1
+        ],
+        "block_threads": [
+          256,
+          1,
+          1
+        ],
+        "ctas": 2688,
+        "lds": 32768,
+        "scratch": 0,
+        "vgpr": 188,
+        "sgpr": 112
+      },
+      {
+        "grid_work_items": [
+          688128,
+          1,
+          1
+        ],
+        "block_threads": [
+          256,
+          1,
+          1
+        ],
+        "ctas": 2688,
+        "lds": 32768,
+        "scratch": 0,
+        "vgpr": 188,
+        "sgpr": 112
+      }
+    ],
+    "aql_dispatch_ms": [
+      2.047679,
+      2.059519
+    ],
+    "ctas": 2688,
+    "gui_cycles": 3106387,
+    "ms_from_gui": 1.941491875,
+    "busy_cu_frac": 0.9862530288402572,
+    "mmop_active_per_simd_cycle": 0.0775321297700512,
+    "mmop_active_per_busy_simd_cycle": 0.07861281791065508,
+    "mmop_insts": 38535168,
+    "mmop_insts_expected_padded": 38535168.0,
+    "mmop_count_matches_padded": true,
+    "mmop_cycles_per_inst": 2.0,
+    "waves": 10752,
+    "waves_per_cta": 4.0,
+    "mean_resident_waves_per_cu": 7.813786080098842,
+    "mean_wave_lifetime_cycles": 44677.19242931547,
+    "wait_any_frac": 0.17630145263297317,
+    "l2_hit_pct": 48.58432652126682,
+    "tcp_tcc_read_latency": 786.8789804642585,
+    "tcp_read_requests": 57635488,
+    "hbm_read_MB": 2499.07968,
+    "hbm_write_MB": 44.110176,
+    "hbm_GBps": 1309.9152712137927,
+    "dram_credit_stall_frac": 0.20542852516444346,
+    "tcp_alloc_stall_frac": 0.004033669179017296,
+    "tcp_pending_stall_frac": 0.6107658511318776,
+    "tcp_alloc_stall_per_busy_cu": 0.004089892817627662,
+    "tcp_pending_stall_per_busy_cu": 0.6192790625445096,
+    "lds_bank_conflict_frac": 0.3327144448570368,
+    "sq_insts_salu_per_wave": 4361.982142857143,
+    "sq_insts_smem_per_wave": 40.5,
+    "sq_insts_valu_per_wave": 4471.0,
+    "sq_insts_vmem_per_wave": 514.0,
+    "sq_insts_lds_per_wave": 1354.0,
+    "sq_insts_branch_per_wave": 386.98214285714283,
+    "sq_insts_mmop_per_wave": 3584.0,
+    "valu_minus_mmop_insts_per_wave": 887.0,
+    "valu_minus_mmop_count_fraction": 0.19838962200849922
+  },
+  {
+    "id": 1186,
+    "backend": "base",
+    "tile": [
+      256,
+      256,
+      16
+    ],
+    "source": "/workspace/v7_coverage/p6d/runs/profile_r1_id1186_base/1/profile/566732_tile_example_grouped_gemm_device_args_benchmark.perf",
+    "dispatch_count": 2,
+    "dispatch_geometries": [
+      {
+        "grid_work_items": [
+          32768,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 64,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          32768,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 64,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      }
+    ],
+    "aql_dispatch_ms": [
+      0.05168,
+      0.039201
+    ],
+    "ctas": 64,
+    "gui_cycles": 75965,
+    "ms_from_gui": 0.047478124999999996,
+    "busy_cu_frac": 0.5935651286776805,
+    "mmop_active_per_simd_cycle": 0.043135654577766074,
+    "mmop_active_per_busy_simd_cycle": 0.07267215086213348,
+    "mmop_insts": 524288,
+    "mmop_insts_expected_padded": 524288.0,
+    "mmop_count_matches_padded": true,
+    "mmop_cycles_per_inst": 2.0,
+    "waves": 512,
+    "waves_per_cta": 8.0,
+    "mean_resident_waves_per_cu": 4.737642335285987,
+    "mean_wave_lifetime_cycles": 14203.126953125,
+    "wait_any_frac": 0.17053339239089763,
+    "l2_hit_pct": 0.17174311926605504,
+    "tcp_tcc_read_latency": 1724.7651123046876,
+    "tcp_read_requests": 409600,
+    "hbm_read_MB": 26.218368,
+    "hbm_write_MB": 4.194304,
+    "hbm_GBps": 640.5617745014151,
+    "dram_credit_stall_frac": 0.4973589811097216,
+    "tcp_alloc_stall_frac": 0.0,
+    "tcp_pending_stall_frac": 0.3389574145988284,
+    "tcp_alloc_stall_per_busy_cu": 0.0,
+    "tcp_pending_stall_per_busy_cu": 0.5710534501141324,
+    "lds_bank_conflict_frac": 0.2857142857142857,
+    "sq_insts_salu_per_wave": 568.5,
+    "sq_insts_smem_per_wave": 8.0,
+    "sq_insts_valu_per_wave": 1793.0,
+    "sq_insts_vmem_per_wave": 82.0,
+    "sq_insts_lds_per_wave": 400.0,
+    "sq_insts_branch_per_wave": 79.5,
+    "sq_insts_mmop_per_wave": 1024.0,
+    "valu_minus_mmop_insts_per_wave": 769.0,
+    "valu_minus_mmop_count_fraction": 0.42889012827663137,
+    "vmem_above_two_loads_per_kstage_per_wave": 18.0
+  },
+  {
+    "id": 1186,
+    "backend": "small128",
+    "tile": [
+      64,
+      128,
+      16
+    ],
+    "source": "/workspace/v7_coverage/p6d/runs/profile_r1_id1186_small128/1/profile/566758_tile_example_grouped_gemm_device_args_benchmark.perf",
+    "dispatch_count": 2,
+    "dispatch_geometries": [
+      {
+        "grid_work_items": [
+          65536,
+          1,
+          1
+        ],
+        "block_threads": [
+          256,
+          1,
+          1
+        ],
+        "ctas": 256,
+        "lds": 32768,
+        "scratch": 0,
+        "vgpr": 80,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          65536,
+          1,
+          1
+        ],
+        "block_threads": [
+          256,
+          1,
+          1
+        ],
+        "ctas": 256,
+        "lds": 32768,
+        "scratch": 0,
+        "vgpr": 80,
+        "sgpr": 48
+      }
+    ],
+    "aql_dispatch_ms": [
+      0.04688,
+      0.04112
+    ],
+    "ctas": 256,
+    "gui_cycles": 76163,
+    "ms_from_gui": 0.047601875,
+    "busy_cu_frac": 0.7234533172275252,
+    "mmop_active_per_simd_cycle": 0.02151175767761249,
+    "mmop_active_per_busy_simd_cycle": 0.02973482485373285,
+    "mmop_insts": 262144,
+    "mmop_insts_expected_padded": 262144.0,
+    "mmop_count_matches_padded": true,
+    "mmop_cycles_per_inst": 2.0,
+    "waves": 1024,
+    "waves_per_cta": 4.0,
+    "mean_resident_waves_per_cu": 4.977723435263842,
+    "mean_wave_lifetime_cycles": 7380.4873046875,
+    "wait_any_frac": 0.1576343025495199,
+    "l2_hit_pct": 41.11486431622197,
+    "tcp_tcc_read_latency": 841.6494018554688,
+    "tcp_read_requests": 819200,
+    "hbm_read_MB": 27.544576,
+    "hbm_write_MB": 4.194304,
+    "hbm_GBps": 666.756929217599,
+    "dram_credit_stall_frac": 0.00533149298215669,
+    "tcp_alloc_stall_frac": 0.0018747620235547444,
+    "tcp_pending_stall_frac": 0.280700438533146,
+    "tcp_alloc_stall_per_busy_cu": 0.002591407045777819,
+    "tcp_pending_stall_per_busy_cu": 0.38800076224526603,
+    "lds_bank_conflict_frac": 0.2702702702702703,
+    "sq_insts_salu_per_wave": 611.5,
+    "sq_insts_smem_per_wave": 8.0,
+    "sq_insts_valu_per_wave": 534.0,
+    "sq_insts_vmem_per_wave": 78.0,
+    "sq_insts_lds_per_wave": 164.0,
+    "sq_insts_branch_per_wave": 72.5,
+    "sq_insts_mmop_per_wave": 256.0,
+    "valu_minus_mmop_insts_per_wave": 278.0,
+    "valu_minus_mmop_count_fraction": 0.5205992509363296
+  },
+  {
+    "id": 1186,
+    "backend": "blas",
+    "tile": [
+      128,
+      128,
+      16
+    ],
+    "source": "/workspace/v7_coverage/p6d/runs/profile_r1_id1186_blas/1/profile/566797_python3.10.perf",
+    "dispatch_count": 2,
+    "dispatch_geometries": [
+      {
+        "grid_work_items": [
+          32768,
+          1,
+          1
+        ],
+        "block_threads": [
+          256,
+          1,
+          1
+        ],
+        "ctas": 128,
+        "lds": 32768,
+        "scratch": 0,
+        "vgpr": 256,
+        "sgpr": 96
+      },
+      {
+        "grid_work_items": [
+          32768,
+          1,
+          1
+        ],
+        "block_threads": [
+          256,
+          1,
+          1
+        ],
+        "ctas": 128,
+        "lds": 32768,
+        "scratch": 0,
+        "vgpr": 256,
+        "sgpr": 96
+      }
+    ],
+    "aql_dispatch_ms": [
+      0.03904,
+      0.0376
+    ],
+    "ctas": 128,
+    "gui_cycles": 71791,
+    "ms_from_gui": 0.044869374999999996,
+    "busy_cu_frac": 0.6281577774372832,
+    "mmop_active_per_simd_cycle": 0.022821802175760193,
+    "mmop_active_per_busy_simd_cycle": 0.03633132151744914,
+    "mmop_insts": 262144,
+    "mmop_insts_expected_padded": 262144.0,
+    "mmop_count_matches_padded": true,
+    "mmop_cycles_per_inst": 2.0,
+    "waves": 512,
+    "waves_per_cta": 4.0,
+    "mean_resident_waves_per_cu": 3.410126617542589,
+    "mean_wave_lifetime_cycles": 9588.77734375,
+    "wait_any_frac": 0.05206139012607105,
+    "l2_hit_pct": 37.82056386629505,
+    "tcp_tcc_read_latency": 403.9046325683594,
+    "tcp_read_requests": 524288,
+    "hbm_read_MB": 25.1792,
+    "hbm_write_MB": 4.194592,
+    "hbm_GBps": 654.6512404061791,
+    "dram_credit_stall_frac": 0.0,
+    "tcp_alloc_stall_frac": 0.0007532281205164993,
+    "tcp_pending_stall_frac": 0.19587604992269225,
+    "tcp_alloc_stall_per_busy_cu": 0.0011991065741308973,
+    "tcp_pending_stall_per_busy_cu": 0.3118261955170156,
+    "lds_bank_conflict_frac": 0.16666666666666666,
+    "sq_insts_salu_per_wave": 1231.984375,
+    "sq_insts_smem_per_wave": 42.5,
+    "sq_insts_valu_per_wave": 1107.0,
+    "sq_insts_vmem_per_wave": 128.0,
+    "sq_insts_lds_per_wave": 192.0,
+    "sq_insts_branch_per_wave": 146.984375,
+    "sq_insts_mmop_per_wave": 512.0,
+    "valu_minus_mmop_insts_per_wave": 595.0,
+    "valu_minus_mmop_count_fraction": 0.5374887082204155
+  },
+  {
+    "id": 1187,
+    "backend": "base",
+    "tile": [
+      256,
+      256,
+      16
+    ],
+    "source": "/workspace/v7_coverage/p6d/runs/profile_r1_id1187_base/1/profile/567154_tile_example_grouped_gemm_device_args_benchmark.perf",
+    "dispatch_count": 2,
+    "dispatch_geometries": [
+      {
+        "grid_work_items": [
+          32768,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 64,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          32768,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 64,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      }
+    ],
+    "aql_dispatch_ms": [
+      0.06672,
+      0.04864
+    ],
+    "ctas": 64,
+    "gui_cycles": 90636,
+    "ms_from_gui": 0.0566475,
+    "busy_cu_frac": 0.6285552925989673,
+    "mmop_active_per_simd_cycle": 0.03615340482810362,
+    "mmop_active_per_busy_simd_cycle": 0.057518256951771984,
+    "mmop_insts": 524288,
+    "mmop_insts_expected_padded": 524288.0,
+    "mmop_count_matches_padded": true,
+    "mmop_cycles_per_inst": 2.0,
+    "waves": 512,
+    "waves_per_cta": 8.0,
+    "mean_resident_waves_per_cu": 4.989275232799329,
+    "mean_wave_lifetime_cycles": 17482.216796875,
+    "wait_any_frac": 0.23154578396908912,
+    "l2_hit_pct": 0.11750945941982226,
+    "tcp_tcc_read_latency": 1910.3821966826026,
+    "tcp_read_requests": 548864,
+    "hbm_read_MB": 35.132032,
+    "hbm_write_MB": 8.388608,
+    "hbm_GBps": 768.2711505362108,
+    "dram_credit_stall_frac": 0.571075510834547,
+    "tcp_alloc_stall_frac": 0.27080906041749414,
+    "tcp_pending_stall_frac": 0.3996208736043073,
+    "tcp_alloc_stall_per_busy_cu": 0.4308436562481967,
+    "tcp_pending_stall_per_busy_cu": 0.6357768016747488,
+    "lds_bank_conflict_frac": 0.2857142857142857,
+    "sq_insts_salu_per_wave": 568.5,
+    "sq_insts_smem_per_wave": 8.0,
+    "sq_insts_valu_per_wave": 1849.0,
+    "sq_insts_vmem_per_wave": 90.0,
+    "sq_insts_lds_per_wave": 400.0,
+    "sq_insts_branch_per_wave": 79.5,
+    "sq_insts_mmop_per_wave": 1024.0,
+    "valu_minus_mmop_insts_per_wave": 825.0,
+    "valu_minus_mmop_count_fraction": 0.4461871281773932,
+    "vmem_above_two_loads_per_kstage_per_wave": 26.0
+  },
+  {
+    "id": 1187,
+    "backend": "small128",
+    "tile": [
+      64,
+      128,
+      16
+    ],
+    "source": "/workspace/v7_coverage/p6d/runs/profile_r1_id1187_small128/1/profile/567187_tile_example_grouped_gemm_device_args_benchmark.perf",
+    "dispatch_count": 2,
+    "dispatch_geometries": [
+      {
+        "grid_work_items": [
+          131072,
+          1,
+          1
+        ],
+        "block_threads": [
+          256,
+          1,
+          1
+        ],
+        "ctas": 512,
+        "lds": 32768,
+        "scratch": 0,
+        "vgpr": 80,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          131072,
+          1,
+          1
+        ],
+        "block_threads": [
+          256,
+          1,
+          1
+        ],
+        "ctas": 512,
+        "lds": 32768,
+        "scratch": 0,
+        "vgpr": 80,
+        "sgpr": 48
+      }
+    ],
+    "aql_dispatch_ms": [
+      0.06832,
+      0.064
+    ],
+    "ctas": 512,
+    "gui_cycles": 111243,
+    "ms_from_gui": 0.069526875,
+    "busy_cu_frac": 0.7473833185009394,
+    "mmop_active_per_simd_cycle": 0.029456235448522605,
+    "mmop_active_per_busy_simd_cycle": 0.03941248716602922,
+    "mmop_insts": 524288,
+    "mmop_insts_expected_padded": 524288.0,
+    "mmop_count_matches_padded": true,
+    "mmop_cycles_per_inst": 2.0,
+    "waves": 2048,
+    "waves_per_cta": 4.0,
+    "mean_resident_waves_per_cu": 5.818612856539288,
+    "mean_wave_lifetime_cycles": 6457.83544921875,
+    "wait_any_frac": 0.1566736961904397,
+    "l2_hit_pct": 53.985172960469896,
+    "tcp_tcc_read_latency": 532.6797314453125,
+    "tcp_read_requests": 1638400,
+    "hbm_read_MB": 36.270848,
+    "hbm_write_MB": 8.388608,
+    "hbm_GBps": 642.3337162787772,
+    "dram_credit_stall_frac": 2.359699037242793e-05,
+    "tcp_alloc_stall_frac": 0.0025117310752137212,
+    "tcp_pending_stall_frac": 0.2609341711388582,
+    "tcp_alloc_stall_per_busy_cu": 0.003360699942101483,
+    "tcp_pending_stall_per_busy_cu": 0.3491303119558859,
+    "lds_bank_conflict_frac": 0.2702702702702703,
+    "sq_insts_salu_per_wave": 611.5,
+    "sq_insts_smem_per_wave": 8.0,
+    "sq_insts_valu_per_wave": 534.0,
+    "sq_insts_vmem_per_wave": 78.0,
+    "sq_insts_lds_per_wave": 164.0,
+    "sq_insts_branch_per_wave": 72.5,
+    "sq_insts_mmop_per_wave": 256.0,
+    "valu_minus_mmop_insts_per_wave": 278.0,
+    "valu_minus_mmop_count_fraction": 0.5205992509363296
+  },
+  {
+    "id": 1187,
+    "backend": "blas",
+    "tile": [
+      128,
+      128,
+      16
+    ],
+    "source": "/workspace/v7_coverage/p6d/runs/profile_r1_id1187_blas/1/profile/567219_python3.10.perf",
+    "dispatch_count": 2,
+    "dispatch_geometries": [
+      {
+        "grid_work_items": [
+          65536,
+          1,
+          1
+        ],
+        "block_threads": [
+          256,
+          1,
+          1
+        ],
+        "ctas": 256,
+        "lds": 32768,
+        "scratch": 0,
+        "vgpr": 256,
+        "sgpr": 96
+      },
+      {
+        "grid_work_items": [
+          65536,
+          1,
+          1
+        ],
+        "block_threads": [
+          256,
+          1,
+          1
+        ],
+        "ctas": 256,
+        "lds": 32768,
+        "scratch": 0,
+        "vgpr": 256,
+        "sgpr": 96
+      }
+    ],
+    "aql_dispatch_ms": [
+      0.05472,
+      0.0504
+    ],
+    "ctas": 256,
+    "gui_cycles": 91207,
+    "ms_from_gui": 0.057004374999999996,
+    "busy_cu_frac": 0.7482309471860712,
+    "mmop_active_per_simd_cycle": 0.035927067001436296,
+    "mmop_active_per_busy_simd_cycle": 0.04801601315282392,
+    "mmop_insts": 524288,
+    "mmop_insts_expected_padded": 524288.0,
+    "mmop_count_matches_padded": true,
+    "mmop_cycles_per_inst": 2.0,
+    "waves": 1024,
+    "waves_per_cta": 4.0,
+    "mean_resident_waves_per_cu": 5.04558257589878,
+    "mean_wave_lifetime_cycles": 8891.23046875,
+    "wait_any_frac": 0.10343232336989353,
+    "l2_hit_pct": 50.361333142817664,
+    "tcp_tcc_read_latency": 485.76111693879415,
+    "tcp_read_requests": 1052448,
+    "hbm_read_MB": 33.568512,
+    "hbm_write_MB": 8.390368,
+    "hbm_GBps": 736.0642055982546,
+    "dram_credit_stall_frac": 0.0,
+    "tcp_alloc_stall_frac": 0.028028276338438934,
+    "tcp_pending_stall_frac": 0.32500328922122207,
+    "tcp_alloc_stall_per_busy_cu": 0.0374593919749604,
+    "tcp_pending_stall_per_busy_cu": 0.43436226534532757,
+    "lds_bank_conflict_frac": 0.16666666666666666,
+    "sq_insts_salu_per_wave": 1231.984375,
+    "sq_insts_smem_per_wave": 42.5,
+    "sq_insts_valu_per_wave": 1107.0,
+    "sq_insts_vmem_per_wave": 128.0,
+    "sq_insts_lds_per_wave": 192.0,
+    "sq_insts_branch_per_wave": 146.984375,
+    "sq_insts_mmop_per_wave": 512.0,
+    "valu_minus_mmop_insts_per_wave": 595.0,
+    "valu_minus_mmop_count_fraction": 0.5374887082204155
+  },
+  {
+    "id": 1178,
+    "backend": "base",
+    "tile": [
+      256,
+      256,
+      16
+    ],
+    "source": "/workspace/v7_coverage/p6d/runs/profile_r1_id1178_base/1/profile/567535_tile_example_grouped_gemm_device_args_benchmark.perf",
+    "dispatch_count": 2,
+    "dispatch_geometries": [
+      {
+        "grid_work_items": [
+          4194304,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 8192,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          4194304,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 8192,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      }
+    ],
+    "aql_dispatch_ms": [
+      56.914833,
+      55.989238
+    ],
+    "ctas": 8192,
+    "gui_cycles": 83999731,
+    "ms_from_gui": 52.499831875,
+    "busy_cu_frac": 0.9915298791254462,
+    "mmop_active_per_simd_cycle": 0.07989176060575717,
+    "mmop_active_per_busy_simd_cycle": 0.08057423410802675,
+    "mmop_insts": 1073741824,
+    "mmop_insts_expected_padded": 1073741824.0,
+    "mmop_count_matches_padded": true,
+    "mmop_cycles_per_inst": 2.0,
+    "waves": 65536,
+    "waves_per_cta": 8.0,
+    "mean_resident_waves_per_cu": 7.926643868657151,
+    "mean_wave_lifetime_cycles": 205159.36192321777,
+    "wait_any_frac": 0.4769131396301085,
+    "l2_hit_pct": 45.94908531254222,
+    "tcp_tcc_read_latency": 755.6885576298773,
+    "tcp_read_requests": 1543221816,
+    "hbm_read_MB": 45741.317184,
+    "hbm_write_MB": 1073.741824,
+    "hbm_GBps": 891.7182652977781,
+    "dram_credit_stall_frac": 0.0009241822750599046,
+    "tcp_alloc_stall_frac": 0.8311582209114455,
+    "tcp_pending_stall_frac": 0.8157431987788152,
+    "tcp_alloc_stall_per_busy_cu": 0.838258370634829,
+    "tcp_pending_stall_per_busy_cu": 0.8227116660350374,
+    "lds_bank_conflict_frac": 0.25287356321839083,
+    "sq_insts_salu_per_wave": 5944.5,
+    "sq_insts_smem_per_wave": 8.0,
+    "sq_insts_valu_per_wave": 17219.0,
+    "sq_insts_vmem_per_wave": 1050.0,
+    "sq_insts_lds_per_wave": 4240.0,
+    "sq_insts_branch_per_wave": 623.5,
+    "sq_insts_mmop_per_wave": 16384.0,
+    "valu_minus_mmop_insts_per_wave": 835.0,
+    "valu_minus_mmop_count_fraction": 0.04849294384110576,
+    "vmem_above_two_loads_per_kstage_per_wave": 26.0
+  },
+  {
+    "id": 1178,
+    "backend": "blas",
+    "tile": [
+      256,
+      256,
+      16
+    ],
+    "source": "/workspace/v7_coverage/p6d/runs/profile_r1_id1178_blas/1/profile/567741_python3.10.perf",
+    "dispatch_count": 2,
+    "dispatch_geometries": [
+      {
+        "grid_work_items": [
+          4194304,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 8192,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 236,
+        "sgpr": 112
+      },
+      {
+        "grid_work_items": [
+          4194304,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 8192,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 236,
+        "sgpr": 112
+      }
+    ],
+    "aql_dispatch_ms": [
+      29.238216,
+      29.228617
+    ],
+    "ctas": 8192,
+    "gui_cycles": 43860947,
+    "ms_from_gui": 27.413091875,
+    "busy_cu_frac": 0.9924342470877339,
+    "mmop_active_per_simd_cycle": 0.15300368229623496,
+    "mmop_active_per_busy_simd_cycle": 0.154170095142544,
+    "mmop_insts": 1073741824,
+    "mmop_insts_expected_padded": 1073741824.0,
+    "mmop_count_matches_padded": true,
+    "mmop_cycles_per_inst": 2.0,
+    "waves": 65536,
+    "waves_per_cta": 8.0,
+    "mean_resident_waves_per_cu": 7.925325007232516,
+    "mean_wave_lifetime_cycles": 106095.22421264648,
+    "wait_any_frac": 0.24091763047451004,
+    "l2_hit_pct": 89.79961191211233,
+    "tcp_tcc_read_latency": 378.32713485520196,
+    "tcp_read_requests": 1523957408,
+    "hbm_read_MB": 9470.68448,
+    "hbm_write_MB": 1073.930176,
+    "hbm_GBps": 384.656160059654,
+    "dram_credit_stall_frac": 0.0,
+    "tcp_alloc_stall_frac": 0.60622159531804,
+    "tcp_pending_stall_frac": 0.6487032119940319,
+    "tcp_alloc_stall_per_busy_cu": 0.610843083153345,
+    "tcp_pending_stall_per_busy_cu": 0.6536485554560723,
+    "lds_bank_conflict_frac": 0.24972564321424218,
+    "sq_insts_salu_per_wave": 9202.984375,
+    "sq_insts_smem_per_wave": 44.5,
+    "sq_insts_valu_per_wave": 17929.0,
+    "sq_insts_vmem_per_wave": 1154.0,
+    "sq_insts_lds_per_wave": 4114.0,
+    "sq_insts_branch_per_wave": 619.984375,
+    "sq_insts_mmop_per_wave": 16384.0,
+    "valu_minus_mmop_insts_per_wave": 1545.0,
+    "valu_minus_mmop_count_fraction": 0.08617323888671984,
+    "vmem_above_two_loads_per_kstage_per_wave": 130.0
+  }
+]

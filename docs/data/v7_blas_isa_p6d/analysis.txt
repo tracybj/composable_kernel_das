@@ -1,0 +1,23 @@
+DIAGNOSTIC_PROGRESS {'jobs': 89, 'successful': 89, 'failures': [], 'timing_jobs': 75, 'profile_jobs': 13, 'trace_jobs': 1, 'cpu_full_blas_checks': 60839936, 'all_profile_mmop_matched': True, 'all_isa_decoded': True, 'dispatch_record_layout_crosschecked_with_sqtt_text': True}
+TIME 76 base=0.036000(3r) small128=0.022880(3r) blas=0.024000(3r) blas_repeat20=0.017080(3r)
+TIME 633 base=0.066080(3r) small128=0.041599(3r) blas=0.039440(3r) blas_repeat20=0.033012(3r)
+TIME 681 base=0.065120(3r) small128=0.038560(3r) blas=0.033920(3r) blas_repeat20=0.027576(3r)
+TIME 358 base=0.662401(3r) small128=0.637766(3r) blas=0.672079(3r) blas_repeat20=0.670992(3r)
+TIME 146 base=5.269615(3r) blas=0.820960(3r) blas_repeat20=0.822779(3r)
+TIME 772 base=1.994234(3r) small128=2.359360(3r) blas=2.034719(3r) blas_repeat20=2.034482(3r)
+TIME 1186 base=0.048321(3r) small128=0.047360(3r) blas=0.044480(3r) blas_repeat20=0.038392(3r)
+TIME 1187 base=0.057921(3r) small128=0.069440(3r) blas=0.056320(3r) blas_repeat20=0.051228(3r)
+TIME 1178 base=56.545494(3r) blas=29.029898(3r) blas_repeat20=29.023921(3r)
+PROFILE 146 base ms 4.95849 wave_cycles 1981254.1 wait 0.317 HBM_MB 895.19 vmem/wave 68960.0
+PROFILE 146 blas ms 0.78288 wave_cycles 24019.9 wait 0.212 HBM_MB 821.09 vmem/wave 256.0
+PROFILE 772 base ms 1.81109 wave_cycles 42232.4 wait 0.169 HBM_MB 2527.34 vmem/wave 462.0
+PROFILE 772 small128 ms 2.1245 wave_cycles 49285.2 wait 0.139 HBM_MB 2644.27 vmem/wave 462.0
+PROFILE 772 blas ms 1.94149 wave_cycles 44677.2 wait 0.176 HBM_MB 2499.08 vmem/wave 514.0
+PROFILE 1186 base ms 0.04748 wave_cycles 14203.1 wait 0.171 HBM_MB 26.22 vmem/wave 82.0
+PROFILE 1186 small128 ms 0.0476 wave_cycles 7380.5 wait 0.158 HBM_MB 27.54 vmem/wave 78.0
+PROFILE 1186 blas ms 0.04487 wave_cycles 9588.8 wait 0.052 HBM_MB 25.18 vmem/wave 128.0
+PROFILE 1187 base ms 0.05665 wave_cycles 17482.2 wait 0.232 HBM_MB 35.13 vmem/wave 90.0
+PROFILE 1187 small128 ms 0.06953 wave_cycles 6457.8 wait 0.157 HBM_MB 36.27 vmem/wave 78.0
+PROFILE 1187 blas ms 0.057 wave_cycles 8891.2 wait 0.103 HBM_MB 33.57 vmem/wave 128.0
+PROFILE 1178 base ms 52.49983 wave_cycles 205159.4 wait 0.477 HBM_MB 45741.32 vmem/wave 1050.0
+PROFILE 1178 blas ms 27.41309 wave_cycles 106095.2 wait 0.241 HBM_MB 9470.68 vmem/wave 1154.0

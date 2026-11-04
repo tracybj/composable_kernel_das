@@ -1,0 +1,42 @@
+{
+  "source": "/workspace/v7_coverage/p6d/runs/profile_r1_id146_base/1/profile/565702_tile_example_grouped_gemm_device_args_benchmark.perf",
+  "code_object_sha256": "a2af765dabc6d0188547c76d6229d3d270d2f51d609616dd31a67510ea29c5a1",
+  "symbol": "_ZN7ck_tile6kentryILi256ELi1ENS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS4_IJLi2ELi2ELi1EEEENS4_IJLi16ELi64ELi32EEEELb0ELb0EEELi1ELi1EEENS_24GemmPipelineAgBgCrCompV4INS_28UniversalGemmPipelineProblemIttfS8_NS_23TileGemmUniversalTraitsILb1ELb1ELb1ELb1ENS_13tensor_layout4gemm8RowMajorESF_SF_Lb0ELb0ELb1ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESJ_Lb1ELi2ELi2EEENS_37GemmPipelineAgBgCrCompV4DefaultPolicyEEENS_16CShuffleEpilogueINS_23CShuffleEpilogueProblemIttNS_5tupleIJEEEftSQ_SF_NS_12element_wise11PassThroughELi64ELi128ELi2ELi2ELi16ELi64ELi32ELb0ELNS_21memory_operation_enumE0ELi1ELb1ELi2ELb0ELi1ELi4ELi1ELi1EEEvEELNS_18GroupedGemmMFilterE0ELi0EEEJPU3AS4KviEEEvDpT2_",
+  "metadata": {
+    ".group_segment_fixed_size": 49152,
+    ".kernarg_segment_align": 8,
+    ".kernarg_segment_size": 272,
+    ".language": "OpenCL C",
+    ".language_version": [
+      2,
+      0
+    ],
+    ".max_flat_workgroup_size": 256,
+    ".name": "_ZN7ck_tile6kentryILi256ELi1ENS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS4_IJLi2ELi2ELi1EEEENS4_IJLi16ELi64ELi32EEEELb0ELb0EEELi1ELi1EEENS_24GemmPipelineAgBgCrCompV4INS_28UniversalGemmPipelineProblemIttfS8_NS_23TileGemmUniversalTraitsILb1ELb1ELb1ELb1ENS_13tensor_layout4gemm8RowMajorESF_SF_Lb0ELb0ELb1ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESJ_Lb1ELi2ELi2EEENS_37GemmPipelineAgBgCrCompV4DefaultPolicyEEENS_16CShuffleEpilogueINS_23CShuffleEpilogueProblemIttNS_5tupleIJEEEftSQ_SF_NS_12element_wise11PassThroughELi64ELi128ELi2ELi2ELi16ELi64ELi32ELb0ELNS_21memory_operation_enumE0ELi1ELb1ELi2ELb0ELi1ELi4ELi1ELi1EEEvEELNS_18GroupedGemmMFilterE0ELi0EEEJPU3AS4KviEEEvDpT2_",
+    ".private_segment_fixed_size": 132,
+    ".sgpr_count": 104,
+    ".sgpr_spill_count": 106,
+    ".symbol": "_ZN7ck_tile6kentryILi256ELi1ENS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS4_IJLi2ELi2ELi1EEEENS4_IJLi16ELi64ELi32EEEELb0ELb0EEELi1ELi1EEENS_24GemmPipelineAgBgCrCompV4INS_28UniversalGemmPipelineProblemIttfS8_NS_23TileGemmUniversalTraitsILb1ELb1ELb1ELb1ENS_13tensor_layout4gemm8RowMajorESF_SF_Lb0ELb0ELb1ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESJ_Lb1ELi2ELi2EEENS_37GemmPipelineAgBgCrCompV4DefaultPolicyEEENS_16CShuffleEpilogueINS_23CShuffleEpilogueProblemIttNS_5tupleIJEEEftSQ_SF_NS_12element_wise11PassThroughELi64ELi128ELi2ELi2ELi16ELi64ELi32ELb0ELNS_21memory_operation_enumE0ELi1ELb1ELi2ELb0ELi1ELi4ELi1ELi1EEEvEELNS_18GroupedGemmMFilterE0ELi0EEEJPU3AS4KviEEEvDpT2_.kd",
+    ".uses_dynamic_stack": false,
+    ".vgpr_count": 256,
+    ".vgpr_spill_count": 39,
+    ".wavefront_size": 64
+  },
+  "dispatch_resources": {
+    "grid_work_items": [
+      20480,
+      1,
+      1
+    ],
+    "block_threads": [
+      256,
+      1,
+      1
+    ],
+    "ctas": 80,
+    "lds": 49152,
+    "scratch": 132,
+    "vgpr": 256,
+    "sgpr": 112
+  }
+}

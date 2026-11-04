@@ -1,0 +1,740 @@
+[
+  {
+    "tag": "blas_ids76_633",
+    "symbol": "Custom_Cijk_Ailk_Bljk_BBS_BH_Bias_GG_AS_SAV_UserArgs_MT64x64x32_MI16x16x1_SN_GSU1_K1_MIWT2_2",
+    "code_object": "/workspace/Grouped_Geem/hipblaslt-install/lib/hipblaslt/library_gfx936/TensileLibrary_gfx936.co",
+    "address": "0xeccce00",
+    "bytes": 20480,
+    "sha256": "7f8e7cf6c62197f3e9097d6fa8a29a6a9d13ff8f8297e4ebc2cbbcc4aa5b884b",
+    "metadata": {
+      ".group_segment_fixed_size": 32768,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 32,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 256,
+      ".name": "Custom_Cijk_Ailk_Bljk_BBS_BH_Bias_GG_AS_SAV_UserArgs_MT64x64x32_MI16x16x1_SN_GSU1_K1_MIWT2_2",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 100,
+      ".sgpr_spill_count": 0,
+      ".symbol": "Custom_Cijk_Ailk_Bljk_BBS_BH_Bias_GG_AS_SAV_UserArgs_MT64x64x32_MI16x16x1_SN_GSU1_K1_MIWT2_2.kd",
+      ".vgpr_count": 102,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64
+    },
+    "static_instructions": 3667,
+    "direct_lds_loads": 17,
+    "unknown_lines": 0,
+    "ids": [
+      76,
+      633
+    ],
+    "first_no_load_tail_block": {
+      "label": "LoopEndL_oddexit_31",
+      "line_start": 770,
+      "line_end": 832,
+      "mmac_instructions": 32,
+      "buffer_load_instructions": 0
+    },
+    "static_wait_operands": {
+      "lgkmcnt(0)": 21,
+      "vmcnt(0)": 20,
+      "vmcnt(4)": 7,
+      "lgkmcnt(4)": 16,
+      "vmcnt(2)": 7,
+      "vmcnt(0) expcnt(0) lgkmcnt(0)": 120,
+      "vmcnt(5)": 2,
+      "vmcnt(3)": 3,
+      "vmcnt(1)": 3
+    },
+    "direct_lds_load_modifier_counts": {
+      "slc": 0,
+      "glc": 0,
+      "total": 17
+    }
+  },
+  {
+    "tag": "blas_ids681",
+    "symbol": "Custom_Cijk_Ailk_Bljk_BBS_BH_Bias_GG_AS_SAV_UserArgs_MT128x64x32_MI16x16x1_SN_GSU1_K1_MIWT4_2_WGM1",
+    "code_object": "/workspace/Grouped_Geem/hipblaslt-install/lib/hipblaslt/library_gfx936/TensileLibrary_gfx936.co",
+    "address": "0xec53200",
+    "bytes": 34560,
+    "sha256": "eebe09749cbeb0c58e1c56b537ae2bb906183bcb7b322383632b36eaf092548b",
+    "metadata": {
+      ".group_segment_fixed_size": 65536,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 32,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 256,
+      ".name": "Custom_Cijk_Ailk_Bljk_BBS_BH_Bias_GG_AS_SAV_UserArgs_MT128x64x32_MI16x16x1_SN_GSU1_K1_MIWT4_2_WGM1",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 100,
+      ".sgpr_spill_count": 0,
+      ".symbol": "Custom_Cijk_Ailk_Bljk_BBS_BH_Bias_GG_AS_SAV_UserArgs_MT128x64x32_MI16x16x1_SN_GSU1_K1_MIWT4_2_WGM1.kd",
+      ".vgpr_count": 186,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64
+    },
+    "static_instructions": 5973,
+    "direct_lds_loads": 38,
+    "unknown_lines": 0,
+    "ids": [
+      681
+    ],
+    "first_no_load_tail_block": {
+      "label": "LoopEndL_oddexit_31",
+      "line_start": 1048,
+      "line_end": 1148,
+      "mmac_instructions": 64,
+      "buffer_load_instructions": 0
+    },
+    "static_wait_operands": {
+      "lgkmcnt(0)": 21,
+      "vmcnt(0)": 19,
+      "vmcnt(3)": 7,
+      "lgkmcnt(6)": 20,
+      "vmcnt(6)": 10,
+      "vmcnt(0) expcnt(0) lgkmcnt(0)": 230,
+      "vmcnt(19)": 1,
+      "vmcnt(18)": 1,
+      "vmcnt(17)": 1,
+      "vmcnt(16)": 1,
+      "vmcnt(15)": 1,
+      "vmcnt(14)": 1,
+      "vmcnt(13)": 1,
+      "vmcnt(12)": 1,
+      "vmcnt(11)": 2,
+      "vmcnt(10)": 2,
+      "vmcnt(9)": 2,
+      "vmcnt(8)": 2,
+      "vmcnt(7)": 2,
+      "vmcnt(5)": 2,
+      "vmcnt(4)": 2,
+      "vmcnt(2)": 2,
+      "vmcnt(1)": 2
+    },
+    "direct_lds_load_modifier_counts": {
+      "slc": 0,
+      "glc": 0,
+      "total": 38
+    }
+  },
+  {
+    "tag": "blas_ids358",
+    "symbol": "Custom_Cijk_Ailk_Bljk_BBS_BH_Bias_GG_AS_SAV_UserArgs_MT128x128x16_SE_EPS1_K1_WGM1_struct_buffer",
+    "code_object": "/workspace/Grouped_Geem/hipblaslt-install/lib/hipblaslt/library_gfx936/TensileLibrary_gfx936.co",
+    "address": "0xed16a00",
+    "bytes": 57856,
+    "sha256": "fedb70c992a0910d3c15f85f59ff9c1f83aedd87b00f36cbfe8f268837a1ec88",
+    "metadata": {
+      ".group_segment_fixed_size": 32768,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 32,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 256,
+      ".name": "Custom_Cijk_Ailk_Bljk_BBS_BH_Bias_GG_AS_SAV_UserArgs_MT128x128x16_SE_EPS1_K1_WGM1_struct_buffer",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 100,
+      ".sgpr_spill_count": 0,
+      ".symbol": "Custom_Cijk_Ailk_Bljk_BBS_BH_Bias_GG_AS_SAV_UserArgs_MT128x128x16_SE_EPS1_K1_WGM1_struct_buffer.kd",
+      ".vgpr_count": 186,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64
+    },
+    "static_instructions": 9797,
+    "direct_lds_loads": 17,
+    "unknown_lines": 0,
+    "ids": [
+      358
+    ],
+    "first_no_load_tail_block": {
+      "label": "LoopEndL_oddexit_31",
+      "line_start": 852,
+      "line_end": 952,
+      "mmac_instructions": 64,
+      "buffer_load_instructions": 0
+    },
+    "static_wait_operands": {
+      "lgkmcnt(0)": 25,
+      "vmcnt(0)": 26,
+      "vmcnt(4)": 10,
+      "lgkmcnt(6)": 16,
+      "vmcnt(2)": 10,
+      "vmcnt(0) expcnt(0) lgkmcnt(0)": 47,
+      "vmcnt(11)": 5,
+      "vmcnt(10)": 5,
+      "vmcnt(9)": 5,
+      "vmcnt(8)": 5,
+      "vmcnt(7)": 5,
+      "vmcnt(6)": 5,
+      "vmcnt(5)": 5,
+      "vmcnt(3)": 6,
+      "vmcnt(1)": 6
+    },
+    "direct_lds_load_modifier_counts": {
+      "slc": 0,
+      "glc": 0,
+      "total": 17
+    }
+  },
+  {
+    "tag": "blas_ids146_1186_1187",
+    "symbol": "Cijk_Ailk_Bljk_BBS_BH_GG_AS_UserArgs_MT128x128x16_MI16x16x1_SN_AFC1_DTL1_EPS1_GRVWA8_GRVWB8_GSU1_GSUAMB_K1_LRVW4_MIWT8_2_NLCA1_NLCB1_OBAFM1_OLDSR0_ONLL1_PGR4_PLR1_SU0_SUS0_TLDS1_ULDSWM1_USFGRO0_USSB1_WSS0_WG16_16_1_WGM1",
+    "code_object": "/workspace/Grouped_Geem/hipblaslt-install/lib/hipblaslt/library_gfx936/TensileLibrary_gfx936.co",
+    "address": "0x25d2c00",
+    "bytes": 52480,
+    "sha256": "0bfc16623638cca7ab104beb5bd0c6fd8afd139c5ff390822bbb2b16f3caf2f9",
+    "metadata": {
+      ".group_segment_fixed_size": 32768,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 32,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 256,
+      ".name": "Cijk_Ailk_Bljk_BBS_BH_GG_AS_UserArgs_MT128x128x16_MI16x16x1_SN_AFC1_DTL1_EPS1_GRVWA8_GRVWB8_GSU1_GSUAMB_K1_LRVW4_MIWT8_2_NLCA1_NLCB1_OBAFM1_OLDSR0_ONLL1_PGR4_PLR1_SU0_SUS0_TLDS1_ULDSWM1_USFGRO0_USSB1_WSS0_WG16_16_1_WGM1",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 76,
+      ".sgpr_spill_count": 0,
+      ".symbol": "Cijk_Ailk_Bljk_BBS_BH_GG_AS_UserArgs_MT128x128x16_MI16x16x1_SN_AFC1_DTL1_EPS1_GRVWA8_GRVWB8_GSU1_GSUAMB_K1_LRVW4_MIWT8_2_NLCA1_NLCB1_OBAFM1_OLDSR0_ONLL1_PGR4_PLR1_SU0_SUS0_TLDS1_ULDSWM1_USFGRO0_USSB1_WSS0_WG16_16_1_WGM1.kd",
+      ".vgpr_count": 256,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64
+    },
+    "static_instructions": 8996,
+    "direct_lds_loads": 16,
+    "unknown_lines": 0,
+    "ids": [
+      146,
+      1186,
+      1187
+    ],
+    "first_no_load_tail_block": {
+      "label": "label_LoopEndL_oddexit_31",
+      "line_start": 867,
+      "line_end": 963,
+      "mmac_instructions": 64,
+      "buffer_load_instructions": 0
+    },
+    "static_wait_operands": {
+      "lgkmcnt(0)": 15,
+      "vmcnt(0)": 14,
+      "vmcnt(2)": 8,
+      "lgkmcnt(6)": 16,
+      "vmcnt(4)": 7,
+      "vmcnt(0) expcnt(0) lgkmcnt(0)": 448,
+      "vmcnt(63) expcnt(7) lgkmcnt(15)": 1,
+      "vmcnt(62)": 1,
+      "vmcnt(61)": 1,
+      "vmcnt(60)": 1,
+      "vmcnt(59)": 1,
+      "vmcnt(58)": 1,
+      "vmcnt(57)": 2,
+      "vmcnt(56)": 2,
+      "vmcnt(55)": 2,
+      "vmcnt(54)": 2,
+      "vmcnt(53)": 2,
+      "vmcnt(52)": 2,
+      "vmcnt(51)": 2,
+      "vmcnt(50)": 2,
+      "vmcnt(49)": 2,
+      "vmcnt(48)": 2,
+      "vmcnt(47)": 2,
+      "vmcnt(46)": 2,
+      "vmcnt(45)": 2,
+      "vmcnt(44)": 2,
+      "vmcnt(43)": 2,
+      "vmcnt(42)": 2,
+      "vmcnt(41)": 2,
+      "vmcnt(40)": 2,
+      "vmcnt(39)": 2,
+      "vmcnt(38)": 2,
+      "vmcnt(37)": 2,
+      "vmcnt(36)": 2,
+      "vmcnt(35)": 2,
+      "vmcnt(34)": 2,
+      "vmcnt(33)": 2,
+      "vmcnt(32)": 2,
+      "vmcnt(31)": 2,
+      "vmcnt(30)": 2,
+      "vmcnt(29)": 2,
+      "vmcnt(28)": 2,
+      "vmcnt(27)": 2,
+      "vmcnt(26)": 2,
+      "vmcnt(25)": 2,
+      "vmcnt(24)": 2,
+      "vmcnt(23)": 2,
+      "vmcnt(22)": 2,
+      "vmcnt(21)": 2,
+      "vmcnt(20)": 2,
+      "vmcnt(19)": 2,
+      "vmcnt(18)": 2,
+      "vmcnt(17)": 2,
+      "vmcnt(16)": 2,
+      "vmcnt(15)": 2,
+      "vmcnt(14)": 2,
+      "vmcnt(13)": 2,
+      "vmcnt(12)": 2,
+      "vmcnt(11)": 2,
+      "vmcnt(10)": 2,
+      "vmcnt(9)": 2,
+      "vmcnt(8)": 2,
+      "vmcnt(7)": 2,
+      "vmcnt(6)": 2,
+      "vmcnt(5)": 3,
+      "vmcnt(3)": 3,
+      "vmcnt(1)": 3
+    },
+    "direct_lds_load_modifier_counts": {
+      "slc": 0,
+      "glc": 0,
+      "total": 16
+    }
+  },
+  {
+    "tag": "blas_ids772",
+    "symbol": "Custom_Cijk_Ailk_Bljk_BBS_BH_Bias_GG_AS_SAV_UserArgs_MT128x128x16_SE_EPS1_K1_WGM8_struct_buffer",
+    "code_object": "/workspace/Grouped_Geem/hipblaslt-install/lib/hipblaslt/library_gfx936/TensileLibrary_gfx936.co",
+    "address": "0xed08700",
+    "bytes": 58112,
+    "sha256": "1bf30fc0bd36d7313d4fc1986c14c12aa9e1e525ee0498a0c94637a3de212f96",
+    "metadata": {
+      ".group_segment_fixed_size": 32768,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 32,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 256,
+      ".name": "Custom_Cijk_Ailk_Bljk_BBS_BH_Bias_GG_AS_SAV_UserArgs_MT128x128x16_SE_EPS1_K1_WGM8_struct_buffer",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 100,
+      ".sgpr_spill_count": 0,
+      ".symbol": "Custom_Cijk_Ailk_Bljk_BBS_BH_Bias_GG_AS_SAV_UserArgs_MT128x128x16_SE_EPS1_K1_WGM8_struct_buffer.kd",
+      ".vgpr_count": 186,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64
+    },
+    "static_instructions": 9828,
+    "direct_lds_loads": 17,
+    "unknown_lines": 0,
+    "ids": [
+      772
+    ],
+    "first_no_load_tail_block": {
+      "label": "LoopEndL_oddexit_31",
+      "line_start": 884,
+      "line_end": 984,
+      "mmac_instructions": 64,
+      "buffer_load_instructions": 0
+    },
+    "static_wait_operands": {
+      "lgkmcnt(0)": 25,
+      "vmcnt(0)": 26,
+      "vmcnt(4)": 10,
+      "lgkmcnt(6)": 16,
+      "vmcnt(2)": 10,
+      "vmcnt(0) expcnt(0) lgkmcnt(0)": 47,
+      "vmcnt(11)": 5,
+      "vmcnt(10)": 5,
+      "vmcnt(9)": 5,
+      "vmcnt(8)": 5,
+      "vmcnt(7)": 5,
+      "vmcnt(6)": 5,
+      "vmcnt(5)": 5,
+      "vmcnt(3)": 6,
+      "vmcnt(1)": 6
+    },
+    "direct_lds_load_modifier_counts": {
+      "slc": 0,
+      "glc": 0,
+      "total": 17
+    }
+  },
+  {
+    "tag": "blas_ids1178",
+    "symbol": "Custom_Cijk_Ailk_Bljk_BBS_BH_Bias_GG_AS_SAV_UserArgs_MT256x256x16_MI16x16x1_SN_GSU1_K1_MIWT8_4_WGM8",
+    "code_object": "/workspace/Grouped_Geem/hipblaslt-install/lib/hipblaslt/library_gfx936/TensileLibrary_gfx936.co",
+    "address": "0xecb3d00",
+    "bytes": 102656,
+    "sha256": "a3336bc9ead90a638d45995dc88190ca24d1786aa7867143b60c1438a8ae9cdf",
+    "metadata": {
+      ".group_segment_fixed_size": 65536,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 32,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 512,
+      ".name": "Custom_Cijk_Ailk_Bljk_BBS_BH_Bias_GG_AS_SAV_UserArgs_MT256x256x16_MI16x16x1_SN_GSU1_K1_MIWT8_4_WGM8",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 100,
+      ".sgpr_spill_count": 0,
+      ".symbol": "Custom_Cijk_Ailk_Bljk_BBS_BH_Bias_GG_AS_SAV_UserArgs_MT256x256x16_MI16x16x1_SN_GSU1_K1_MIWT8_4_WGM8.kd",
+      ".vgpr_count": 236,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64
+    },
+    "static_instructions": 16633,
+    "direct_lds_loads": 25,
+    "unknown_lines": 0,
+    "ids": [
+      1178
+    ],
+    "first_no_load_tail_block": {
+      "label": "LoopEndL_oddexit_31",
+      "line_start": 1264,
+      "line_end": 1434,
+      "mmac_instructions": 128,
+      "buffer_load_instructions": 0
+    },
+    "static_wait_operands": {
+      "lgkmcnt(0)": 26,
+      "vmcnt(0)": 42,
+      "vmcnt(4)": 30,
+      "lgkmcnt(8)": 20,
+      "vmcnt(2)": 25,
+      "vmcnt(0) expcnt(0) lgkmcnt(0)": 88,
+      "vmcnt(5)": 21,
+      "vmcnt(3)": 21,
+      "vmcnt(1)": 22
+    },
+    "direct_lds_load_modifier_counts": {
+      "slc": 0,
+      "glc": 0,
+      "total": 25
+    }
+  },
+  {
+    "tag": "ck_uniform_9f4f1ca884",
+    "symbol": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_21GemmPipelineV7UniformINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE0EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+    "code_object": "/workspace/v7_coverage/p6d/ck_v7_fadf87b1d867.co",
+    "address": "0x2100",
+    "bytes": 28400,
+    "sha256": "0d3a3738eea5e7b3f4ee8df2a619128a75ef92f125eab6e657ab6ce81249fb31",
+    "metadata": {
+      ".group_segment_fixed_size": 0,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 512,
+      ".name": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_21GemmPipelineV7UniformINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE0EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 47,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_21GemmPipelineV7UniformINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE0EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_.kd",
+      ".unfolded_args": [
+        {
+          ".address_space": "constant",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".offset": 8,
+          ".size": 4,
+          ".value_kind": "by_value"
+        },
+        {
+          ".offset": 12,
+          ".size": 4,
+          ".value_kind": "by_value"
+        }
+      ],
+      ".uniform_work_group_size": 1,
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 212,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64
+    },
+    "static_instructions": 4556,
+    "direct_lds_loads": 102,
+    "unknown_lines": 0,
+    "static_wait_operands": {
+      "lgkmcnt(0)": 24,
+      "vmcnt(0)": 2,
+      "vmcnt(6)": 1,
+      "vmcnt(4)": 47,
+      "vmcnt(2)": 1,
+      "lgkmcnt(8)": 46
+    },
+    "direct_lds_load_modifier_counts": {
+      "slc": 51,
+      "glc": 0,
+      "total": 102
+    }
+  },
+  {
+    "tag": "ck_uniform_e881be357c",
+    "symbol": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi8EEENS_21GemmPipelineV7UniformINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE0EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+    "code_object": "/workspace/v7_coverage/p6d/ck_v7_c4fd32a6cf9d.co",
+    "address": "0x2100",
+    "bytes": 28580,
+    "sha256": "2740306b4e42c40208d6b835e08d807c30102502928916687d14f2a143239804",
+    "metadata": {
+      ".group_segment_fixed_size": 0,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 512,
+      ".name": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi8EEENS_21GemmPipelineV7UniformINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE0EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 47,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi8EEENS_21GemmPipelineV7UniformINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE0EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_.kd",
+      ".unfolded_args": [
+        {
+          ".address_space": "constant",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".offset": 8,
+          ".size": 4,
+          ".value_kind": "by_value"
+        },
+        {
+          ".offset": 12,
+          ".size": 4,
+          ".value_kind": "by_value"
+        }
+      ],
+      ".uniform_work_group_size": 1,
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 212,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64
+    },
+    "static_instructions": 4599,
+    "direct_lds_loads": 102,
+    "unknown_lines": 0,
+    "static_wait_operands": {
+      "lgkmcnt(0)": 24,
+      "vmcnt(0)": 2,
+      "vmcnt(6)": 1,
+      "vmcnt(4)": 47,
+      "vmcnt(2)": 1,
+      "lgkmcnt(8)": 46
+    },
+    "direct_lds_load_modifier_counts": {
+      "slc": 51,
+      "glc": 0,
+      "total": 102
+    }
+  },
+  {
+    "tag": "ck_small128",
+    "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_20GemmPipelineV7SmallMINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+    "code_object": "/workspace/v7_coverage/p6d/ck_v7_082385e35689.co",
+    "address": "0x2100",
+    "bytes": 13080,
+    "sha256": "84e9cc159dd62145e36bad5df25a96d939850f340ef9c5615dba227578a50b48",
+    "metadata": {
+      ".group_segment_fixed_size": 0,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 256,
+      ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_20GemmPipelineV7SmallMINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 47,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_20GemmPipelineV7SmallMINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_.kd",
+      ".unfolded_args": [
+        {
+          ".address_space": "constant",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".offset": 8,
+          ".size": 4,
+          ".value_kind": "by_value"
+        },
+        {
+          ".offset": 12,
+          ".size": 4,
+          ".value_kind": "by_value"
+        }
+      ],
+      ".uniform_work_group_size": 1,
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 80,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64
+    },
+    "static_instructions": 2390,
+    "direct_lds_loads": 102,
+    "unknown_lines": 0,
+    "static_wait_operands": {
+      "lgkmcnt(0)": 66,
+      "vmcnt(0)": 2,
+      "vmcnt(6)": 1,
+      "vmcnt(4)": 47,
+      "vmcnt(2)": 1,
+      "lgkmcnt(4)": 46
+    },
+    "direct_lds_load_modifier_counts": {
+      "slc": 51,
+      "glc": 0,
+      "total": 102
+    }
+  },
+  {
+    "tag": "ck_small64",
+    "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi64ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_20GemmPipelineV7SmallMINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi64EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi64EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+    "code_object": "/workspace/v7_coverage/p6d/ck_v7_0e2192577b51.co",
+    "address": "0x2100",
+    "bytes": 10176,
+    "sha256": "dd2c433c8e31ee4e19d9c04d2d07bb039a33a4f6714058851a07827944857e1b",
+    "metadata": {
+      ".group_segment_fixed_size": 0,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 256,
+      ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi64ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_20GemmPipelineV7SmallMINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi64EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi64EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 51,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi64ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_20GemmPipelineV7SmallMINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi64EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi64EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_.kd",
+      ".unfolded_args": [
+        {
+          ".address_space": "constant",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".offset": 8,
+          ".size": 4,
+          ".value_kind": "by_value"
+        },
+        {
+          ".offset": 12,
+          ".size": 4,
+          ".value_kind": "by_value"
+        }
+      ],
+      ".uniform_work_group_size": 1,
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 55,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64
+    },
+    "static_instructions": 1964,
+    "direct_lds_loads": 102,
+    "unknown_lines": 0,
+    "static_wait_operands": {
+      "lgkmcnt(0)": 66,
+      "vmcnt(0)": 2,
+      "vmcnt(6)": 1,
+      "vmcnt(4)": 47,
+      "vmcnt(2)": 1,
+      "lgkmcnt(3)": 46
+    },
+    "direct_lds_load_modifier_counts": {
+      "slc": 51,
+      "glc": 0,
+      "total": 102
+    }
+  },
+  {
+    "tag": "ck_uniform_7710f7bbcc",
+    "symbol": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_21GemmPipelineV7UniformINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE1EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+    "code_object": "/workspace/v7_coverage/p6d/ck_v7_a5902ed20ea1.co",
+    "address": "0x2100",
+    "bytes": 27508,
+    "sha256": "dee6deb18ab00873296329f00d755b6b645366c0250f6115383e281036acfb79",
+    "metadata": {
+      ".group_segment_fixed_size": 0,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 512,
+      ".name": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_21GemmPipelineV7UniformINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE1EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 48,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_21GemmPipelineV7UniformINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE1EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_.kd",
+      ".unfolded_args": [
+        {
+          ".address_space": "constant",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".offset": 8,
+          ".size": 4,
+          ".value_kind": "by_value"
+        },
+        {
+          ".offset": 12,
+          ".size": 4,
+          ".value_kind": "by_value"
+        }
+      ],
+      ".uniform_work_group_size": 1,
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 211,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64
+    },
+    "static_instructions": 4426,
+    "direct_lds_loads": 102,
+    "unknown_lines": 0,
+    "static_wait_operands": {
+      "lgkmcnt(0)": 24,
+      "vmcnt(0)": 2,
+      "vmcnt(6)": 1,
+      "vmcnt(4)": 47,
+      "vmcnt(2)": 1,
+      "lgkmcnt(8)": 46
+    },
+    "direct_lds_load_modifier_counts": {
+      "slc": 0,
+      "glc": 0,
+      "total": 102
+    }
+  }
+]

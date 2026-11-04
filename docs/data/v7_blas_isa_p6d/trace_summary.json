@@ -1,0 +1,36 @@
+{
+  "successful_traces": 1,
+  "traces": [
+    {
+      "key": "trace_r1_id681_small128",
+      "id": 681,
+      "backend": "small128",
+      "files": [
+        {
+          "path": "/workspace/v7_coverage/p6d/runs/trace_r1_id681_small128/1/profile/568177_tile_example_grouped_gemm_device_args_benchmark.perf",
+          "bytes": 19685,
+          "sha256": "c717c72ed50dd75e2d36db4d731fa5647637d0b9d398616204851f8fa7516f38"
+        },
+        {
+          "path": "/workspace/v7_coverage/p6d/runs/trace_r1_id681_small128/1/profile/results.txt",
+          "bytes": 1432,
+          "sha256": "f429f77c67e05de3fca85d3f20fe26272172f60d27942def85a876b34020eef7"
+        },
+        {
+          "path": "/workspace/v7_coverage/p6d/runs/trace_r1_id681_small128/1/profile/thread_trace_8__ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13_se0_cu1.out",
+          "bytes": 424800,
+          "sha256": "362c01d167817a8fb65af8fcaa823cbaf9ce092af70030298e9fe2d2dd310612",
+          "format": "hexadecimal 16-bit raw SQTT tokens, one word per line",
+          "words": 84960,
+          "raw_token_bytes": 169920,
+          "decoded_pc_or_latency": false
+        }
+      ],
+      "se0_reported_token_bytes": 169920,
+      "scope": "first active CU of first active SE (hardware output cu1/se0)",
+      "instruction_latency_analysis": "not performed: installed Linux xprof emits raw token hex; supplied XCompute GUI is a Windows installer, no compatible decoder used",
+      "capture_timing_not_formal": true
+    }
+  ],
+  "decision": "Probe succeeded. Do not collect more SQTT without a usable PC/latency decoder; use verified static ISA plus PMC. Raw capture is ready for XCompute GUI review."
+}
