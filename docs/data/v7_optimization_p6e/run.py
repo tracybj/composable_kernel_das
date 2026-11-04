@@ -26,23 +26,12 @@ def append(path,row):
  with path.open('a') as f:f.write(json.dumps(row,ensure_ascii=False)+'\n');f.flush();os.fsync(f.fileno())
 def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 def gate(key):
- for attempt in range(1,4):
-  start=time.monotonic()
-  r=subprocess.run(['hy-smi'],env=ENV,text=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,timeout=45)
-  out=re.sub(r'\x1b\[[0-9;]*m','',r.stdout)
-  rows=[s.split() for s in out.splitlines() if re.match(r'^\s*4\s',s)]
-  pct=rows[0][6] if len(rows)==1 and len(rows[0])>6 else None
-  mem=int(re.search(r'MemAvailable:\s+(\d+)',Path('/proc/meminfo').read_text())[1])
-  append(ROOT/'gate.jsonl',dict(key=key,at=stamp(),attempt=attempt,rc=r.returncode,hcu4=pct,mem_available_kib=mem,seconds=time.monotonic()-start,output=out))
-  if mem<64*1024*1024:raise RuntimeError('LOW_HOST_MEMORY; save and stop')
-  if r.returncode==0 and 'MKFD' not in out and pct is not None:
-   if pct!='0.0%':raise RuntimeError('CARD4_BUSY '+pct+'; do not switch')
-   return
-  print('GATE_RETRY',key,attempt,flush=True)
-  if attempt<3:
-   t=time.monotonic();time.sleep(60)
-   append(ROOT/'waits.jsonl',dict(at=stamp(),key=key,reason='MKFD_or_missing_card',seconds=time.monotonic()-t))
- raise RuntimeError('ENVIRONMENT_GATE_FAILED_3; stop GPU work and report')
+ from health import gate as checked_gate
+ return checked_gate(key)
+
+def current_epoch():
+ from journalview import epoch
+ return epoch()
 
 def cases():
  return {int(r['ID']):dict(id=int(r['ID']),**{k:int(r[k]) for k in ['M','N','K','G']}) for r in csv.DictReader(open('/workspace/shapes_1178.csv',encoding='utf-8-sig'))}
@@ -50,7 +39,7 @@ def cases():
 def main():
  global BENCH
  resource.setrlimit(resource.RLIMIT_CORE,(0,0))
- ap=argparse.ArgumentParser();ap.add_argument('suite',choices=['cache_accuracy','cache_perf','cache_profile','cache_expand','cache_walk','regression']);ap.add_argument('--binary');ap.add_argument('--tag',default='');args=ap.parse_args()
+ ap=argparse.ArgumentParser();ap.add_argument('suite',choices=['cache_accuracy','cache_perf','cache_profile','cache_expand','cache_walk','regression']);ap.add_argument('--binary');ap.add_argument('--tag',default='');ap.add_argument('--repair-epoch');args=ap.parse_args()
  if args.binary:BENCH=Path(args.binary)
  snapshot=ROOT/'scripts'/f'{sha(__file__)}.py';snapshot.parent.mkdir(exist_ok=True);snapshot.write_bytes(Path(__file__).read_bytes())
  session=json.loads((ROOT/'session.json').read_text());deadline=datetime.datetime.fromisoformat(session['deadline_utc']).timestamp()
@@ -88,15 +77,22 @@ def main():
  if args.suite=='regression':
   for tag,binary in [('selector','tile_example_grouped_gemm_selector_test'),('query','tile_example_grouped_gemm_device_args_query_test'),('smoke','tile_example_grouped_gemm_device_args_smoke')]:
    jobs.append(dict(key='regression_'+tag,id=0,variant='base',kind=tag,command=[str(REPO/'build/bin'/binary)]))
+ if args.tag and args.repair_epoch:raise RuntimeError('Use tag or repair-epoch, not both')
  if args.tag:
   for job in jobs:job['key']=args.tag+'_'+job['key']
+ for job in jobs:
+  job['logical_key']=job['key']
+  if args.repair_epoch:job['key']=args.repair_epoch+'_'+job['key']
  with Path('/workspace/v7_coverage/p6b/run.lock').open('a') as lock:
   fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
-  journal=ROOT/'jobs.jsonl';records=[json.loads(s) for s in journal.read_text().splitlines()] if journal.exists() else []
-  done={r['key'] for r in records if r.get('ok')}
+  from journalview import read as read_journal
+  journal=ROOT/'jobs.jsonl';records,valid=read_journal()
+  done=set(valid)
+  if (ROOT/'invalidations.json').exists() and not args.repair_epoch and not args.tag and args.suite=='cache_expand':
+   raise RuntimeError('Use --repair-epoch with fresh physical keys after invalidation')
   binary_hash=sha(BENCH)
   for number,spec in enumerate(jobs,1):
-   if spec['key'] in done:continue
+   if spec['logical_key'] in done:continue
    if time.time()>deadline-900:raise RuntimeError('DEADLINE_RESERVE; stop new GPU jobs')
    assert sha(BENCH)==binary_hash,'Benchmark changed during campaign'
    gate(spec['key'])
@@ -109,7 +105,7 @@ def main():
     env['CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN']='0'
    cmd=spec['command']
    if spec['kind']=='profile':cmd=['/opt/rocm-6.3.3/bin/xprof','--kernels','V7Uniform','--sections',GC,'--output-dir',str(folder/'profile')]+cmd
-   record=dict(spec,at=stamp(),path=str(folder),command=cmd,benchmark_sha256=binary_hash,script_sha256=sha(__file__),environment={k:v for k,v in env.items() if k.startswith(('CK_TILE_GROUPED_GEMM_','HIP_VISIBLE_DEVICES','CUDA_VISIBLE_DEVICES'))})
+   record=dict(spec,environment_epoch=current_epoch(),at=stamp(),path=str(folder),command=cmd,benchmark_sha256=binary_hash,script_sha256=sha(__file__),environment={k:v for k,v in env.items() if k.startswith(('CK_TILE_GROUPED_GEMM_','HIP_VISIBLE_DEVICES','CUDA_VISIBLE_DEVICES'))})
    (folder/'command.json').write_text(json.dumps(record,indent=2))
    print('START',number,'/',len(jobs),spec['key'],flush=True);start=time.monotonic()
    try:

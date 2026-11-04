@@ -1,0 +1,200 @@
+[
+  {
+    "id": 1126,
+    "M": 16384,
+    "N": 4096,
+    "K": 7168,
+    "G": 8,
+    "policy_applies": true,
+    "variant": "noslc_row",
+    "before_ms": 19.195368,
+    "after_ms": 19.605854,
+    "delta_pct": 2.1384638210635076,
+    "before_round_ms": [
+      19.19273,
+      19.195368,
+      19.196091
+    ],
+    "after_round_ms": [
+      19.788546,
+      19.605854,
+      19.537842
+    ],
+    "paired_round_delta_pct": [
+      3.104383795322496,
+      2.1384638210635076,
+      1.7803155861263686
+    ],
+    "before_cv": [
+      0.0011893387,
+      0.0016132265,
+      0.0012667116
+    ],
+    "after_cv": [
+      0.06024749,
+      0.071678643,
+      0.068928636
+    ],
+    "commands": [
+      "walk_cache_r1_id1126_noslc",
+      "walk_cache_r1_id1126_noslc_row",
+      "walk_cache_r2_id1126_noslc",
+      "walk_cache_r2_id1126_noslc_row",
+      "walk_cache_r3_id1126_noslc",
+      "walk_cache_r3_id1126_noslc_row"
+    ],
+    "unpaired_median_delta_pct": 2.1384638210635076,
+    "observational_label": "uncertain",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      0,
+      0,
+      0
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 18.6314754486084,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 18.6314754486084,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 0.9706235092032828,
+    "R_after": 0.9503016521804354
+  },
+  {
+    "id": 1164,
+    "M": 8192,
+    "N": 6144,
+    "K": 7168,
+    "G": 12,
+    "policy_applies": true,
+    "variant": "noslc_row",
+    "before_ms": 21.828386,
+    "after_ms": 24.369928,
+    "delta_pct": 11.643288697570231,
+    "before_round_ms": [
+      21.82745,
+      21.828386,
+      21.830013
+    ],
+    "after_round_ms": [
+      24.298645,
+      24.369928,
+      24.675823
+    ],
+    "paired_round_delta_pct": [
+      11.32150113732937,
+      11.643288697570231,
+      13.036226776410986
+    ],
+    "before_cv": [
+      0.0029435193,
+      0.0023105051,
+      0.0030671144
+    ],
+    "after_cv": [
+      0.027975042,
+      0.057372188,
+      0.056876918
+    ],
+    "commands": [
+      "walk_cache_r1_id1164_noslc",
+      "walk_cache_r1_id1164_noslc_row",
+      "walk_cache_r2_id1164_noslc",
+      "walk_cache_r2_id1164_noslc_row",
+      "walk_cache_r3_id1164_noslc",
+      "walk_cache_r3_id1164_noslc_row"
+    ],
+    "unpaired_median_delta_pct": 11.643288697570231,
+    "observational_label": "stable_regression",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      0,
+      0,
+      0
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 21.441184997558594,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 21.441184997558594,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 0.9822615834976803,
+    "R_after": 0.8798214339229312
+  },
+  {
+    "id": 1178,
+    "M": 2048,
+    "N": 4096,
+    "K": 8192,
+    "G": 64,
+    "policy_applies": true,
+    "variant": "noslc_row",
+    "before_ms": 29.826307,
+    "after_ms": 35.910706,
+    "delta_pct": 20.426574668072185,
+    "before_round_ms": [
+      29.839432,
+      29.826307,
+      29.819586
+    ],
+    "after_round_ms": [
+      35.994049,
+      35.874634,
+      35.910706
+    ],
+    "paired_round_delta_pct": [
+      20.625784699923244,
+      20.278497770441373,
+      20.426574668072185
+    ],
+    "before_cv": [
+      0.00024598939,
+      0.00032299501,
+      0.00037974459
+    ],
+    "after_cv": [
+      0.01560459,
+      0.017528358,
+      0.019527305
+    ],
+    "commands": [
+      "walk_cache_r1_id1178_noslc",
+      "walk_cache_r1_id1178_noslc_row",
+      "walk_cache_r2_id1178_noslc",
+      "walk_cache_r2_id1178_noslc_row",
+      "walk_cache_r3_id1178_noslc",
+      "walk_cache_r3_id1178_noslc_row"
+    ],
+    "unpaired_median_delta_pct": 20.399437986070467,
+    "observational_label": "stable_regression",
+    "label_note": "Heuristic: all paired rounds beyond2%, median change beyond2x maximum sample CV; not a statistical confidence interval",
+    "environment_epochs": [
+      0,
+      0,
+      0
+    ],
+    "aggregation_note": "Time columns are measured medians; effect is median of within-epoch paired ratios, never a pair across recovery",
+    "blas": {
+      "ms": 29.023935317993164,
+      "gpu": 0,
+      "protocol": "frozen Native GroupedGemm repeat20",
+      "source": "/workspace/bf16NN-groupgemm.csv"
+    },
+    "blas_ms": 29.023935317993164,
+    "blas_gpu": 0,
+    "blas_protocol": "frozen Native GroupedGemm repeat20",
+    "blas_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before": 0.9730985239973948,
+    "R_after": 0.8082251381522035
+  }
+]

@@ -1,0 +1,79 @@
+{
+  "at": "2026-11-04T10:22:30.390198+00:00",
+  "first_transition": "2026-11-04T10:15:58.155404+00:00",
+  "raw_keys": [
+    "expand_cache_r3_id1052_base",
+    "expand_cache_r3_id1052_noslc",
+    "expand_cache_r3_id1053_base",
+    "expand_cache_r3_id1053_noslc",
+    "expand_cache_r3_id1054_base",
+    "expand_cache_r3_id1054_noslc",
+    "expand_cache_r3_id1055_base",
+    "expand_cache_r3_id1055_noslc",
+    "expand_cache_r3_id1056_base",
+    "expand_cache_r3_id1056_noslc",
+    "expand_cache_r3_id1057_base",
+    "expand_cache_r3_id1057_noslc",
+    "expand_cache_r3_id1058_base",
+    "expand_cache_r3_id1058_noslc",
+    "expand_cache_r3_id1059_base",
+    "expand_cache_r3_id1059_noslc",
+    "expand_cache_r3_id1060_base",
+    "expand_cache_r3_id1060_noslc",
+    "expand_cache_r3_id1061_base",
+    "expand_cache_r3_id1061_noslc",
+    "expand_cache_r3_id1062_base",
+    "expand_cache_r3_id1062_noslc",
+    "expand_cache_r3_id1063_base",
+    "expand_cache_r3_id1063_noslc",
+    "expand_cache_r3_id1064_base",
+    "expand_cache_r3_id1064_noslc",
+    "expand_cache_r3_id1065_base",
+    "expand_cache_r3_id1065_noslc",
+    "rec1_expand_cache_r3_id1138_base",
+    "rec1_expand_cache_r3_id1138_noslc",
+    "rec1_expand_cache_r3_id1139_base",
+    "rec1_expand_cache_r3_id1139_noslc",
+    "rec1_expand_cache_r3_id1140_base"
+  ],
+  "reason": "Measurements after MKFD before complete two-check/known-good recovery protocol; retain raw values, replace full affected pairs",
+  "orphaned_inflight": [
+    {
+      "key": "expand_cache_r3_id1065_noslc",
+      "path": "/workspace/v7_coverage/p6e/runs/expand_cache_r3_id1065_noslc/1",
+      "at": "2026-11-04T10:19:32.328332+00:00",
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=4",
+        "--n=4096",
+        "--k=7168",
+        "--groups=48",
+        "--include-args-build=0",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--time=1",
+        "--validate=1",
+        "--correctness-repeats=1",
+        "--warmup=10",
+        "--samples=30"
+      ]
+    }
+  ],
+  "additional_transitions": [
+    {
+      "at": "2026-11-04T10:49:06.185676+00:00",
+      "environment_epoch": 1,
+      "reason": "hymgr unregister/re-register contemporaneous with invalid device ordinal before SELECT",
+      "raw_keys": [
+        "rec1_expand_cache_r3_id1138_base",
+        "rec1_expand_cache_r3_id1138_noslc",
+        "rec1_expand_cache_r3_id1139_base",
+        "rec1_expand_cache_r3_id1139_noslc",
+        "rec1_expand_cache_r3_id1140_base"
+      ],
+      "evidence": "kernel_environment_events.log"
+    }
+  ]
+}

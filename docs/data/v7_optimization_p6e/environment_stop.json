@@ -1,0 +1,24 @@
+{
+  "at": "2026-11-04T10:19:35.939618+00:00",
+  "reason": "Observed MKFD at10:15:58; old gate lacked full recovery workflow",
+  "stopped_own_orchestrators": [
+    {
+      "pid": 657601,
+      "parent": 655191,
+      "command": "python3 /workspace/v7_coverage/p6e/run.py cache_expand"
+    },
+    {
+      "pid": 670719,
+      "parent": 670718,
+      "command": "python3 /workspace/v7_coverage/p6e/after_cache.py"
+    }
+  ],
+  "children_allowed_to_finish": [
+    {
+      "pid": 749054,
+      "parent": 657601,
+      "command": "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark --dtype=bf16 --layout=NN --m=4 --n=4096 --k=7168 --groups=48 --include-args-build=0 --backend=ck --blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so --time=1 --validate=1 --correctness-repeats=1 --warmup=10 --samples=30"
+    }
+  ],
+  "children_verified_finished_at": "2026-11-04T10:26:00.648586+00:00"
+}
