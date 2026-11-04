@@ -35,7 +35,7 @@ def sources():
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--build', type=Path, default=E / 'build/refactor_v121')
+    parser.add_argument('--build', type=Path, default=E / 'build/scale_v122')
     parser.add_argument('--compiler', default='/opt/dtk/bin/aicc')
     parser.add_argument('--arch', default='gfx936')
     parser.add_argument('--jobs', type=int, default=2)
@@ -61,7 +61,7 @@ def main():
     exports = subprocess.check_output(['nm', '-D', '--defined-only', str(library)], text=True)
     names = [line.split()[-1] for line in exports.splitlines() if line.split()]
     api = [name for name in names if name.startswith('ck_tile_int8_nt_cached_')]
-    assert len(api) == 8, api
+    assert len(api) == 9 and 'ck_tile_int8_nt_cached_plan_create_v2' in api, api
     assert not any(name.startswith('ck_tile_hcu_grouped_gemm_')
                    or name == 'ck_tile_grouped_int8_nt_launch' for name in names)
     (build / 'sources.json').write_text(json.dumps(before, indent=2) + '\n')

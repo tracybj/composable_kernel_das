@@ -5,7 +5,7 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
 endif()
 get_filename_component(CK_INT8_CACHED_ROOT "${CMAKE_CURRENT_LIST_DIR}/../../../.." ABSOLUTE)
 set(CK_INT8_CACHED_ARCH gfx936 CACHE STRING "Architecture for the INT8-only extension")
-add_library(ck_tile_int8_nt_cached SHARED cached_api.cpp cached_dispatch.cpp)
+add_library(ck_tile_int8_nt_cached SHARED cached_api.cpp cached_dispatch.cpp scaled_dispatch.cpp)
 find_package(Threads REQUIRED)
 target_link_libraries(ck_tile_int8_nt_cached PRIVATE Threads::Threads)
 target_include_directories(ck_tile_int8_nt_cached PRIVATE

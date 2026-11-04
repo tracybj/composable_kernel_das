@@ -57,6 +57,34 @@ typedef struct ck_tile_int8_nt_cached_group_desc_v1 {
  uint32_t reserved0;
  uint64_t reserved[2];
 } ck_tile_int8_nt_cached_group_desc_v1;
+
+enum ck_tile_int8_nt_output_type_v2 {
+ CK_TILE_INT8_OUTPUT_INT32_V2=0,
+ CK_TILE_INT8_OUTPUT_BF16_V2=1,
+ CK_TILE_INT8_OUTPUT_FP16_V2=2
+};
+enum ck_tile_int8_nt_scale_mode_v2 {
+ CK_TILE_INT8_SCALE_SCALAR_V2=0,
+ CK_TILE_INT8_SCALE_OUTER_VECTOR_V2=1
+};
+// New descriptor;the v1 structs and entry points retain their ABI.
+// output = RNE_output(float(INT32_dot)*FP32(scale_a[row]*scale_b[col])).
+// FP32 device scale pointers;NULL means1. Scalar mode reads element0.
+// Outer mode:activation scale has M elements;weight scale has N elements.
+// Scales are borrowed,may be updated with stream ordering,and must outlive run.
+// output_type must be common across groups. INT32 requires both scales NULL
+// and scalar modes. No alpha/beta,bias,zero point or output quantization.
+typedef struct ck_tile_int8_nt_cached_group_desc_v2 {
+ uint32_t struct_size,abi_version; // sizeof(this descriptor),2.
+ const int8_t* a;
+ void* c; // [M,N],dtype selected below;strides count output elements.
+ int32_t m,a_row_stride,c_row_stride;
+ uint32_t output_type;
+ const float* scale_a;
+ const float* scale_b;
+ uint32_t scale_a_mode,scale_b_mode;
+ uint64_t reserved[2];
+} ck_tile_int8_nt_cached_group_desc_v2;
 typedef struct ck_tile_int8_nt_cached_weights_info_v1 {
  uint32_t struct_size,abi_version;
  int32_t group_count,n,k,format;
@@ -100,6 +128,12 @@ CK_TILE_INT8_CACHED_API int ck_tile_int8_nt_cached_plan_create_v1(
  ck_tile_int8_nt_cached_plan_handle_v1* result);
 CK_TILE_INT8_CACHED_API int ck_tile_int8_nt_cached_plan_query_v1(
  ck_tile_int8_nt_cached_plan_handle_v1 plan,ck_tile_int8_nt_cached_plan_info_v1* info);
+// v2 plans reuse the existing weights handle,run/query/destroy functions.
+// FP16/BF16 conversion is fused in the same GEMM kernel;no INT32 output buffer.
+CK_TILE_INT8_CACHED_API int ck_tile_int8_nt_cached_plan_create_v2(
+ ck_tile_int8_nt_cached_weights_handle_v1 weights,
+ const ck_tile_int8_nt_cached_group_desc_v2* groups,int32_t group_count,
+ ck_tile_int8_nt_cached_plan_handle_v1* result);
 CK_TILE_INT8_CACHED_API int ck_tile_int8_nt_cached_run_v1(
  ck_tile_int8_nt_cached_plan_handle_v1 plan,void* stream);
 CK_TILE_INT8_CACHED_API int ck_tile_int8_nt_cached_plan_destroy_v1(

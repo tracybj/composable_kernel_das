@@ -1,8 +1,13 @@
 # INT8 NT grouped GEMM — two-core organization
 
-This example implements signed INT8 × INT8 → INT32, NT layout, alpha=1,
-beta=0, no scales. Static expert weights may be packed once and reused;
-dynamic activations are never packed. FP16/BF16 interfaces are unchanged.
+This example implements signed INT8 × INT8 grouped GEMM in NT layout,
+alpha=1,beta=0. The v1 API retains INT32 output without scales. The v2 plan
+also supports FP32 scalar/outer-vector scales with fused BF16 or FP16 output.
+Static expert weights may be packed once and reused;dynamic activations are
+never packed. Existing FP16/BF16 input interfaces are unchanged.
+
+See [scale semantics and validation](docs/INT8_SCALE_OUTPUT.md) for the v2
+contract,the BLASLt reference and the limits of the current comparison.
 
 ## Production layout
 
@@ -13,6 +18,7 @@ dynamic activations are never packed. FP16/BF16 interfaces are unchanged.
 | Problem and instances | `cached_weights/core_problem.hpp`, `cached_weights/instances.hpp` | Compile-time geometry and policy: BM/BN/BK, producer/consumer waves, A-read batch, weight address format, record stride, transpose and output mapping. |
 | Selection | `cached_weights/selector.hpp`, `include/ck_tile/ops/gemm/grouped_gemm_selector.hpp` | Select an instance from M/N/K/G, layout, strides, alignment and device CU count. Never uses workload case IDs, phase labels or performance targets. |
 | Kernel / epilogue | `cached_weights/core_kernel.hpp`, `cached_weights/core_epilogue.hpp` | One grouped launch wrapper and output mapping for the WASP instances. |
+| Scaled output | `cached_weights/scaled_kernel.hpp`, `scaled_epilogue.hpp`, `scaled_dispatch.cpp` | Reuse both integer pipelines and fuse FP32 scaling plus selected 16-bit output in the same GEMM kernel. |
 | API / packing | `cached_weights/cached_api.cpp`, `pack_kernel.hpp` | Weight ownership, one-time INT8-only packing, plan/stream lifetime and launch. Packing is not a third GEMM pipeline. |
 | Compatibility | Previous m32/m64/m128/wide_n headers | Thin aliases only. Old public INT8 ABI remains available; the unused legacy direct kernel remains for ABI compatibility. |
 
@@ -21,7 +27,7 @@ implementation; v113–v120 experiments did not improve the remaining eight
 cases and are not enabled. The refactor preserves this production policy,
 rather than promoting the v120 experimental M192 candidate.
 
-The reorganized version has completed one new full round on physical GPU7:
+The archived v121 INT32/no-scale build completed one full round on physical GPU7:
 1178/1178 numerical PASS, 1170/1178 at or above the frozen BLAS target;
 prefill 298/306, decode 872/872. Minimum ratio is 0.981198. Median speedup
 versus v112 is 1.000034x, so performance is effectively preserved.
@@ -34,7 +40,7 @@ BLAS numbers are the frozen tuned targets, not a new BLAS measurement.
 
 ## Maintained Python entry points
 
-Only six Python files are kept for the current implementation:
+The maintained Python entry points are:
 
 | File | Purpose |
 | --- | --- |
@@ -44,6 +50,7 @@ Only six Python files are kept for the current implementation:
 | `cached_weights/tests/test_cached_api.py` | Full-range INT8 numerical, stride, tail, guard and API boundary tests. |
 | `cached_weights/tests/test_lifetime.py` | Prepared-weight reuse, refresh, stream ordering and destruction tests. |
 | `cached_weights/tests/validate_all_1178.py` | Full-output correctness and one-round performance measurement for all shapes. |
+| `cached_weights/tests/test_scaled_api.py` | Full-range INT8 gates for scale broadcasting,BF16/FP16 rounding,production route families and original INT32 APIs. |
 
 The 17 root-level Python scripts from earlier raw-API experiments and v23–v80
 validation have been removed from `main`. They are preserved at
@@ -58,18 +65,21 @@ frozen targets and the published v121 performance results are unchanged.
 R=/workspace/GroupGemm/composable_kernel
 E=$R/example_hcu/ck_tile/24_grouped_gemm_int8_nt
 python3 "$E/cached_weights/build_and_manifest.py" \
-  --build "$E/build/refactor_v121" --compiler /opt/dtk/bin/aicc \
+  --build "$E/build/scale_v122" --compiler /opt/dtk/bin/aicc \
   --arch gfx936 --jobs 2
 ```
 
 The cached target is also available from the example/root CMake build.
-Link the old raw API owner only once; the cached-weight API has eight separate
-INT8-only C symbols and does not define an old FP16/BF16 owner.
+Link the old raw API owner only once;the cached-weight API retains eight v1
+C symbols and adds `ck_tile_int8_nt_cached_plan_create_v2`. It defines no old
+FP16/BF16 provider.
 
 ## Reproduce validation and performance
 
 Use physical GPU 7 in `ck_yyc`. Run the boundary and lifetime gates first,
-then the full suite, using a fresh output directory (one formal round):
+then the full unscaled INT32 suite,using a fresh output directory (one formal
+round). The following commands reproduce the archived v121 build;v122 scaled
+output gates are documented in [the scale guide](docs/INT8_SCALE_OUTPUT.md).
 
 ```bash
 export HIP_VISIBLE_DEVICES=7 CUDA_VISIBLE_DEVICES=7 DTK_VISIBLE_DEVICES=7

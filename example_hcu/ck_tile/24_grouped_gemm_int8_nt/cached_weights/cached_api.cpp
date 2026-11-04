@@ -2,6 +2,7 @@
 #include "ck_tile_int8_nt_cached.h"
 #include "pack_kernel.hpp"
 #include "selector.hpp"
+#include "scale_args.hpp"
 #include "ck_tile/ops/gemm/grouped_gemm_selector.hpp"
 #include "ck_tile/ops/gemm/kernel/gemm_tile_partitioner.hpp"
 #include "ck_tile/ops/gemm/kernel/grouped_gemm_kernel.hpp"
@@ -21,6 +22,8 @@ extern "C" int ck_tile_int8_cached_launch_private(
  unsigned,unsigned,const void*,int,int,int,hipStream_t);
 extern "C" int ck_tile_int8_cached_pack_private(
  const ck_tile::Int8CachedWeightPackArgs*,int,int,int,hipStream_t);
+extern "C" int ck_tile_int8_scaled_launch_private(
+ unsigned,unsigned,unsigned,const void*,const void*,int,int,int,hipStream_t);
 
 namespace {
 thread_local std::string last_error;
@@ -70,12 +73,15 @@ struct ck_tile_int8_nt_cached_plan_impl {
  KArg* args=nullptr;
  int g=0,max_m=0,launch_m=1,n=0,k=0;
  unsigned route=0,legacy_instance=0;
+ unsigned output_type=0;
+ ck_tile::Int8NtScaleArgs* scales=nullptr;
  std::vector<hipStream_t> streams;
  std::mutex mutex;
  explicit ck_tile_int8_nt_cached_plan_impl(ck_tile_int8_nt_cached_weights_impl* w):weights(w){weights->plans.fetch_add(1);}
  ~ck_tile_int8_nt_cached_plan_impl(){
   for(auto stream:streams)(void)hipStreamSynchronize(stream);
   if(args)(void)hipFree(args);
+  if(scales)(void)hipFree(scales);
   weights->plans.fetch_sub(1);
  }
 };
@@ -175,7 +181,41 @@ extern "C" CK_TILE_INT8_CACHED_API int ck_tile_int8_nt_cached_run_v1(
  if(std::find(p->streams.begin(),p->streams.end(),stream)==p->streams.end()){
   hip_check(hipStreamWaitEvent(stream,p->weights->ready,0));p->streams.push_back(stream);
  }
- require(ck_tile_int8_cached_launch_private(p->route,p->legacy_instance,p->args,p->g,p->launch_m,p->n,stream)==0,CK_TILE_INT8_CACHED_INTERNAL_ERROR_V1,"INT8 cached plan launch failed");
+ const int status=p->output_type==0?
+  ck_tile_int8_cached_launch_private(p->route,p->legacy_instance,p->args,p->g,p->launch_m,p->n,stream):
+  ck_tile_int8_scaled_launch_private(p->output_type,p->route,p->legacy_instance,p->args,p->scales,p->g,p->launch_m,p->n,stream);
+ require(status==0,CK_TILE_INT8_CACHED_INTERNAL_ERROR_V1,"INT8 cached plan launch failed");
  });}
 extern "C" CK_TILE_INT8_CACHED_API int ck_tile_int8_nt_cached_plan_destroy_v1(
  ck_tile_int8_nt_cached_plan_handle_v1 p){return api([&]{if(!p)return;current_device_is(p->weights->device);delete p;});}
+
+extern "C" CK_TILE_INT8_CACHED_API int ck_tile_int8_nt_cached_plan_create_v2(
+ ck_tile_int8_nt_cached_weights_handle_v1 w,const ck_tile_int8_nt_cached_group_desc_v2* groups,
+ int32_t g,ck_tile_int8_nt_cached_plan_handle_v1* result){return api([&]{
+ require(result,CK_TILE_INT8_CACHED_INVALID_ARGUMENT_V1,"null plan result");*result=nullptr;
+ require(w && groups && g==w->g,CK_TILE_INT8_CACHED_INVALID_ARGUMENT_V1,"invalid v2 groups/weights");current_device_is(w->device);
+ std::vector<ck_tile_int8_nt_cached_group_desc_v1> legacy(g);
+ std::vector<ck_tile::Int8NtScaleArgs> scales(g);
+ for(int i=0;i<g;++i){
+  const auto& a=groups[i];
+  require(a.struct_size==sizeof(a),CK_TILE_INT8_CACHED_BAD_STRUCT_SIZE_V1,"wrong v2 group size");
+  require(a.abi_version==2,CK_TILE_INT8_CACHED_BAD_VERSION_V1,"v2 group requires abi_version2");
+  require(a.reserved[0]==0 && a.reserved[1]==0,CK_TILE_INT8_CACHED_INVALID_ARGUMENT_V1,"nonzero v2 reserved field");
+  require(a.output_type<=2 && a.output_type==groups[0].output_type,CK_TILE_INT8_CACHED_INVALID_ARGUMENT_V1,"invalid/mixed output type");
+  require(a.scale_a_mode<=1 && a.scale_b_mode<=1,CK_TILE_INT8_CACHED_INVALID_ARGUMENT_V1,"unsupported scale mode");
+  require((!a.scale_a || aligned(a.scale_a,alignof(float))) && (!a.scale_b || aligned(a.scale_b,alignof(float))),CK_TILE_INT8_CACHED_INVALID_ARGUMENT_V1,"unaligned FP32 scale");
+  require(a.output_type!=0 || (!a.scale_a && !a.scale_b && a.scale_a_mode==0 && a.scale_b_mode==0),CK_TILE_INT8_CACHED_INVALID_ARGUMENT_V1,"INT32 output requires no scales");
+  auto& b=legacy[i];b.struct_size=sizeof(b);b.abi_version=1;b.a=a.a;b.c=static_cast<int32_t*>(a.c);b.m=a.m;b.a_row_stride=a.a_row_stride;b.c_row_stride=a.c_row_stride;
+  scales[i]={a.scale_a,a.scale_b,static_cast<int32_t>(a.scale_a_mode),static_cast<int32_t>(a.scale_b_mode)};
+ }
+ ck_tile_int8_nt_cached_plan_handle_v1 handle=nullptr;
+ const int status=ck_tile_int8_nt_cached_plan_create_v1(w,legacy.data(),g,&handle);
+ if(status!=0)throw ApiError(status,last_error.c_str());
+ std::unique_ptr<ck_tile_int8_nt_cached_plan_impl> p(handle);
+ p->output_type=groups[0].output_type;
+ if(p->output_type){
+  hip_check(hipMalloc(reinterpret_cast<void**>(&p->scales),sizeof(scales[0])*g));
+  hip_check(hipMemcpy(p->scales,scales.data(),sizeof(scales[0])*g,hipMemcpyHostToDevice));
+ }
+ *result=p.release();
+ });}
