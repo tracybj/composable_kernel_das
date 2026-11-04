@@ -48,4 +48,12 @@ python3 cached_weights/build_and_manifest.py --build build/max_all_v124_tune --t
 
 ## 分支与提交
 
-本地与服务器基于`ac59e6b`创建`exp/int8_nt`，main保留v123。每轮用明确说明改动的commit提交方法、结果与必要实现。GitHub连接目前从Windows/服务器均有超时或重置；本地/服务器先记录，连接恢复后正常推送，不强推覆盖远端历史。
+本地与服务器基于`ac59e6b`创建`exp/int8_nt`，main保留v123。每轮用明确说明改动的commit提交方法、结果与必要实现。GitHub连接通过当前系统代理恢复；已正常推送main的v123归档和实验分支起点`2364ef5`，保留远端原实验历史，没有强推。
+
+## 后续数据路径对照（用户补充，尚未实施）
+
+在现有Cooperative/WASP两套主流水内，比较A/B都经LDS、仅A经LDS、仅B经LDS、A/B都直入寄存器的实例。先覆盖小M、短K、低N和对应已达标回归样本。
+
+当前Cooperative的LDS负责物理连续K方向加载后的MMAC寄存器分发，并提供跨wave复用。wave内shuffle不能直接取其它wave的寄存器；直读方案需明确重复GMEM请求、向量宽度、缓存流量、VGPR和有效驻留的代价。不能以LDS占用减少直接判断成功。
+
+WASP原方向已有A走LDS、B走寄存器的实现，逻辑转置方向可交换原操作数角色；这些是可借鉴的已有数据路径，不把它们未经测量推广为所有Cooperative几何的最优解。保留数值/scale/输出规则，先比较完整kernel时间，再用ISA/资源和受控消融解释差异。
