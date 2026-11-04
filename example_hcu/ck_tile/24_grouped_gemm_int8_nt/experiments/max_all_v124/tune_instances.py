@@ -10,7 +10,7 @@ def atomic(path,value):
 
 def main():
     ap=argparse.ArgumentParser();ap.add_argument('--output',type=Path,required=True)
-    ap.add_argument('--suite',choices=['low_n','prefill','decode'],default='low_n')
+    ap.add_argument('--suite',choices=['low_n','low_n_refine','prefill','decode'],default='low_n')
     ap.add_argument('--warmup',type=int,default=3);ap.add_argument('--repeat',type=int,default=10);ap.add_argument('--samples',type=int,default=2)
     ap.add_argument('--validation',choices=['full','sample'],default='full');args=ap.parse_args()
     assert args.repeat>0 and args.samples>0
@@ -31,7 +31,11 @@ def main():
     assert bus.value.decode().lower()==Path('/sys/class/drm/renderD135/device').resolve().name.lower()
     targets=list(csv.DictReader((E/'docs/targets_max_all_1191.csv').open()))
     targets=[dict(**{k:int(r[k]) for k in ['ID','M','N','K','G']},phase=r['phase'],target_TOPS=float(r['target_TOPS'])) for r in targets]
-    if args.suite=='low_n':
+    if args.suite=='low_n_refine':
+        lookup={(r['M'],r['N'],r['K'],r['G']):r for r in targets}
+        shapes=[(m,g) for g in [4,16,32,64,128] for m in [256,512,1024,2048,4096]]+[(8192,64),(16384,64)]
+        cases=[lookup.get((m,256,512,g),dict(ID=f'extra_M{m}_G{g}',M=m,N=256,K=512,G=g,phase='synthetic',target_TOPS=None)) for m,g in shapes]
+    elif args.suite=='low_n':
         cases=[r for r in targets if r['N']==256 and r['K']==512 and r['G']==64]
         cases += [dict(ID=f'extra_M{m}',M=m,N=256,K=512,G=64,phase='synthetic',target_TOPS=None) for m in [512,1024]]
     else:
@@ -46,12 +50,14 @@ def main():
         cases=[r for r in targets if r['ID'] in ids]
     candidates=[('default',None,None)]+[(f'route_{r}',r,None) for r in [1,3,5,6,7,8,9,10,11,12]]
     candidates += [(f'cooperative_{i}',0,i) for i in [6005,6006,6035,6041,6042,6061,7501,7603]]
+    if args.suite=='low_n_refine':candidates=[('default',None,None)]+[(f'route_{r}',r,None) for r in [6,7,8,11]]
+    if args.suite=='prefill':candidates=[('default',None,None)]+[(f'route_{r}',r,None) for r in [1,2,3,4,5,6,7,8,12]]
     if args.suite=='decode':candidates += [(f'cooperative_{i}',0,i) for i in [6401,6403,6404,6505,7502,7504,7604]]
     out=args.output.resolve();out.mkdir(parents=True,exist_ok=True)
     assert not (out/'records.jsonl').exists(),'Existing run;inspect before restarting'
     build=Path(os.environ['CK_INT8_CACHED_BUILD']);identity=json.loads((build/'exported_api_symbols.json').read_text())
     assert identity['experimental_tuning']
-    atomic(out/'manifest.json',dict(suite=args.suite,cases=cases,candidates=candidates,validation=args.validation,warmup=args.warmup,repeat=args.repeat,samples=args.samples,library=identity,gpu=7,pci=bus.value.decode(),input_range=[-8,8],scale='FP32 scalar A + FP32 channel B',target_sha256=hashlib.sha256((E/'docs/targets_max_all_1191.csv').read_bytes()).hexdigest(),runner_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),source_revision=subprocess.check_output(['git','-C',str(E.parents[2]),'rev-parse','HEAD'],text=True).strip()))
+    atomic(out/'manifest.json',dict(suite=args.suite,cases=cases,candidates=candidates,validation=args.validation,warmup=args.warmup,repeat=args.repeat,samples=args.samples,library=identity,compiled_sources=json.loads((build/'sources.json').read_text()),gpu=7,pci=bus.value.decode(),input_range=[-8,8],scale='FP32 scalar A + FP32 channel B',target_sha256=hashlib.sha256((E/'docs/targets_max_all_1191.csv').read_bytes()).hexdigest(),runner_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),runner_revision=os.environ.get('CK_INT8_RUNNER_REVISION') or subprocess.check_output(['git','-C',str(E.parents[2]),'rev-parse','HEAD'],text=True).strip()))
     records=[];best=[]
     try:
         with (out/'records.jsonl').open('w') as stream:
