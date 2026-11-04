@@ -189,3 +189,11 @@ v124正式对照已证实两类实例收益，本轮将其接入生产构建，�
 | 128/384 | 896 | 119 | 32768 | 1 |
 
 v125 BM128/BN384虽把LDS减半，资源组合下API最大驻留仍只有1 CTA，未满足原假设的2 CTA前提；这会改变后续设计，不能继续仅按LDS估计驻留。该查询是静态可行上限，不是动态achieved occupancy，也不能单独证明性能瓶颈。数据及精确Problem参数见[max_all_wasp_occupancy.json](max_all_wasp_occupancy.json)。
+
+## v129草案：先反量化打包，再交换16-bit输出
+
+当前native WASP先对四个INT32累加值做4次ds_bpermute，再逐个反量化写16-bit。本候选不改主循环：使用原MMAC坐标对应的8个通道系数，先调用同一个Int8NtDequantConvert（相同FP32乘法和RNE/NaN规则），将4个16-bit结果打包为两个32-bit word，再用两次相邻quad交换加一次跨pair交换形成连续4列写回。每四输出的wave交换由4条变为3条，但新增半字打包/选择，不能按指令减少比例预报kernel加速。
+
+草案位于experiments/packed_output_v129/epilogue.hpp，仅原方向native/scalar-A路径候选；逻辑转置和per-token沿用Parent，INT32无此epilogue。test_layout.py在CPU完成4105组quad场景的位级映射证明，包括随机16-bit及NaN/Inf/符号位模式；这不是GPU数值或性能证明。
+
+目前未接入kernel模板/dispatch、未编译、未运行GPU，不改变v128全量使用的源码及二进制。待本轮全量完成后，使用相同几何/主流水成对验证，再决定保留或放弃；不以缩小数值契约换取收益。
