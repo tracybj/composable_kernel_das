@@ -1,0 +1,214 @@
+{
+  "layout": "NN",
+  "precision": "bf16",
+  "m": null,
+  "n": null,
+  "k": null,
+  "groups": null,
+  "all": true,
+  "case_ids": null,
+  "gpu": 4,
+  "cxx": "g++",
+  "workspace_mib": 32,
+  "heuristic_count": 64,
+  "index_to": 16384,
+  "index_batch": 4096,
+  "screen_warmup": 3,
+  "screen_repeat": 10,
+  "screen_samples": 3,
+  "top_k": 3,
+  "warmup": 5,
+  "repeat": 20,
+  "samples": 3,
+  "atol": 0.02,
+  "rtol": 0.02,
+  "seed": 2026102600,
+  "detach": false,
+  "list": false,
+  "build_only": false,
+  "backend": "groupgemm",
+  "cases": [
+    {
+      "id": 1179,
+      "M": 1,
+      "N": 256,
+      "K": 512,
+      "G": 64,
+      "phase": "decode",
+      "EP": 4
+    },
+    {
+      "id": 1180,
+      "M": 2,
+      "N": 256,
+      "K": 512,
+      "G": 64,
+      "phase": "decode",
+      "EP": 4
+    },
+    {
+      "id": 1181,
+      "M": 4,
+      "N": 256,
+      "K": 512,
+      "G": 64,
+      "phase": "decode",
+      "EP": 4
+    },
+    {
+      "id": 1182,
+      "M": 8,
+      "N": 256,
+      "K": 512,
+      "G": 64,
+      "phase": "decode",
+      "EP": 4
+    },
+    {
+      "id": 1183,
+      "M": 16,
+      "N": 256,
+      "K": 512,
+      "G": 64,
+      "phase": "decode",
+      "EP": 4
+    },
+    {
+      "id": 1184,
+      "M": 32,
+      "N": 256,
+      "K": 512,
+      "G": 64,
+      "phase": "decode",
+      "EP": 4
+    },
+    {
+      "id": 1185,
+      "M": 64,
+      "N": 256,
+      "K": 512,
+      "G": 64,
+      "phase": "decode",
+      "EP": 4
+    },
+    {
+      "id": 1186,
+      "M": 128,
+      "N": 256,
+      "K": 512,
+      "G": 64,
+      "phase": "decode",
+      "EP": 4
+    },
+    {
+      "id": 1187,
+      "M": 256,
+      "N": 256,
+      "K": 512,
+      "G": 64,
+      "phase": "decode",
+      "EP": 4
+    },
+    {
+      "id": 1188,
+      "M": 512,
+      "N": 256,
+      "K": 512,
+      "G": 64,
+      "phase": "prefill",
+      "EP": 4
+    },
+    {
+      "id": 1189,
+      "M": 1024,
+      "N": 256,
+      "K": 512,
+      "G": 64,
+      "phase": "prefill",
+      "EP": 4
+    },
+    {
+      "id": 1190,
+      "M": 2048,
+      "N": 256,
+      "K": 512,
+      "G": 64,
+      "phase": "prefill",
+      "EP": 4
+    },
+    {
+      "id": 1191,
+      "M": 4096,
+      "N": 256,
+      "K": 512,
+      "G": 64,
+      "phase": "prefill",
+      "EP": 4
+    },
+    {
+      "id": 1192,
+      "M": 8192,
+      "N": 256,
+      "K": 512,
+      "G": 64,
+      "phase": "prefill",
+      "EP": 4
+    },
+    {
+      "id": 1193,
+      "M": 16384,
+      "N": 256,
+      "K": 512,
+      "G": 64,
+      "phase": "prefill",
+      "EP": 4
+    }
+  ],
+  "out": "/workspace/v7_coverage/p6c/new_blas",
+  "workspace_bytes": 33554432,
+  "binary": "/workspace/Grouped_Geem/blaslt_tuning_tools/build/libgroupgemm_tune.so",
+  "binary_sha256": "a0706c9474aadc00147b93d9b5d930c22e05670c66d59029786f4c81149c4f96",
+  "blas_library": "/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so.0.10",
+  "blas_sha256": "05524e5b1032409d3b4ba3926e26a4e989f2cccb4b867e0f1a2cfaa1e63ed5a5",
+  "build": {
+    "fingerprint": {
+      "source_sha256": "6975fcf25b7f206a809ac640383b420a9d9fd4d59486a145af312743b756d9a3",
+      "blas_sha256": "05524e5b1032409d3b4ba3926e26a4e989f2cccb4b867e0f1a2cfaa1e63ed5a5",
+      "header_sha256": "1021741675a42d77d1bc6ac8c7506c3f9dea949831f1aa68f8c2f2be84c9c99a",
+      "blas_root": "/workspace/Grouped_Geem/hipblaslt-install",
+      "hip_root": "/opt/dtk/hip",
+      "cxx": "g++"
+    },
+    "command": [
+      "g++",
+      "-O2",
+      "-std=c++17",
+      "-fPIC",
+      "-shared",
+      "-D__HIP_PLATFORM_AMD__",
+      "-I/workspace/Grouped_Geem/hipblaslt-install/include",
+      "-I/opt/dtk/hip/include",
+      "/workspace/Grouped_Geem/blaslt_tuning_tools/results/bf16_nn_compare_20261027_191315/tool_snapshot/groupgemm_bridge.cpp",
+      "/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so.0.10",
+      "/opt/dtk/hip/lib/libgalaxyhip.so.5",
+      "-ldl",
+      "-Wl,-rpath,/workspace/Grouped_Geem/hipblaslt-install/lib",
+      "-Wl,-rpath,/opt/dtk/hip/lib",
+      "-o",
+      "/workspace/Grouped_Geem/blaslt_tuning_tools/results/bf16_nn_compare_20261027_191315/tool_snapshot/build/libgroupgemm_tune.so"
+    ],
+    "binary_sha256": "a0706c9474aadc00147b93d9b5d930c22e05670c66d59029786f4c81149c4f96",
+    "compiler": "g++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0\nCopyright (C) 2021 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+    "built_at": "2026-10-27T19:13:18.201580+08:00"
+  },
+  "created_at": "2026-10-27T19:13:18.215561+08:00",
+  "source_sha256": {
+    "matmul_bridge.cpp": "6e52c7441a777d2e6c701a902691f9a00a7d348fe6d36ded0c2cfced6f55844e",
+    "shapes_1178.csv": "a2e6cec395bb9c2c0cfabb2e9aa988b5b1c32dcd6024b334d99bf8bb5f8b4eb9",
+    "tune_matmul.py": "ce3a90765b1d9536d907b55511e46f1d6664e06cbed345dad8e560e7d431e36a",
+    "groupgemm_bridge.cpp": "6975fcf25b7f206a809ac640383b420a9d9fd4d59486a145af312743b756d9a3",
+    "README.md": "36203f8941c3f7ca9554005c2e0926e1214493fe10b25a64971a21d86361d614",
+    "tune_groupgemm.py": "ad4703c34d92ab31c070c7d01755312b7da939c510b32ced779debf90ce1e5fe",
+    "tuning_common.py": "fdcce74c74647993ae10b16070ecb00197094a4e1a5a1906a03417a9ec6ffa17"
+  }
+}
