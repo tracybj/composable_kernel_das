@@ -158,3 +158,11 @@ ISA已确认8-byte候选使用global_load_dwordx2，shuffle候选使用global_lo
 低N边界正式对照27个shape、270条记录全部完整输出PASS；N2048/K768族16个shape、128条记录全部完整输出PASS。均为10次预热、50次重复、3样本中位数。此前仅r2初筛表已提交，本次补存正式CSV，避免与实验结论丢失。
 
 N256/K512/G64，M256选route8为119.336 TOPS（目标84.961）；M2048选route6为194.079（目标139.329）；M4096选route6为205.879（目标146.975）。N2048/K768、M>=2048的16条选route6，BF16/FP16均超过固定目标，最小R约1.0329。相邻G测试及负结果保留在[max_all_v124_low_n_formal.csv](max_all_v124_low_n_formal.csv)、[max_all_v124_k768_formal.csv](max_all_v124_k768_formal.csv)。这两类已有候选可供后续独立的scaled selector改动及全量回归使用，本轮仍未修改默认selector。
+
+## v128：接入已验证的scaled几何选择，保留INT32策略
+
+v124正式对照已证实两类实例收益，本轮将其接入生产构建，而非停留在环境变量实验：N256/K512、M256–1024选择packed M64×N256（route8），M>=2048选择packed M128×N256（route6）；N2048/K768、M>=2048选择route6。选择只依赖尺寸及packed可用性，仍由原native/uniform/stride域保护；其它形状沿用原策略。
+
+为在生成kernel参数前决定raw/packed指针，把原plan构造提取为内部make_plan，v1传INT32、v2传实际输出类型；不先创建旧plan再重分配参数。9个公共ABI函数及结构不变，无scale INT32继续使用原selector，其它BF16/FP16输入算子不修改。
+
+新增host policy断言及三组production API数值用例（NULL scale、scalar/per-channel/per-token、BF16/FP16及INT32旧route），同时复跑边界/生命周期/epilogue门禁。通过后在卡7对1191条按Max ALL固定目标跑一轮正式计时、两种输出完整校验；最终R>=1才计达标。编译和全量结果待补。

@@ -24,6 +24,11 @@ def main():
     cases=[(f'route_{key}',int(r['G']),[int(r['M'])]*int(r['G']),int(r['N']),int(r['K']),False,key) for key,r in sorted(routes.items())]
     cases += [('tail_padded_ragged',4,[0,1,17,33],260,272,True,None),('special_values',2,[16]*2,256,512,False,None),('rounding_ties',2,[16]*2,256,512,False,None)]
     cases += [(f'supplement_M{m}',64,[m]*64,256,512,False,None) for m in [1,2,4,8,16,32,64,128,256,2048,4096,8192,16384]]
+    # Exercise the new scaled policy through the production API,including NULL
+    # scales and per-token fallback. INT32 keeps the original route in each case.
+    cases += [('scaled_policy_low_n_m256',2,[256]*2,256,512,False,{0:(3,0),1:(8,0),2:(8,0)}),
+              ('scaled_policy_low_n_m2048',2,[2048]*2,256,512,False,{0:(3,0),1:(6,0),2:(6,0)}),
+              ('scaled_policy_k768',2,[2048]*2,2048,768,False,{0:(4,0),1:(6,0),2:(6,0)})]
     records=[];invalid_checks=0;covered=set()
     for name,g,ms,n,k,padded,expected in cases:
         astride=k+16 if padded else k;bstride=k+32 if padded else k;cstride=n+8 if padded else n
@@ -52,7 +57,9 @@ def main():
                     d.scale_a=sa[i].data_ptr() if sa is not None else None;d.scale_b=sb[i].data_ptr() if sb is not None else None
                     d.scale_a_mode=int(mode in ['row_channel','special']);d.scale_b_mode=int(mode in ['channel','row_channel','special','ties'])
                 plan=C.c_void_p();ok(lib.ck_tile_int8_nt_cached_plan_create_v2(weights,gd,g,C.byref(plan)));pi=plan_info(plan)
-                if expected is not None:assert (pi.route,pi.legacy_instance if pi.route==0 else 0)==expected
+                if expected is not None:
+                    want=expected[output] if isinstance(expected,dict) else expected
+                    assert (pi.route,pi.legacy_instance if pi.route==0 else 0)==want,(name,output,pi.route,want)
                 covered.add((pi.route,pi.legacy_instance if pi.route==0 else 0))
                 ok(lib.ck_tile_int8_nt_cached_run_v1(plan,None));torch.cuda.synchronize()
                 bad=0

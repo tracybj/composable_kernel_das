@@ -46,4 +46,14 @@ inline unsigned int8_cached_route(int m,int n,int k,int groups,bool packed_avail
  return base;
 }
 
+// Scaled outputs have a separate policy;the established INT32 route is unchanged.
+// Formal paired measurements cover the low-N family and K768 M128 packed tile.
+inline unsigned int8_cached_scaled_route(int m,int n,int k,int groups,
+                                        bool packed_available,int compute_units=80){
+ if(packed_available && m>=256 && n==256 && k==512)
+  return m<=1024?8u:6u;
+ if(packed_available && m>=2048 && n==2048 && k==768)return 6u;
+ return int8_cached_route(m,n,k,groups,packed_available,compute_units);
+}
+
 }
