@@ -1,0 +1,50 @@
+{
+  "images": [
+    {
+      "name": "device_577536.hsaco",
+      "sha256": "687e11d707a065fe3b5b17f884dd55e3c1c9776913966bc9807215859ef04fa9",
+      "kernels": 42
+    },
+    {
+      "name": "device_983040.hsaco",
+      "sha256": "a2255eb410f3cca34363dd5a7864b23dd249ccc8b683af1f99c84216b8dd2986",
+      "kernels": 78
+    }
+  ],
+  "int32_device_image_unchanged": true,
+  "selected": [
+    {
+      "demangled": "void ck_tile::kentry<768, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspCoreProblem<256, true, 8, 4, 4, true, true, 0, false, false, 1, 8>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      ".vgpr_count": 198,
+      ".sgpr_count": 44,
+      ".private_segment_fixed_size": 0,
+      ".vgpr_spill_count": 0,
+      ".group_segment_fixed_size": 65536
+    },
+    {
+      "demangled": "void ck_tile::kentry<384, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspCoreProblem<128, false, 4, 1, 4, true, true, 0, false, true, 0, 4>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      ".vgpr_count": 135,
+      ".sgpr_count": 40,
+      ".private_segment_fixed_size": 0,
+      ".vgpr_spill_count": 0,
+      ".group_segment_fixed_size": 32768
+    },
+    {
+      "demangled": "void ck_tile::kentry<768, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspCoreProblem<256, true, 8, 4, 4, true, true, 0, false, false, 1, 8>, false>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      ".vgpr_count": 198,
+      ".sgpr_count": 42,
+      ".private_segment_fixed_size": 0,
+      ".vgpr_spill_count": 0,
+      ".group_segment_fixed_size": 65536
+    },
+    {
+      "demangled": "void ck_tile::kentry<384, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspCoreProblem<128, false, 4, 1, 4, true, true, 0, false, true, 0, 4>, false>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      ".vgpr_count": 135,
+      ".sgpr_count": 40,
+      ".private_segment_fixed_size": 0,
+      ".vgpr_spill_count": 0,
+      ".group_segment_fixed_size": 32768
+    }
+  ],
+  "scaled_spills": []
+}
