@@ -440,3 +440,8 @@ Pipeline末尾增加默认false的SingleB策略：B使用slot0，当前K stage�
 
 CPU B生命周期模型16900检查PASS（非GPU证明）；GPU将覆盖full-range INT8/FP64完整输出、INT32/BF16/FP16、scale模式/特殊值、K奇偶stage、尾部/stride及guard。先代表prefill初筛，再对有希望的候选独立正式计时；未经正式验证不改生产，不拼接赢家覆盖1191正式CSV。旧生产kernel将做逐函数机器码对照。当前新候选未编译、未运行GPU，尚无收益结论。
 
+### v137本地门禁与执行状态
+
+源码86e9e1b已同步到ck_yyc指定仓库；本地runner语法检查及B生命周期16900项检查PASS。GPU计划为648项full-range完整输出与216项非法域prelaunch拒绝检查，随后查询实际occupancy并做同轮代表shape对照。这些GPU检查尚未执行，不能将计划条数写成PASS。
+
+构建启动与GitHub推送均被自动审批服务的用量限制阻止，命令未执行；未启动编译/GPU进程，也未绕过审批。服务器源码已同步86e9e1b，最后确认GitHub为f8c4570；恢复后先核对远端HEAD/进程再构建，不重复启动。状态记录见max_all_v137_local_preflight.json。正式生产仍为v136，性能达标数未因本地模型检查改变。

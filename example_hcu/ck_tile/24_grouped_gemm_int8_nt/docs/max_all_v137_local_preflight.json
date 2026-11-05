@@ -1,0 +1,124 @@
+{
+  "status": "LOCAL_PARSE_AND_MODEL_PASS_GPU_NOT_RUN",
+  "source_revision": "86e9e1b89c054d00ec18d8b7542a6956edca2bac",
+  "remaining_union": 75,
+  "remaining_families": [
+    {
+      "phase": "prefill",
+      "N": 3072,
+      "K": 4096,
+      "cases": 16
+    },
+    {
+      "phase": "prefill",
+      "N": 4096,
+      "K": 1536,
+      "cases": 8
+    },
+    {
+      "phase": "prefill",
+      "N": 6144,
+      "K": 2048,
+      "cases": 8
+    },
+    {
+      "phase": "decode",
+      "N": 6144,
+      "K": 7168,
+      "cases": 7
+    },
+    {
+      "phase": "prefill",
+      "N": 3072,
+      "K": 1536,
+      "cases": 6
+    },
+    {
+      "phase": "prefill",
+      "N": 5120,
+      "K": 2304,
+      "cases": 5
+    },
+    {
+      "phase": "prefill",
+      "N": 1536,
+      "K": 2048,
+      "cases": 5
+    },
+    {
+      "phase": "prefill",
+      "N": 3072,
+      "K": 3072,
+      "cases": 5
+    },
+    {
+      "phase": "decode",
+      "N": 4096,
+      "K": 8192,
+      "cases": 4
+    },
+    {
+      "phase": "prefill",
+      "N": 7168,
+      "K": 2048,
+      "cases": 3
+    },
+    {
+      "phase": "decode",
+      "N": 4096,
+      "K": 7168,
+      "cases": 2
+    },
+    {
+      "phase": "prefill",
+      "N": 4096,
+      "K": 7168,
+      "cases": 2
+    },
+    {
+      "phase": "prefill",
+      "N": 4096,
+      "K": 2048,
+      "cases": 1
+    },
+    {
+      "phase": "prefill",
+      "N": 4608,
+      "K": 5120,
+      "cases": 1
+    },
+    {
+      "phase": "decode",
+      "N": 4096,
+      "K": 6144,
+      "cases": 1
+    },
+    {
+      "phase": "prefill",
+      "N": 4096,
+      "K": 6144,
+      "cases": 1
+    }
+  ],
+  "gate_expectations": {
+    "full_range_full_output_checks": 648,
+    "prelaunch_rejects": 216
+  },
+  "pending": [
+    "isolated tuning build",
+    "old126 production kernel code equivalence",
+    "full-range GPU gates",
+    "HIP occupancy and no-spill verification",
+    "interleaved screening",
+    "independent formal followup"
+  ],
+  "b_lifetime_model_checks": 16900,
+  "execution_state": {
+    "build": "NOT_EXECUTED",
+    "gpu": "NOT_RUN",
+    "github_push": "NOT_EXECUTED",
+    "reason": "Automatic approval review could not complete because of its usage limit; no unsafe-action finding; no bypass attempted",
+    "server_source_commit": "86e9e1b89c054d00ec18d8b7542a6956edca2bac",
+    "last_confirmed_github_commit": "f8c4570edba29573d25282f9f1e19ff02d57fbe6"
+  }
+}
