@@ -173,7 +173,9 @@ std::unique_ptr<ck_tile_int8_nt_cached_plan_impl> make_plan(
    p->route==CK_TILE_INT8_CACHED_PACKED_M64_N64_A2_V1 ||
    p->route==CK_TILE_INT8_CACHED_PACKED_M32_N256_A2_V1 ||
    p->route==CK_TILE_INT8_CACHED_PACKED_M32_N64_A1_V1 ||
-   p->route==CK_TILE_INT8_CACHED_PACKED_M256_N384_A2_V1
+   p->route==CK_TILE_INT8_CACHED_PACKED_M256_N384_A2_V1 ||
+   p->route==CK_TILE_INT8_CACHED_PACKED_M256_N384_MASKED_M4_V1 ||
+   p->route==CK_TILE_INT8_CACHED_PACKED_M256_N384_MASKED_M8_V1
 #ifdef CK_INT8_CACHED_TUNING
    || (p->route>=13 && p->route<=21) || (p->route>=32 && p->route<=43) || (p->route>=48 && p->route<=60)
 #endif

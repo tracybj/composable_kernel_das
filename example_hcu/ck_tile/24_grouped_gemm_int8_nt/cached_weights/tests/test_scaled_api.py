@@ -21,7 +21,13 @@ def main():
     for r in source:
         key=(int(r['route']),int(r['legacy_instance']) if int(r['route'])==0 else 0)
         if key not in routes or int(r['G'])*int(r['M'])*int(r['N'])*int(r['K'])<int(routes[key]['G'])*int(routes[key]['M'])*int(routes[key]['N'])*int(routes[key]['K']):routes[key]=r
-    cases=[(f'route_{key}',int(r['G']),[int(r['M'])]*int(r['G']),int(r['N']),int(r['K']),False,key) for key,r in sorted(routes.items())]
+    cases=[]
+    for key,r in sorted(routes.items()):
+        g,m,n,k=[int(r[x]) for x in ['G','M','N','K']]
+        scaled=key
+        if m>=2048 and m%256==0 and 3584<=n<=8192 and n%256==0 and n%384!=0 and 1024<=k<16384 and k%128==0:
+            scaled=(23 if k>=4096 or n%384==128 else 22,0)
+        cases.append((f'route_{key}',g,[m]*g,n,k,False,{0:key,1:scaled,2:scaled}))
     cases += [('tail_padded_ragged',4,[0,1,17,33],260,272,True,None),('special_values',2,[16]*2,256,512,False,None),('rounding_ties',2,[16]*2,256,512,False,None)]
     cases += [(f'supplement_M{m}',64,[m]*64,256,512,False,None) for m in [1,2,4,8,16,32,64,128,256,2048,4096,8192,16384]]
     # Exercise the new scaled policy through the production API,including NULL
@@ -29,6 +35,9 @@ def main():
     cases += [('scaled_policy_low_n_m256',2,[256]*2,256,512,False,{0:(3,0),1:(8,0),2:(8,0)}),
               ('scaled_policy_low_n_m2048',2,[2048]*2,256,512,False,{0:(3,0),1:(6,0),2:(6,0)}),
               ('scaled_policy_k768',2,[2048]*2,2048,768,False,{0:(4,0),1:(6,0),2:(6,0)})]
+    cases += [('scaled_policy_tail_cl4',2,[2048]*2,4096,1536,False,{0:(5,0),1:(22,0),2:(22,0)}),
+              ('scaled_policy_tail_cl8_n',2,[2048]*2,5120,2304,True,{0:(5,0),1:(23,0),2:(23,0)}),
+              ('scaled_policy_tail_cl8_k',2,[2048]*2,4096,4096,False,{0:(5,0),1:(23,0),2:(23,0)})]
     records=[];invalid_checks=0;covered=set()
     for name,g,ms,n,k,padded,expected in cases:
         astride=k+16 if padded else k;bstride=k+32 if padded else k;cstride=n+8 if padded else n

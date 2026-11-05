@@ -40,6 +40,10 @@ int main(){
     check("60",256,1792,1536,true,true,true);
     check("60",256,1792,1536,true,false,false);
     check("61",256,4096,7168,true,true,false);
+    check("22",256,4096,7168,true,true,true);
+    check("23",128,4096,7168,true,true,false);
+    check("23",256,4096,7168,true,false,false);
+    check("24",256,4096,7168,true,true,false);
     check("-1",256,4096,7168,true,true,false);
     check("36x",256,4096,7168,true,true,false);
     check("36",1,4096,7168,false,true,false,false,false);

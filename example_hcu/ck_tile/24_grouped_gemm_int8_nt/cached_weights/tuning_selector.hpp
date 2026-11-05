@@ -52,7 +52,7 @@ inline void int8_tuning_override(bool uniform,bool empty,bool native,bool packed
         if(aligned && (m%bm || n%bn || k%bk))
             throw std::invalid_argument("aligned tuning instance has a partial tile");
     }
-    if((route>21 && route<32) || (route>43 && route<48))throw std::invalid_argument("unlisted tuning route");
+    if((route>23 && route<32) || (route>43 && route<48))throw std::invalid_argument("unlisted tuning route");
     if(route>=32 && route<=43){
         if(!packed)throw std::invalid_argument("packed cooperative requires prepared weights");
         const unsigned geometry=(route-32)%4;
@@ -65,7 +65,7 @@ inline void int8_tuning_override(bool uniform,bool empty,bool native,bool packed
     }
     if(!route)return;
     if(!native)throw std::invalid_argument("WASP tuning requires the native domain");
-    const int bm=route==18 || route==19 || route>=48?256:route==6 || route==7 || route>=13?128:route==8 || route==9?64:route==10 || route==11?32:256;
+    const int bm=route==18 || route==19 || route==22 || route==23 || route>=48?256:route==6 || route==7 || route>=13?128:route==8 || route==9?64:route==10 || route==11?32:256;
     if(m%bm)throw std::invalid_argument("WASP tuning requires complete M tiles");
     if((route==1 || route==2) && !raw_original)
         throw std::invalid_argument("raw WASP weight stride is unsupported");

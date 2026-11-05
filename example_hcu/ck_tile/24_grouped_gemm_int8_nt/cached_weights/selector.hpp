@@ -53,6 +53,14 @@ inline unsigned int8_cached_scaled_route(int m,int n,int k,int groups,
  if(packed_available && m>=256 && n==256 && k==512)
   return m<=1024?8u:6u;
  if(packed_available && m>=2048 && n==2048 && k==768)return 6u;
+ // Calibrated across156 original tail shapes on80-CU gfx936. Keep complete
+ // N blocks and unmeasured dimension ranges on their established policy.
+ // Masking removes absent32-column consumers; cl8 is preferable for a wide
+ // tail (128 valid columns) or longK, while cl4 retains shortK locality.
+ if(packed_available && compute_units==80 && m>=2048 && m%256==0 &&
+    n>=3584 && n<=8192 && n%256==0 && n%384!=0 &&
+    k>=1024 && k<16384 && k%128==0)
+  return k>=4096 || n%384==128?23u:22u;
  return int8_cached_route(m,n,k,groups,packed_available,compute_units);
 }
 
