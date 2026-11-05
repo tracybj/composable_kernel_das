@@ -294,3 +294,24 @@ WASP访问顺序初筛18组、396项输出抽样检查PASS，每组8行，warm3/
 继续在Cooperative的相同四种FullNK几何做消融，不新增核心流水。40–43对照36–39：仅将A/B相对字节offset算术改为uint32，基指针保留64位；A/B的16B读取、K64共同排列、MMAC、预取顺序及C epilogue不变。已有API检查m*Astride及N*Bstride不超过INT32_MAX；新增实验host检查packed N*K域，FullNK和masked M约束保持。数据位于高虚拟地址仍合法，禁止把基指针截断为32位。
 
 假设：少做64位地址乘加可减少VGPR/地址指令，改善长K、小M供给；反证是ISA无有效变化、寄存器不降或完整时间不改善。先做host边界与full-range数值/guard/scale门禁，再同轮同几何比较；尚未编译、未报收益，默认生产分流不变。
+
+### v133结果
+
+源码b6ed863，API SHA256 95e7473e9ba2e446bf07f9cca6da8d580f00ccca21501b54657ae7bdad5da326。CPU支持域25项PASS，GPU full-range INT8/FP64门禁324项PASS、180项非法组合在launch前拒绝；包括BF16/FP16、无scale INT32、per-token fallback、特殊scale、tail/padded stride及guard。新kernel无spill。19组正式同轮对照342项完整输出检查PASS，warm10/repeat50/3样本中位数，输入[-8,8]，不与full-range门禁混为同一输入域。逐条核对原始样本中位数、2GMNK吞吐及目标R，CSV与jsonl一致。
+
+| BN/BK | 64位offset VGPR | 32位offset VGPR | LDS bytes | 静态最大CTA旧→新 | 完整函数静态指令旧→新 |
+|---|---:|---:|---:|---|---|
+| 32/512 | 156 | 145 | 2048 | 8→10 | 588→494 |
+| 64/256 | 128 | 119 | 4096 | 12→12 | 566→474 |
+| 128/256 | 126 | 119 | 8192 | 6→6 | 561→476 |
+| 64/512 | 240 | 221 | 4096 | 6→6 | 823→657 |
+
+ISA确认地址进位等指令减少，例如BN32/BK512的v_add_co/v_addc_co各49→7；原MMAC/加载的静态条数保持，但wait/调度也发生变化。上表是整个函数的静态计数，不能当作动态每次循环耗时比例；静态CTA上限不能当实际达到的occupancy。
+
+对同几何36–39，40–43在19组×2输出上的吞吐增益中位数分别仅+0.026%、+0.206%、+0.191%、+0.435%，部分样本回退最多约3%；减少VGPR并不等于稳定整体加速。M32/N2048/K512/G16的新route43约36.66/36.91 TOPS，比同轮默认约+10%，但该条原本已达目标。M1/N4096/K6144/G8的新route41约2.3645/2.3644 TOPS、R1.0344，相对同轮默认约+5.8/+6.0%，这是预排+FullNK+地址的组合相对默认，不能把全部收益归给32位地址。
+
+M1/N4096/K7168/G8约R1.0045/1.0063，M2同族约R1.0077/1.0092，余量仍小；N6144/K7168和N4096/K8192小M族仍未全达标。因此本轮不统一切换到纯寄存器，不把试验赢家拼接进v128全量CSV。现有两套核心流水保持，下一步按各自的复用、物理B访问和资源特点决定是否扩大某个实例的独立验证域。
+
+78个默认scaled kernel与42个无scale/pack kernel逐函数机器码和v132完全相同；public BF16/FP16输入算子未改，默认selector不改。正式全量严格达标数仍1109 BF16/1123 FP16，不宣称1191全部完成。
+
+数据：[v133正式CSV](max_all_v133_address32_formal.csv)、[数值/资源/ISA/代码等价](max_all_v133_validation_resources.json)。操作数路径的选择逻辑另见[OPERAND_DATA_PATH_REVIEW.md](OPERAND_DATA_PATH_REVIEW.md)。
