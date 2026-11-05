@@ -531,3 +531,20 @@ v140全量仍在卡7运行，本轮只在本地编辑，未同步/编译/运行G
 ### v141隔离CPU预检查
 
 在results/max_all_v141_cpu_preflight副本通过46项tuning域检查和10000组lane映射检查，未覆盖/修改v140冻结测试源。新route68～71均为M256 Problem；拒绝M128、缺少prepared B、非native及未列出的72。当地Python脚本均已做语法编译检查。当前仍未同步v141编译源到远端仓库，也未做GPU构建/门禁，不能把CPU检查当最终PASS。
+
+### v140全1191正式回归完成并独立审计
+
+卡7PID459570终态完成。原1191 shape、881 decode/310 prefill、一轮正式计时，两输出各1191完整数值PASS，0失败/跳过。逐条核对原shape、phase/E=G、guard/输入scale抽样、三样本中位数、2GMNK吞吐及冻结P目标与R，并核对总表/两单输出表。开始/结束源码快照相同；另按Git19a3262精确验证冻结编译/测试/runner源码blob，原有CRLF按各自冻结SHA确切重建，不忽略内容差异。
+
+| 输出 | 严格R>=1 | R>=0.99 | 未严格达标 | minR | prefill严格达标 | decode严格达标 |
+|---|---:|---:|---:|---:|---:|---:|
+| BF16 | 1125/1191 | 1138/1191 | 66 | 0.94238202 | 254/310 | 871/881 |
+| FP16 | 1133/1191 | 1152/1191 | 58 | 0.95315365 | 262/310 | 871/881 |
+
+与v136比较，实际9条改变路线；新增/丢失跨线按改变和未改变路线分别记录于max_all_v140_policy_changes.json。未改路线的跨线不归为代码收益，仍保留当前真实结果；本次为独立整轮，不拼接局部最快值。
+
+BF16: changed新增严格达标[992, 1017, 1087, 1088]，changed失去达标[]；unchanged新增[382, 384, 385, 746, 1131]，unchanged失去[]。
+
+FP16: changed新增严格达标[1017, 1087]，changed失去达标[]；unchanged新增[]，unchanged失去[]。
+
+完整数据：max_all_v140_1191.csv、max_all_v140_bf16.csv、max_all_v140_fp16.csv、max_all_v140_remaining.csv、max_all_v140_summary.json。仍有缺口，目标未完成；v141输出交换候选继续tuning验证。

@@ -1,0 +1,147 @@
+{
+  "status": "FULL_AUDIT_PASS",
+  "cases": 1191,
+  "formal_rounds": 1,
+  "numeric_PASS": {
+    "BF16": 1191,
+    "FP16": 1191
+  },
+  "failures": 0,
+  "skips": 0,
+  "source_commit": "19a3262ddffafa41b315791ca534021163ec42af",
+  "library_sha256": "1e54b515e42f34984bdb5713d85bf9917d9307efac6026ec12edae8a3235126e",
+  "phase_counts": {
+    "decode": 881,
+    "prefill": 310
+  },
+  "outputs": {
+    "BF16": {
+      "all": {
+        "cases": 1191,
+        "strict": 1125,
+        "at_least_099": 1138,
+        "at_least_05": 1191,
+        "min_R": 0.9423820180695894
+      },
+      "prefill": {
+        "cases": 310,
+        "strict": 254,
+        "at_least_099": 267,
+        "at_least_05": 310,
+        "min_R": 0.9423820180695894
+      },
+      "decode": {
+        "cases": 881,
+        "strict": 871,
+        "at_least_099": 871,
+        "at_least_05": 881,
+        "min_R": 0.9521858852999092
+      },
+      "v136_strict": 1116,
+      "newly_strict_ids": [
+        382,
+        384,
+        385,
+        746,
+        992,
+        1017,
+        1087,
+        1088,
+        1131
+      ],
+      "lost_strict_ids": [],
+      "newly_strict_changed_route": [
+        992,
+        1017,
+        1087,
+        1088
+      ],
+      "newly_strict_unchanged_route": [
+        382,
+        384,
+        385,
+        746,
+        1131
+      ],
+      "lost_strict_changed_route": [],
+      "lost_strict_unchanged_route": []
+    },
+    "FP16": {
+      "all": {
+        "cases": 1191,
+        "strict": 1133,
+        "at_least_099": 1152,
+        "at_least_05": 1191,
+        "min_R": 0.9531536500042409
+      },
+      "prefill": {
+        "cases": 310,
+        "strict": 262,
+        "at_least_099": 281,
+        "at_least_05": 310,
+        "min_R": 0.9566580481310605
+      },
+      "decode": {
+        "cases": 881,
+        "strict": 871,
+        "at_least_099": 871,
+        "at_least_05": 881,
+        "min_R": 0.9531536500042409
+      },
+      "v136_strict": 1131,
+      "newly_strict_ids": [
+        1017,
+        1087
+      ],
+      "lost_strict_ids": [],
+      "newly_strict_changed_route": [
+        1017,
+        1087
+      ],
+      "newly_strict_unchanged_route": [],
+      "lost_strict_changed_route": [],
+      "lost_strict_unchanged_route": []
+    }
+  },
+  "routing_changes": 9,
+  "changed_ids": [
+    992,
+    1017,
+    1018,
+    1019,
+    1020,
+    1087,
+    1088,
+    1089,
+    1090
+  ],
+  "route_counts": {
+    "0": 659,
+    "9": 84,
+    "7": 91,
+    "3": 15,
+    "6": 40,
+    "4": 15,
+    "22": 84,
+    "12": 96,
+    "5": 16,
+    "23": 63,
+    "11": 6,
+    "1": 3,
+    "10": 5,
+    "8": 6,
+    "24": 8
+  },
+  "source_blobs_verified": 72,
+  "source_eol_reconstructed": {
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/selector_test.cpp": "CRLF checkout exactly matches frozen SHA256",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/grouped_int8_nt_wasp_problem.hpp": "CRLF checkout exactly matches frozen SHA256",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/grouped_int8_nt_wasp_epilogue.hpp": "CRLF checkout exactly matches frozen SHA256",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/grouped_int8_nt_wasp_kernel.hpp": "CRLF checkout exactly matches frozen SHA256",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/grouped_int8_nt_wasp_fallback.hpp": "CRLF checkout exactly matches frozen SHA256",
+    "example_hcu/ck_tile/24_grouped_gemm_int8_nt/instances.cpp": "CRLF checkout exactly matches frozen SHA256",
+    "include/ck_tile/ops/gemm/grouped_gemm_selector.hpp": "CRLF checkout exactly matches frozen SHA256",
+    "include/ck_tile/ops/gemm/grouped_gemm_device_args.h": "CRLF checkout exactly matches frozen SHA256",
+    "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args.cpp": "CRLF checkout exactly matches frozen SHA256"
+  }
+}
