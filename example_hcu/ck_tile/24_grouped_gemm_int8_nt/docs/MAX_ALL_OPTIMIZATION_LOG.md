@@ -515,3 +515,9 @@ OFF构建成功，库SHA256 1e54b515e42f34984bdb5713d85bf9917d9307efac6026ec12ed
 源码归一后仍是Cooperative/WASP两家族，scaled实例从41增为42（Cooperative23、WASP19，不按BF16/FP16重复计数）；输出类型分别实例化后新增两个设备kernel，生产总128。正式全1191回归将使用新冻结OFF库和v140门禁版本，保持一轮正式计时及全部原始shape。
 
 归档：max_all_v140_production_formal.csv、max_all_v140_validation_resources.json；原始证据results/max_all_v140_production_formal/max_all_v140_gates/max_all_v140_resources。
+
+### v140完整1191正式回归已启动
+
+卡7进程PID459570，目录results/max_all_v140_full_1191，源码版本19a3262（编译实现18e554d；后续只改runner与记录）。库为上述OFF构建，使用v140门禁身份，原始1191 shape、一轮、两个输出、warm10/repeat50/3样本中位数。已核实/proc命令匹配且状态R，首次检查完成34条，双输出34/34完整数值PASS；这是运行中进度，不是最终达标统计。全量期间不改远端C++、测试、runner或库，不重复启动；终态以done/failure和原始records.jsonl、开始/结束源码快照为准。
+
+下一候选准备：WASP标量A的BF16 epilogue先按原始acc列索引反量化/RNE转换，再把16位值打包做4×4波内转置，可将4次32位bpermute交换改为2次打包交换。独立CPU映射模型10000组随机16位模式通过；尚未实现GPU或证明性能。必须保留NaN/RNE和FP32 scale乘积舍入边界，比较打包/解包新增指令与减少交换等待的收益，不能以CPU映射通过当成kernel正确性或速度证据。
