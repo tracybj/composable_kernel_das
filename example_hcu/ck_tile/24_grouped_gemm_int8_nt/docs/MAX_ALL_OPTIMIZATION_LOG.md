@@ -560,3 +560,15 @@ FP16: changed新增严格达标[1017, 1087]，changed失去达标[]；unchanged�
 ### v141首轮门禁脚本修正
 
 首轮results/max_all_v141_gates在M1/route5被native域预期拒绝后，被旧脚本仅允许route>=12拒绝的断言误判；尚未执行新kernel，不是GPU数值失败。修正为packed-exchange suite在已有显式域匹配断言通过后接受route5拒绝，保留旧日志，以同一3fa1502f...库在gates_r1重跑，不重建。资源提取脚本在已有SingleB派生Problem名称处解析退出，resources/images已保存；修正辅助解析后再取selected。128旧生产及384旧tuning kernel已逐函数机器码全同。
+
+## v142：有限FP32组合factor的BF16转换快路径（本地准备）
+
+原方向WASP/scalar-A路径预取8个channel factor后做wave统一有限性判定；只在全部FP32组合factor有限时使用无NaN分支的原RNE公式。INT32累加转float有限，因此此路径结果只可能有限或Inf；非有限factor、per-token、逻辑转置、FP16均保留原Parent。主循环与4次INT32交换不改，与v141两次16位交换分开消融。新增tuning-only72～75对应12/22/23/5，默认生产不改。
+
+CPU99684项边界/随机检查通过，覆盖有限factor造成输出Inf、正负零、subnormal、INT32转FP32边界、原始scale有限但乘积Inf；这不是GPU证明。新增GPU夹具含显式零行，有限factor极值、组合factor溢出和受控RNE ties，验证0×Inf必须回退通用NaN路径。v141同库门禁/初筛仍在执行，v142暂不部署以保持本轮来源清晰。
+
+### v141 GPU门禁与初筛：不推广打包交换
+
+同一已编译3fa1502f...库的r1门禁504项full-range完整输出PASS、288项域外prelaunch拒绝；原128生产和384旧tuning kernel机器码全同，整库396 kernel无spill。14代表shape、84项完整输出初筛PASS（warm3/repeat10/2样本），逐条核对原始样本中位数和2GMNK吞吐。相同Problem/主循环下BF16吞吐比min/median/max=0.95579/0.97636/0.98743，全部回退；FP16控制中位数0.999975。ID302新方案R0.90581，对照约0.942；ID925新R0.93665，未填平任何默认缺口。减少交换数量没有带来整体收益，打包/解包和转换调度的动态贡献仍未分解；不能凭静态指令数归因。
+
+不接入生产、不重复用正式全量追一个已全面落后的候选。保留实验与负结果：max_all_v141_exchange_screen.csv、max_all_v141_summary.json，原始results/max_all_v141_exchange_screen及gates_r1。下一步独立验证finite-factor RNE路径，保留原4次交换以分离收益来源。

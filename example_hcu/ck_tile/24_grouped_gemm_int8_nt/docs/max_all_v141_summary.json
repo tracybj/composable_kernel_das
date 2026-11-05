@@ -1,0 +1,39 @@
+{
+  "status": "VALIDATED_NOT_PROMOTED",
+  "cases": 14,
+  "records": 84,
+  "checks": 504,
+  "rejected": 288,
+  "library": {
+    "symbols": [
+      "ck_tile_int8_nt_cached_last_error_v1",
+      "ck_tile_int8_nt_cached_plan_create_v1",
+      "ck_tile_int8_nt_cached_plan_create_v2",
+      "ck_tile_int8_nt_cached_plan_destroy_v1",
+      "ck_tile_int8_nt_cached_plan_query_v1",
+      "ck_tile_int8_nt_cached_run_v1",
+      "ck_tile_int8_nt_cached_weights_create_v1",
+      "ck_tile_int8_nt_cached_weights_destroy_v1",
+      "ck_tile_int8_nt_cached_weights_query_v1"
+    ],
+    "library_sha256": "3fa1502f9354bf16ac75988a032f21dfeba1806e669c2e0c05341163b58eb620",
+    "benchmark_sha256": "38d8e4634bdfe72f9df64540cd04c70ccaabf0d72e35ace142764025a6df7df4",
+    "experimental_tuning": true,
+    "operand_paths": true
+  },
+  "source_implementation": "3b20351",
+  "gate_runner": "10ec161",
+  "timing": "screen: warm3/repeat10/2 median, full bounded output",
+  "outputs": {
+    "BF16": {
+      "min_speedup": 0.9557871160438794,
+      "median_speedup": 0.9763626660499072,
+      "max_speedup": 0.9874301562585832
+    },
+    "FP16": {
+      "min_speedup": 0.9996340098511404,
+      "median_speedup": 0.9999749979718515,
+      "max_speedup": 1.0005951203977035
+    }
+  }
+}
