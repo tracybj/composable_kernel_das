@@ -1,0 +1,26 @@
+{
+  "status": "AUDIT_PASS",
+  "cases": 54,
+  "checks": 216,
+  "numeric_failures": 0,
+  "library": {
+    "symbols": [
+      "ck_tile_int8_nt_cached_last_error_v1",
+      "ck_tile_int8_nt_cached_plan_create_v1",
+      "ck_tile_int8_nt_cached_plan_create_v2",
+      "ck_tile_int8_nt_cached_plan_destroy_v1",
+      "ck_tile_int8_nt_cached_plan_query_v1",
+      "ck_tile_int8_nt_cached_run_v1",
+      "ck_tile_int8_nt_cached_weights_create_v1",
+      "ck_tile_int8_nt_cached_weights_destroy_v1",
+      "ck_tile_int8_nt_cached_weights_query_v1"
+    ],
+    "library_sha256": "b35c856ab48c76b7765ea5dbf42b013e781e240d8ddd63cd3385baeea61f4d05",
+    "benchmark_sha256": "4be63aea906be9cb6234b736fd73c726194275c0262a643feab57c41b62f69e6",
+    "experimental_tuning": true,
+    "operand_paths": true
+  },
+  "timing": "warm10/repeat50/3 median, interleaved",
+  "raw_results": "results/max_all_v138_frontier_formal",
+  "promotion": "No production changes in v138"
+}
