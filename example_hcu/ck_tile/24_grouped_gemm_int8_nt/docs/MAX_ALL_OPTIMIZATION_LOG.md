@@ -552,3 +552,7 @@ FP16: changed新增严格达标[1017, 1087]，changed失去达标[]；unchanged�
 ### 外部优化建议核对
 
 已按用户提供的图和全文逐项对照当前代码及v115/v119/v129/v130/v137/v140证据。优先验证finite-factor BF16快路径、跨K64半段A预取和wave私有小LDS decode；P0私有LDS写回与N64 consumer有可行性但尚未验证。纠正route24线程/barrier归属、2KB搬运映射覆盖、双驻留尾波比例及寄存器预算等推导。完整核对见REVIEW_EXTERNAL_OPTIMIZATION_SUGGESTIONS.md；不把预测加速或覆盖数当已有结果。
+
+### v141构建结束（尚无GPU结论）
+
+隔离tuning构建成功，编译实现3b20351，库SHA256 3fa1502f9354bf16ac75988a032f21dfeba1806e669c2e0c05341163b58eb620；benchmark 38d8e4634bdfe72f9df64540cd04c70ccaabf0d72e35ace142764025a6df7df4。当前未执行新GPU门禁或计时；用户当前要求先核对外部建议，故此处仅记录已完成构建，不能称候选数值/性能通过。
