@@ -499,3 +499,9 @@ CPU selector边界、39项tuning域、3333项尾部协议PASS；GPU完整范围3
 将已测route41的共同K排列、FullNK和32位相对地址实现迁到pipeline/packed_cooperative.hpp，原实验文件改为兼容include，避免双份主循环。新增scaled-only稳定route24（BM16/BN64/BK256、两wave）：prepared B、80CU、uniform非空、M1～8、N4096、K6144/7168、G8时启用，取v138有正式证据的域，不扩到已观察回退的G12以上。其余WASP/INT32策略不变。小M不满足WASP native域，所以plan在独立条件下选择该实例；必须同时绑定prepared B，并保持原输出/scale坐标。
 
 新增host域检查和生产API full-range/FP64夹具，覆盖M1/M2/M8、padded输入输出、空scale/标量/channel/per-token/NaN/Inf；INT32须仍走原8734。先独立OFF构建及门禁，再对48条长K邻域正式验证，当前不报新增达标数。
+
+### v140编译与代码等价
+
+OFF构建成功，库SHA256 1e54b515e42f34984bdb5713d85bf9917d9307efac6026ec12edae8a3235126e，benchmark a1ad6e7cd0c649ea18edbc548b41340d6603a0ad19cf7858458475b0164417b3。128个kernel无spill；126个旧生产kernel逐函数机器码与v139完全相同，两个新scaled kernel与此前已验证route41逐函数完全相同。新BF16实例119VGPR、4096B LDS（仅输出交换），主循环输入不经过LDS。实际CPU分流审计1191行，8条小M切route24，加上v139的ID992共9条相对v136改变。
+
+全量runner增加显式门禁版本选择（默认仍v136），核对本次实际库SHA后才可运行；route24报告为cooperative，避免仅用route非零误标WASP。新门禁和48条邻域正式性能验证完成后，使用冻结库进行新1191全量回归，不拼接局部结果。

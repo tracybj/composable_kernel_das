@@ -38,8 +38,10 @@ def main():
         assert math.isclose(2*case['G']*case['M']*case['N']*case['K']/case['target_ms']/1e9,case['target_TOPS'],rel_tol=1e-10)
     if args.limit:cases=cases[:args.limit]
     frozen=original.snapshot();assert not json.loads((B/'exported_api_symbols.json').read_text())['experimental_tuning']
-    validation=json.loads((E/'results/max_all_v136_gates/scaled_validation.json').read_text());assert validation['status']=='PASS' and validation['library_sha256']==frozen['api_library']
-    for name in ['cached_api_v136_boundaries.json','cached_api_v136_lifetime.json']:
+    version=os.environ.get('CK_INT8_TEST_VERSION','v136')
+    assert version.startswith('v') and version[1:].isdigit(), 'Invalid gate version'
+    validation=json.loads((E/f'results/max_all_{version}_gates/scaled_validation.json').read_text());assert validation['status']=='PASS' and validation['library_sha256']==frozen['api_library']
+    for name in [f'cached_api_{version}_boundaries.json',f'cached_api_{version}_lifetime.json']:
         check=json.loads((E/'results'/name).read_text());assert check['status']=='PASS' and check['library_sha256']==frozen['api_library']
     assert all(os.environ.get(x)=='7' for x in ['HIP_VISIBLE_DEVICES','CUDA_VISIBLE_DEVICES','DTK_VISIBLE_DEVICES'])
     import torch
@@ -104,7 +106,7 @@ def main():
                             d=gd[i];d.struct_size=C.sizeof(d);d.abi_version=2;d.a=a[i].data_ptr();d.c=output[kind][i].data_ptr();d.m=m;d.a_row_stride=k;d.c_row_stride=n;d.output_type=code;d.scale_a=sa[i:].data_ptr();d.scale_b=sb[i].data_ptr();d.scale_a_mode=0;d.scale_b_mode=1
                         plan=C.c_void_p();ok(lib.ck_tile_int8_nt_cached_plan_create_v2(handle,gd,g,C.byref(plan)));plans[kind]=plan
                         pi=plan_info(plan);assert (pi.group_count,pi.max_m,pi.n,pi.k)==(g,m,n,k)
-                        rec.update(route=pi.route,legacy_instance=pi.legacy_instance,pipeline='cooperative' if pi.route==0 else 'WASP')
+                        rec.update(route=pi.route,legacy_instance=pi.legacy_instance,pipeline='cooperative' if pi.route in [0,24] else 'WASP')
                         benches[kind]=lib.cached_i8_bench_create(plan);assert benches[kind],lib.cached_i8_bench_error().decode()
                     torch.cuda.synchronize()
                     for kind in (['BF16','FP16'] if idx%2 else ['FP16','BF16']):
