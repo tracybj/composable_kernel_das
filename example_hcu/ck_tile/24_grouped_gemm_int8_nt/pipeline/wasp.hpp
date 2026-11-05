@@ -290,7 +290,7 @@ CK_TILE_DEVICE void take_a_stage_snapshot(int slot, const char* lds)
 
 }
 
-template <typename Problem, typename Policy = GemmPipelineAgBgCrCompV4DefaultPolicy, index_t ConsumerSplit = 8,index_t AReadBatch = 1,bool APrefetch = false,bool OneBarrier = false,index_t RecordCap = 0,bool EarlyB = false,bool PackedB = false,index_t BAddress = 0,bool MaskInactiveN = false,bool SingleB = false>
+template <typename Problem, typename Policy = GemmPipelineAgBgCrCompV4DefaultPolicy, index_t ConsumerSplit = 8,index_t AReadBatch = 1,bool APrefetch = false,bool OneBarrier = false,index_t RecordCap = 0,bool EarlyB = false,bool PackedB = false,index_t BAddress = 0,bool MaskInactiveN = false,bool SingleB = false,bool CrossHalfPrefetch = false>
 struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Policy>
 {
     using Base = GemmPipelineAgBgCrCompV3<Problem, Policy>;
@@ -477,6 +477,8 @@ struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Poli
                   AccTile::kMIters % AReadBatch == 0, "A-read batch must divide M fragments");
     static_assert(BlockGemmShape::kM == 32 || BlockGemmShape::kM == 64 ||
                   BlockGemmShape::kM == 128 || BlockGemmShape::kM == 256);
+    static_assert(!CrossHalfPrefetch || (APrefetch && OneBarrier && !EarlyB && !SingleB),
+                  "cross-half schedule keeps the established late double-B protocol");
     template<index_t SLOT,bool H1> CK_TILE_DEVICE void consume_short(const AReadBases& rb,const grouped_int8_nt_wasp_core_detail::stage16_t (&b)[2],AccTile& acc) const {
         using namespace grouped_int8_nt_wasp_core_detail;
         if constexpr(!APrefetch) {
@@ -566,6 +568,50 @@ struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Poli
             // the next B stage overwrite slot0. A still has two LDS slots.
             if(k_stage+1<num_loop)load_B_stage(b_rsrc,b_pairs,k_stage+1,b_regs[0],vmem_diag);
     }
+    // Carry the first high-K64 A batch across the final low-K64 MMAC group.
+    // Only register prefetch lifetime changes; A-slot publication/retirement
+    // remains one barrier per K128 stage.
+    template<index_t CUR>
+    CK_TILE_DEVICE void c_pair(index_t k_stage,index_t num_loop,
+                              grouped_int8_nt_wasp_core_detail::buffer_rsrc_t b_rsrc,
+                              const BPairs& b_pairs,const AReadBases& rb,
+                              grouped_int8_nt_wasp_core_detail::stage16_t (&b)[2][2][AccTile::kNIters],
+                              grouped_int8_nt_wasp_core_detail::WaspVmemDiag& diag,AccTile& acc) const {
+        using namespace grouped_int8_nt_wasp_core_detail;
+        constexpr int Groups=AccTile::kMIters/AReadBatch;
+        constexpr index_t SLOT=CUR*kAStageBytes;
+        wasp_wait_vmcnt0(diag,k_stage);
+        stage16_t a[2][AReadBatch];
+        static_for<0,AReadBatch,1>{}([&](auto rr){constexpr int i=decltype(rr)::value;
+            read_prefetch<SLOT+i*2048>(rb.h0,a[0][i].d4);
+        });
+        static_for<0,2,1>{}([&](auto hh){constexpr int H=decltype(hh)::value;
+            // low fragments are dead, high current-B remains live.
+            if constexpr(H==1)if(k_stage+1<num_loop)
+                load_B_stage(b_rsrc,b_pairs,k_stage+1,b[CUR^1],diag);
+            static_for<0,Groups,1>{}([&](auto gg){
+                constexpr int G=decltype(gg)::value,slot=(H*Groups+G)%2,base_m=G*AReadBatch;
+                asm volatile("s_waitcnt lgkmcnt(0)" ::: "memory");
+                if constexpr(G+1<Groups){
+                    const uint32_t base=H?rb.h1:rb.h0;
+                    static_for<0,AReadBatch,1>{}([&](auto rr){constexpr int i=decltype(rr)::value;
+                        read_prefetch<SLOT+(base_m+AReadBatch+i)*2048>(base,a[slot^1][i].d4);
+                    });
+                }else if constexpr(H==0){
+                    static_for<0,AReadBatch,1>{}([&](auto rr){constexpr int i=decltype(rr)::value;
+                        read_prefetch<SLOT+i*2048>(rb.h1,a[slot^1][i].d4);
+                    });
+                }
+                static_for<0,2,1>{}([&](auto kk){constexpr int K=decltype(kk)::value;
+                    static_for<0,AReadBatch,1>{}([&](auto rr){constexpr int i=decltype(rr)::value;
+                        static_for<0,2,1>{}([&](auto nn){constexpr int N=decltype(nn)::value;
+                            acc.v[(base_m+i)*2+N]=mmac_i8(a[slot][i].frag[K],b[CUR][H][N].frag[K],acc.v[(base_m+i)*2+N]);
+                        });
+                    });
+                });
+            });
+        });
+    }
     CK_TILE_DEVICE void consumer_run_c(index_t consumer_id,
                                                  index_t num_loop,
                                                  const AReadBases& a_rb,
@@ -576,6 +622,16 @@ struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Poli
                                                  grouped_int8_nt_wasp_core_detail::WaspVmemDiag& vmem_diag,
                                                  AccTile& acc) const
     {
+        if constexpr(CrossHalfPrefetch){
+            for(index_t k=0;k<num_loop;k+=2){
+                c_pair<0>(k,num_loop,b_rsrc,b_pairs,a_rb,b_regs,vmem_diag,acc);
+                grouped_int8_nt_wasp_core_detail::wasp_barrier_maybe();
+                if(k+1<num_loop){
+                    c_pair<1>(k+1,num_loop,b_rsrc,b_pairs,a_rb,b_regs,vmem_diag,acc);
+                    grouped_int8_nt_wasp_core_detail::wasp_barrier_maybe();
+                }
+            }
+        }else{
         for(index_t k = 0; k < num_loop; k += 2)
         {
             c_I1<0>(consumer_id, k, num_loop, b_rsrc, b_pairs, a_rb, b_regs, a_regs, vmem_diag, acc);
@@ -608,6 +664,7 @@ struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Poli
                         acc);
                 grouped_int8_nt_wasp_core_detail::wasp_barrier_maybe();
             }
+        }
         }
     }
     CK_TILE_DEVICE static uint32_t record_stride(uint32_t physical_pitch)

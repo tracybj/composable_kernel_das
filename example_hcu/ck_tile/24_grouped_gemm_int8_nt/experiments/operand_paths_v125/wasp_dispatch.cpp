@@ -31,6 +31,12 @@ template<int Batch,int Group>struct SingleB128 : P<384,Batch,Group> {
         ck_tile::GemmPipelineAgBgCrCompV4DefaultPolicy,12,Batch,true,true,0,false,true,0,false,true>;
     static_assert(Pipeline::BlockSize==896 && Pipeline::kWaspLdsBytes==32768);
 };
+template<int Consumers,int Batch,int Group,bool Mask>struct CrossHalf256 : G256<Consumers*32,Batch,Group> {
+    using Base=G256<Consumers*32,Batch,Group>;
+    using Pipeline=ck_tile::GroupedInt8NtWaspPipeline<typename Base::PipelineProblem,
+        ck_tile::GemmPipelineAgBgCrCompV4DefaultPolicy,Consumers,Batch,true,true,0,false,true,0,Mask,false,true>;
+    static_assert(Pipeline::BlockSize==Base::Threads && Pipeline::kWaspLdsBytes==65536);
+};
 }
 extern "C" int ck_tile_int8_experimental_wasp_launch_private(unsigned output,unsigned route,const void* args,const void* scales,int g,int m,int n,hipStream_t stream){
     switch(route){
@@ -71,6 +77,10 @@ extern "C" int ck_tile_int8_experimental_wasp_launch_private(unsigned output,uns
     case 73:return run<ck_tile::int8_nt_instances::PackedM256N384MaskedM4,false,false,true>(output,args,scales,g,m,n,stream);
     case 74:return run<ck_tile::int8_nt_instances::PackedM256N384MaskedM8,false,false,true>(output,args,scales,g,m,n,stream);
     case 75:return run<ck_tile::int8_nt_instances::PackedM256N256,false,false,true>(output,args,scales,g,m,n,stream);
+    case 76:return run<CrossHalf256<12,2,4,false>>(output,args,scales,g,m,n,stream);
+    case 77:return run<CrossHalf256<12,2,4,true>>(output,args,scales,g,m,n,stream);
+    case 78:return run<CrossHalf256<12,2,8,true>>(output,args,scales,g,m,n,stream);
+    case 79:return run<CrossHalf256<8,4,4,false>>(output,args,scales,g,m,n,stream);
     default:return -5;
     }
 }
