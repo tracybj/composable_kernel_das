@@ -290,7 +290,7 @@ CK_TILE_DEVICE void take_a_stage_snapshot(int slot, const char* lds)
 
 }
 
-template <typename Problem, typename Policy = GemmPipelineAgBgCrCompV4DefaultPolicy, index_t ConsumerSplit = 8,index_t AReadBatch = 1,bool APrefetch = false,bool OneBarrier = false,index_t RecordCap = 0,bool EarlyB = false,bool PackedB = false,index_t BAddress = 0>
+template <typename Problem, typename Policy = GemmPipelineAgBgCrCompV4DefaultPolicy, index_t ConsumerSplit = 8,index_t AReadBatch = 1,bool APrefetch = false,bool OneBarrier = false,index_t RecordCap = 0,bool EarlyB = false,bool PackedB = false,index_t BAddress = 0,bool MaskInactiveN = false>
 struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Policy>
 {
     using Base = GemmPipelineAgBgCrCompV3<Problem, Policy>;
@@ -471,6 +471,7 @@ struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Poli
         asm volatile("ds_read_b128 %0, %1 offset:%c2" : "=&v"(out) : "v"(addr),"n"(OFF) : "memory");
     }
     static_assert(ConsumerSplit==kNumConsumerWaves && OneBarrier,"WASP core uses uniform consumers and one publication barrier per stage");
+    static_assert(!MaskInactiveN || PackedB,"inactive N consumers are gated only for prepared B");
     static_assert(AReadBatch > 0 && (AReadBatch & (AReadBatch-1)) == 0 &&
                   AccTile::kMIters % AReadBatch == 0, "A-read batch must divide M fragments");
     static_assert(BlockGemmShape::kM == 32 || BlockGemmShape::kM == 64 ||
@@ -679,50 +680,63 @@ struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Poli
             acc = AccTile{};
             const index_t consumer_id = wid - kNumProducerWaves;
 
-            grouped_int8_nt_wasp_core_detail::stage16_t a_regs[AccTile::kMIters];
-
-            const uint32_t lane    = static_cast<uint32_t>(get_lane_id());
-            const uint32_t row     = lane & 15u;
-            const uint32_t r7      = row & 7u;
-            const uint32_t colg    = lane >> 4;
-            const uint32_t rowbase = static_cast<uint32_t>(reinterpret_cast<uintptr_t>(lds)) +
-                                     row * (kStageK * sizeof(ADataType));
-            const AReadBases a_rb{rowbase + ((colg ^ r7) * 16u),
-                                  rowbase + (((colg + 4u) ^ r7) * 16u)};
-            const uint32_t nrow  = static_cast<uint32_t>(consumer_id) * 32u + row;
-            const uint32_t inrow = colg * 16u;
-            const uint32_t record_pitch = record_stride(b_pitch_bytes);
-            const uint32_t quotient = b_pitch_bytes / record_pitch;
-            const uint32_t remainder = b_pitch_bytes % record_pitch;
-            // Low32 is the structured record index, high32 the byte offset.
-            // index*record_pitch+offset equals row*physical_pitch+inrow.
-            BPairs b_pr{
-                (static_cast<uint64_t>(nrow * remainder + inrow) << 32) |
-                    (nrow * quotient),
-                (static_cast<uint64_t>((nrow + 16u) * remainder + inrow) << 32) |
-                    ((nrow + 16u) * quotient)};
-
-            if constexpr(PackedB)
+            // A consumer owns a complete 32-column stripe. An entirely absent
+            // stripe has no output, but must still participate in every CTA
+            // publication/retirement epoch. The branch is uniform per wave.
+            if(!MaskInactiveN || b_n_origin + consumer_id * 32 < b_n_len)
             {
-                b_pr.p0 = static_cast<uint32_t>(consumer_id) * 2048u + lane * 16u;
-                b_pr.p1 = static_cast<uint32_t>(consumer_id) * 2048u + 1024u + lane * 16u;
-                b_pr.half_stride = static_cast<uint32_t>(b_n_len) * 64u;
-            }
-            else if constexpr(BAddress != 0)
-            {
-                b_pr.p0 = nrow * b_pitch_bytes + inrow;
-                b_pr.p1 = (nrow + 16u) * b_pitch_bytes + inrow;
-            }
-            grouped_int8_nt_wasp_core_detail::stage16_t b_regs[2][2][AccTile::kNIters];
+                grouped_int8_nt_wasp_core_detail::stage16_t a_regs[AccTile::kMIters];
 
-            if(num_loop > 0)
-            {
-                load_B_stage(b_rsrc, b_pr, 0, b_regs[0], vmem_diag);
-            }
-            if constexpr(!OneBarrier)grouped_int8_nt_wasp_core_detail::wasp_barrier_maybe();
-            grouped_int8_nt_wasp_core_detail::wasp_barrier_maybe();
+                const uint32_t lane    = static_cast<uint32_t>(get_lane_id());
+                const uint32_t row     = lane & 15u;
+                const uint32_t r7      = row & 7u;
+                const uint32_t colg    = lane >> 4;
+                const uint32_t rowbase = static_cast<uint32_t>(reinterpret_cast<uintptr_t>(lds)) +
+                                         row * (kStageK * sizeof(ADataType));
+                const AReadBases a_rb{rowbase + ((colg ^ r7) * 16u),
+                                      rowbase + (((colg + 4u) ^ r7) * 16u)};
+                const uint32_t nrow  = static_cast<uint32_t>(consumer_id) * 32u + row;
+                const uint32_t inrow = colg * 16u;
+                const uint32_t record_pitch = record_stride(b_pitch_bytes);
+                const uint32_t quotient = b_pitch_bytes / record_pitch;
+                const uint32_t remainder = b_pitch_bytes % record_pitch;
+                // Low32 is the structured record index, high32 the byte offset.
+                // index*record_pitch+offset equals row*physical_pitch+inrow.
+                BPairs b_pr{
+                    (static_cast<uint64_t>(nrow * remainder + inrow) << 32) |
+                        (nrow * quotient),
+                    (static_cast<uint64_t>((nrow + 16u) * remainder + inrow) << 32) |
+                        ((nrow + 16u) * quotient)};
 
-            consumer_run_c(consumer_id,num_loop,a_rb,b_rsrc,b_pr,b_regs,a_regs,vmem_diag,acc);
+                if constexpr(PackedB)
+                {
+                    b_pr.p0 = static_cast<uint32_t>(consumer_id) * 2048u + lane * 16u;
+                    b_pr.p1 = static_cast<uint32_t>(consumer_id) * 2048u + 1024u + lane * 16u;
+                    b_pr.half_stride = static_cast<uint32_t>(b_n_len) * 64u;
+                }
+                else if constexpr(BAddress != 0)
+                {
+                    b_pr.p0 = nrow * b_pitch_bytes + inrow;
+                    b_pr.p1 = (nrow + 16u) * b_pitch_bytes + inrow;
+                }
+                grouped_int8_nt_wasp_core_detail::stage16_t b_regs[2][2][AccTile::kNIters];
+
+                if(num_loop > 0)
+                {
+                    load_B_stage(b_rsrc, b_pr, 0, b_regs[0], vmem_diag);
+                }
+                if constexpr(!OneBarrier)grouped_int8_nt_wasp_core_detail::wasp_barrier_maybe();
+                grouped_int8_nt_wasp_core_detail::wasp_barrier_maybe();
+
+                consumer_run_c(consumer_id,num_loop,a_rb,b_rsrc,b_pr,b_regs,a_regs,vmem_diag,acc);
+            }
+            else
+            {
+                // Initial A-ready epoch followed by one epoch per K stage.
+                // Do not return here: the common final LDS sync is required.
+                for(index_t epoch = 0; epoch <= num_loop; ++epoch)
+                    grouped_int8_nt_wasp_core_detail::wasp_barrier_maybe();
+            }
         }
 
         grouped_int8_nt_wasp_core_detail::wasp_sync_lds_maybe();

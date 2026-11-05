@@ -15,6 +15,13 @@ template<class P,bool PackedOutput=false>int run(unsigned output,const void* arg
     return hipGetLastError()==hipSuccess?0:-100;
 }
 template<int N,int Batch,int Group>using G256=ck_tile::GroupedInt8NtWaspCoreProblem<256,false,N/32,Group,Batch,true,true,0,false,true,0,N/32>;
+
+template<int Group>struct TailMaskedG256 : G256<384,2,Group> {
+    using Base=G256<384,2,Group>;
+    using Pipeline=ck_tile::GroupedInt8NtWaspPipeline<typename Base::PipelineProblem,
+        ck_tile::GemmPipelineAgBgCrCompV4DefaultPolicy,12,2,true,true,0,false,true,0,true>;
+    static_assert(Pipeline::BlockSize==Base::Threads && Pipeline::kWaspLdsBytes==65536);
+};
 template<int N,int Batch,int Group>using P=ck_tile::GroupedInt8NtWaspCoreProblem<128,false,N/32,Group,Batch,true,true,0,false,true,0,N/32>;
 }
 extern "C" int ck_tile_int8_experimental_wasp_launch_private(unsigned output,unsigned route,const void* args,const void* scales,int g,int m,int n,hipStream_t stream){
@@ -36,6 +43,11 @@ extern "C" int ck_tile_int8_experimental_wasp_launch_private(unsigned output,uns
     case 53:return run<G256<256,4,2>>(output,args,scales,g,m,n,stream);
     case 54:return run<G256<256,4,8>>(output,args,scales,g,m,n,stream);
     case 55:return run<G256<256,4,16>>(output,args,scales,g,m,n,stream);
+    case 56:return run<TailMaskedG256<1>>(output,args,scales,g,m,n,stream);
+    case 57:return run<TailMaskedG256<2>>(output,args,scales,g,m,n,stream);
+    case 58:return run<TailMaskedG256<4>>(output,args,scales,g,m,n,stream);
+    case 59:return run<TailMaskedG256<8>>(output,args,scales,g,m,n,stream);
+    case 60:return run<TailMaskedG256<16>>(output,args,scales,g,m,n,stream);
     default:return -5;
     }
 }

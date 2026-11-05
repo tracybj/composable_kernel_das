@@ -34,7 +34,12 @@ int main(){
     check("42",17,512,768,false,false,false);
     check("40",1,65536,65536,false,true,false);
     check("44",256,4096,7168,true,true,false);
-    check("56",256,4096,7168,true,true,false);
+    check("56",256,4096,7168,true,true,true);
+    check("58",256,256,512,true,true,true);
+    check("58",128,5120,2304,true,true,false);
+    check("60",256,1792,1536,true,true,true);
+    check("60",256,1792,1536,true,false,false);
+    check("61",256,4096,7168,true,true,false);
     check("-1",256,4096,7168,true,true,false);
     check("36x",256,4096,7168,true,true,false);
     check("36",1,4096,7168,false,true,false,false,false);

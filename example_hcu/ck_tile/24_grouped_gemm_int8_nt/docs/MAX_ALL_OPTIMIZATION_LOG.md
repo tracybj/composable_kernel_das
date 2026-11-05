@@ -315,3 +315,13 @@ M1/N4096/K7168/G8约R1.0045/1.0063，M2同族约R1.0077/1.0092，余量仍小；
 78个默认scaled kernel与42个无scale/pack kernel逐函数机器码和v132完全相同；public BF16/FP16输入算子未改，默认selector不改。正式全量严格达标数仍1109 BF16/1123 FP16，不宣称1191全部完成。
 
 数据：[v133正式CSV](max_all_v133_address32_formal.csv)、[数值/资源/ISA/代码等价](max_all_v133_validation_resources.json)。操作数路径的选择逻辑另见[OPERAND_DATA_PATH_REVIEW.md](OPERAND_DATA_PATH_REVIEW.md)。
+
+## v134：BN384尾块的无效consumer仅保留barrier
+
+v132访问顺序实验仍有大M差距。源码确认原BN384在主循环为全部12个consumer计算，直到epilogue才屏蔽越出N的32列条带；例如N5120最后一块仅4个consumer有效，另外8个仍搬B、读A LDS并MMAC。新候选只省去完全无效wave的输入读取与MMAC，不改producer，也不省去它们的CTA同步。
+
+pipeline/wasp.hpp新增默认false的MaskInactiveN策略，实验Problem只在packed原方向BM256/BN384启用。56–60分别对应M-cluster1/2/4/8/16，与48/49/12/50/51成对。波内分支统一，inactive consumer初始化acc为0，执行ready一次加num_loop次阶段barrier，随后继续参加所有角色共用的最终LDS sync；禁止提前return。OneBarrier约束保持，旧默认路径不启用。
+
+CPU协议模型检查0–65个K阶段的三种角色barrier epoch、双缓冲读写所有权，以及多种N尾块的32列覆盖；GPU测试需覆盖短/长与奇/偶K阶段、N有/无尾块、多个M CTA/cluster、padded stride、空scale/per-channel/per-token/特殊值、INT32/BF16/FP16输出和guard。模型不能替代编译后GPU门禁，未完成前不报收益。
+
+假设：减少尾块无效wave工作能缓解CU发射/共享LDS端口负担；可能反证为尾块占比太小、分支改变调度/资源或有效consumer依旧是关键路径。先比较相同cluster/tile，再与默认最优比较；无效wave仍占用launch资源，不预报按省掉MMAC比例线性加速。
