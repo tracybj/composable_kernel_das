@@ -83,6 +83,10 @@ extern "C" int ck_tile_int8_packed_small_launch_private(unsigned output,unsigned
     case 37:return run<ck_tile::GroupedInt8NtPackedSmallProblem<B256,true>>(output,args,scales,g,m,n,stream);
     case 38:return run<ck_tile::GroupedInt8NtPackedSmallProblem<N128,true>>(output,args,scales,g,m,n,stream);
     case 39:return run<ck_tile::GroupedInt8NtPackedSmallProblem<N64K512,true>>(output,args,scales,g,m,n,stream);
+    case 40:return run<ck_tile::GroupedInt8NtPackedSmallProblem<B512,true,true>>(output,args,scales,g,m,n,stream);
+    case 41:return run<ck_tile::GroupedInt8NtPackedSmallProblem<B256,true,true>>(output,args,scales,g,m,n,stream);
+    case 42:return run<ck_tile::GroupedInt8NtPackedSmallProblem<N128,true,true>>(output,args,scales,g,m,n,stream);
+    case 43:return run<ck_tile::GroupedInt8NtPackedSmallProblem<N64K512,true,true>>(output,args,scales,g,m,n,stream);
     default:return -5;
     }
 }

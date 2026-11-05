@@ -8,7 +8,7 @@ from bindings import Weight,init,lib,ok,plan_info
 from test_scaled_api import Group2
 
 def main():
-    ap=argparse.ArgumentParser();ap.add_argument('--output',type=Path,required=True);ap.add_argument('--shuffle-only',action='store_true');ap.add_argument('--deferred-only',action='store_true');ap.add_argument('--next-round-only',action='store_true');ap.add_argument('--packed-input-only',action='store_true');ap.add_argument('--fullnk-grid-only',action='store_true');args=ap.parse_args()
+    ap=argparse.ArgumentParser();ap.add_argument('--output',type=Path,required=True);ap.add_argument('--shuffle-only',action='store_true');ap.add_argument('--deferred-only',action='store_true');ap.add_argument('--next-round-only',action='store_true');ap.add_argument('--packed-input-only',action='store_true');ap.add_argument('--fullnk-grid-only',action='store_true');ap.add_argument('--address32-only',action='store_true');args=ap.parse_args()
     assert os.environ.get('HIP_VISIBLE_DEVICES')=='7'
     build=Path(os.environ['CK_INT8_CACHED_BUILD']);identity=json.loads((build/'exported_api_symbols.json').read_text());assert identity['operand_paths']
     torch.set_num_threads(4);torch.manual_seed(20261104)
@@ -21,6 +21,9 @@ def main():
     if args.fullnk_grid_only:
         candidates=[(r,None) for r in [*range(32,40),*range(48,56)]]
         cases+=[(17,512,768,True)] # legal pack with K512 tail:checked paths must work;FullNK512 rejects.
+    if args.address32_only:
+        candidates=[(r,None) for r in range(36,44)]
+        cases+=[(17,512,768,True)]
     for m,n,k,padded in cases:
         g=2;astride=k+16 if padded else k;bstride=k+32 if padded else k;cstride=n+4
         a=torch.randint(-128,128,(g,m,astride),device='cuda',dtype=torch.int8);b=torch.randint(-128,128,(g,n,bstride),device='cuda',dtype=torch.int8)

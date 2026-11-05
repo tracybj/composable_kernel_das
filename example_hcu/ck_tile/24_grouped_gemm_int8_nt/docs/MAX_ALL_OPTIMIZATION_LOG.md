@@ -278,3 +278,19 @@ neighbor_formal独立完成25个原始shape、250项完整输出检查，0数值
 大M：不改MMAC/搬运/epilogue，只将现有packed BM256/BN384及BN256的M tile cluster从4分别改为1/2/8/16（48–55）。这里cluster是CTA访问顺序，不是专家组G；原G完全保留。检验相同访存字节下的A/B复用与L2访问顺序，而非继续单独降低LDS。M cluster较大时的小M padding CTA开销计入时间，超出M的CTA在同步前整块退出。先比较代表未达标prefill，不能以部分shape的最佳值宣称全量目标达成。
 
 所有候选仅tuning构建启用，默认selector及v128冻结库不改。待CPU/GPU门禁、元数据和同轮时间验证，暂无收益结论。
+
+### v132结果
+
+实现0505638，API SHA256 a07f29149de43c031dc7a164a3743b454d3acaf649e92a2d7aa34d95b63fd20e。486项full-range INT8/FP64完整输出检查PASS，522项不满足pack/FullNK/WASP域的组合在launch前拒绝，包含masked M及K尾部验证；新kernel无spill。
+
+FullNK正式对照19组、418项完整输出检查PASS，warm10/repeat50/3样本中位数。M1/N4096/K6144/G8的route38为BF16 2.3468 TOPS、R1.0266，FP16约2.346、R1.0264，相比同轮默认约+5.4%。同几何FullNK相对检查版route34约+4.6%，说明边界/编译指令开销会影响纯寄存器方案；并非只要移除LDS即可。M1/N4096/K7168/G8仍约R0.997，M2同族约R1.002、余量很小；其余长K小M仍有未达标。不将初筛逐条最优拼入生产全量CSV。
+
+WASP访问顺序初筛18组、396项输出抽样检查PASS，每组8行，warm3/repeat10/2样本，非正式验收。M-cluster从4改1/2可在部分原默认非最优的尺寸获益，但相同BN384相邻cluster大多约0–1%，不能解决主要大M差距。M4096/N5120/K2304/G48的cluster1约513.70 TOPS、R0.9539，虽比默认+3.7%仍未达标；M8192/N1536/K2048/G4约469.58、R1.0029，接近噪声需独立复测。资源保持：BN384 183VGPR/64KiB/1024threads、BN256 199VGPR/64KiB/768threads，静态最大1CTA。访问顺序没有改变两套核心流水。
+
+归档：[FullNK正式数据](max_all_v132_fullnk_formal.csv)、[WASP顺序初筛](max_all_v132_grid_screen.csv)、[门禁与资源](max_all_v132_validation_resources.json)。默认selector仍v128，正式全量1109 BF16/1123 FP16严格达标不变。
+
+## v133：纯寄存器输入的32位相对字节地址
+
+继续在Cooperative的相同四种FullNK几何做消融，不新增核心流水。40–43对照36–39：仅将A/B相对字节offset算术改为uint32，基指针保留64位；A/B的16B读取、K64共同排列、MMAC、预取顺序及C epilogue不变。已有API检查m*Astride及N*Bstride不超过INT32_MAX；新增实验host检查packed N*K域，FullNK和masked M约束保持。数据位于高虚拟地址仍合法，禁止把基指针截断为32位。
+
+假设：少做64位地址乘加可减少VGPR/地址指令，改善长K、小M供给；反证是ISA无有效变化、寄存器不降或完整时间不改善。先做host边界与full-range数值/guard/scale门禁，再同轮同几何比较；尚未编译、未报收益，默认生产分流不变。

@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 #pragma once
 #include <cstdlib>
+#include <cstdint>
+#include <limits>
 #include <stdexcept>
 
 namespace ck_tile {
@@ -50,13 +52,15 @@ inline void int8_tuning_override(bool uniform,bool empty,bool native,bool packed
         if(aligned && (m%bm || n%bn || k%bk))
             throw std::invalid_argument("aligned tuning instance has a partial tile");
     }
-    if((route>21 && route<32) || (route>39 && route<48))throw std::invalid_argument("unlisted tuning route");
-    if(route>=32 && route<=39){
+    if((route>21 && route<32) || (route>43 && route<48))throw std::invalid_argument("unlisted tuning route");
+    if(route>=32 && route<=43){
         if(!packed)throw std::invalid_argument("packed cooperative requires prepared weights");
         const unsigned geometry=(route-32)%4;
         const int bk=geometry==0 || geometry==3?512:256;
         const int bn=geometry==0?32:geometry==2?128:64;
         if(route>=36 && (k%bk || n%bn))throw std::invalid_argument("FullNK cooperative requires complete N/K tiles");
+        if(route>=40 && static_cast<uint64_t>(n)*static_cast<uint64_t>(k)>static_cast<uint64_t>(std::numeric_limits<int32_t>::max()))
+            throw std::invalid_argument("32-bit packed offsets exceed the supported matrix span");
         return; // M remains masked;the original checked path supports K tails.
     }
     if(!route)return;
