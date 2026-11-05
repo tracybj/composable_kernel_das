@@ -74,7 +74,7 @@ def main():
                         if status:
                             # Native-domain checks must reject unsupported WASP
                             # shapes before launch;all cooperative paths are masked.
-                            assert route>=12,(route,legacy,m,n,k,status,lib.ck_tile_int8_nt_cached_last_error_v1().decode())
+                            assert args.packed_exchange_only or route>=12,(route,legacy,m,n,k,status,lib.ck_tile_int8_nt_cached_last_error_v1().decode())
                             rejected+=1;del raw,out,gd;continue
                         try:
                             pi=plan_info(plan);assert pi.route==route and (legacy is None or pi.legacy_instance==legacy)

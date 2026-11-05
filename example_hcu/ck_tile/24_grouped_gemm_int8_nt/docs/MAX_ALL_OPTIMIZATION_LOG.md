@@ -556,3 +556,7 @@ FP16: changed新增严格达标[1017, 1087]，changed失去达标[]；unchanged�
 ### v141构建结束（尚无GPU结论）
 
 隔离tuning构建成功，编译实现3b20351，库SHA256 3fa1502f9354bf16ac75988a032f21dfeba1806e669c2e0c05341163b58eb620；benchmark 38d8e4634bdfe72f9df64540cd04c70ccaabf0d72e35ace142764025a6df7df4。当前未执行新GPU门禁或计时；用户当前要求先核对外部建议，故此处仅记录已完成构建，不能称候选数值/性能通过。
+
+### v141首轮门禁脚本修正
+
+首轮results/max_all_v141_gates在M1/route5被native域预期拒绝后，被旧脚本仅允许route>=12拒绝的断言误判；尚未执行新kernel，不是GPU数值失败。修正为packed-exchange suite在已有显式域匹配断言通过后接受route5拒绝，保留旧日志，以同一3fa1502f...库在gates_r1重跑，不重建。资源提取脚本在已有SingleB派生Problem名称处解析退出，resources/images已保存；修正辅助解析后再取selected。128旧生产及384旧tuning kernel已逐函数机器码全同。
