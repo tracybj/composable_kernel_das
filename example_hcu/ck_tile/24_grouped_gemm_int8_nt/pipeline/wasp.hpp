@@ -290,7 +290,7 @@ CK_TILE_DEVICE void take_a_stage_snapshot(int slot, const char* lds)
 
 }
 
-template <typename Problem, typename Policy = GemmPipelineAgBgCrCompV4DefaultPolicy, index_t ConsumerSplit = 8,index_t AReadBatch = 1,bool APrefetch = false,bool OneBarrier = false,index_t RecordCap = 0,bool EarlyB = false,bool PackedB = false,index_t BAddress = 0,bool MaskInactiveN = false>
+template <typename Problem, typename Policy = GemmPipelineAgBgCrCompV4DefaultPolicy, index_t ConsumerSplit = 8,index_t AReadBatch = 1,bool APrefetch = false,bool OneBarrier = false,index_t RecordCap = 0,bool EarlyB = false,bool PackedB = false,index_t BAddress = 0,bool MaskInactiveN = false,bool SingleB = false>
 struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Policy>
 {
     using Base = GemmPipelineAgBgCrCompV3<Problem, Policy>;
@@ -532,13 +532,14 @@ struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Poli
         (void)consumer_id;
         (void)num_loop;
         constexpr index_t SLOT = CUR * kAStageBytes;
+        constexpr index_t BSlot = SingleB ? 0 : CUR;
 
         grouped_int8_nt_wasp_core_detail::wasp_wait_vmcnt0(vmem_diag, k_stage);
         // The opposite B register slot is free after the previous stage. Issue
         // the next read before low+high MMAC instead of before high alone.
-        if constexpr(EarlyB)
+        if constexpr(EarlyB && !SingleB)
             if(k_stage+1<num_loop)load_B_stage(b_rsrc,b_pairs,k_stage+1,b_regs[CUR^1],vmem_diag);
-        consume_short<SLOT,false>(a_rb,b_regs[CUR][0],acc);
+        consume_short<SLOT,false>(a_rb,b_regs[BSlot][0],acc);
     }
     template <index_t CUR>
     CK_TILE_DEVICE void c_I2(index_t consumer_id,
@@ -554,11 +555,16 @@ struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Poli
     {
         using namespace grouped_int8_nt_wasp_core_detail;
         constexpr index_t SLOT = CUR * kAStageBytes;
+        constexpr index_t BSlot = SingleB ? 0 : CUR;
         (void)consumer_id;
 
-        if constexpr(!EarlyB)
+        if constexpr(!EarlyB && !SingleB)
             if(k_stage+1<num_loop)load_B_stage(b_rsrc,b_pairs,k_stage+1,b_regs[CUR^1],vmem_diag);
-        consume_short<SLOT,true>(a_rb,b_regs[CUR][1],acc);
+        consume_short<SLOT,true>(a_rb,b_regs[BSlot][1],acc);
+        if constexpr(SingleB)
+            // Both K halves have completed their final MMAC use. Only now may
+            // the next B stage overwrite slot0. A still has two LDS slots.
+            if(k_stage+1<num_loop)load_B_stage(b_rsrc,b_pairs,k_stage+1,b_regs[0],vmem_diag);
     }
     CK_TILE_DEVICE void consumer_run_c(index_t consumer_id,
                                                  index_t num_loop,

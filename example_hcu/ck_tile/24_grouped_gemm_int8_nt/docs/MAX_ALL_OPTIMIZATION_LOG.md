@@ -430,3 +430,13 @@ SingleB草稿仍只在本地隔离目录，未并入v136；将作为后续结构
 当前gfx936汇编器正向接受现用v_mmac_i32_16x16x32_i8；对所试v_mmac_i32_16x16x64_i8及v_mmac_i32_32x32x16_i8助记符报invalid instruction，故不把这两个未被工具链接受的候选当作可用加速路径。探针仅CPU汇编，位于results/max_all_v136_mmac_probe，不宣称涵盖全部可能指令。
 
 归档：[全1191条双输出CSV](max_all_v136_1191.csv)、[BF16 CSV](max_all_v136_bf16.csv)、[FP16 CSV](max_all_v136_fp16.csv)、[剩余75条](max_all_v136_remaining.csv)、[全量审计统计](max_all_v136_summary.json)、[路由变化及跨线归因](max_all_v136_policy_changes.json)。原始样本/manifest/报告保留于results/max_all_v136_full_1191。当前生产候选仍为v136，未触及其它16位输入接口；原INT32策略保持。目标尚未完成，下一轮继续验证WASP单B缓冲的驻留/延迟取舍，本地草稿尚未构建或GPU测试。
+## v137：WASP单B寄存器缓冲与独立CTA（准备验证）
+
+v136正式全量仍为BF16 1116/1191、FP16 1131/1191严格达到Max ALL P目标；本轮不改变默认选择。此前BM128/BN384虽然把A LDS降到32KiB，896线程、119VGPR组合下HIP最大驻留仍只有1CTA。下一步用同一WASP流水减少B的活跃缓冲，检验资源约束能否改变，不将更少LDS/VGPR等同于更快。
+
+Pipeline末尾增加默认false的SingleB策略：B使用slot0，当前K stage的low/high MMAC全部完成后才发下一stage加载；下一stage消费前沿用VMEM wait。A仍用两个LDS槽，producer、发布/退役barrier及最终LDS同步不变。候选61–64为BM128/BN384、AReadBatch1/2与M-cluster2/4；65–67及已有13为同几何双B缓冲对照。实例编号只用于tuning，不是caseID，生产分流与原INT32路径不改。
+
+预测B单缓冲可减少约16个活跃I32寄存器，可能使每CU最大CTA从1到2；代价是同consumer的B-next/当前MMAC重叠减少，且M128相比M256会增加B读取。必须检查实际VGPR/LDS/spill/HIP occupancy和完整kernel时间。若仍只有1CTA或额外等待超过收益，不推广；转而评估更少consumer wave、每wave更宽N的联动结构，而不继续仅扫描旧参数。
+
+CPU B生命周期模型16900检查PASS（非GPU证明）；GPU将覆盖full-range INT8/FP64完整输出、INT32/BF16/FP16、scale模式/特殊值、K奇偶stage、尾部/stride及guard。先代表prefill初筛，再对有希望的候选独立正式计时；未经正式验证不改生产，不拼接赢家覆盖1191正式CSV。旧生产kernel将做逐函数机器码对照。当前新候选未编译、未运行GPU，尚无收益结论。
+
