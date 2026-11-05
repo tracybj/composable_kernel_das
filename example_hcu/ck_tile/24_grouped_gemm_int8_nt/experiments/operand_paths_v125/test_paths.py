@@ -54,10 +54,13 @@ def main():
                             d=gd[i];d.struct_size=C.sizeof(d);d.abi_version=2;d.a=a[i].data_ptr();d.c=out[i].data_ptr();d.m=m;d.a_row_stride=astride;d.c_row_stride=cstride;d.output_type=output
                             d.scale_a=sa[i].data_ptr() if sa is not None else None;d.scale_b=sb[i].data_ptr() if sb is not None else None;d.scale_a_mode=int(mode=='row_channel');d.scale_b_mode=int(mode!='none')
                         plan=C.c_void_p();status=lib.ck_tile_int8_nt_cached_plan_create_v2(weights,gd,g,C.byref(plan))
+                        if args.tail_mask_only:
+                            expected=m%256==0 and n%256==0 and k%128==0 and 512<=k<16384
+                            assert (status==0)==expected,('TAIL_MASK_DOMAIN',route,m,n,k,status,lib.ck_tile_int8_nt_cached_last_error_v1().decode())
                         if status:
                             # Native-domain checks must reject unsupported WASP
                             # shapes before launch;all cooperative paths are masked.
-                            assert route>=13,(route,legacy,m,n,k,status,lib.ck_tile_int8_nt_cached_last_error_v1().decode())
+                            assert route>=12,(route,legacy,m,n,k,status,lib.ck_tile_int8_nt_cached_last_error_v1().decode())
                             rejected+=1;del raw,out,gd;continue
                         try:
                             pi=plan_info(plan);assert pi.route==route and (legacy is None or pi.legacy_instance==legacy)

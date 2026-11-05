@@ -325,3 +325,7 @@ pipeline/wasp.hpp新增默认false的MaskInactiveN策略，实验Problem只在pa
 CPU协议模型检查0–65个K阶段的三种角色barrier epoch、双缓冲读写所有权，以及多种N尾块的32列覆盖；GPU测试需覆盖短/长与奇/偶K阶段、N有/无尾块、多个M CTA/cluster、padded stride、空scale/per-channel/per-token/特殊值、INT32/BF16/FP16输出和guard。模型不能替代编译后GPU门禁，未完成前不报收益。
 
 假设：减少尾块无效wave工作能缓解CU发射/共享LDS端口负担；可能反证为尾块占比太小、分支改变调度/资源或有效consumer依旧是关键路径。先比较相同cluster/tile，再与默认最优比较；无效wave仍占用launch资源，不预报按省掉MMAC比例线性加速。
+
+### v134首轮门禁脚本修正
+
+隔离构建成功，三类旧代码对象（42/78/171 kernels）SHA与v133完全相同，新tail实例182VGPR/64KiB无spill。首轮results/max_all_v134_gates在第一个M1非native fixture的plan_create预期拒绝后，被旧脚本route>=13断言误判：本轮新增了原route12作为对照。进程已结束、没有执行新kernel；不是GPU数值失败或VMFault。修正fixture接受route12的预期拒绝，并给tail suite逐shape增加明确native/packed域的成功/失败断言，避免将应成功的plan_create错误计作正常拒绝。原日志保留，使用新的gates_r1目录验证相同已编译库；仅Python门禁修改，不重建或替换该二进制。
