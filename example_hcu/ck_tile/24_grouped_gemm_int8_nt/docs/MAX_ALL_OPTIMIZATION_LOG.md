@@ -548,3 +548,7 @@ BF16: changed新增严格达标[992, 1017, 1087, 1088]，changed失去达标[]�
 FP16: changed新增严格达标[1017, 1087]，changed失去达标[]；unchanged新增[]，unchanged失去[]。
 
 完整数据：max_all_v140_1191.csv、max_all_v140_bf16.csv、max_all_v140_fp16.csv、max_all_v140_remaining.csv、max_all_v140_summary.json。仍有缺口，目标未完成；v141输出交换候选继续tuning验证。
+
+### 外部优化建议核对
+
+已按用户提供的图和全文逐项对照当前代码及v115/v119/v129/v130/v137/v140证据。优先验证finite-factor BF16快路径、跨K64半段A预取和wave私有小LDS decode；P0私有LDS写回与N64 consumer有可行性但尚未验证。纠正route24线程/barrier归属、2KB搬运映射覆盖、双驻留尾波比例及寄存器预算等推导。完整核对见REVIEW_EXTERNAL_OPTIMIZATION_SUGGESTIONS.md；不把预测加速或覆盖数当已有结果。
