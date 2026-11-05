@@ -6,17 +6,17 @@ namespace ck_tile {
 // Cooperative load-next/compute-current with private input registers. Each
 // K64 stripe is consumed as two interleaved K32 sets;both operands use exactly
 // the same K permutation. No wave exchange is needed for the16B lane vector.
-template<class Base> struct GroupedInt8NtPackedSmallProblem : Base {};
+template<class Base,bool FullNK_=false> struct GroupedInt8NtPackedSmallProblem : Base {static constexpr bool FullNK=FullNK_;};
 
-template<class Base> struct GroupedInt8NtTilePolicy<GroupedInt8NtPackedSmallProblem<Base>>
+template<class Base,bool F> struct GroupedInt8NtTilePolicy<GroupedInt8NtPackedSmallProblem<Base,F>>
     : GroupedInt8NtTilePolicy<Base> {
     using Parent=GroupedInt8NtTilePolicy<Base>;
     static constexpr index_t OperandBytes=0,OperandAllocation=0,SmemBytes=Parent::CStripeBytes;
 };
 
-template<class Base,class Policy>
-struct GroupedInt8NtTilePipeline<GroupedInt8NtPackedSmallProblem<Base>,Policy> {
-    using P=GroupedInt8NtPackedSmallProblem<Base>;
+template<class Base,bool F,class Policy>
+struct GroupedInt8NtTilePipeline<GroupedInt8NtPackedSmallProblem<Base,F>,Policy> {
+    using P=GroupedInt8NtPackedSmallProblem<Base,F>;
     using Mmac=typename P::Mmac;using Copy=typename P::CopyVector;
     using AVec=typename Mmac::AVecType;using BVec=typename Mmac::BVecType;using Acc=typename Mmac::CVecType;
     struct GlobalTile {Copy a[P::MR][P::BK/64],b[P::NR][P::BK/64];};
@@ -29,14 +29,14 @@ struct GroupedInt8NtTilePipeline<GroupedInt8NtPackedSmallProblem<Base>,Policy> {
         static_for<0,P::MR,1>{}([&](auto i){static_for<0,P::BK/64,1>{}([&](auto j){
             constexpr index_t mi=decltype(i)::value,ki=decltype(j)::value;
             const index_t row=mb+wm*(P::BM/P::WM)+mi*16+lane%16,k=kb+ki*64+q*16;
-            if(row<arg.M && k+16<=arg.K)
+            if(row<arg.M && (P::FullNK || k+16<=arg.K))
                 v.a[mi][ki]=*reinterpret_cast<const Copy*>(static_cast<const int8_t*>(arg.as_ptr[0])+
                                  static_cast<long long>(row)*arg.stride_As[0]+k);
         });});
         static_for<0,P::NR,1>{}([&](auto i){static_for<0,P::BK/64,1>{}([&](auto j){
             constexpr index_t ni=decltype(i)::value,ki=decltype(j)::value;
             const index_t row=nb+wn*(P::BN/P::WN)+ni*16+lane%16,k=kb+ki*64+q*16;
-            if(row<arg.N && k+16<=arg.K){
+            if(P::FullNK || (row<arg.N && k+16<=arg.K)){
                 // Existing prepared layout:[K/64,N/16,4,16,16]. A wave reads
                 // one contiguous1024-byte N16/K64 block;raw activation stays MK.
                 const long long offset=((static_cast<long long>(kb/64+ki)*(arg.N/16)+row/16)*64+lane)*16;

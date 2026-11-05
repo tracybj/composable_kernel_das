@@ -22,7 +22,7 @@ inline void int8_tuning_override(bool uniform,bool empty,bool native,bool packed
     const char* legacy_value=std::getenv("CK_INT8_TUNE_LEGACY");
     if(!route_value && !legacy_value)return;
     if(!uniform || empty)throw std::invalid_argument("tuning requires nonempty uniform groups");
-    route=route_value?int8_tuning_uint(route_value,35):0;
+    route=route_value?int8_tuning_uint(route_value,55):0;
     if(legacy_value) {
         if(route)throw std::invalid_argument("legacy tuning requires route0");
         legacy=int8_tuning_uint(legacy_value,10000);
@@ -50,14 +50,18 @@ inline void int8_tuning_override(bool uniform,bool empty,bool native,bool packed
         if(aligned && (m%bm || n%bn || k%bk))
             throw std::invalid_argument("aligned tuning instance has a partial tile");
     }
-    if(route>21 && route<32)throw std::invalid_argument("unlisted tuning route");
-    if(route>=32){
+    if((route>21 && route<32) || (route>39 && route<48))throw std::invalid_argument("unlisted tuning route");
+    if(route>=32 && route<=39){
         if(!packed)throw std::invalid_argument("packed cooperative requires prepared weights");
-        return; // Masked M;no WASP full-M/native-domain requirement.
+        const unsigned geometry=(route-32)%4;
+        const int bk=geometry==0 || geometry==3?512:256;
+        const int bn=geometry==0?32:geometry==2?128:64;
+        if(route>=36 && (k%bk || n%bn))throw std::invalid_argument("FullNK cooperative requires complete N/K tiles");
+        return; // M remains masked;the original checked path supports K tails.
     }
     if(!route)return;
     if(!native)throw std::invalid_argument("WASP tuning requires the native domain");
-    const int bm=route==18 || route==19?256:route==6 || route==7 || route>=13?128:route==8 || route==9?64:route==10 || route==11?32:256;
+    const int bm=route==18 || route==19 || route>=48?256:route==6 || route==7 || route>=13?128:route==8 || route==9?64:route==10 || route==11?32:256;
     if(m%bm)throw std::invalid_argument("WASP tuning requires complete M tiles");
     if((route==1 || route==2) && !raw_original)
         throw std::invalid_argument("raw WASP weight stride is unsupported");

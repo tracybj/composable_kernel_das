@@ -270,3 +270,11 @@ v130已证明减少LDS能提高静态驻留但仍未越过小M目标；v126/127�
 同K64原始NT双寄存器与packed对照证明物理B供给的组合影响。例如M1/N4096/K6144/G8的原始B双寄存器约1.79 TOPS，而相同BN32/BK512 packed为2.309；但仍需优化边界/地址等指令，不能宣称所有直接寄存器路径都更好。明细见[max_all_v131_packed_formal.csv](max_all_v131_packed_formal.csv)、[门禁与资源](max_all_v131_validation_resources.json)。v130的78个默认scaled kernel与v127控制逐函数机器码全同，报告在results/max_all_v130_resources/default_scaled_control_equivalence.json，排除可选epilogue参数本身改变对照计算代码。
 
 neighbor_formal独立完成25个原始shape、250项完整输出检查，0数值错误。冻结v130库924dc278...，runner为2987cd9，明确区分编译库与runner来源。M2048/N4096/K1536/G4的route6为399.02 TOPS、R1.0382；M8192/N1536/K2048/G4的route12为469.70、R1.0032，后一条仍接近波动，需要正式全量保持审计。相邻shape确认并非一条规则都选同一实例，例如M2048/N4096/K1536/G8更适合route12，而G16默认已为route12。见[max_all_v131_neighbor_formal.csv](max_all_v131_neighbor_formal.csv)。当前正式全量仍为v128，未用这些小样本替换正式记录。
+
+## v132：FullNK专用实例与WASP CTA访问顺序
+
+小M：在32–35的相同Problem几何增加36–39 FullNK实例。只有host已证明N/BK完整（N%BN=0、K%BK=0）且prepared-weight合法时移除输入N/K判断；M仍逐row masked。检查版保留K尾部支持，FullNK遇部分K在launch前拒绝，不能靠越界读取换性能。新增CPU tuning_domain_test.cpp覆盖整块接受、尾K拒绝、masked M允许、非pack/空/ragged拒绝等19个边界。
+
+大M：不改MMAC/搬运/epilogue，只将现有packed BM256/BN384及BN256的M tile cluster从4分别改为1/2/8/16（48–55）。这里cluster是CTA访问顺序，不是专家组G；原G完全保留。检验相同访存字节下的A/B复用与L2访问顺序，而非继续单独降低LDS。M cluster较大时的小M padding CTA开销计入时间，超出M的CTA在同步前整块退出。先比较代表未达标prefill，不能以部分shape的最佳值宣称全量目标达成。
+
+所有候选仅tuning构建启用，默认selector及v128冻结库不改。待CPU/GPU门禁、元数据和同轮时间验证，暂无收益结论。

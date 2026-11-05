@@ -14,6 +14,7 @@ template<class P,bool PackedOutput=false>int run(unsigned output,const void* arg
     else ck_tile::launch_kernel(config,ck_tile::make_kernel<P::Threads,1>(ck_tile::GroupedInt8NtScaledWaspKernel<P,false,std::conditional_t<PackedOutput,ck_tile::GroupedInt8NtPackedOutputEpilogue<P,false>,ck_tile::GroupedInt8NtScaledWaspEpilogue<P,false>>>{},grid,dim3(P::Threads),0,a,s));
     return hipGetLastError()==hipSuccess?0:-100;
 }
+template<int N,int Batch,int Group>using G256=ck_tile::GroupedInt8NtWaspCoreProblem<256,false,N/32,Group,Batch,true,true,0,false,true,0,N/32>;
 template<int N,int Batch,int Group>using P=ck_tile::GroupedInt8NtWaspCoreProblem<128,false,N/32,Group,Batch,true,true,0,false,true,0,N/32>;
 }
 extern "C" int ck_tile_int8_experimental_wasp_launch_private(unsigned output,unsigned route,const void* args,const void* scales,int g,int m,int n,hipStream_t stream){
@@ -27,6 +28,14 @@ extern "C" int ck_tile_int8_experimental_wasp_launch_private(unsigned output,uns
     case 19:return run<ck_tile::int8_nt_instances::PackedM256N256,true>(output,args,scales,g,m,n,stream);
     case 20:return run<ck_tile::int8_nt_instances::PackedM128N256,true>(output,args,scales,g,m,n,stream);
     case 21:return run<ck_tile::int8_nt_instances::PackedM128N128,true>(output,args,scales,g,m,n,stream);
+    case 48:return run<G256<384,2,1>>(output,args,scales,g,m,n,stream);
+    case 49:return run<G256<384,2,2>>(output,args,scales,g,m,n,stream);
+    case 50:return run<G256<384,2,8>>(output,args,scales,g,m,n,stream);
+    case 51:return run<G256<384,2,16>>(output,args,scales,g,m,n,stream);
+    case 52:return run<G256<256,4,1>>(output,args,scales,g,m,n,stream);
+    case 53:return run<G256<256,4,2>>(output,args,scales,g,m,n,stream);
+    case 54:return run<G256<256,4,8>>(output,args,scales,g,m,n,stream);
+    case 55:return run<G256<256,4,16>>(output,args,scales,g,m,n,stream);
     default:return -5;
     }
 }
