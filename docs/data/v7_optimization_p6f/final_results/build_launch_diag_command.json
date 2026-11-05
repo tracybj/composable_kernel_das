@@ -1,0 +1,16 @@
+{
+  "at": "2026-11-05T08:55:02.003053+00:00",
+  "command": [
+    "cmake",
+    "--build",
+    "build",
+    "--target",
+    "tile_example_grouped_gemm_device_args_benchmark",
+    "tile_example_grouped_gemm_selector_test",
+    "tile_example_grouped_gemm_device_args_query_test",
+    "tile_example_grouped_gemm_device_args_smoke",
+    "-j4"
+  ],
+  "tag": "launch_diag",
+  "head": "6bf6cd954aaf30991dad6d3752a4a4cd63dca0ff"
+}

@@ -1,0 +1,70 @@
+{
+  "at": "2026-11-05T08:07:36.722135+00:00",
+  "epoch": 5,
+  "reason": "kernel_service_transition",
+  "record": {
+    "key": "e5_k32_resource_acc_id517_candidate",
+    "shape": {
+      "id": 517,
+      "M": 8,
+      "N": 5120,
+      "K": 2304,
+      "G": 12
+    },
+    "id": 517,
+    "expected": 5008,
+    "command": [
+      "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+      "--dtype=bf16",
+      "--layout=NN",
+      "--m=8",
+      "--n=5120",
+      "--k=2304",
+      "--groups=12",
+      "--backend=both",
+      "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+      "--include-args-build=0",
+      "--time=0",
+      "--validate=1",
+      "--warmup=10",
+      "--samples=30",
+      "--correctness-repeats=1"
+    ],
+    "env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "2"
+    },
+    "kind": "accuracy",
+    "task": 3,
+    "arm": "candidate",
+    "variant": "k32_resource",
+    "logical_key": "k32_resource_acc_id517_candidate",
+    "campaign_binary_sha256": "3411731442660e51e3681e5341bbf852409b47b8e80fcffe15a92e52e45dbaac",
+    "at": "2026-11-05T08:07:33.696127+00:00",
+    "epoch": 5,
+    "physical_gpu": 4,
+    "path": "/workspace/v7_coverage/p6f/runs/e5_k32_resource_acc_id517_candidate",
+    "binary_sha256": "3411731442660e51e3681e5341bbf852409b47b8e80fcffe15a92e52e45dbaac",
+    "script_sha256": "ef37f0f6632580769a290e69793e71fbcbd95aad8be743b02962741576f16842",
+    "gate_at": "2026-11-05T08:07:33.691981+00:00",
+    "environment": {
+      "HIP_VISIBLE_DEVICES": "4",
+      "CUDA_VISIBLE_DEVICES": "4",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "2"
+    },
+    "source_scripts_sha256": {
+      "runtime.py": "ef37f0f6632580769a290e69793e71fbcbd95aad8be743b02962741576f16842",
+      "health.py": "f3e05cf36f387d86e799b9938b68b0ce1503e7523a665b46ad44e01897b68ea7",
+      "campaign.py": "e14040eef6b210312b8c6ed7d813b293025acef79d3091969c88abfa1f2ebc51",
+      "native_replay.py": "132eeb1587f6a0844a124dd5e0bc166749eafe9ce2343bac635a19b2789c4d13"
+    },
+    "pid": 1683112,
+    "rc": 0,
+    "seconds": 2.8715653773397207,
+    "finished_at": "2026-11-05T08:07:36.633621+00:00",
+    "ok": false,
+    "kernel_service_events": [
+      "[4323905.920812] hycu: hymgr (1706696) unregister hyuds space."
+    ]
+  }
+}

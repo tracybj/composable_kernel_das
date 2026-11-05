@@ -229,6 +229,7 @@ struct Options
     int group_count         = 4;
     int warmup              = 10;
     int samples             = 30;
+    int launches_per_sample = 1; // Explicit diagnostic; formal default stays one.
     int correctness_repeats = 3;
     std::uint32_t num_cu    = 0;
     std::string dtype       = "fp16";
@@ -257,6 +258,7 @@ struct Options
        << "  --blas-root=/path/to/hipblaslt-install\n"
        << "  --blas-lib=/path/to/libhipblaslt.so|libhipblas.so\n"
        << "  --time=1 --warmup=10 --samples=30 --correctness-repeats=3\n"
+       << "  --launches-per-sample=1 (1..256; diagnostic; timings are per launch)\n"
        << "  --num-cu=0 --validate=0|1 --include-args-build=0|1\n"
        << "  --allow-empty-groups=0|1 --blas-streams=1|4\n"
        << "\n"
@@ -341,6 +343,8 @@ Options parse_options(int argc, char* argv[])
             options.samples = parse_positive_or_zero(name, value);
         else if(name == "time")
             options.time = parse_positive_or_zero(name, value) != 0;
+        else if(name == "launches-per-sample")
+            options.launches_per_sample = parse_positive_or_zero(name, value);
         else if(name == "correctness-repeats")
             options.correctness_repeats = parse_positive_or_zero(name, value);
         else if(name == "num-cu")
@@ -407,6 +411,8 @@ Options parse_options(int argc, char* argv[])
         throw std::runtime_error("M/N/K/group count 必须为正数");
     if((options.time && options.samples <= 0) || options.correctness_repeats <= 0)
         throw std::runtime_error("计时开启时 samples、所有模式下 correctness-repeats 必须为正数");
+    if(options.launches_per_sample <= 0 || options.launches_per_sample > 256)
+        throw std::runtime_error("launches-per-sample 必须在 1..256 范围内");
     if(options.dtype != "fp16" && options.dtype != "bf16")
         throw std::runtime_error("dtype 只支持 fp16 或 bf16");
     if(options.layout != "NT" && options.layout != "NN" && options.layout != "TN")
@@ -1309,15 +1315,19 @@ public:
             static_cast<void>(hipEventDestroy(stop_));
     }
 
-    float measure(hipStream_t stream, const std::function<void()>& launch)
+    float measure(hipStream_t stream, const std::function<void()>& launch, int launches)
     {
         hip_check(hipEventRecord(start_, stream), "hipEventRecord(start)");
-        launch();
+        if(launches == 1)
+            launch();
+        else
+            for(int i = 0; i < launches; ++i)
+                launch();
         hip_check(hipEventRecord(stop_, stream), "hipEventRecord(stop)");
         hip_check(hipEventSynchronize(stop_), "hipEventSynchronize(stop)");
         float milliseconds = 0;
         hip_check(hipEventElapsedTime(&milliseconds, start_, stop_), "hipEventElapsedTime");
-        return milliseconds;
+        return milliseconds / static_cast<float>(launches);
     }
 };
 
@@ -1506,6 +1516,7 @@ int run(const Options& options)
                << " variable_capacity=" << plan.capacity
                << " timing=" << (options.time ? "on" : "off")
                << " warmup=" << options.warmup << " samples=" << options.samples
+               << " launches_per_sample=" << options.launches_per_sample
                << " include_args_build=" << options.include_args_build
                << " num_cu=" << options.num_cu
                << " blas_streams=" << options.blas_streams << std::endl;
@@ -1628,11 +1639,11 @@ int run(const Options& options)
     {
         const bool ck_first = sample % 2 == 0;
         if(run_ck_backend && (!run_blas_backend || ck_first))
-            ck_samples.push_back(timer.measure(stream, launch_ck));
+            ck_samples.push_back(timer.measure(stream, launch_ck, options.launches_per_sample));
         if(run_blas_backend)
-            blas_samples.push_back(timer.measure(stream, launch_blas));
+            blas_samples.push_back(timer.measure(stream, launch_blas, options.launches_per_sample));
         if(run_ck_backend && run_blas_backend && !ck_first)
-            ck_samples.push_back(timer.measure(stream, launch_ck));
+            ck_samples.push_back(timer.measure(stream, launch_ck, options.launches_per_sample));
     }
 
     TimingStats ck_timing;

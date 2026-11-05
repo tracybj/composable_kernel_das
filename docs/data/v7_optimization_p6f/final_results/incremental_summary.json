@@ -1,0 +1,133 @@
+{
+  "at": "2026-11-05T09:13:45.840666+00:00",
+  "baseline": {
+    "prefill": {
+      "total": 312,
+      "bins": [
+        285,
+        23,
+        4,
+        0,
+        0,
+        0
+      ],
+      "fresh": 0
+    },
+    "decode": {
+      "total": 881,
+      "bins": [
+        594,
+        257,
+        14,
+        7,
+        8,
+        1
+      ],
+      "fresh": 0
+    },
+    "all": {
+      "total": 1193,
+      "bins": [
+        879,
+        280,
+        18,
+        7,
+        8,
+        1
+      ],
+      "fresh": 0
+    }
+  },
+  "bins": [
+    ">=.99",
+    "[.8,.99)",
+    "[.5,.8)",
+    "[.3,.5)",
+    "[.2,.3)",
+    "<.2"
+  ],
+  "views": {
+    "policy_overlay_incremental_1193": {
+      "prefill": {
+        "total": 312,
+        "bins": [
+          293,
+          19,
+          0,
+          0,
+          0,
+          0
+        ],
+        "fresh": 8
+      },
+      "decode": {
+        "total": 881,
+        "bins": [
+          610,
+          257,
+          14,
+          0,
+          0,
+          0
+        ],
+        "fresh": 16
+      },
+      "all": {
+        "total": 1193,
+        "bins": [
+          903,
+          276,
+          14,
+          0,
+          0,
+          0
+        ],
+        "fresh": 24
+      }
+    },
+    "historical_envelope_incremental_1193": {
+      "prefill": {
+        "total": 312,
+        "bins": [
+          293,
+          19,
+          0,
+          0,
+          0,
+          0
+        ],
+        "fresh": 14
+      },
+      "decode": {
+        "total": 881,
+        "bins": [
+          650,
+          219,
+          12,
+          0,
+          0,
+          0
+        ],
+        "fresh": 137
+      },
+      "all": {
+        "total": 1193,
+        "bins": [
+          943,
+          238,
+          12,
+          0,
+          0,
+          0
+        ],
+        "fresh": 151
+      }
+    }
+  },
+  "scope": "Both1193 tables retain historical source labels. Only affected domains are fresh; never claim fresh full-GPU replay. Frozen Native remains old1178GPU0/repeat20,new15GPU4/repeat20.",
+  "adopted_rules": [
+    "N-tail:common nonragged/nonempty gfx936 BF16NN,M<=128,N>=128,N%8=0,N%128!=0,K64..4096%16,G<=1024 plus byte/tile bounds; choose tail256",
+    "Cache:common nonragged/nonempty gfx936 BF16NN,1024<M<=2048,N>4096,N%256=0,K3072..4096%16,G<=1024 plus byte/tile bounds; NoSLC/M01=5"
+  ],
+  "task3_policy": "New K16/K32 flows and complete159-case existing-K32 resource domain do not justify broad adoption; all negative/noise results retained; numerical envelope entries are separately reproducible, not a new global policy"
+}

@@ -1,0 +1,74 @@
+{
+  "at": "2026-11-05T08:37:40.016941+00:00",
+  "epoch": 6,
+  "reason": "kernel_service_transition",
+  "record": {
+    "key": "e6_rec6_k32_resource_r2_id810_control",
+    "shape": {
+      "id": 810,
+      "M": 16,
+      "N": 2048,
+      "K": 4096,
+      "G": 16
+    },
+    "id": 810,
+    "expected": 5003,
+    "command": [
+      "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+      "--dtype=bf16",
+      "--layout=NN",
+      "--m=16",
+      "--n=2048",
+      "--k=4096",
+      "--groups=16",
+      "--backend=ck",
+      "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+      "--include-args-build=0",
+      "--time=1",
+      "--validate=1",
+      "--warmup=10",
+      "--samples=30",
+      "--correctness-repeats=1"
+    ],
+    "env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128"
+    },
+    "kind": "perf",
+    "task": 3,
+    "arm": "control",
+    "round": 2,
+    "pair": "k32_resource_r2_id810",
+    "variant": "k32_resource",
+    "baseline_scheme": "smallM_64x128x16",
+    "logical_key": "k32_resource_r2_id810_control",
+    "campaign_binary_sha256": "3411731442660e51e3681e5341bbf852409b47b8e80fcffe15a92e52e45dbaac",
+    "at": "2026-11-05T08:37:38.954949+00:00",
+    "epoch": 6,
+    "physical_gpu": 4,
+    "path": "/workspace/v7_coverage/p6f/runs/e6_rec6_k32_resource_r2_id810_control",
+    "binary_sha256": "3411731442660e51e3681e5341bbf852409b47b8e80fcffe15a92e52e45dbaac",
+    "script_sha256": "ef37f0f6632580769a290e69793e71fbcbd95aad8be743b02962741576f16842",
+    "gate_at": "2026-11-05T08:37:38.954122+00:00",
+    "environment": {
+      "HIP_VISIBLE_DEVICES": "4",
+      "CUDA_VISIBLE_DEVICES": "4",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128"
+    },
+    "source_scripts_sha256": {
+      "runtime.py": "ef37f0f6632580769a290e69793e71fbcbd95aad8be743b02962741576f16842",
+      "health.py": "f3e05cf36f387d86e799b9938b68b0ce1503e7523a665b46ad44e01897b68ea7",
+      "campaign.py": "e14040eef6b210312b8c6ed7d813b293025acef79d3091969c88abfa1f2ebc51",
+      "native_replay.py": "132eeb1587f6a0844a124dd5e0bc166749eafe9ce2343bac635a19b2789c4d13"
+    },
+    "pid": 1722152,
+    "rc": 0,
+    "seconds": 0.8765335772186518,
+    "finished_at": "2026-11-05T08:37:39.904404+00:00",
+    "ok": false,
+    "kernel_service_events": [
+      "[4325709.165256] hycu: hymgr (3282130) unregister hyuds space."
+    ]
+  }
+}

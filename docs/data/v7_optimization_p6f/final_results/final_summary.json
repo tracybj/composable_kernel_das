@@ -1,0 +1,764 @@
+{
+  "at": "2026-11-05T09:13:47.990427+00:00",
+  "wall_seconds_at_report": 21554.990406036377,
+  "wall_hours_at_report": 5.987497335010104,
+  "t0_utc": "2026-11-05T03:14:33+00:00",
+  "deadline_utc": "2026-11-05T19:14:33+00:00",
+  "tasks": {
+    "tail": {
+      "implemented": true,
+      "full_output_verified": true,
+      "performance_verified": true,
+      "recommendation": "Adopt default-off tail256 attribute route",
+      "shapes": 16,
+      "median_paired_delta_pct": -78.43388220468918,
+      "equal_case_total_delta_pct": -79.65515239948662,
+      "gains_gt2pct": 16,
+      "regressions_gt2pct": 0,
+      "stable_gains": 16,
+      "stable_regressions": 0,
+      "quality_counts": {
+        "stable_direction": 16
+      },
+      "R_range": [
+        1.0980432334827357,
+        1.6888020876655432
+      ]
+    },
+    "cache": {
+      "implemented": true,
+      "full_output_verified": true,
+      "performance_verified": true,
+      "recommendation": "Adopt bounded default-off NoSLC/M01=5 attribute route",
+      "shapes": 12,
+      "median_paired_delta_pct": -13.600280039882879,
+      "equal_case_total_delta_pct": -28.513638627437075,
+      "gains_gt2pct": 8,
+      "regressions_gt2pct": 0,
+      "stable_gains": 8,
+      "stable_regressions": 0,
+      "quality_counts": {
+        "stable_direction": 8,
+        "uncertain_within2pct": 4
+      },
+      "R_range": [
+        1.0299387130970818,
+        1.1995500138341535
+      ]
+    },
+    "decode": {
+      "implemented": true,
+      "full_output_verified": true,
+      "performance_verified": true,
+      "recommendation": "No broad adoption of new steady/tail refactor or159-case existingK32 route",
+      "k16": {
+        "shapes": 24,
+        "median_paired_delta_pct": 1.71900532345306,
+        "equal_case_total_delta_pct": 7.321014185918728,
+        "gains_gt2pct": 0,
+        "regressions_gt2pct": 12,
+        "stable_gains": 0,
+        "stable_regressions": 8,
+        "quality_counts": {
+          "within_observed_variation_uncertain": 4,
+          "uncertain_within2pct": 12,
+          "stable_direction": 8
+        },
+        "R_range": [
+          0.5048659032041236,
+          1.0395304303297281
+        ]
+      },
+      "k32": {
+        "shapes": 24,
+        "median_paired_delta_pct": 5.105450021947755,
+        "equal_case_total_delta_pct": 9.415002563062579,
+        "gains_gt2pct": 2,
+        "regressions_gt2pct": 17,
+        "stable_gains": 2,
+        "stable_regressions": 13,
+        "quality_counts": {
+          "uncertain_within2pct": 5,
+          "stable_direction": 15,
+          "within_observed_variation_uncertain": 4
+        },
+        "R_range": [
+          0.5121980745961876,
+          1.0328604495664682
+        ]
+      },
+      "existing_k32_resource": {
+        "shapes": 159,
+        "median_paired_delta_pct": -1.111405674766619,
+        "equal_case_total_delta_pct": -2.324791940298776,
+        "gains_gt2pct": 67,
+        "regressions_gt2pct": 58,
+        "stable_gains": 63,
+        "stable_regressions": 57,
+        "quality_counts": {
+          "uncertain_within2pct": 34,
+          "stable_direction": 120,
+          "within_observed_variation_uncertain": 5
+        },
+        "R_range": [
+          0.7826167925937879,
+          6.7741086164167905
+        ]
+      }
+    }
+  },
+  "audit": {
+    "at": "2026-11-05T09:09:04.597687+00:00",
+    "jobs_attempted": 2529,
+    "jobs_accepted": 2510,
+    "invalid_keys": [
+      "e1_cache_profile_slc_m5",
+      "e2_cache_profile_rec2_noslc_m8",
+      "e3_steady_acc_k16_stages64",
+      "e4_rec4_impl_native_r1_id1187",
+      "e5_rec5_impl_profile_small_k16_id76",
+      "e5_k32_resource_acc_id517_candidate",
+      "e6_rec6_k32_resource_r2_id810_control"
+    ],
+    "protocol_excluded_keys": [
+      "e5_rec5_k16_steady_r1_id688_candidate",
+      "e5_rec5_k16_steady_r1_id688_control",
+      "e5_rec5_k16_steady_r2_id688_candidate",
+      "e5_rec5_k16_steady_r2_id688_control",
+      "e5_rec5_k16_steady_r3_id688_candidate",
+      "e5_rec5_k16_steady_r3_id688_control",
+      "e5_rec5_k32_steady_r1_id688_candidate",
+      "e5_rec5_k32_steady_r1_id688_control",
+      "e5_rec5_k32_steady_r2_id688_candidate",
+      "e5_rec5_k32_steady_r2_id688_control",
+      "e5_rec5_k32_steady_r3_id688_candidate",
+      "e5_rec5_k32_steady_r3_id688_control"
+    ],
+    "performance_jobs": 1730,
+    "complete_pair_generations": 288,
+    "accuracy_jobs": 659,
+    "whole_output_comparisons": 1383,
+    "whole_output_elements": 64038323112,
+    "accuracy_max_abs_values": [
+      "0"
+    ],
+    "physical_GPU": 4,
+    "same_epoch_pairs": true,
+    "adjacent_arms": true,
+    "shape_hashes_unchanged": true,
+    "protected_diff_unchanged_unstaged": true,
+    "recovery_total": {
+      "seconds": 2107.758676290512,
+      "attempts": 7
+    },
+    "no_full_gpu_suite": true,
+    "note": "Audit of completed accepted records only; live/unfinished plans remain pending, not completion of P6f"
+  },
+  "latest_contrasts": 288,
+  "all_regressions": 87,
+  "unique_formal_shape_ids": [
+    76,
+    139,
+    140,
+    141,
+    142,
+    143,
+    144,
+    145,
+    146,
+    147,
+    148,
+    149,
+    150,
+    151,
+    152,
+    153,
+    154,
+    322,
+    323,
+    324,
+    325,
+    326,
+    327,
+    328,
+    329,
+    330,
+    331,
+    332,
+    333,
+    334,
+    335,
+    358,
+    371,
+    372,
+    373,
+    374,
+    375,
+    376,
+    377,
+    441,
+    442,
+    443,
+    444,
+    445,
+    446,
+    447,
+    514,
+    515,
+    516,
+    517,
+    518,
+    583,
+    584,
+    585,
+    587,
+    606,
+    607,
+    608,
+    609,
+    610,
+    611,
+    612,
+    615,
+    616,
+    617,
+    618,
+    619,
+    620,
+    621,
+    622,
+    623,
+    624,
+    625,
+    626,
+    627,
+    628,
+    629,
+    633,
+    654,
+    655,
+    656,
+    657,
+    658,
+    659,
+    660,
+    663,
+    664,
+    665,
+    666,
+    667,
+    668,
+    669,
+    672,
+    673,
+    674,
+    675,
+    676,
+    677,
+    678,
+    681,
+    688,
+    723,
+    724,
+    725,
+    726,
+    727,
+    728,
+    729,
+    731,
+    732,
+    733,
+    734,
+    735,
+    736,
+    737,
+    772,
+    781,
+    782,
+    783,
+    784,
+    799,
+    800,
+    801,
+    802,
+    803,
+    804,
+    805,
+    806,
+    807,
+    808,
+    809,
+    810,
+    811,
+    812,
+    841,
+    842,
+    843,
+    844,
+    845,
+    846,
+    847,
+    850,
+    851,
+    852,
+    853,
+    854,
+    855,
+    856,
+    859,
+    860,
+    861,
+    862,
+    863,
+    864,
+    865,
+    868,
+    869,
+    870,
+    871,
+    872,
+    873,
+    874,
+    877,
+    878,
+    879,
+    880,
+    881,
+    882,
+    883,
+    886,
+    887,
+    888,
+    889,
+    890,
+    891,
+    892,
+    942,
+    943,
+    944,
+    945,
+    946,
+    947,
+    948,
+    949,
+    950,
+    951,
+    952,
+    953,
+    954,
+    955,
+    957,
+    960,
+    962,
+    964,
+    1179,
+    1180,
+    1181,
+    1182,
+    1183,
+    1184,
+    1185,
+    1186,
+    1187,
+    1188,
+    1189,
+    1190,
+    1191,
+    1192,
+    1193
+  ],
+  "new15_full_output_checked": true,
+  "launched_diagnostic_rows": 6,
+  "formal_batch_diagnostics_excluded": true,
+  "views": {
+    "at": "2026-11-05T09:13:45.840666+00:00",
+    "baseline": {
+      "prefill": {
+        "total": 312,
+        "bins": [
+          285,
+          23,
+          4,
+          0,
+          0,
+          0
+        ],
+        "fresh": 0
+      },
+      "decode": {
+        "total": 881,
+        "bins": [
+          594,
+          257,
+          14,
+          7,
+          8,
+          1
+        ],
+        "fresh": 0
+      },
+      "all": {
+        "total": 1193,
+        "bins": [
+          879,
+          280,
+          18,
+          7,
+          8,
+          1
+        ],
+        "fresh": 0
+      }
+    },
+    "bins": [
+      ">=.99",
+      "[.8,.99)",
+      "[.5,.8)",
+      "[.3,.5)",
+      "[.2,.3)",
+      "<.2"
+    ],
+    "views": {
+      "policy_overlay_incremental_1193": {
+        "prefill": {
+          "total": 312,
+          "bins": [
+            293,
+            19,
+            0,
+            0,
+            0,
+            0
+          ],
+          "fresh": 8
+        },
+        "decode": {
+          "total": 881,
+          "bins": [
+            610,
+            257,
+            14,
+            0,
+            0,
+            0
+          ],
+          "fresh": 16
+        },
+        "all": {
+          "total": 1193,
+          "bins": [
+            903,
+            276,
+            14,
+            0,
+            0,
+            0
+          ],
+          "fresh": 24
+        }
+      },
+      "historical_envelope_incremental_1193": {
+        "prefill": {
+          "total": 312,
+          "bins": [
+            293,
+            19,
+            0,
+            0,
+            0,
+            0
+          ],
+          "fresh": 14
+        },
+        "decode": {
+          "total": 881,
+          "bins": [
+            650,
+            219,
+            12,
+            0,
+            0,
+            0
+          ],
+          "fresh": 137
+        },
+        "all": {
+          "total": 1193,
+          "bins": [
+            943,
+            238,
+            12,
+            0,
+            0,
+            0
+          ],
+          "fresh": 151
+        }
+      }
+    },
+    "scope": "Both1193 tables retain historical source labels. Only affected domains are fresh; never claim fresh full-GPU replay. Frozen Native remains old1178GPU0/repeat20,new15GPU4/repeat20.",
+    "adopted_rules": [
+      "N-tail:common nonragged/nonempty gfx936 BF16NN,M<=128,N>=128,N%8=0,N%128!=0,K64..4096%16,G<=1024 plus byte/tile bounds; choose tail256",
+      "Cache:common nonragged/nonempty gfx936 BF16NN,1024<M<=2048,N>4096,N%256=0,K3072..4096%16,G<=1024 plus byte/tile bounds; NoSLC/M01=5"
+    ],
+    "task3_policy": "New K16/K32 flows and complete159-case existing-K32 resource domain do not justify broad adoption; all negative/noise results retained; numerical envelope entries are separately reproducible, not a new global policy"
+  },
+  "recovery": {
+    "seconds": 2107.758676290512,
+    "attempts": 7
+  },
+  "failed_records": [
+    {
+      "key": "e1_cache_profile_slc_m5",
+      "rc": 0,
+      "kernel_service_events": [
+        "[4313799.015634] hycu: hymgr (1180503) unregister hyuds space.",
+        "[4313800.511562] hycu: hymgr (3125228) register hyuds space.",
+        "[4313808.294924] hycu: hymgr (3125228) unregister hyuds space.",
+        "[4313808.765870] hycu: hymgr (3127694) register hyuds space.",
+        "[4313816.893974] hycu: hymgr (3130360) register hyuds space.",
+        "[4313825.034697] hycu: hymgr (3133133) register hyuds space.",
+        "[4313833.457498] hycu: hymgr (3135966) register hyuds space.",
+        "[4313841.733452] hycu: hymgr (3139397) register hyuds space."
+      ]
+    },
+    {
+      "key": "e2_cache_profile_rec2_noslc_m8",
+      "rc": 0,
+      "kernel_service_events": [
+        "[4315603.663325] hycu: hymgr (3292912) unregister hyuds space.",
+        "[4315606.696021] hycu: hymgr (3873650) register hyuds space.",
+        "[4315614.834562] hycu: hymgr (3876368) register hyuds space."
+      ]
+    },
+    {
+      "key": "e3_steady_acc_k16_stages64",
+      "rc": 0,
+      "kernel_service_events": [
+        "[4319461.182911] hycu: hymgr (3893912) unregister hyuds space."
+      ]
+    },
+    {
+      "key": "e4_rec4_impl_native_r1_id1187",
+      "rc": 0,
+      "kernel_service_events": [
+        "[4320160.620493] hycu: hymgr (1420320) unregister hyuds space.",
+        "[4320163.404591] hycu: hymgr (1692466) register hyuds space.",
+        "[4320171.557131] hycu: hymgr (1695249) register hyuds space."
+      ]
+    },
+    {
+      "key": "e5_rec5_impl_profile_small_k16_id76",
+      "rc": 0,
+      "kernel_service_events": []
+    },
+    {
+      "key": "e5_k32_resource_acc_id517_candidate",
+      "rc": 0,
+      "kernel_service_events": [
+        "[4323905.920812] hycu: hymgr (1706696) unregister hyuds space."
+      ]
+    },
+    {
+      "key": "e6_rec6_k32_resource_r2_id810_control",
+      "rc": 0,
+      "kernel_service_events": [
+        "[4325709.165256] hycu: hymgr (3282130) unregister hyuds space."
+      ]
+    }
+  ],
+  "protocol_exclusions": {
+    "at": "2026-11-05T09:03:10.946139+00:00",
+    "reason": "Final CPU lineage audit found one fallback-route gate omission, not environment/math failure",
+    "keys": {
+      "e5_rec5_k16_steady_r1_id688_control": "Whole-output gate omitted for selected fallback5000 on this exact shape/binary; exclude BOTH arms of complete three-round comparison; replace after full-output gates on final binary",
+      "e5_rec5_k16_steady_r2_id688_control": "Whole-output gate omitted for selected fallback5000 on this exact shape/binary; exclude BOTH arms of complete three-round comparison; replace after full-output gates on final binary",
+      "e5_rec5_k16_steady_r3_id688_control": "Whole-output gate omitted for selected fallback5000 on this exact shape/binary; exclude BOTH arms of complete three-round comparison; replace after full-output gates on final binary",
+      "e5_rec5_k16_steady_r1_id688_candidate": "Whole-output gate omitted for selected fallback5000 on this exact shape/binary; exclude BOTH arms of complete three-round comparison; replace after full-output gates on final binary",
+      "e5_rec5_k16_steady_r2_id688_candidate": "Whole-output gate omitted for selected fallback5000 on this exact shape/binary; exclude BOTH arms of complete three-round comparison; replace after full-output gates on final binary",
+      "e5_rec5_k16_steady_r3_id688_candidate": "Whole-output gate omitted for selected fallback5000 on this exact shape/binary; exclude BOTH arms of complete three-round comparison; replace after full-output gates on final binary",
+      "e5_rec5_k32_steady_r1_id688_control": "Whole-output gate omitted for selected fallback5000 on this exact shape/binary; exclude BOTH arms of complete three-round comparison; replace after full-output gates on final binary",
+      "e5_rec5_k32_steady_r2_id688_control": "Whole-output gate omitted for selected fallback5000 on this exact shape/binary; exclude BOTH arms of complete three-round comparison; replace after full-output gates on final binary",
+      "e5_rec5_k32_steady_r3_id688_control": "Whole-output gate omitted for selected fallback5000 on this exact shape/binary; exclude BOTH arms of complete three-round comparison; replace after full-output gates on final binary",
+      "e5_rec5_k32_steady_r1_id688_candidate": "Whole-output gate omitted for selected fallback5000 on this exact shape/binary; exclude BOTH arms of complete three-round comparison; replace after full-output gates on final binary",
+      "e5_rec5_k32_steady_r2_id688_candidate": "Whole-output gate omitted for selected fallback5000 on this exact shape/binary; exclude BOTH arms of complete three-round comparison; replace after full-output gates on final binary",
+      "e5_rec5_k32_steady_r3_id688_candidate": "Whole-output gate omitted for selected fallback5000 on this exact shape/binary; exclude BOTH arms of complete three-round comparison; replace after full-output gates on final binary"
+    },
+    "replacement_plan": "fallback688_repair_frozen.json",
+    "original_contrasts": [
+      {
+        "id": 688,
+        "M": 128,
+        "N": 1536,
+        "K": 2048,
+        "G": 4,
+        "task": 3,
+        "variant": "k16_steady",
+        "study": "k16_steady_id688",
+        "control_instance": 5009,
+        "candidate_instance": 5000,
+        "control_scheme": "smallM_128x128x16_square",
+        "control_env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "3"
+        },
+        "candidate_env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "6"
+        },
+        "before_ms": 0.044801001,
+        "after_ms": 0.066239998,
+        "before_round_ms": [
+          0.04544,
+          0.044720002,
+          0.044801001
+        ],
+        "after_round_ms": [
+          0.066241004,
+          0.066239998,
+          0.066239998
+        ],
+        "paired_delta_pct": 47.85383478373617,
+        "round_delta_pct": [
+          45.77685739436621,
+          48.12163469939019,
+          47.85383478373617
+        ],
+        "before_cv": [
+          0.02976316,
+          0.02564652,
+          0.055388713
+        ],
+        "after_cv": [
+          0.012852102,
+          0.01310879,
+          0.013336974
+        ],
+        "observed_variation_band_pct": 5.5388713,
+        "quality": "stable_direction",
+        "frozen_BLAS_ms": 0.033927999436855316,
+        "frozen_BLAS_gpu": 0,
+        "frozen_BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+        "frozen_BLAS_source": "/workspace/bf16NN-groupgemm.csv",
+        "R_before_frozen": 0.757304494978925,
+        "R_after_frozen": 0.5121980745961876,
+        "CK_gpu": 4,
+        "epoch": 5,
+        "binary_sha256": "3411731442660e51e3681e5341bbf852409b47b8e80fcffe15a92e52e45dbaac",
+        "last_measured_at": "2026-11-05T07:28:56.491299+00:00",
+        "source_keys": [
+          "e5_rec5_k16_steady_r1_id688_control",
+          "e5_rec5_k16_steady_r2_id688_control",
+          "e5_rec5_k16_steady_r3_id688_control",
+          "e5_rec5_k16_steady_r1_id688_candidate",
+          "e5_rec5_k16_steady_r2_id688_candidate",
+          "e5_rec5_k16_steady_r3_id688_candidate"
+        ],
+        "source_logs": [
+          "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r1_id688_control/run.log",
+          "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r2_id688_control/run.log",
+          "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r3_id688_control/run.log",
+          "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r1_id688_candidate/run.log",
+          "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r2_id688_candidate/run.log",
+          "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r3_id688_candidate/run.log"
+        ],
+        "full_output_accuracy_keys": [],
+        "fallback": true,
+        "selection_contract": "See frozen plan and source policy; instance chosen by default selector; expected ID is assertion only"
+      },
+      {
+        "id": 688,
+        "M": 128,
+        "N": 1536,
+        "K": 2048,
+        "G": 4,
+        "task": 3,
+        "variant": "k32_steady",
+        "study": "k32_steady_id688",
+        "control_instance": 5009,
+        "candidate_instance": 5000,
+        "control_scheme": "smallM_128x128x16_square",
+        "control_env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "3"
+        },
+        "candidate_env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "5"
+        },
+        "before_ms": 0.044801001,
+        "after_ms": 0.066239998,
+        "before_round_ms": [
+          0.044801001,
+          0.044799998,
+          0.044959001
+        ],
+        "after_round_ms": [
+          0.066239998,
+          0.066880003,
+          0.066238999
+        ],
+        "paired_delta_pct": 47.85383478373617,
+        "round_delta_pct": [
+          47.85383478373617,
+          49.285727646684265,
+          47.3320081111233
+        ],
+        "before_cv": [
+          0.019283361,
+          0.019296429,
+          0.027778154
+        ],
+        "after_cv": [
+          0.013343567,
+          0.014744891,
+          0.012780466
+        ],
+        "observed_variation_band_pct": 2.7778153999999997,
+        "quality": "stable_direction",
+        "frozen_BLAS_ms": 0.033927999436855316,
+        "frozen_BLAS_gpu": 0,
+        "frozen_BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+        "frozen_BLAS_source": "/workspace/bf16NN-groupgemm.csv",
+        "R_before_frozen": 0.757304494978925,
+        "R_after_frozen": 0.5121980745961876,
+        "CK_gpu": 4,
+        "epoch": 5,
+        "binary_sha256": "3411731442660e51e3681e5341bbf852409b47b8e80fcffe15a92e52e45dbaac",
+        "last_measured_at": "2026-11-05T07:29:00.638056+00:00",
+        "source_keys": [
+          "e5_rec5_k32_steady_r1_id688_control",
+          "e5_rec5_k32_steady_r2_id688_control",
+          "e5_rec5_k32_steady_r3_id688_control",
+          "e5_rec5_k32_steady_r1_id688_candidate",
+          "e5_rec5_k32_steady_r2_id688_candidate",
+          "e5_rec5_k32_steady_r3_id688_candidate"
+        ],
+        "source_logs": [
+          "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r1_id688_control/run.log",
+          "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r2_id688_control/run.log",
+          "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r3_id688_control/run.log",
+          "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r1_id688_candidate/run.log",
+          "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r2_id688_candidate/run.log",
+          "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r3_id688_candidate/run.log"
+        ],
+        "full_output_accuracy_keys": [],
+        "fallback": true,
+        "selection_contract": "See frozen plan and source policy; instance chosen by default selector; expected ID is assertion only"
+      }
+    ]
+  },
+  "limitations": [
+    "No fresh1193/1178 GPU replay",
+    "Default experiments remain off",
+    "Historical envelopes are numeric observed minima, not stability/optimality proofs",
+    "Long-term all1193 >=BLAS target remains unmet",
+    "No implementation/claim for2LDS/two-wave/GEMV/SplitK in this round"
+  ],
+  "local_commits_before_final": [
+    "9cdc853",
+    "d8ca5cf",
+    "e35b459",
+    "6bf6cd9"
+  ]
+}

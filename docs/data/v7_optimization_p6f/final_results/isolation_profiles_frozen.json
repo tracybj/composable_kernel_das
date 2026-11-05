@@ -1,0 +1,170 @@
+{
+  "at": "2026-11-05T07:34:24.644712+00:00",
+  "reason": "Mandatory original representatives620/621 show K32 benefit vs best5003 but need old5008 same-geometry isolation;76 K16 olddrain comparison separates branch cost. No attribute expansion or winner-based dispatch.",
+  "jobs": [
+    {
+      "key": "iso_profile_old_k32_id620",
+      "shape": {
+        "id": 620,
+        "M": 32,
+        "N": 1024,
+        "K": 2048,
+        "G": 32
+      },
+      "id": 620,
+      "expected": 5008,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=32",
+        "--n=1024",
+        "--k=2048",
+        "--groups=32",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=0",
+        "--warmup=10",
+        "--samples=1",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "2"
+      },
+      "kind": "profile",
+      "task": 3,
+      "variant": "old_k32",
+      "logical_tile": [
+        64,
+        128,
+        32
+      ],
+      "kernel_filter": "GemmPipelineV7SmallMK32<"
+    },
+    {
+      "key": "iso_profile_new_k32_id620",
+      "shape": {
+        "id": 620,
+        "M": 32,
+        "N": 1024,
+        "K": 2048,
+        "G": 32
+      },
+      "id": 620,
+      "expected": 5014,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=32",
+        "--n=1024",
+        "--k=2048",
+        "--groups=32",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=0",
+        "--warmup=10",
+        "--samples=1",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "5"
+      },
+      "kind": "profile",
+      "task": 3,
+      "variant": "new_k32",
+      "logical_tile": [
+        64,
+        128,
+        32
+      ],
+      "kernel_filter": "GemmPipelineV7SmallMK32Steady"
+    },
+    {
+      "key": "iso_profile_old_k32_id621",
+      "shape": {
+        "id": 621,
+        "M": 64,
+        "N": 1024,
+        "K": 2048,
+        "G": 32
+      },
+      "id": 621,
+      "expected": 5008,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=64",
+        "--n=1024",
+        "--k=2048",
+        "--groups=32",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=0",
+        "--warmup=10",
+        "--samples=1",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "2"
+      },
+      "kind": "profile",
+      "task": 3,
+      "variant": "old_k32",
+      "logical_tile": [
+        64,
+        128,
+        32
+      ],
+      "kernel_filter": "GemmPipelineV7SmallMK32<"
+    },
+    {
+      "key": "iso_profile_new_k32_id621",
+      "shape": {
+        "id": 621,
+        "M": 64,
+        "N": 1024,
+        "K": 2048,
+        "G": 32
+      },
+      "id": 621,
+      "expected": 5014,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=64",
+        "--n=1024",
+        "--k=2048",
+        "--groups=32",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=0",
+        "--warmup=10",
+        "--samples=1",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "5"
+      },
+      "kind": "profile",
+      "task": 3,
+      "variant": "new_k32",
+      "logical_tile": [
+        64,
+        128,
+        32
+      ],
+      "kernel_filter": "GemmPipelineV7SmallMK32Steady"
+    }
+  ]
+}

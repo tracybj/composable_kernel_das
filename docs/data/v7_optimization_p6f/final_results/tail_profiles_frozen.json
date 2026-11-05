@@ -1,0 +1,248 @@
+{
+  "at": "2026-11-05T05:37:03.312147+00:00",
+  "jobs": [
+    {
+      "key": "impl_profile_tail_control_id146",
+      "shape": {
+        "id": 146,
+        "M": 128,
+        "N": 1232,
+        "K": 1536,
+        "G": 196
+      },
+      "id": 146,
+      "expected": 4003,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=128",
+        "--n=1232",
+        "--k=1536",
+        "--groups=196",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=0",
+        "--warmup=10",
+        "--samples=1",
+        "--correctness-repeats=1"
+      ],
+      "env": {},
+      "kind": "profile",
+      "task": 1,
+      "variant": "tail_control",
+      "logical_tile": [
+        128,
+        128,
+        32
+      ],
+      "kernel_filter": "GroupedGemmKernel"
+    },
+    {
+      "key": "impl_profile_tail128_id146",
+      "shape": {
+        "id": 146,
+        "M": 128,
+        "N": 1232,
+        "K": 1536,
+        "G": 196
+      },
+      "id": 146,
+      "expected": 5013,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=128",
+        "--n=1232",
+        "--k=1536",
+        "--groups=196",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=0",
+        "--warmup=10",
+        "--samples=1",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_N_TAIL": "1"
+      },
+      "kind": "profile",
+      "task": 1,
+      "variant": "tail128",
+      "logical_tile": [
+        128,
+        128,
+        16
+      ],
+      "kernel_filter": "GemmPipelineV7Tail128"
+    },
+    {
+      "key": "impl_profile_tail256_id146",
+      "shape": {
+        "id": 146,
+        "M": 128,
+        "N": 1232,
+        "K": 1536,
+        "G": 196
+      },
+      "id": 146,
+      "expected": 5016,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=128",
+        "--n=1232",
+        "--k=1536",
+        "--groups=196",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=0",
+        "--warmup=10",
+        "--samples=1",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_N_TAIL": "2"
+      },
+      "kind": "profile",
+      "task": 1,
+      "variant": "tail256",
+      "logical_tile": [
+        128,
+        256,
+        16
+      ],
+      "kernel_filter": "GemmPipelineV7Tail256"
+    },
+    {
+      "key": "impl_profile_tail_control_id147",
+      "shape": {
+        "id": 147,
+        "M": 1,
+        "N": 1232,
+        "K": 1536,
+        "G": 392
+      },
+      "id": 147,
+      "expected": 4003,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=1",
+        "--n=1232",
+        "--k=1536",
+        "--groups=392",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=0",
+        "--warmup=10",
+        "--samples=1",
+        "--correctness-repeats=1"
+      ],
+      "env": {},
+      "kind": "profile",
+      "task": 1,
+      "variant": "tail_control",
+      "logical_tile": [
+        128,
+        128,
+        32
+      ],
+      "kernel_filter": "GroupedGemmKernel"
+    },
+    {
+      "key": "impl_profile_tail128_id147",
+      "shape": {
+        "id": 147,
+        "M": 1,
+        "N": 1232,
+        "K": 1536,
+        "G": 392
+      },
+      "id": 147,
+      "expected": 5013,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=1",
+        "--n=1232",
+        "--k=1536",
+        "--groups=392",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=0",
+        "--warmup=10",
+        "--samples=1",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_N_TAIL": "1"
+      },
+      "kind": "profile",
+      "task": 1,
+      "variant": "tail128",
+      "logical_tile": [
+        128,
+        128,
+        16
+      ],
+      "kernel_filter": "GemmPipelineV7Tail128"
+    },
+    {
+      "key": "impl_profile_tail256_id147",
+      "shape": {
+        "id": 147,
+        "M": 1,
+        "N": 1232,
+        "K": 1536,
+        "G": 392
+      },
+      "id": 147,
+      "expected": 5016,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=1",
+        "--n=1232",
+        "--k=1536",
+        "--groups=392",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=0",
+        "--warmup=10",
+        "--samples=1",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_N_TAIL": "2"
+      },
+      "kind": "profile",
+      "task": 1,
+      "variant": "tail256",
+      "logical_tile": [
+        128,
+        256,
+        16
+      ],
+      "kernel_filter": "GemmPipelineV7Tail256"
+    }
+  ],
+  "note": "Exact filters must be checked against actual final binary symbol table before running; control4003 geometry must be filled from actual symbol/dispatch"
+}

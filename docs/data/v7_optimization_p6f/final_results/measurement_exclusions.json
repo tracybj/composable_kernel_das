@@ -1,0 +1,181 @@
+{
+  "at": "2026-11-05T09:03:10.946139+00:00",
+  "reason": "Final CPU lineage audit found one fallback-route gate omission, not environment/math failure",
+  "keys": {
+    "e5_rec5_k16_steady_r1_id688_control": "Whole-output gate omitted for selected fallback5000 on this exact shape/binary; exclude BOTH arms of complete three-round comparison; replace after full-output gates on final binary",
+    "e5_rec5_k16_steady_r2_id688_control": "Whole-output gate omitted for selected fallback5000 on this exact shape/binary; exclude BOTH arms of complete three-round comparison; replace after full-output gates on final binary",
+    "e5_rec5_k16_steady_r3_id688_control": "Whole-output gate omitted for selected fallback5000 on this exact shape/binary; exclude BOTH arms of complete three-round comparison; replace after full-output gates on final binary",
+    "e5_rec5_k16_steady_r1_id688_candidate": "Whole-output gate omitted for selected fallback5000 on this exact shape/binary; exclude BOTH arms of complete three-round comparison; replace after full-output gates on final binary",
+    "e5_rec5_k16_steady_r2_id688_candidate": "Whole-output gate omitted for selected fallback5000 on this exact shape/binary; exclude BOTH arms of complete three-round comparison; replace after full-output gates on final binary",
+    "e5_rec5_k16_steady_r3_id688_candidate": "Whole-output gate omitted for selected fallback5000 on this exact shape/binary; exclude BOTH arms of complete three-round comparison; replace after full-output gates on final binary",
+    "e5_rec5_k32_steady_r1_id688_control": "Whole-output gate omitted for selected fallback5000 on this exact shape/binary; exclude BOTH arms of complete three-round comparison; replace after full-output gates on final binary",
+    "e5_rec5_k32_steady_r2_id688_control": "Whole-output gate omitted for selected fallback5000 on this exact shape/binary; exclude BOTH arms of complete three-round comparison; replace after full-output gates on final binary",
+    "e5_rec5_k32_steady_r3_id688_control": "Whole-output gate omitted for selected fallback5000 on this exact shape/binary; exclude BOTH arms of complete three-round comparison; replace after full-output gates on final binary",
+    "e5_rec5_k32_steady_r1_id688_candidate": "Whole-output gate omitted for selected fallback5000 on this exact shape/binary; exclude BOTH arms of complete three-round comparison; replace after full-output gates on final binary",
+    "e5_rec5_k32_steady_r2_id688_candidate": "Whole-output gate omitted for selected fallback5000 on this exact shape/binary; exclude BOTH arms of complete three-round comparison; replace after full-output gates on final binary",
+    "e5_rec5_k32_steady_r3_id688_candidate": "Whole-output gate omitted for selected fallback5000 on this exact shape/binary; exclude BOTH arms of complete three-round comparison; replace after full-output gates on final binary"
+  },
+  "replacement_plan": "fallback688_repair_frozen.json",
+  "original_contrasts": [
+    {
+      "id": 688,
+      "M": 128,
+      "N": 1536,
+      "K": 2048,
+      "G": 4,
+      "task": 3,
+      "variant": "k16_steady",
+      "study": "k16_steady_id688",
+      "control_instance": 5009,
+      "candidate_instance": 5000,
+      "control_scheme": "smallM_128x128x16_square",
+      "control_env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "3"
+      },
+      "candidate_env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "6"
+      },
+      "before_ms": 0.044801001,
+      "after_ms": 0.066239998,
+      "before_round_ms": [
+        0.04544,
+        0.044720002,
+        0.044801001
+      ],
+      "after_round_ms": [
+        0.066241004,
+        0.066239998,
+        0.066239998
+      ],
+      "paired_delta_pct": 47.85383478373617,
+      "round_delta_pct": [
+        45.77685739436621,
+        48.12163469939019,
+        47.85383478373617
+      ],
+      "before_cv": [
+        0.02976316,
+        0.02564652,
+        0.055388713
+      ],
+      "after_cv": [
+        0.012852102,
+        0.01310879,
+        0.013336974
+      ],
+      "observed_variation_band_pct": 5.5388713,
+      "quality": "stable_direction",
+      "frozen_BLAS_ms": 0.033927999436855316,
+      "frozen_BLAS_gpu": 0,
+      "frozen_BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+      "frozen_BLAS_source": "/workspace/bf16NN-groupgemm.csv",
+      "R_before_frozen": 0.757304494978925,
+      "R_after_frozen": 0.5121980745961876,
+      "CK_gpu": 4,
+      "epoch": 5,
+      "binary_sha256": "3411731442660e51e3681e5341bbf852409b47b8e80fcffe15a92e52e45dbaac",
+      "last_measured_at": "2026-11-05T07:28:56.491299+00:00",
+      "source_keys": [
+        "e5_rec5_k16_steady_r1_id688_control",
+        "e5_rec5_k16_steady_r2_id688_control",
+        "e5_rec5_k16_steady_r3_id688_control",
+        "e5_rec5_k16_steady_r1_id688_candidate",
+        "e5_rec5_k16_steady_r2_id688_candidate",
+        "e5_rec5_k16_steady_r3_id688_candidate"
+      ],
+      "source_logs": [
+        "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r1_id688_control/run.log",
+        "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r2_id688_control/run.log",
+        "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r3_id688_control/run.log",
+        "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r1_id688_candidate/run.log",
+        "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r2_id688_candidate/run.log",
+        "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r3_id688_candidate/run.log"
+      ],
+      "full_output_accuracy_keys": [],
+      "fallback": true,
+      "selection_contract": "See frozen plan and source policy; instance chosen by default selector; expected ID is assertion only"
+    },
+    {
+      "id": 688,
+      "M": 128,
+      "N": 1536,
+      "K": 2048,
+      "G": 4,
+      "task": 3,
+      "variant": "k32_steady",
+      "study": "k32_steady_id688",
+      "control_instance": 5009,
+      "candidate_instance": 5000,
+      "control_scheme": "smallM_128x128x16_square",
+      "control_env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "3"
+      },
+      "candidate_env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "5"
+      },
+      "before_ms": 0.044801001,
+      "after_ms": 0.066239998,
+      "before_round_ms": [
+        0.044801001,
+        0.044799998,
+        0.044959001
+      ],
+      "after_round_ms": [
+        0.066239998,
+        0.066880003,
+        0.066238999
+      ],
+      "paired_delta_pct": 47.85383478373617,
+      "round_delta_pct": [
+        47.85383478373617,
+        49.285727646684265,
+        47.3320081111233
+      ],
+      "before_cv": [
+        0.019283361,
+        0.019296429,
+        0.027778154
+      ],
+      "after_cv": [
+        0.013343567,
+        0.014744891,
+        0.012780466
+      ],
+      "observed_variation_band_pct": 2.7778153999999997,
+      "quality": "stable_direction",
+      "frozen_BLAS_ms": 0.033927999436855316,
+      "frozen_BLAS_gpu": 0,
+      "frozen_BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+      "frozen_BLAS_source": "/workspace/bf16NN-groupgemm.csv",
+      "R_before_frozen": 0.757304494978925,
+      "R_after_frozen": 0.5121980745961876,
+      "CK_gpu": 4,
+      "epoch": 5,
+      "binary_sha256": "3411731442660e51e3681e5341bbf852409b47b8e80fcffe15a92e52e45dbaac",
+      "last_measured_at": "2026-11-05T07:29:00.638056+00:00",
+      "source_keys": [
+        "e5_rec5_k32_steady_r1_id688_control",
+        "e5_rec5_k32_steady_r2_id688_control",
+        "e5_rec5_k32_steady_r3_id688_control",
+        "e5_rec5_k32_steady_r1_id688_candidate",
+        "e5_rec5_k32_steady_r2_id688_candidate",
+        "e5_rec5_k32_steady_r3_id688_candidate"
+      ],
+      "source_logs": [
+        "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r1_id688_control/run.log",
+        "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r2_id688_control/run.log",
+        "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r3_id688_control/run.log",
+        "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r1_id688_candidate/run.log",
+        "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r2_id688_candidate/run.log",
+        "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r3_id688_candidate/run.log"
+      ],
+      "full_output_accuracy_keys": [],
+      "fallback": true,
+      "selection_contract": "See frozen plan and source policy; instance chosen by default selector; expected ID is assertion only"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "at": "2026-11-05T06:41:28.337051+00:00",
+  "jobs": [
+    {
+      "key": "regression_selector_test",
+      "regression_kind": "selector_test",
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_selector_test"
+      ],
+      "kind": "regression",
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "0"
+      }
+    },
+    {
+      "key": "regression_device_args_query_test",
+      "regression_kind": "device_args_query_test",
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_query_test"
+      ],
+      "kind": "regression",
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "0"
+      }
+    },
+    {
+      "key": "regression_device_args_smoke",
+      "regression_kind": "device_args_smoke",
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_smoke"
+      ],
+      "kind": "regression",
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "0"
+      }
+    }
+  ]
+}

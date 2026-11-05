@@ -1,0 +1,22 @@
+{
+  "at": "2026-11-05T09:13:46.849584+00:00",
+  "passed": true,
+  "cpu_only": true,
+  "selector_checks": 2386,
+  "shapes": 1193,
+  "views": [
+    "policy_overlay_incremental_1193",
+    "historical_envelope_incremental_1193"
+  ],
+  "compile_command": [
+    "g++",
+    "-O2",
+    "-std=c++17",
+    "-I/workspace/composable_kernel/include",
+    "/workspace/v7_coverage/p6f/selector_incremental_probe.cpp",
+    "-o",
+    "/workspace/v7_coverage/p6f/selector_incremental_probe"
+  ],
+  "header_sha256": "f8ddc45d5d1b73db02f13c48f11165ac13320779dd2f5c2864989dd2dd0fa020",
+  "note": "Reachability and provenance only; not GPU full replay or proof of stable optimality"
+}

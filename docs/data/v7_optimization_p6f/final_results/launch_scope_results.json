@@ -1,0 +1,530 @@
+[
+  {
+    "id": 76,
+    "variant": "launch_scope_old_k32",
+    "epoch": 7,
+    "physical_gpu": 4,
+    "instance_id": 5008,
+    "CK_single_ms": 0.021439999,
+    "CK_batch20_per_launch_ms": 0.015188025,
+    "single_round_ms": [
+      0.021439999,
+      0.021439999,
+      0.021919999
+    ],
+    "batch20_round_per_launch_ms": [
+      0.015188025,
+      0.015191975,
+      0.014951999
+    ],
+    "single_cv": [
+      0.053701345,
+      0.053825199,
+      0.12202774
+    ],
+    "batch20_cv": [
+      0.010021441,
+      0.029199749,
+      0.011127749
+    ],
+    "amortized_difference_us": 6.251974000000001,
+    "Native_same_epoch": {
+      "study": "launch_scope_native",
+      "id": 76,
+      "epoch": 7,
+      "physical_gpu": 4,
+      "algorithm_id": 11285,
+      "timings": [
+        {
+          "repeat": 1,
+          "median_ms": 0.024159999564290047,
+          "round_ms": [
+            0.024000000208616257,
+            0.024159999564290047,
+            0.024159999564290047
+          ],
+          "round_cv": [
+            0.05221208648447339,
+            0.05581821264495198,
+            0.053207171170361986
+          ],
+          "versus_frozen_pct": 41.71750572926199
+        },
+        {
+          "repeat": 20,
+          "median_ms": 0.017079949378967285,
+          "round_ms": [
+            0.017103999853134155,
+            0.01706797629594803,
+            0.017079949378967285
+          ],
+          "round_cv": [
+            0.0035959523088753055,
+            0.0029861011249360603,
+            0.00416528630762337
+          ],
+          "versus_frozen_pct": 0.18741173931926536
+        }
+      ],
+      "frozen_ms": 0.017047999426722527,
+      "frozen_gpu": 0,
+      "frozen_protocol": "frozen_native_groupedgemm_repeat20",
+      "source_keys": [
+        "e7_launch_scope_native_r1_id76",
+        "e7_launch_scope_native_r2_id76",
+        "e7_launch_scope_native_r3_id76"
+      ],
+      "note": "Frozen algorithms, no retuning; same-card single-launch diagnostic is distinct from historical repeat20 R"
+    },
+    "binary_sha256": "207675bef8749a4553e3543223c82c8aef744bdfe85c9fa43331e66463a0f5ae",
+    "source_keys": [
+      "e7_launch_scope_old_k32_r1_id76_control",
+      "e7_launch_scope_old_k32_r2_id76_control",
+      "e7_launch_scope_old_k32_r3_id76_control",
+      "e7_launch_scope_old_k32_r1_id76_candidate",
+      "e7_launch_scope_old_k32_r2_id76_candidate",
+      "e7_launch_scope_old_k32_r3_id76_candidate"
+    ],
+    "note": "Diagnostic scope only;20-launch averages are excluded from formal one-launch/frozen-R/envelope views. Public API/default selector invoked each launch."
+  },
+  {
+    "id": 76,
+    "variant": "launch_scope_steady_k32",
+    "epoch": 7,
+    "physical_gpu": 4,
+    "instance_id": 5014,
+    "CK_single_ms": 0.021759,
+    "CK_batch20_per_launch_ms": 0.015464,
+    "single_round_ms": [
+      0.021600001,
+      0.023359001,
+      0.021759
+    ],
+    "batch20_round_per_launch_ms": [
+      0.01546405,
+      0.015464,
+      0.01524805
+    ],
+    "single_cv": [
+      0.055896054,
+      0.053381564,
+      0.056653889
+    ],
+    "batch20_cv": [
+      0.0072694954,
+      0.0080860543,
+      0.0023604416
+    ],
+    "amortized_difference_us": 6.295,
+    "Native_same_epoch": {
+      "study": "launch_scope_native",
+      "id": 76,
+      "epoch": 7,
+      "physical_gpu": 4,
+      "algorithm_id": 11285,
+      "timings": [
+        {
+          "repeat": 1,
+          "median_ms": 0.024159999564290047,
+          "round_ms": [
+            0.024000000208616257,
+            0.024159999564290047,
+            0.024159999564290047
+          ],
+          "round_cv": [
+            0.05221208648447339,
+            0.05581821264495198,
+            0.053207171170361986
+          ],
+          "versus_frozen_pct": 41.71750572926199
+        },
+        {
+          "repeat": 20,
+          "median_ms": 0.017079949378967285,
+          "round_ms": [
+            0.017103999853134155,
+            0.01706797629594803,
+            0.017079949378967285
+          ],
+          "round_cv": [
+            0.0035959523088753055,
+            0.0029861011249360603,
+            0.00416528630762337
+          ],
+          "versus_frozen_pct": 0.18741173931926536
+        }
+      ],
+      "frozen_ms": 0.017047999426722527,
+      "frozen_gpu": 0,
+      "frozen_protocol": "frozen_native_groupedgemm_repeat20",
+      "source_keys": [
+        "e7_launch_scope_native_r1_id76",
+        "e7_launch_scope_native_r2_id76",
+        "e7_launch_scope_native_r3_id76"
+      ],
+      "note": "Frozen algorithms, no retuning; same-card single-launch diagnostic is distinct from historical repeat20 R"
+    },
+    "binary_sha256": "207675bef8749a4553e3543223c82c8aef744bdfe85c9fa43331e66463a0f5ae",
+    "source_keys": [
+      "e7_launch_scope_steady_k32_r1_id76_control",
+      "e7_launch_scope_steady_k32_r2_id76_control",
+      "e7_launch_scope_steady_k32_r3_id76_control",
+      "e7_launch_scope_steady_k32_r1_id76_candidate",
+      "e7_launch_scope_steady_k32_r2_id76_candidate",
+      "e7_launch_scope_steady_k32_r3_id76_candidate"
+    ],
+    "note": "Diagnostic scope only;20-launch averages are excluded from formal one-launch/frozen-R/envelope views. Public API/default selector invoked each launch."
+  },
+  {
+    "id": 620,
+    "variant": "launch_scope_current_k16",
+    "epoch": 7,
+    "physical_gpu": 4,
+    "instance_id": 5003,
+    "CK_single_ms": 0.15440249,
+    "CK_batch20_per_launch_ms": 0.15069035,
+    "single_round_ms": [
+      0.15519799,
+      0.15352049,
+      0.15440249
+    ],
+    "batch20_round_per_launch_ms": [
+      0.15068008,
+      0.15119794,
+      0.15069035
+    ],
+    "single_cv": [
+      0.017741009,
+      0.015601953,
+      0.019980866
+    ],
+    "batch20_cv": [
+      0.0064155821,
+      0.0032056409,
+      0.0051338718
+    ],
+    "amortized_difference_us": 3.7121400000000024,
+    "Native_same_epoch": {
+      "study": "launch_scope_native",
+      "id": 620,
+      "epoch": 7,
+      "physical_gpu": 4,
+      "algorithm_id": 313,
+      "timings": [
+        {
+          "repeat": 1,
+          "median_ms": 0.12887900322675705,
+          "round_ms": [
+            0.12960000336170197,
+            0.12887900322675705,
+            0.12800000607967377
+          ],
+          "round_cv": [
+            0.015102467568721922,
+            0.013038117850861375,
+            0.011902141264588507
+          ],
+          "versus_frozen_pct": 5.514032276550962
+        },
+        {
+          "repeat": 20,
+          "median_ms": 0.12277190014719963,
+          "round_ms": [
+            0.1231319010257721,
+            0.12277190014719963,
+            0.12219589948654175
+          ],
+          "round_cv": [
+            0.002171943728908285,
+            0.0036545725858128644,
+            0.0020508751982265656
+          ],
+          "versus_frozen_pct": 0.5141094394781165
+        }
+      ],
+      "frozen_ms": 0.1221439465880394,
+      "frozen_gpu": 0,
+      "frozen_protocol": "frozen_native_groupedgemm_repeat20",
+      "source_keys": [
+        "e7_launch_scope_native_r1_id620",
+        "e7_launch_scope_native_r2_id620",
+        "e7_launch_scope_native_r3_id620"
+      ],
+      "note": "Frozen algorithms, no retuning; same-card single-launch diagnostic is distinct from historical repeat20 R"
+    },
+    "binary_sha256": "207675bef8749a4553e3543223c82c8aef744bdfe85c9fa43331e66463a0f5ae",
+    "source_keys": [
+      "e7_launch_scope_current_k16_r1_id620_control",
+      "e7_launch_scope_current_k16_r2_id620_control",
+      "e7_launch_scope_current_k16_r3_id620_control",
+      "e7_launch_scope_current_k16_r1_id620_candidate",
+      "e7_launch_scope_current_k16_r2_id620_candidate",
+      "e7_launch_scope_current_k16_r3_id620_candidate"
+    ],
+    "note": "Diagnostic scope only;20-launch averages are excluded from formal one-launch/frozen-R/envelope views. Public API/default selector invoked each launch."
+  },
+  {
+    "id": 620,
+    "variant": "launch_scope_steady_k32",
+    "epoch": 7,
+    "physical_gpu": 4,
+    "instance_id": 5014,
+    "CK_single_ms": 0.1392,
+    "CK_batch20_per_launch_ms": 0.13431674,
+    "single_round_ms": [
+      0.1392,
+      0.13912,
+      0.160723
+    ],
+    "batch20_round_per_launch_ms": [
+      0.13431674,
+      0.13404734,
+      0.13435438
+    ],
+    "single_cv": [
+      0.015659063,
+      0.012744652,
+      0.016306951
+    ],
+    "batch20_cv": [
+      0.0038118221,
+      0.0048180202,
+      0.0026572615
+    ],
+    "amortized_difference_us": 4.88326,
+    "Native_same_epoch": {
+      "study": "launch_scope_native",
+      "id": 620,
+      "epoch": 7,
+      "physical_gpu": 4,
+      "algorithm_id": 313,
+      "timings": [
+        {
+          "repeat": 1,
+          "median_ms": 0.12887900322675705,
+          "round_ms": [
+            0.12960000336170197,
+            0.12887900322675705,
+            0.12800000607967377
+          ],
+          "round_cv": [
+            0.015102467568721922,
+            0.013038117850861375,
+            0.011902141264588507
+          ],
+          "versus_frozen_pct": 5.514032276550962
+        },
+        {
+          "repeat": 20,
+          "median_ms": 0.12277190014719963,
+          "round_ms": [
+            0.1231319010257721,
+            0.12277190014719963,
+            0.12219589948654175
+          ],
+          "round_cv": [
+            0.002171943728908285,
+            0.0036545725858128644,
+            0.0020508751982265656
+          ],
+          "versus_frozen_pct": 0.5141094394781165
+        }
+      ],
+      "frozen_ms": 0.1221439465880394,
+      "frozen_gpu": 0,
+      "frozen_protocol": "frozen_native_groupedgemm_repeat20",
+      "source_keys": [
+        "e7_launch_scope_native_r1_id620",
+        "e7_launch_scope_native_r2_id620",
+        "e7_launch_scope_native_r3_id620"
+      ],
+      "note": "Frozen algorithms, no retuning; same-card single-launch diagnostic is distinct from historical repeat20 R"
+    },
+    "binary_sha256": "207675bef8749a4553e3543223c82c8aef744bdfe85c9fa43331e66463a0f5ae",
+    "source_keys": [
+      "e7_launch_scope_steady_k32_r1_id620_control",
+      "e7_launch_scope_steady_k32_r2_id620_control",
+      "e7_launch_scope_steady_k32_r3_id620_control",
+      "e7_launch_scope_steady_k32_r1_id620_candidate",
+      "e7_launch_scope_steady_k32_r2_id620_candidate",
+      "e7_launch_scope_steady_k32_r3_id620_candidate"
+    ],
+    "note": "Diagnostic scope only;20-launch averages are excluded from formal one-launch/frozen-R/envelope views. Public API/default selector invoked each launch."
+  },
+  {
+    "id": 621,
+    "variant": "launch_scope_current_k16",
+    "epoch": 7,
+    "physical_gpu": 4,
+    "instance_id": 5003,
+    "CK_single_ms": 0.17016,
+    "CK_batch20_per_launch_ms": 0.16783777,
+    "single_round_ms": [
+      0.170324,
+      0.16896051,
+      0.17016
+    ],
+    "batch20_round_per_launch_ms": [
+      0.16783777,
+      0.16789295,
+      0.16763487
+    ],
+    "single_cv": [
+      0.026849745,
+      0.022251545,
+      0.019494975
+    ],
+    "batch20_cv": [
+      0.0052128024,
+      0.0053036046,
+      0.0051950236
+    ],
+    "amortized_difference_us": 2.3222300000000082,
+    "Native_same_epoch": {
+      "study": "launch_scope_native",
+      "id": 621,
+      "epoch": 7,
+      "physical_gpu": 4,
+      "algorithm_id": 313,
+      "timings": [
+        {
+          "repeat": 1,
+          "median_ms": 0.13327999413013458,
+          "round_ms": [
+            0.13327999413013458,
+            0.13488000631332397,
+            0.13304000347852707
+          ],
+          "round_cv": [
+            0.013656540197500035,
+            0.016293288109936986,
+            0.011741410846980722
+          ],
+          "versus_frozen_pct": 5.090558571713744
+        },
+        {
+          "repeat": 20,
+          "median_ms": 0.12727190554141998,
+          "round_ms": [
+            0.12725190073251724,
+            0.12760789692401886,
+            0.12727190554141998
+          ],
+          "round_cv": [
+            0.0020873774566305798,
+            0.004017308870118042,
+            0.004386633737457275
+          ],
+          "versus_frozen_pct": 0.3532130319183091
+        }
+      ],
+      "frozen_ms": 0.12682394683361053,
+      "frozen_gpu": 0,
+      "frozen_protocol": "frozen_native_groupedgemm_repeat20",
+      "source_keys": [
+        "e7_launch_scope_native_r1_id621",
+        "e7_launch_scope_native_r2_id621",
+        "e7_launch_scope_native_r3_id621"
+      ],
+      "note": "Frozen algorithms, no retuning; same-card single-launch diagnostic is distinct from historical repeat20 R"
+    },
+    "binary_sha256": "207675bef8749a4553e3543223c82c8aef744bdfe85c9fa43331e66463a0f5ae",
+    "source_keys": [
+      "e7_launch_scope_current_k16_r1_id621_control",
+      "e7_launch_scope_current_k16_r2_id621_control",
+      "e7_launch_scope_current_k16_r3_id621_control",
+      "e7_launch_scope_current_k16_r1_id621_candidate",
+      "e7_launch_scope_current_k16_r2_id621_candidate",
+      "e7_launch_scope_current_k16_r3_id621_candidate"
+    ],
+    "note": "Diagnostic scope only;20-launch averages are excluded from formal one-launch/frozen-R/envelope views. Public API/default selector invoked each launch."
+  },
+  {
+    "id": 621,
+    "variant": "launch_scope_steady_k32",
+    "epoch": 7,
+    "physical_gpu": 4,
+    "instance_id": 5014,
+    "CK_single_ms": 0.146643,
+    "CK_batch20_per_launch_ms": 0.14035663,
+    "single_round_ms": [
+      0.146643,
+      0.14680299,
+      0.145677
+    ],
+    "batch20_round_per_launch_ms": [
+      0.14055276,
+      0.14035663,
+      0.13988972
+    ],
+    "single_cv": [
+      0.01779894,
+      0.013413349,
+      0.015968106
+    ],
+    "batch20_cv": [
+      0.0039997048,
+      0.0036123533,
+      0.0034238668
+    ],
+    "amortized_difference_us": 6.286369999999986,
+    "Native_same_epoch": {
+      "study": "launch_scope_native",
+      "id": 621,
+      "epoch": 7,
+      "physical_gpu": 4,
+      "algorithm_id": 313,
+      "timings": [
+        {
+          "repeat": 1,
+          "median_ms": 0.13327999413013458,
+          "round_ms": [
+            0.13327999413013458,
+            0.13488000631332397,
+            0.13304000347852707
+          ],
+          "round_cv": [
+            0.013656540197500035,
+            0.016293288109936986,
+            0.011741410846980722
+          ],
+          "versus_frozen_pct": 5.090558571713744
+        },
+        {
+          "repeat": 20,
+          "median_ms": 0.12727190554141998,
+          "round_ms": [
+            0.12725190073251724,
+            0.12760789692401886,
+            0.12727190554141998
+          ],
+          "round_cv": [
+            0.0020873774566305798,
+            0.004017308870118042,
+            0.004386633737457275
+          ],
+          "versus_frozen_pct": 0.3532130319183091
+        }
+      ],
+      "frozen_ms": 0.12682394683361053,
+      "frozen_gpu": 0,
+      "frozen_protocol": "frozen_native_groupedgemm_repeat20",
+      "source_keys": [
+        "e7_launch_scope_native_r1_id621",
+        "e7_launch_scope_native_r2_id621",
+        "e7_launch_scope_native_r3_id621"
+      ],
+      "note": "Frozen algorithms, no retuning; same-card single-launch diagnostic is distinct from historical repeat20 R"
+    },
+    "binary_sha256": "207675bef8749a4553e3543223c82c8aef744bdfe85c9fa43331e66463a0f5ae",
+    "source_keys": [
+      "e7_launch_scope_steady_k32_r1_id621_control",
+      "e7_launch_scope_steady_k32_r2_id621_control",
+      "e7_launch_scope_steady_k32_r3_id621_control",
+      "e7_launch_scope_steady_k32_r1_id621_candidate",
+      "e7_launch_scope_steady_k32_r2_id621_candidate",
+      "e7_launch_scope_steady_k32_r3_id621_candidate"
+    ],
+    "note": "Diagnostic scope only;20-launch averages are excluded from formal one-launch/frozen-R/envelope views. Public API/default selector invoked each launch."
+  }
+]

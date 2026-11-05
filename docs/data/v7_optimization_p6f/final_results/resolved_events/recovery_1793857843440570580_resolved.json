@@ -1,0 +1,86 @@
+{
+  "at": "2026-11-05T05:49:32.661890+00:00",
+  "epoch": 2,
+  "reason": "kernel_service_transition",
+  "record": {
+    "key": "e2_cache_profile_rec2_noslc_m8",
+    "shape": {
+      "id": 781,
+      "M": 2048,
+      "N": 6144,
+      "K": 3584,
+      "G": 224
+    },
+    "id": 781,
+    "expected": 5006,
+    "command": [
+      "/opt/rocm-6.3.3/bin/xprof",
+      "--kernels",
+      "V7Uniform",
+      "--sections",
+      "speed_of_light,memory_workload,occupancy,memory_chart,instruction_statistics,compute_workload,scheduler_statistics,wave_state",
+      "--output-dir",
+      "/workspace/v7_coverage/p6f/runs/e2_cache_profile_rec2_noslc_m8/profile",
+      "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+      "--dtype=bf16",
+      "--layout=NN",
+      "--m=2048",
+      "--n=6144",
+      "--k=3584",
+      "--groups=224",
+      "--backend=ck",
+      "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+      "--include-args-build=0",
+      "--time=1",
+      "--validate=0",
+      "--warmup=10",
+      "--samples=1",
+      "--correctness-repeats=1"
+    ],
+    "env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_WALK": "8",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "1"
+    },
+    "kind": "profile",
+    "variant": "noslc_m8",
+    "logical_tile": [
+      256,
+      256,
+      16
+    ],
+    "task": 2,
+    "logical_key": "cache_profile_rec2_noslc_m8",
+    "campaign_binary_sha256": "0491e577fc7da6c68f69aa726f285b09dd78d0e003720dba20584a4db21d5fe0",
+    "binary": "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+    "at": "2026-11-05T05:46:56.681131+00:00",
+    "epoch": 2,
+    "physical_gpu": 4,
+    "path": "/workspace/v7_coverage/p6f/runs/e2_cache_profile_rec2_noslc_m8",
+    "binary_sha256": "0491e577fc7da6c68f69aa726f285b09dd78d0e003720dba20584a4db21d5fe0",
+    "script_sha256": "ef37f0f6632580769a290e69793e71fbcbd95aad8be743b02962741576f16842",
+    "gate_at": "2026-11-05T05:46:56.680099+00:00",
+    "environment": {
+      "HIP_VISIBLE_DEVICES": "4",
+      "CUDA_VISIBLE_DEVICES": "4",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_WALK": "8",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "1"
+    },
+    "source_scripts_sha256": {
+      "runtime.py": "ef37f0f6632580769a290e69793e71fbcbd95aad8be743b02962741576f16842",
+      "health.py": "f3e05cf36f387d86e799b9938b68b0ce1503e7523a665b46ad44e01897b68ea7",
+      "campaign.py": "f1da5285415ad3fe7aedcbc7d342bc6251b9d046be732057a9966c6ea6c2a7f1",
+      "native_replay.py": "132eeb1587f6a0844a124dd5e0bc166749eafe9ce2343bac635a19b2789c4d13"
+    },
+    "pid": 1568822,
+    "rc": 0,
+    "seconds": 155.82493502553552,
+    "finished_at": "2026-11-05T05:49:32.572465+00:00",
+    "ok": false,
+    "kernel_service_events": [
+      "[4315603.663325] hycu: hymgr (3292912) unregister hyuds space.",
+      "[4315606.696021] hycu: hymgr (3873650) register hyuds space.",
+      "[4315614.834562] hycu: hymgr (3876368) register hyuds space."
+    ]
+  }
+}

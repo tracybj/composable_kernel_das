@@ -1,0 +1,942 @@
+{
+  "at": "2026-11-05T07:34:24.643615+00:00",
+  "reason": "Mandatory original representatives620/621 show K32 benefit vs best5003 but need old5008 same-geometry isolation;76 K16 olddrain comparison separates branch cost. No attribute expansion or winner-based dispatch.",
+  "jobs": [
+    {
+      "key": "k32_control_isolation_r1_id620_control",
+      "shape": {
+        "id": 620,
+        "M": 32,
+        "N": 1024,
+        "K": 2048,
+        "G": 32
+      },
+      "id": 620,
+      "expected": 5008,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=32",
+        "--n=1024",
+        "--k=2048",
+        "--groups=32",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "2"
+      },
+      "kind": "perf",
+      "task": 3,
+      "round": 1,
+      "pair": "k32_control_isolation_r1_id620",
+      "arm": "control",
+      "variant": "k32_control_isolation",
+      "baseline_scheme": "matched geometry causal control, distinct from per-shape current-best comparison"
+    },
+    {
+      "key": "k32_control_isolation_r1_id620_candidate",
+      "shape": {
+        "id": 620,
+        "M": 32,
+        "N": 1024,
+        "K": 2048,
+        "G": 32
+      },
+      "id": 620,
+      "expected": 5014,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=32",
+        "--n=1024",
+        "--k=2048",
+        "--groups=32",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "5"
+      },
+      "kind": "perf",
+      "task": 3,
+      "round": 1,
+      "pair": "k32_control_isolation_r1_id620",
+      "arm": "candidate",
+      "variant": "k32_control_isolation",
+      "baseline_scheme": "matched geometry causal control, distinct from per-shape current-best comparison"
+    },
+    {
+      "key": "k32_control_isolation_r2_id620_control",
+      "shape": {
+        "id": 620,
+        "M": 32,
+        "N": 1024,
+        "K": 2048,
+        "G": 32
+      },
+      "id": 620,
+      "expected": 5008,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=32",
+        "--n=1024",
+        "--k=2048",
+        "--groups=32",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "2"
+      },
+      "kind": "perf",
+      "task": 3,
+      "round": 2,
+      "pair": "k32_control_isolation_r2_id620",
+      "arm": "control",
+      "variant": "k32_control_isolation",
+      "baseline_scheme": "matched geometry causal control, distinct from per-shape current-best comparison"
+    },
+    {
+      "key": "k32_control_isolation_r2_id620_candidate",
+      "shape": {
+        "id": 620,
+        "M": 32,
+        "N": 1024,
+        "K": 2048,
+        "G": 32
+      },
+      "id": 620,
+      "expected": 5014,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=32",
+        "--n=1024",
+        "--k=2048",
+        "--groups=32",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "5"
+      },
+      "kind": "perf",
+      "task": 3,
+      "round": 2,
+      "pair": "k32_control_isolation_r2_id620",
+      "arm": "candidate",
+      "variant": "k32_control_isolation",
+      "baseline_scheme": "matched geometry causal control, distinct from per-shape current-best comparison"
+    },
+    {
+      "key": "k32_control_isolation_r3_id620_control",
+      "shape": {
+        "id": 620,
+        "M": 32,
+        "N": 1024,
+        "K": 2048,
+        "G": 32
+      },
+      "id": 620,
+      "expected": 5008,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=32",
+        "--n=1024",
+        "--k=2048",
+        "--groups=32",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "2"
+      },
+      "kind": "perf",
+      "task": 3,
+      "round": 3,
+      "pair": "k32_control_isolation_r3_id620",
+      "arm": "control",
+      "variant": "k32_control_isolation",
+      "baseline_scheme": "matched geometry causal control, distinct from per-shape current-best comparison"
+    },
+    {
+      "key": "k32_control_isolation_r3_id620_candidate",
+      "shape": {
+        "id": 620,
+        "M": 32,
+        "N": 1024,
+        "K": 2048,
+        "G": 32
+      },
+      "id": 620,
+      "expected": 5014,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=32",
+        "--n=1024",
+        "--k=2048",
+        "--groups=32",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "5"
+      },
+      "kind": "perf",
+      "task": 3,
+      "round": 3,
+      "pair": "k32_control_isolation_r3_id620",
+      "arm": "candidate",
+      "variant": "k32_control_isolation",
+      "baseline_scheme": "matched geometry causal control, distinct from per-shape current-best comparison"
+    },
+    {
+      "key": "k32_control_isolation_r1_id621_control",
+      "shape": {
+        "id": 621,
+        "M": 64,
+        "N": 1024,
+        "K": 2048,
+        "G": 32
+      },
+      "id": 621,
+      "expected": 5008,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=64",
+        "--n=1024",
+        "--k=2048",
+        "--groups=32",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "2"
+      },
+      "kind": "perf",
+      "task": 3,
+      "round": 1,
+      "pair": "k32_control_isolation_r1_id621",
+      "arm": "control",
+      "variant": "k32_control_isolation",
+      "baseline_scheme": "matched geometry causal control, distinct from per-shape current-best comparison"
+    },
+    {
+      "key": "k32_control_isolation_r1_id621_candidate",
+      "shape": {
+        "id": 621,
+        "M": 64,
+        "N": 1024,
+        "K": 2048,
+        "G": 32
+      },
+      "id": 621,
+      "expected": 5014,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=64",
+        "--n=1024",
+        "--k=2048",
+        "--groups=32",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "5"
+      },
+      "kind": "perf",
+      "task": 3,
+      "round": 1,
+      "pair": "k32_control_isolation_r1_id621",
+      "arm": "candidate",
+      "variant": "k32_control_isolation",
+      "baseline_scheme": "matched geometry causal control, distinct from per-shape current-best comparison"
+    },
+    {
+      "key": "k32_control_isolation_r2_id621_control",
+      "shape": {
+        "id": 621,
+        "M": 64,
+        "N": 1024,
+        "K": 2048,
+        "G": 32
+      },
+      "id": 621,
+      "expected": 5008,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=64",
+        "--n=1024",
+        "--k=2048",
+        "--groups=32",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "2"
+      },
+      "kind": "perf",
+      "task": 3,
+      "round": 2,
+      "pair": "k32_control_isolation_r2_id621",
+      "arm": "control",
+      "variant": "k32_control_isolation",
+      "baseline_scheme": "matched geometry causal control, distinct from per-shape current-best comparison"
+    },
+    {
+      "key": "k32_control_isolation_r2_id621_candidate",
+      "shape": {
+        "id": 621,
+        "M": 64,
+        "N": 1024,
+        "K": 2048,
+        "G": 32
+      },
+      "id": 621,
+      "expected": 5014,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=64",
+        "--n=1024",
+        "--k=2048",
+        "--groups=32",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "5"
+      },
+      "kind": "perf",
+      "task": 3,
+      "round": 2,
+      "pair": "k32_control_isolation_r2_id621",
+      "arm": "candidate",
+      "variant": "k32_control_isolation",
+      "baseline_scheme": "matched geometry causal control, distinct from per-shape current-best comparison"
+    },
+    {
+      "key": "k32_control_isolation_r3_id621_control",
+      "shape": {
+        "id": 621,
+        "M": 64,
+        "N": 1024,
+        "K": 2048,
+        "G": 32
+      },
+      "id": 621,
+      "expected": 5008,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=64",
+        "--n=1024",
+        "--k=2048",
+        "--groups=32",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "2"
+      },
+      "kind": "perf",
+      "task": 3,
+      "round": 3,
+      "pair": "k32_control_isolation_r3_id621",
+      "arm": "control",
+      "variant": "k32_control_isolation",
+      "baseline_scheme": "matched geometry causal control, distinct from per-shape current-best comparison"
+    },
+    {
+      "key": "k32_control_isolation_r3_id621_candidate",
+      "shape": {
+        "id": 621,
+        "M": 64,
+        "N": 1024,
+        "K": 2048,
+        "G": 32
+      },
+      "id": 621,
+      "expected": 5014,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=64",
+        "--n=1024",
+        "--k=2048",
+        "--groups=32",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "5"
+      },
+      "kind": "perf",
+      "task": 3,
+      "round": 3,
+      "pair": "k32_control_isolation_r3_id621",
+      "arm": "candidate",
+      "variant": "k32_control_isolation",
+      "baseline_scheme": "matched geometry causal control, distinct from per-shape current-best comparison"
+    },
+    {
+      "key": "k16_branch_vsbase_r1_id76_control",
+      "shape": {
+        "id": 76,
+        "M": 1,
+        "N": 2048,
+        "K": 768,
+        "G": 4
+      },
+      "id": 76,
+      "expected": 5003,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=1",
+        "--n=2048",
+        "--k=768",
+        "--groups=4",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128"
+      },
+      "kind": "perf",
+      "task": 3,
+      "round": 1,
+      "pair": "k16_branch_vsbase_r1_id76",
+      "arm": "control",
+      "variant": "k16_branch_vsbase",
+      "baseline_scheme": "matched geometry causal control, distinct from per-shape current-best comparison"
+    },
+    {
+      "key": "k16_branch_vsbase_r1_id76_candidate",
+      "shape": {
+        "id": 76,
+        "M": 1,
+        "N": 2048,
+        "K": 768,
+        "G": 4
+      },
+      "id": 76,
+      "expected": 5015,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=1",
+        "--n=2048",
+        "--k=768",
+        "--groups=4",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "6"
+      },
+      "kind": "perf",
+      "task": 3,
+      "round": 1,
+      "pair": "k16_branch_vsbase_r1_id76",
+      "arm": "candidate",
+      "variant": "k16_branch_vsbase",
+      "baseline_scheme": "matched geometry causal control, distinct from per-shape current-best comparison"
+    },
+    {
+      "key": "k16_branch_vsbase_r2_id76_control",
+      "shape": {
+        "id": 76,
+        "M": 1,
+        "N": 2048,
+        "K": 768,
+        "G": 4
+      },
+      "id": 76,
+      "expected": 5003,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=1",
+        "--n=2048",
+        "--k=768",
+        "--groups=4",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128"
+      },
+      "kind": "perf",
+      "task": 3,
+      "round": 2,
+      "pair": "k16_branch_vsbase_r2_id76",
+      "arm": "control",
+      "variant": "k16_branch_vsbase",
+      "baseline_scheme": "matched geometry causal control, distinct from per-shape current-best comparison"
+    },
+    {
+      "key": "k16_branch_vsbase_r2_id76_candidate",
+      "shape": {
+        "id": 76,
+        "M": 1,
+        "N": 2048,
+        "K": 768,
+        "G": 4
+      },
+      "id": 76,
+      "expected": 5015,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=1",
+        "--n=2048",
+        "--k=768",
+        "--groups=4",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "6"
+      },
+      "kind": "perf",
+      "task": 3,
+      "round": 2,
+      "pair": "k16_branch_vsbase_r2_id76",
+      "arm": "candidate",
+      "variant": "k16_branch_vsbase",
+      "baseline_scheme": "matched geometry causal control, distinct from per-shape current-best comparison"
+    },
+    {
+      "key": "k16_branch_vsbase_r3_id76_control",
+      "shape": {
+        "id": 76,
+        "M": 1,
+        "N": 2048,
+        "K": 768,
+        "G": 4
+      },
+      "id": 76,
+      "expected": 5003,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=1",
+        "--n=2048",
+        "--k=768",
+        "--groups=4",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128"
+      },
+      "kind": "perf",
+      "task": 3,
+      "round": 3,
+      "pair": "k16_branch_vsbase_r3_id76",
+      "arm": "control",
+      "variant": "k16_branch_vsbase",
+      "baseline_scheme": "matched geometry causal control, distinct from per-shape current-best comparison"
+    },
+    {
+      "key": "k16_branch_vsbase_r3_id76_candidate",
+      "shape": {
+        "id": 76,
+        "M": 1,
+        "N": 2048,
+        "K": 768,
+        "G": 4
+      },
+      "id": 76,
+      "expected": 5015,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=1",
+        "--n=2048",
+        "--k=768",
+        "--groups=4",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "6"
+      },
+      "kind": "perf",
+      "task": 3,
+      "round": 3,
+      "pair": "k16_branch_vsbase_r3_id76",
+      "arm": "candidate",
+      "variant": "k16_branch_vsbase",
+      "baseline_scheme": "matched geometry causal control, distinct from per-shape current-best comparison"
+    },
+    {
+      "key": "k16_branch_vsdrain_r1_id76_control",
+      "shape": {
+        "id": 76,
+        "M": 1,
+        "N": 2048,
+        "K": 768,
+        "G": 4
+      },
+      "id": 76,
+      "expected": 5007,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=1",
+        "--n=2048",
+        "--k=768",
+        "--groups=4",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "1"
+      },
+      "kind": "perf",
+      "task": 3,
+      "round": 1,
+      "pair": "k16_branch_vsdrain_r1_id76",
+      "arm": "control",
+      "variant": "k16_branch_vsdrain",
+      "baseline_scheme": "matched geometry causal control, distinct from per-shape current-best comparison"
+    },
+    {
+      "key": "k16_branch_vsdrain_r1_id76_candidate",
+      "shape": {
+        "id": 76,
+        "M": 1,
+        "N": 2048,
+        "K": 768,
+        "G": 4
+      },
+      "id": 76,
+      "expected": 5015,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=1",
+        "--n=2048",
+        "--k=768",
+        "--groups=4",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "6"
+      },
+      "kind": "perf",
+      "task": 3,
+      "round": 1,
+      "pair": "k16_branch_vsdrain_r1_id76",
+      "arm": "candidate",
+      "variant": "k16_branch_vsdrain",
+      "baseline_scheme": "matched geometry causal control, distinct from per-shape current-best comparison"
+    },
+    {
+      "key": "k16_branch_vsdrain_r2_id76_control",
+      "shape": {
+        "id": 76,
+        "M": 1,
+        "N": 2048,
+        "K": 768,
+        "G": 4
+      },
+      "id": 76,
+      "expected": 5007,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=1",
+        "--n=2048",
+        "--k=768",
+        "--groups=4",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "1"
+      },
+      "kind": "perf",
+      "task": 3,
+      "round": 2,
+      "pair": "k16_branch_vsdrain_r2_id76",
+      "arm": "control",
+      "variant": "k16_branch_vsdrain",
+      "baseline_scheme": "matched geometry causal control, distinct from per-shape current-best comparison"
+    },
+    {
+      "key": "k16_branch_vsdrain_r2_id76_candidate",
+      "shape": {
+        "id": 76,
+        "M": 1,
+        "N": 2048,
+        "K": 768,
+        "G": 4
+      },
+      "id": 76,
+      "expected": 5015,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=1",
+        "--n=2048",
+        "--k=768",
+        "--groups=4",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "6"
+      },
+      "kind": "perf",
+      "task": 3,
+      "round": 2,
+      "pair": "k16_branch_vsdrain_r2_id76",
+      "arm": "candidate",
+      "variant": "k16_branch_vsdrain",
+      "baseline_scheme": "matched geometry causal control, distinct from per-shape current-best comparison"
+    },
+    {
+      "key": "k16_branch_vsdrain_r3_id76_control",
+      "shape": {
+        "id": 76,
+        "M": 1,
+        "N": 2048,
+        "K": 768,
+        "G": 4
+      },
+      "id": 76,
+      "expected": 5007,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=1",
+        "--n=2048",
+        "--k=768",
+        "--groups=4",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "1"
+      },
+      "kind": "perf",
+      "task": 3,
+      "round": 3,
+      "pair": "k16_branch_vsdrain_r3_id76",
+      "arm": "control",
+      "variant": "k16_branch_vsdrain",
+      "baseline_scheme": "matched geometry causal control, distinct from per-shape current-best comparison"
+    },
+    {
+      "key": "k16_branch_vsdrain_r3_id76_candidate",
+      "shape": {
+        "id": 76,
+        "M": 1,
+        "N": 2048,
+        "K": 768,
+        "G": 4
+      },
+      "id": 76,
+      "expected": 5015,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=1",
+        "--n=2048",
+        "--k=768",
+        "--groups=4",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "6"
+      },
+      "kind": "perf",
+      "task": 3,
+      "round": 3,
+      "pair": "k16_branch_vsdrain_r3_id76",
+      "arm": "candidate",
+      "variant": "k16_branch_vsdrain",
+      "baseline_scheme": "matched geometry causal control, distinct from per-shape current-best comparison"
+    }
+  ]
+}

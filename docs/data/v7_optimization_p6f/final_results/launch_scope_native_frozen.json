@@ -1,0 +1,186 @@
+{
+  "at": "2026-11-05T08:34:57.476204+00:00",
+  "reason": "Native76 one-launch vsrepeat20 has6.75us per-launch difference; isolate measurement scope via explicit new default-off CK batch option, same public API/selector per launch, no historical reference replacement",
+  "jobs": [
+    {
+      "key": "launch_scope_native_r1_id76",
+      "id": 76,
+      "round": 1,
+      "kind": "native_perf",
+      "replay_script_sha256": "132eeb1587f6a0844a124dd5e0bc166749eafe9ce2343bac635a19b2789c4d13",
+      "command": [
+        "/usr/bin/python3",
+        "-u",
+        "/workspace/v7_coverage/p6f/native_replay.py",
+        "--id=76",
+        "--warmup=10",
+        "--samples=30",
+        "--repeats=1,20",
+        "--validate=0"
+      ],
+      "env": {
+        "LD_PRELOAD": "/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so"
+      }
+    },
+    {
+      "key": "launch_scope_native_r2_id76",
+      "id": 76,
+      "round": 2,
+      "kind": "native_perf",
+      "replay_script_sha256": "132eeb1587f6a0844a124dd5e0bc166749eafe9ce2343bac635a19b2789c4d13",
+      "command": [
+        "/usr/bin/python3",
+        "-u",
+        "/workspace/v7_coverage/p6f/native_replay.py",
+        "--id=76",
+        "--warmup=10",
+        "--samples=30",
+        "--repeats=1,20",
+        "--validate=0"
+      ],
+      "env": {
+        "LD_PRELOAD": "/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so"
+      }
+    },
+    {
+      "key": "launch_scope_native_r3_id76",
+      "id": 76,
+      "round": 3,
+      "kind": "native_perf",
+      "replay_script_sha256": "132eeb1587f6a0844a124dd5e0bc166749eafe9ce2343bac635a19b2789c4d13",
+      "command": [
+        "/usr/bin/python3",
+        "-u",
+        "/workspace/v7_coverage/p6f/native_replay.py",
+        "--id=76",
+        "--warmup=10",
+        "--samples=30",
+        "--repeats=1,20",
+        "--validate=0"
+      ],
+      "env": {
+        "LD_PRELOAD": "/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so"
+      }
+    },
+    {
+      "key": "launch_scope_native_r1_id620",
+      "id": 620,
+      "round": 1,
+      "kind": "native_perf",
+      "replay_script_sha256": "132eeb1587f6a0844a124dd5e0bc166749eafe9ce2343bac635a19b2789c4d13",
+      "command": [
+        "/usr/bin/python3",
+        "-u",
+        "/workspace/v7_coverage/p6f/native_replay.py",
+        "--id=620",
+        "--warmup=10",
+        "--samples=30",
+        "--repeats=1,20",
+        "--validate=0"
+      ],
+      "env": {
+        "LD_PRELOAD": "/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so"
+      }
+    },
+    {
+      "key": "launch_scope_native_r2_id620",
+      "id": 620,
+      "round": 2,
+      "kind": "native_perf",
+      "replay_script_sha256": "132eeb1587f6a0844a124dd5e0bc166749eafe9ce2343bac635a19b2789c4d13",
+      "command": [
+        "/usr/bin/python3",
+        "-u",
+        "/workspace/v7_coverage/p6f/native_replay.py",
+        "--id=620",
+        "--warmup=10",
+        "--samples=30",
+        "--repeats=1,20",
+        "--validate=0"
+      ],
+      "env": {
+        "LD_PRELOAD": "/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so"
+      }
+    },
+    {
+      "key": "launch_scope_native_r3_id620",
+      "id": 620,
+      "round": 3,
+      "kind": "native_perf",
+      "replay_script_sha256": "132eeb1587f6a0844a124dd5e0bc166749eafe9ce2343bac635a19b2789c4d13",
+      "command": [
+        "/usr/bin/python3",
+        "-u",
+        "/workspace/v7_coverage/p6f/native_replay.py",
+        "--id=620",
+        "--warmup=10",
+        "--samples=30",
+        "--repeats=1,20",
+        "--validate=0"
+      ],
+      "env": {
+        "LD_PRELOAD": "/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so"
+      }
+    },
+    {
+      "key": "launch_scope_native_r1_id621",
+      "id": 621,
+      "round": 1,
+      "kind": "native_perf",
+      "replay_script_sha256": "132eeb1587f6a0844a124dd5e0bc166749eafe9ce2343bac635a19b2789c4d13",
+      "command": [
+        "/usr/bin/python3",
+        "-u",
+        "/workspace/v7_coverage/p6f/native_replay.py",
+        "--id=621",
+        "--warmup=10",
+        "--samples=30",
+        "--repeats=1,20",
+        "--validate=0"
+      ],
+      "env": {
+        "LD_PRELOAD": "/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so"
+      }
+    },
+    {
+      "key": "launch_scope_native_r2_id621",
+      "id": 621,
+      "round": 2,
+      "kind": "native_perf",
+      "replay_script_sha256": "132eeb1587f6a0844a124dd5e0bc166749eafe9ce2343bac635a19b2789c4d13",
+      "command": [
+        "/usr/bin/python3",
+        "-u",
+        "/workspace/v7_coverage/p6f/native_replay.py",
+        "--id=621",
+        "--warmup=10",
+        "--samples=30",
+        "--repeats=1,20",
+        "--validate=0"
+      ],
+      "env": {
+        "LD_PRELOAD": "/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so"
+      }
+    },
+    {
+      "key": "launch_scope_native_r3_id621",
+      "id": 621,
+      "round": 3,
+      "kind": "native_perf",
+      "replay_script_sha256": "132eeb1587f6a0844a124dd5e0bc166749eafe9ce2343bac635a19b2789c4d13",
+      "command": [
+        "/usr/bin/python3",
+        "-u",
+        "/workspace/v7_coverage/p6f/native_replay.py",
+        "--id=621",
+        "--warmup=10",
+        "--samples=30",
+        "--repeats=1,20",
+        "--validate=0"
+      ],
+      "env": {
+        "LD_PRELOAD": "/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so"
+      }
+    }
+  ]
+}

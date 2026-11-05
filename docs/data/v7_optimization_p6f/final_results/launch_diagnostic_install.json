@@ -1,0 +1,12 @@
+{
+  "at": "2026-11-05T07:47:02.002930+00:00",
+  "source": "/workspace/composable_kernel/example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args_benchmark.cpp",
+  "source_sha256": "eb17c4d6a1905fe5404c53fd64c8c46e08359a209a5701fc5a838bdcf48e0071",
+  "prepared_source_sha256": "559ad13739277c5e0ab184eacf4a3470a82873d51a64914dfc44d9ef40c8e748",
+  "installed": true,
+  "reason": "Native76 same-card single .023840 vsrepeat20 .017092ms; separate launch-boundary diagnostic without changing formal one-launch/frozen-R protocol",
+  "scope": "76/620/621, existing current/control and newK32 routes, launches1vs20; no new pipeline or attribute expansion",
+  "argument_validation": "independent positive bounded launches check",
+  "installed_at": "2026-11-05T08:54:57.605356+00:00",
+  "note": "Only benchmark adds explicit diagnostic batch; formal default1 and public API per launch remain unchanged; no new kernel/ABI/provider change"
+}

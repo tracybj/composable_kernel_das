@@ -1,0 +1,565 @@
+{
+  "at": "2026-11-05T09:03:10.953940+00:00",
+  "reason": "Two full-output gates then both complete three-round default-selector contrasts, exact same declared fallback case; no new candidate/domain",
+  "jobs": [
+    {
+      "key": "fallback688_repair_acc_current",
+      "shape": {
+        "id": 688,
+        "M": 128,
+        "N": 1536,
+        "K": 2048,
+        "G": 4
+      },
+      "id": 688,
+      "expected": 5009,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=128",
+        "--n=1536",
+        "--k=2048",
+        "--groups=4",
+        "--backend=both",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=0",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=3"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "3"
+      },
+      "kind": "accuracy"
+    },
+    {
+      "key": "fallback688_repair_acc_fallback",
+      "shape": {
+        "id": 688,
+        "M": 128,
+        "N": 1536,
+        "K": 2048,
+        "G": 4
+      },
+      "id": 688,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=128",
+        "--n=1536",
+        "--k=2048",
+        "--groups=4",
+        "--backend=both",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=0",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=3"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "5"
+      },
+      "kind": "accuracy"
+    },
+    {
+      "key": "fallback688_repair_k16_steady_r1_id688_control",
+      "shape": {
+        "id": 688,
+        "M": 128,
+        "N": 1536,
+        "K": 2048,
+        "G": 4
+      },
+      "id": 688,
+      "expected": 5009,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=128",
+        "--n=1536",
+        "--k=2048",
+        "--groups=4",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "3"
+      },
+      "kind": "perf",
+      "task": 3,
+      "arm": "control",
+      "round": 1,
+      "pair": "fallback688_repair_k16_steady_r1_id688",
+      "variant": "k16_steady",
+      "fallback": true,
+      "baseline_scheme": "smallM_128x128x16_square"
+    },
+    {
+      "key": "fallback688_repair_k16_steady_r1_id688_candidate",
+      "shape": {
+        "id": 688,
+        "M": 128,
+        "N": 1536,
+        "K": 2048,
+        "G": 4
+      },
+      "id": 688,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=128",
+        "--n=1536",
+        "--k=2048",
+        "--groups=4",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "6"
+      },
+      "kind": "perf",
+      "task": 3,
+      "arm": "candidate",
+      "round": 1,
+      "pair": "fallback688_repair_k16_steady_r1_id688",
+      "variant": "k16_steady",
+      "fallback": true,
+      "baseline_scheme": "smallM_128x128x16_square"
+    },
+    {
+      "key": "fallback688_repair_k16_steady_r2_id688_control",
+      "shape": {
+        "id": 688,
+        "M": 128,
+        "N": 1536,
+        "K": 2048,
+        "G": 4
+      },
+      "id": 688,
+      "expected": 5009,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=128",
+        "--n=1536",
+        "--k=2048",
+        "--groups=4",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "3"
+      },
+      "kind": "perf",
+      "task": 3,
+      "arm": "control",
+      "round": 2,
+      "pair": "fallback688_repair_k16_steady_r2_id688",
+      "variant": "k16_steady",
+      "fallback": true,
+      "baseline_scheme": "smallM_128x128x16_square"
+    },
+    {
+      "key": "fallback688_repair_k16_steady_r2_id688_candidate",
+      "shape": {
+        "id": 688,
+        "M": 128,
+        "N": 1536,
+        "K": 2048,
+        "G": 4
+      },
+      "id": 688,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=128",
+        "--n=1536",
+        "--k=2048",
+        "--groups=4",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "6"
+      },
+      "kind": "perf",
+      "task": 3,
+      "arm": "candidate",
+      "round": 2,
+      "pair": "fallback688_repair_k16_steady_r2_id688",
+      "variant": "k16_steady",
+      "fallback": true,
+      "baseline_scheme": "smallM_128x128x16_square"
+    },
+    {
+      "key": "fallback688_repair_k16_steady_r3_id688_control",
+      "shape": {
+        "id": 688,
+        "M": 128,
+        "N": 1536,
+        "K": 2048,
+        "G": 4
+      },
+      "id": 688,
+      "expected": 5009,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=128",
+        "--n=1536",
+        "--k=2048",
+        "--groups=4",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "3"
+      },
+      "kind": "perf",
+      "task": 3,
+      "arm": "control",
+      "round": 3,
+      "pair": "fallback688_repair_k16_steady_r3_id688",
+      "variant": "k16_steady",
+      "fallback": true,
+      "baseline_scheme": "smallM_128x128x16_square"
+    },
+    {
+      "key": "fallback688_repair_k16_steady_r3_id688_candidate",
+      "shape": {
+        "id": 688,
+        "M": 128,
+        "N": 1536,
+        "K": 2048,
+        "G": 4
+      },
+      "id": 688,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=128",
+        "--n=1536",
+        "--k=2048",
+        "--groups=4",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "6"
+      },
+      "kind": "perf",
+      "task": 3,
+      "arm": "candidate",
+      "round": 3,
+      "pair": "fallback688_repair_k16_steady_r3_id688",
+      "variant": "k16_steady",
+      "fallback": true,
+      "baseline_scheme": "smallM_128x128x16_square"
+    },
+    {
+      "key": "fallback688_repair_k32_steady_r1_id688_control",
+      "shape": {
+        "id": 688,
+        "M": 128,
+        "N": 1536,
+        "K": 2048,
+        "G": 4
+      },
+      "id": 688,
+      "expected": 5009,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=128",
+        "--n=1536",
+        "--k=2048",
+        "--groups=4",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "3"
+      },
+      "kind": "perf",
+      "task": 3,
+      "arm": "control",
+      "round": 1,
+      "pair": "fallback688_repair_k32_steady_r1_id688",
+      "variant": "k32_steady",
+      "fallback": true,
+      "baseline_scheme": "smallM_128x128x16_square"
+    },
+    {
+      "key": "fallback688_repair_k32_steady_r1_id688_candidate",
+      "shape": {
+        "id": 688,
+        "M": 128,
+        "N": 1536,
+        "K": 2048,
+        "G": 4
+      },
+      "id": 688,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=128",
+        "--n=1536",
+        "--k=2048",
+        "--groups=4",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "5"
+      },
+      "kind": "perf",
+      "task": 3,
+      "arm": "candidate",
+      "round": 1,
+      "pair": "fallback688_repair_k32_steady_r1_id688",
+      "variant": "k32_steady",
+      "fallback": true,
+      "baseline_scheme": "smallM_128x128x16_square"
+    },
+    {
+      "key": "fallback688_repair_k32_steady_r2_id688_control",
+      "shape": {
+        "id": 688,
+        "M": 128,
+        "N": 1536,
+        "K": 2048,
+        "G": 4
+      },
+      "id": 688,
+      "expected": 5009,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=128",
+        "--n=1536",
+        "--k=2048",
+        "--groups=4",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "3"
+      },
+      "kind": "perf",
+      "task": 3,
+      "arm": "control",
+      "round": 2,
+      "pair": "fallback688_repair_k32_steady_r2_id688",
+      "variant": "k32_steady",
+      "fallback": true,
+      "baseline_scheme": "smallM_128x128x16_square"
+    },
+    {
+      "key": "fallback688_repair_k32_steady_r2_id688_candidate",
+      "shape": {
+        "id": 688,
+        "M": 128,
+        "N": 1536,
+        "K": 2048,
+        "G": 4
+      },
+      "id": 688,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=128",
+        "--n=1536",
+        "--k=2048",
+        "--groups=4",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "5"
+      },
+      "kind": "perf",
+      "task": 3,
+      "arm": "candidate",
+      "round": 2,
+      "pair": "fallback688_repair_k32_steady_r2_id688",
+      "variant": "k32_steady",
+      "fallback": true,
+      "baseline_scheme": "smallM_128x128x16_square"
+    },
+    {
+      "key": "fallback688_repair_k32_steady_r3_id688_control",
+      "shape": {
+        "id": 688,
+        "M": 128,
+        "N": 1536,
+        "K": 2048,
+        "G": 4
+      },
+      "id": 688,
+      "expected": 5009,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=128",
+        "--n=1536",
+        "--k=2048",
+        "--groups=4",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "3"
+      },
+      "kind": "perf",
+      "task": 3,
+      "arm": "control",
+      "round": 3,
+      "pair": "fallback688_repair_k32_steady_r3_id688",
+      "variant": "k32_steady",
+      "fallback": true,
+      "baseline_scheme": "smallM_128x128x16_square"
+    },
+    {
+      "key": "fallback688_repair_k32_steady_r3_id688_candidate",
+      "shape": {
+        "id": 688,
+        "M": 128,
+        "N": 1536,
+        "K": 2048,
+        "G": 4
+      },
+      "id": 688,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=128",
+        "--n=1536",
+        "--k=2048",
+        "--groups=4",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "5"
+      },
+      "kind": "perf",
+      "task": 3,
+      "arm": "candidate",
+      "round": 3,
+      "pair": "fallback688_repair_k32_steady_r3_id688",
+      "variant": "k32_steady",
+      "fallback": true,
+      "baseline_scheme": "smallM_128x128x16_square"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "at": "2026-11-05T06:00:51.748792+00:00",
+  "command": [
+    "cmake",
+    "--build",
+    "build",
+    "--target",
+    "tile_example_grouped_gemm_device_args_benchmark",
+    "tile_example_grouped_gemm_selector_test",
+    "tile_example_grouped_gemm_device_args_query_test",
+    "tile_example_grouped_gemm_device_args_smoke",
+    "-j4"
+  ],
+  "tag": "impl",
+  "head": "9cdc853ed42b33512ad1dfd8df888059bb90b956"
+}

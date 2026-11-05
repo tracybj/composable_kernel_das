@@ -1,0 +1,15 @@
+{
+  "at": "2026-11-05T05:43:30.482107+00:00",
+  "command": [
+    "cmake",
+    "--build",
+    "build",
+    "--target",
+    "ck_tile_hcu_grouped_gemm_device_args_providers",
+    "ck_tile_hcu_grouped_gemm_v7_v8_bf16",
+    "-j4"
+  ],
+  "cpu_only": true,
+  "benchmark_sha_before": "0491e577fc7da6c68f69aa726f285b09dd78d0e003720dba20584a4db21d5fe0",
+  "note": "Only two static archive targets; no executable target and no HIP launches. Official executable remains frozen for in-flight serial profiler."
+}

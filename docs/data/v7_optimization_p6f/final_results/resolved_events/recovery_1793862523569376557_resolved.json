@@ -1,0 +1,55 @@
+{
+  "at": "2026-11-05T07:05:26.473771+00:00",
+  "epoch": 4,
+  "reason": "kernel_service_transition",
+  "record": {
+    "key": "e4_rec4_impl_native_r1_id1187",
+    "id": 1187,
+    "round": 1,
+    "kind": "native_perf",
+    "replay_script_sha256": "132eeb1587f6a0844a124dd5e0bc166749eafe9ce2343bac635a19b2789c4d13",
+    "command": [
+      "/usr/bin/python3",
+      "-u",
+      "/workspace/v7_coverage/p6f/native_replay.py",
+      "--id=1187",
+      "--warmup=10",
+      "--samples=30",
+      "--repeats=1,20",
+      "--validate=0"
+    ],
+    "env": {
+      "LD_PRELOAD": "/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so"
+    },
+    "logical_key": "impl_native_r1_id1187",
+    "campaign_binary_sha256": "3411731442660e51e3681e5341bbf852409b47b8e80fcffe15a92e52e45dbaac",
+    "at": "2026-11-05T07:05:07.536230+00:00",
+    "epoch": 4,
+    "physical_gpu": 4,
+    "path": "/workspace/v7_coverage/p6f/runs/e4_rec4_impl_native_r1_id1187",
+    "binary_sha256": "d6bca2b84e73c7775a0dd5e6a76899cfe4ee62863d7c8f88513811d1fda23f49",
+    "script_sha256": "ef37f0f6632580769a290e69793e71fbcbd95aad8be743b02962741576f16842",
+    "gate_at": "2026-11-05T07:05:07.535342+00:00",
+    "environment": {
+      "HIP_VISIBLE_DEVICES": "4",
+      "CUDA_VISIBLE_DEVICES": "4",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+    },
+    "source_scripts_sha256": {
+      "runtime.py": "ef37f0f6632580769a290e69793e71fbcbd95aad8be743b02962741576f16842",
+      "health.py": "f3e05cf36f387d86e799b9938b68b0ce1503e7523a665b46ad44e01897b68ea7",
+      "campaign.py": "f1da5285415ad3fe7aedcbc7d342bc6251b9d046be732057a9966c6ea6c2a7f1",
+      "native_replay.py": "132eeb1587f6a0844a124dd5e0bc166749eafe9ce2343bac635a19b2789c4d13"
+    },
+    "pid": 1626299,
+    "rc": 0,
+    "seconds": 18.842038333415985,
+    "finished_at": "2026-11-05T07:05:26.386554+00:00",
+    "ok": false,
+    "kernel_service_events": [
+      "[4320160.620493] hycu: hymgr (1420320) unregister hyuds space.",
+      "[4320163.404591] hycu: hymgr (1692466) register hyuds space.",
+      "[4320171.557131] hycu: hymgr (1695249) register hyuds space."
+    ]
+  }
+}

@@ -1,0 +1,674 @@
+[
+  {
+    "study": "cache_native",
+    "id": 781,
+    "epoch": 1,
+    "physical_gpu": 4,
+    "algorithm_id": 11283,
+    "timings": [
+      {
+        "repeat": 1,
+        "median_ms": 63.36971664428711,
+        "round_ms": [
+          63.36971664428711,
+          63.38203048706055,
+          63.2197151184082
+        ],
+        "round_cv": [
+          0.004717148673534673,
+          0.0045401941768469165,
+          0.0036578725433668974
+        ],
+        "versus_frozen_pct": 0.14774996302935328
+      },
+      {
+        "repeat": 20,
+        "median_ms": 63.31621170043945,
+        "round_ms": [
+          63.306589126586914,
+          63.31621170043945,
+          63.34566307067871
+        ],
+        "round_cv": [
+          0.0011150398790859726,
+          0.0012825088078533527,
+          0.0016235383663807616
+        ],
+        "versus_frozen_pct": 0.06319222753687903
+      }
+    ],
+    "frozen_ms": 63.27622604370117,
+    "frozen_gpu": 0,
+    "frozen_protocol": "frozen_native_groupedgemm_repeat20",
+    "source_keys": [
+      "e1_cache_native_r1_id781",
+      "e1_cache_native_r2_id781",
+      "e1_cache_native_r3_id781"
+    ],
+    "note": "Frozen algorithms, no retuning; same-card single-launch diagnostic is distinct from historical repeat20 R"
+  },
+  {
+    "study": "cache_native",
+    "id": 782,
+    "epoch": 1,
+    "physical_gpu": 4,
+    "algorithm_id": 11283,
+    "timings": [
+      {
+        "repeat": 1,
+        "median_ms": 28.967658042907715,
+        "round_ms": [
+          28.960299491882324,
+          28.973734855651855,
+          28.967658042907715
+        ],
+        "round_cv": [
+          0.0016957423594826573,
+          0.069222786085432,
+          0.014551001798224496
+        ],
+        "versus_frozen_pct": 0.11211645424733518
+      },
+      {
+        "repeat": 20,
+        "median_ms": 28.956149101257324,
+        "round_ms": [
+          28.948638916015625,
+          29.05127716064453,
+          28.956149101257324
+        ],
+        "round_cv": [
+          0.00028505533576386077,
+          0.008251107095942989,
+          0.0011902432730535272
+        ],
+        "versus_frozen_pct": 0.07234159550444375
+      }
+    ],
+    "frozen_ms": 28.935216903686523,
+    "frozen_gpu": 0,
+    "frozen_protocol": "frozen_native_groupedgemm_repeat20",
+    "source_keys": [
+      "e1_cache_native_r1_id782",
+      "e1_cache_native_r2_id782",
+      "e1_cache_native_r3_id782"
+    ],
+    "note": "Frozen algorithms, no retuning; same-card single-launch diagnostic is distinct from historical repeat20 R"
+  },
+  {
+    "study": "cache_native",
+    "id": 783,
+    "epoch": 1,
+    "physical_gpu": 4,
+    "algorithm_id": 11283,
+    "timings": [
+      {
+        "repeat": 1,
+        "median_ms": 14.151510238647461,
+        "round_ms": [
+          14.160229206085205,
+          14.149508953094482,
+          14.151510238647461
+        ],
+        "round_cv": [
+          0.001402642785125443,
+          0.0012400177838484678,
+          0.0014483569263676038
+        ],
+        "versus_frozen_pct": -0.022018296206993693
+      },
+      {
+        "repeat": 20,
+        "median_ms": 14.148013591766357,
+        "round_ms": [
+          14.149524211883545,
+          14.14484453201294,
+          14.148013591766357
+        ],
+        "round_cv": [
+          0.0018040737235361396,
+          0.0017197092407484516,
+          0.00021173197484778187
+        ],
+        "versus_frozen_pct": -0.046721503992464
+      }
+    ],
+    "frozen_ms": 14.154626846313477,
+    "frozen_gpu": 0,
+    "frozen_protocol": "frozen_native_groupedgemm_repeat20",
+    "source_keys": [
+      "e1_cache_native_r1_id783",
+      "e1_cache_native_r2_id783",
+      "e1_cache_native_r3_id783"
+    ],
+    "note": "Frozen algorithms, no retuning; same-card single-launch diagnostic is distinct from historical repeat20 R"
+  },
+  {
+    "study": "cache_native",
+    "id": 784,
+    "epoch": 1,
+    "physical_gpu": 4,
+    "algorithm_id": 11283,
+    "timings": [
+      {
+        "repeat": 1,
+        "median_ms": 7.05879545211792,
+        "round_ms": [
+          7.06399393081665,
+          7.057914972305298,
+          7.05879545211792
+        ],
+        "round_cv": [
+          0.0017299641391389832,
+          0.0009735180228797183,
+          0.0012991233887519535
+        ],
+        "versus_frozen_pct": 0.07049985607998632
+      },
+      {
+        "repeat": 20,
+        "median_ms": 7.055510520935059,
+        "round_ms": [
+          7.056490659713745,
+          7.053866863250732,
+          7.055510520935059
+        ],
+        "round_cv": [
+          0.0001858227208412966,
+          0.00022565007814646126,
+          0.00018556034357533846
+        ],
+        "versus_frozen_pct": 0.023930337570532423
+      }
+    ],
+    "frozen_ms": 7.0538225173950195,
+    "frozen_gpu": 0,
+    "frozen_protocol": "frozen_native_groupedgemm_repeat20",
+    "source_keys": [
+      "e1_cache_native_r1_id784",
+      "e1_cache_native_r2_id784",
+      "e1_cache_native_r3_id784"
+    ],
+    "note": "Frozen algorithms, no retuning; same-card single-launch diagnostic is distinct from historical repeat20 R"
+  },
+  {
+    "study": "impl_native",
+    "id": 76,
+    "epoch": 5,
+    "physical_gpu": 4,
+    "algorithm_id": 11285,
+    "timings": [
+      {
+        "repeat": 1,
+        "median_ms": 0.023840000852942467,
+        "round_ms": [
+          0.023679999634623528,
+          0.024159999564290047,
+          0.023840000852942467
+        ],
+        "round_cv": [
+          0.049773419204968306,
+          0.06643689192470228,
+          0.03824878808438912
+        ],
+        "versus_frozen_pct": 39.84046019835947
+      },
+      {
+        "repeat": 20,
+        "median_ms": 0.01709197461605072,
+        "round_ms": [
+          0.01709197461605072,
+          0.017083999700844288,
+          0.01709197461605072
+        ],
+        "round_cv": [
+          0.002514973390822815,
+          0.00274389983459246,
+          0.0063399639368920836
+        ],
+        "versus_frozen_pct": 0.2579492656438198
+      }
+    ],
+    "frozen_ms": 0.017047999426722527,
+    "frozen_gpu": 0,
+    "frozen_protocol": "frozen_native_groupedgemm_repeat20",
+    "source_keys": [
+      "e5_rec5_impl_native_r1_id76",
+      "e5_rec5_impl_native_r2_id76",
+      "e5_rec5_impl_native_r3_id76"
+    ],
+    "note": "Frozen algorithms, no retuning; same-card single-launch diagnostic is distinct from historical repeat20 R"
+  },
+  {
+    "study": "impl_native",
+    "id": 146,
+    "epoch": 5,
+    "physical_gpu": 4,
+    "algorithm_id": 313,
+    "timings": [
+      {
+        "repeat": 1,
+        "median_ms": 0.8196794986724854,
+        "round_ms": [
+          0.8220790028572083,
+          0.8196794986724854,
+          0.817999005317688
+        ],
+        "round_cv": [
+          0.013138300949354614,
+          0.009947199925553435,
+          0.012087089841583944
+        ],
+        "versus_frozen_pct": -0.1812380411309933
+      },
+      {
+        "repeat": 20,
+        "median_ms": 0.8230594098567963,
+        "round_ms": [
+          0.8233594596385956,
+          0.8223754465579987,
+          0.8230594098567963
+        ],
+        "round_cv": [
+          0.0032664500524753784,
+          0.003047661110723015,
+          0.0026015694155990996
+        ],
+        "versus_frozen_pct": 0.23036009020600545
+      }
+    ],
+    "frozen_ms": 0.8211677670478821,
+    "frozen_gpu": 0,
+    "frozen_protocol": "frozen_native_groupedgemm_repeat20",
+    "source_keys": [
+      "e5_rec5_impl_native_r1_id146",
+      "e5_rec5_impl_native_r2_id146",
+      "e5_rec5_impl_native_r3_id146"
+    ],
+    "note": "Frozen algorithms, no retuning; same-card single-launch diagnostic is distinct from historical repeat20 R"
+  },
+  {
+    "study": "impl_native",
+    "id": 147,
+    "epoch": 5,
+    "physical_gpu": 4,
+    "algorithm_id": 11290,
+    "timings": [
+      {
+        "repeat": 1,
+        "median_ms": 1.8011980056762695,
+        "round_ms": [
+          1.802718997001648,
+          1.7994389533996582,
+          1.8011980056762695
+        ],
+        "round_cv": [
+          0.0042793277546645135,
+          0.0044819726473549915,
+          0.0030454302221742673
+        ],
+        "versus_frozen_pct": 0.19125768755710038
+      },
+      {
+        "repeat": 20,
+        "median_ms": 1.8002747893333435,
+        "round_ms": [
+          1.800778865814209,
+          1.7989787459373474,
+          1.8002747893333435
+        ],
+        "round_cv": [
+          0.0008902383894216917,
+          0.0014135418186454554,
+          0.0010071962698489847
+        ],
+        "versus_frozen_pct": 0.13990397395982068
+      }
+    ],
+    "frozen_ms": 1.7977596521377563,
+    "frozen_gpu": 0,
+    "frozen_protocol": "frozen_native_groupedgemm_repeat20",
+    "source_keys": [
+      "e5_rec5_impl_native_r1_id147",
+      "e5_rec5_impl_native_r2_id147",
+      "e5_rec5_impl_native_r3_id147"
+    ],
+    "note": "Frozen algorithms, no retuning; same-card single-launch diagnostic is distinct from historical repeat20 R"
+  },
+  {
+    "study": "impl_native",
+    "id": 620,
+    "epoch": 5,
+    "physical_gpu": 4,
+    "algorithm_id": 313,
+    "timings": [
+      {
+        "repeat": 1,
+        "median_ms": 0.12855949997901917,
+        "round_ms": [
+          0.1287200003862381,
+          0.12848000228405,
+          0.12855949997901917
+        ],
+        "round_cv": [
+          0.012542329481811975,
+          0.012991289603722981,
+          0.009560412798663624
+        ],
+        "versus_frozen_pct": 5.252453003354973
+      },
+      {
+        "repeat": 20,
+        "median_ms": 0.12293194979429245,
+        "round_ms": [
+          0.12319190055131912,
+          0.12275590375065804,
+          0.12293194979429245
+        ],
+        "round_cv": [
+          0.002464483092907299,
+          0.004130021065008676,
+          0.00467327778009448
+        ],
+        "versus_frozen_pct": 0.6451430695217253
+      }
+    ],
+    "frozen_ms": 0.1221439465880394,
+    "frozen_gpu": 0,
+    "frozen_protocol": "frozen_native_groupedgemm_repeat20",
+    "source_keys": [
+      "e5_rec5_impl_native_r1_id620",
+      "e5_rec5_impl_native_r2_id620",
+      "e5_rec5_impl_native_r3_id620"
+    ],
+    "note": "Frozen algorithms, no retuning; same-card single-launch diagnostic is distinct from historical repeat20 R"
+  },
+  {
+    "study": "impl_native",
+    "id": 621,
+    "epoch": 5,
+    "physical_gpu": 4,
+    "algorithm_id": 313,
+    "timings": [
+      {
+        "repeat": 1,
+        "median_ms": 0.13328000158071518,
+        "round_ms": [
+          0.13328000158071518,
+          0.133760005235672,
+          0.13312000036239624
+        ],
+        "round_cv": [
+          0.026432899899805747,
+          0.014156116958403362,
+          0.01139141009173584
+        ],
+        "versus_frozen_pct": 5.09056444645648
+      },
+      {
+        "repeat": 20,
+        "median_ms": 0.12776389718055725,
+        "round_ms": [
+          0.12776389718055725,
+          0.12806790322065353,
+          0.12725190073251724
+        ],
+        "round_cv": [
+          0.0037264884759709393,
+          0.0030161945624555563,
+          0.0036028838879377883
+        ],
+        "versus_frozen_pct": 0.7411457933728327
+      }
+    ],
+    "frozen_ms": 0.12682394683361053,
+    "frozen_gpu": 0,
+    "frozen_protocol": "frozen_native_groupedgemm_repeat20",
+    "source_keys": [
+      "e5_rec5_impl_native_r1_id621",
+      "e5_rec5_impl_native_r2_id621",
+      "e5_rec5_impl_native_r3_id621"
+    ],
+    "note": "Frozen algorithms, no retuning; same-card single-launch diagnostic is distinct from historical repeat20 R"
+  },
+  {
+    "study": "impl_native",
+    "id": 1186,
+    "epoch": 5,
+    "physical_gpu": 4,
+    "algorithm_id": 313,
+    "timings": [
+      {
+        "repeat": 1,
+        "median_ms": 0.044319998472929,
+        "round_ms": [
+          0.044319998472929,
+          0.04456000030040741,
+          0.04399999976158142
+        ],
+        "round_cv": [
+          0.025158796823798443,
+          0.02714631511310398,
+          0.028517234100064973
+        ],
+        "versus_frozen_pct": 15.296706564020134
+      },
+      {
+        "repeat": 20,
+        "median_ms": 0.038419974967837334,
+        "round_ms": [
+          0.038415949791669846,
+          0.038419974967837334,
+          0.03845197521150112
+        ],
+        "round_cv": [
+          0.0016167052296461243,
+          0.0016741912535666187,
+          0.0014176924646949558
+        ],
+        "versus_frozen_pct": -0.05196902771933409
+      }
+    ],
+    "frozen_ms": 0.038439951837062836,
+    "frozen_gpu": 4,
+    "frozen_protocol": "frozen_native_groupedgemm_repeat20",
+    "source_keys": [
+      "e5_rec5_impl_native_r1_id1186",
+      "e5_rec5_impl_native_r2_id1186",
+      "e5_rec5_impl_native_r3_id1186"
+    ],
+    "note": "Frozen algorithms, no retuning; same-card single-launch diagnostic is distinct from historical repeat20 R"
+  },
+  {
+    "study": "impl_native",
+    "id": 1187,
+    "epoch": 5,
+    "physical_gpu": 4,
+    "algorithm_id": 313,
+    "timings": [
+      {
+        "repeat": 1,
+        "median_ms": 0.05648000165820122,
+        "round_ms": [
+          0.05632000043988228,
+          0.0568000003695488,
+          0.05648000165820122
+        ],
+        "round_cv": [
+          0.021671572958074196,
+          0.022515294153764836,
+          0.03827512588162978
+        ],
+        "versus_frozen_pct": 12.06361117153627
+      },
+      {
+        "repeat": 20,
+        "median_ms": 0.05089594982564449,
+        "round_ms": [
+          0.05089594982564449,
+          0.0511119719594717,
+          0.05084394849836826
+        ],
+        "round_cv": [
+          0.002648174819805005,
+          0.0027657138207176097,
+          0.003503449005763472
+        ],
+        "versus_frozen_pct": 0.9841317991330367
+      }
+    ],
+    "frozen_ms": 0.05039994791150093,
+    "frozen_gpu": 4,
+    "frozen_protocol": "frozen_native_groupedgemm_repeat20",
+    "source_keys": [
+      "e5_rec5_impl_native_r1_id1187",
+      "e5_rec5_impl_native_r2_id1187",
+      "e5_rec5_impl_native_r3_id1187"
+    ],
+    "note": "Frozen algorithms, no retuning; same-card single-launch diagnostic is distinct from historical repeat20 R"
+  },
+  {
+    "study": "launch_scope_native",
+    "id": 76,
+    "epoch": 7,
+    "physical_gpu": 4,
+    "algorithm_id": 11285,
+    "timings": [
+      {
+        "repeat": 1,
+        "median_ms": 0.024159999564290047,
+        "round_ms": [
+          0.024000000208616257,
+          0.024159999564290047,
+          0.024159999564290047
+        ],
+        "round_cv": [
+          0.05221208648447339,
+          0.05581821264495198,
+          0.053207171170361986
+        ],
+        "versus_frozen_pct": 41.71750572926199
+      },
+      {
+        "repeat": 20,
+        "median_ms": 0.017079949378967285,
+        "round_ms": [
+          0.017103999853134155,
+          0.01706797629594803,
+          0.017079949378967285
+        ],
+        "round_cv": [
+          0.0035959523088753055,
+          0.0029861011249360603,
+          0.00416528630762337
+        ],
+        "versus_frozen_pct": 0.18741173931926536
+      }
+    ],
+    "frozen_ms": 0.017047999426722527,
+    "frozen_gpu": 0,
+    "frozen_protocol": "frozen_native_groupedgemm_repeat20",
+    "source_keys": [
+      "e7_launch_scope_native_r1_id76",
+      "e7_launch_scope_native_r2_id76",
+      "e7_launch_scope_native_r3_id76"
+    ],
+    "note": "Frozen algorithms, no retuning; same-card single-launch diagnostic is distinct from historical repeat20 R"
+  },
+  {
+    "study": "launch_scope_native",
+    "id": 620,
+    "epoch": 7,
+    "physical_gpu": 4,
+    "algorithm_id": 313,
+    "timings": [
+      {
+        "repeat": 1,
+        "median_ms": 0.12887900322675705,
+        "round_ms": [
+          0.12960000336170197,
+          0.12887900322675705,
+          0.12800000607967377
+        ],
+        "round_cv": [
+          0.015102467568721922,
+          0.013038117850861375,
+          0.011902141264588507
+        ],
+        "versus_frozen_pct": 5.514032276550962
+      },
+      {
+        "repeat": 20,
+        "median_ms": 0.12277190014719963,
+        "round_ms": [
+          0.1231319010257721,
+          0.12277190014719963,
+          0.12219589948654175
+        ],
+        "round_cv": [
+          0.002171943728908285,
+          0.0036545725858128644,
+          0.0020508751982265656
+        ],
+        "versus_frozen_pct": 0.5141094394781165
+      }
+    ],
+    "frozen_ms": 0.1221439465880394,
+    "frozen_gpu": 0,
+    "frozen_protocol": "frozen_native_groupedgemm_repeat20",
+    "source_keys": [
+      "e7_launch_scope_native_r1_id620",
+      "e7_launch_scope_native_r2_id620",
+      "e7_launch_scope_native_r3_id620"
+    ],
+    "note": "Frozen algorithms, no retuning; same-card single-launch diagnostic is distinct from historical repeat20 R"
+  },
+  {
+    "study": "launch_scope_native",
+    "id": 621,
+    "epoch": 7,
+    "physical_gpu": 4,
+    "algorithm_id": 313,
+    "timings": [
+      {
+        "repeat": 1,
+        "median_ms": 0.13327999413013458,
+        "round_ms": [
+          0.13327999413013458,
+          0.13488000631332397,
+          0.13304000347852707
+        ],
+        "round_cv": [
+          0.013656540197500035,
+          0.016293288109936986,
+          0.011741410846980722
+        ],
+        "versus_frozen_pct": 5.090558571713744
+      },
+      {
+        "repeat": 20,
+        "median_ms": 0.12727190554141998,
+        "round_ms": [
+          0.12725190073251724,
+          0.12760789692401886,
+          0.12727190554141998
+        ],
+        "round_cv": [
+          0.0020873774566305798,
+          0.004017308870118042,
+          0.004386633737457275
+        ],
+        "versus_frozen_pct": 0.3532130319183091
+      }
+    ],
+    "frozen_ms": 0.12682394683361053,
+    "frozen_gpu": 0,
+    "frozen_protocol": "frozen_native_groupedgemm_repeat20",
+    "source_keys": [
+      "e7_launch_scope_native_r1_id621",
+      "e7_launch_scope_native_r2_id621",
+      "e7_launch_scope_native_r3_id621"
+    ],
+    "note": "Frozen algorithms, no retuning; same-card single-launch diagnostic is distinct from historical repeat20 R"
+  }
+]
