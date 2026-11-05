@@ -46,5 +46,12 @@ int main(){using ck_tile::int8_cached_route;
  assert(int8_cached_scaled_route(8192,4096,4096,8,false,80)==int8_cached_route(8192,4096,4096,8,false,80));
  assert(int8_cached_scaled_route(8192,4096,4096,8,true,96)==int8_cached_route(8192,4096,4096,8,true,96));
  assert(int8_cached_route(8192,4096,4096,8,true,80)==12);
+ // Scaled-only full-N threshold; native/device/pack boundaries remain explicit.
+ assert(int8_cached_scaled_route(2048,4608,5120,12,true,80)==12);
+ assert(int8_cached_route(2048,4608,5120,12,true,80)==5);
+ assert(int8_cached_scaled_route(2048,4608,5120,12,false,80)==int8_cached_route(2048,4608,5120,12,false,80));
+ assert(int8_cached_scaled_route(2048,4608,5120,12,true,96)==int8_cached_route(2048,4608,5120,12,true,96));
+ assert(int8_cached_scaled_route(1024,4608,5120,12,true,80)==int8_cached_route(1024,4608,5120,12,true,80));
+ assert(int8_cached_scaled_route(2176,4608,5120,12,true,80)==int8_cached_route(2176,4608,5120,12,true,80));
  std::cout<<"SCALED_TAIL_POLICY_PASS\n";
 }

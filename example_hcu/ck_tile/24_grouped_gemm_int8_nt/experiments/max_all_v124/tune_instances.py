@@ -10,7 +10,7 @@ def atomic(path,value):
 
 def main():
     ap=argparse.ArgumentParser();ap.add_argument('--output',type=Path,required=True)
-    ap.add_argument('--suite',choices=['frontier_v138','low_n','low_n_refine','k768_formal','prefill','decode','operand_decode','shuffle_decode','deferred_decode','compact_decode','packed_direct_decode','fast_packed_decode','address32_decode','tail_prefill','tail_formal','tail_neighbors','single_b_prefill','grid_prefill','neighbor_formal','packed_output_prefill','wide_prefill'],default='low_n')
+    ap.add_argument('--suite',choices=['wide_policy_v139','frontier_v138','low_n','low_n_refine','k768_formal','prefill','decode','operand_decode','shuffle_decode','deferred_decode','compact_decode','packed_direct_decode','fast_packed_decode','address32_decode','tail_prefill','tail_formal','tail_neighbors','single_b_prefill','grid_prefill','neighbor_formal','packed_output_prefill','wide_prefill'],default='low_n')
     ap.add_argument('--warmup',type=int,default=3);ap.add_argument('--repeat',type=int,default=10);ap.add_argument('--samples',type=int,default=2)
     ap.add_argument('--validation',choices=['full','sample'],default='full');args=ap.parse_args()
     assert args.repeat>0 and args.samples>0
@@ -31,7 +31,9 @@ def main():
     assert bus.value.decode().lower()==Path('/sys/class/drm/renderD135/device').resolve().name.lower()
     targets=list(csv.DictReader((E/'docs/targets_max_all_1191.csv').open()))
     targets=[dict(**{k:int(r[k]) for k in ['ID','M','N','K','G']},phase=r['phase'],target_TOPS=float(r['target_TOPS'])) for r in targets]
-    if args.suite=='frontier_v138':
+    if args.suite=='wide_policy_v139':
+        cases=[r for r in targets if r['M']>=256 and r['N']==4608 and r['K']==5120]
+    elif args.suite=='frontier_v138':
         # Broad dimension neighborhood, including already-passing controls.
         cases=[r for r in targets if
                (r['M']<=8 and r['N']==4096 and r['K'] in [6144,7168]) or
@@ -94,7 +96,7 @@ def main():
     out=args.output.resolve();out.mkdir(parents=True,exist_ok=True)
     assert not (out/'records.jsonl').exists(),'Existing run;inspect before restarting'
     build=Path(os.environ['CK_INT8_CACHED_BUILD']);identity=json.loads((build/'exported_api_symbols.json').read_text())
-    assert identity['experimental_tuning']
+    assert identity['experimental_tuning'] or args.suite=='wide_policy_v139'
     if args.suite in ['operand_decode','shuffle_decode','deferred_decode','compact_decode','packed_direct_decode','fast_packed_decode','address32_decode','tail_prefill','tail_formal','tail_neighbors','single_b_prefill','grid_prefill','neighbor_formal','packed_output_prefill','wide_prefill']:assert identity.get('operand_paths')
     atomic(out/'manifest.json',dict(suite=args.suite,cases=cases,candidates=candidates,validation=args.validation,warmup=args.warmup,repeat=args.repeat,samples=args.samples,library=identity,compiled_sources=json.loads((build/'sources.json').read_text()),gpu=7,pci=bus.value.decode(),input_range=[-8,8],scale='FP32 scalar A + FP32 channel B',target_sha256=hashlib.sha256((E/'docs/targets_max_all_1191.csv').read_bytes()).hexdigest(),runner_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),runner_revision=os.environ.get('CK_INT8_RUNNER_REVISION') or subprocess.check_output(['git','-C',str(E.parents[2]),'rev-parse','HEAD'],text=True).strip()))
     records=[];best=[]
@@ -102,7 +104,9 @@ def main():
         with (out/'records.jsonl').open('w') as stream:
             for case_index,case in enumerate(cases):
                 ID,m,n,k,g=[case[x] for x in ['ID','M','N','K','G']]
-                if args.suite=='frontier_v138':
+                if args.suite=='wide_policy_v139':
+                    candidates=[('default',None,None)]
+                elif args.suite=='frontier_v138':
                     candidates=[('default',None,None),('route_41',41,None)] if m<=8 else [('default',None,None),('route_12',12,None)]
                 atomic(out/'active.json',dict(**case,stage='allocate'))
                 torch.manual_seed(20261104+(ID if isinstance(ID,int) else 100000+case_index))

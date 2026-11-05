@@ -479,3 +479,7 @@ M2048/N4096/K1536/G4的单B BF16约405.76、默认395.24，但该行已超过目
 48条小M对照中，route41整体BF16速度比中位数0.97467，不能推广到整个长K域。N4096/K6144、G8时M1/2/4/8约+5.6%～6.5%，G16只约+0.6%～1.4%，G32/64回退；K7168仅G8约+1.0%～1.4%，G12及以上回退。N4096/K6144/M1/G8本轮R1.0416，K7168/M1/2/G8为R1.0057/1.0106。小M候选尚需移出实验目录、生产域与full-range门禁，先不接入。v136全量结果仍1116/1191，不能把候选样本拼为新全量成绩。
 
 归档：max_all_v138_frontier_formal.csv、max_all_v138_summary.json；原始样本与manifest位于results/max_all_v138_frontier_formal。
+
+## v139：把完整N块的调度阈值接入scaled生产策略
+
+基于v137初筛和v138正式同轮对照，在已测N4608/K5120、M2048～4096且整M256、prepared B、80CU域，按实际CTA批次数量判断是否从原route5转route12：old_batches>=20，且old/wide>=1.46。只调整BF16/FP16的scaled策略，不按caseID分流；INT32策略不变。原1191清单只有ID992应改变路线，门禁包含无packed、其它CU和不完整M的边界。尚待独立TUNING=OFF构建和GPU验证，当前不计新增达标数。

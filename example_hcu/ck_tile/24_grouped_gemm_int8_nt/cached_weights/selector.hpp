@@ -61,7 +61,18 @@ inline unsigned int8_cached_scaled_route(int m,int n,int k,int groups,
     n>=3584 && n<=8192 && n%256==0 && n%384!=0 &&
     k>=1024 && k<16384 && k%128==0)
   return k>=4096 || n%384==128?23u:22u;
- return int8_cached_route(m,n,k,groups,packed_available,compute_units);
+ // Full BN384 blocks: calibrate the scheduling threshold in the measured
+ // N4608/K5120 neighborhood. Use CTA batches, never workload IDs.
+ const unsigned route=int8_cached_route(m,n,k,groups,packed_available,compute_units);
+ if(route==5u && packed_available && compute_units==80 &&
+    m>=2048 && m<=4096 && m%256==0 && n==4608 && k==5120){
+  const std::uint64_t mt=(std::uint64_t(m)+255u)/256u;
+  const std::uint64_t padded_m=(mt+3u)/4u*4u;
+  const std::uint64_t old_batches=(padded_m*((std::uint64_t(n)+255u)/256u)*groups+79u)/80u;
+  const std::uint64_t wide_batches=(padded_m*(std::uint64_t(n)/384u)*groups+79u)/80u;
+  if(old_batches>=20u && old_batches*100u>=wide_batches*146u)return 12u;
+ }
+ return route;
 }
 
 }
