@@ -393,3 +393,11 @@ cl8的额外128条v_mov确实消失：BF16完整函数静态指令10417→10296�
 新增host边界/未校准范围断言、生产API full-range夹具（cl4、N尾块cl8、长K cl8，含padded B/输出scale模式），保留原INT32路径对照。使用TUNING=OFF的独立构建和1191条单轮正式runner，先跑现有完整数值/ABI/lifetime门禁，再全量。全量期间冻结C++及测试源码，尚未构建/运行前不报最终提升。
 
 SingleB草稿仍只在本地隔离目录，未并入v136；将作为后续结构候选，不能覆盖本版新增的生产route22/23和fixture。
+
+### v136正式构建门禁完成
+
+源码06a442c，TUNING=OFF生产库SHA256 e026eeccd82efada138891ffeccdb36bae9523dae570c4add1cee63c46a8d924；benchmark SHA256 e964c6bb62a54ab1a8594ffc5a997aa04e071200fefdbab3c3a31f2d6e0ba0e7。CPU selector边界、34项tuning域与3333项barrier协议模型PASS。GPU full-range INT8/FP64完整输出382项PASS，非法配置7项拒绝，已包含新route22/23的三种生产API夹具和原INT32分流对照；native BLAS scalar reference6项bitwise PASS。epilogue18项、原INT32 ABI边界65项、生命周期32项均PASS，scaled/ABI/lifetime报告均匹配该库SHA；epilogue旧报告不独立嵌入SHA，由相同冻结门禁driver环境执行。
+
+120个原有生产kernel逐函数机器码与v135完全一致；新6个生产入口（2个cluster×INT32/BF16/FP16）与对应已测tuning实例机器码完全相同。新实例182VGPR/64KiB/1024threads、无spill，HIP静态最大1CTA。证明从实验迁移未引入额外设备代码变化，不以该证明代替新分流的全量性能验收。
+
+证据见[max_all_v136_validation_resources.json](max_all_v136_validation_resources.json)。接下来只用该OFF库，在卡7对原始1191条做一轮BF16/FP16正式回归，warm10/repeat50/3样本中位数，完整输出/guard/输入scale抽样不变检查；准备时间单列。全量期间冻结编译及测试源码，不把156条筛选赢家拼接为全量结果。

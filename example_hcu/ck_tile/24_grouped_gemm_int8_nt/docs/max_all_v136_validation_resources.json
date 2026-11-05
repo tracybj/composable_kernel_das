@@ -1,0 +1,2437 @@
+{
+  "status": "PASS",
+  "source_revision": "06a442c241b986f97821debd177bb54e3da9b350",
+  "library": {
+    "symbols": [
+      "ck_tile_int8_nt_cached_last_error_v1",
+      "ck_tile_int8_nt_cached_plan_create_v1",
+      "ck_tile_int8_nt_cached_plan_create_v2",
+      "ck_tile_int8_nt_cached_plan_destroy_v1",
+      "ck_tile_int8_nt_cached_plan_query_v1",
+      "ck_tile_int8_nt_cached_run_v1",
+      "ck_tile_int8_nt_cached_weights_create_v1",
+      "ck_tile_int8_nt_cached_weights_destroy_v1",
+      "ck_tile_int8_nt_cached_weights_query_v1"
+    ],
+    "library_sha256": "e026eeccd82efada138891ffeccdb36bae9523dae570c4add1cee63c46a8d924",
+    "benchmark_sha256": "e964c6bb62a54ab1a8594ffc5a997aa04e071200fefdbab3c3a31f2d6e0ba0e7",
+    "experimental_tuning": false,
+    "operand_paths": false
+  },
+  "scaled_checks": 382,
+  "invalid_checks": 7,
+  "covered_routes": [
+    [
+      0,
+      6004
+    ],
+    [
+      0,
+      6044
+    ],
+    [
+      0,
+      6401
+    ],
+    [
+      0,
+      6403
+    ],
+    [
+      0,
+      6404
+    ],
+    [
+      0,
+      7501
+    ],
+    [
+      0,
+      7502
+    ],
+    [
+      0,
+      7504
+    ],
+    [
+      0,
+      7603
+    ],
+    [
+      0,
+      8734
+    ],
+    [
+      1,
+      0
+    ],
+    [
+      3,
+      0
+    ],
+    [
+      4,
+      0
+    ],
+    [
+      5,
+      0
+    ],
+    [
+      6,
+      0
+    ],
+    [
+      7,
+      0
+    ],
+    [
+      8,
+      0
+    ],
+    [
+      9,
+      0
+    ],
+    [
+      10,
+      0
+    ],
+    [
+      11,
+      0
+    ],
+    [
+      12,
+      0
+    ],
+    [
+      22,
+      0
+    ],
+    [
+      23,
+      0
+    ]
+  ],
+  "native_blas_checks": [
+    {
+      "output": "torch.bfloat16",
+      "M": 16,
+      "N": 256,
+      "K": 512,
+      "G": 2,
+      "bitwise_mismatches": 0,
+      "status": "PASS",
+      "blas_library": "/workspace/GroupGemm/baseline/hipblaslt-install/lib/libhipblaslt.so.0.10"
+    },
+    {
+      "output": "torch.bfloat16",
+      "M": 128,
+      "N": 512,
+      "K": 1024,
+      "G": 4,
+      "bitwise_mismatches": 0,
+      "status": "PASS",
+      "blas_library": "/workspace/GroupGemm/baseline/hipblaslt-install/lib/libhipblaslt.so.0.10"
+    },
+    {
+      "output": "torch.bfloat16",
+      "M": 256,
+      "N": 2048,
+      "K": 512,
+      "G": 8,
+      "bitwise_mismatches": 0,
+      "status": "PASS",
+      "blas_library": "/workspace/GroupGemm/baseline/hipblaslt-install/lib/libhipblaslt.so.0.10"
+    },
+    {
+      "output": "torch.float16",
+      "M": 16,
+      "N": 256,
+      "K": 512,
+      "G": 2,
+      "bitwise_mismatches": 0,
+      "status": "PASS",
+      "blas_library": "/workspace/GroupGemm/baseline/hipblaslt-install/lib/libhipblaslt.so.0.10"
+    },
+    {
+      "output": "torch.float16",
+      "M": 128,
+      "N": 512,
+      "K": 1024,
+      "G": 4,
+      "bitwise_mismatches": 0,
+      "status": "PASS",
+      "blas_library": "/workspace/GroupGemm/baseline/hipblaslt-install/lib/libhipblaslt.so.0.10"
+    },
+    {
+      "output": "torch.float16",
+      "M": 256,
+      "N": 2048,
+      "K": 512,
+      "G": 8,
+      "bitwise_mismatches": 0,
+      "status": "PASS",
+      "blas_library": "/workspace/GroupGemm/baseline/hipblaslt-install/lib/libhipblaslt.so.0.10"
+    }
+  ],
+  "epilogue": {
+    "status": "PASS",
+    "checks": [
+      {
+        "M": 128,
+        "N": 256,
+        "K": 512,
+        "G": 2,
+        "route": 7,
+        "output": "torch.bfloat16",
+        "step": 0,
+        "status": "PASS",
+        "bad_elements": 0,
+        "full_output": true
+      },
+      {
+        "M": 128,
+        "N": 256,
+        "K": 512,
+        "G": 2,
+        "route": 7,
+        "output": "torch.bfloat16",
+        "step": 1,
+        "status": "PASS",
+        "bad_elements": 0,
+        "full_output": true
+      },
+      {
+        "M": 128,
+        "N": 256,
+        "K": 512,
+        "G": 2,
+        "route": 7,
+        "output": "torch.bfloat16",
+        "step": 2,
+        "status": "PASS",
+        "bad_elements": 0,
+        "full_output": true
+      },
+      {
+        "M": 128,
+        "N": 256,
+        "K": 512,
+        "G": 2,
+        "route": 7,
+        "output": "torch.float16",
+        "step": 0,
+        "status": "PASS",
+        "bad_elements": 0,
+        "full_output": true
+      },
+      {
+        "M": 128,
+        "N": 256,
+        "K": 512,
+        "G": 2,
+        "route": 7,
+        "output": "torch.float16",
+        "step": 1,
+        "status": "PASS",
+        "bad_elements": 0,
+        "full_output": true
+      },
+      {
+        "M": 128,
+        "N": 256,
+        "K": 512,
+        "G": 2,
+        "route": 7,
+        "output": "torch.float16",
+        "step": 2,
+        "status": "PASS",
+        "bad_elements": 0,
+        "full_output": true
+      },
+      {
+        "M": 256,
+        "N": 512,
+        "K": 512,
+        "G": 2,
+        "route": 3,
+        "output": "torch.bfloat16",
+        "step": 0,
+        "status": "PASS",
+        "bad_elements": 0,
+        "full_output": true
+      },
+      {
+        "M": 256,
+        "N": 512,
+        "K": 512,
+        "G": 2,
+        "route": 3,
+        "output": "torch.bfloat16",
+        "step": 1,
+        "status": "PASS",
+        "bad_elements": 0,
+        "full_output": true
+      },
+      {
+        "M": 256,
+        "N": 512,
+        "K": 512,
+        "G": 2,
+        "route": 3,
+        "output": "torch.bfloat16",
+        "step": 2,
+        "status": "PASS",
+        "bad_elements": 0,
+        "full_output": true
+      },
+      {
+        "M": 256,
+        "N": 512,
+        "K": 512,
+        "G": 2,
+        "route": 3,
+        "output": "torch.float16",
+        "step": 0,
+        "status": "PASS",
+        "bad_elements": 0,
+        "full_output": true
+      },
+      {
+        "M": 256,
+        "N": 512,
+        "K": 512,
+        "G": 2,
+        "route": 3,
+        "output": "torch.float16",
+        "step": 1,
+        "status": "PASS",
+        "bad_elements": 0,
+        "full_output": true
+      },
+      {
+        "M": 256,
+        "N": 512,
+        "K": 512,
+        "G": 2,
+        "route": 3,
+        "output": "torch.float16",
+        "step": 2,
+        "status": "PASS",
+        "bad_elements": 0,
+        "full_output": true
+      },
+      {
+        "M": 2048,
+        "N": 1792,
+        "K": 1536,
+        "G": 2,
+        "route": 12,
+        "output": "torch.bfloat16",
+        "step": 0,
+        "status": "PASS",
+        "bad_elements": 0,
+        "full_output": true
+      },
+      {
+        "M": 2048,
+        "N": 1792,
+        "K": 1536,
+        "G": 2,
+        "route": 12,
+        "output": "torch.bfloat16",
+        "step": 1,
+        "status": "PASS",
+        "bad_elements": 0,
+        "full_output": true
+      },
+      {
+        "M": 2048,
+        "N": 1792,
+        "K": 1536,
+        "G": 2,
+        "route": 12,
+        "output": "torch.bfloat16",
+        "step": 2,
+        "status": "PASS",
+        "bad_elements": 0,
+        "full_output": true
+      },
+      {
+        "M": 2048,
+        "N": 1792,
+        "K": 1536,
+        "G": 2,
+        "route": 12,
+        "output": "torch.float16",
+        "step": 0,
+        "status": "PASS",
+        "bad_elements": 0,
+        "full_output": true
+      },
+      {
+        "M": 2048,
+        "N": 1792,
+        "K": 1536,
+        "G": 2,
+        "route": 12,
+        "output": "torch.float16",
+        "step": 1,
+        "status": "PASS",
+        "bad_elements": 0,
+        "full_output": true
+      },
+      {
+        "M": 2048,
+        "N": 1792,
+        "K": 1536,
+        "G": 2,
+        "route": 12,
+        "output": "torch.float16",
+        "step": 2,
+        "status": "PASS",
+        "bad_elements": 0,
+        "full_output": true
+      }
+    ]
+  },
+  "boundaries": {
+    "status": "PASS",
+    "checks": [
+      {
+        "index": 0,
+        "lengths": [
+          17,
+          17
+        ],
+        "N": 260,
+        "K": 528,
+        "route": 0,
+        "legacy_instance": 7501,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": false,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 1,
+        "lengths": [
+          32,
+          32,
+          32,
+          32,
+          32,
+          32,
+          32,
+          32
+        ],
+        "N": 260,
+        "K": 1232,
+        "route": 0,
+        "legacy_instance": 7502,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": false,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 2,
+        "lengths": [
+          33,
+          33
+        ],
+        "N": 260,
+        "K": 1232,
+        "route": 0,
+        "legacy_instance": 7603,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": false,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 3,
+        "lengths": [
+          64,
+          64,
+          64,
+          64,
+          64,
+          64,
+          64,
+          64
+        ],
+        "N": 260,
+        "K": 4112,
+        "route": 0,
+        "legacy_instance": 7604,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": false,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 4,
+        "lengths": [
+          1,
+          17,
+          0
+        ],
+        "N": 1236,
+        "K": 1232,
+        "route": 0,
+        "legacy_instance": 6004,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": false,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 5,
+        "lengths": [
+          0,
+          0
+        ],
+        "N": 128,
+        "K": 512,
+        "route": 0,
+        "legacy_instance": 6004,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": false,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 6,
+        "lengths": [
+          33,
+          0,
+          257
+        ],
+        "N": 300,
+        "K": 528,
+        "route": 0,
+        "legacy_instance": 6007,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": false,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 7,
+        "lengths": [
+          128,
+          256
+        ],
+        "N": 260,
+        "K": 256,
+        "route": 0,
+        "legacy_instance": 6007,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": false,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 8,
+        "lengths": [
+          128,
+          128
+        ],
+        "N": 256,
+        "K": 512,
+        "route": 7,
+        "legacy_instance": 6035,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": true,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 9,
+        "lengths": [
+          256,
+          256
+        ],
+        "N": 256,
+        "K": 2048,
+        "route": 7,
+        "legacy_instance": 19001,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": true,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 10,
+        "lengths": [
+          128
+        ],
+        "N": 256,
+        "K": 2048,
+        "route": 7,
+        "legacy_instance": 6042,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": true,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 11,
+        "lengths": [
+          257,
+          257
+        ],
+        "N": 260,
+        "K": 2064,
+        "route": 0,
+        "legacy_instance": 6043,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": false,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 12,
+        "lengths": [
+          129,
+          129
+        ],
+        "N": 260,
+        "K": 528,
+        "route": 0,
+        "legacy_instance": 6044,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": false,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 13,
+        "lengths": [
+          4096
+        ],
+        "N": 256,
+        "K": 2048,
+        "route": 6,
+        "legacy_instance": 19003,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": true,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 14,
+        "lengths": [
+          4096
+        ],
+        "N": 256,
+        "K": 4096,
+        "route": 5,
+        "legacy_instance": 19003,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": true,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 15,
+        "lengths": [
+          4097
+        ],
+        "N": 260,
+        "K": 1232,
+        "route": 0,
+        "legacy_instance": 6050,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": false,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 16,
+        "lengths": [
+          16,
+          16
+        ],
+        "N": 256,
+        "K": 4096,
+        "route": 0,
+        "legacy_instance": 8734,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": true,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 17,
+        "lengths": [
+          1
+        ],
+        "N": 260,
+        "K": 256,
+        "route": 0,
+        "legacy_instance": 6401,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": false,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 18,
+        "lengths": [
+          2,
+          2
+        ],
+        "N": 260,
+        "K": 768,
+        "route": 0,
+        "legacy_instance": 6401,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": false,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 19,
+        "lengths": [
+          3
+        ],
+        "N": 260,
+        "K": 1232,
+        "route": 0,
+        "legacy_instance": 6403,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": false,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 20,
+        "lengths": [
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8,
+          8
+        ],
+        "N": 260,
+        "K": 2064,
+        "route": 0,
+        "legacy_instance": 6404,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": false,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 21,
+        "lengths": [
+          16,
+          16,
+          16,
+          16,
+          16,
+          16,
+          16,
+          16,
+          16,
+          16,
+          16,
+          16,
+          16,
+          16,
+          16,
+          16,
+          16
+        ],
+        "N": 260,
+        "K": 528,
+        "route": 0,
+        "legacy_instance": 6401,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": false,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 22,
+        "lengths": [
+          1
+        ],
+        "N": 260,
+        "K": 4112,
+        "route": 0,
+        "legacy_instance": 8734,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": false,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 23,
+        "lengths": [
+          16,
+          16,
+          16,
+          16,
+          16,
+          16,
+          16,
+          16
+        ],
+        "N": 260,
+        "K": 6160,
+        "route": 0,
+        "legacy_instance": 8734,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": false,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 24,
+        "lengths": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "N": 260,
+        "K": 4096,
+        "route": 0,
+        "legacy_instance": 8734,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": false,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 25,
+        "lengths": [
+          256
+        ],
+        "N": 256,
+        "K": 384,
+        "route": 4,
+        "legacy_instance": 19005,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": false,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 26,
+        "lengths": [
+          512
+        ],
+        "N": 256,
+        "K": 640,
+        "route": 4,
+        "legacy_instance": 19005,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": true,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 27,
+        "lengths": [
+          2048
+        ],
+        "N": 256,
+        "K": 768,
+        "route": 4,
+        "legacy_instance": 19005,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": true,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 28,
+        "lengths": [
+          2304
+        ],
+        "N": 256,
+        "K": 768,
+        "route": 4,
+        "legacy_instance": 19005,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": true,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 29,
+        "lengths": [
+          2304
+        ],
+        "N": 256,
+        "K": 896,
+        "route": 4,
+        "legacy_instance": 19005,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": true,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 30,
+        "lengths": [
+          256
+        ],
+        "N": 512,
+        "K": 4096,
+        "route": 0,
+        "legacy_instance": 19001,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": true,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 31,
+        "lengths": [
+          256
+        ],
+        "N": 512,
+        "K": 6144,
+        "route": 4,
+        "legacy_instance": 19005,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": true,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 32,
+        "lengths": [
+          512
+        ],
+        "N": 256,
+        "K": 6144,
+        "route": 5,
+        "legacy_instance": 19004,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": true,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 33,
+        "lengths": [
+          512
+        ],
+        "N": 256,
+        "K": 7168,
+        "route": 5,
+        "legacy_instance": 19004,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": true,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 34,
+        "lengths": [
+          512
+        ],
+        "N": 256,
+        "K": 1536,
+        "route": 5,
+        "legacy_instance": 19004,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": true,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 35,
+        "lengths": [
+          512
+        ],
+        "N": 256,
+        "K": 3072,
+        "route": 5,
+        "legacy_instance": 19004,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": true,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 36,
+        "lengths": [
+          256
+        ],
+        "N": 512,
+        "K": 7168,
+        "route": 4,
+        "legacy_instance": 19005,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": true,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 37,
+        "lengths": [
+          512
+        ],
+        "N": 256,
+        "K": 768,
+        "route": 4,
+        "legacy_instance": 19005,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": true,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 38,
+        "lengths": [
+          512
+        ],
+        "N": 256,
+        "K": 640,
+        "route": 4,
+        "legacy_instance": 19005,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": true,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 39,
+        "lengths": [
+          768
+        ],
+        "N": 512,
+        "K": 6144,
+        "route": 5,
+        "legacy_instance": 19004,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": true,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 40,
+        "lengths": [
+          256
+        ],
+        "N": 768,
+        "K": 6144,
+        "route": 4,
+        "legacy_instance": 19005,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": false,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 41,
+        "lengths": [
+          2048
+        ],
+        "N": 256,
+        "K": 1536,
+        "route": 5,
+        "legacy_instance": 19004,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": true,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 42,
+        "lengths": [
+          2048
+        ],
+        "N": 512,
+        "K": 3072,
+        "route": 5,
+        "legacy_instance": 19004,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": true,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 43,
+        "lengths": [
+          4096
+        ],
+        "N": 1280,
+        "K": 2048,
+        "route": 1,
+        "legacy_instance": 19003,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": true,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 44,
+        "lengths": [
+          8192
+        ],
+        "N": 1024,
+        "K": 2048,
+        "route": 6,
+        "legacy_instance": 19003,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": true,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 45,
+        "lengths": [
+          4096
+        ],
+        "N": 1024,
+        "K": 2048,
+        "route": 6,
+        "legacy_instance": 19003,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": true,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 46,
+        "lengths": [
+          256
+        ],
+        "N": 512,
+        "K": 512,
+        "route": 3,
+        "legacy_instance": 19001,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": true,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 47,
+        "lengths": [
+          64
+        ],
+        "N": 256,
+        "K": 512,
+        "route": 9,
+        "legacy_instance": 7603,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": true,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 48,
+        "lengths": [
+          64,
+          64
+        ],
+        "N": 512,
+        "K": 640,
+        "route": 9,
+        "legacy_instance": 7603,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": true,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 49,
+        "lengths": [
+          64,
+          64
+        ],
+        "N": 4096,
+        "K": 4096,
+        "route": 8,
+        "legacy_instance": 7603,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": false,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 50,
+        "lengths": [
+          64,
+          64,
+          64,
+          64,
+          64,
+          64,
+          64,
+          64,
+          64,
+          64,
+          64,
+          64,
+          64,
+          64,
+          64,
+          64
+        ],
+        "N": 4096,
+        "K": 4096,
+        "route": 9,
+        "legacy_instance": 7604,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": false,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 51,
+        "lengths": [
+          63,
+          65
+        ],
+        "N": 256,
+        "K": 512,
+        "route": 0,
+        "legacy_instance": 6006,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": true,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 52,
+        "lengths": [
+          64,
+          128
+        ],
+        "N": 256,
+        "K": 512,
+        "route": 0,
+        "legacy_instance": 6007,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": true,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 53,
+        "lengths": [
+          0,
+          64
+        ],
+        "N": 256,
+        "K": 512,
+        "route": 0,
+        "legacy_instance": 6005,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": true,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 54,
+        "lengths": [
+          64
+        ],
+        "N": 512,
+        "K": 1232,
+        "route": 0,
+        "legacy_instance": 7603,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": false,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 55,
+        "lengths": [
+          32
+        ],
+        "N": 256,
+        "K": 4096,
+        "route": 11,
+        "legacy_instance": 7501,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": true,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 56,
+        "lengths": [
+          32,
+          32
+        ],
+        "N": 4096,
+        "K": 4096,
+        "route": 10,
+        "legacy_instance": 7501,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": false,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 57,
+        "lengths": [
+          32,
+          32,
+          32,
+          32,
+          32,
+          32,
+          32,
+          32,
+          32,
+          32,
+          32,
+          32,
+          32,
+          32,
+          32,
+          32
+        ],
+        "N": 512,
+        "K": 4096,
+        "route": 0,
+        "legacy_instance": 7502,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": false,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 58,
+        "lengths": [
+          32,
+          32
+        ],
+        "N": 512,
+        "K": 3072,
+        "route": 11,
+        "legacy_instance": 7501,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": true,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 59,
+        "lengths": [
+          31,
+          33
+        ],
+        "N": 256,
+        "K": 4096,
+        "route": 0,
+        "legacy_instance": 6005,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": true,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 60,
+        "lengths": [
+          0,
+          32
+        ],
+        "N": 256,
+        "K": 4096,
+        "route": 0,
+        "legacy_instance": 6004,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": true,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 61,
+        "lengths": [
+          2048,
+          2048,
+          2048,
+          2048
+        ],
+        "N": 1536,
+        "K": 2048,
+        "route": 12,
+        "legacy_instance": 19001,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": false,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 62,
+        "lengths": [
+          4096,
+          4096,
+          4096,
+          4096,
+          4096,
+          4096,
+          4096,
+          4096
+        ],
+        "N": 4096,
+        "K": 1536,
+        "route": 12,
+        "legacy_instance": 19004,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": false,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 63,
+        "lengths": [
+          2048,
+          2048,
+          2048,
+          2048,
+          2048,
+          2048
+        ],
+        "N": 3072,
+        "K": 4096,
+        "route": 12,
+        "legacy_instance": 19001,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": false,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      },
+      {
+        "index": 64,
+        "lengths": [
+          2048,
+          2048,
+          2048,
+          2048
+        ],
+        "N": 3072,
+        "K": 4096,
+        "route": 5,
+        "legacy_instance": 19001,
+        "status": "PASS",
+        "full_range_int8": true,
+        "fp64_reference": true,
+        "nondefault_prepare_and_compute_streams": true,
+        "packed_bytes_checked": false,
+        "inputs_unchanged": true,
+        "output_guards": true,
+        "weight_lifetime_and_contracts": true
+      }
+    ],
+    "library_sha256": "e026eeccd82efada138891ffeccdb36bae9523dae570c4add1cee63c46a8d924",
+    "routes": [
+      0,
+      1,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "C_ABI_sizes": [
+      48,
+      56,
+      56,
+      56
+    ]
+  },
+  "lifetime": {
+    "status": "PASS",
+    "checks": [
+      {
+        "generation": 0,
+        "M": 32,
+        "N": 256,
+        "K": 4096,
+        "G": 2,
+        "route": 11,
+        "stream_iteration": 0,
+        "exact_fp64": true,
+        "shared_weights": true,
+        "status": "PASS"
+      },
+      {
+        "generation": 0,
+        "M": 32,
+        "N": 256,
+        "K": 4096,
+        "G": 2,
+        "route": 11,
+        "stream_iteration": 1,
+        "exact_fp64": true,
+        "shared_weights": true,
+        "status": "PASS"
+      },
+      {
+        "generation": 0,
+        "M": 64,
+        "N": 256,
+        "K": 4096,
+        "G": 2,
+        "route": 9,
+        "stream_iteration": 0,
+        "exact_fp64": true,
+        "shared_weights": true,
+        "status": "PASS"
+      },
+      {
+        "generation": 0,
+        "M": 64,
+        "N": 256,
+        "K": 4096,
+        "G": 2,
+        "route": 9,
+        "stream_iteration": 1,
+        "exact_fp64": true,
+        "shared_weights": true,
+        "status": "PASS"
+      },
+      {
+        "generation": 0,
+        "M": 128,
+        "N": 256,
+        "K": 4096,
+        "G": 2,
+        "route": 7,
+        "stream_iteration": 0,
+        "exact_fp64": true,
+        "shared_weights": true,
+        "status": "PASS"
+      },
+      {
+        "generation": 0,
+        "M": 128,
+        "N": 256,
+        "K": 4096,
+        "G": 2,
+        "route": 7,
+        "stream_iteration": 1,
+        "exact_fp64": true,
+        "shared_weights": true,
+        "status": "PASS"
+      },
+      {
+        "generation": 0,
+        "M": 256,
+        "N": 256,
+        "K": 4096,
+        "G": 2,
+        "route": 3,
+        "stream_iteration": 0,
+        "exact_fp64": true,
+        "shared_weights": true,
+        "status": "PASS"
+      },
+      {
+        "generation": 0,
+        "M": 256,
+        "N": 256,
+        "K": 4096,
+        "G": 2,
+        "route": 3,
+        "stream_iteration": 1,
+        "exact_fp64": true,
+        "shared_weights": true,
+        "status": "PASS"
+      },
+      {
+        "generation": 0,
+        "M": 512,
+        "N": 256,
+        "K": 4096,
+        "G": 2,
+        "route": 5,
+        "stream_iteration": 0,
+        "exact_fp64": true,
+        "shared_weights": true,
+        "status": "PASS"
+      },
+      {
+        "generation": 0,
+        "M": 512,
+        "N": 256,
+        "K": 4096,
+        "G": 2,
+        "route": 5,
+        "stream_iteration": 1,
+        "exact_fp64": true,
+        "shared_weights": true,
+        "status": "PASS"
+      },
+      {
+        "generation": 0,
+        "M": 2048,
+        "N": 256,
+        "K": 4096,
+        "G": 2,
+        "route": 5,
+        "stream_iteration": 0,
+        "exact_fp64": true,
+        "shared_weights": true,
+        "status": "PASS"
+      },
+      {
+        "generation": 0,
+        "M": 2048,
+        "N": 256,
+        "K": 4096,
+        "G": 2,
+        "route": 5,
+        "stream_iteration": 1,
+        "exact_fp64": true,
+        "shared_weights": true,
+        "status": "PASS"
+      },
+      {
+        "generation": 1,
+        "M": 32,
+        "N": 256,
+        "K": 4096,
+        "G": 2,
+        "route": 11,
+        "stream_iteration": 0,
+        "exact_fp64": true,
+        "shared_weights": true,
+        "status": "PASS"
+      },
+      {
+        "generation": 1,
+        "M": 32,
+        "N": 256,
+        "K": 4096,
+        "G": 2,
+        "route": 11,
+        "stream_iteration": 1,
+        "exact_fp64": true,
+        "shared_weights": true,
+        "status": "PASS"
+      },
+      {
+        "generation": 1,
+        "M": 64,
+        "N": 256,
+        "K": 4096,
+        "G": 2,
+        "route": 9,
+        "stream_iteration": 0,
+        "exact_fp64": true,
+        "shared_weights": true,
+        "status": "PASS"
+      },
+      {
+        "generation": 1,
+        "M": 64,
+        "N": 256,
+        "K": 4096,
+        "G": 2,
+        "route": 9,
+        "stream_iteration": 1,
+        "exact_fp64": true,
+        "shared_weights": true,
+        "status": "PASS"
+      },
+      {
+        "generation": 1,
+        "M": 128,
+        "N": 256,
+        "K": 4096,
+        "G": 2,
+        "route": 7,
+        "stream_iteration": 0,
+        "exact_fp64": true,
+        "shared_weights": true,
+        "status": "PASS"
+      },
+      {
+        "generation": 1,
+        "M": 128,
+        "N": 256,
+        "K": 4096,
+        "G": 2,
+        "route": 7,
+        "stream_iteration": 1,
+        "exact_fp64": true,
+        "shared_weights": true,
+        "status": "PASS"
+      },
+      {
+        "generation": 1,
+        "M": 256,
+        "N": 256,
+        "K": 4096,
+        "G": 2,
+        "route": 3,
+        "stream_iteration": 0,
+        "exact_fp64": true,
+        "shared_weights": true,
+        "status": "PASS"
+      },
+      {
+        "generation": 1,
+        "M": 256,
+        "N": 256,
+        "K": 4096,
+        "G": 2,
+        "route": 3,
+        "stream_iteration": 1,
+        "exact_fp64": true,
+        "shared_weights": true,
+        "status": "PASS"
+      },
+      {
+        "generation": 1,
+        "M": 512,
+        "N": 256,
+        "K": 4096,
+        "G": 2,
+        "route": 5,
+        "stream_iteration": 0,
+        "exact_fp64": true,
+        "shared_weights": true,
+        "status": "PASS"
+      },
+      {
+        "generation": 1,
+        "M": 512,
+        "N": 256,
+        "K": 4096,
+        "G": 2,
+        "route": 5,
+        "stream_iteration": 1,
+        "exact_fp64": true,
+        "shared_weights": true,
+        "status": "PASS"
+      },
+      {
+        "generation": 1,
+        "M": 2048,
+        "N": 256,
+        "K": 4096,
+        "G": 2,
+        "route": 5,
+        "stream_iteration": 0,
+        "exact_fp64": true,
+        "shared_weights": true,
+        "status": "PASS"
+      },
+      {
+        "generation": 1,
+        "M": 2048,
+        "N": 256,
+        "K": 4096,
+        "G": 2,
+        "route": 5,
+        "stream_iteration": 1,
+        "exact_fp64": true,
+        "shared_weights": true,
+        "status": "PASS"
+      },
+      {
+        "generation": 0,
+        "M": 32,
+        "N": 4096,
+        "K": 4096,
+        "G": 2,
+        "route": 10,
+        "stream_iteration": 0,
+        "exact_fp64": true,
+        "shared_weights": true,
+        "status": "PASS"
+      },
+      {
+        "generation": 0,
+        "M": 32,
+        "N": 4096,
+        "K": 4096,
+        "G": 2,
+        "route": 10,
+        "stream_iteration": 1,
+        "exact_fp64": true,
+        "shared_weights": true,
+        "status": "PASS"
+      },
+      {
+        "generation": 1,
+        "M": 32,
+        "N": 4096,
+        "K": 4096,
+        "G": 2,
+        "route": 10,
+        "stream_iteration": 0,
+        "exact_fp64": true,
+        "shared_weights": true,
+        "status": "PASS"
+      },
+      {
+        "generation": 1,
+        "M": 32,
+        "N": 4096,
+        "K": 4096,
+        "G": 2,
+        "route": 10,
+        "stream_iteration": 1,
+        "exact_fp64": true,
+        "shared_weights": true,
+        "status": "PASS"
+      },
+      {
+        "generation": 0,
+        "M": 2048,
+        "N": 1536,
+        "K": 2048,
+        "G": 4,
+        "route": 12,
+        "stream_iteration": 0,
+        "exact_fp64": true,
+        "shared_weights": true,
+        "status": "PASS"
+      },
+      {
+        "generation": 0,
+        "M": 2048,
+        "N": 1536,
+        "K": 2048,
+        "G": 4,
+        "route": 12,
+        "stream_iteration": 1,
+        "exact_fp64": true,
+        "shared_weights": true,
+        "status": "PASS"
+      },
+      {
+        "generation": 1,
+        "M": 2048,
+        "N": 1536,
+        "K": 2048,
+        "G": 4,
+        "route": 12,
+        "stream_iteration": 0,
+        "exact_fp64": true,
+        "shared_weights": true,
+        "status": "PASS"
+      },
+      {
+        "generation": 1,
+        "M": 2048,
+        "N": 1536,
+        "K": 2048,
+        "G": 4,
+        "route": 12,
+        "stream_iteration": 1,
+        "exact_fp64": true,
+        "shared_weights": true,
+        "status": "PASS"
+      }
+    ],
+    "same_source_addresses_refreshed": true,
+    "plans_destroy_wait_for_queued_work": true,
+    "library_sha256": "e026eeccd82efada138891ffeccdb36bae9523dae570c4add1cee63c46a8d924"
+  },
+  "code_equivalence": {
+    "old_default_compared": 120,
+    "old_default_bit_identical": 120,
+    "different": [],
+    "production_masks_compared": 6,
+    "production_masks_identical_to_tuned": 6,
+    "mask_different": [],
+    "old": "max_all_v135_resources",
+    "new": "max_all_v136_resources"
+  },
+  "resources": [
+    {
+      ".args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".group_segment_fixed_size": 65536,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 768,
+      ".name": "_ZN7ck_tile6kentryILi768ELi1ENS_29GroupedInt8NtScaledWaspKernelINS_28GroupedInt8NtWaspCoreProblemILi256ELb0ELi8ELi4ELi4ELb1ELb1ELi0ELb0ELb1ELi0ELi8EEELb1ENS_31GroupedInt8NtScaledWaspEpilogueIS3_Lb1EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 40,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi768ELi1ENS_29GroupedInt8NtScaledWaspKernelINS_28GroupedInt8NtWaspCoreProblemILi256ELb0ELi8ELi4ELi4ELb1ELb1ELi0ELb0ELb1ELi0ELi8EEELb1ENS_31GroupedInt8NtScaledWaspEpilogueIS3_Lb1EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_.kd",
+      ".unfolded_args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 199,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64,
+      "demangled": "void ck_tile::kentry<768, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 8, 4, 4, true, true, 0, false, true, 0, 8>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 8, 4, 4, true, true, 0, false, true, 0, 8>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      "image": "device_1044480.hsaco",
+      "label": {
+        "kind": "wasp_grid",
+        "BM": 256,
+        "BN": 256,
+        "cluster": 4
+      }
+    },
+    {
+      ".args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".group_segment_fixed_size": 65536,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 1024,
+      ".name": "_ZN7ck_tile6kentryILi1024ELi1ENS_29GroupedInt8NtScaledWaspKernelINS_28GroupedInt8NtWaspCoreProblemILi256ELb0ELi12ELi4ELi2ELb1ELb1ELi0ELb0ELb1ELi0ELi12EEELb1ENS_31GroupedInt8NtScaledWaspEpilogueIS3_Lb1EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 40,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi1024ELi1ENS_29GroupedInt8NtScaledWaspKernelINS_28GroupedInt8NtWaspCoreProblemILi256ELb0ELi12ELi4ELi2ELb1ELb1ELi0ELb0ELb1ELi0ELi12EEELb1ENS_31GroupedInt8NtScaledWaspEpilogueIS3_Lb1EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_.kd",
+      ".unfolded_args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 183,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64,
+      "demangled": "void ck_tile::kentry<1024, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 12, 4, 2, true, true, 0, false, true, 0, 12>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 12, 4, 2, true, true, 0, false, true, 0, 12>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      "image": "device_1044480.hsaco",
+      "label": {
+        "kind": "wasp_grid",
+        "BM": 256,
+        "BN": 384,
+        "cluster": 4
+      }
+    },
+    {
+      ".args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".group_segment_fixed_size": 65536,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 1024,
+      ".name": "_ZN7ck_tile6kentryILi1024ELi1ENS_29GroupedInt8NtScaledWaspKernelINS_34GroupedInt8NtWaspMaskedWideProblemILi4EEELb1ENS_31GroupedInt8NtScaledWaspEpilogueIS3_Lb1EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 40,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi1024ELi1ENS_29GroupedInt8NtScaledWaspKernelINS_34GroupedInt8NtWaspMaskedWideProblemILi4EEELb1ENS_31GroupedInt8NtScaledWaspEpilogueIS3_Lb1EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_.kd",
+      ".unfolded_args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 182,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64,
+      "demangled": "void ck_tile::kentry<1024, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspMaskedWideProblem<4>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspMaskedWideProblem<4>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      "image": "device_1044480.hsaco",
+      "label": {
+        "kind": "production_tail_mask",
+        "BM": 256,
+        "BN": 384,
+        "cluster": 4
+      }
+    },
+    {
+      ".args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".group_segment_fixed_size": 65536,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 1024,
+      ".name": "_ZN7ck_tile6kentryILi1024ELi1ENS_29GroupedInt8NtScaledWaspKernelINS_34GroupedInt8NtWaspMaskedWideProblemILi8EEELb1ENS_31GroupedInt8NtScaledWaspEpilogueIS3_Lb1EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 40,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi1024ELi1ENS_29GroupedInt8NtScaledWaspKernelINS_34GroupedInt8NtWaspMaskedWideProblemILi8EEELb1ENS_31GroupedInt8NtScaledWaspEpilogueIS3_Lb1EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_.kd",
+      ".unfolded_args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 182,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64,
+      "demangled": "void ck_tile::kentry<1024, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspMaskedWideProblem<8>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspMaskedWideProblem<8>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      "image": "device_1044480.hsaco",
+      "label": {
+        "kind": "production_tail_mask",
+        "BM": 256,
+        "BN": 384,
+        "cluster": 8
+      }
+    }
+  ],
+  "occupancy": [
+    {
+      "geometry": [
+        256,
+        8
+      ],
+      "threads": 768,
+      "vgpr": 199,
+      "lds": 65536,
+      "api_max_active_blocks_per_mp": 1,
+      "demangled": "void ck_tile::kentry<768, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 8, 4, 4, true, true, 0, false, true, 0, 8>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 8, 4, 4, true, true, 0, false, true, 0, 8>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "geometry": [
+        256,
+        12
+      ],
+      "threads": 1024,
+      "vgpr": 183,
+      "lds": 65536,
+      "api_max_active_blocks_per_mp": 1,
+      "demangled": "void ck_tile::kentry<1024, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 12, 4, 2, true, true, 0, false, true, 0, 12>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 12, 4, 2, true, true, 0, false, true, 0, 12>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "geometry": [
+        256,
+        384
+      ],
+      "threads": 1024,
+      "vgpr": 182,
+      "lds": 65536,
+      "api_max_active_blocks_per_mp": 1,
+      "demangled": "void ck_tile::kentry<1024, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspMaskedWideProblem<4>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspMaskedWideProblem<4>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "geometry": [
+        256,
+        384
+      ],
+      "threads": 1024,
+      "vgpr": 182,
+      "lds": 65536,
+      "api_max_active_blocks_per_mp": 1,
+      "demangled": "void ck_tile::kentry<1024, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspMaskedWideProblem<8>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspMaskedWideProblem<8>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "geometry": [
+        16,
+        64,
+        256
+      ],
+      "threads": 128,
+      "vgpr": 110,
+      "lds": 21760,
+      "api_max_active_blocks_per_mp": 3,
+      "demangled": "void ck_tile::kentry<128, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtTileProblem<16, 64, 256, 1, 2, false, false, true, true, 1, true, 0>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "geometry": [
+        16,
+        128,
+        256
+      ],
+      "threads": 256,
+      "vgpr": 103,
+      "lds": 39168,
+      "api_max_active_blocks_per_mp": 1,
+      "demangled": "void ck_tile::kentry<256, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtTileProblem<16, 128, 256, 1, 4, false, false, true, true, 1, true, 0>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "geometry": [
+        16,
+        32,
+        512
+      ],
+      "threads": 128,
+      "vgpr": 114,
+      "lds": 25344,
+      "api_max_active_blocks_per_mp": 2,
+      "demangled": "void ck_tile::kentry<128, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtTileProblem<16, 32, 512, 1, 2, false, false, true, true, 1, true, 0>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    }
+  ]
+}
