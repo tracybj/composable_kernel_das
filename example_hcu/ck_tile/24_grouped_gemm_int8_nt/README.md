@@ -9,6 +9,13 @@ never packed. Existing FP16/BF16 input interfaces are unchanged.
 See [scale semantics and validation](docs/INT8_SCALE_OUTPUT.md) for the v2
 contract,the BLASLt reference and the limits of the current comparison.
 
+For the current `exp/int8_nt` implementation, read
+[current status and complete call/data flow](docs/CURRENT_INT8_NT_STATUS_AND_FLOW.md).
+The last full scaled acceptance is v136:1191/1191 numerical PASS for each
+BF16/FP16 output;1116/1131 cases respectively meet the frozen Max ALL target.
+The v137 single-B-buffer experiment remains tuning-only and is not promoted.
+The v120/v121 results below describe the historical unscaled reference.
+
 ## Production layout
 
 | Layer | Files | Responsibility |

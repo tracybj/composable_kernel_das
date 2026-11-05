@@ -445,3 +445,15 @@ CPU B生命周期模型16900检查PASS（非GPU证明）；GPU将覆盖full-rang
 源码86e9e1b已同步到ck_yyc指定仓库；本地runner语法检查及B生命周期16900项检查PASS。GPU计划为648项full-range完整输出与216项非法域prelaunch拒绝检查，随后查询实际occupancy并做同轮代表shape对照。这些GPU检查尚未执行，不能将计划条数写成PASS。
 
 构建启动与GitHub推送均被自动审批服务的用量限制阻止，命令未执行；未启动编译/GPU进程，也未绕过审批。服务器源码已同步86e9e1b，最后确认GitHub为f8c4570；恢复后先核对远端HEAD/进程再构建，不重复启动。状态记录见max_all_v137_local_preflight.json。正式生产仍为v136，性能达标数未因本地模型检查改变。
+
+### v137 GPU验证及初筛结果：不推广单B缓冲
+
+自动审批服务恢复后，已按原审批流程完成构建及GitHub推送。隔离构建build/max_all_v137_single_b，源码86e9e1b，API SHA256 b35c856ab48c76b7765ea5dbf42b013e781e240d8ddd63cd3385baeea61f4d05。648项full-range INT8/FP64完整输出检查PASS，216项非法域在launch前拒绝。覆盖INT32/BF16/FP16、无scale/标量A加channelB/per-token A/特殊scale、odd/even K阶段、尾部/stride/guard。384个kernel无spill。旧生产126个kernel与v136逐函数机器码完全相同，旧v135实验及生产357个kernel也全部相同。
+
+单B缓冲确实降低资源：BM128/BN384、896线程、LDS32KiB，AReadBatch1为95VGPR，batch2为103VGPR；HIP静态每CU最大CTA均为2。同几何双B的batch1/2为111/119VGPR，静态仍只有1CTA。这是资源可行上限，不是动态achieved occupancy。
+
+卡7独立完成16个代表prefill/回归shape、320项完整输出初筛，0数值错误；3 warm/10 repeat/2样本中位数，保留所有原始样本。单B没有新增填平任何本轮默认未达标项，多数中长K仍慢于默认。例M16384/N4096/K6144/G8，BF16默认687.61 TOPS、单B最佳598.21（约-13.0%）；M8192/N3072/K4096/G6，默认613.59、单B最佳557.19（约-9.2%）。双B batch2同几何对照中，单B的BF16吞吐比中位数约0.990、FP16约0.977，驻留上限翻倍未抵消单wave预取重叠减少及不同tile的额外B请求等成本。时延结果证明该组合没有整体收益，尚未用动态counter拆分各成本，不能把单一原因写成已证。
+
+M2048/N4096/K1536/G4的单B BF16约405.76、默认395.24，但该行已超过目标，且FP16无对应收益，不晋升生产。初筛另观察已有route12对N4608/K5120代表行有收益；尚未独立正式复测及相邻域验证，不改selector、不覆盖正式全量数据。
+
+按用户要求，本轮不再启动新实验，先归档并梳理当前实现。单B实验只保留在tuning开关，未启用生产；1191正式结果仍是v136的1116 BF16/1131 FP16严格达标，75/60条未达标。初筛不是最终验收，不以逐条最快拼接正式CSV。报告见max_all_v137_single_b_screen.csv、max_all_v137_screen_summary.json及max_all_v137_validation_resources.json；总流程见CURRENT_INT8_NT_STATUS_AND_FLOW.md。

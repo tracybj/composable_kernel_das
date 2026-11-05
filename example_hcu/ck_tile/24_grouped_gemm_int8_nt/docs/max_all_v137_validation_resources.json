@@ -1,0 +1,235 @@
+{
+  "status": "GPU_GATES_AND_RESOURCES_PASS",
+  "library": {
+    "symbols": [
+      "ck_tile_int8_nt_cached_last_error_v1",
+      "ck_tile_int8_nt_cached_plan_create_v1",
+      "ck_tile_int8_nt_cached_plan_create_v2",
+      "ck_tile_int8_nt_cached_plan_destroy_v1",
+      "ck_tile_int8_nt_cached_plan_query_v1",
+      "ck_tile_int8_nt_cached_run_v1",
+      "ck_tile_int8_nt_cached_weights_create_v1",
+      "ck_tile_int8_nt_cached_weights_destroy_v1",
+      "ck_tile_int8_nt_cached_weights_query_v1"
+    ],
+    "library_sha256": "b35c856ab48c76b7765ea5dbf42b013e781e240d8ddd63cd3385baeea61f4d05",
+    "benchmark_sha256": "4be63aea906be9cb6234b736fd73c726194275c0262a643feab57c41b62f69e6",
+    "experimental_tuning": true,
+    "operand_paths": true
+  },
+  "full_range_checks": 648,
+  "prelaunch_rejections": 216,
+  "kernels": 384,
+  "spill_kernels": 0,
+  "occupancy": [
+    {
+      "kind": "double_b",
+      "BM": 256,
+      "BN": 384,
+      "batch": 2,
+      "cluster": 4,
+      "threads": 1024,
+      "vgpr": 183,
+      "lds": 65536,
+      "api_max_active_blocks_per_mp": 1,
+      "demangled": "void ck_tile::kentry<1024, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 12, 4, 2, true, true, 0, false, true, 0, 12>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 12, 4, 2, true, true, 0, false, true, 0, 12>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "kind": "double_b",
+      "BM": 128,
+      "BN": 384,
+      "batch": 2,
+      "cluster": 4,
+      "threads": 896,
+      "vgpr": 119,
+      "lds": 32768,
+      "api_max_active_blocks_per_mp": 1,
+      "demangled": "void ck_tile::kentry<896, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspCoreProblem<128, false, 12, 4, 2, true, true, 0, false, true, 0, 12>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspCoreProblem<128, false, 12, 4, 2, true, true, 0, false, true, 0, 12>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "kind": "double_b",
+      "BM": 128,
+      "BN": 384,
+      "batch": 4,
+      "cluster": 4,
+      "threads": 896,
+      "vgpr": 135,
+      "lds": 32768,
+      "api_max_active_blocks_per_mp": 1,
+      "demangled": "void ck_tile::kentry<896, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspCoreProblem<128, false, 12, 4, 4, true, true, 0, false, true, 0, 12>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspCoreProblem<128, false, 12, 4, 4, true, true, 0, false, true, 0, 12>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "kind": "double_b",
+      "BM": 128,
+      "BN": 384,
+      "batch": 2,
+      "cluster": 8,
+      "threads": 896,
+      "vgpr": 119,
+      "lds": 32768,
+      "api_max_active_blocks_per_mp": 1,
+      "demangled": "void ck_tile::kentry<896, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspCoreProblem<128, false, 12, 8, 2, true, true, 0, false, true, 0, 12>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspCoreProblem<128, false, 12, 8, 2, true, true, 0, false, true, 0, 12>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "kind": "double_b",
+      "BM": 128,
+      "BN": 384,
+      "batch": 4,
+      "cluster": 8,
+      "threads": 896,
+      "vgpr": 135,
+      "lds": 32768,
+      "api_max_active_blocks_per_mp": 1,
+      "demangled": "void ck_tile::kentry<896, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspCoreProblem<128, false, 12, 8, 4, true, true, 0, false, true, 0, 12>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspCoreProblem<128, false, 12, 8, 4, true, true, 0, false, true, 0, 12>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "kind": "double_b",
+      "BM": 256,
+      "BN": 384,
+      "batch": 2,
+      "cluster": 1,
+      "threads": 1024,
+      "vgpr": 183,
+      "lds": 65536,
+      "api_max_active_blocks_per_mp": 1,
+      "demangled": "void ck_tile::kentry<1024, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 12, 1, 2, true, true, 0, false, true, 0, 12>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 12, 1, 2, true, true, 0, false, true, 0, 12>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "kind": "double_b",
+      "BM": 256,
+      "BN": 384,
+      "batch": 2,
+      "cluster": 2,
+      "threads": 1024,
+      "vgpr": 183,
+      "lds": 65536,
+      "api_max_active_blocks_per_mp": 1,
+      "demangled": "void ck_tile::kentry<1024, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 12, 2, 2, true, true, 0, false, true, 0, 12>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 12, 2, 2, true, true, 0, false, true, 0, 12>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "kind": "double_b",
+      "BM": 256,
+      "BN": 384,
+      "batch": 2,
+      "cluster": 8,
+      "threads": 1024,
+      "vgpr": 183,
+      "lds": 65536,
+      "api_max_active_blocks_per_mp": 1,
+      "demangled": "void ck_tile::kentry<1024, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 12, 8, 2, true, true, 0, false, true, 0, 12>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 12, 8, 2, true, true, 0, false, true, 0, 12>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "kind": "double_b",
+      "BM": 256,
+      "BN": 384,
+      "batch": 2,
+      "cluster": 16,
+      "threads": 1024,
+      "vgpr": 183,
+      "lds": 65536,
+      "api_max_active_blocks_per_mp": 1,
+      "demangled": "void ck_tile::kentry<1024, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 12, 16, 2, true, true, 0, false, true, 0, 12>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 12, 16, 2, true, true, 0, false, true, 0, 12>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "kind": "single_b",
+      "BM": 128,
+      "BN": 384,
+      "batch": 1,
+      "cluster": 2,
+      "threads": 896,
+      "vgpr": 95,
+      "lds": 32768,
+      "api_max_active_blocks_per_mp": 2,
+      "demangled": "void ck_tile::kentry<896, 1, ck_tile::GroupedInt8NtScaledWaspKernel<(anonymous namespace)::SingleB128<1, 2>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<(anonymous namespace)::SingleB128<1, 2>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "kind": "single_b",
+      "BM": 128,
+      "BN": 384,
+      "batch": 1,
+      "cluster": 4,
+      "threads": 896,
+      "vgpr": 95,
+      "lds": 32768,
+      "api_max_active_blocks_per_mp": 2,
+      "demangled": "void ck_tile::kentry<896, 1, ck_tile::GroupedInt8NtScaledWaspKernel<(anonymous namespace)::SingleB128<1, 4>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<(anonymous namespace)::SingleB128<1, 4>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "kind": "single_b",
+      "BM": 128,
+      "BN": 384,
+      "batch": 2,
+      "cluster": 2,
+      "threads": 896,
+      "vgpr": 103,
+      "lds": 32768,
+      "api_max_active_blocks_per_mp": 2,
+      "demangled": "void ck_tile::kentry<896, 1, ck_tile::GroupedInt8NtScaledWaspKernel<(anonymous namespace)::SingleB128<2, 2>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<(anonymous namespace)::SingleB128<2, 2>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "kind": "single_b",
+      "BM": 128,
+      "BN": 384,
+      "batch": 2,
+      "cluster": 4,
+      "threads": 896,
+      "vgpr": 103,
+      "lds": 32768,
+      "api_max_active_blocks_per_mp": 2,
+      "demangled": "void ck_tile::kentry<896, 1, ck_tile::GroupedInt8NtScaledWaspKernel<(anonymous namespace)::SingleB128<2, 4>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<(anonymous namespace)::SingleB128<2, 4>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "kind": "double_b",
+      "BM": 128,
+      "BN": 384,
+      "batch": 1,
+      "cluster": 2,
+      "threads": 896,
+      "vgpr": 111,
+      "lds": 32768,
+      "api_max_active_blocks_per_mp": 1,
+      "demangled": "void ck_tile::kentry<896, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspCoreProblem<128, false, 12, 2, 1, true, true, 0, false, true, 0, 12>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspCoreProblem<128, false, 12, 2, 1, true, true, 0, false, true, 0, 12>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "kind": "double_b",
+      "BM": 128,
+      "BN": 384,
+      "batch": 1,
+      "cluster": 4,
+      "threads": 896,
+      "vgpr": 111,
+      "lds": 32768,
+      "api_max_active_blocks_per_mp": 1,
+      "demangled": "void ck_tile::kentry<896, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspCoreProblem<128, false, 12, 4, 1, true, true, 0, false, true, 0, 12>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspCoreProblem<128, false, 12, 4, 1, true, true, 0, false, true, 0, 12>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "kind": "double_b",
+      "BM": 128,
+      "BN": 384,
+      "batch": 2,
+      "cluster": 2,
+      "threads": 896,
+      "vgpr": 119,
+      "lds": 32768,
+      "api_max_active_blocks_per_mp": 1,
+      "demangled": "void ck_tile::kentry<896, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspCoreProblem<128, false, 12, 2, 2, true, true, 0, false, true, 0, 12>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspCoreProblem<128, false, 12, 2, 2, true, true, 0, false, true, 0, 12>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    }
+  ],
+  "code_equivalence": {
+    "max_all_v136_resources": {
+      "compared": 126,
+      "bit_identical": 126,
+      "missing": [],
+      "different": []
+    },
+    "max_all_v135_resources": {
+      "compared": 357,
+      "bit_identical": 357,
+      "missing": [],
+      "different": []
+    }
+  },
+  "b_lifetime_model_checks": 16900,
+  "tail_barrier_model_checks": 3333,
+  "tuning_domain_checks": 39
+}
