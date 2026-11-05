@@ -1,0 +1,39 @@
+{
+  "at": "2026-11-05T05:51:06.940744+00:00",
+  "records": [
+    {
+      "key": "e1_cache_profile_slc_m5",
+      "reason": "kernel_service_transition",
+      "epoch": 1,
+      "rc": 0,
+      "pid": 1547758,
+      "source_log": "/workspace/v7_coverage/p6f/runs/e1_cache_profile_slc_m5/run.log",
+      "events": [
+        "[4313799.015634] hycu: hymgr (1180503) unregister hyuds space.",
+        "[4313800.511562] hycu: hymgr (3125228) register hyuds space.",
+        "[4313808.294924] hycu: hymgr (3125228) unregister hyuds space.",
+        "[4313808.765870] hycu: hymgr (3127694) register hyuds space.",
+        "[4313816.893974] hycu: hymgr (3130360) register hyuds space.",
+        "[4313825.034697] hycu: hymgr (3133133) register hyuds space.",
+        "[4313833.457498] hycu: hymgr (3135966) register hyuds space.",
+        "[4313841.733452] hycu: hymgr (3139397) register hyuds space."
+      ],
+      "raw_retained": true
+    },
+    {
+      "key": "e2_cache_profile_rec2_noslc_m8",
+      "reason": "kernel_service_transition",
+      "epoch": 2,
+      "rc": 0,
+      "pid": 1568822,
+      "source_log": "/workspace/v7_coverage/p6f/runs/e2_cache_profile_rec2_noslc_m8/run.log",
+      "events": [
+        "[4315603.663325] hycu: hymgr (3292912) unregister hyuds space.",
+        "[4315606.696021] hycu: hymgr (3873650) register hyuds space.",
+        "[4315614.834562] hycu: hymgr (3876368) register hyuds space."
+      ],
+      "raw_retained": true
+    }
+  ],
+  "note": "Pre-job gate failures have no HIP job record; inspect gate/kernel_checks/recovery journals. All valid earlier formal contrasts completed before the later profile events. No cross-epoch pairing."
+}

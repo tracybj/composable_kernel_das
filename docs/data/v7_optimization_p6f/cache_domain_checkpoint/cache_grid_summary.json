@@ -1,0 +1,41 @@
+{
+  "at": "2026-11-05T05:44:49.433215+00:00",
+  "domain": {
+    "at": "before any expansion GPU data; during initial fixed four-shape factor study",
+    "ids": [
+      583,
+      584,
+      585,
+      587,
+      781,
+      782,
+      783,
+      784,
+      957,
+      960,
+      962,
+      964
+    ],
+    "count": 12,
+    "predicate": "common nonragged/nonempty BF16 NN gfx936; 5<=ceil(M/256)<=8, N/256>=16, 192<=K/16<=256, N%256==0, K%16==0, G<=1024; original byte/tile guards",
+    "reason": "A five-M-tile strip within a five-to-eight-M-tile grid, with at least16 N tiles and large panels; covers the four primary cases plus complete dataset near-neighbors",
+    "optional": true,
+    "gate": "only expand if the completed factor evidence supports a stable candidate; otherwise retain four-shape diagnosis only",
+    "note": "The137-case broader admissible domain is not scheduled; protect time for both mandatory tail and decode tasks",
+    "candidate_rule_frozen_before_expansion": "A NoSLC; choose M01=5 when ceil(N/256)>16, otherwise M01=1. M01=5 and8 primary NoSLC results near tied;5 follows the frozen Native family. The16-N-tile boundary comes from an80-CTA patch divided by a5-M strip, not a shape ID list.",
+    "candidate_rule_status": "hypothesis to validate across the entire12-shape domain, no global adoption yet"
+  },
+  "count": 12,
+  "median_paired_change_pct": -14.270287556031864,
+  "equal_call_paired_total_change_pct": -28.32478340789194,
+  "regressions_over2pct": [],
+  "uncertain": [
+    957,
+    960,
+    962,
+    964
+  ],
+  "same_instance_controls": [],
+  "recommendation": "do not adopt as entire domain without further evidence",
+  "note": "Whole contrast same-epoch/same-binary/same-GPU; different completed shapes may have different epochs; full domain fixed before expansion; not production frequency weighted"
+}
