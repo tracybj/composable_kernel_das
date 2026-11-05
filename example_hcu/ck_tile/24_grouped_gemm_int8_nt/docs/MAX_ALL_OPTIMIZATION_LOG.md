@@ -572,3 +572,17 @@ CPU99684项边界/随机检查通过，覆盖有限factor造成输出Inf、正�
 同一已编译3fa1502f...库的r1门禁504项full-range完整输出PASS、288项域外prelaunch拒绝；原128生产和384旧tuning kernel机器码全同，整库396 kernel无spill。14代表shape、84项完整输出初筛PASS（warm3/repeat10/2样本），逐条核对原始样本中位数和2GMNK吞吐。相同Problem/主循环下BF16吞吐比min/median/max=0.95579/0.97636/0.98743，全部回退；FP16控制中位数0.999975。ID302新方案R0.90581，对照约0.942；ID925新R0.93665，未填平任何默认缺口。减少交换数量没有带来整体收益，打包/解包和转换调度的动态贡献仍未分解；不能凭静态指令数归因。
 
 不接入生产、不重复用正式全量追一个已全面落后的候选。保留实验与负结果：max_all_v141_exchange_screen.csv、max_all_v141_summary.json，原始results/max_all_v141_exchange_screen及gates_r1。下一步独立验证finite-factor RNE路径，保留原4次交换以分离收益来源。
+
+## v143：low/high K64之间携带首批A预取（本地准备）
+
+在同一WASP核心增加默认false的CrossHalfPrefetch策略：low最后一个M-fragment batch发出high首批A LDS读，再完成当前low MMAC；随后按原late-B时机发B-next，high首批消费前仍wait lgkmcnt(0)。不擅自改非零wait阈值，A双槽、B双槽、stage发布/退役与尾部barrier保持。该策略限定APrefetch/OneBarrier且非EarlyB/SingleB。新76/77/78/79与12/22/23/5的tile、batch（N256对照Batch4）、cluster、mask逐一一致，epilogue不改，以分离主循环收益。
+
+CPU寄存器槽所有权244530项检查PASS，覆盖单双batch数、0～65 stage；尚未GPU验证。当前v142正式复测仍在收尾，v143先只本地准备，不修改远端当轮源码。
+
+### v142 GPU结果：正确，但不推广有限factor原型
+
+实现371e841，库417e350a8c9a6e06e3fdd55dec2f0a19bffcd636cfacd4e8b923fa2dc397a198，benchmark a773c9605b2e2097d075c7ac421d5d8f2677a4fea52604a8508f83dd386fca5d。840项full-range/FP64完整输出PASS、480项非法域拒绝，含有限factor输出Inf、有限输入scale组合后Inf、零行0×Inf回退、subnormal/负零/NaN、RNE ties、per-token/padding/tail。404个kernel无spill，128旧生产和396旧实验机器码完全相同。
+
+13条代表shape初筛78项完整输出PASS；独立正式warm10/repeat50/3样本同样78项PASS，已核对全部原始中位数及TOPS。相同Problem正式BF16速度比min/median/max为0.972103/1.000246/1.005914，FP16为0.999845/0.999979/1.000323。完整N384的route72在ID202/391/705/753/925上约-1.3%～-2.8%；masked路径ID522约+0.59%但R仍0.98516，ID302约+0.25%而R仍0.94499。ID1038 R1.000174仅有0.017%余量，不据此推广。
+
+ISA显示同一N384 BF16完整函数静态指令10264→11848，包含新增fast循环和通用fallback；VGPR仍183。该计数不是动态热路径耗时，尚未拆分判定/代码布局/调度成本，不能把回退仅归为ballot或代码大小。数学上可行不等于该实现普遍提速，不改变生产selector或v140 CSV。归档max_all_v142_finite_screen.csv、max_all_v142_finite_formal.csv、max_all_v142_summary.json。继续按优先级验证跨半段A预取。

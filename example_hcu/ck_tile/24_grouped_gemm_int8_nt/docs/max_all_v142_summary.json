@@ -1,0 +1,109 @@
+{
+  "status": "NOT_PROMOTED",
+  "library": {
+    "symbols": [
+      "ck_tile_int8_nt_cached_last_error_v1",
+      "ck_tile_int8_nt_cached_plan_create_v1",
+      "ck_tile_int8_nt_cached_plan_create_v2",
+      "ck_tile_int8_nt_cached_plan_destroy_v1",
+      "ck_tile_int8_nt_cached_plan_query_v1",
+      "ck_tile_int8_nt_cached_run_v1",
+      "ck_tile_int8_nt_cached_weights_create_v1",
+      "ck_tile_int8_nt_cached_weights_destroy_v1",
+      "ck_tile_int8_nt_cached_weights_query_v1"
+    ],
+    "library_sha256": "417e350a8c9a6e06e3fdd55dec2f0a19bffcd636cfacd4e8b923fa2dc397a198",
+    "benchmark_sha256": "a773c9605b2e2097d075c7ac421d5d8f2677a4fea52604a8508f83dd386fca5d",
+    "experimental_tuning": true,
+    "operand_paths": true
+  },
+  "gate_checks": 840,
+  "rejected": 480,
+  "old_production_bit_identical": 128,
+  "old_tuning_bit_identical": 396,
+  "spills": 0,
+  "runs": {
+    "screen": {
+      "cases": 13,
+      "records": 78,
+      "outputs": {
+        "BF16": {
+          "min_speedup": 0.9723455393932259,
+          "median_speedup": 0.9999542608279622,
+          "max_speedup": 1.0058253976408282
+        },
+        "FP16": {
+          "min_speedup": 0.9985460530311531,
+          "median_speedup": 0.9999657585249225,
+          "max_speedup": 1.0002818442097527
+        }
+      }
+    },
+    "formal": {
+      "cases": 13,
+      "records": 78,
+      "outputs": {
+        "BF16": {
+          "min_speedup": 0.9721030376275893,
+          "median_speedup": 1.0002460560267397,
+          "max_speedup": 1.00591351438849
+        },
+        "FP16": {
+          "min_speedup": 0.9998453672310417,
+          "median_speedup": 0.9999792672646195,
+          "max_speedup": 1.0003233155751334
+        }
+      }
+    }
+  },
+  "isa_static_whole_function": {
+    "default": {
+      "vgpr": 183,
+      "static_instructions": 10264,
+      "ops": {
+        "s_cbranch_vccnz": 106,
+        "v_cvt_f32_u32_e32": 2,
+        "v_cvt_u32_f32_e32": 2,
+        "s_cbranch_vccz": 5,
+        "s_and_saveexec_b64": 35,
+        "s_cbranch_execz": 54,
+        "v_cvt_f32_i32_e32": 385,
+        "v_add3_u32": 385,
+        "v_and_b32_e32": 428,
+        "v_cndmask_b32_e32": 588,
+        "global_store_short": 1,
+        "v_and_or_b32": 5,
+        "s_cbranch_scc0": 5,
+        "s_cbranch_execnz": 3,
+        "s_cbranch_scc1": 68,
+        "ds_bpermute_b32": 384,
+        "v_cndmask_b32_e64": 992,
+        "global_store_dwordx2": 96
+      }
+    },
+    "finite": {
+      "vgpr": 183,
+      "static_instructions": 11848,
+      "ops": {
+        "s_cbranch_vccnz": 114,
+        "v_cvt_f32_u32_e32": 2,
+        "v_cvt_u32_f32_e32": 2,
+        "s_cbranch_vccz": 7,
+        "s_and_saveexec_b64": 34,
+        "s_cbranch_execz": 54,
+        "v_cvt_f32_i32_e32": 513,
+        "v_add3_u32": 521,
+        "v_and_b32_e32": 439,
+        "v_cndmask_b32_e32": 780,
+        "global_store_short": 1,
+        "v_and_or_b32": 6,
+        "s_cbranch_scc0": 5,
+        "s_cbranch_execnz": 3,
+        "s_cbranch_scc1": 69,
+        "ds_bpermute_b32": 512,
+        "v_cndmask_b32_e64": 1193,
+        "global_store_dwordx2": 128
+      }
+    }
+  }
+}
