@@ -329,3 +329,11 @@ CPU协议模型检查0–65个K阶段的三种角色barrier epoch、双缓冲读
 ### v134首轮门禁脚本修正
 
 隔离构建成功，三类旧代码对象（42/78/171 kernels）SHA与v133完全相同，新tail实例182VGPR/64KiB无spill。首轮results/max_all_v134_gates在第一个M1非native fixture的plan_create预期拒绝后，被旧脚本route>=13断言误判：本轮新增了原route12作为对照。进程已结束、没有执行新kernel；不是GPU数值失败或VMFault。修正fixture接受route12的预期拒绝，并给tail suite逐shape增加明确native/packed域的成功/失败断言，避免将应成功的plan_create错误计作正常拒绝。原日志保留，使用新的gates_r1目录验证相同已编译库；仅Python门禁修改，不重建或替换该二进制。
+
+### v134门禁通过与初筛
+
+修正后的r1门禁630项full-range完整输出PASS，360项按显式支持域预期拒绝；全部342个已有kernel在各自代码对象中逐函数机器码与v133相同，新15个kernel均无spill。Mask候选182VGPR/64KiB/1024threads，静态最大仍1CTA，未通过省计算改变静态资源分配。
+
+18组初筛432项抽样输出PASS，每组8行，warm3/repeat10/2样本；不能用作全量性能验收。FP16尾块在相同cluster下中位增益约0.7%–3.1%，BF16混合、部分候选回退。整N控制组也有小幅差异，说明编译调度等影响不能与tail省工作量混为同一归因；cluster8的BF16出现较大回退，需要正式复测核实。不直接推广。
+
+接下来相同18组以完整输出、warm10/repeat50/3样本正式复测默认、原cl1/4/8与Mask cl1/4/8，保留两种输出和原始样本。该runner仅Python新增tail_formal套件，继续用581d61c编译的同一库；不重新编译C++，不把初筛最快样本写入生产CSV。
