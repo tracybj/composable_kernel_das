@@ -1,12 +1,15 @@
 // SPDX-License-Identifier: MIT
 #pragma once
 #include "problem.hpp"
+#include "../pipeline/packed_cooperative.hpp"
 #include "m128/problem.hpp"
 #include "m64/problem.hpp"
 #include "m32/problem.hpp"
 #include "wide_n/problem.hpp"
 #include "wide_n/masked_problem.hpp"
 namespace ck_tile::int8_nt_instances {
+using PackedM16N64K256 = GroupedInt8NtPackedSmallProblem<
+ GroupedInt8NtTileProblem<16,64,256,1,2,false,false,true,true,1,true>,true,true>;
 // Stable route handles identify precompiled geometry/policy, never workload IDs.
 using RawM256N256 = GroupedInt8NtWaspCachedProblem<false,8,4,4,true,true,0,false,false,1>;
 using RawM256N256Record1024 = GroupedInt8NtWaspCachedProblem<false,8,4,4,true,true,1024,false,false,1>;

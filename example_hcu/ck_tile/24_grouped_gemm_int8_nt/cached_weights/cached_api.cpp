@@ -159,6 +159,10 @@ std::unique_ptr<ck_tile_int8_nt_cached_plan_impl> make_plan(
  p->route=native_domain?(output_type?
   ck_tile::int8_cached_scaled_route(groups[0].m,w->n,w->k,g,w->packable,w->compute_units):
   ck_tile::int8_cached_route(groups[0].m,w->n,w->k,g,w->packable,w->compute_units)):0;
+ if(output_type && uniform && !empty){
+  const unsigned small=ck_tile::int8_cached_scaled_small_route(max_m,w->n,w->k,g,w->packable,w->compute_units);
+  if(small)p->route=small;
+ }
  if(((p->route==1 || p->route==2) && !raw_original) || ((p->route==3 || p->route==4) && !raw_transposed))p->route=0;
 #ifdef CK_INT8_CACHED_TUNING
  ck_tile::int8_tuning_override(uniform,empty,native_domain,w->packable,raw_original,raw_transposed,
@@ -175,7 +179,8 @@ std::unique_ptr<ck_tile_int8_nt_cached_plan_impl> make_plan(
    p->route==CK_TILE_INT8_CACHED_PACKED_M32_N64_A1_V1 ||
    p->route==CK_TILE_INT8_CACHED_PACKED_M256_N384_A2_V1 ||
    p->route==CK_TILE_INT8_CACHED_PACKED_M256_N384_MASKED_M4_V1 ||
-   p->route==CK_TILE_INT8_CACHED_PACKED_M256_N384_MASKED_M8_V1
+   p->route==CK_TILE_INT8_CACHED_PACKED_M256_N384_MASKED_M8_V1 ||
+   p->route==CK_TILE_INT8_CACHED_PACKED_M16_N64_K256_V1
 #ifdef CK_INT8_CACHED_TUNING
    || (p->route>=13 && p->route<=21) || (p->route>=32 && p->route<=43) || (p->route>=48 && p->route<=67)
 #endif

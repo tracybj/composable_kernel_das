@@ -38,6 +38,10 @@ def main():
     cases += [('scaled_policy_tail_cl4',2,[2048]*2,4096,1536,False,{0:(5,0),1:(22,0),2:(22,0)}),
               ('scaled_policy_tail_cl8_n',2,[2048]*2,5120,2304,True,{0:(5,0),1:(23,0),2:(23,0)}),
               ('scaled_policy_tail_cl8_k',2,[2048]*2,4096,4096,False,{0:(5,0),1:(23,0),2:(23,0)})]
+    cases += [('scaled_packed_small_m1',8,[1]*8,4096,6144,False,{0:(0,8734),1:(24,0),2:(24,0)}),
+              ('scaled_packed_small_m2',8,[2]*8,4096,7168,False,{0:(0,8734),1:(24,0),2:(24,0)}),
+              ('scaled_packed_small_padded',8,[8]*8,4096,7168,True,{0:(0,8734),1:(24,0),2:(24,0)}),
+              ('special_values_packed_small',8,[8]*8,4096,6144,False,{0:(0,8734),1:(24,0),2:(24,0)})]
     records=[];invalid_checks=0;covered=set()
     for name,g,ms,n,k,padded,expected in cases:
         astride=k+16 if padded else k;bstride=k+32 if padded else k;cstride=n+8 if padded else n
@@ -48,7 +52,7 @@ def main():
         # FP64 reference preserves every integer dot product across full INT8 range.
         refs=[]
         for i,m in enumerate(ms):refs.append((a[i,:m,:k].double()@b[i,:,:k].double().T).to(torch.int32))
-        for mode in ['none','scalar','channel','row_channel']+(['special'] if name=='special_values' else [])+(['ties'] if name=='rounding_ties' else []):
+        for mode in ['none','scalar','channel','row_channel']+(['special'] if name.startswith('special_values') else [])+(['ties'] if name=='rounding_ties' else []):
             sa=None if mode=='none' else torch.rand((g,maxm if mode in ['row_channel','special'] else 1),device='cuda')*.003+.001
             sb=None if mode=='none' else torch.rand((g,n if mode in ['channel','row_channel','special','ties'] else 1),device='cuda')*.003+.001
             if mode=='ties':
@@ -103,7 +107,7 @@ def main():
                 ok(lib.ck_tile_int8_nt_cached_plan_destroy_v1(plan))
                 rec=dict(case=name,output=str(dtype),scale_mode=mode,route=pi.route,legacy_instance=pi.legacy_instance,status='PASS',bad_elements=bad)
                 records.append(rec);print(json.dumps(rec),flush=True)
-                if name=='special_values' and mode=='none' and output==0:
+                if name.startswith('special_values') and mode=='none' and output==0:
                     for field,value in [('abi_version',1),('struct_size',79),('output_type',3),('output_type',1),('scale_a_mode',2),('scale_a',a.data_ptr()),('reserved',1)]:
                         d=gd[0];previous=d.reserved[0] if field=='reserved' else getattr(d,field)
                         if field=='reserved':d.reserved[0]=value

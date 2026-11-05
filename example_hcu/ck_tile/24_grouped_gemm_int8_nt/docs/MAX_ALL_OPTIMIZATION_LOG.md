@@ -493,3 +493,9 @@ CPU selector边界、39项tuning域、3333项尾部协议PASS；GPU完整范围3
 本版解决1条已知BF16缺口，但未重跑全1191，不把局部数据拼接为新全量CSV；最近正式全量仍v136（1116/1191，75未达标），其中ID992已有本版独立通过证据。小M route41仍未默认启用，待生产化和支持域验证。
 
 归档：max_all_v139_production_formal.csv、max_all_v139_validation_resources.json；服务器原始证据在results/max_all_v139_production_formal、max_all_v139_gates、max_all_v139_resources。
+
+## v140：低group长K的prepared-B协作实例生产化
+
+将已测route41的共同K排列、FullNK和32位相对地址实现迁到pipeline/packed_cooperative.hpp，原实验文件改为兼容include，避免双份主循环。新增scaled-only稳定route24（BM16/BN64/BK256、两wave）：prepared B、80CU、uniform非空、M1～8、N4096、K6144/7168、G8时启用，取v138有正式证据的域，不扩到已观察回退的G12以上。其余WASP/INT32策略不变。小M不满足WASP native域，所以plan在独立条件下选择该实例；必须同时绑定prepared B，并保持原输出/scale坐标。
+
+新增host域检查和生产API full-range/FP64夹具，覆盖M1/M2/M8、padded输入输出、空scale/标量/channel/per-token/NaN/Inf；INT32须仍走原8734。先独立OFF构建及门禁，再对48条长K邻域正式验证，当前不报新增达标数。

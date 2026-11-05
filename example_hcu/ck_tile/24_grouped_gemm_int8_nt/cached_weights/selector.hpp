@@ -46,6 +46,14 @@ inline unsigned int8_cached_route(int m,int n,int k,int groups,bool packed_avail
  return base;
 }
 
+// The prepared-B cooperative domain is independent of the WASP native-M domain.
+// Calibrated on M1/2/4/8, G8 and the complete long-K requirement neighborhood.
+inline unsigned int8_cached_scaled_small_route(int m,int n,int k,int groups,
+                                              bool packed_available,int compute_units=80){
+ return packed_available && compute_units==80 && m>0 && m<=8 &&
+        n==4096 && (k==6144 || k==7168) && groups==8 ?24u:0u;
+}
+
 // Scaled outputs have a separate policy;the established INT32 route is unchanged.
 // Formal paired measurements cover the low-N family and K768 M128 packed tile.
 inline unsigned int8_cached_scaled_route(int m,int n,int k,int groups,

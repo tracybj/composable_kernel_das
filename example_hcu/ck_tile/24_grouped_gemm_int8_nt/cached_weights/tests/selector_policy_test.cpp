@@ -53,5 +53,13 @@ int main(){using ck_tile::int8_cached_route;
  assert(int8_cached_scaled_route(2048,4608,5120,12,true,96)==int8_cached_route(2048,4608,5120,12,true,96));
  assert(int8_cached_scaled_route(1024,4608,5120,12,true,80)==int8_cached_route(1024,4608,5120,12,true,80));
  assert(int8_cached_scaled_route(2176,4608,5120,12,true,80)==int8_cached_route(2176,4608,5120,12,true,80));
+ using ck_tile::int8_cached_scaled_small_route;
+ for(int m:{1,2,4,8})for(int k:{6144,7168})assert(int8_cached_scaled_small_route(m,4096,k,8,true,80)==24);
+ assert(int8_cached_scaled_small_route(0,4096,6144,8,true,80)==0);
+ assert(int8_cached_scaled_small_route(16,4096,6144,8,true,80)==0);
+ assert(int8_cached_scaled_small_route(1,4096,6144,16,true,80)==0);
+ assert(int8_cached_scaled_small_route(1,4096,6144,8,false,80)==0);
+ assert(int8_cached_scaled_small_route(1,4096,6144,8,true,96)==0);
+ assert(int8_cached_scaled_small_route(1,4096,8192,8,true,80)==0);
  std::cout<<"SCALED_TAIL_POLICY_PASS\n";
 }
