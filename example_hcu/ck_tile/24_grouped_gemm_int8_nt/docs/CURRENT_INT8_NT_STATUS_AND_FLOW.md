@@ -1,5 +1,7 @@
 # INT8 NT当前状态与实现流程
 
+> 更新：v139已验证一项scaled分流改进。ID992切到已有route12，BF16 645.994 TOPS（R1.03993），FP16 649.253 TOPS（R1.04517）；6条邻域两输出均PASS，126个设备kernel与v136逐byte一致。最近完整1191回归仍为下文v136，未混入局部复测数据。详见MAX_ALL_OPTIMIZATION_LOG.md的v138/v139记录。
+
 记录日期：2026-11-05。适用仓库分支为`exp/int8_nt`、目录`example_hcu/ck_tile/24_grouped_gemm_int8_nt`。当前完整验收版本是v136；v137单B缓冲实验已完成，未接入默认分流。本文梳理已存在的实现，不启动新实验，也不将代表shape初筛成绩当作全量成绩。
 
 ## 1. 当前状态

@@ -483,3 +483,13 @@ M2048/N4096/K1536/G4的单B BF16约405.76、默认395.24，但该行已超过目
 ## v139：把完整N块的调度阈值接入scaled生产策略
 
 基于v137初筛和v138正式同轮对照，在已测N4608/K5120、M2048～4096且整M256、prepared B、80CU域，按实际CTA批次数量判断是否从原route5转route12：old_batches>=20，且old/wide>=1.46。只调整BF16/FP16的scaled策略，不按caseID分流；INT32策略不变。原1191清单只有ID992应改变路线，门禁包含无packed、其它CU和不完整M的边界。尚待独立TUNING=OFF构建和GPU验证，当前不计新增达标数。
+
+### v139生产验证完成
+
+实现5c1e496，TUNING=OFF库SHA256 c6126c0b7b223108338304325bd38c00b5dd06bda4e99e76f809d05efe20ec90，benchmark SHA256 6b5eb721c68fd7a883a82a42c27973c97b1c335295d5bcdc34b08778f8055bd6。两个设备代码镜像与v136逐byte一致，126个kernel全部未变、无spill，本版只改变host策略。实际C++策略按完整native域核对1191行，仅ID992的scaled路线5→12；审计脚本首版漏了N/K native限制，已纠正后核对，不把域外函数返回当实际dispatch。
+
+CPU selector边界、39项tuning域、3333项尾部协议PASS；GPU完整范围382项、7项非法域拒绝、实际BLAS标量对照6项bitwise、epilogue18项、原INT32 ABI65项、生命周期32项均PASS。生产库在卡7独立完成N4608/K5120全部6条邻域，两输出12项完整输出检查PASS、0失败，warm10/repeat50/3样本中位数。ID992 M2048/N4608/K5120/G12实际默认route12：BF16 1.795126081ms、645.994274TOPS、R1.0399268；FP16 1.786114693ms、649.253474TOPS、R1.0451735。其余5条仍达到目标。
+
+本版解决1条已知BF16缺口，但未重跑全1191，不把局部数据拼接为新全量CSV；最近正式全量仍v136（1116/1191，75未达标），其中ID992已有本版独立通过证据。小M route41仍未默认启用，待生产化和支持域验证。
+
+归档：max_all_v139_production_formal.csv、max_all_v139_validation_resources.json；服务器原始证据在results/max_all_v139_production_formal、max_all_v139_gates、max_all_v139_resources。

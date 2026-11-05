@@ -1,0 +1,107 @@
+{
+  "status": "AUDIT_PASS",
+  "implementation_commit": "5c1e496167fda10852363c7d86b8335ce75c10fd",
+  "library": {
+    "symbols": [
+      "ck_tile_int8_nt_cached_last_error_v1",
+      "ck_tile_int8_nt_cached_plan_create_v1",
+      "ck_tile_int8_nt_cached_plan_create_v2",
+      "ck_tile_int8_nt_cached_plan_destroy_v1",
+      "ck_tile_int8_nt_cached_plan_query_v1",
+      "ck_tile_int8_nt_cached_run_v1",
+      "ck_tile_int8_nt_cached_weights_create_v1",
+      "ck_tile_int8_nt_cached_weights_destroy_v1",
+      "ck_tile_int8_nt_cached_weights_query_v1"
+    ],
+    "library_sha256": "c6126c0b7b223108338304325bd38c00b5dd06bda4e99e76f809d05efe20ec90",
+    "benchmark_sha256": "6b5eb721c68fd7a883a82a42c27973c97b1c335295d5bcdc34b08778f8055bd6",
+    "experimental_tuning": false,
+    "operand_paths": false
+  },
+  "scaled_checks": 382,
+  "invalid_checks": 7,
+  "native_blas_checks": 6,
+  "epilogue_checks": 18,
+  "abi_checks": 65,
+  "lifetime_checks": 32,
+  "code_equivalence": {
+    "status": "PASS",
+    "device_images_bit_identical": true,
+    "kernels": 126,
+    "images": [
+      {
+        "image": "device_606208.hsaco",
+        "sha256": "03837fb3212830466ef070cbb72552e6e29c29f326de4a93b53ded666d1359cb",
+        "kernels": 44
+      },
+      {
+        "image": "device_1044480.hsaco",
+        "sha256": "f210e975c67188b71aaac8780f9924e55dd28af3e6715129c9fa7740274a5ab0",
+        "kernels": 82
+      }
+    ]
+  },
+  "formal_cases": 6,
+  "formal_checks": 12,
+  "formal_numeric_failures": 0,
+  "full_1191_rerun": false,
+  "expected_route_changes": [
+    {
+      "ID": 992,
+      "old": 5,
+      "new": 12
+    }
+  ],
+  "results_992": [
+    {
+      "ID": 992,
+      "M": 2048,
+      "N": 4608,
+      "K": 5120,
+      "G": 12,
+      "phase": "prefill",
+      "target_TOPS": 621.192065947515,
+      "candidate": "default",
+      "output": "BF16",
+      "route": 12,
+      "legacy_instance": 19004,
+      "ms": 1.7951260805130005,
+      "TOPS": 645.9942744459513,
+      "R": 1.0399267953633715,
+      "samples_ms": [
+        1.7951260805130005,
+        1.7951388359069824,
+        1.7950717210769653
+      ],
+      "bad_elements": 0,
+      "validation": "full",
+      "status": "PASS",
+      "packed_weight_bytes": 283115520
+    },
+    {
+      "ID": 992,
+      "M": 2048,
+      "N": 4608,
+      "K": 5120,
+      "G": 12,
+      "phase": "prefill",
+      "target_TOPS": 621.192065947515,
+      "candidate": "default",
+      "output": "FP16",
+      "route": 12,
+      "legacy_instance": 19004,
+      "ms": 1.7861146926879883,
+      "TOPS": 649.2534744086419,
+      "R": 1.04517348176095,
+      "samples_ms": [
+        1.7861146926879883,
+        1.7861404418945312,
+        1.785817265510559
+      ],
+      "bad_elements": 0,
+      "validation": "full",
+      "status": "PASS",
+      "packed_weight_bytes": 283115520
+    }
+  ]
+}
