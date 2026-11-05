@@ -122,6 +122,14 @@ A/B沿连续K方向做16字节搬运；LDS承担搬运布局到MMAC fragment布�
 
 带scale的协作epilogue复用LDS把分散的accumulator重排成连续输出，再反量化写出。因此即使实验中A/B输入绕过LDS，也不能称整个kernel完全不用LDS。
 
+### 5.1 一个小M实例的任务划分
+
+以正式清单中的`M1/N4096/K7168/G8`为例，route0/legacy8734在scaled入口使用BM16/BN32/BK512、WM1/WN2，共128线程。两个wave分别负责同一M16范围的两个N16条带；整个调用有`8*(4096/32)=1024`个CTA，每CTA计算14个K512阶段。
+
+实际只有1行M有效，MMAC仍按M16计算，最后只写有效行。这意味着该实例在M方向的有效算术比例是1/16；不意味着实际耗时必然能缩短16倍，也不能单凭这个比例断定瓶颈。边界判断可以避免无效A行的GMEM读取，但没有将16×16 MMAC改成1×16指令。
+
+输入LDS占`(16+32)*(512+16)=25344`字节：其中24KiB为完整tile数据，768B为行padding。输出stripe重排需要`16*32*4=2048`字节，与主循环复用同一分配，故总LDS取max而不是两者相加。此处是默认scaled Cooperative实例；不要把历史无scale direct名称或实验纯寄存器路径混入这段主循环。
+
 ## 6. WASP流水：producer与consumer分工
 
 主干在`pipeline/wasp.hpp`，`core_problem.hpp`描述几何和策略；`core_kernel.hpp`及`scaled_kernel.hpp`负责group、CTA、边界与输出调用。
@@ -136,6 +144,8 @@ consumer：B → VGPR；从当前A LDS读fragment → MMAC
 
 producer与consumer是同一CTA中的不同waves；不是CPU线程或不同kernel。原方向consumer独占自己的N32条带，A经LDS在各N条带之间共享；B由各consumer直接读取到寄存器。当前默认B使用双stage寄存器，A使用双LDS槽。
 
+这里A的原方向实际输入指令是`buffer_load_dwordx4 ... offen lds`，直接把数据载入LDS；VGPR操作数提供源地址，不是保存一份待写LDS的A数据。它与Cooperative的`global_load_dwordx4 → ds_write_b128`中转不同。已从冻结v136代码对象反汇编核实，证据见[current_flow_instruction_evidence.json](current_flow_instruction_evidence.json)。WASP消费者的B使用不带`lds`的buffer load进入VGPR，A则由`ds_read_b128`进入MMAC寄存器。
+
 BM256/BN384常用4个producer加12个consumer，共1024线程，A双LDS槽64KiB；BM128/BN256等几何调整producer/consumer数、LDS和accumulator数量，仍共用一个WASP流程。AReadBatch是一次LDS读取展开/预取的策略参数，不是额外一套流水。
 
 ### 6.1 原方向与逻辑转置
@@ -149,6 +159,47 @@ BM256/BN384常用4个producer加12个consumer，共1024线程，A双LDS槽64KiB�
 BN384不一定整除N；末尾可能只有部分N32 consumer条带有效。22/23让完全无效的consumer跳过B读取、A LDS读取和MMAC，但它们仍参加所有必要发布/退役及最终同步，不能提前退出导致其它wave死锁。只有主循环最终同步完成后，kernel才丢弃无效consumer，且不读取它们未定义的accumulator。
 
 该优化减少无效工作，不减少launch占用资源；它只解决N尾块浪费，不解决所有完整N块的吞吐差距。
+
+### 6.3 一个完整N块实例与逐阶段时序
+
+以`M8192/N3072/K4096/G6`的route12为例：BM256/BN384/BK128、MGroup4。每组32个M tile、8个N tile，整个调用1536个CTA；每CTA处理32个K128阶段。
+
+| CTA内角色 | wave编号 | 负责的数据/输出 |
+|---|---|---|
+| producer | 0–3 | 各搬A的64行；合计覆盖当前M256/K128块 |
+| consumer | 4–15 | consumer c负责完整M256、N方向第c个32列条带 |
+
+一个consumer的M256×N32输出为8192个INT32，分布到64个lane，每lane持有128个INT32 accumulator。B的一个stage由K128的两个K64半段、N32的两个N16块组成，每lane共64字节；当前/下一stage双缓冲共32个I32寄存器。再加A读取预取和地址寄存器，该BF16实例实际声明183VGPR、64KiB LDS。上述均不同于“整个CTA只有一份B寄存器”。
+
+默认`EarlyB=false`、`SingleB=false`、`OneBarrier=true`的顺序如下。表中是依赖/源码发射顺序，不是按周期比例绘制，也不保证某次执行完全重叠。
+
+| 阶段 | producer | consumer |
+|---|---|---|
+| prologue | A0直接加载LDS槽0，等待VMEM完成 | 发B0到寄存器槽0 |
+| A0发布 | 到达初始ready barrier | 到达同一barrier；消费前等待自己的B0 VMEM |
+| 当前stage s的low K64 | 搬A(s+1)到另一LDS槽并等待完成 | 从当前A槽读取，执行low半段MMAC |
+| 当前stage s的high K64 | 到达stage barrier，等待consumer | 若有下一stage，先发B(s+1)到另一寄存器槽，再执行high半段MMAC |
+| stage barrier | A(s+1)已准备好 | A(s)最后一次使用已结束；到达同一barrier |
+| 下一stage | barrier后才可在后续迭代覆盖更旧A槽 | 切换A/B槽，等待B(s+1)，继续计算 |
+| 尾部 | 无新A需要搬运，仍参加最后stage barrier | 不再预取越界B，完成最后MMAC及barrier |
+| 退出主循环 | 参加最终LDS wait/barrier | 参加最终LDS wait/barrier，然后进入epilogue |
+
+因此一个stage barrier同时建立“下一A可读”和“更旧A可退役”的条件；`s_waitcnt`负责完成本wave相关内存操作，不能单独替代跨wave的barrier。不要在原one-barrier协议之外凭图例再加一组独立发布/退役barrier。
+
+还有更细一级的预取：`consume_short`内部按M fragment分组，把下一组A的LDS读取发出后计算当前组；它与producer的A-stage双缓冲、consumer的B-stage双缓冲是三个不同层次。
+
+下面只统计一个**完整有效CTA、一个K128 stage**的逻辑字节，不是实测HBM/LDS流量：
+
+| 数据项 | 字节 |
+|---|---:|
+| A从GMEM送入LDS | 256×128=32KiB |
+| B从GMEM送入各consumer VGPR | 384×128=48KiB |
+| A由12个consumer各读一次 | 12×256×128=384KiB |
+| A双槽LDS容量 | 2×256×128=64KiB |
+
+32KiB的A由12个不同consumer wave复用，GMEM搬入一次，但LDS侧仍存在12份逻辑读取。CTA之间还会重复请求A/B，cache可能复用，不能把上表相加当作整卡实际HBM流量。每CTA的BF16/FP16完整输出为192KiB，只在全部32个K阶段累加结束后写一次；输出字节不应按stage重复计算。
+
+当前反汇编中Cooperative函数有global load、ds_write及ds_read；所选WASP函数有带lds的buffer load、普通buffer load及ds_read，没有显式ds_write。归档的静态指令条数覆盖整个函数，包含prologue、展开循环、tail和epilogue，不能直接当成每stage动态次数或耗时占比。
 
 ## 7. scale与输出
 

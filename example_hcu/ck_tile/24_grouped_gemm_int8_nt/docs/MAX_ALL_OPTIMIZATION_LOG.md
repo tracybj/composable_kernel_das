@@ -457,3 +457,9 @@ CPU B生命周期模型16900检查PASS（非GPU证明）；GPU将覆盖full-rang
 M2048/N4096/K1536/G4的单B BF16约405.76、默认395.24，但该行已超过目标，且FP16无对应收益，不晋升生产。初筛另观察已有route12对N4608/K5120代表行有收益；尚未独立正式复测及相邻域验证，不改selector、不覆盖正式全量数据。
 
 按用户要求，本轮不再启动新实验，先归档并梳理当前实现。单B实验只保留在tuning开关，未启用生产；1191正式结果仍是v136的1116 BF16/1131 FP16严格达标，75/60条未达标。初筛不是最终验收，不以逐条最快拼接正式CSV。报告见max_all_v137_single_b_screen.csv、max_all_v137_screen_summary.json及max_all_v137_validation_resources.json；总流程见CURRENT_INT8_NT_STATUS_AND_FLOW.md。
+
+### 源码流程补充核对：现有产物的指令与阶段
+
+仅使用v136冻结代码对象反汇编，没有编译、启动或计时新GPU实验。所选scaled Cooperative BM16/BN32/BK512的实际指令包含global_load_dwordx4、ds_write_b128及ds_read2_b64，LDS25344B；WASP BM256/BN384原方向使用buffer_load_dwordx4 ... lds直接装入A的LDS槽、普通buffer load装入B的VGPR、ds_read_b128读取A，函数无显式ds_write，LDS65536B。归档current_flow_instruction_evidence.json保留函数名、代码对象SHA及指令例子。静态函数计数不作为动态每stage计数或耗时比例。
+
+逐条核对正式清单M1/N4096/K7168/G8为route0/legacy8734、M8192/N3072/K4096/G6为route12，补充了CTA/wave任务范围、单/双缓冲层次、K128 low/high时序和stage barrier发布/退役的联合条件。所有容量、逻辑字节和CTA数由实际实例定义推导，并与资源元数据交叉核对；逻辑读字节不当作实测HBM/LDS流量。文档见CURRENT_INT8_NT_STATUS_AND_FLOW.md第5.1、6.3节。生产及1191结果没有改动。
