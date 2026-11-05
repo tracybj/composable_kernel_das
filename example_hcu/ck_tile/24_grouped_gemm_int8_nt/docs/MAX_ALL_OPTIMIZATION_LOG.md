@@ -337,3 +337,27 @@ CPU协议模型检查0–65个K阶段的三种角色barrier epoch、双缓冲读
 18组初筛432项抽样输出PASS，每组8行，warm3/repeat10/2样本；不能用作全量性能验收。FP16尾块在相同cluster下中位增益约0.7%–3.1%，BF16混合、部分候选回退。整N控制组也有小幅差异，说明编译调度等影响不能与tail省工作量混为同一归因；cluster8的BF16出现较大回退，需要正式复测核实。不直接推广。
 
 接下来相同18组以完整输出、warm10/repeat50/3样本正式复测默认、原cl1/4/8与Mask cl1/4/8，保留两种输出和原始样本。该runner仅Python新增tail_formal套件，继续用581d61c编译的同一库；不重新编译C++，不把初筛最快样本写入生产CSV。
+
+### v134正式结果及ISA复查
+
+18组正式完整输出252项PASS，warm10/repeat50/3样本中位数；已核对CSV与原始jsonl、中位数及2GMNK吞吐，未用抽样初筛值代替。门禁库SHA256 6773c27d786f76d15b8f5847c863844d18b486a0ccf39fc3303a674f5a004b49，C++源码581d61c、r1门禁runner263fa01、正式runner5dacc5a，明确区分来源。
+
+| 同几何/cluster的屏蔽前后 | BF16有尾块中位增益 | FP16有尾块中位增益 | BF16整块控制中位增益 | FP16整块控制中位增益 |
+|---|---:|---:|---:|---:|
+| cl1:56对48 | -0.50% | +0.80% | -0.41% | +0.67% |
+| cl4:58对12 | +0.54% | +1.82% | -0.39% | +0.25% |
+| cl8:59对50 | -1.56% | +3.05% | -4.93% | +0.32% |
+
+每组分别11条有尾块、7条整块；包含K512/K768控制。M8192/N4096/K2048/G8的FP16新route58为505.55 TOPS、R1.0107；M16384/N4096/K4096/G8新route59约624.60、R1.0133；M16384/N4096/K6144/G8约689.27、R1.00193但余量很小。BF16主要差距未解；M4096/N5120/K2304/G48最佳仍原route48约513.73、R0.95395。不能将FP16的结果推广为BF16达标。
+
+BF16 cl8在K512控制224.58→162.49 TOPS（-27.65%），K很长时回退缩小甚至小幅改善，独立正式轮稳定复现；不能归为初筛噪声。cl8 ISA相比旧版多143条静态指令，其中128条v_mov，两个输出格式均出现，来源关联无效acc零值/汇合路径；这是可消除的代码生成开销线索，尚不能证明它独立解释全部BF16回退。新旧主循环MMAC与加载的静态条数未变；完整函数静态长度不能当动态热路径长度。
+
+现有gfx936汇编器实测拒绝v_cvt_pk_bf16_f32及v_cvt_bf16_f32（instruction not supported）；FP16 RTZ转换正向控制接受，但不能用RTZ替换约定RNE。该CPU-only能力探针位于results/max_all_v134_bf16_isa_probe，不改变数值规则，不把硬件BF16转换当可用优化。
+
+归档：[初筛](max_all_v134_tail_screen.csv)、[完整输出正式对照](max_all_v134_tail_formal.csv)、[门禁/资源/342个旧kernel代码等价](max_all_v134_validation_resources.json)。不统一推广，默认生产policy不改，正式全量严格达标数仍1109 BF16/1123 FP16；下一版先消除无效acc汇合，再决定是否保留该尾块策略。
+
+## v135：无效consumer不定义acc，最终同步后退出
+
+针对v134的额外128条move，Masked策略只为有效consumer初始化acc；无效consumer仍完成ready、逐K阶段和所有角色共用的最终LDS sync。CoreKernel与ScaledWaspKernel在run_raw_into返回后、任何epilogue读取前检查MasksInactiveN策略并退出producer/无效consumer。此处之后的native epilogue只有wave内交换/输出，没有CTA barrier，因此不会损坏主循环同步；per-token路径也不会读取未定义acc。原默认false路径保留初始化顺序，数值和接口不变。
+
+仅已有实验56–60启用，生产分流不变；并非靠把无效acc当0或读取未初始化值来省指令。先编译检查move/资源是否实际减少，再执行同一630项full-range门禁与完整输出正式对照，不预报收益。

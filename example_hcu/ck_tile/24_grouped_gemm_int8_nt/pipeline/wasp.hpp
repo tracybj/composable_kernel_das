@@ -334,6 +334,7 @@ struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Poli
     using AccTile = Int8WaspAccTileCore<BlockGemmShape::kM>;
 
     static constexpr bool IsWaspPipeline = true;
+    static constexpr bool MasksInactiveN = MaskInactiveN;
 
     struct AProdSrc
     {
@@ -677,7 +678,7 @@ struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Poli
         else
         {
 
-            acc = AccTile{};
+            if constexpr(!MaskInactiveN) acc = AccTile{};
             const index_t consumer_id = wid - kNumProducerWaves;
 
             // A consumer owns a complete 32-column stripe. An entirely absent
@@ -685,6 +686,7 @@ struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Poli
             // publication/retirement epoch. The branch is uniform per wave.
             if(!MaskInactiveN || b_n_origin + consumer_id * 32 < b_n_len)
             {
+                if constexpr(MaskInactiveN) acc = AccTile{};
                 grouped_int8_nt_wasp_core_detail::stage16_t a_regs[AccTile::kMIters];
 
                 const uint32_t lane    = static_cast<uint32_t>(get_lane_id());
@@ -734,6 +736,8 @@ struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Poli
             {
                 // Initial A-ready epoch followed by one epoch per K stage.
                 // Do not return here: the common final LDS sync is required.
+                // No accumulator is defined for this wave. Mask-aware kernels
+                // must discard it AFTER final sync and BEFORE any epilogue read.
                 for(index_t epoch = 0; epoch <= num_loop; ++epoch)
                     grouped_int8_nt_wasp_core_detail::wasp_barrier_maybe();
             }
