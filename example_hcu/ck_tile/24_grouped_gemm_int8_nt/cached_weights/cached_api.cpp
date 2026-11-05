@@ -182,7 +182,7 @@ std::unique_ptr<ck_tile_int8_nt_cached_plan_impl> make_plan(
    p->route==CK_TILE_INT8_CACHED_PACKED_M256_N384_MASKED_M8_V1 ||
    p->route==CK_TILE_INT8_CACHED_PACKED_M16_N64_K256_V1
 #ifdef CK_INT8_CACHED_TUNING
-   || (p->route>=13 && p->route<=21) || (p->route>=32 && p->route<=43) || (p->route>=48 && p->route<=71)
+   || (p->route>=13 && p->route<=21) || (p->route>=32 && p->route<=43) || (p->route>=48 && p->route<=75)
 #endif
    ;
   const void* b=packed?w->packed+uint64_t(i)*per_group:w->raw[i].data;

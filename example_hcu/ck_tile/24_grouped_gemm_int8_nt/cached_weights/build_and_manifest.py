@@ -21,7 +21,7 @@ def sources(tuning=False):
     for path in E.rglob('*'):
         if not path.is_file():
             continue
-        compiled_experiment = tuning and path.relative_to(E).parts[:2] in [('experiments', 'operand_paths_v125'),('experiments','packed_output_v129'),('experiments','packed_exchange_v141')]
+        compiled_experiment = tuning and path.relative_to(E).parts[:2] in [('experiments', 'operand_paths_v125'),('experiments','packed_output_v129'),('experiments','packed_exchange_v141'),('experiments','finite_factor_v142')]
         if not compiled_experiment and any(part in ['experiments', 'docs', 'tests', 'build', 'results', '__pycache__']
                or part.startswith('build_') for part in path.relative_to(E).parts):
             continue

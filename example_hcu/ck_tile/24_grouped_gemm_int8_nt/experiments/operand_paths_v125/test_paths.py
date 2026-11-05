@@ -8,7 +8,7 @@ from bindings import Weight,init,lib,ok,plan_info
 from test_scaled_api import Group2
 
 def main():
-    ap=argparse.ArgumentParser();ap.add_argument('--output',type=Path,required=True);ap.add_argument('--shuffle-only',action='store_true');ap.add_argument('--deferred-only',action='store_true');ap.add_argument('--next-round-only',action='store_true');ap.add_argument('--packed-input-only',action='store_true');ap.add_argument('--fullnk-grid-only',action='store_true');ap.add_argument('--address32-only',action='store_true');ap.add_argument('--tail-mask-only',action='store_true');ap.add_argument('--single-b-only',action='store_true');ap.add_argument('--packed-exchange-only',action='store_true');args=ap.parse_args()
+    ap=argparse.ArgumentParser();ap.add_argument('--output',type=Path,required=True);ap.add_argument('--shuffle-only',action='store_true');ap.add_argument('--deferred-only',action='store_true');ap.add_argument('--next-round-only',action='store_true');ap.add_argument('--packed-input-only',action='store_true');ap.add_argument('--fullnk-grid-only',action='store_true');ap.add_argument('--address32-only',action='store_true');ap.add_argument('--tail-mask-only',action='store_true');ap.add_argument('--single-b-only',action='store_true');ap.add_argument('--packed-exchange-only',action='store_true');ap.add_argument('--finite-factor-only',action='store_true');args=ap.parse_args()
     assert os.environ.get('HIP_VISIBLE_DEVICES')=='7'
     build=Path(os.environ['CK_INT8_CACHED_BUILD']);identity=json.loads((build/'exported_api_symbols.json').read_text());assert identity['operand_paths']
     torch.set_num_threads(4);torch.manual_seed(20261104)
@@ -36,9 +36,16 @@ def main():
         candidates=[(r,None) for r in [12,22,23,5,68,69,70,71]]
         cases += [(256,256,512,False),(512,512,640,True),
                   (256,5120,2304,False),(256,6144,2048,False),(256,7168,2048,True)]
+    if args.finite_factor_only:
+        candidates=[(r,None) for r in [12,22,23,5,72,73,74,75]]
+        cases += [(256,256,512,False),(512,512,640,True),
+                  (256,5120,2304,False),(256,6144,2048,False),(256,7168,2048,True)]
     for m,n,k,padded in cases:
         g=2;astride=k+16 if padded else k;bstride=k+32 if padded else k;cstride=n+4
         a=torch.randint(-128,128,(g,m,astride),device='cuda',dtype=torch.int8);b=torch.randint(-128,128,(g,n,bstride),device='cuda',dtype=torch.int8)
+        if args.finite_factor_only:
+            if (m,n,k,padded)==(256,256,512,False):a.fill_(1);a[1].fill_(-1);b.fill_(1)
+            a[:,:1,:k].zero_() # deterministic 0*Inf cases after factor overflow
         olda,oldb=a.clone(),b.clone()
         refs=[(a[i,:,:k].double()@b[i,:,:k].double().T).to(torch.int32) for i in range(g)]
         wd=(Weight*g)(*[init(Weight,data=b[i].data_ptr(),n=n,k=k,row_stride=bstride) for i in range(g)])
@@ -47,12 +54,21 @@ def main():
             for route,legacy in candidates:
                 os.environ['CK_INT8_TUNE_ROUTE']=str(route);os.environ.pop('CK_INT8_TUNE_LEGACY',None)
                 if legacy is not None:os.environ['CK_INT8_TUNE_LEGACY']=str(legacy)
-                for mode in ['none','channel','row_channel','special']:
+                for mode in ['none','channel','row_channel','special']+(['finite_edge','factor_overflow','ties'] if args.finite_factor_only else []):
                     sa=None if mode=='none' else torch.rand((g,m if mode=='row_channel' else 1),device='cuda')*.003+.001
                     sb=None if mode=='none' else torch.rand((g,n),device='cuda')*.003+.001
                     if mode=='special':
                         sa[:,0]=torch.tensor([0.,-.003],device='cuda')
                         sb[:,:8]=torch.tensor([float('inf'),float('-inf'),float('nan'),-0.,0.,1e-35,1e30,-.5],device='cuda')
+                    if mode=='finite_edge':
+                        sa.fill_(1.0);mx=torch.finfo(torch.float32).max
+                        sb[:]=torch.tensor([mx,-mx,0.,-0.,2**-149,2**-126,1.,-1.],device='cuda').repeat((n+7)//8)[:n]
+                    if mode=='factor_overflow':
+                        sa.fill_(2.0);mx=torch.finfo(torch.float32).max
+                        sb[:]=torch.tensor([mx,-mx,mx*.5,0.,1.,-1.,2**-149,-0.],device='cuda').repeat((n+7)//8)[:n]
+                    if mode=='ties':
+                        sa.fill_(1.0/k)
+                        sb[:]=torch.tensor([1+2**-8,1+3*2**-8,1+2**-11,1+3*2**-11],device='cuda').repeat(n//4)
                     outputs=[(1,torch.bfloat16),(2,torch.float16)]+([(0,torch.int32)] if mode=='none' else [])
                     for output,dtype in outputs:
                         span=m*cstride;cap=(span+7)//8*8
@@ -65,7 +81,7 @@ def main():
                         if args.tail_mask_only:
                             expected=m%256==0 and n%256==0 and k%128==0 and 512<=k<16384
                             assert (status==0)==expected,('TAIL_MASK_DOMAIN',route,m,n,k,status,lib.ck_tile_int8_nt_cached_last_error_v1().decode())
-                        if args.packed_exchange_only:
+                        if args.packed_exchange_only or args.finite_factor_only:
                             expected=m%256==0 and n%256==0 and k%128==0 and 512<=k<16384
                             assert (status==0)==expected,('PACKED_EXCHANGE_DOMAIN',route,m,n,k,status,lib.ck_tile_int8_nt_cached_last_error_v1().decode())
                         if args.single_b_only:
@@ -74,7 +90,7 @@ def main():
                         if status:
                             # Native-domain checks must reject unsupported WASP
                             # shapes before launch;all cooperative paths are masked.
-                            assert args.packed_exchange_only or route>=12,(route,legacy,m,n,k,status,lib.ck_tile_int8_nt_cached_last_error_v1().decode())
+                            assert args.packed_exchange_only or args.finite_factor_only or route>=12,(route,legacy,m,n,k,status,lib.ck_tile_int8_nt_cached_last_error_v1().decode())
                             rejected+=1;del raw,out,gd;continue
                         try:
                             pi=plan_info(plan);assert pi.route==route and (legacy is None or pi.legacy_instance==legacy)

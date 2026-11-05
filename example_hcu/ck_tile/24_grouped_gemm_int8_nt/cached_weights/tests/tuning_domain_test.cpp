@@ -55,7 +55,11 @@ int main(){
     check("68",128,4096,7168,true,true,false);
     check("69",256,4096,7168,true,false,false);
     check("70",256,4096,7168,false,true,false);
-    check("72",256,4096,7168,true,true,false);
+    check("72",256,4096,7168,true,true,true);
+    check("73",256,5120,2304,true,true,true);
+    check("74",128,4096,7168,true,true,false);
+    check("75",256,6144,2048,true,false,false);
+    check("76",256,4096,7168,true,true,false);
     check("-1",256,4096,7168,true,true,false);
     check("36x",256,4096,7168,true,true,false);
     check("36",1,4096,7168,false,true,false,false,false);
