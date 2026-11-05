@@ -1,5 +1,7 @@
 # INT8 NT当前状态与实现流程
 
+> v140更新：已把低G长K prepared-B协作实例接入scaled生产route24。仅uniform非空M<=8、N4096、K6144/7168、G8、80CU且已预排权重启用。48条邻域两输出均PASS，ID1017/1087/1088的BF16独立复测达到目标；全量统计仍等待新1191回归。两家族不变，scaled实例42种（23 Cooperative+19 WASP）。route24的A/B主循环直接进VGPR，输出仍使用4096B LDS交换。
+
 > 更新：v139已验证一项scaled分流改进。ID992切到已有route12，BF16 645.994 TOPS（R1.03993），FP16 649.253 TOPS（R1.04517）；6条邻域两输出均PASS，126个设备kernel与v136逐byte一致。最近完整1191回归仍为下文v136，未混入局部复测数据。详见MAX_ALL_OPTIMIZATION_LOG.md的v138/v139记录。
 
 记录日期：2026-11-05。适用仓库分支为`exp/int8_nt`、目录`example_hcu/ck_tile/24_grouped_gemm_int8_nt`。当前完整验收版本是v136；v137单B缓冲实验已完成，未接入默认分流。本文梳理已存在的实现，不启动新实验，也不将代表shape初筛成绩当作全量成绩。

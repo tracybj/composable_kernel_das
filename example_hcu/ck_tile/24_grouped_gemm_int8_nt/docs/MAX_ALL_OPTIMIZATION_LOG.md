@@ -505,3 +505,13 @@ CPU selector边界、39项tuning域、3333项尾部协议PASS；GPU完整范围3
 OFF构建成功，库SHA256 1e54b515e42f34984bdb5713d85bf9917d9307efac6026ec12edae8a3235126e，benchmark a1ad6e7cd0c649ea18edbc548b41340d6603a0ad19cf7858458475b0164417b3。128个kernel无spill；126个旧生产kernel逐函数机器码与v139完全相同，两个新scaled kernel与此前已验证route41逐函数完全相同。新BF16实例119VGPR、4096B LDS（仅输出交换），主循环输入不经过LDS。实际CPU分流审计1191行，8条小M切route24，加上v139的ID992共9条相对v136改变。
 
 全量runner增加显式门禁版本选择（默认仍v136），核对本次实际库SHA后才可运行；route24报告为cooperative，避免仅用route非零误标WASP。新门禁和48条邻域正式性能验证完成后，使用冻结库进行新1191全量回归，不拼接局部结果。
+
+### v140门禁与48条生产邻域结果
+
+完整范围INT8/FP64检查420项PASS，非法域7项拒绝；实际BLAS标量对照6项bitwise、epilogue18项、原INT32 ABI65项、生命周期32项均PASS。新增route24覆盖完整输出的NULL/标量/channel/per-token和NaN/Inf、padded stride，原INT32仍8734。
+
+卡7的48条原始长K邻域、96项生产输出全部PASS，0失败/跳过，warm10/repeat50/3样本中位数已独立核对；只有G8的8条切route24，其余40条维持route0。新路线8条的两个输出均R>=1。ID1017 M1/N4096/K6144/G8：BF16 0.169539183ms、2.374986TOPS、R1.038957；ID1087 M1/N4096/K7168/G8：0.198380753ms、2.367982TOPS、R1.007275；ID1088 M2同族：0.199593559ms、4.707186TOPS、R1.010333。FP16对应R1.039212/1.006074/1.012329。小余量仍以全量独立回归确认，不用候选赢家覆盖v136 CSV。
+
+源码归一后仍是Cooperative/WASP两家族，scaled实例从41增为42（Cooperative23、WASP19，不按BF16/FP16重复计数）；输出类型分别实例化后新增两个设备kernel，生产总128。正式全1191回归将使用新冻结OFF库和v140门禁版本，保持一轮正式计时及全部原始shape。
+
+归档：max_all_v140_production_formal.csv、max_all_v140_validation_resources.json；原始证据results/max_all_v140_production_formal/max_all_v140_gates/max_all_v140_resources。

@@ -1,0 +1,45 @@
+{
+  "status": "AUDIT_PASS",
+  "implementation_commit": "18e554d6f2884b6fa8c39fd4faf293b325d11bd4",
+  "runner_commit": "91d07287d27704e9368974c4550a3253265959e4",
+  "library": {
+    "symbols": [
+      "ck_tile_int8_nt_cached_last_error_v1",
+      "ck_tile_int8_nt_cached_plan_create_v1",
+      "ck_tile_int8_nt_cached_plan_create_v2",
+      "ck_tile_int8_nt_cached_plan_destroy_v1",
+      "ck_tile_int8_nt_cached_plan_query_v1",
+      "ck_tile_int8_nt_cached_run_v1",
+      "ck_tile_int8_nt_cached_weights_create_v1",
+      "ck_tile_int8_nt_cached_weights_destroy_v1",
+      "ck_tile_int8_nt_cached_weights_query_v1"
+    ],
+    "library_sha256": "1e54b515e42f34984bdb5713d85bf9917d9307efac6026ec12edae8a3235126e",
+    "benchmark_sha256": "a1ad6e7cd0c649ea18edbc548b41340d6603a0ad19cf7858458475b0164417b3",
+    "experimental_tuning": false,
+    "operand_paths": false
+  },
+  "scaled_checks": 420,
+  "invalid_checks": 14,
+  "native_blas_checks": 6,
+  "epilogue_checks": 18,
+  "abi_checks": 65,
+  "lifetime_checks": 32,
+  "code_equivalence": {
+    "max_all_v139_resources": {
+      "compared": 126,
+      "bit_identical": 126,
+      "missing": [],
+      "different": []
+    },
+    "promoted_scaled_kernels": {
+      "compared": 2,
+      "bit_identical": 2
+    }
+  },
+  "formal_cases": 48,
+  "formal_checks": 96,
+  "numeric_failures": 0,
+  "full_1191_status": "NOT_STARTED",
+  "raw_results": "results/max_all_v140_production_formal"
+}
