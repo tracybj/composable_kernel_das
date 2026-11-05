@@ -521,3 +521,13 @@ OFF构建成功，库SHA256 1e54b515e42f34984bdb5713d85bf9917d9307efac6026ec12ed
 卡7进程PID459570，目录results/max_all_v140_full_1191，源码版本19a3262（编译实现18e554d；后续只改runner与记录）。库为上述OFF构建，使用v140门禁身份，原始1191 shape、一轮、两个输出、warm10/repeat50/3样本中位数。已核实/proc命令匹配且状态R，首次检查完成34条，双输出34/34完整数值PASS；这是运行中进度，不是最终达标统计。全量期间不改远端C++、测试、runner或库，不重复启动；终态以done/failure和原始records.jsonl、开始/结束源码快照为准。
 
 下一候选准备：WASP标量A的BF16 epilogue先按原始acc列索引反量化/RNE转换，再把16位值打包做4×4波内转置，可将4次32位bpermute交换改为2次打包交换。独立CPU映射模型10000组随机16位模式通过；尚未实现GPU或证明性能。必须保留NaN/RNE和FP32 scale乘积舍入边界，比较打包/解包新增指令与减少交换等待的收益，不能以CPU映射通过当成kernel正确性或速度证据。
+
+## v141：BF16先转换、再打包做波内交换（本地准备）
+
+v140全量仍在卡7运行，本轮只在本地编辑，未同步/编译/运行GPU，冻结服务器不变。新增tuning-only route68/69/70/71，与生产12/22/23/5分别使用同一Problem和主循环。标量A的BF16路径先按accumulator原列索引计算scale并RNE转换，再把16位值打包成32位交换载荷，做两次bpermute完成4×4 lane转置；原路径是四次交换INT32后转换。FP16、逻辑转置及per-token路径保留原epilogue作为对照。
+
+假设减少交换及依赖等待能改善短K的大M族；反证是打包/解包、factor加载分布或编译器调度增加成本、收益只在噪声范围。CPU10000组随机16位bit pattern映射检查PASS，尚无GPU数值/性能结论。计划先full-range/FP64和特殊值、空scale、per-token、尾块、padded stride门禁，再代表shape相同tile配对；不改变生产默认，不扩大BF16数值容差。
+
+### v141隔离CPU预检查
+
+在results/max_all_v141_cpu_preflight副本通过46项tuning域检查和10000组lane映射检查，未覆盖/修改v140冻结测试源。新route68～71均为M256 Problem；拒绝M128、缺少prepared B、非native及未列出的72。当地Python脚本均已做语法编译检查。当前仍未同步v141编译源到远端仓库，也未做GPU构建/门禁，不能把CPU检查当最终PASS。
