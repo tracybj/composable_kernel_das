@@ -401,3 +401,9 @@ SingleB草稿仍只在本地隔离目录，未并入v136；将作为后续结构
 120个原有生产kernel逐函数机器码与v135完全一致；新6个生产入口（2个cluster×INT32/BF16/FP16）与对应已测tuning实例机器码完全相同。新实例182VGPR/64KiB/1024threads、无spill，HIP静态最大1CTA。证明从实验迁移未引入额外设备代码变化，不以该证明代替新分流的全量性能验收。
 
 证据见[max_all_v136_validation_resources.json](max_all_v136_validation_resources.json)。接下来只用该OFF库，在卡7对原始1191条做一轮BF16/FP16正式回归，warm10/repeat50/3样本中位数，完整输出/guard/输入scale抽样不变检查；准备时间单列。全量期间冻结编译及测试源码，不把156条筛选赢家拼接为全量结果。
+
+### v136全量已启动（最终结果待审计）
+
+卡7正式进程PID444065，目录results/max_all_v136_full_1191，使用关闭实验覆盖的e026eecc...库；source revision记录f27aacf，编译实现06a442c，两者差异仅门禁文档。原1191个shape、881 decode/310 prefill，一轮、双输出、warm10/repeat50/3样本中位数，完整输出/guard/输入scale不变检查。启动后已观察真实进程和PASS记录，未以pid文件代替存活证据。
+
+原Excel于本轮重新共享读取核对，SHA256仍为adbb420c4e4d9a3a7a30520c8af55369b94ae79f54ba3b8c0410c1fe2a6478ae，与冻结P列目标一致。当前尚无全量完成结论；结果以该目录done.json/failure.json、原始records.jsonl及完成后的独立审计为准。期间只同步本条文档及Git bundle，不重写冻结C++、测试或runner文件。
