@@ -463,3 +463,5 @@ M2048/N4096/K1536/G4的单B BF16约405.76、默认395.24，但该行已超过目
 仅使用v136冻结代码对象反汇编，没有编译、启动或计时新GPU实验。所选scaled Cooperative BM16/BN32/BK512的实际指令包含global_load_dwordx4、ds_write_b128及ds_read2_b64，LDS25344B；WASP BM256/BN384原方向使用buffer_load_dwordx4 ... lds直接装入A的LDS槽、普通buffer load装入B的VGPR、ds_read_b128读取A，函数无显式ds_write，LDS65536B。归档current_flow_instruction_evidence.json保留函数名、代码对象SHA及指令例子。静态函数计数不作为动态每stage计数或耗时比例。
 
 逐条核对正式清单M1/N4096/K7168/G8为route0/legacy8734、M8192/N3072/K4096/G6为route12，补充了CTA/wave任务范围、单/双缓冲层次、K128 low/high时序和stage barrier发布/退役的联合条件。所有容量、逻辑字节和CTA数由实际实例定义推导，并与资源元数据交叉核对；逻辑读字节不当作实测HBM/LDS流量。文档见CURRENT_INT8_NT_STATUS_AND_FLOW.md第5.1、6.3节。生产及1191结果没有改动。
+
+继续按用户要求做结构梳理，未启动新实验。核对consumer N32在accumulator、B地址、wave数量、两个epilogue和尾块判断中的耦合位置，区分接口契约与实现选择；用同一M256/N384/K128有效区域对比当前结构及v137，明确M128重复B请求但未减少A consumer逻辑读取的代价。N64 consumer只作为未实现的任务划分讨论草案，实际资源和性能未知，不将估算写成收益。见总流程文档第9.1、9.2节。
