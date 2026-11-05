@@ -1,0 +1,156 @@
+{
+  "at": "2026-11-05T05:43:30.307976+00:00",
+  "files": [
+    {
+      "source": "example_hcu/ck_tile/19_grouped_gemm/CMakeLists.txt",
+      "sha256": "b1cc933a5a6b8c8d452eb15c13273c92428b6d98a67086f73670895a99f9921f",
+      "snapshot": "/workspace/v7_coverage/p6f/impl_source/example_hcu/ck_tile/19_grouped_gemm/CMakeLists.txt",
+      "protected": false
+    },
+    {
+      "source": "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args.cpp",
+      "sha256": "b0b2a3f253df0f27ae6ed38efb4402325bdad149903c71d535f5fb099de72659",
+      "snapshot": "/workspace/v7_coverage/p6f/impl_source/example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args.cpp",
+      "protected": false
+    },
+    {
+      "source": "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args_query_test.cpp",
+      "sha256": "99095bbf983725734b68cc00b38afa7c7649c7729968484f84deda324cc0e671",
+      "snapshot": "/workspace/v7_coverage/p6f/impl_source/example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args_query_test.cpp",
+      "protected": false
+    },
+    {
+      "source": "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_selector_test.cpp",
+      "sha256": "b1ef2f42a1171e5a68b5e25f8069ddfaa7f4e9aee00ad1729c13db601c97f0ff",
+      "snapshot": "/workspace/v7_coverage/p6f/impl_source/example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_selector_test.cpp",
+      "protected": false
+    },
+    {
+      "source": "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_v7_v8_device_args_provider_sources.txt",
+      "sha256": "7c5d71dbc8f769c9f323136181e98b341338c8a4f242b01bc260d18aa0b425d7",
+      "snapshot": "/workspace/v7_coverage/p6f/impl_source/example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_v7_v8_device_args_provider_sources.txt",
+      "protected": false
+    },
+    {
+      "source": "example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_device_args_provider.hpp",
+      "sha256": "2fe757d3c8fbbff741b85b3cc711d31732c8d5bba8944e9e18dcd45cfd306253",
+      "snapshot": "/workspace/v7_coverage/p6f/impl_source/example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_device_args_provider.hpp",
+      "protected": false
+    },
+    {
+      "source": "include/ck_tile/ops/gemm/grouped_gemm_device_args.h",
+      "sha256": "8ff6955dc8e916b3d564d5a5f213430a86838a126863e015d89e189a20ccc829",
+      "snapshot": "/workspace/v7_coverage/p6f/impl_source/include/ck_tile/ops/gemm/grouped_gemm_device_args.h",
+      "protected": false
+    },
+    {
+      "source": "include/ck_tile/ops/gemm/grouped_gemm_selector.hpp",
+      "sha256": "f8ddc45d5d1b73db02f13c48f11165ac13320779dd2f5c2864989dd2dd0fa020",
+      "snapshot": "/workspace/v7_coverage/p6f/impl_source/include/ck_tile/ops/gemm/grouped_gemm_selector.hpp",
+      "protected": false
+    },
+    {
+      "source": "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_uniform.hpp",
+      "sha256": "eacd5ccc4bf73676c64c3edd5035f5c39e000ef4741385b1054c025c27907e65",
+      "snapshot": "/workspace/v7_coverage/p6f/impl_source/include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_uniform.hpp",
+      "protected": true
+    },
+    {
+      "source": "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_v7_tail256_epilogue.hpp",
+      "sha256": "5da1231abfdd363368eeaecdba94a3e593e22babf459c605cb77a96e8f843b06",
+      "snapshot": "/workspace/v7_coverage/p6f/impl_source/example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_v7_tail256_epilogue.hpp",
+      "protected": false
+    },
+    {
+      "source": "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_v7_tail_epilogue.hpp",
+      "sha256": "ab2ea1404d2de9ce7a971ff8de90f9191f1d239cefdf02ec57132d0cc789fe30",
+      "snapshot": "/workspace/v7_coverage/p6f/impl_source/example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_v7_tail_epilogue.hpp",
+      "protected": false
+    },
+    {
+      "source": "example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_v7_bf16_nn_small_m_k16_steady_device_args.cpp",
+      "sha256": "09c0234cf1d63893bcff42c1ec88f7b4b0ed035c56212bc2534c6207c2135898",
+      "snapshot": "/workspace/v7_coverage/p6f/impl_source/example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_v7_bf16_nn_small_m_k16_steady_device_args.cpp",
+      "protected": false
+    },
+    {
+      "source": "example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_v7_bf16_nn_small_m_k32_steady_device_args.cpp",
+      "sha256": "f532f0fd51b10ca6d15c65157810bb764f149b978f90d61a88621215fe130112",
+      "snapshot": "/workspace/v7_coverage/p6f/impl_source/example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_v7_bf16_nn_small_m_k32_steady_device_args.cpp",
+      "protected": false
+    },
+    {
+      "source": "example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_v7_bf16_nn_small_m_noslc_device_args.cpp",
+      "sha256": "04fbe5aa01efd6aba2441af02d55aec2ecea6428aefe752113693339c27d7c90",
+      "snapshot": "/workspace/v7_coverage/p6f/impl_source/example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_v7_bf16_nn_small_m_noslc_device_args.cpp",
+      "protected": false
+    },
+    {
+      "source": "example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_v7_bf16_nn_tail128_device_args.cpp",
+      "sha256": "f413358e530462896939dcefca3f1e7ba615f96185038e27cf4d2703ff8acfa0",
+      "snapshot": "/workspace/v7_coverage/p6f/impl_source/example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_v7_bf16_nn_tail128_device_args.cpp",
+      "protected": false
+    },
+    {
+      "source": "example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_v7_bf16_nn_tail256_device_args.cpp",
+      "sha256": "60b8088a92f6c4cfa112e9540c33be50d54ceaa2bcf47a1ea6c257e4eaef9109",
+      "snapshot": "/workspace/v7_coverage/p6f/impl_source/example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_v7_bf16_nn_tail256_device_args.cpp",
+      "protected": false
+    },
+    {
+      "source": "example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_v7_small_cache_launch.hpp",
+      "sha256": "da5748e8cdcb944aae2e13b41cb7a3559380d760afd0badf159addbe0bd4869f",
+      "snapshot": "/workspace/v7_coverage/p6f/impl_source/example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_v7_small_cache_launch.hpp",
+      "protected": false
+    },
+    {
+      "source": "example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_v7_steady_launch.hpp",
+      "sha256": "3b66587a54e27c984231437b7da630ef973cb26849444638ccfcc834d0022bd4",
+      "snapshot": "/workspace/v7_coverage/p6f/impl_source/example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_v7_steady_launch.hpp",
+      "protected": false
+    },
+    {
+      "source": "example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_v7_tail256_launch.hpp",
+      "sha256": "e6171bef8f03fbe0d7175bf78f6000d564f043aa6b65ceaea9eea7f64ab077e9",
+      "snapshot": "/workspace/v7_coverage/p6f/impl_source/example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_v7_tail256_launch.hpp",
+      "protected": false
+    },
+    {
+      "source": "example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_v7_tail_launch.hpp",
+      "sha256": "f489e95baa89bf9017df3b2d7a4f5c8db293530afe791ba8c3f1900479fb3f00",
+      "snapshot": "/workspace/v7_coverage/p6f/impl_source/example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_v7_tail_launch.hpp",
+      "protected": false
+    },
+    {
+      "source": "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_small_m_k16_steady.hpp",
+      "sha256": "9b8f928842687837e423c1f430eca6594cf94275aa6fa473692ee29a01b80d30",
+      "snapshot": "/workspace/v7_coverage/p6f/impl_source/include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_small_m_k16_steady.hpp",
+      "protected": false
+    },
+    {
+      "source": "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_small_m_k32_steady.hpp",
+      "sha256": "f365b93c6f52f9fdfda91da82812d146c6f16ea1b630c7445146535e28d03423",
+      "snapshot": "/workspace/v7_coverage/p6f/impl_source/include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_small_m_k32_steady.hpp",
+      "protected": false
+    },
+    {
+      "source": "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_small_m_noslc.hpp",
+      "sha256": "4f9514c20ee6871a24915577a557b224c9d9b8cf3cf3d5fbbacea77044c2e4a1",
+      "snapshot": "/workspace/v7_coverage/p6f/impl_source/include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_small_m_noslc.hpp",
+      "protected": false
+    },
+    {
+      "source": "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_tail128.hpp",
+      "sha256": "5a027c7a5a4e4da99331a8e50e6a5a3b33a6c750b5584bc2e90bdfe980a0620b",
+      "snapshot": "/workspace/v7_coverage/p6f/impl_source/include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_tail128.hpp",
+      "protected": false
+    },
+    {
+      "source": "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_tail256.hpp",
+      "sha256": "285e6bbd814f8a8dac050b066b5cc26d3a044d3e48f5151d1850360c86d5a178",
+      "snapshot": "/workspace/v7_coverage/p6f/impl_source/include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_tail256.hpp",
+      "protected": false
+    }
+  ],
+  "protected_source_not_staged": true
+}

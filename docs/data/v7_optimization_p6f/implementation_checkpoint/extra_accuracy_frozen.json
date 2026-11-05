@@ -1,0 +1,278 @@
+{
+  "at": "2026-11-05T06:48:41.234857+00:00",
+  "reason": "Close explicit GPU max-K and full-M/min-stage corner coverage before final acceptance; no added performance domain",
+  "jobs": [
+    {
+      "key": "extra_tail1_kmax_m1",
+      "shape": {
+        "id": -1,
+        "M": 1,
+        "N": 1232,
+        "K": 4096,
+        "G": 1
+      },
+      "id": -1,
+      "expected": 5013,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=1",
+        "--n=1232",
+        "--k=4096",
+        "--groups=1",
+        "--backend=both",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=0",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=3"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_N_TAIL": "1"
+      },
+      "kind": "accuracy",
+      "task": 1
+    },
+    {
+      "key": "extra_tail1_kmax_m128",
+      "shape": {
+        "id": -1,
+        "M": 128,
+        "N": 1232,
+        "K": 4096,
+        "G": 1
+      },
+      "id": -1,
+      "expected": 5013,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=128",
+        "--n=1232",
+        "--k=4096",
+        "--groups=1",
+        "--backend=both",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=0",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=3"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_N_TAIL": "1"
+      },
+      "kind": "accuracy",
+      "task": 1
+    },
+    {
+      "key": "extra_tail2_kmax_m1",
+      "shape": {
+        "id": -1,
+        "M": 1,
+        "N": 1232,
+        "K": 4096,
+        "G": 1
+      },
+      "id": -1,
+      "expected": 5016,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=1",
+        "--n=1232",
+        "--k=4096",
+        "--groups=1",
+        "--backend=both",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=0",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=3"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_N_TAIL": "2"
+      },
+      "kind": "accuracy",
+      "task": 1
+    },
+    {
+      "key": "extra_tail2_kmax_m128",
+      "shape": {
+        "id": -1,
+        "M": 128,
+        "N": 1232,
+        "K": 4096,
+        "G": 1
+      },
+      "id": -1,
+      "expected": 5016,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=128",
+        "--n=1232",
+        "--k=4096",
+        "--groups=1",
+        "--backend=both",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=0",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=3"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_N_TAIL": "2"
+      },
+      "kind": "accuracy",
+      "task": 1
+    },
+    {
+      "key": "extra_steady5_max_m64",
+      "shape": {
+        "id": -1,
+        "M": 64,
+        "N": 384,
+        "K": 4096,
+        "G": 17
+      },
+      "id": -1,
+      "expected": 5014,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=64",
+        "--n=384",
+        "--k=4096",
+        "--groups=17",
+        "--backend=both",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=0",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=3"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "5"
+      },
+      "kind": "accuracy",
+      "task": 3
+    },
+    {
+      "key": "extra_steady5_min_m64",
+      "shape": {
+        "id": -1,
+        "M": 64,
+        "N": 128,
+        "K": 128,
+        "G": 1
+      },
+      "id": -1,
+      "expected": 5014,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=64",
+        "--n=128",
+        "--k=128",
+        "--groups=1",
+        "--backend=both",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=0",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=20"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "5"
+      },
+      "kind": "accuracy",
+      "task": 3
+    },
+    {
+      "key": "extra_steady6_max_m64",
+      "shape": {
+        "id": -1,
+        "M": 64,
+        "N": 384,
+        "K": 4096,
+        "G": 17
+      },
+      "id": -1,
+      "expected": 5015,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=64",
+        "--n=384",
+        "--k=4096",
+        "--groups=17",
+        "--backend=both",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=0",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=3"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "6"
+      },
+      "kind": "accuracy",
+      "task": 3
+    },
+    {
+      "key": "extra_steady6_min_m64",
+      "shape": {
+        "id": -1,
+        "M": 64,
+        "N": 128,
+        "K": 64,
+        "G": 1
+      },
+      "id": -1,
+      "expected": 5015,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=64",
+        "--n=128",
+        "--k=64",
+        "--groups=1",
+        "--backend=both",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=0",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=20"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "6"
+      },
+      "kind": "accuracy",
+      "task": 3
+    }
+  ]
+}

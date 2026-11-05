@@ -1,0 +1,162 @@
+[
+  {
+    "pipeline": "GemmPipelineV7Tail128",
+    "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi128ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_21GemmPipelineV7Tail128INS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_30GroupedGemmV7TailStoreEpilogueItNS_15V7SmallMAccTileINS_17V7Tail128GeometryEEESP_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+    "resources": {
+      "SGPRs": "48",
+      "VGPRs": "123",
+      "ScratchSize [bytes/lane]": "0",
+      "Dynamic Stack": "False",
+      "Occupancy [waves/SIMD]": "6",
+      "SGPRs Spill": "0",
+      "VGPRs Spill": "0",
+      "LDS Size [bytes/block]": "0",
+      "Instructions": "3516"
+    },
+    "note": "Compiler log occurrence; architecture not inferred from occurrence order; final gfx936 ELF metadata is authoritative"
+  },
+  {
+    "pipeline": "GemmPipelineV7Tail128",
+    "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi128ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_21GemmPipelineV7Tail128INS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_30GroupedGemmV7TailStoreEpilogueItNS_15V7SmallMAccTileINS_17V7Tail128GeometryEEESP_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+    "resources": {
+      "SGPRs": "48",
+      "VGPRs": "123",
+      "ScratchSize [bytes/lane]": "0",
+      "Dynamic Stack": "False",
+      "Occupancy [waves/SIMD]": "6",
+      "SGPRs Spill": "0",
+      "VGPRs Spill": "0",
+      "LDS Size [bytes/block]": "0",
+      "Instructions": "3507"
+    },
+    "note": "Compiler log occurrence; architecture not inferred from occurrence order; final gfx936 ELF metadata is authoritative"
+  },
+  {
+    "pipeline": "GemmPipelineV7Tail256",
+    "symbol": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi128ELi256ELi64EEEENS5_IJLi2ELi4ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_21GemmPipelineV7Tail256INS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi256EEENS_33GroupedGemmV7Tail256StoreEpilogueItNS_15V7SmallMAccTileINS_17V7Tail256GeometryEEESP_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+    "resources": {
+      "SGPRs": "48",
+      "VGPRs": "124",
+      "ScratchSize [bytes/lane]": "0",
+      "Dynamic Stack": "False",
+      "Occupancy [waves/SIMD]": "6",
+      "SGPRs Spill": "0",
+      "VGPRs Spill": "0",
+      "LDS Size [bytes/block]": "0",
+      "Instructions": "3510"
+    },
+    "note": "Compiler log occurrence; architecture not inferred from occurrence order; final gfx936 ELF metadata is authoritative"
+  },
+  {
+    "pipeline": "GemmPipelineV7Tail256",
+    "symbol": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi128ELi256ELi64EEEENS5_IJLi2ELi4ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_21GemmPipelineV7Tail256INS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi256EEENS_33GroupedGemmV7Tail256StoreEpilogueItNS_15V7SmallMAccTileINS_17V7Tail256GeometryEEESP_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+    "resources": {
+      "SGPRs": "48",
+      "VGPRs": "124",
+      "ScratchSize [bytes/lane]": "0",
+      "Dynamic Stack": "False",
+      "Occupancy [waves/SIMD]": "6",
+      "SGPRs Spill": "0",
+      "VGPRs Spill": "0",
+      "LDS Size [bytes/block]": "0",
+      "Instructions": "3502"
+    },
+    "note": "Compiler log occurrence; architecture not inferred from occurrence order; final gfx936 ELF metadata is authoritative"
+  },
+  {
+    "pipeline": "GemmPipelineV7SmallMK32Steady",
+    "symbol": "_ZN7ck_tile6kentryILi256ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_29GemmPipelineV7SmallMK32SteadyINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_19V7SmallMK32GeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+    "resources": {
+      "SGPRs": "70",
+      "VGPRs": "116",
+      "ScratchSize [bytes/lane]": "0",
+      "Dynamic Stack": "False",
+      "Occupancy [waves/SIMD]": "6",
+      "SGPRs Spill": "0",
+      "VGPRs Spill": "0",
+      "LDS Size [bytes/block]": "0",
+      "Instructions": "5035"
+    },
+    "note": "Compiler log occurrence; architecture not inferred from occurrence order; final gfx936 ELF metadata is authoritative"
+  },
+  {
+    "pipeline": "GemmPipelineV7SmallMK32Steady",
+    "symbol": "_ZN7ck_tile6kentryILi256ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_29GemmPipelineV7SmallMK32SteadyINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_19V7SmallMK32GeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+    "resources": {
+      "SGPRs": "70",
+      "VGPRs": "116",
+      "ScratchSize [bytes/lane]": "0",
+      "Dynamic Stack": "False",
+      "Occupancy [waves/SIMD]": "6",
+      "SGPRs Spill": "0",
+      "VGPRs Spill": "0",
+      "LDS Size [bytes/block]": "0",
+      "Instructions": "5030"
+    },
+    "note": "Compiler log occurrence; architecture not inferred from occurrence order; final gfx936 ELF metadata is authoritative"
+  },
+  {
+    "pipeline": "GemmPipelineV7SmallMSteady",
+    "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_26GemmPipelineV7SmallMSteadyINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+    "resources": {
+      "SGPRs": "60",
+      "VGPRs": "80",
+      "ScratchSize [bytes/lane]": "0",
+      "Dynamic Stack": "False",
+      "Occupancy [waves/SIMD]": "9",
+      "SGPRs Spill": "0",
+      "VGPRs Spill": "0",
+      "LDS Size [bytes/block]": "0",
+      "Instructions": "4206"
+    },
+    "note": "Compiler log occurrence; architecture not inferred from occurrence order; final gfx936 ELF metadata is authoritative"
+  },
+  {
+    "pipeline": "GemmPipelineV7SmallMSteady",
+    "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_26GemmPipelineV7SmallMSteadyINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+    "resources": {
+      "SGPRs": "60",
+      "VGPRs": "80",
+      "ScratchSize [bytes/lane]": "0",
+      "Dynamic Stack": "False",
+      "Occupancy [waves/SIMD]": "9",
+      "SGPRs Spill": "0",
+      "VGPRs Spill": "0",
+      "LDS Size [bytes/block]": "0",
+      "Instructions": "4200"
+    },
+    "note": "Compiler log occurrence; architecture not inferred from occurrence order; final gfx936 ELF metadata is authoritative"
+  },
+  {
+    "pipeline": "GemmPipelineV7SmallMNoSlc",
+    "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_25GemmPipelineV7SmallMNoSlcINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+    "resources": {
+      "SGPRs": "47",
+      "VGPRs": "80",
+      "ScratchSize [bytes/lane]": "0",
+      "Dynamic Stack": "False",
+      "Occupancy [waves/SIMD]": "9",
+      "SGPRs Spill": "0",
+      "VGPRs Spill": "0",
+      "LDS Size [bytes/block]": "0",
+      "Instructions": "2804"
+    },
+    "note": "Compiler log occurrence; architecture not inferred from occurrence order; final gfx936 ELF metadata is authoritative"
+  },
+  {
+    "pipeline": "GemmPipelineV7SmallMNoSlc",
+    "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_25GemmPipelineV7SmallMNoSlcINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+    "resources": {
+      "SGPRs": "47",
+      "VGPRs": "80",
+      "ScratchSize [bytes/lane]": "0",
+      "Dynamic Stack": "False",
+      "Occupancy [waves/SIMD]": "9",
+      "SGPRs Spill": "0",
+      "VGPRs Spill": "0",
+      "LDS Size [bytes/block]": "0",
+      "Instructions": "2799"
+    },
+    "note": "Compiler log occurrence; architecture not inferred from occurrence order; final gfx936 ELF metadata is authoritative"
+  }
+]

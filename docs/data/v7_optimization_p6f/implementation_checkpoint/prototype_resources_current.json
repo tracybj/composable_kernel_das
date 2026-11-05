@@ -1,0 +1,67 @@
+[
+  {
+    "variant": "tail",
+    "resources": [
+      "/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     SGPRs: 48 [-Rpass-analysis=kernel-resource-usage]",
+      "/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     VGPRs: 123 [-Rpass-analysis=kernel-resource-usage]",
+      "/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     ScratchSize [bytes/lane]: 0 [-Rpass-analysis=kernel-resource-usage]",
+      "/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     SGPRs Spill: 0 [-Rpass-analysis=kernel-resource-usage]",
+      "/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     VGPRs Spill: 0 [-Rpass-analysis=kernel-resource-usage]",
+      "/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     Instructions: 3516 [-Rpass-analysis=kernel-resource-usage]"
+    ],
+    "object_sha256": "f7cf6e25328fc4eadda7b259a1ee2982f46876d3749e2a096034d10e9d562ccb",
+    "cpu_only": true
+  },
+  {
+    "variant": "tailwide",
+    "resources": [
+      "/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     SGPRs: 48 [-Rpass-analysis=kernel-resource-usage]",
+      "/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     VGPRs: 124 [-Rpass-analysis=kernel-resource-usage]",
+      "/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     ScratchSize [bytes/lane]: 0 [-Rpass-analysis=kernel-resource-usage]",
+      "/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     SGPRs Spill: 0 [-Rpass-analysis=kernel-resource-usage]",
+      "/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     VGPRs Spill: 0 [-Rpass-analysis=kernel-resource-usage]",
+      "/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     Instructions: 3510 [-Rpass-analysis=kernel-resource-usage]"
+    ],
+    "object_sha256": "bf06a8e7034cc086949e120210a0c79ef2830ab5ffe642ac4554cbbdf567d663",
+    "cpu_only": true
+  },
+  {
+    "variant": "k32steady",
+    "resources": [
+      "/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     SGPRs: 70 [-Rpass-analysis=kernel-resource-usage]",
+      "/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     VGPRs: 116 [-Rpass-analysis=kernel-resource-usage]",
+      "/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     ScratchSize [bytes/lane]: 0 [-Rpass-analysis=kernel-resource-usage]",
+      "/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     SGPRs Spill: 0 [-Rpass-analysis=kernel-resource-usage]",
+      "/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     VGPRs Spill: 0 [-Rpass-analysis=kernel-resource-usage]",
+      "/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     Instructions: 5035 [-Rpass-analysis=kernel-resource-usage]"
+    ],
+    "object_sha256": "4e875f21a49668c2ae1057c28eedc85cfba131ec865e04158f70789840451249",
+    "cpu_only": true
+  },
+  {
+    "variant": "k16steady",
+    "resources": [
+      "/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     SGPRs: 60 [-Rpass-analysis=kernel-resource-usage]",
+      "/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     VGPRs: 80 [-Rpass-analysis=kernel-resource-usage]",
+      "/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     ScratchSize [bytes/lane]: 0 [-Rpass-analysis=kernel-resource-usage]",
+      "/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     SGPRs Spill: 0 [-Rpass-analysis=kernel-resource-usage]",
+      "/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     VGPRs Spill: 0 [-Rpass-analysis=kernel-resource-usage]",
+      "/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     Instructions: 4206 [-Rpass-analysis=kernel-resource-usage]"
+    ],
+    "object_sha256": "4d265c078231c5fa70f0002d9b0b0a4534b954816ed36a03bb7875e5fd06896a",
+    "cpu_only": true
+  },
+  {
+    "variant": "smallcache",
+    "resources": [
+      "/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     SGPRs: 47 [-Rpass-analysis=kernel-resource-usage]",
+      "/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     VGPRs: 80 [-Rpass-analysis=kernel-resource-usage]",
+      "/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     ScratchSize [bytes/lane]: 0 [-Rpass-analysis=kernel-resource-usage]",
+      "/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     SGPRs Spill: 0 [-Rpass-analysis=kernel-resource-usage]",
+      "/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     VGPRs Spill: 0 [-Rpass-analysis=kernel-resource-usage]",
+      "/workspace/composable_kernel/include/ck_tile/host/kernel_launch.hpp:34:1: remark:     Instructions: 2804 [-Rpass-analysis=kernel-resource-usage]"
+    ],
+    "object_sha256": "c8beac26d760b71ca743e84bf8425010efc6cb4e77bee52be42202c805fe028d",
+    "cpu_only": true
+  }
+]

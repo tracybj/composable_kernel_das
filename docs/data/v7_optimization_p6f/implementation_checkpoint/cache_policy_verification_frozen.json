@@ -1,0 +1,4829 @@
+{
+  "at": "2026-11-05T05:41:56.212687+00:00",
+  "domain": {
+    "at": "2026-11-05T05:41:56.202676+00:00",
+    "original_domain": {
+      "at": "before any expansion GPU data; during initial fixed four-shape factor study",
+      "ids": [
+        583,
+        584,
+        585,
+        587,
+        781,
+        782,
+        783,
+        784,
+        957,
+        960,
+        962,
+        964
+      ],
+      "count": 12,
+      "predicate": "common nonragged/nonempty BF16 NN gfx936; 5<=ceil(M/256)<=8, N/256>=16, 192<=K/16<=256, N%256==0, K%16==0, G<=1024; original byte/tile guards",
+      "reason": "A five-M-tile strip within a five-to-eight-M-tile grid, with at least16 N tiles and large panels; covers the four primary cases plus complete dataset near-neighbors",
+      "optional": true,
+      "gate": "only expand if the completed factor evidence supports a stable candidate; otherwise retain four-shape diagnosis only",
+      "note": "The137-case broader admissible domain is not scheduled; protect time for both mandatory tail and decode tasks",
+      "candidate_rule_frozen_before_expansion": "A NoSLC; choose M01=5 when ceil(N/256)>16, otherwise M01=1. M01=5 and8 primary NoSLC results near tied;5 follows the frozen Native family. The16-N-tile boundary comes from an80-CTA patch divided by a5-M strip, not a shape ID list.",
+      "candidate_rule_status": "hypothesis to validate across the entire12-shape domain, no global adoption yet"
+    },
+    "predicate": "common nonragged/nonempty BF16 NN gfx936;1024<M<=2048,N>4096,N%256=0,3072<=K<=4096,K%16=0,G<=1024 plus original byte/tile bounds",
+    "ids": [
+      583,
+      584,
+      585,
+      587,
+      781,
+      782,
+      783,
+      784
+    ],
+    "boundary_ids": [
+      957,
+      960,
+      962,
+      964
+    ],
+    "reason": "N=4096 NoSLC/M01=1 branch showed no confirmed benefit in all4controls; retain original fallback there. N>4096 NoSLC/M01=5 branch improved all8. Refined entire attribute domain, no ID whitelist; fresh policy verification before adoption.",
+    "prior_results": [
+      {
+        "id": 583,
+        "M": 2048,
+        "N": 7168,
+        "K": 3072,
+        "G": 96,
+        "task": 2,
+        "variant": "cache_grid",
+        "control_instance": 5000,
+        "candidate_instance": 5012,
+        "control_scheme": "v7_256x256x16_M01_1",
+        "control_env": {
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+        },
+        "candidate_env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_WALK": "5",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "1"
+        },
+        "before_ms": 26.509659,
+        "after_ms": 22.444946,
+        "before_round_ms": [
+          26.509659,
+          26.857592,
+          26.239449
+        ],
+        "after_round_ms": [
+          22.436954,
+          22.444946,
+          22.448566
+        ],
+        "paired_delta_pct": -15.363098408772435,
+        "round_delta_pct": [
+          -15.363098408772435,
+          -16.429790131594814,
+          -14.447266023002236
+        ],
+        "before_cv": [
+          0.014328102,
+          0.010954717,
+          0.012634123
+        ],
+        "after_cv": [
+          0.00012565848,
+          0.00028093598,
+          0.00060100529
+        ],
+        "observed_variation_band_pct": 2.331765187926408,
+        "quality": "stable_direction",
+        "frozen_BLAS_ms": 25.353914260864258,
+        "frozen_BLAS_gpu": 0,
+        "frozen_BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+        "frozen_BLAS_source": "/workspace/bf16NN-groupgemm.csv",
+        "R_before_frozen": 0.9564028817143313,
+        "R_after_frozen": 1.129604600557482,
+        "CK_gpu": 4,
+        "epoch": 2,
+        "binary_sha256": "0491e577fc7da6c68f69aa726f285b09dd78d0e003720dba20584a4db21d5fe0",
+        "last_measured_at": "2026-11-05T05:37:00.538847+00:00",
+        "source_keys": [
+          "e2_cache_grid_r1_id583_control",
+          "e2_cache_grid_r2_id583_control",
+          "e2_cache_grid_r3_id583_control",
+          "e2_cache_grid_r1_id583_candidate",
+          "e2_cache_grid_r2_id583_candidate",
+          "e2_cache_grid_r3_id583_candidate"
+        ],
+        "source_logs": [
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_r1_id583_control/run.log",
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_r2_id583_control/run.log",
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_r3_id583_control/run.log",
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_r1_id583_candidate/run.log",
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_r2_id583_candidate/run.log",
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_r3_id583_candidate/run.log"
+        ],
+        "full_output_accuracy_keys": [
+          "e2_cache_grid_acc_id583_candidate"
+        ],
+        "fallback": false,
+        "selection_contract": "See frozen plan and source policy; instance chosen by default selector; expected ID is assertion only",
+        "reused_primary": false
+      },
+      {
+        "id": 584,
+        "M": 2048,
+        "N": 7168,
+        "K": 3072,
+        "G": 48,
+        "task": 2,
+        "variant": "cache_grid",
+        "control_instance": 5000,
+        "candidate_instance": 5012,
+        "control_scheme": "v7_256x256x16_M01_1",
+        "control_env": {
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+        },
+        "candidate_env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_WALK": "5",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "1"
+        },
+        "before_ms": 13.161348,
+        "after_ms": 11.260721,
+        "before_round_ms": [
+          13.203123,
+          13.161348,
+          13.159443
+        ],
+        "after_round_ms": [
+          11.602404,
+          11.260011,
+          11.260721
+        ],
+        "paired_delta_pct": -14.428589416740511,
+        "round_delta_pct": [
+          -12.123790712242855,
+          -14.446369779144197,
+          -14.428589416740511
+        ],
+        "before_cv": [
+          0.018169922,
+          0.019974318,
+          0.017763327
+        ],
+        "after_cv": [
+          0.0013441281,
+          0.00067576738,
+          0.00025485701
+        ],
+        "observed_variation_band_pct": 3.040595713187455,
+        "quality": "stable_direction",
+        "frozen_BLAS_ms": 12.382747650146484,
+        "frozen_BLAS_gpu": 0,
+        "frozen_BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+        "frozen_BLAS_source": "/workspace/bf16NN-groupgemm.csv",
+        "R_before_frozen": 0.9408418993363358,
+        "R_after_frozen": 1.0996407468177645,
+        "CK_gpu": 4,
+        "epoch": 2,
+        "binary_sha256": "0491e577fc7da6c68f69aa726f285b09dd78d0e003720dba20584a4db21d5fe0",
+        "last_measured_at": "2026-11-05T05:37:12.221299+00:00",
+        "source_keys": [
+          "e2_cache_grid_r1_id584_control",
+          "e2_cache_grid_r2_id584_control",
+          "e2_cache_grid_r3_id584_control",
+          "e2_cache_grid_r1_id584_candidate",
+          "e2_cache_grid_r2_id584_candidate",
+          "e2_cache_grid_r3_id584_candidate"
+        ],
+        "source_logs": [
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_r1_id584_control/run.log",
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_r2_id584_control/run.log",
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_r3_id584_control/run.log",
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_r1_id584_candidate/run.log",
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_r2_id584_candidate/run.log",
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_r3_id584_candidate/run.log"
+        ],
+        "full_output_accuracy_keys": [
+          "e2_cache_grid_acc_id584_candidate"
+        ],
+        "fallback": false,
+        "selection_contract": "See frozen plan and source policy; instance chosen by default selector; expected ID is assertion only",
+        "reused_primary": false
+      },
+      {
+        "id": 585,
+        "M": 2048,
+        "N": 7168,
+        "K": 3072,
+        "G": 24,
+        "task": 2,
+        "variant": "cache_grid",
+        "control_instance": 5000,
+        "candidate_instance": 5012,
+        "control_scheme": "v7_256x256x16_M01_1",
+        "control_env": {
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+        },
+        "candidate_env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_WALK": "5",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "1"
+        },
+        "before_ms": 6.6039381,
+        "after_ms": 5.6728106,
+        "before_round_ms": [
+          6.5467281,
+          6.6039381,
+          6.6684074
+        ],
+        "after_round_ms": [
+          5.6728106,
+          5.6719913,
+          5.7187252
+        ],
+        "paired_delta_pct": -14.111985695323215,
+        "round_delta_pct": [
+          -13.348920050612767,
+          -14.111985695323215,
+          -14.241514398175504
+        ],
+        "before_cv": [
+          0.026772282,
+          0.02215431,
+          0.026144862
+        ],
+        "after_cv": [
+          0.0008135929,
+          0.00085030394,
+          0.009572355
+        ],
+        "observed_variation_band_pct": 2.6772282,
+        "quality": "stable_direction",
+        "frozen_BLAS_ms": 6.1528544425964355,
+        "frozen_BLAS_gpu": 0,
+        "frozen_BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+        "frozen_BLAS_source": "/workspace/bf16NN-groupgemm.csv",
+        "R_before_frozen": 0.9316947478045616,
+        "R_after_frozen": 1.0846218702588863,
+        "CK_gpu": 4,
+        "epoch": 2,
+        "binary_sha256": "0491e577fc7da6c68f69aa726f285b09dd78d0e003720dba20584a4db21d5fe0",
+        "last_measured_at": "2026-11-05T05:37:18.723487+00:00",
+        "source_keys": [
+          "e2_cache_grid_r1_id585_control",
+          "e2_cache_grid_r2_id585_control",
+          "e2_cache_grid_r3_id585_control",
+          "e2_cache_grid_r1_id585_candidate",
+          "e2_cache_grid_r2_id585_candidate",
+          "e2_cache_grid_r3_id585_candidate"
+        ],
+        "source_logs": [
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_r1_id585_control/run.log",
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_r2_id585_control/run.log",
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_r3_id585_control/run.log",
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_r1_id585_candidate/run.log",
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_r2_id585_candidate/run.log",
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_r3_id585_candidate/run.log"
+        ],
+        "full_output_accuracy_keys": [
+          "e2_cache_grid_acc_id585_candidate"
+        ],
+        "fallback": false,
+        "selection_contract": "See frozen plan and source policy; instance chosen by default selector; expected ID is assertion only",
+        "reused_primary": false
+      },
+      {
+        "id": 587,
+        "M": 2048,
+        "N": 7168,
+        "K": 3072,
+        "G": 12,
+        "task": 2,
+        "variant": "cache_grid",
+        "control_instance": 5000,
+        "candidate_instance": 5012,
+        "control_scheme": "v7_256x256x16_M01_1",
+        "control_env": {
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+        },
+        "candidate_env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_WALK": "5",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "1"
+        },
+        "before_ms": 3.264082,
+        "after_ms": 2.8607192,
+        "before_round_ms": [
+          3.2350485,
+          3.264082,
+          3.2729812
+        ],
+        "after_round_ms": [
+          2.8601074,
+          2.8656089,
+          2.8607192
+        ],
+        "paired_delta_pct": -12.207815244837604,
+        "round_delta_pct": [
+          -11.589968434785447,
+          -12.207815244837604,
+          -12.595917141228908
+        ],
+        "before_cv": [
+          0.034104869,
+          0.03852057,
+          0.024964742
+        ],
+        "after_cv": [
+          0.0012208008,
+          0.0040564144,
+          0.0010136577
+        ],
+        "observed_variation_band_pct": 3.852057,
+        "quality": "stable_direction",
+        "frozen_BLAS_ms": 3.05810284614563,
+        "frozen_BLAS_gpu": 0,
+        "frozen_BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+        "frozen_BLAS_source": "/workspace/bf16NN-groupgemm.csv",
+        "R_before_frozen": 0.9368952269414892,
+        "R_after_frozen": 1.0689979100869564,
+        "CK_gpu": 4,
+        "epoch": 2,
+        "binary_sha256": "0491e577fc7da6c68f69aa726f285b09dd78d0e003720dba20584a4db21d5fe0",
+        "last_measured_at": "2026-11-05T05:37:22.927966+00:00",
+        "source_keys": [
+          "e2_cache_grid_r1_id587_control",
+          "e2_cache_grid_r2_id587_control",
+          "e2_cache_grid_r3_id587_control",
+          "e2_cache_grid_r1_id587_candidate",
+          "e2_cache_grid_r2_id587_candidate",
+          "e2_cache_grid_r3_id587_candidate"
+        ],
+        "source_logs": [
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_r1_id587_control/run.log",
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_r2_id587_control/run.log",
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_r3_id587_control/run.log",
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_r1_id587_candidate/run.log",
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_r2_id587_candidate/run.log",
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_r3_id587_candidate/run.log"
+        ],
+        "full_output_accuracy_keys": [
+          "e2_cache_grid_acc_id587_candidate"
+        ],
+        "fallback": false,
+        "selection_contract": "See frozen plan and source policy; instance chosen by default selector; expected ID is assertion only",
+        "reused_primary": false
+      },
+      {
+        "id": 781,
+        "M": 2048,
+        "N": 6144,
+        "K": 3584,
+        "G": 224,
+        "task": 2,
+        "variant": "cache_grid",
+        "control_instance": 5000,
+        "candidate_instance": 5012,
+        "control_scheme": "fresh original5000; whole contrast repeated after ID781 profiler service event",
+        "control_env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_WALK": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "0"
+        },
+        "candidate_env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_WALK": "5",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "1"
+        },
+        "before_ms": 84.482246,
+        "after_ms": 52.782368,
+        "before_round_ms": [
+          84.482246,
+          84.630188,
+          82.716019
+        ],
+        "after_round_ms": [
+          52.782368,
+          55.692841,
+          52.76556
+        ],
+        "paired_delta_pct": -36.208777165641884,
+        "round_delta_pct": [
+          -37.52253224896507,
+          -34.19270083625479,
+          -36.208777165641884
+        ],
+        "before_cv": [
+          0.046970587,
+          0.076290224,
+          0.087247695
+        ],
+        "after_cv": [
+          0.0012942333,
+          0.0014530677,
+          0.0017557198
+        ],
+        "observed_variation_band_pct": 8.7247695,
+        "quality": "stable_direction",
+        "frozen_BLAS_ms": 63.27622604370117,
+        "frozen_BLAS_gpu": 0,
+        "frozen_BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+        "frozen_BLAS_source": "/workspace/bf16NN-groupgemm.csv",
+        "R_before_frozen": 0.7489884447875731,
+        "R_after_frozen": 1.198813703161275,
+        "CK_gpu": 4,
+        "epoch": 2,
+        "binary_sha256": "0491e577fc7da6c68f69aa726f285b09dd78d0e003720dba20584a4db21d5fe0",
+        "last_measured_at": "2026-11-05T05:40:29.367648+00:00",
+        "source_keys": [
+          "e2_cache_grid_rec2_r1_id781_control",
+          "e2_cache_grid_rec2_r2_id781_control",
+          "e2_cache_grid_rec2_r3_id781_control",
+          "e2_cache_grid_rec2_r1_id781_candidate",
+          "e2_cache_grid_rec2_r2_id781_candidate",
+          "e2_cache_grid_rec2_r3_id781_candidate"
+        ],
+        "source_logs": [
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_rec2_r1_id781_control/run.log",
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_rec2_r2_id781_control/run.log",
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_rec2_r3_id781_control/run.log",
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_rec2_r1_id781_candidate/run.log",
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_rec2_r2_id781_candidate/run.log",
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_rec2_r3_id781_candidate/run.log"
+        ],
+        "full_output_accuracy_keys": [
+          "e1_acc_cache_id781_m5_n1"
+        ],
+        "fallback": false,
+        "selection_contract": "See frozen plan and source policy; instance chosen by default selector; expected ID is assertion only",
+        "reused_primary": false
+      },
+      {
+        "id": 782,
+        "M": 2048,
+        "N": 6144,
+        "K": 3584,
+        "G": 112,
+        "task": 2,
+        "variant": "cache_grid",
+        "control_instance": 5000,
+        "candidate_instance": 5012,
+        "control_scheme": "explicit matched geometry/control",
+        "control_env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_WALK": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "0"
+        },
+        "candidate_env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_WALK": "5",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "1"
+        },
+        "before_ms": 42.939903,
+        "after_ms": 26.377674,
+        "before_round_ms": [
+          43.732231,
+          42.939903,
+          41.855743
+        ],
+        "after_round_ms": [
+          26.353115,
+          26.377674,
+          26.392174
+        ],
+        "paired_delta_pct": -38.57071824312226,
+        "round_delta_pct": [
+          -39.73983399109,
+          -38.57071824312226,
+          -36.94491577894101
+        ],
+        "before_cv": [
+          0.062482787,
+          0.078436406,
+          0.096013927
+        ],
+        "after_cv": [
+          0.0028684461,
+          0.0023462695,
+          0.0023812188
+        ],
+        "observed_variation_band_pct": 9.6013927,
+        "quality": "stable_direction",
+        "frozen_BLAS_ms": 28.935216903686523,
+        "frozen_BLAS_gpu": 0,
+        "frozen_BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+        "frozen_BLAS_source": "/workspace/bf16NN-groupgemm.csv",
+        "R_before_frozen": 0.6738538022241578,
+        "R_after_frozen": 1.096958621282776,
+        "CK_gpu": 4,
+        "epoch": 1,
+        "binary_sha256": "0491e577fc7da6c68f69aa726f285b09dd78d0e003720dba20584a4db21d5fe0",
+        "last_measured_at": "2026-11-05T04:56:27.524322+00:00",
+        "source_keys": [
+          "e1_cache_r1_id782_m5_n1_control",
+          "e1_cache_r2_id782_m5_n1_control",
+          "e1_cache_r3_id782_m5_n1_control",
+          "e1_cache_r1_id782_m5_n1_candidate",
+          "e1_cache_r2_id782_m5_n1_candidate",
+          "e1_cache_r3_id782_m5_n1_candidate"
+        ],
+        "source_logs": [
+          "/workspace/v7_coverage/p6f/runs/e1_cache_r1_id782_m5_n1_control/run.log",
+          "/workspace/v7_coverage/p6f/runs/e1_cache_r2_id782_m5_n1_control/run.log",
+          "/workspace/v7_coverage/p6f/runs/e1_cache_r3_id782_m5_n1_control/run.log",
+          "/workspace/v7_coverage/p6f/runs/e1_cache_r1_id782_m5_n1_candidate/run.log",
+          "/workspace/v7_coverage/p6f/runs/e1_cache_r2_id782_m5_n1_candidate/run.log",
+          "/workspace/v7_coverage/p6f/runs/e1_cache_r3_id782_m5_n1_candidate/run.log"
+        ],
+        "full_output_accuracy_keys": [
+          "e1_acc_cache_id782_m5_n1"
+        ],
+        "fallback": false,
+        "selection_contract": "See frozen plan and source policy; instance chosen by default selector; expected ID is assertion only",
+        "reused_primary": true
+      },
+      {
+        "id": 783,
+        "M": 2048,
+        "N": 6144,
+        "K": 3584,
+        "G": 56,
+        "task": 2,
+        "variant": "cache_grid",
+        "control_instance": 5000,
+        "candidate_instance": 5012,
+        "control_scheme": "explicit matched geometry/control",
+        "control_env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_WALK": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "0"
+        },
+        "candidate_env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_WALK": "5",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "1"
+        },
+        "before_ms": 20.830704,
+        "after_ms": 13.199207,
+        "before_round_ms": [
+          20.830704,
+          20.771212,
+          21.717651
+        ],
+        "after_round_ms": [
+          13.194649,
+          13.199207,
+          13.223749
+        ],
+        "paired_delta_pct": -36.657690493801844,
+        "round_delta_pct": [
+          -36.657690493801844,
+          -36.45432437933809,
+          -39.11059257743851
+        ],
+        "before_cv": [
+          0.10702079,
+          0.104625,
+          0.094992443
+        ],
+        "after_cv": [
+          0.0040954345,
+          0.0028276717,
+          0.0042593974
+        ],
+        "observed_variation_band_pct": 10.702079000000001,
+        "quality": "stable_direction",
+        "frozen_BLAS_ms": 14.154626846313477,
+        "frozen_BLAS_gpu": 0,
+        "frozen_BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+        "frozen_BLAS_source": "/workspace/bf16NN-groupgemm.csv",
+        "R_before_frozen": 0.6795078479495209,
+        "R_after_frozen": 1.0723846399494665,
+        "CK_gpu": 4,
+        "epoch": 1,
+        "binary_sha256": "0491e577fc7da6c68f69aa726f285b09dd78d0e003720dba20584a4db21d5fe0",
+        "last_measured_at": "2026-11-05T04:58:04.111385+00:00",
+        "source_keys": [
+          "e1_cache_r1_id783_m5_n1_control",
+          "e1_cache_r2_id783_m5_n1_control",
+          "e1_cache_r3_id783_m5_n1_control",
+          "e1_cache_r1_id783_m5_n1_candidate",
+          "e1_cache_r2_id783_m5_n1_candidate",
+          "e1_cache_r3_id783_m5_n1_candidate"
+        ],
+        "source_logs": [
+          "/workspace/v7_coverage/p6f/runs/e1_cache_r1_id783_m5_n1_control/run.log",
+          "/workspace/v7_coverage/p6f/runs/e1_cache_r2_id783_m5_n1_control/run.log",
+          "/workspace/v7_coverage/p6f/runs/e1_cache_r3_id783_m5_n1_control/run.log",
+          "/workspace/v7_coverage/p6f/runs/e1_cache_r1_id783_m5_n1_candidate/run.log",
+          "/workspace/v7_coverage/p6f/runs/e1_cache_r2_id783_m5_n1_candidate/run.log",
+          "/workspace/v7_coverage/p6f/runs/e1_cache_r3_id783_m5_n1_candidate/run.log"
+        ],
+        "full_output_accuracy_keys": [
+          "e1_acc_cache_id783_m5_n1"
+        ],
+        "fallback": false,
+        "selection_contract": "See frozen plan and source policy; instance chosen by default selector; expected ID is assertion only",
+        "reused_primary": true
+      },
+      {
+        "id": 784,
+        "M": 2048,
+        "N": 6144,
+        "K": 3584,
+        "G": 28,
+        "task": 2,
+        "variant": "cache_grid",
+        "control_instance": 5000,
+        "candidate_instance": 5012,
+        "control_scheme": "explicit matched geometry/control",
+        "control_env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_WALK": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "0"
+        },
+        "candidate_env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_WALK": "5",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "1"
+        },
+        "before_ms": 9.7240887,
+        "after_ms": 6.6213722,
+        "before_round_ms": [
+          9.9301786,
+          7.3413696,
+          9.7240887
+        ],
+        "after_round_ms": [
+          6.632791,
+          6.6213722,
+          6.6201487
+        ],
+        "paired_delta_pct": -31.92011195866611,
+        "round_delta_pct": [
+          -33.205723006834944,
+          -9.807398880993546,
+          -31.92011195866611
+        ],
+        "before_cv": [
+          0.094143319,
+          0.0063386261,
+          0.095120227
+        ],
+        "after_cv": [
+          0.0029092365,
+          0.0033839443,
+          0.0037484453
+        ],
+        "observed_variation_band_pct": 26.622638684898046,
+        "quality": "stable_direction",
+        "frozen_BLAS_ms": 7.0538225173950195,
+        "frozen_BLAS_gpu": 0,
+        "frozen_BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+        "frozen_BLAS_source": "/workspace/bf16NN-groupgemm.csv",
+        "R_before_frozen": 0.7253967682745448,
+        "R_after_frozen": 1.0653112835727645,
+        "CK_gpu": 4,
+        "epoch": 1,
+        "binary_sha256": "0491e577fc7da6c68f69aa726f285b09dd78d0e003720dba20584a4db21d5fe0",
+        "last_measured_at": "2026-11-05T04:58:55.750408+00:00",
+        "source_keys": [
+          "e1_cache_r1_id784_m5_n1_control",
+          "e1_cache_r2_id784_m5_n1_control",
+          "e1_cache_r3_id784_m5_n1_control",
+          "e1_cache_r1_id784_m5_n1_candidate",
+          "e1_cache_r2_id784_m5_n1_candidate",
+          "e1_cache_r3_id784_m5_n1_candidate"
+        ],
+        "source_logs": [
+          "/workspace/v7_coverage/p6f/runs/e1_cache_r1_id784_m5_n1_control/run.log",
+          "/workspace/v7_coverage/p6f/runs/e1_cache_r2_id784_m5_n1_control/run.log",
+          "/workspace/v7_coverage/p6f/runs/e1_cache_r3_id784_m5_n1_control/run.log",
+          "/workspace/v7_coverage/p6f/runs/e1_cache_r1_id784_m5_n1_candidate/run.log",
+          "/workspace/v7_coverage/p6f/runs/e1_cache_r2_id784_m5_n1_candidate/run.log",
+          "/workspace/v7_coverage/p6f/runs/e1_cache_r3_id784_m5_n1_candidate/run.log"
+        ],
+        "full_output_accuracy_keys": [
+          "e1_acc_cache_id784_m5_n1"
+        ],
+        "fallback": false,
+        "selection_contract": "See frozen plan and source policy; instance chosen by default selector; expected ID is assertion only",
+        "reused_primary": true
+      },
+      {
+        "id": 957,
+        "M": 2048,
+        "N": 4096,
+        "K": 4096,
+        "G": 64,
+        "task": 2,
+        "variant": "cache_grid",
+        "control_instance": 5000,
+        "candidate_instance": 5005,
+        "control_scheme": "v7_256x256x16_M01_1",
+        "control_env": {
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+        },
+        "candidate_env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_WALK": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "1"
+        },
+        "before_ms": 10.968635,
+        "after_ms": 10.988964,
+        "before_round_ms": [
+          10.99024,
+          10.966957,
+          10.968635
+        ],
+        "after_round_ms": [
+          10.988964,
+          11.036234,
+          10.986234
+        ],
+        "paired_delta_pct": 0.16044840584081843,
+        "round_delta_pct": [
+          -0.011610301503883758,
+          0.6316884437497006,
+          0.16044840584081843
+        ],
+        "before_cv": [
+          0.0022227604,
+          0.00050835179,
+          0.0012516549
+        ],
+        "after_cv": [
+          0.0011409373,
+          0.0044910488,
+          0.00072770608
+        ],
+        "observed_variation_band_pct": 2,
+        "quality": "uncertain_within2pct",
+        "frozen_BLAS_ms": 11.630572319030762,
+        "frozen_BLAS_gpu": 0,
+        "frozen_BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+        "frozen_BLAS_source": "/workspace/bf16NN-groupgemm.csv",
+        "R_before_frozen": 1.0603481945593742,
+        "R_after_frozen": 1.0583866066929295,
+        "CK_gpu": 4,
+        "epoch": 2,
+        "binary_sha256": "0491e577fc7da6c68f69aa726f285b09dd78d0e003720dba20584a4db21d5fe0",
+        "last_measured_at": "2026-11-05T05:37:36.641321+00:00",
+        "source_keys": [
+          "e2_cache_grid_r1_id957_control",
+          "e2_cache_grid_r2_id957_control",
+          "e2_cache_grid_r3_id957_control",
+          "e2_cache_grid_r1_id957_candidate",
+          "e2_cache_grid_r2_id957_candidate",
+          "e2_cache_grid_r3_id957_candidate"
+        ],
+        "source_logs": [
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_r1_id957_control/run.log",
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_r2_id957_control/run.log",
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_r3_id957_control/run.log",
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_r1_id957_candidate/run.log",
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_r2_id957_candidate/run.log",
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_r3_id957_candidate/run.log"
+        ],
+        "full_output_accuracy_keys": [
+          "e2_cache_grid_acc_id957_candidate"
+        ],
+        "fallback": false,
+        "selection_contract": "See frozen plan and source policy; instance chosen by default selector; expected ID is assertion only",
+        "reused_primary": false
+      },
+      {
+        "id": 960,
+        "M": 2048,
+        "N": 4096,
+        "K": 4096,
+        "G": 32,
+        "task": 2,
+        "variant": "cache_grid",
+        "control_instance": 5000,
+        "candidate_instance": 5005,
+        "control_scheme": "v7_256x256x16_M01_1",
+        "control_env": {
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+        },
+        "candidate_env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_WALK": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "1"
+        },
+        "before_ms": 5.5350456,
+        "after_ms": 5.5520096,
+        "before_round_ms": [
+          5.5350456,
+          5.5355263,
+          5.5336084
+        ],
+        "after_round_ms": [
+          5.5544758,
+          5.5509615,
+          5.5520096
+        ],
+        "paired_delta_pct": 0.3325352766198497,
+        "round_delta_pct": [
+          0.3510395650579534,
+          0.2788388883636861,
+          0.3325352766198497
+        ],
+        "before_cv": [
+          0.00079273923,
+          0.0010986642,
+          0.001207413
+        ],
+        "after_cv": [
+          0.00072196072,
+          0.00094420785,
+          0.0013875013
+        ],
+        "observed_variation_band_pct": 2,
+        "quality": "uncertain_within2pct",
+        "frozen_BLAS_ms": 5.7852864265441895,
+        "frozen_BLAS_gpu": 0,
+        "frozen_BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+        "frozen_BLAS_source": "/workspace/bf16NN-groupgemm.csv",
+        "R_before_frozen": 1.0452102556380365,
+        "R_after_frozen": 1.0420166468271579,
+        "CK_gpu": 4,
+        "epoch": 2,
+        "binary_sha256": "0491e577fc7da6c68f69aa726f285b09dd78d0e003720dba20584a4db21d5fe0",
+        "last_measured_at": "2026-11-05T05:37:44.030138+00:00",
+        "source_keys": [
+          "e2_cache_grid_r1_id960_control",
+          "e2_cache_grid_r2_id960_control",
+          "e2_cache_grid_r3_id960_control",
+          "e2_cache_grid_r1_id960_candidate",
+          "e2_cache_grid_r2_id960_candidate",
+          "e2_cache_grid_r3_id960_candidate"
+        ],
+        "source_logs": [
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_r1_id960_control/run.log",
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_r2_id960_control/run.log",
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_r3_id960_control/run.log",
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_r1_id960_candidate/run.log",
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_r2_id960_candidate/run.log",
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_r3_id960_candidate/run.log"
+        ],
+        "full_output_accuracy_keys": [
+          "e2_cache_grid_acc_id960_candidate"
+        ],
+        "fallback": false,
+        "selection_contract": "See frozen plan and source policy; instance chosen by default selector; expected ID is assertion only",
+        "reused_primary": false
+      },
+      {
+        "id": 962,
+        "M": 2048,
+        "N": 4096,
+        "K": 4096,
+        "G": 16,
+        "task": 2,
+        "variant": "cache_grid",
+        "control_instance": 5000,
+        "candidate_instance": 5005,
+        "control_scheme": "v7_256x256x16_M01_1",
+        "control_env": {
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+        },
+        "candidate_env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_WALK": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "1"
+        },
+        "before_ms": 2.7829657,
+        "after_ms": 2.7853703,
+        "before_round_ms": [
+          2.7829657,
+          2.7832093,
+          2.781759
+        ],
+        "after_round_ms": [
+          2.7844119,
+          2.7916751,
+          2.7853703
+        ],
+        "paired_delta_pct": 0.129820735728714,
+        "round_delta_pct": [
+          0.05196614532474442,
+          0.30417403391111986,
+          0.129820735728714
+        ],
+        "before_cv": [
+          0.0032534582,
+          0.0021565296,
+          0.0030164962
+        ],
+        "after_cv": [
+          0.0013567423,
+          0.0029766925,
+          0.0014380834
+        ],
+        "observed_variation_band_pct": 2,
+        "quality": "uncertain_within2pct",
+        "frozen_BLAS_ms": 2.873903274536133,
+        "frozen_BLAS_gpu": 0,
+        "frozen_BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+        "frozen_BLAS_source": "/workspace/bf16NN-groupgemm.csv",
+        "R_before_frozen": 1.0326764985052215,
+        "R_after_frozen": 1.031784992658295,
+        "CK_gpu": 4,
+        "epoch": 2,
+        "binary_sha256": "0491e577fc7da6c68f69aa726f285b09dd78d0e003720dba20584a4db21d5fe0",
+        "last_measured_at": "2026-11-05T05:37:48.354713+00:00",
+        "source_keys": [
+          "e2_cache_grid_r1_id962_control",
+          "e2_cache_grid_r2_id962_control",
+          "e2_cache_grid_r3_id962_control",
+          "e2_cache_grid_r1_id962_candidate",
+          "e2_cache_grid_r2_id962_candidate",
+          "e2_cache_grid_r3_id962_candidate"
+        ],
+        "source_logs": [
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_r1_id962_control/run.log",
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_r2_id962_control/run.log",
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_r3_id962_control/run.log",
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_r1_id962_candidate/run.log",
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_r2_id962_candidate/run.log",
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_r3_id962_candidate/run.log"
+        ],
+        "full_output_accuracy_keys": [
+          "e2_cache_grid_acc_id962_candidate"
+        ],
+        "fallback": false,
+        "selection_contract": "See frozen plan and source policy; instance chosen by default selector; expected ID is assertion only",
+        "reused_primary": false
+      },
+      {
+        "id": 964,
+        "M": 2048,
+        "N": 4096,
+        "K": 4096,
+        "G": 8,
+        "task": 2,
+        "variant": "cache_grid",
+        "control_instance": 5000,
+        "candidate_instance": 5005,
+        "control_scheme": "v7_256x256x16_M01_1",
+        "control_env": {
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+        },
+        "candidate_env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_WALK": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "1"
+        },
+        "before_ms": 1.392481,
+        "after_ms": 1.39521,
+        "before_round_ms": [
+          1.392481,
+          1.3930525,
+          1.3923345
+        ],
+        "after_round_ms": [
+          1.39521,
+          1.454478,
+          1.3936005
+        ],
+        "paired_delta_pct": 0.19598113008363338,
+        "round_delta_pct": [
+          0.19598113008363338,
+          4.409417448373265,
+          0.09092642608510282
+        ],
+        "before_cv": [
+          0.0017745038,
+          0.0029935762,
+          0.0034886848
+        ],
+        "after_cv": [
+          0.0020258041,
+          0.036847012,
+          0.0018702957
+        ],
+        "observed_variation_band_pct": 4.363321650504219,
+        "quality": "uncertain_within2pct",
+        "frozen_BLAS_ms": 1.4341834783554077,
+        "frozen_BLAS_gpu": 0,
+        "frozen_BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+        "frozen_BLAS_source": "/workspace/bf16NN-groupgemm.csv",
+        "R_before_frozen": 1.0299483284550437,
+        "R_after_frozen": 1.0279337722317126,
+        "CK_gpu": 4,
+        "epoch": 2,
+        "binary_sha256": "0491e577fc7da6c68f69aa726f285b09dd78d0e003720dba20584a4db21d5fe0",
+        "last_measured_at": "2026-11-05T05:37:51.223820+00:00",
+        "source_keys": [
+          "e2_cache_grid_r1_id964_control",
+          "e2_cache_grid_r2_id964_control",
+          "e2_cache_grid_r3_id964_control",
+          "e2_cache_grid_r1_id964_candidate",
+          "e2_cache_grid_r2_id964_candidate",
+          "e2_cache_grid_r3_id964_candidate"
+        ],
+        "source_logs": [
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_r1_id964_control/run.log",
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_r2_id964_control/run.log",
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_r3_id964_control/run.log",
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_r1_id964_candidate/run.log",
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_r2_id964_candidate/run.log",
+          "/workspace/v7_coverage/p6f/runs/e2_cache_grid_r3_id964_candidate/run.log"
+        ],
+        "full_output_accuracy_keys": [
+          "e2_cache_grid_acc_id964_candidate"
+        ],
+        "fallback": false,
+        "selection_contract": "See frozen plan and source policy; instance chosen by default selector; expected ID is assertion only",
+        "reused_primary": false
+      }
+    ]
+  },
+  "jobs": [
+    {
+      "key": "cache_policy_acc_id583_control",
+      "shape": {
+        "id": 583,
+        "M": 2048,
+        "N": 7168,
+        "K": 3072,
+        "G": 96
+      },
+      "id": 583,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=7168",
+        "--k=3072",
+        "--groups=96",
+        "--backend=both",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=0",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+      },
+      "kind": "accuracy",
+      "task": 2,
+      "arm": "control",
+      "variant": "cache_policy"
+    },
+    {
+      "key": "cache_policy_acc_id583_candidate",
+      "shape": {
+        "id": 583,
+        "M": 2048,
+        "N": 7168,
+        "K": 3072,
+        "G": 96
+      },
+      "id": 583,
+      "expected": 5012,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=7168",
+        "--k=3072",
+        "--groups=96",
+        "--backend=both",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=0",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID": "1"
+      },
+      "kind": "accuracy",
+      "task": 2,
+      "arm": "candidate",
+      "variant": "cache_policy"
+    },
+    {
+      "key": "cache_policy_acc_id584_control",
+      "shape": {
+        "id": 584,
+        "M": 2048,
+        "N": 7168,
+        "K": 3072,
+        "G": 48
+      },
+      "id": 584,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=7168",
+        "--k=3072",
+        "--groups=48",
+        "--backend=both",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=0",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+      },
+      "kind": "accuracy",
+      "task": 2,
+      "arm": "control",
+      "variant": "cache_policy"
+    },
+    {
+      "key": "cache_policy_acc_id584_candidate",
+      "shape": {
+        "id": 584,
+        "M": 2048,
+        "N": 7168,
+        "K": 3072,
+        "G": 48
+      },
+      "id": 584,
+      "expected": 5012,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=7168",
+        "--k=3072",
+        "--groups=48",
+        "--backend=both",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=0",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID": "1"
+      },
+      "kind": "accuracy",
+      "task": 2,
+      "arm": "candidate",
+      "variant": "cache_policy"
+    },
+    {
+      "key": "cache_policy_acc_id585_control",
+      "shape": {
+        "id": 585,
+        "M": 2048,
+        "N": 7168,
+        "K": 3072,
+        "G": 24
+      },
+      "id": 585,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=7168",
+        "--k=3072",
+        "--groups=24",
+        "--backend=both",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=0",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+      },
+      "kind": "accuracy",
+      "task": 2,
+      "arm": "control",
+      "variant": "cache_policy"
+    },
+    {
+      "key": "cache_policy_acc_id585_candidate",
+      "shape": {
+        "id": 585,
+        "M": 2048,
+        "N": 7168,
+        "K": 3072,
+        "G": 24
+      },
+      "id": 585,
+      "expected": 5012,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=7168",
+        "--k=3072",
+        "--groups=24",
+        "--backend=both",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=0",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID": "1"
+      },
+      "kind": "accuracy",
+      "task": 2,
+      "arm": "candidate",
+      "variant": "cache_policy"
+    },
+    {
+      "key": "cache_policy_acc_id587_control",
+      "shape": {
+        "id": 587,
+        "M": 2048,
+        "N": 7168,
+        "K": 3072,
+        "G": 12
+      },
+      "id": 587,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=7168",
+        "--k=3072",
+        "--groups=12",
+        "--backend=both",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=0",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+      },
+      "kind": "accuracy",
+      "task": 2,
+      "arm": "control",
+      "variant": "cache_policy"
+    },
+    {
+      "key": "cache_policy_acc_id587_candidate",
+      "shape": {
+        "id": 587,
+        "M": 2048,
+        "N": 7168,
+        "K": 3072,
+        "G": 12
+      },
+      "id": 587,
+      "expected": 5012,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=7168",
+        "--k=3072",
+        "--groups=12",
+        "--backend=both",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=0",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID": "1"
+      },
+      "kind": "accuracy",
+      "task": 2,
+      "arm": "candidate",
+      "variant": "cache_policy"
+    },
+    {
+      "key": "cache_policy_acc_id781_control",
+      "shape": {
+        "id": 781,
+        "M": 2048,
+        "N": 6144,
+        "K": 3584,
+        "G": 224
+      },
+      "id": 781,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=6144",
+        "--k=3584",
+        "--groups=224",
+        "--backend=both",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=0",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_WALK": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "0"
+      },
+      "kind": "accuracy",
+      "task": 2,
+      "arm": "control",
+      "variant": "cache_policy"
+    },
+    {
+      "key": "cache_policy_acc_id781_candidate",
+      "shape": {
+        "id": 781,
+        "M": 2048,
+        "N": 6144,
+        "K": 3584,
+        "G": 224
+      },
+      "id": 781,
+      "expected": 5012,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=6144",
+        "--k=3584",
+        "--groups=224",
+        "--backend=both",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=0",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID": "1"
+      },
+      "kind": "accuracy",
+      "task": 2,
+      "arm": "candidate",
+      "variant": "cache_policy"
+    },
+    {
+      "key": "cache_policy_acc_id782_control",
+      "shape": {
+        "id": 782,
+        "M": 2048,
+        "N": 6144,
+        "K": 3584,
+        "G": 112
+      },
+      "id": 782,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=6144",
+        "--k=3584",
+        "--groups=112",
+        "--backend=both",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=0",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_WALK": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "0"
+      },
+      "kind": "accuracy",
+      "task": 2,
+      "arm": "control",
+      "variant": "cache_policy"
+    },
+    {
+      "key": "cache_policy_acc_id782_candidate",
+      "shape": {
+        "id": 782,
+        "M": 2048,
+        "N": 6144,
+        "K": 3584,
+        "G": 112
+      },
+      "id": 782,
+      "expected": 5012,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=6144",
+        "--k=3584",
+        "--groups=112",
+        "--backend=both",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=0",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID": "1"
+      },
+      "kind": "accuracy",
+      "task": 2,
+      "arm": "candidate",
+      "variant": "cache_policy"
+    },
+    {
+      "key": "cache_policy_acc_id783_control",
+      "shape": {
+        "id": 783,
+        "M": 2048,
+        "N": 6144,
+        "K": 3584,
+        "G": 56
+      },
+      "id": 783,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=6144",
+        "--k=3584",
+        "--groups=56",
+        "--backend=both",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=0",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_WALK": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "0"
+      },
+      "kind": "accuracy",
+      "task": 2,
+      "arm": "control",
+      "variant": "cache_policy"
+    },
+    {
+      "key": "cache_policy_acc_id783_candidate",
+      "shape": {
+        "id": 783,
+        "M": 2048,
+        "N": 6144,
+        "K": 3584,
+        "G": 56
+      },
+      "id": 783,
+      "expected": 5012,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=6144",
+        "--k=3584",
+        "--groups=56",
+        "--backend=both",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=0",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID": "1"
+      },
+      "kind": "accuracy",
+      "task": 2,
+      "arm": "candidate",
+      "variant": "cache_policy"
+    },
+    {
+      "key": "cache_policy_acc_id784_control",
+      "shape": {
+        "id": 784,
+        "M": 2048,
+        "N": 6144,
+        "K": 3584,
+        "G": 28
+      },
+      "id": 784,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=6144",
+        "--k=3584",
+        "--groups=28",
+        "--backend=both",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=0",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_WALK": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "0"
+      },
+      "kind": "accuracy",
+      "task": 2,
+      "arm": "control",
+      "variant": "cache_policy"
+    },
+    {
+      "key": "cache_policy_acc_id784_candidate",
+      "shape": {
+        "id": 784,
+        "M": 2048,
+        "N": 6144,
+        "K": 3584,
+        "G": 28
+      },
+      "id": 784,
+      "expected": 5012,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=6144",
+        "--k=3584",
+        "--groups=28",
+        "--backend=both",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=0",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID": "1"
+      },
+      "kind": "accuracy",
+      "task": 2,
+      "arm": "candidate",
+      "variant": "cache_policy"
+    },
+    {
+      "key": "cache_policy_acc_id957_control",
+      "shape": {
+        "id": 957,
+        "M": 2048,
+        "N": 4096,
+        "K": 4096,
+        "G": 64
+      },
+      "id": 957,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=4096",
+        "--k=4096",
+        "--groups=64",
+        "--backend=both",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=0",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+      },
+      "kind": "accuracy",
+      "task": 2,
+      "arm": "control",
+      "variant": "cache_policy"
+    },
+    {
+      "key": "cache_policy_acc_id957_candidate",
+      "shape": {
+        "id": 957,
+        "M": 2048,
+        "N": 4096,
+        "K": 4096,
+        "G": 64
+      },
+      "id": 957,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=4096",
+        "--k=4096",
+        "--groups=64",
+        "--backend=both",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=0",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID": "1"
+      },
+      "kind": "accuracy",
+      "task": 2,
+      "arm": "candidate",
+      "variant": "cache_policy"
+    },
+    {
+      "key": "cache_policy_acc_id960_control",
+      "shape": {
+        "id": 960,
+        "M": 2048,
+        "N": 4096,
+        "K": 4096,
+        "G": 32
+      },
+      "id": 960,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=4096",
+        "--k=4096",
+        "--groups=32",
+        "--backend=both",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=0",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+      },
+      "kind": "accuracy",
+      "task": 2,
+      "arm": "control",
+      "variant": "cache_policy"
+    },
+    {
+      "key": "cache_policy_acc_id960_candidate",
+      "shape": {
+        "id": 960,
+        "M": 2048,
+        "N": 4096,
+        "K": 4096,
+        "G": 32
+      },
+      "id": 960,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=4096",
+        "--k=4096",
+        "--groups=32",
+        "--backend=both",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=0",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID": "1"
+      },
+      "kind": "accuracy",
+      "task": 2,
+      "arm": "candidate",
+      "variant": "cache_policy"
+    },
+    {
+      "key": "cache_policy_acc_id962_control",
+      "shape": {
+        "id": 962,
+        "M": 2048,
+        "N": 4096,
+        "K": 4096,
+        "G": 16
+      },
+      "id": 962,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=4096",
+        "--k=4096",
+        "--groups=16",
+        "--backend=both",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=0",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+      },
+      "kind": "accuracy",
+      "task": 2,
+      "arm": "control",
+      "variant": "cache_policy"
+    },
+    {
+      "key": "cache_policy_acc_id962_candidate",
+      "shape": {
+        "id": 962,
+        "M": 2048,
+        "N": 4096,
+        "K": 4096,
+        "G": 16
+      },
+      "id": 962,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=4096",
+        "--k=4096",
+        "--groups=16",
+        "--backend=both",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=0",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID": "1"
+      },
+      "kind": "accuracy",
+      "task": 2,
+      "arm": "candidate",
+      "variant": "cache_policy"
+    },
+    {
+      "key": "cache_policy_acc_id964_control",
+      "shape": {
+        "id": 964,
+        "M": 2048,
+        "N": 4096,
+        "K": 4096,
+        "G": 8
+      },
+      "id": 964,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=4096",
+        "--k=4096",
+        "--groups=8",
+        "--backend=both",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=0",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+      },
+      "kind": "accuracy",
+      "task": 2,
+      "arm": "control",
+      "variant": "cache_policy"
+    },
+    {
+      "key": "cache_policy_acc_id964_candidate",
+      "shape": {
+        "id": 964,
+        "M": 2048,
+        "N": 4096,
+        "K": 4096,
+        "G": 8
+      },
+      "id": 964,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=4096",
+        "--k=4096",
+        "--groups=8",
+        "--backend=both",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=0",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID": "1"
+      },
+      "kind": "accuracy",
+      "task": 2,
+      "arm": "candidate",
+      "variant": "cache_policy"
+    },
+    {
+      "key": "cache_policy_r1_id583_control",
+      "shape": {
+        "id": 583,
+        "M": 2048,
+        "N": 7168,
+        "K": 3072,
+        "G": 96
+      },
+      "id": 583,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=7168",
+        "--k=3072",
+        "--groups=96",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "control",
+      "round": 1,
+      "pair": "cache_policy_r1_id583",
+      "variant": "cache_policy",
+      "fallback": false,
+      "baseline_scheme": "v7_256x256x16_M01_1"
+    },
+    {
+      "key": "cache_policy_r1_id583_candidate",
+      "shape": {
+        "id": 583,
+        "M": 2048,
+        "N": 7168,
+        "K": 3072,
+        "G": 96
+      },
+      "id": 583,
+      "expected": 5012,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=7168",
+        "--k=3072",
+        "--groups=96",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "candidate",
+      "round": 1,
+      "pair": "cache_policy_r1_id583",
+      "variant": "cache_policy",
+      "fallback": false,
+      "baseline_scheme": "v7_256x256x16_M01_1"
+    },
+    {
+      "key": "cache_policy_r1_id584_control",
+      "shape": {
+        "id": 584,
+        "M": 2048,
+        "N": 7168,
+        "K": 3072,
+        "G": 48
+      },
+      "id": 584,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=7168",
+        "--k=3072",
+        "--groups=48",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "control",
+      "round": 1,
+      "pair": "cache_policy_r1_id584",
+      "variant": "cache_policy",
+      "fallback": false,
+      "baseline_scheme": "v7_256x256x16_M01_1"
+    },
+    {
+      "key": "cache_policy_r1_id584_candidate",
+      "shape": {
+        "id": 584,
+        "M": 2048,
+        "N": 7168,
+        "K": 3072,
+        "G": 48
+      },
+      "id": 584,
+      "expected": 5012,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=7168",
+        "--k=3072",
+        "--groups=48",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "candidate",
+      "round": 1,
+      "pair": "cache_policy_r1_id584",
+      "variant": "cache_policy",
+      "fallback": false,
+      "baseline_scheme": "v7_256x256x16_M01_1"
+    },
+    {
+      "key": "cache_policy_r1_id585_control",
+      "shape": {
+        "id": 585,
+        "M": 2048,
+        "N": 7168,
+        "K": 3072,
+        "G": 24
+      },
+      "id": 585,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=7168",
+        "--k=3072",
+        "--groups=24",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "control",
+      "round": 1,
+      "pair": "cache_policy_r1_id585",
+      "variant": "cache_policy",
+      "fallback": false,
+      "baseline_scheme": "v7_256x256x16_M01_1"
+    },
+    {
+      "key": "cache_policy_r1_id585_candidate",
+      "shape": {
+        "id": 585,
+        "M": 2048,
+        "N": 7168,
+        "K": 3072,
+        "G": 24
+      },
+      "id": 585,
+      "expected": 5012,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=7168",
+        "--k=3072",
+        "--groups=24",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "candidate",
+      "round": 1,
+      "pair": "cache_policy_r1_id585",
+      "variant": "cache_policy",
+      "fallback": false,
+      "baseline_scheme": "v7_256x256x16_M01_1"
+    },
+    {
+      "key": "cache_policy_r1_id587_control",
+      "shape": {
+        "id": 587,
+        "M": 2048,
+        "N": 7168,
+        "K": 3072,
+        "G": 12
+      },
+      "id": 587,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=7168",
+        "--k=3072",
+        "--groups=12",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "control",
+      "round": 1,
+      "pair": "cache_policy_r1_id587",
+      "variant": "cache_policy",
+      "fallback": false,
+      "baseline_scheme": "v7_256x256x16_M01_1"
+    },
+    {
+      "key": "cache_policy_r1_id587_candidate",
+      "shape": {
+        "id": 587,
+        "M": 2048,
+        "N": 7168,
+        "K": 3072,
+        "G": 12
+      },
+      "id": 587,
+      "expected": 5012,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=7168",
+        "--k=3072",
+        "--groups=12",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "candidate",
+      "round": 1,
+      "pair": "cache_policy_r1_id587",
+      "variant": "cache_policy",
+      "fallback": false,
+      "baseline_scheme": "v7_256x256x16_M01_1"
+    },
+    {
+      "key": "cache_policy_r1_id781_control",
+      "shape": {
+        "id": 781,
+        "M": 2048,
+        "N": 6144,
+        "K": 3584,
+        "G": 224
+      },
+      "id": 781,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=6144",
+        "--k=3584",
+        "--groups=224",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_WALK": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "0"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "control",
+      "round": 1,
+      "pair": "cache_policy_r1_id781",
+      "variant": "cache_policy",
+      "fallback": false,
+      "baseline_scheme": "fresh original5000; whole contrast repeated after ID781 profiler service event"
+    },
+    {
+      "key": "cache_policy_r1_id781_candidate",
+      "shape": {
+        "id": 781,
+        "M": 2048,
+        "N": 6144,
+        "K": 3584,
+        "G": 224
+      },
+      "id": 781,
+      "expected": 5012,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=6144",
+        "--k=3584",
+        "--groups=224",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "candidate",
+      "round": 1,
+      "pair": "cache_policy_r1_id781",
+      "variant": "cache_policy",
+      "fallback": false,
+      "baseline_scheme": "fresh original5000; whole contrast repeated after ID781 profiler service event"
+    },
+    {
+      "key": "cache_policy_r1_id782_control",
+      "shape": {
+        "id": 782,
+        "M": 2048,
+        "N": 6144,
+        "K": 3584,
+        "G": 112
+      },
+      "id": 782,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=6144",
+        "--k=3584",
+        "--groups=112",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_WALK": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "0"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "control",
+      "round": 1,
+      "pair": "cache_policy_r1_id782",
+      "variant": "cache_policy",
+      "fallback": false,
+      "baseline_scheme": "explicit matched geometry/control"
+    },
+    {
+      "key": "cache_policy_r1_id782_candidate",
+      "shape": {
+        "id": 782,
+        "M": 2048,
+        "N": 6144,
+        "K": 3584,
+        "G": 112
+      },
+      "id": 782,
+      "expected": 5012,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=6144",
+        "--k=3584",
+        "--groups=112",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "candidate",
+      "round": 1,
+      "pair": "cache_policy_r1_id782",
+      "variant": "cache_policy",
+      "fallback": false,
+      "baseline_scheme": "explicit matched geometry/control"
+    },
+    {
+      "key": "cache_policy_r1_id783_control",
+      "shape": {
+        "id": 783,
+        "M": 2048,
+        "N": 6144,
+        "K": 3584,
+        "G": 56
+      },
+      "id": 783,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=6144",
+        "--k=3584",
+        "--groups=56",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_WALK": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "0"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "control",
+      "round": 1,
+      "pair": "cache_policy_r1_id783",
+      "variant": "cache_policy",
+      "fallback": false,
+      "baseline_scheme": "explicit matched geometry/control"
+    },
+    {
+      "key": "cache_policy_r1_id783_candidate",
+      "shape": {
+        "id": 783,
+        "M": 2048,
+        "N": 6144,
+        "K": 3584,
+        "G": 56
+      },
+      "id": 783,
+      "expected": 5012,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=6144",
+        "--k=3584",
+        "--groups=56",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "candidate",
+      "round": 1,
+      "pair": "cache_policy_r1_id783",
+      "variant": "cache_policy",
+      "fallback": false,
+      "baseline_scheme": "explicit matched geometry/control"
+    },
+    {
+      "key": "cache_policy_r1_id784_control",
+      "shape": {
+        "id": 784,
+        "M": 2048,
+        "N": 6144,
+        "K": 3584,
+        "G": 28
+      },
+      "id": 784,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=6144",
+        "--k=3584",
+        "--groups=28",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_WALK": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "0"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "control",
+      "round": 1,
+      "pair": "cache_policy_r1_id784",
+      "variant": "cache_policy",
+      "fallback": false,
+      "baseline_scheme": "explicit matched geometry/control"
+    },
+    {
+      "key": "cache_policy_r1_id784_candidate",
+      "shape": {
+        "id": 784,
+        "M": 2048,
+        "N": 6144,
+        "K": 3584,
+        "G": 28
+      },
+      "id": 784,
+      "expected": 5012,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=6144",
+        "--k=3584",
+        "--groups=28",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "candidate",
+      "round": 1,
+      "pair": "cache_policy_r1_id784",
+      "variant": "cache_policy",
+      "fallback": false,
+      "baseline_scheme": "explicit matched geometry/control"
+    },
+    {
+      "key": "cache_policy_r1_id957_control",
+      "shape": {
+        "id": 957,
+        "M": 2048,
+        "N": 4096,
+        "K": 4096,
+        "G": 64
+      },
+      "id": 957,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=4096",
+        "--k=4096",
+        "--groups=64",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "control",
+      "round": 1,
+      "pair": "cache_policy_r1_id957",
+      "variant": "cache_policy",
+      "fallback": true,
+      "baseline_scheme": "v7_256x256x16_M01_1"
+    },
+    {
+      "key": "cache_policy_r1_id957_candidate",
+      "shape": {
+        "id": 957,
+        "M": 2048,
+        "N": 4096,
+        "K": 4096,
+        "G": 64
+      },
+      "id": 957,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=4096",
+        "--k=4096",
+        "--groups=64",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "candidate",
+      "round": 1,
+      "pair": "cache_policy_r1_id957",
+      "variant": "cache_policy",
+      "fallback": true,
+      "baseline_scheme": "v7_256x256x16_M01_1"
+    },
+    {
+      "key": "cache_policy_r1_id960_control",
+      "shape": {
+        "id": 960,
+        "M": 2048,
+        "N": 4096,
+        "K": 4096,
+        "G": 32
+      },
+      "id": 960,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=4096",
+        "--k=4096",
+        "--groups=32",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "control",
+      "round": 1,
+      "pair": "cache_policy_r1_id960",
+      "variant": "cache_policy",
+      "fallback": true,
+      "baseline_scheme": "v7_256x256x16_M01_1"
+    },
+    {
+      "key": "cache_policy_r1_id960_candidate",
+      "shape": {
+        "id": 960,
+        "M": 2048,
+        "N": 4096,
+        "K": 4096,
+        "G": 32
+      },
+      "id": 960,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=4096",
+        "--k=4096",
+        "--groups=32",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "candidate",
+      "round": 1,
+      "pair": "cache_policy_r1_id960",
+      "variant": "cache_policy",
+      "fallback": true,
+      "baseline_scheme": "v7_256x256x16_M01_1"
+    },
+    {
+      "key": "cache_policy_r1_id962_control",
+      "shape": {
+        "id": 962,
+        "M": 2048,
+        "N": 4096,
+        "K": 4096,
+        "G": 16
+      },
+      "id": 962,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=4096",
+        "--k=4096",
+        "--groups=16",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "control",
+      "round": 1,
+      "pair": "cache_policy_r1_id962",
+      "variant": "cache_policy",
+      "fallback": true,
+      "baseline_scheme": "v7_256x256x16_M01_1"
+    },
+    {
+      "key": "cache_policy_r1_id962_candidate",
+      "shape": {
+        "id": 962,
+        "M": 2048,
+        "N": 4096,
+        "K": 4096,
+        "G": 16
+      },
+      "id": 962,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=4096",
+        "--k=4096",
+        "--groups=16",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "candidate",
+      "round": 1,
+      "pair": "cache_policy_r1_id962",
+      "variant": "cache_policy",
+      "fallback": true,
+      "baseline_scheme": "v7_256x256x16_M01_1"
+    },
+    {
+      "key": "cache_policy_r1_id964_control",
+      "shape": {
+        "id": 964,
+        "M": 2048,
+        "N": 4096,
+        "K": 4096,
+        "G": 8
+      },
+      "id": 964,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=4096",
+        "--k=4096",
+        "--groups=8",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "control",
+      "round": 1,
+      "pair": "cache_policy_r1_id964",
+      "variant": "cache_policy",
+      "fallback": true,
+      "baseline_scheme": "v7_256x256x16_M01_1"
+    },
+    {
+      "key": "cache_policy_r1_id964_candidate",
+      "shape": {
+        "id": 964,
+        "M": 2048,
+        "N": 4096,
+        "K": 4096,
+        "G": 8
+      },
+      "id": 964,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=4096",
+        "--k=4096",
+        "--groups=8",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "candidate",
+      "round": 1,
+      "pair": "cache_policy_r1_id964",
+      "variant": "cache_policy",
+      "fallback": true,
+      "baseline_scheme": "v7_256x256x16_M01_1"
+    },
+    {
+      "key": "cache_policy_r2_id583_control",
+      "shape": {
+        "id": 583,
+        "M": 2048,
+        "N": 7168,
+        "K": 3072,
+        "G": 96
+      },
+      "id": 583,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=7168",
+        "--k=3072",
+        "--groups=96",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "control",
+      "round": 2,
+      "pair": "cache_policy_r2_id583",
+      "variant": "cache_policy",
+      "fallback": false,
+      "baseline_scheme": "v7_256x256x16_M01_1"
+    },
+    {
+      "key": "cache_policy_r2_id583_candidate",
+      "shape": {
+        "id": 583,
+        "M": 2048,
+        "N": 7168,
+        "K": 3072,
+        "G": 96
+      },
+      "id": 583,
+      "expected": 5012,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=7168",
+        "--k=3072",
+        "--groups=96",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "candidate",
+      "round": 2,
+      "pair": "cache_policy_r2_id583",
+      "variant": "cache_policy",
+      "fallback": false,
+      "baseline_scheme": "v7_256x256x16_M01_1"
+    },
+    {
+      "key": "cache_policy_r2_id584_control",
+      "shape": {
+        "id": 584,
+        "M": 2048,
+        "N": 7168,
+        "K": 3072,
+        "G": 48
+      },
+      "id": 584,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=7168",
+        "--k=3072",
+        "--groups=48",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "control",
+      "round": 2,
+      "pair": "cache_policy_r2_id584",
+      "variant": "cache_policy",
+      "fallback": false,
+      "baseline_scheme": "v7_256x256x16_M01_1"
+    },
+    {
+      "key": "cache_policy_r2_id584_candidate",
+      "shape": {
+        "id": 584,
+        "M": 2048,
+        "N": 7168,
+        "K": 3072,
+        "G": 48
+      },
+      "id": 584,
+      "expected": 5012,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=7168",
+        "--k=3072",
+        "--groups=48",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "candidate",
+      "round": 2,
+      "pair": "cache_policy_r2_id584",
+      "variant": "cache_policy",
+      "fallback": false,
+      "baseline_scheme": "v7_256x256x16_M01_1"
+    },
+    {
+      "key": "cache_policy_r2_id585_control",
+      "shape": {
+        "id": 585,
+        "M": 2048,
+        "N": 7168,
+        "K": 3072,
+        "G": 24
+      },
+      "id": 585,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=7168",
+        "--k=3072",
+        "--groups=24",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "control",
+      "round": 2,
+      "pair": "cache_policy_r2_id585",
+      "variant": "cache_policy",
+      "fallback": false,
+      "baseline_scheme": "v7_256x256x16_M01_1"
+    },
+    {
+      "key": "cache_policy_r2_id585_candidate",
+      "shape": {
+        "id": 585,
+        "M": 2048,
+        "N": 7168,
+        "K": 3072,
+        "G": 24
+      },
+      "id": 585,
+      "expected": 5012,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=7168",
+        "--k=3072",
+        "--groups=24",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "candidate",
+      "round": 2,
+      "pair": "cache_policy_r2_id585",
+      "variant": "cache_policy",
+      "fallback": false,
+      "baseline_scheme": "v7_256x256x16_M01_1"
+    },
+    {
+      "key": "cache_policy_r2_id587_control",
+      "shape": {
+        "id": 587,
+        "M": 2048,
+        "N": 7168,
+        "K": 3072,
+        "G": 12
+      },
+      "id": 587,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=7168",
+        "--k=3072",
+        "--groups=12",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "control",
+      "round": 2,
+      "pair": "cache_policy_r2_id587",
+      "variant": "cache_policy",
+      "fallback": false,
+      "baseline_scheme": "v7_256x256x16_M01_1"
+    },
+    {
+      "key": "cache_policy_r2_id587_candidate",
+      "shape": {
+        "id": 587,
+        "M": 2048,
+        "N": 7168,
+        "K": 3072,
+        "G": 12
+      },
+      "id": 587,
+      "expected": 5012,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=7168",
+        "--k=3072",
+        "--groups=12",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "candidate",
+      "round": 2,
+      "pair": "cache_policy_r2_id587",
+      "variant": "cache_policy",
+      "fallback": false,
+      "baseline_scheme": "v7_256x256x16_M01_1"
+    },
+    {
+      "key": "cache_policy_r2_id781_control",
+      "shape": {
+        "id": 781,
+        "M": 2048,
+        "N": 6144,
+        "K": 3584,
+        "G": 224
+      },
+      "id": 781,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=6144",
+        "--k=3584",
+        "--groups=224",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_WALK": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "0"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "control",
+      "round": 2,
+      "pair": "cache_policy_r2_id781",
+      "variant": "cache_policy",
+      "fallback": false,
+      "baseline_scheme": "fresh original5000; whole contrast repeated after ID781 profiler service event"
+    },
+    {
+      "key": "cache_policy_r2_id781_candidate",
+      "shape": {
+        "id": 781,
+        "M": 2048,
+        "N": 6144,
+        "K": 3584,
+        "G": 224
+      },
+      "id": 781,
+      "expected": 5012,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=6144",
+        "--k=3584",
+        "--groups=224",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "candidate",
+      "round": 2,
+      "pair": "cache_policy_r2_id781",
+      "variant": "cache_policy",
+      "fallback": false,
+      "baseline_scheme": "fresh original5000; whole contrast repeated after ID781 profiler service event"
+    },
+    {
+      "key": "cache_policy_r2_id782_control",
+      "shape": {
+        "id": 782,
+        "M": 2048,
+        "N": 6144,
+        "K": 3584,
+        "G": 112
+      },
+      "id": 782,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=6144",
+        "--k=3584",
+        "--groups=112",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_WALK": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "0"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "control",
+      "round": 2,
+      "pair": "cache_policy_r2_id782",
+      "variant": "cache_policy",
+      "fallback": false,
+      "baseline_scheme": "explicit matched geometry/control"
+    },
+    {
+      "key": "cache_policy_r2_id782_candidate",
+      "shape": {
+        "id": 782,
+        "M": 2048,
+        "N": 6144,
+        "K": 3584,
+        "G": 112
+      },
+      "id": 782,
+      "expected": 5012,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=6144",
+        "--k=3584",
+        "--groups=112",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "candidate",
+      "round": 2,
+      "pair": "cache_policy_r2_id782",
+      "variant": "cache_policy",
+      "fallback": false,
+      "baseline_scheme": "explicit matched geometry/control"
+    },
+    {
+      "key": "cache_policy_r2_id783_control",
+      "shape": {
+        "id": 783,
+        "M": 2048,
+        "N": 6144,
+        "K": 3584,
+        "G": 56
+      },
+      "id": 783,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=6144",
+        "--k=3584",
+        "--groups=56",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_WALK": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "0"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "control",
+      "round": 2,
+      "pair": "cache_policy_r2_id783",
+      "variant": "cache_policy",
+      "fallback": false,
+      "baseline_scheme": "explicit matched geometry/control"
+    },
+    {
+      "key": "cache_policy_r2_id783_candidate",
+      "shape": {
+        "id": 783,
+        "M": 2048,
+        "N": 6144,
+        "K": 3584,
+        "G": 56
+      },
+      "id": 783,
+      "expected": 5012,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=6144",
+        "--k=3584",
+        "--groups=56",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "candidate",
+      "round": 2,
+      "pair": "cache_policy_r2_id783",
+      "variant": "cache_policy",
+      "fallback": false,
+      "baseline_scheme": "explicit matched geometry/control"
+    },
+    {
+      "key": "cache_policy_r2_id784_control",
+      "shape": {
+        "id": 784,
+        "M": 2048,
+        "N": 6144,
+        "K": 3584,
+        "G": 28
+      },
+      "id": 784,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=6144",
+        "--k=3584",
+        "--groups=28",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_WALK": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "0"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "control",
+      "round": 2,
+      "pair": "cache_policy_r2_id784",
+      "variant": "cache_policy",
+      "fallback": false,
+      "baseline_scheme": "explicit matched geometry/control"
+    },
+    {
+      "key": "cache_policy_r2_id784_candidate",
+      "shape": {
+        "id": 784,
+        "M": 2048,
+        "N": 6144,
+        "K": 3584,
+        "G": 28
+      },
+      "id": 784,
+      "expected": 5012,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=6144",
+        "--k=3584",
+        "--groups=28",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "candidate",
+      "round": 2,
+      "pair": "cache_policy_r2_id784",
+      "variant": "cache_policy",
+      "fallback": false,
+      "baseline_scheme": "explicit matched geometry/control"
+    },
+    {
+      "key": "cache_policy_r2_id957_control",
+      "shape": {
+        "id": 957,
+        "M": 2048,
+        "N": 4096,
+        "K": 4096,
+        "G": 64
+      },
+      "id": 957,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=4096",
+        "--k=4096",
+        "--groups=64",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "control",
+      "round": 2,
+      "pair": "cache_policy_r2_id957",
+      "variant": "cache_policy",
+      "fallback": true,
+      "baseline_scheme": "v7_256x256x16_M01_1"
+    },
+    {
+      "key": "cache_policy_r2_id957_candidate",
+      "shape": {
+        "id": 957,
+        "M": 2048,
+        "N": 4096,
+        "K": 4096,
+        "G": 64
+      },
+      "id": 957,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=4096",
+        "--k=4096",
+        "--groups=64",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "candidate",
+      "round": 2,
+      "pair": "cache_policy_r2_id957",
+      "variant": "cache_policy",
+      "fallback": true,
+      "baseline_scheme": "v7_256x256x16_M01_1"
+    },
+    {
+      "key": "cache_policy_r2_id960_control",
+      "shape": {
+        "id": 960,
+        "M": 2048,
+        "N": 4096,
+        "K": 4096,
+        "G": 32
+      },
+      "id": 960,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=4096",
+        "--k=4096",
+        "--groups=32",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "control",
+      "round": 2,
+      "pair": "cache_policy_r2_id960",
+      "variant": "cache_policy",
+      "fallback": true,
+      "baseline_scheme": "v7_256x256x16_M01_1"
+    },
+    {
+      "key": "cache_policy_r2_id960_candidate",
+      "shape": {
+        "id": 960,
+        "M": 2048,
+        "N": 4096,
+        "K": 4096,
+        "G": 32
+      },
+      "id": 960,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=4096",
+        "--k=4096",
+        "--groups=32",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "candidate",
+      "round": 2,
+      "pair": "cache_policy_r2_id960",
+      "variant": "cache_policy",
+      "fallback": true,
+      "baseline_scheme": "v7_256x256x16_M01_1"
+    },
+    {
+      "key": "cache_policy_r2_id962_control",
+      "shape": {
+        "id": 962,
+        "M": 2048,
+        "N": 4096,
+        "K": 4096,
+        "G": 16
+      },
+      "id": 962,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=4096",
+        "--k=4096",
+        "--groups=16",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "control",
+      "round": 2,
+      "pair": "cache_policy_r2_id962",
+      "variant": "cache_policy",
+      "fallback": true,
+      "baseline_scheme": "v7_256x256x16_M01_1"
+    },
+    {
+      "key": "cache_policy_r2_id962_candidate",
+      "shape": {
+        "id": 962,
+        "M": 2048,
+        "N": 4096,
+        "K": 4096,
+        "G": 16
+      },
+      "id": 962,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=4096",
+        "--k=4096",
+        "--groups=16",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "candidate",
+      "round": 2,
+      "pair": "cache_policy_r2_id962",
+      "variant": "cache_policy",
+      "fallback": true,
+      "baseline_scheme": "v7_256x256x16_M01_1"
+    },
+    {
+      "key": "cache_policy_r2_id964_control",
+      "shape": {
+        "id": 964,
+        "M": 2048,
+        "N": 4096,
+        "K": 4096,
+        "G": 8
+      },
+      "id": 964,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=4096",
+        "--k=4096",
+        "--groups=8",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "control",
+      "round": 2,
+      "pair": "cache_policy_r2_id964",
+      "variant": "cache_policy",
+      "fallback": true,
+      "baseline_scheme": "v7_256x256x16_M01_1"
+    },
+    {
+      "key": "cache_policy_r2_id964_candidate",
+      "shape": {
+        "id": 964,
+        "M": 2048,
+        "N": 4096,
+        "K": 4096,
+        "G": 8
+      },
+      "id": 964,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=4096",
+        "--k=4096",
+        "--groups=8",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "candidate",
+      "round": 2,
+      "pair": "cache_policy_r2_id964",
+      "variant": "cache_policy",
+      "fallback": true,
+      "baseline_scheme": "v7_256x256x16_M01_1"
+    },
+    {
+      "key": "cache_policy_r3_id583_control",
+      "shape": {
+        "id": 583,
+        "M": 2048,
+        "N": 7168,
+        "K": 3072,
+        "G": 96
+      },
+      "id": 583,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=7168",
+        "--k=3072",
+        "--groups=96",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "control",
+      "round": 3,
+      "pair": "cache_policy_r3_id583",
+      "variant": "cache_policy",
+      "fallback": false,
+      "baseline_scheme": "v7_256x256x16_M01_1"
+    },
+    {
+      "key": "cache_policy_r3_id583_candidate",
+      "shape": {
+        "id": 583,
+        "M": 2048,
+        "N": 7168,
+        "K": 3072,
+        "G": 96
+      },
+      "id": 583,
+      "expected": 5012,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=7168",
+        "--k=3072",
+        "--groups=96",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "candidate",
+      "round": 3,
+      "pair": "cache_policy_r3_id583",
+      "variant": "cache_policy",
+      "fallback": false,
+      "baseline_scheme": "v7_256x256x16_M01_1"
+    },
+    {
+      "key": "cache_policy_r3_id584_control",
+      "shape": {
+        "id": 584,
+        "M": 2048,
+        "N": 7168,
+        "K": 3072,
+        "G": 48
+      },
+      "id": 584,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=7168",
+        "--k=3072",
+        "--groups=48",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "control",
+      "round": 3,
+      "pair": "cache_policy_r3_id584",
+      "variant": "cache_policy",
+      "fallback": false,
+      "baseline_scheme": "v7_256x256x16_M01_1"
+    },
+    {
+      "key": "cache_policy_r3_id584_candidate",
+      "shape": {
+        "id": 584,
+        "M": 2048,
+        "N": 7168,
+        "K": 3072,
+        "G": 48
+      },
+      "id": 584,
+      "expected": 5012,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=7168",
+        "--k=3072",
+        "--groups=48",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "candidate",
+      "round": 3,
+      "pair": "cache_policy_r3_id584",
+      "variant": "cache_policy",
+      "fallback": false,
+      "baseline_scheme": "v7_256x256x16_M01_1"
+    },
+    {
+      "key": "cache_policy_r3_id585_control",
+      "shape": {
+        "id": 585,
+        "M": 2048,
+        "N": 7168,
+        "K": 3072,
+        "G": 24
+      },
+      "id": 585,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=7168",
+        "--k=3072",
+        "--groups=24",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "control",
+      "round": 3,
+      "pair": "cache_policy_r3_id585",
+      "variant": "cache_policy",
+      "fallback": false,
+      "baseline_scheme": "v7_256x256x16_M01_1"
+    },
+    {
+      "key": "cache_policy_r3_id585_candidate",
+      "shape": {
+        "id": 585,
+        "M": 2048,
+        "N": 7168,
+        "K": 3072,
+        "G": 24
+      },
+      "id": 585,
+      "expected": 5012,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=7168",
+        "--k=3072",
+        "--groups=24",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "candidate",
+      "round": 3,
+      "pair": "cache_policy_r3_id585",
+      "variant": "cache_policy",
+      "fallback": false,
+      "baseline_scheme": "v7_256x256x16_M01_1"
+    },
+    {
+      "key": "cache_policy_r3_id587_control",
+      "shape": {
+        "id": 587,
+        "M": 2048,
+        "N": 7168,
+        "K": 3072,
+        "G": 12
+      },
+      "id": 587,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=7168",
+        "--k=3072",
+        "--groups=12",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "control",
+      "round": 3,
+      "pair": "cache_policy_r3_id587",
+      "variant": "cache_policy",
+      "fallback": false,
+      "baseline_scheme": "v7_256x256x16_M01_1"
+    },
+    {
+      "key": "cache_policy_r3_id587_candidate",
+      "shape": {
+        "id": 587,
+        "M": 2048,
+        "N": 7168,
+        "K": 3072,
+        "G": 12
+      },
+      "id": 587,
+      "expected": 5012,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=7168",
+        "--k=3072",
+        "--groups=12",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "candidate",
+      "round": 3,
+      "pair": "cache_policy_r3_id587",
+      "variant": "cache_policy",
+      "fallback": false,
+      "baseline_scheme": "v7_256x256x16_M01_1"
+    },
+    {
+      "key": "cache_policy_r3_id781_control",
+      "shape": {
+        "id": 781,
+        "M": 2048,
+        "N": 6144,
+        "K": 3584,
+        "G": 224
+      },
+      "id": 781,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=6144",
+        "--k=3584",
+        "--groups=224",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_WALK": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "0"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "control",
+      "round": 3,
+      "pair": "cache_policy_r3_id781",
+      "variant": "cache_policy",
+      "fallback": false,
+      "baseline_scheme": "fresh original5000; whole contrast repeated after ID781 profiler service event"
+    },
+    {
+      "key": "cache_policy_r3_id781_candidate",
+      "shape": {
+        "id": 781,
+        "M": 2048,
+        "N": 6144,
+        "K": 3584,
+        "G": 224
+      },
+      "id": 781,
+      "expected": 5012,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=6144",
+        "--k=3584",
+        "--groups=224",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "candidate",
+      "round": 3,
+      "pair": "cache_policy_r3_id781",
+      "variant": "cache_policy",
+      "fallback": false,
+      "baseline_scheme": "fresh original5000; whole contrast repeated after ID781 profiler service event"
+    },
+    {
+      "key": "cache_policy_r3_id782_control",
+      "shape": {
+        "id": 782,
+        "M": 2048,
+        "N": 6144,
+        "K": 3584,
+        "G": 112
+      },
+      "id": 782,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=6144",
+        "--k=3584",
+        "--groups=112",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_WALK": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "0"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "control",
+      "round": 3,
+      "pair": "cache_policy_r3_id782",
+      "variant": "cache_policy",
+      "fallback": false,
+      "baseline_scheme": "explicit matched geometry/control"
+    },
+    {
+      "key": "cache_policy_r3_id782_candidate",
+      "shape": {
+        "id": 782,
+        "M": 2048,
+        "N": 6144,
+        "K": 3584,
+        "G": 112
+      },
+      "id": 782,
+      "expected": 5012,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=6144",
+        "--k=3584",
+        "--groups=112",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "candidate",
+      "round": 3,
+      "pair": "cache_policy_r3_id782",
+      "variant": "cache_policy",
+      "fallback": false,
+      "baseline_scheme": "explicit matched geometry/control"
+    },
+    {
+      "key": "cache_policy_r3_id783_control",
+      "shape": {
+        "id": 783,
+        "M": 2048,
+        "N": 6144,
+        "K": 3584,
+        "G": 56
+      },
+      "id": 783,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=6144",
+        "--k=3584",
+        "--groups=56",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_WALK": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "0"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "control",
+      "round": 3,
+      "pair": "cache_policy_r3_id783",
+      "variant": "cache_policy",
+      "fallback": false,
+      "baseline_scheme": "explicit matched geometry/control"
+    },
+    {
+      "key": "cache_policy_r3_id783_candidate",
+      "shape": {
+        "id": 783,
+        "M": 2048,
+        "N": 6144,
+        "K": 3584,
+        "G": 56
+      },
+      "id": 783,
+      "expected": 5012,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=6144",
+        "--k=3584",
+        "--groups=56",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "candidate",
+      "round": 3,
+      "pair": "cache_policy_r3_id783",
+      "variant": "cache_policy",
+      "fallback": false,
+      "baseline_scheme": "explicit matched geometry/control"
+    },
+    {
+      "key": "cache_policy_r3_id784_control",
+      "shape": {
+        "id": 784,
+        "M": 2048,
+        "N": 6144,
+        "K": 3584,
+        "G": 28
+      },
+      "id": 784,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=6144",
+        "--k=3584",
+        "--groups=28",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_WALK": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "0"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "control",
+      "round": 3,
+      "pair": "cache_policy_r3_id784",
+      "variant": "cache_policy",
+      "fallback": false,
+      "baseline_scheme": "explicit matched geometry/control"
+    },
+    {
+      "key": "cache_policy_r3_id784_candidate",
+      "shape": {
+        "id": 784,
+        "M": 2048,
+        "N": 6144,
+        "K": 3584,
+        "G": 28
+      },
+      "id": 784,
+      "expected": 5012,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=6144",
+        "--k=3584",
+        "--groups=28",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "candidate",
+      "round": 3,
+      "pair": "cache_policy_r3_id784",
+      "variant": "cache_policy",
+      "fallback": false,
+      "baseline_scheme": "explicit matched geometry/control"
+    },
+    {
+      "key": "cache_policy_r3_id957_control",
+      "shape": {
+        "id": 957,
+        "M": 2048,
+        "N": 4096,
+        "K": 4096,
+        "G": 64
+      },
+      "id": 957,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=4096",
+        "--k=4096",
+        "--groups=64",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "control",
+      "round": 3,
+      "pair": "cache_policy_r3_id957",
+      "variant": "cache_policy",
+      "fallback": true,
+      "baseline_scheme": "v7_256x256x16_M01_1"
+    },
+    {
+      "key": "cache_policy_r3_id957_candidate",
+      "shape": {
+        "id": 957,
+        "M": 2048,
+        "N": 4096,
+        "K": 4096,
+        "G": 64
+      },
+      "id": 957,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=4096",
+        "--k=4096",
+        "--groups=64",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "candidate",
+      "round": 3,
+      "pair": "cache_policy_r3_id957",
+      "variant": "cache_policy",
+      "fallback": true,
+      "baseline_scheme": "v7_256x256x16_M01_1"
+    },
+    {
+      "key": "cache_policy_r3_id960_control",
+      "shape": {
+        "id": 960,
+        "M": 2048,
+        "N": 4096,
+        "K": 4096,
+        "G": 32
+      },
+      "id": 960,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=4096",
+        "--k=4096",
+        "--groups=32",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "control",
+      "round": 3,
+      "pair": "cache_policy_r3_id960",
+      "variant": "cache_policy",
+      "fallback": true,
+      "baseline_scheme": "v7_256x256x16_M01_1"
+    },
+    {
+      "key": "cache_policy_r3_id960_candidate",
+      "shape": {
+        "id": 960,
+        "M": 2048,
+        "N": 4096,
+        "K": 4096,
+        "G": 32
+      },
+      "id": 960,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=4096",
+        "--k=4096",
+        "--groups=32",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "candidate",
+      "round": 3,
+      "pair": "cache_policy_r3_id960",
+      "variant": "cache_policy",
+      "fallback": true,
+      "baseline_scheme": "v7_256x256x16_M01_1"
+    },
+    {
+      "key": "cache_policy_r3_id962_control",
+      "shape": {
+        "id": 962,
+        "M": 2048,
+        "N": 4096,
+        "K": 4096,
+        "G": 16
+      },
+      "id": 962,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=4096",
+        "--k=4096",
+        "--groups=16",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "control",
+      "round": 3,
+      "pair": "cache_policy_r3_id962",
+      "variant": "cache_policy",
+      "fallback": true,
+      "baseline_scheme": "v7_256x256x16_M01_1"
+    },
+    {
+      "key": "cache_policy_r3_id962_candidate",
+      "shape": {
+        "id": 962,
+        "M": 2048,
+        "N": 4096,
+        "K": 4096,
+        "G": 16
+      },
+      "id": 962,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=4096",
+        "--k=4096",
+        "--groups=16",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "candidate",
+      "round": 3,
+      "pair": "cache_policy_r3_id962",
+      "variant": "cache_policy",
+      "fallback": true,
+      "baseline_scheme": "v7_256x256x16_M01_1"
+    },
+    {
+      "key": "cache_policy_r3_id964_control",
+      "shape": {
+        "id": 964,
+        "M": 2048,
+        "N": 4096,
+        "K": 4096,
+        "G": 8
+      },
+      "id": 964,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=4096",
+        "--k=4096",
+        "--groups=8",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "control",
+      "round": 3,
+      "pair": "cache_policy_r3_id964",
+      "variant": "cache_policy",
+      "fallback": true,
+      "baseline_scheme": "v7_256x256x16_M01_1"
+    },
+    {
+      "key": "cache_policy_r3_id964_candidate",
+      "shape": {
+        "id": 964,
+        "M": 2048,
+        "N": 4096,
+        "K": 4096,
+        "G": 8
+      },
+      "id": 964,
+      "expected": 5000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=2048",
+        "--n=4096",
+        "--k=4096",
+        "--groups=8",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--time=1",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--correctness-repeats=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID": "1"
+      },
+      "kind": "perf",
+      "task": 2,
+      "arm": "candidate",
+      "round": 3,
+      "pair": "cache_policy_r3_id964",
+      "variant": "cache_policy",
+      "fallback": true,
+      "baseline_scheme": "v7_256x256x16_M01_1"
+    }
+  ]
+}

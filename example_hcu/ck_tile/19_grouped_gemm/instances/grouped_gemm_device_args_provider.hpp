@@ -171,6 +171,11 @@ int launch_registry_candidate(ck_tile::GroupedGemmInstanceId instance_id,
     case ck_tile::GroupedGemmInstanceId::v7_bf16_nn_small_m_k32n64:
     case ck_tile::GroupedGemmInstanceId::v7_bf16_nn_cache_m01_5:
     case ck_tile::GroupedGemmInstanceId::v7_bf16_nn_cache_noslc_m01_5:
+    case ck_tile::GroupedGemmInstanceId::v7_bf16_nn_tail128:
+    case ck_tile::GroupedGemmInstanceId::v7_bf16_nn_small_m_k32_steady:
+    case ck_tile::GroupedGemmInstanceId::v7_bf16_nn_small_m_k16_steady:
+    case ck_tile::GroupedGemmInstanceId::v7_bf16_nn_tail256:
+    case ck_tile::GroupedGemmInstanceId::v7_bf16_nn_small_m_noslc:
     case ck_tile::GroupedGemmInstanceId::v8_bf16_tn: break;
 #if defined(CK_TILE_GROUPED_GEMM_DEVICE_ARGS_REGISTRY_GFX936)
     case ck_tile::GroupedGemmInstanceId::gfx936_v3_256_m_only_padding:

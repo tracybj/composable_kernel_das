@@ -981,7 +981,7 @@ int run_v7_small_experiment_tests()
         q.n=GroupedGemmDimensionSummary::Common(1048576);
         check(q,policy,select_grouped_gemm_candidate(q,base).instance_id);
     }
-    for(int invalid : {-1,0,5,128}) {auto policy=base;policy.bf16_v7_nn_small_m_experiment=invalid;check(p,policy,select_grouped_gemm_candidate(p,base).instance_id);}
+    for(int invalid : {-1,0,8,128}) {auto policy=base;policy.bf16_v7_nn_small_m_experiment=invalid;check(p,policy,select_grouped_gemm_candidate(p,base).instance_id);}
     if(!failures)std::cout<<"SELECTOR_V7_SMALL_EXPERIMENT_PASS cases="<<checked<<'\n';
     return failures;
 }

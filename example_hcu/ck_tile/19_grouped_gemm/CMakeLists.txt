@@ -354,7 +354,7 @@ set_source_files_properties(
 # any consumer of the manifest that wants these instances must extend its own
 # compile options to match.
 if(GPU_TARGETS MATCHES "gfx936")
-    # Separate manifest: includes opt-in cache/walk and small-M experiments (5005..5012).
+    # Separate manifest: includes opt-in cache/walk, independent N-tail, steady/drain and limited small-M cache control (5005..5017).
     # These entries must retain this archive's codegen flags.
     file(STRINGS
         ${CMAKE_CURRENT_LIST_DIR}/grouped_gemm_v7_v8_device_args_provider_sources.txt
