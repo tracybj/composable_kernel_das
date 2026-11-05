@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "cpu_only": true,
+  "checks": 2663,
+  "shape_count": 1193,
+  "selector_sha256": "91345a9c675fb765b44d88a722ad90c24294068baf804ec4bc14f2bb945a2853",
+  "compile_command": [
+    "c++",
+    "-O2",
+    "-std=c++17",
+    "/workspace/v7_coverage/best_known/selector_probe.cpp",
+    "-o",
+    "/workspace/v7_coverage/best_known/selector_probe"
+  ],
+  "note": "Policy-level CPU selection; does not launch GPU or newly verify performance/precision. Environment recipes assume unrelated experiment switches unset."
+}

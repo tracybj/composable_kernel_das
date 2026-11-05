@@ -1,0 +1,2370 @@
+[
+  {
+    "path": "/workspace/shapes_1178.csv",
+    "sha256": "5c3ae4d1d682b919ed90adb5cfed1cec755e3b519f9003afde8c46d282e77863",
+    "bytes": 36820,
+    "note": "shape input",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/full1178/perf/summary.txt",
+    "sha256": "1fd1b8df7927d2acbd59787d33f2b319fdde4a9f18b730565094973ee3b8fdf5",
+    "bytes": 140712,
+    "note": "Healthy historical snapshot; same-shape full-output pass available",
+    "accepted": 1178,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/full1178_p4b/perf/summary.txt",
+    "sha256": "9c29bbc271e7656dd66bca283c6f746c030a241ed7946bf6bb8ee54468d09ffe",
+    "bytes": 156793,
+    "note": "Legacy MKFD/re-registration events and high-variance rows; recovery protocol weaker than P6e; historical observation, needs replay if selected",
+    "accepted": 1178,
+    "excluded": 1
+  },
+  {
+    "path": "/workspace/v7_coverage/p1/da_time_id1118.log",
+    "sha256": "8f9d12c6278e452ef0a98a30194c9771887ca9d9506e4a416043085a6b414513",
+    "bytes": 978,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p1/da_time_id962.log",
+    "sha256": "8692143ffeab9d3c482bb35f1a7ab0313327e469a21c4da788c08b38dcccfaee",
+    "bytes": 976,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p1/da_time_id992.log",
+    "sha256": "7df98e3cc64dac32603a3a4a216dd84e9d3cc6f08a4522a2f75b337b46cb10e2",
+    "bytes": 957,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p1/da_time_m256.log",
+    "sha256": "a8a12ab9c59aeb8ae55390e72d6816a5737654d46d0b33e3d6c52961ee9967af",
+    "bytes": 964,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 0,
+    "excluded": 1
+  },
+  {
+    "path": "/workspace/v7_coverage/p1/da_time_m512.log",
+    "sha256": "06f7f5a90088dd3d671ab1e52a3e3bdb38f18dba5f2e9799bdefa61a1bab7675",
+    "bytes": 956,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 0,
+    "excluded": 1
+  },
+  {
+    "path": "/workspace/v7_coverage/p2/perf/id1118_p1_r1.log",
+    "sha256": "f0083d3cab2084709b38f1e6f44c373c053975d7922030ee898b88982104627c",
+    "bytes": 707,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p2/perf/id1118_p1_r2.log",
+    "sha256": "9768f8934d732f1f5f5af708a46f4874188a49a948179480a1fba2f2444292c1",
+    "bytes": 708,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p2/perf/id1118_p1_r3.log",
+    "sha256": "8aa86c8674f200b6f564fbdf422a96549172e3a2da0b60fbdbfcd6b8b64ea3db",
+    "bytes": 707,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p2/perf/id1118_p1_r4.log",
+    "sha256": "87ccfad06dd9b77f0a9dad631a9de0fa44559b98b83ff6116d9ce12fc1230b8b",
+    "bytes": 706,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p2/perf/id1118_p1_r5.log",
+    "sha256": "e860da986ebccd1f22ba7c775c701b1578e683adbb26b1ef02fa9d086f15e0a4",
+    "bytes": 707,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p2/perf/id1118_p1_r6.log",
+    "sha256": "371af5d637e8be54527c59fe72a50d92177d262c1fb853bd29300519be7bc64e",
+    "bytes": 708,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p2/perf/id1118_p2_r1.log",
+    "sha256": "3a984007a879b1f6cf9b810837c11b8a582772a6d81bddc9d76d876072cec472",
+    "bytes": 705,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p2/perf/id1118_p2_r2.log",
+    "sha256": "36e05ae2ca839cd46938693ec56ba8a29663e304a4fbe11630b43f49369a9574",
+    "bytes": 707,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p2/perf/id1118_p2_r3.log",
+    "sha256": "18c5ed8768d7266ee22e687ccbffc8d0abc5a0129d81b9ffd805cd6ced5eb73f",
+    "bytes": 707,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p2/perf/id1118_p2_r4.log",
+    "sha256": "12871337a5b8bf26b90e1d9ec2618e4fe9d3eb8f63b8ae2aab9fe43906eef6a8",
+    "bytes": 706,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p2/perf/id1118_p2_r5.log",
+    "sha256": "b3c2068a621ccc9f279e008d39c297868b192c8d61c598dc722a3c9a31330abc",
+    "bytes": 708,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p2/perf/id1118_p2_r6.log",
+    "sha256": "bfc604fa5c732e59690cb56c01436b926f4ee6c1248be72126206e11fc5381f7",
+    "bytes": 708,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p2/perf/id962_p1_r1.log",
+    "sha256": "8786238d4d304d0c535fa96387a27d369ddd557ebb93bcd28dded8a50eae3a8c",
+    "bytes": 705,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p2/perf/id962_p1_r2.log",
+    "sha256": "82147ea66fab6d8da106079adb72c0cd2e0cb92fdc02b9f7f02066f0ac93a432",
+    "bytes": 705,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p2/perf/id962_p1_r3.log",
+    "sha256": "b50692e785db9ecc124ac420d38d93820a0f0bf01464d572816b8ee19191db2f",
+    "bytes": 708,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p2/perf/id962_p2_r1.log",
+    "sha256": "1ea1ac315c83ea64a88eca6be1a6aaf117ab82709e6e103802e61fb422ec200d",
+    "bytes": 707,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p2/perf/id962_p2_r2.log",
+    "sha256": "d1693de4e3c8d67a881ae48420596af137d073558a835f55d94b3daa3a915f3c",
+    "bytes": 708,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p2/perf/id962_p2_r3.log",
+    "sha256": "a2f0ad6bf03f2059885bad29ad12ce86d4e1956b630bfbf03b3228832670fd0a",
+    "bytes": 705,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p2/perf/id992_p1_r1.log",
+    "sha256": "d3278783415daf4ee67a42172abd9cfeac75c04e3b2fe2df9fde259b4b68d5c4",
+    "bytes": 688,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p2/perf/id992_p1_r2.log",
+    "sha256": "631c3df4389c5890d2abfb4d0a7ace31b4072b6bd9afeafe413b2219539fe12e",
+    "bytes": 685,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p2/perf/id992_p1_r3.log",
+    "sha256": "59119071e6f4cfc736482e57ab66bd0da7ca2cb8192270f62cd7fdcd9ee79119",
+    "bytes": 687,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p2/perf/id992_p1_r4.log",
+    "sha256": "87fde87e19356fe3c4bd1d2518c81a5cd0182fd84f610c335112b454eb0d4de7",
+    "bytes": 687,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p2/perf/id992_p1_r5.log",
+    "sha256": "bcbe4010860879f15781ab96b4acd93490ac07b7f35c6f0add1649d51e4e48c4",
+    "bytes": 688,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p2/perf/id992_p1_r6.log",
+    "sha256": "115c2d9396d9e21f8a5d7d0106b96070d1dc9c3be6f1dfb66fd03130ac04bdf6",
+    "bytes": 688,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p2/perf/id992_p2_r1.log",
+    "sha256": "936ad2a9f23c892bb14c4aec15391a6d9f11db840fe115bc1e93678f4c6284ae",
+    "bytes": 687,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p2/perf/id992_p2_r2.log",
+    "sha256": "8fa6996e3d99f9c8d803f8f83444b178062cfa2fa16fd80d1f68f519f3fe8ba8",
+    "bytes": 686,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p2/perf/id992_p2_r3.log",
+    "sha256": "504cdc8eb16b097a86a7590ae05d711a34b7c46c91b1cc5ea22473b7cb4e480f",
+    "bytes": 688,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p2/perf/id992_p2_r4.log",
+    "sha256": "1223919a2f0ba97dc8f678434c5035755a5418328f81d860405aae1654e5c68d",
+    "bytes": 688,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p2/perf/id992_p2_r5.log",
+    "sha256": "263a280d6cb0fe88bf2d8bdd9eabe2c83722c4902134afc93220420001387319",
+    "bytes": 687,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p2/perf/id992_p2_r6.log",
+    "sha256": "8522e171aed6f30bb765443f063316e4f0df0b6e32284a5ea62e6e0d41b333de",
+    "bytes": 686,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3a/m1/id438_dflt_g24.log",
+    "sha256": "d4d2f5a846b87bd8c2f1299677e1f02045fce62b723844160dbce09431caaf2f",
+    "bytes": 686,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3a/m1/id438_v7g16_r1.log",
+    "sha256": "a6b6a1ceaa5ee5e9329e686066c646cc7828aedac4bc32888acf1f3393bd034c",
+    "bytes": 671,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3a/m1/id438_v7g16_r2.log",
+    "sha256": "45e1a479d77b69fc975e6c0c83b6a3fdfafecfc6636dffc19ce56214cc10839a",
+    "bytes": 671,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3a/m1/id438_v7g16_r3.log",
+    "sha256": "de579d51dba6402d8dc15cb7ef44d1631e3886c1709e52307792c110567410f5",
+    "bytes": 673,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3a/m1/id466_dflt_g32.log",
+    "sha256": "3864d6249bd6de00be4220574ca75f01c6b901840fd38a1ccb45e6df21bf0144",
+    "bytes": 779,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3a/m1/id466_v7g16_r1.log",
+    "sha256": "5ac7183e6a7acaed6e670a2d7cf2605a67bbffe54bb09f23b37388c18d34644b",
+    "bytes": 710,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3a/m1/id466_v7g16_r2.log",
+    "sha256": "e191442b6e95454cbe241fe3ebca950dcbea0703859e79fcc30e0f424e86a1c4",
+    "bytes": 708,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3a/m1/id466_v7g16_r3.log",
+    "sha256": "daac09068452cea26c5b716e633ce07da44d0f82afad84ff9b4a6c763624ce49",
+    "bytes": 710,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3a/m1/id933_dflt_g64.log",
+    "sha256": "770550cc3150aa9b6227a121e5767f7e44874392ec4d66df14878e56aa1a4026",
+    "bytes": 810,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3a/m1/id933_v7g16_r1.log",
+    "sha256": "eb053d06e81490d59186f582a821a49d0fcd203436850e300397d444e988a4af",
+    "bytes": 675,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3a/m1/id933_v7g16_r2.log",
+    "sha256": "46deb73a706af5709c84bfa749e03910bf07d1219e8c7ba5d015200d817924c7",
+    "bytes": 676,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3a/m1/id933_v7g16_r3.log",
+    "sha256": "85ca0d66328880527c417d691ef6d29290079228f3bda23fcfafe46b3f69f906",
+    "bytes": 674,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3a/m1/id933_v7g16_r4.log",
+    "sha256": "d897f4007b540fdab8645ea9c2ba4020fed3a711d6859d99e9135e5236e5a84e",
+    "bytes": 674,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3a/m1/id933_v7g16_r5.log",
+    "sha256": "ffa1363f155ff4dc5ee84edd6c4f5808b0efdadf5d9bf5fc91ac1c4d87c80537",
+    "bytes": 673,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3a/m1/id933_v7g16_r6.log",
+    "sha256": "2d77a8b2b8ff1cb83b6870809d5f3de14061fdf2b42fabb73ee8be44c19a0a3f",
+    "bytes": 674,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3a/m1/id958_dflt_g64.log",
+    "sha256": "8f67f0734c98f9466ee650c936526dc6e5ee2e252670f2ad953598995d2bccca",
+    "bytes": 939,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3a/m1/id958_v7g16_r1.log",
+    "sha256": "39a5be845d7dae6ce9bf27c74428e235e16d6330cb185525346d7a582091dae7",
+    "bytes": 709,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3a/m1/id958_v7g16_r2.log",
+    "sha256": "a8661492fa55044e35e32491238142a8fbd0cf8b0e226b4cc27d3dc89dfeae55",
+    "bytes": 708,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3a/m1/id958_v7g16_r3.log",
+    "sha256": "f0340b170b68d5dd37ef5a647e1ccee9afd06ce5c6577348cf7ae7beee632299",
+    "bytes": 707,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/perf16/id1118_p2_r1.log",
+    "sha256": "e700ce4d72189991da88a4e49469aaace3d041e99217b5c03a364aaa650edf33",
+    "bytes": 708,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/perf16/id1118_p2_r2.log",
+    "sha256": "fec9e56956aca6c9e6bf94a2b9a51c71d56c42191e3d0a6c7c99f9f869ce9cb8",
+    "bytes": 708,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/perf16/id1118_p2_r3.log",
+    "sha256": "05e55678d6fec7e44b8840ff35211d4e6ce0faddf788e08aac4e0f7ac18c2d55",
+    "bytes": 708,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/perf16/id1118_p2_r4.log",
+    "sha256": "919b754d0e967bace85bf4b157ab66547399b8be7ec0a8fcc8d07cca3bb19da3",
+    "bytes": 708,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/perf16/id1118_p2_r5.log",
+    "sha256": "784e8edf6d36d94744497892d2eb64538bd4b84ad3eb64790c19eae5e234c841",
+    "bytes": 708,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/perf16/id1118_p2_r6.log",
+    "sha256": "56a767de2c0f103a1d04b34b9690037012ecd53282bf5fce3b636e78dbc0ba83",
+    "bytes": 708,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/perf16/id1118_p3_r1.log",
+    "sha256": "b9de7b4ca3e31634aede4a8f133185a99f46a9bd35df6f3a75970f5f0344e0e9",
+    "bytes": 708,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/perf16/id1118_p3_r2.log",
+    "sha256": "4fd6cdc7c4a59f20641d049759ef22755f368d09e6cbbc0a4d4b9682828f2285",
+    "bytes": 708,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/perf16/id1118_p3_r3.log",
+    "sha256": "7f7745177d6b0f6cb378bb7931e3a78fe1f9523f56587ec36a6b85d48e177777",
+    "bytes": 707,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/perf16/id1118_p3_r4.log",
+    "sha256": "a490b3b27b202a8d8dc6a314f0d006cbd550fe9c4f1c832852da0758dea65ae2",
+    "bytes": 706,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/perf16/id1118_p3_r5.log",
+    "sha256": "86a9b08822438cf192fe179e3d133f3f8542ba2f4379ea4f65148d5d0ec6f9f1",
+    "bytes": 706,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/perf16/id1118_p3_r6.log",
+    "sha256": "082fd618761d78946a71eb5b2aeb8fb26a487f99ea80fa85ecf4fec68bd474fb",
+    "bytes": 706,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/perf16/id18_p2_r1.log",
+    "sha256": "7cc619b5ce63e69ab54c0970928fe20dade71b8ee6062b7ed1f3b0bc09b2b65d",
+    "bytes": 656,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/perf16/id18_p2_r2.log",
+    "sha256": "3f65d9275b5cf53f3948533cf10017fe2fa0871646bfec32cbf610f1cd36d2aa",
+    "bytes": 658,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/perf16/id18_p2_r3.log",
+    "sha256": "faa5cfdc695793833d71405fe05da19ee4c059905ed7a9bc145337890bd823fd",
+    "bytes": 659,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/perf16/id18_p3_r1.log",
+    "sha256": "dfd13056a462f647d3ba039eca76f3180f6087fef6689d4c417d0eef27a96a43",
+    "bytes": 658,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/perf16/id18_p3_r2.log",
+    "sha256": "b4c6a3daf7c01867cb1cdd53a09e7bdb327ad825915a7a25e592fd71157d1962",
+    "bytes": 651,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/perf16/id18_p3_r3.log",
+    "sha256": "6e409863d8cdd4a7948a544cae3d90c568bce03bfa81450b9f34cc368916a6ae",
+    "bytes": 659,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/perf16/id942_p2_r1.log",
+    "sha256": "cb7b15557348ec4967b5dfdb1815f279f8bc80ec399a85a3ee06f759b8cdf7df",
+    "bytes": 655,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/perf16/id942_p2_r2.log",
+    "sha256": "b67e3424c568285efd0e5eafdedc76bf03667b26393364eb1219eee272129699",
+    "bytes": 652,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/perf16/id942_p2_r3.log",
+    "sha256": "f10d72d810fe8cc6588ed1d9f763c557c1318d155a6a8c6836c387e3081c4cf6",
+    "bytes": 653,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/perf16/id942_p3_r1.log",
+    "sha256": "73204ed676d08831c3d423246ab88290cbe00afe8f3a59c2e5ec6563d912da59",
+    "bytes": 651,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/perf16/id942_p3_r2.log",
+    "sha256": "caff5e3daa1c14993dc12d0b1e0d20a418656e5824d8f28cf84b5b792dbce256",
+    "bytes": 652,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/perf16/id942_p3_r3.log",
+    "sha256": "37e9fdb5398f5ac1b9fd1c479d06155ca14fcf3aaedc9e54da9a0df6e0d10d7a",
+    "bytes": 655,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/perf16/id962_p2_r1.log",
+    "sha256": "50c41d389b5787202ea2b3b432ded49d844854231f2f32ffb108ad666bbb7a19",
+    "bytes": 708,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/perf16/id962_p2_r2.log",
+    "sha256": "0ef239876738c4cda459f28c979f9454932573eaa450b185179b2aa314a2288f",
+    "bytes": 708,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/perf16/id962_p2_r3.log",
+    "sha256": "130cb6a880d7d182be436b85e9342e8895c61acf9944953de3032bded598796f",
+    "bytes": 706,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/perf16/id962_p3_r1.log",
+    "sha256": "41678c63116f67c5ed22d1217a30fd72a3d541f6936dac665c9fdde6d915e510",
+    "bytes": 708,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/perf16/id962_p3_r2.log",
+    "sha256": "688dd6ab577e57395095fced7bb9ac03a1f78d6feffc404039c85e0d97439b36",
+    "bytes": 706,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/perf16/id962_p3_r3.log",
+    "sha256": "593020a51aedca51040234e4775a6283fb6958bef111f9b588ea41d5bceec13c",
+    "bytes": 709,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/perf16/id992_p2_r1.log",
+    "sha256": "78585cd6d495d6471f808d40b9a3cf7a8d1bab2230cce4496e3a1952a950edec",
+    "bytes": 687,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/perf16/id992_p2_r2.log",
+    "sha256": "a57d48a5daf21ec17c78e5df2c85285d4e2bafa1219e896cc628b3af80f264f5",
+    "bytes": 688,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/perf16/id992_p2_r3.log",
+    "sha256": "772a1eb365f7d45cbec7f55dea905265511713b9118e31a999f1df1b34949fb4",
+    "bytes": 688,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/perf16/id992_p2_r4.log",
+    "sha256": "77edfb29a3bca02bd547ab6b6874815ceec735c5f5265bc3a398c866cec69145",
+    "bytes": 686,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/perf16/id992_p2_r5.log",
+    "sha256": "a59d7742e224cc4e96b0d700f613d9fddb56bb0ce14af1d6c916155595b453e9",
+    "bytes": 688,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/perf16/id992_p2_r6.log",
+    "sha256": "d9b2bbc8f7b7ffa25ffbb70347aa0849d5e0acf00f2b8d93922cc6a25d992ee1",
+    "bytes": 688,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/perf16/id992_p3_r1.log",
+    "sha256": "ec6428dd17d6d6d795ea48aef69db77b218e2d365124a4333fb676468cdfd16f",
+    "bytes": 687,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/perf16/id992_p3_r2.log",
+    "sha256": "4746f9e5cf7c8d36f19311ae5f71c0bc7b2cb148bcd3b739f7bf9a4fb760b2a3",
+    "bytes": 686,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/perf16/id992_p3_r3.log",
+    "sha256": "4d362ef225df93f5f5789d8984755d663268fd6f6d91937afb66633c380b558b",
+    "bytes": 688,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/perf16/id992_p3_r4.log",
+    "sha256": "5dd6e18cf2e39c6f8dd8c01a6083b622005c22343f3e24478516133613266697",
+    "bytes": 687,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/perf16/id992_p3_r5.log",
+    "sha256": "87e2afc781e45375f38b33a2b31db82ec28ae4b2ad2ca44bd74d3bf275751ff9",
+    "bytes": 684,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/perf16/id992_p3_r6.log",
+    "sha256": "419ed411db5fbec3f3a796e40152ae05a7c4c067a6904ec1ed36833b132c0a58",
+    "bytes": 687,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/perf16/rag16_p2_r1.log",
+    "sha256": "56670ecbbbc3e7e6a59d6935a20d0de80ad902a4536d5dbacbff6c9103a88c36",
+    "bytes": 680,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 0,
+    "excluded": 1
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/perf16/rag16_p2_r2.log",
+    "sha256": "564b5bba7e98d1d11f0504a69f9bcc64af397a62e3de537c73c35b0b1aac6d66",
+    "bytes": 676,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 0,
+    "excluded": 1
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/perf16/rag16_p2_r3.log",
+    "sha256": "d3799fd2f1408a3ee5714699bf2c676953545887116d95e80451a71c3cffeac2",
+    "bytes": 680,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 0,
+    "excluded": 1
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/perf16/rag16_p3_r1.log",
+    "sha256": "41090b195b353f1f716b0bae28e4cb2db71e2b37f17f2ff6b27997b7c2ad762c",
+    "bytes": 679,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 0,
+    "excluded": 1
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/perf16/rag16_p3_r2.log",
+    "sha256": "843adb51a8c43929d6dc234f5efe792e1835789ebecb56ee62000bdfcaf7b29b",
+    "bytes": 677,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 0,
+    "excluded": 1
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/perf16/rag16_p3_r3.log",
+    "sha256": "a80714e9adda6b29e791f28917023cb488596d1d138d0df5448785aaaa01588c",
+    "bytes": 679,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 0,
+    "excluded": 1
+  },
+  {
+    "path": "/workspace/v7_coverage/p3b/cov/summary_merged.txt",
+    "sha256": "ef141f16de1bcbf3525e6ffe5bd3238c569545a5f7e229614aef27c79904b284",
+    "bytes": 20010,
+    "note": "P3b204-case coverage; actual MNKG join",
+    "accepted": 204,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/timing_6.txt",
+    "sha256": "19591928bde56683ce13d75c86db223f7fe81e097ce8e02a0d4f58b0c797e346",
+    "bytes": 6944,
+    "note": "legacy aggregate text; preserve successful round medians",
+    "accepted": 54,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/base_id1126_r1.log",
+    "sha256": "f76e7ff133baae68e8953c19f0703dba397accce804c48480f05616a114b753e",
+    "bytes": 677,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_8_id1126_r1.log",
+    "sha256": "22ae5703785946101f3dbb56e2dc812041573b9c78d179242764a238d95247e1",
+    "bytes": 678,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_4_id1126_r1.log",
+    "sha256": "a22b1b9ea7be1f45a00474e580a89e96f6d82dceb6400a40da45709ac6832cfd",
+    "bytes": 678,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/base_id1164_r1.log",
+    "sha256": "0268115fbafee73c2fe39d73b8f0017b61188d8cc6a5d697762836047a47b84d",
+    "bytes": 688,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_8_id1164_r1.log",
+    "sha256": "19d93ea6e50e896ca3f176e3a8b431fd9085702143e05abe5a477853b7785f27",
+    "bytes": 687,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_4_id1164_r1.log",
+    "sha256": "54c6c72ea45ef6051797b7e3733efe01ac3a38f935dfabd8e3d996593a63a341",
+    "bytes": 687,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/base_id992_r1.log",
+    "sha256": "259e57e086862ab287e737823af55fdaa1731a0c3f81b339a1b3850b81bf3d57",
+    "bytes": 688,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_8_id992_r1.log",
+    "sha256": "dfa0e08c6668c8097b41f165b4a9da37a83e90e7c967434d337642c1276a4b4e",
+    "bytes": 688,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_4_id992_r1.log",
+    "sha256": "56a4ec9ee60abe6ccaca241e818a5413ba352ae7bc34d576d8da13a547723140",
+    "bytes": 686,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/base_id1034_r1.log",
+    "sha256": "0be7f84a8038ded91b825dd5c2fdf28c68563e0fe6feb03066cff70d663f5b64",
+    "bytes": 710,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_8_id1034_r1.log",
+    "sha256": "3020d7d811df0b466c2d9ae0631cf69b423576da0151c891bb4c5f83c1f6cae3",
+    "bytes": 709,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_4_id1034_r1.log",
+    "sha256": "ada549b42535980885805a43f4d7939a58567bac88b6786ec99434f2ac1efaaa",
+    "bytes": 711,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/base_id966_r1.log",
+    "sha256": "80517c445d46f757d82f955657aac4f3b83a04534020fb0619f343e9f3ea34df",
+    "bytes": 665,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_8_id966_r1.log",
+    "sha256": "8fae3c1e0ba93506514d792d1e0e22fb74a5800bc1fd4510dc0202df3228261d",
+    "bytes": 667,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_4_id966_r1.log",
+    "sha256": "7901a20cbced1347adef3419e25ad79c86f873fa53ba19bf00c4726c26046092",
+    "bytes": 667,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/base_id465_r1.log",
+    "sha256": "b8d386cbadd973feb18e1027a94aff00deccd8acb2ba38b0540e3c2df2c20879",
+    "bytes": 789,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_8_id465_r1.log",
+    "sha256": "9de35362b4c804c42dc845e146423ec4ca2b15d43335a304238a6e6262e89b47",
+    "bytes": 786,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_4_id465_r1.log",
+    "sha256": "380223add144a805d0424e1b825f7954ca0ce787649afa4c3b5863d1e7ad604f",
+    "bytes": 789,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/base_id1126_r2.log",
+    "sha256": "62898c95dd6e5633e255f7ff682a9f95d64b122558b1a7e64e41e811dfc2800a",
+    "bytes": 677,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_8_id1126_r2.log",
+    "sha256": "259cbae620d2dc218aebea385650dafca1241838da3b3bf73520f14f177a1e0b",
+    "bytes": 678,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_4_id1126_r2.log",
+    "sha256": "2315183446d2a3db375f4e5ac0bbd195a26c8793eaec0d1114ec05ffe6980541",
+    "bytes": 678,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/base_id1164_r2.log",
+    "sha256": "d7125053e4523f35629cfeb4c5034041f9e97536dce12e2e40b49793476b6a6c",
+    "bytes": 687,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_8_id1164_r2.log",
+    "sha256": "08b12b233590c7688cbcaa886afde369afedf08c7735e1a8690e1c377eb85888",
+    "bytes": 687,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_4_id1164_r2.log",
+    "sha256": "0000b09303d56388b27b52758ff5a50f27f17d5b29a44fc7d535fb69d4d76661",
+    "bytes": 687,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/base_id992_r2.log",
+    "sha256": "38bb77a2ecf3cb347a3e3bda617fce69489c5a367e367194bcf38edf9fced49c",
+    "bytes": 688,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_8_id992_r2.log",
+    "sha256": "e0844eb29d220e47328539acca06fefde2967b57e626a52e2bdddf27f4f038ce",
+    "bytes": 687,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_4_id992_r2.log",
+    "sha256": "ab20253ec10f874a9309a888667af6fe2fe58105131a0df3c1f1d944dd58ee6a",
+    "bytes": 685,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/base_id1034_r2.log",
+    "sha256": "39b78d6e3527b71460db76c933446c4c81cb13fc85c5aa69466d4b25cf42889a",
+    "bytes": 709,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_8_id1034_r2.log",
+    "sha256": "02eee4724e3770add8c261902ecc00097d6137fec2498cfd578fde3bfc4a84fb",
+    "bytes": 711,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_4_id1034_r2.log",
+    "sha256": "32eec0ef623b826e0d60323e13eccdf383afd52c6ffce0213f2de92ea1f9b1d6",
+    "bytes": 710,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/base_id966_r2.log",
+    "sha256": "5cad82c1f0636f6bcba5778d6ee8945fa5710d8317cc747fb8e5e86a64c36614",
+    "bytes": 665,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_8_id966_r2.log",
+    "sha256": "7cf58d3592f553632cd4db9f71b5ce533f76fb2b0120eb342f284fec07a782b6",
+    "bytes": 667,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_4_id966_r2.log",
+    "sha256": "c2b83367532c0ddabb85c0c345fcb3f49443cd5b672525806fbf2f17fa30c211",
+    "bytes": 666,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/base_id465_r2.log",
+    "sha256": "352a4283b9c0c7481e3eb083c42fe4e4044c40fd283008504a5d91ab9a699234",
+    "bytes": 789,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_8_id465_r2.log",
+    "sha256": "2abbe29e4ef692b30fb48cbb4070bb71c22e5f7b99747f9c90f0df0a064761ed",
+    "bytes": 789,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_4_id465_r2.log",
+    "sha256": "c96cd87a77e71064fe7009a49e84b1988df7ffc499a5e81f7afd3124ad7e40df",
+    "bytes": 790,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/base_id1126_r3.log",
+    "sha256": "774605bf1613988fddffe3431b85a405f967fe61921a58d592f6769a3525ff9b",
+    "bytes": 677,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_8_id1126_r3.log",
+    "sha256": "c76d2fa9fe9390143199a264ef3b0e2a5178b2a04f3f51d5379f943d71af97bb",
+    "bytes": 678,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_4_id1126_r3.log",
+    "sha256": "d5470fcce2ddfd046b625f1321971cc84e6649a40cc441e6905fd0979c3e762d",
+    "bytes": 676,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/base_id1164_r3.log",
+    "sha256": "0a7139853d8eb1d5ed0e7760ab41913b59a657fadb69663d37b695e7e55709c7",
+    "bytes": 687,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_8_id1164_r3.log",
+    "sha256": "2eb704505fd2e57c2400298a95c22804b99bec00d00fc6684ce48c83aa907d0d",
+    "bytes": 687,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_4_id1164_r3.log",
+    "sha256": "3cd1a8baa81c152a27ad609b501b59ec8f85bc1505de3f9ae157926da7931748",
+    "bytes": 686,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/base_id992_r3.log",
+    "sha256": "6bc5cfed2319e2f2cd6f0ab77230d3e29294079dfbd93e2e9407a7683c1eb9ef",
+    "bytes": 686,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_8_id992_r3.log",
+    "sha256": "e32cdc4c7c0c5dc2c4f97f42df621595131f96b787add31fc67fa75c0133467d",
+    "bytes": 687,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_4_id992_r3.log",
+    "sha256": "8ac5e36290b1ecaf64121e3b4f4da2e9066562603c021b4a2120a40969ec3502",
+    "bytes": 684,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/base_id1034_r3.log",
+    "sha256": "00b485280b293c64da5063277a1f5540e74195e597b4b36aa9857c9262f04897",
+    "bytes": 710,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_8_id1034_r3.log",
+    "sha256": "c9dac83ed545f963f6107d07dfba66ae136f8e7465b19c583a4075ad9b86cd20",
+    "bytes": 710,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_4_id1034_r3.log",
+    "sha256": "bb0fe53862968c40c6cd1cf47c9389879acb293312ca39010d343d2a666c6604",
+    "bytes": 710,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/base_id966_r3.log",
+    "sha256": "f66d7e0cfed91f761eaf6398d233949f13baeff0bb376b20e00415a08c8d9599",
+    "bytes": 668,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_8_id966_r3.log",
+    "sha256": "cfdc220d58fa8c442fd36554c6d92744a196875ea289b6928e4ce2a9b0f3491d",
+    "bytes": 668,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_4_id966_r3.log",
+    "sha256": "7a027f10e723089c9c9d267f63cc676dbf6a7314e63356cd1f81c0590127fb20",
+    "bytes": 666,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/base_id465_r3.log",
+    "sha256": "736d6f2fd31f8a902c02b7408cc5aa421a039c987a9477ab597bfb4d89258616",
+    "bytes": 789,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_8_id465_r3.log",
+    "sha256": "a8dcca88b208b23ef45bfd56f2dcce0d3ea5309852972d475e3e628d048f3da9",
+    "bytes": 788,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_4_id465_r3.log",
+    "sha256": "78a9a024923f4d62a1a199cf41137e9862b3362cce0e2d11044037aa76f27565",
+    "bytes": 787,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/timing.txt",
+    "sha256": "19591928bde56683ce13d75c86db223f7fe81e097ce8e02a0d4f58b0c797e346",
+    "bytes": 6944,
+    "note": "EXCLUDED duplicate of timing_6.txt; exact SHA equal",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/timing_wide.txt",
+    "sha256": "be1f5d07a6e816d0c7e7f6d8a505d3a8f7fa369f212a41d014160ff7ab54c118",
+    "bytes": 11528,
+    "note": "legacy aggregate text; preserve successful round medians",
+    "accepted": 90,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/base_id963_r1.log",
+    "sha256": "0ff118c30cdfa84193c138adab88ecc8db6289a4a8aca6154d79cddc1c4dcf74",
+    "bytes": 710,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_8_id963_r1.log",
+    "sha256": "c24045bba3cb4abf18a5302fac55a89801a4e415508fc8df43882b3ac8583905",
+    "bytes": 709,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_4_id963_r1.log",
+    "sha256": "4325955f2fd710589d8c877983f278bceb0d8eb59a39106d9abe05327474051d",
+    "bytes": 707,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/base_id906_r1.log",
+    "sha256": "8e8da9a28a6d0966f1fd8d817f4f8e32ca3d4452ff490c219519bf019b48567e",
+    "bytes": 727,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_8_id906_r1.log",
+    "sha256": "1975173e0dd9334facc45bdacac8879a270edee4d58bd3012edd3c191fc10ce9",
+    "bytes": 728,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_4_id906_r1.log",
+    "sha256": "a283cf5c2898d3ba701a7183bd166c429bfa7808062d9b9c212475f4fb381255",
+    "bytes": 727,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/base_id1038_r1.log",
+    "sha256": "ceda3396aa35a24dd9a0598be19660a943f3b4a87c7cdfa0c0ecdb6fa1463a27",
+    "bytes": 676,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_8_id1038_r1.log",
+    "sha256": "79d51f3b69adde5e1330143a566077226269924148f43e9bc468c449f4231cdd",
+    "bytes": 678,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_4_id1038_r1.log",
+    "sha256": "b7b5e4b8235e31884077286c6e5720b2ad07d891a8c85ee27b62fa332c377c0a",
+    "bytes": 680,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/base_id1119_r1.log",
+    "sha256": "fe559121e0d11717383f74a442408859dc680a736621b7f30d660309c2a1c13b",
+    "bytes": 710,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_8_id1119_r1.log",
+    "sha256": "740ad541b8f5cdc36415c7b0d90f94b3073ccd5ec31101424cb9552da3bee926",
+    "bytes": 709,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_4_id1119_r1.log",
+    "sha256": "507621ab2159ffc21ad8f645f668e76861a03e2673b3a72670fd2bff76250abf",
+    "bytes": 709,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/base_id524_r1.log",
+    "sha256": "829109735295a58ed7865f308fc332e960160c3d8cfd5f3de760b07ae632e2f4",
+    "bytes": 685,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_8_id524_r1.log",
+    "sha256": "94ebb7555f51631d8dd4c1d237e6d4cd096e6c41295020c93f077ddf6e121ab0",
+    "bytes": 684,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_4_id524_r1.log",
+    "sha256": "561f819a8e00e616ffa3724fa7ed67f750b17f15b618bb37e35ff0c4fcf68584",
+    "bytes": 686,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/base_id589_r1.log",
+    "sha256": "3629e314000a5dfe91a862ef1743dfd41437b7216e656790862dda6480a3d4a4",
+    "bytes": 687,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_8_id589_r1.log",
+    "sha256": "52f75d5fd9c19fe98cda84e763da6f94bf0c246df08ace3d881e4130274c944a",
+    "bytes": 688,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_4_id589_r1.log",
+    "sha256": "45feb414c1a142a348a939af42c62d89e7d21807b91efadb7ecf661396f9d46c",
+    "bytes": 687,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/base_id753_r1.log",
+    "sha256": "6c85abdb66cccf23df72f835ca616e17697b55222f38ece3cefe9102aa9284ed",
+    "bytes": 679,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_8_id753_r1.log",
+    "sha256": "7919b2cb2dc82a96f6a754a0a9c426f86969d2340c8af71d19cba61b83d641fa",
+    "bytes": 678,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_4_id753_r1.log",
+    "sha256": "40f781e1149dbdb36877e0ddac73d9f7dfd2c1b7865cf3ca54143e28d11098f3",
+    "bytes": 679,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/base_id286_r1.log",
+    "sha256": "758c51789137aa5df71c4f561130dd4517eb7d817aa3cbfa31d67f1973f7a412",
+    "bytes": 725,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_8_id286_r1.log",
+    "sha256": "dd44d02b11a3e4e7a126d33989c66fccf51aa4ec12c0273c11920b8b4eb5318a",
+    "bytes": 727,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_4_id286_r1.log",
+    "sha256": "733459a4efb5809a2affdc63cfbaf5b87d46b630e19d44bdb923ee69e5918c35",
+    "bytes": 728,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/base_id44_r1.log",
+    "sha256": "4bf7bda60feee096a8f8917fe2dfe4fa100df14450d00f20cdd726139e10b736",
+    "bytes": 707,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_8_id44_r1.log",
+    "sha256": "a77622713f0fa6726a750621b584871d83eb2cba1f46d0e3d96d8acccca71f8b",
+    "bytes": 707,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_4_id44_r1.log",
+    "sha256": "9916839a8c9df3b1d81ebc5bd55860b2e7ea0ba60bacf5a2407ceeff974da548",
+    "bytes": 707,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/base_id197_r1.log",
+    "sha256": "186c571690408b8d66fbce143a96379756eb381d39709eb34f4866a9ad2c70ee",
+    "bytes": 705,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_8_id197_r1.log",
+    "sha256": "53ad9c55e4ac808c666379e2988665c1f0e5d1819c2c39717131e9480cc61d49",
+    "bytes": 706,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_4_id197_r1.log",
+    "sha256": "2655a848a10be58c57ef2d7bbfd45e64d636ff81d7ac0085cea137ba27d32670",
+    "bytes": 707,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/base_id963_r2.log",
+    "sha256": "d89589d1c20100c1d72bfb3294cd71d47b4b6c6bed00f95f765483537a0f9070",
+    "bytes": 708,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_8_id963_r2.log",
+    "sha256": "4bef25991335d09702bb2513e57d0f4ced1675918611fc02b4650c616dfc8a54",
+    "bytes": 709,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_4_id963_r2.log",
+    "sha256": "a701bc18f71d26dc58cea6fec30639a70686b88f22ad2bf697441d8a249a22d9",
+    "bytes": 709,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/base_id906_r2.log",
+    "sha256": "2f740033f836d657e3317e973a3dd93d4de570ef67747b1230a19b21174787b4",
+    "bytes": 728,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_8_id906_r2.log",
+    "sha256": "9fc90ff0aaee8a183e8638378647a568aa98226d1f7028829134408c21037d70",
+    "bytes": 726,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_4_id906_r2.log",
+    "sha256": "f1a149788fdb5e1fa3582ff7476998ea6557176dca0d5430fa37944df9eee33c",
+    "bytes": 727,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/base_id1038_r2.log",
+    "sha256": "a65d9c686c98e40e20e3d2d8b1b6b841dea544aa71b1733c2c4f58dfbfce7953",
+    "bytes": 677,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_8_id1038_r2.log",
+    "sha256": "c978268088e32e830d485787b6fb762c0abff09c236a1c9ff9e76cd0c1075475",
+    "bytes": 679,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_4_id1038_r2.log",
+    "sha256": "5885c8850f8c1b49a3ff78ebc3bb19cefa41042c5427d6256730ea38cf49755f",
+    "bytes": 680,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/base_id1119_r2.log",
+    "sha256": "da3357633e6e710ba19e7e08541d6befcc96b861ab615cc7f11befb6c5c9bdfb",
+    "bytes": 710,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_8_id1119_r2.log",
+    "sha256": "1ed18fca098260079e336fd0ffe78917f9c7a520bb4886d5b21dabd42a18e951",
+    "bytes": 709,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_4_id1119_r2.log",
+    "sha256": "dcca592ccb3be409cc01afc1e82156eb18fca131a914721cae4626116073fe4e",
+    "bytes": 709,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/base_id524_r2.log",
+    "sha256": "21188e04ad7300934b87ff1d5dcca604db781628e962821ac97493d7b0c1dad7",
+    "bytes": 685,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_8_id524_r2.log",
+    "sha256": "b0ef2351d19f36be9abb88c00806e50b9a714e575f036cb4cf0dfa235d0a3320",
+    "bytes": 686,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_4_id524_r2.log",
+    "sha256": "757a5e158fcf9383520e6e67bc056a57108fffb506e43d1c3ddcb445b36c87e5",
+    "bytes": 687,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/base_id589_r2.log",
+    "sha256": "82e1cd481da370018d7b84d4ca26560c7fff41faac27561c3614631a6573af3e",
+    "bytes": 688,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_8_id589_r2.log",
+    "sha256": "2fc59b6cb11b2b57c95c45d5f56af2f64d0cd62f17c5eefb0f5e1e89c8d2eb2d",
+    "bytes": 689,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_4_id589_r2.log",
+    "sha256": "2b3d78273d0a0c623818f43fbca9e79cd37a6349eecc7eb198d847b79b426159",
+    "bytes": 688,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/base_id753_r2.log",
+    "sha256": "bdca05f7d45e76d410a87e08f26b8010e0a37391ef0412d70710184409831bb2",
+    "bytes": 677,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_8_id753_r2.log",
+    "sha256": "d11be42af7658f8c89c1b27a5e6ee0cf2f2743fcb334018a03fb74d49b97a116",
+    "bytes": 679,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_4_id753_r2.log",
+    "sha256": "612fe64af2f7a6652735d73905ad39e8dbb2079c5ccb322414e8ee45a7b7541c",
+    "bytes": 677,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/base_id286_r2.log",
+    "sha256": "37d8658cc723318d23318bfbdac04bad46bab87bd3c7d262fedc141728f94eb7",
+    "bytes": 728,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_8_id286_r2.log",
+    "sha256": "50271d7f0fe535470dfb0feefb485389c56c99aea49b9f016a0f3b6bcdee3e32",
+    "bytes": 728,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_4_id286_r2.log",
+    "sha256": "6fbb489f162052ff4f640e83476aa2a7e38eeba52602ffc262b8299d68129de3",
+    "bytes": 728,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/base_id44_r2.log",
+    "sha256": "a921b2329bc87024e15c1842cca35389c1d4ec42a18497443041c3f275f254c5",
+    "bytes": 709,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_8_id44_r2.log",
+    "sha256": "ecf7069c00196f61f49be9e706820b518a7efa8241d79b1712f9c37e5509a753",
+    "bytes": 707,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_4_id44_r2.log",
+    "sha256": "6bf86512e952c28ba98cc3067482016294a36083f02a90bca42aed4b0c725cba",
+    "bytes": 707,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/base_id197_r2.log",
+    "sha256": "bf116f6872e54a8d066851661af2f301e16a2fc590054bbb436a668decd1f7a1",
+    "bytes": 707,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_8_id197_r2.log",
+    "sha256": "74a3cc7380028790e862d210fd4c024963c0ac5e4cd9353dc5ded5202ec89f59",
+    "bytes": 707,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_4_id197_r2.log",
+    "sha256": "1abf30d894d41c0c131395dd2e8349b0d0e8b438a790db019c6f898c36ab262f",
+    "bytes": 702,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/base_id963_r3.log",
+    "sha256": "0faf23f58e3a6a5e5ad944f1f22697736bee8a9d303e1c529de34f979e6f8948",
+    "bytes": 708,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_8_id963_r3.log",
+    "sha256": "ea3c9b275dd6329e5fcb916b064a1f0d6787564f4a7f4e2e41f5d55257b25ffb",
+    "bytes": 707,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_4_id963_r3.log",
+    "sha256": "20131377af7a512f8c979caf803fb511d9c3df2b9328079b560c4119268c17c7",
+    "bytes": 707,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/base_id906_r3.log",
+    "sha256": "36550eeccaaddd2ef2b1975e038c8b8e8fa40a8b881cafbf33f27d79ce8e6e65",
+    "bytes": 727,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_8_id906_r3.log",
+    "sha256": "ad41b1a87588b5df9ae307ac97d9f1c099e4963eaa98fbd3fcdebbd625b62be2",
+    "bytes": 728,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_4_id906_r3.log",
+    "sha256": "9db91dc6b5de66a17d26daf3852938a82dfa2d2eadd25c7fc82f029e4a04f943",
+    "bytes": 729,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/base_id1038_r3.log",
+    "sha256": "df99e038e2e1788f1d6938ed570a5c45d3c9bb8b269e7e7fc7be70fac36577f9",
+    "bytes": 677,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_8_id1038_r3.log",
+    "sha256": "1126e7ca0672e3326bf49bf1784032d6e2751579822a39fde269082df6d56d87",
+    "bytes": 677,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_4_id1038_r3.log",
+    "sha256": "d410fa98daa0512b72b08d6a74c55f3607a4c5d751196efc740b55e5ec0f9488",
+    "bytes": 678,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/base_id1119_r3.log",
+    "sha256": "ab1041cffbdb035f6ad50158e0324041f36183d805987c262529d0260c74eefb",
+    "bytes": 709,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_8_id1119_r3.log",
+    "sha256": "b8fc898a48d77b545ed76bb9781bc4352385bff93fa55a0fd01b4d8fc107e4b1",
+    "bytes": 710,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_4_id1119_r3.log",
+    "sha256": "e87d1020e80773d459454812ae19d369c029ca3250e8d038609b6b9f2ca62d71",
+    "bytes": 709,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/base_id524_r3.log",
+    "sha256": "04943c1473120ad6e6d3c7d6a3f4a25fad434b7da9c0037d4cf37ea987e3668b",
+    "bytes": 685,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_8_id524_r3.log",
+    "sha256": "be50db04afd98b62b4ba898df2845d06c62cc10fbbde4d6c87755bdf5ba3de8e",
+    "bytes": 686,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_4_id524_r3.log",
+    "sha256": "47bbb466fbb2ae56462183f9ab3a94687627947dedfb99f71fe354c72963b76b",
+    "bytes": 687,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/base_id589_r3.log",
+    "sha256": "b3ca665059a5a547ff3909d5e4fa300862c8a73ee7d9d21771929d8f84ed24a7",
+    "bytes": 688,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_8_id589_r3.log",
+    "sha256": "0d31e4d4871e0e7173a9a26bf466fc7e8eb4284e1cd71732dff4f2ba8871d559",
+    "bytes": 686,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_4_id589_r3.log",
+    "sha256": "ca01c7fe7e12d418784d8be0a7da38c66cf485d3fb666fdf74f7251618768f0e",
+    "bytes": 686,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/base_id753_r3.log",
+    "sha256": "9603a4933e9f1594590e159fb9281b671afc0dade1adf5595565198500549573",
+    "bytes": 678,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_8_id753_r3.log",
+    "sha256": "87d2a5796765a7aa12587f84288981f6baa8faf66a033c74b3028f8f9a552263",
+    "bytes": 677,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_4_id753_r3.log",
+    "sha256": "f8ef1667e1c0071c9163c56ef2af374013baae5b7e2262afb4ec1acf2ad12802",
+    "bytes": 680,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/base_id286_r3.log",
+    "sha256": "59abde0d5b0d4c5dd436837ddf0a93405780f40246a4c48233910a223d35a8eb",
+    "bytes": 729,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_8_id286_r3.log",
+    "sha256": "ffe9d66c1d07bc65360834c26f240396d87149aecfe7f5a9b50d780c0c8c6c14",
+    "bytes": 728,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_4_id286_r3.log",
+    "sha256": "4188100ad6251784e70c992c65c2cd29b355c16a0da57f79732d70fb6e794bff",
+    "bytes": 728,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/base_id44_r3.log",
+    "sha256": "dcda59405dfbb2f634c368185112ba88410dfbe75ef3bca9a9c61e754152e001",
+    "bytes": 708,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_8_id44_r3.log",
+    "sha256": "5a760bad61313218081478ddfd3a44f57addf2ce051d1e7691a12f620e712790",
+    "bytes": 706,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_4_id44_r3.log",
+    "sha256": "a299a34533dd56d882873e85b760572cbb84c39a02671418dc5d7cfa9071aae9",
+    "bytes": 704,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/base_id197_r3.log",
+    "sha256": "b2f63fb7abec0a15402d69c9de0fe814a500e9e77b5907cd1aefdbeb95749d2c",
+    "bytes": 707,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_8_id197_r3.log",
+    "sha256": "fd264632573c508ef0d94cbb3f65d7fe76681473e3a9b44981036e5c69a615bd",
+    "bytes": 706,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/order/m01_4_id197_r3.log",
+    "sha256": "a9bc7cfd3e5b2c6dbe046261ad8da97206b5d1da39dbe6c4592bae4984f3e965",
+    "bytes": 706,
+    "note": "CONFIG/CV cross-check for order experiment",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/kscan/t_K4096_r1.log",
+    "sha256": "c5d333564ffb19bf64c84891d1454af18c3ecc92439658b77fa6e1d2d40b2da2",
+    "bytes": 667,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/kscan/t_K4096_r2.log",
+    "sha256": "0a6c9d584027dc40662003aaba712ab9c476d1aea0f9eda030ee12c80116f5ac",
+    "bytes": 668,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/kscan/t_K4096_r3.log",
+    "sha256": "b89d7311986c3ab3762ddbc3a7e1ac7a0a71145d5229a387206b14e38c24544b",
+    "bytes": 669,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/kscan/t_K4352_r1.log",
+    "sha256": "277065a711a212c292d750002fd47c8d269084b47e37fa913f173bfb35b0ae18",
+    "bytes": 666,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 0,
+    "excluded": 1
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/kscan/t_K4352_r2.log",
+    "sha256": "26cfa79350cea6558b5469f7597f8305cd0a12c24c7d2ad617a7ddad219bd852",
+    "bytes": 664,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 0,
+    "excluded": 1
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/kscan/t_K4352_r3.log",
+    "sha256": "3c499830e6362f95c8621c73d3c6182b8a6f75541856c9f984c07b6b81187859",
+    "bytes": 664,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 0,
+    "excluded": 1
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/kscan/t_K4608_r1.log",
+    "sha256": "626500f9c709e6ede420393ee5001812f02b8bd5960d527f5828875902fdaba2",
+    "bytes": 665,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 0,
+    "excluded": 1
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/kscan/t_K4608_r2.log",
+    "sha256": "ac343157db4ec3132651623be714b530986d8ffcd7ab91b7c437e057b83b10c4",
+    "bytes": 662,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 0,
+    "excluded": 1
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/kscan/t_K4608_r3.log",
+    "sha256": "9f4650166ddc53187c83776fce3606c7011c2c34d2e120d23eb2ebae12030d84",
+    "bytes": 665,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 0,
+    "excluded": 1
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/kscan/t_K5120_r1.log",
+    "sha256": "94ea3711b77dc13ad681260563d67597729e0ac10ab4e034abaa632814d9ddb4",
+    "bytes": 667,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 0,
+    "excluded": 1
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/kscan/t_K5120_r2.log",
+    "sha256": "96a4c13b53ee23a868fd7ffafc94bf1fff82c04326418e328f8a5025a6e6a4c5",
+    "bytes": 666,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 0,
+    "excluded": 1
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/kscan/t_K5120_r3.log",
+    "sha256": "759748845aade2c6ec690d4920cc3447faad85e19341fe5527b87e330c58f35b",
+    "bytes": 667,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 0,
+    "excluded": 1
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/kscan/t_K6144_r1.log",
+    "sha256": "ef4389154108f42fe1f3277f36c8d9f914c0e11eba34d764ca8c79d5af04b8ee",
+    "bytes": 663,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/kscan/t_K6144_r2.log",
+    "sha256": "1bfc8e1ee5b0d7224706fc37f15bcdecff1bf9f5f65c830911332f3d21eee7bf",
+    "bytes": 666,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/kscan/t_K6144_r3.log",
+    "sha256": "3efcec04936e6c9f63bcb6af606c4c34f39e17edebc9fcccd61758c1379535c5",
+    "bytes": 667,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/kscan/t_K7168_r1.log",
+    "sha256": "4683df8fae976ba5f37b5cca7c2867eb74afdb3eb1d729776644330833953d32",
+    "bytes": 665,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/kscan/t_K7168_r2.log",
+    "sha256": "dc3304b29c66d578c1cf81adae040bf795c1868026bda6e99972a3c14c71d078",
+    "bytes": 667,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/kscan/t_K7168_r3.log",
+    "sha256": "42ac33ebf3dac28913d1f78a77600143330cf56d855a94e8d7d867b99b96b65b",
+    "bytes": 666,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 1,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/kscan/t_K8192_r1.log",
+    "sha256": "817846cc80959b4758431cad6ebde8a82d801b98bd562fcd34f5bbf7a9d532d3",
+    "bytes": 667,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 0,
+    "excluded": 1
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/kscan/t_K8192_r2.log",
+    "sha256": "96bc3e67f6010fa4d33a8701327c7557aae47c77b1d5740fc9243e47540807a3",
+    "bytes": 667,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 0,
+    "excluded": 1
+  },
+  {
+    "path": "/workspace/v7_coverage/p4a/kscan/t_K8192_r3.log",
+    "sha256": "1131801315255307302fea87a5d24326c767ab0a070be378f2bc7691c1a1448e",
+    "bytes": 666,
+    "note": "legacy formal benchmark; join by CONFIG MNKG, not filename ID",
+    "accepted": 0,
+    "excluded": 1
+  },
+  {
+    "path": "/workspace/v7_coverage/p4b/grid/timing.txt",
+    "sha256": "ad20d989b7b35e197aa0a960100914c32b06de73733401af43a85770cce8f7e5",
+    "bytes": 52764,
+    "note": "legacy aggregate text; preserve successful round medians",
+    "accepted": 30,
+    "excluded": 330
+  },
+  {
+    "path": "/workspace/v7_coverage/p4b/ab_shapes.txt",
+    "sha256": "04c4f00e1d9a3a30a4a0f726b19fd46c34882ea3db003689d4cf07140af6495c",
+    "bytes": 4392,
+    "note": "P4b actual command shape list",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4b/ab/timing.txt",
+    "sha256": "aa22809a2a268614af7ca27cb469f0ae9a8bf3a300f32192f16018bb14a33bee",
+    "bytes": 131947,
+    "note": "legacy aggregate text; preserve successful round medians",
+    "accepted": 888,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p4b/ab/timing_card0_20261102_final.txt",
+    "sha256": "90ee05d445585569148688ee1346ff75e6cab48f4c3fe4e44f88eea3d5dac30d",
+    "bytes": 52887,
+    "note": "legacy aggregate text; preserve successful round medians",
+    "accepted": 405,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/full1178_p4b/retest/timing.txt",
+    "sha256": "b30fd433d6558864a7c372c83a148d2a2be549da8cc03e6c6935df38782b9171",
+    "bytes": 66456,
+    "note": "legacy aggregate text; preserve successful round medians",
+    "accepted": 414,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/full1178_p4b/retest/timing2.txt",
+    "sha256": "b371ca7c525e6c7fd22adb68d2ee8b454a60528380823fecacc0028143cf0c8b",
+    "bytes": 12718,
+    "note": "legacy aggregate text; preserve successful round medians",
+    "accepted": 78,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/full1178_p4b/retest/timing3.txt",
+    "sha256": "1abe95dc3296a304f559d33676080414f36e90e647b3eb04e8f2d0b6b60dccf9",
+    "bytes": 9919,
+    "note": "legacy aggregate text; preserve successful round medians",
+    "accepted": 60,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p6/jobs.jsonl",
+    "sha256": "d66776a575546a7fce66f9c5f16a2583c6b2ee4ae906586ed400f4fc9c460f75",
+    "bytes": 68936,
+    "note": "raw journal; successful formal timings only",
+    "accepted": 12,
+    "excluded": 1
+  },
+  {
+    "path": "/workspace/v7_coverage/p6b/stage_wait/jobs.jsonl",
+    "sha256": "7032d020a90d30f583c157d48387b673a9884fc80acb37da81d6287a35985d82",
+    "bytes": 240046,
+    "note": "raw journal; successful formal timings only",
+    "accepted": 252,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p6c/jobs.jsonl",
+    "sha256": "f8c1d7c279ed1f1dd833d5b9f7ff70b9bae328199f9adc8b1f364e12b99345c7",
+    "bytes": 2766365,
+    "note": "raw journal; successful formal timings only",
+    "accepted": 3726,
+    "excluded": 1
+  },
+  {
+    "path": "/workspace/v7_coverage/p6d/jobs.jsonl",
+    "sha256": "d05121875961573010de187925eccb932e06fc08e95bf4c1c132c6037e0af7e7",
+    "bytes": 139401,
+    "note": "raw journal; successful formal timings only",
+    "accepted": 48,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p6e/jobs.jsonl",
+    "sha256": "69efeed30366ace3e9f0ce63d3abef1d8920402bbaa357474ee722fca35d166f",
+    "bytes": 8300333,
+    "note": "raw journal; successful formal timings only",
+    "accepted": 4560,
+    "excluded": 33
+  },
+  {
+    "path": "/workspace/v7_coverage/p6e/invalidations.json",
+    "sha256": "2f96065b2081166fbf1f8e5ca02ac5f5dc98e7eca5e3d0f1ea0ec6382e5a5c16",
+    "bytes": 2727,
+    "note": "mandatory environment invalidations",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p6e/runs/rec3_nativeref_r1_id1178_noslc/1/run.log",
+    "sha256": "8caf16915d6fdaa025e9cfeb6488de3fa93bbbae5f7ccf90771b985cfa7d345f",
+    "bytes": 967,
+    "note": "Read actual SELECT for timing journal without selected field",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p6e/runs/rec3_nativeref_r2_id1178_noslc/1/run.log",
+    "sha256": "3723c70f35f0e26579f9fd008127bdea772b918312da9a279b7200aac1b9cfb6",
+    "bytes": 967,
+    "note": "Read actual SELECT for timing journal without selected field",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p6e/runs/rec3_nativeref_r3_id1178_noslc/1/run.log",
+    "sha256": "13c4717adb7228b53fd8d0540875693871314626eeb2228382e9250e84a671e0",
+    "bytes": 965,
+    "note": "Read actual SELECT for timing journal without selected field",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/bf16_nn_customer_benchmark/full_run/results.csv",
+    "sha256": "d02791186bd5f5b322e8895657dc3c51f1e05b5ec6be0c3f11794d0ce76c29c8",
+    "bytes": 305049,
+    "note": "fused_test continuous20 historical reference; excluded from primary comparison",
+    "accepted": 970,
+    "excluded": 208
+  },
+  {
+    "path": "/workspace/results_bfnn.csv",
+    "sha256": "7fcccf7ca4bc2aa7e784abc1861ea168de664f97da33d6abb677a1d88c0c084c",
+    "bytes": 80176,
+    "note": "Original supplied CK CSV: GPU/timing/instance/accuracy not recorded, reference only",
+    "accepted": 0,
+    "excluded": 1178
+  },
+  {
+    "path": "/workspace/bf16_nn_blas_compare/ck_csv_vs_groupgemm/comparison.csv",
+    "sha256": "f82cd1fc5bf334ddf7db687dfe6faa3a8b5a2c9b68f0518a1a6e50309dbe9ad5",
+    "bytes": 427868,
+    "note": "Derived comparison view of original supplied CSV; not independent CK measurements",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/bf16NN-groupgemm.csv",
+    "sha256": "9d83df28e4fcac50a8f0350dbfdb3e7c6d233209962ad3685dcb31f9d000144b",
+    "bytes": 349344,
+    "note": "Frozen BLAS1178 baseline, physicalcard0 repeat20",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p6c/native_new15.json",
+    "sha256": "70145124ed162249cc50a18fc2837efc91b62995abaa115f98c7affef985401f",
+    "bytes": 21747,
+    "note": "Frozen new15 BLAS, physicalcard4 repeat20",
+    "accepted": 0,
+    "excluded": 0
+  },
+  {
+    "path": "/workspace/v7_coverage/p6c/merged1193.csv",
+    "sha256": "47234fe0a18b8248708a9555cb919869803a10cb46c2330d86ed8f89fec19ad6",
+    "bytes": 147712,
+    "note": "Reference original CK columns only; not reimported as duplicate observations",
+    "accepted": 0,
+    "excluded": 0
+  }
+]

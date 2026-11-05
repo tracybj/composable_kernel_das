@@ -1,0 +1,21 @@
+{
+  "passed": true,
+  "cpu_only": true,
+  "shape_count": 1193,
+  "candidate_series": 7260,
+  "observations": 14250,
+  "source_files_verified": 296,
+  "mandatory_invalidations_excluded": 33,
+  "selector_cases": 2663,
+  "checks": [
+    "1193 consecutive unique IDs and actual MNKG",
+    "881decode/312prefill",
+    "every candidate median reconstructs from recorded rounds",
+    "each primary winner is the minimum compatible candidate series",
+    "each current winner is the minimum CPU-selector-available series",
+    "no fused20/card0 candidate in main choice",
+    "33P6e invalidations absent and retained in exclusions",
+    "all frozen source SHA256 unchanged",
+    "R and mutually exclusive bucket totals verified"
+  ]
+}
