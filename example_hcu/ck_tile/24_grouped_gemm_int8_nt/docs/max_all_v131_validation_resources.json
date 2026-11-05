@@ -1,0 +1,293 @@
+{
+  "status": "PASS",
+  "checks": 522,
+  "rejected": 72,
+  "library": {
+    "symbols": [
+      "ck_tile_int8_nt_cached_last_error_v1",
+      "ck_tile_int8_nt_cached_plan_create_v1",
+      "ck_tile_int8_nt_cached_plan_create_v2",
+      "ck_tile_int8_nt_cached_plan_destroy_v1",
+      "ck_tile_int8_nt_cached_plan_query_v1",
+      "ck_tile_int8_nt_cached_run_v1",
+      "ck_tile_int8_nt_cached_weights_create_v1",
+      "ck_tile_int8_nt_cached_weights_destroy_v1",
+      "ck_tile_int8_nt_cached_weights_query_v1"
+    ],
+    "library_sha256": "93c0716eace24d0a441a6120896e6c62457653f4ec1b2af34b5a04a1165d22c6",
+    "benchmark_sha256": "e315f0849cb6d1aeab09b70701ff6a5c883fc4c6a9199f67e159d07bbd9c3343",
+    "experimental_tuning": true,
+    "operand_paths": true
+  },
+  "resources": [
+    {
+      "demangled": "void ck_tile::kentry<128, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtOperandProblem<ck_tile::GroupedInt8NtTileProblem<16, 32, 512, 1, 2, false, false, true, true, 1, true, 0>, false, true, true, true, true, true>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      ".vgpr_count": 159,
+      ".group_segment_fixed_size": 16384,
+      ".private_segment_fixed_size": 0,
+      ".vgpr_spill_count": 0,
+      "image": "device_3567616.hsaco",
+      ".name": "_ZN7ck_tile6kentryILi128ELi1ENS_29GroupedInt8NtScaledTileKernelINS_27GroupedInt8NtOperandProblemINS_24GroupedInt8NtTileProblemILi16ELi32ELi512ELi1ELi2ELb0ELb0ELb1ELb1ELi1ELb1ELi0EEELb0ELb1ELb1ELb1ELb1ELb1EEELb1EEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_"
+    },
+    {
+      "demangled": "void ck_tile::kentry<128, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtOperandProblem<ck_tile::GroupedInt8NtTileProblem<16, 64, 256, 1, 2, false, false, true, true, 1, true, 0>, false, true, true, true, true, true>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      ".vgpr_count": 122,
+      ".group_segment_fixed_size": 16384,
+      ".private_segment_fixed_size": 0,
+      ".vgpr_spill_count": 0,
+      "image": "device_3567616.hsaco",
+      ".name": "_ZN7ck_tile6kentryILi128ELi1ENS_29GroupedInt8NtScaledTileKernelINS_27GroupedInt8NtOperandProblemINS_24GroupedInt8NtTileProblemILi16ELi64ELi256ELi1ELi2ELb0ELb0ELb1ELb1ELi1ELb1ELi0EEELb0ELb1ELb1ELb1ELb1ELb1EEELb1EEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_"
+    },
+    {
+      "demangled": "void ck_tile::kentry<256, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtOperandProblem<ck_tile::GroupedInt8NtTileProblem<16, 128, 256, 1, 4, false, false, true, true, 1, true, 0>, false, true, true, true, true, true>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      ".vgpr_count": 120,
+      ".group_segment_fixed_size": 32768,
+      ".private_segment_fixed_size": 0,
+      ".vgpr_spill_count": 0,
+      "image": "device_3567616.hsaco",
+      ".name": "_ZN7ck_tile6kentryILi256ELi1ENS_29GroupedInt8NtScaledTileKernelINS_27GroupedInt8NtOperandProblemINS_24GroupedInt8NtTileProblemILi16ELi128ELi256ELi1ELi4ELb0ELb0ELb1ELb1ELi1ELb1ELi0EEELb0ELb1ELb1ELb1ELb1ELb1EEELb1EEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_"
+    },
+    {
+      "demangled": "void ck_tile::kentry<128, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtOperandProblem<ck_tile::GroupedInt8NtTileProblem<16, 32, 512, 1, 2, false, false, true, true, 1, true, 0>, false, false, true, true, false, true>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      ".vgpr_count": 140,
+      ".group_segment_fixed_size": 2048,
+      ".private_segment_fixed_size": 0,
+      ".vgpr_spill_count": 0,
+      "image": "device_3567616.hsaco",
+      ".name": "_ZN7ck_tile6kentryILi128ELi1ENS_29GroupedInt8NtScaledTileKernelINS_27GroupedInt8NtOperandProblemINS_24GroupedInt8NtTileProblemILi16ELi32ELi512ELi1ELi2ELb0ELb0ELb1ELb1ELi1ELb1ELi0EEELb0ELb0ELb1ELb1ELb0ELb1EEELb1EEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_"
+    },
+    {
+      "demangled": "void ck_tile::kentry<128, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtOperandProblem<ck_tile::GroupedInt8NtTileProblem<16, 64, 256, 1, 2, false, false, true, true, 1, true, 0>, false, false, true, true, false, true>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      ".vgpr_count": 114,
+      ".group_segment_fixed_size": 4096,
+      ".private_segment_fixed_size": 0,
+      ".vgpr_spill_count": 0,
+      "image": "device_3567616.hsaco",
+      ".name": "_ZN7ck_tile6kentryILi128ELi1ENS_29GroupedInt8NtScaledTileKernelINS_27GroupedInt8NtOperandProblemINS_24GroupedInt8NtTileProblemILi16ELi64ELi256ELi1ELi2ELb0ELb0ELb1ELb1ELi1ELb1ELi0EEELb0ELb0ELb1ELb1ELb0ELb1EEELb1EEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_"
+    },
+    {
+      "demangled": "void ck_tile::kentry<256, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtOperandProblem<ck_tile::GroupedInt8NtTileProblem<16, 128, 256, 1, 4, false, false, true, true, 1, true, 0>, false, false, true, true, false, true>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      ".vgpr_count": 114,
+      ".group_segment_fixed_size": 8192,
+      ".private_segment_fixed_size": 0,
+      ".vgpr_spill_count": 0,
+      "image": "device_3567616.hsaco",
+      ".name": "_ZN7ck_tile6kentryILi256ELi1ENS_29GroupedInt8NtScaledTileKernelINS_27GroupedInt8NtOperandProblemINS_24GroupedInt8NtTileProblemILi16ELi128ELi256ELi1ELi4ELb0ELb0ELb1ELb1ELi1ELb1ELi0EEELb0ELb0ELb1ELb1ELb0ELb1EEELb1EEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_"
+    },
+    {
+      "demangled": "void ck_tile::kentry<128, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtOperandProblem<ck_tile::GroupedInt8NtTileProblem<16, 64, 512, 1, 2, false, false, true, true, 1, true, 0>, false, false, true, true, false, true>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      ".vgpr_count": 210,
+      ".group_segment_fixed_size": 4096,
+      ".private_segment_fixed_size": 0,
+      ".vgpr_spill_count": 0,
+      "image": "device_3567616.hsaco",
+      ".name": "_ZN7ck_tile6kentryILi128ELi1ENS_29GroupedInt8NtScaledTileKernelINS_27GroupedInt8NtOperandProblemINS_24GroupedInt8NtTileProblemILi16ELi64ELi512ELi1ELi2ELb0ELb0ELb1ELb1ELi1ELb1ELi0EEELb0ELb0ELb1ELb1ELb0ELb1EEELb1EEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_"
+    },
+    {
+      "demangled": "void ck_tile::kentry<128, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtPackedSmallProblem<ck_tile::GroupedInt8NtTileProblem<16, 32, 512, 1, 2, false, false, true, true, 1, true, 0> >, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      ".vgpr_count": 156,
+      ".group_segment_fixed_size": 2048,
+      ".private_segment_fixed_size": 0,
+      ".vgpr_spill_count": 0,
+      "image": "device_3567616.hsaco",
+      ".name": "_ZN7ck_tile6kentryILi128ELi1ENS_29GroupedInt8NtScaledTileKernelINS_31GroupedInt8NtPackedSmallProblemINS_24GroupedInt8NtTileProblemILi16ELi32ELi512ELi1ELi2ELb0ELb0ELb1ELb1ELi1ELb1ELi0EEEEELb1EEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_"
+    },
+    {
+      "demangled": "void ck_tile::kentry<128, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtPackedSmallProblem<ck_tile::GroupedInt8NtTileProblem<16, 64, 256, 1, 2, false, false, true, true, 1, true, 0> >, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      ".vgpr_count": 128,
+      ".group_segment_fixed_size": 4096,
+      ".private_segment_fixed_size": 0,
+      ".vgpr_spill_count": 0,
+      "image": "device_3567616.hsaco",
+      ".name": "_ZN7ck_tile6kentryILi128ELi1ENS_29GroupedInt8NtScaledTileKernelINS_31GroupedInt8NtPackedSmallProblemINS_24GroupedInt8NtTileProblemILi16ELi64ELi256ELi1ELi2ELb0ELb0ELb1ELb1ELi1ELb1ELi0EEEEELb1EEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_"
+    },
+    {
+      "demangled": "void ck_tile::kentry<256, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtPackedSmallProblem<ck_tile::GroupedInt8NtTileProblem<16, 128, 256, 1, 4, false, false, true, true, 1, true, 0> >, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      ".vgpr_count": 128,
+      ".group_segment_fixed_size": 8192,
+      ".private_segment_fixed_size": 0,
+      ".vgpr_spill_count": 0,
+      "image": "device_3567616.hsaco",
+      ".name": "_ZN7ck_tile6kentryILi256ELi1ENS_29GroupedInt8NtScaledTileKernelINS_31GroupedInt8NtPackedSmallProblemINS_24GroupedInt8NtTileProblemILi16ELi128ELi256ELi1ELi4ELb0ELb0ELb1ELb1ELi1ELb1ELi0EEEEELb1EEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_"
+    },
+    {
+      "demangled": "void ck_tile::kentry<128, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtPackedSmallProblem<ck_tile::GroupedInt8NtTileProblem<16, 64, 512, 1, 2, false, false, true, true, 1, true, 0> >, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      ".vgpr_count": 240,
+      ".group_segment_fixed_size": 4096,
+      ".private_segment_fixed_size": 0,
+      ".vgpr_spill_count": 0,
+      "image": "device_3567616.hsaco",
+      ".name": "_ZN7ck_tile6kentryILi128ELi1ENS_29GroupedInt8NtScaledTileKernelINS_31GroupedInt8NtPackedSmallProblemINS_24GroupedInt8NtTileProblemILi16ELi64ELi512ELi1ELi2ELb0ELb0ELb1ELb1ELi1ELb1ELi0EEEEELb1EEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_"
+    }
+  ],
+  "occupancy": [
+    {
+      "geometry": [
+        16,
+        32,
+        512
+      ],
+      "threads": 128,
+      "vgpr": 159,
+      "lds": 16384,
+      "api_max_active_blocks_per_mp": 4,
+      "demangled": "void ck_tile::kentry<128, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtOperandProblem<ck_tile::GroupedInt8NtTileProblem<16, 32, 512, 1, 2, false, false, true, true, 1, true, 0>, false, true, true, true, true, true>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "geometry": [
+        16,
+        64,
+        256
+      ],
+      "threads": 128,
+      "vgpr": 122,
+      "lds": 16384,
+      "api_max_active_blocks_per_mp": 4,
+      "demangled": "void ck_tile::kentry<128, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtOperandProblem<ck_tile::GroupedInt8NtTileProblem<16, 64, 256, 1, 2, false, false, true, true, 1, true, 0>, false, true, true, true, true, true>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "geometry": [
+        16,
+        128,
+        256
+      ],
+      "threads": 256,
+      "vgpr": 120,
+      "lds": 32768,
+      "api_max_active_blocks_per_mp": 2,
+      "demangled": "void ck_tile::kentry<256, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtOperandProblem<ck_tile::GroupedInt8NtTileProblem<16, 128, 256, 1, 4, false, false, true, true, 1, true, 0>, false, true, true, true, true, true>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "geometry": [
+        16,
+        32,
+        512
+      ],
+      "threads": 128,
+      "vgpr": 140,
+      "lds": 2048,
+      "api_max_active_blocks_per_mp": 10,
+      "demangled": "void ck_tile::kentry<128, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtOperandProblem<ck_tile::GroupedInt8NtTileProblem<16, 32, 512, 1, 2, false, false, true, true, 1, true, 0>, false, false, true, true, false, true>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "geometry": [
+        16,
+        64,
+        256
+      ],
+      "threads": 128,
+      "vgpr": 114,
+      "lds": 4096,
+      "api_max_active_blocks_per_mp": 12,
+      "demangled": "void ck_tile::kentry<128, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtOperandProblem<ck_tile::GroupedInt8NtTileProblem<16, 64, 256, 1, 2, false, false, true, true, 1, true, 0>, false, false, true, true, false, true>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "geometry": [
+        16,
+        128,
+        256
+      ],
+      "threads": 256,
+      "vgpr": 114,
+      "lds": 8192,
+      "api_max_active_blocks_per_mp": 6,
+      "demangled": "void ck_tile::kentry<256, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtOperandProblem<ck_tile::GroupedInt8NtTileProblem<16, 128, 256, 1, 4, false, false, true, true, 1, true, 0>, false, false, true, true, false, true>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "geometry": [
+        16,
+        64,
+        512
+      ],
+      "threads": 128,
+      "vgpr": 210,
+      "lds": 4096,
+      "api_max_active_blocks_per_mp": 6,
+      "demangled": "void ck_tile::kentry<128, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtOperandProblem<ck_tile::GroupedInt8NtTileProblem<16, 64, 512, 1, 2, false, false, true, true, 1, true, 0>, false, false, true, true, false, true>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "geometry": [
+        16,
+        32,
+        512
+      ],
+      "threads": 128,
+      "vgpr": 156,
+      "lds": 2048,
+      "api_max_active_blocks_per_mp": 8,
+      "demangled": "void ck_tile::kentry<128, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtPackedSmallProblem<ck_tile::GroupedInt8NtTileProblem<16, 32, 512, 1, 2, false, false, true, true, 1, true, 0> >, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "geometry": [
+        16,
+        64,
+        256
+      ],
+      "threads": 128,
+      "vgpr": 128,
+      "lds": 4096,
+      "api_max_active_blocks_per_mp": 12,
+      "demangled": "void ck_tile::kentry<128, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtPackedSmallProblem<ck_tile::GroupedInt8NtTileProblem<16, 64, 256, 1, 2, false, false, true, true, 1, true, 0> >, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "geometry": [
+        16,
+        128,
+        256
+      ],
+      "threads": 256,
+      "vgpr": 128,
+      "lds": 8192,
+      "api_max_active_blocks_per_mp": 6,
+      "demangled": "void ck_tile::kentry<256, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtPackedSmallProblem<ck_tile::GroupedInt8NtTileProblem<16, 128, 256, 1, 4, false, false, true, true, 1, true, 0> >, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "geometry": [
+        16,
+        64,
+        512
+      ],
+      "threads": 128,
+      "vgpr": 240,
+      "lds": 4096,
+      "api_max_active_blocks_per_mp": 6,
+      "demangled": "void ck_tile::kentry<128, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtPackedSmallProblem<ck_tile::GroupedInt8NtTileProblem<16, 64, 512, 1, 2, false, false, true, true, 1, true, 0> >, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "geometry": [
+        16,
+        64,
+        256
+      ],
+      "threads": 128,
+      "vgpr": 110,
+      "lds": 21760,
+      "api_max_active_blocks_per_mp": 3,
+      "demangled": "void ck_tile::kentry<128, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtTileProblem<16, 64, 256, 1, 2, false, false, true, true, 1, true, 0>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "geometry": [
+        16,
+        128,
+        256
+      ],
+      "threads": 256,
+      "vgpr": 103,
+      "lds": 39168,
+      "api_max_active_blocks_per_mp": 1,
+      "demangled": "void ck_tile::kentry<256, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtTileProblem<16, 128, 256, 1, 4, false, false, true, true, 1, true, 0>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "geometry": [
+        16,
+        32,
+        512
+      ],
+      "threads": 128,
+      "vgpr": 114,
+      "lds": 25344,
+      "api_max_active_blocks_per_mp": 2,
+      "demangled": "void ck_tile::kentry<128, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtTileProblem<16, 32, 512, 1, 2, false, false, true, true, 1, true, 0>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    }
+  ]
+}

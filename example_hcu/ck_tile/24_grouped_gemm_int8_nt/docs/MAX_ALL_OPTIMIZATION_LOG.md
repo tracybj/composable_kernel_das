@@ -260,3 +260,13 @@ v130已证明减少LDS能提高静态驻留但仍未越过小M目标；v126/127�
 9051/9052/9053把同一K64顺序用于原始B的紧凑LDS、A16B寄存器旁路，去掉旧A shuffle；9054–9057是A/B均原始NT、16B寄存器直取的相同tile对照，用来区分K顺序与B物理预排的组合收益。所有选择仍是实例参数，非case ID分流。CPU已完成454656个贡献位置及144个精确整数点积的预排/排列模型检查；GPU门禁、实际资源和时间未测，不报收益。
 
 同时为v130初筛发现的已有实例机会增加neighbor_formal：N1536/K2048的四档M、四档G，以及N4096/K1536的三档M、三档G，比较默认、route1/5/6/12。正式计时与完整输出验证，用于确定稳定的尺寸分流边界，不直接照抄初筛赢家。
+
+### v131结果
+
+实现2987cd9，API库SHA256为93c0716eace24d0a441a6120896e6c62457653f4ec1b2af34b5a04a1165d22c6。522项full-range INT8/FP64完整输出门禁PASS，72项非pack域在launch前拒绝。所有新kernel无private/spill。输入均寄存器的新实例只保留C的2/4/8KiB LDS；HIP静态上限随几何为8/12/6/6 CTA，不将该数值当动态达到的驻留。
+
+19个shape、760项正式完整输出检查PASS，10 warm/50 repeat/3样本中位数。M1/N4096/K6144/G8，默认2.225 TOPS、R0.973；packed route32为BF16 2.3093、R1.01020，FP16 2.3082、R1.00972，首次在该对照跨过P目标。其余12条小M未达标仍没有全部跨线；K7168部分packed候选还慢于原默认，不做统一替换。M1/N4096/K8192/G64最佳route34约2.393 TOPS、R0.9733，仍不足；短K已达标控制M1/N2048/K512/G64由约2.16到2.45 TOPS，不能把控制样本收益算成剩余目标完成。
+
+同K64原始NT双寄存器与packed对照证明物理B供给的组合影响。例如M1/N4096/K6144/G8的原始B双寄存器约1.79 TOPS，而相同BN32/BK512 packed为2.309；但仍需优化边界/地址等指令，不能宣称所有直接寄存器路径都更好。明细见[max_all_v131_packed_formal.csv](max_all_v131_packed_formal.csv)、[门禁与资源](max_all_v131_validation_resources.json)。v130的78个默认scaled kernel与v127控制逐函数机器码全同，报告在results/max_all_v130_resources/default_scaled_control_equivalence.json，排除可选epilogue参数本身改变对照计算代码。
+
+neighbor_formal独立完成25个原始shape、250项完整输出检查，0数值错误。冻结v130库924dc278...，runner为2987cd9，明确区分编译库与runner来源。M2048/N4096/K1536/G4的route6为399.02 TOPS、R1.0382；M8192/N1536/K2048/G4的route12为469.70、R1.0032，后一条仍接近波动，需要正式全量保持审计。相邻shape确认并非一条规则都选同一实例，例如M2048/N4096/K1536/G8更适合route12，而G16默认已为route12。见[max_all_v131_neighbor_formal.csv](max_all_v131_neighbor_formal.csv)。当前正式全量仍为v128，未用这些小样本替换正式记录。
