@@ -119,6 +119,8 @@ struct GroupedGemmSelectorPolicy
     bool enable_bf16_v7_nn_small_m = false;
     std::int32_t bf16_v7_nn_small_m_tile_n = 128;
     bool enable_bf16_v7_nn_a_noslc = false; // Independent cache-policy experiment.
+    // P6f diagnostic factor: 0 keeps the old policy; 1/5/8 set a tile walk.
+    std::int32_t bf16_v7_nn_cache_walk = 0;
     // 0=off, 1=K16 drain, 2=K32 N128, 3=square128, 4=K32 N64.
     std::int32_t bf16_v7_nn_small_m_experiment = 0;
 };
@@ -180,6 +182,8 @@ enum class GroupedGemmInstanceId
     v7_bf16_nn_small_m_k32 = 5008,
     v7_bf16_nn_small_m_square128 = 5009,
     v7_bf16_nn_small_m_k32n64 = 5010,
+    v7_bf16_nn_cache_m01_5 = 5011,
+    v7_bf16_nn_cache_noslc_m01_5 = 5012,
 
 };
 
@@ -199,7 +203,7 @@ struct GroupedGemmCandidateIdentity
     GroupedGemmCandidateFamily family;
 };
 
-inline constexpr std::array<GroupedGemmCandidateIdentity, 29>
+inline constexpr std::array<GroupedGemmCandidateIdentity, 31>
     grouped_gemm_candidate_registry{{
         {GroupedGemmInstanceId::bw_family_selected,
          "bw_family.selected",
@@ -286,6 +290,10 @@ inline constexpr std::array<GroupedGemmCandidateIdentity, 29>
          "v7.nn_b.small_m.128x128x16", GroupedGemmCandidateFamily::v7},
         {GroupedGemmInstanceId::v7_bf16_nn_small_m_k32n64,
          "v7.nn_b.small_m.64x64x32", GroupedGemmCandidateFamily::v7},
+        {GroupedGemmInstanceId::v7_bf16_nn_cache_m01_5,
+         "v7.nn_b.uniform_d2l.256x256x16.cache_m01_5", GroupedGemmCandidateFamily::v7},
+        {GroupedGemmInstanceId::v7_bf16_nn_cache_noslc_m01_5,
+         "v7.nn_b.uniform_d2l.256x256x16.cache_noslc_m01_5", GroupedGemmCandidateFamily::v7},
 
     }};
 
@@ -332,6 +340,8 @@ enum class GroupedGemmSelectionReason
     v7_bf16_nn_small_m_k32,
     v7_bf16_nn_small_m_square128,
     v7_bf16_nn_small_m_k32n64,
+    v7_bf16_nn_cache_m01_5,
+    v7_bf16_nn_cache_noslc_m01_5,
 };
 
 struct GroupedGemmSelection
@@ -536,6 +546,34 @@ constexpr GroupedGemmSelection select_grouped_gemm_candidate(
     if(v7_contract && problem.group_count <= kGroupedGemmV7NnMaxGroups && is_bf16 &&
        is_nn && policy.enable_bf16_v7_nn)
     {
+        // P6f factor isolation. An explicit opt-in controls only a valid common
+        // NN V7 contract; this is not an ID/shape dispatch override.
+        if((policy.bf16_v7_nn_cache_walk == 1 || policy.bf16_v7_nn_cache_walk == 5 ||
+            policy.bf16_v7_nn_cache_walk == 8) &&
+           problem.m.kind == GroupedGemmDimensionKind::common &&
+           !problem.group_lengths_are_ragged && k <= 1073741823 &&
+           m <= std::int64_t{2147483647} / (2 * k) &&
+           n <= std::int64_t{2147483647} / (2 * k))
+        {
+            const bool no_slc = policy.enable_bf16_v7_nn_a_noslc;
+            if(policy.bf16_v7_nn_cache_walk == 5)
+                return no_slc
+                    ? GroupedGemmSelection{GroupedGemmInstanceId::v7_bf16_nn_cache_noslc_m01_5,
+                                           GroupedGemmSelectionReason::v7_bf16_nn_cache_noslc_m01_5}
+                    : GroupedGemmSelection{GroupedGemmInstanceId::v7_bf16_nn_cache_m01_5,
+                                           GroupedGemmSelectionReason::v7_bf16_nn_cache_m01_5};
+            if(policy.bf16_v7_nn_cache_walk == 8)
+                return no_slc
+                    ? GroupedGemmSelection{GroupedGemmInstanceId::v7_bf16_nn_a_noslc_m01_8,
+                                           GroupedGemmSelectionReason::v7_bf16_nn_a_noslc_m01_8}
+                    : GroupedGemmSelection{GroupedGemmInstanceId::v7_bf16_nn_m01_8,
+                                           GroupedGemmSelectionReason::v7_bf16_nn_m01_8};
+            return no_slc
+                ? GroupedGemmSelection{GroupedGemmInstanceId::v7_bf16_nn_a_noslc,
+                                       GroupedGemmSelectionReason::v7_bf16_nn_a_noslc}
+                : GroupedGemmSelection{GroupedGemmInstanceId::v7_bf16_nn,
+                                       GroupedGemmSelectionReason::v7_bf16_nn};
+        }
         // Experimental cache-only variant: keep the original tile walk.
         if(policy.enable_bf16_v7_nn_a_noslc &&
            problem.m.kind == GroupedGemmDimensionKind::common &&

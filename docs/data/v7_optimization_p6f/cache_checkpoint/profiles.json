@@ -1,0 +1,966 @@
+[
+  {
+    "key": "e1_cache_profile_base1",
+    "id": 781,
+    "variant": "base1",
+    "physical_gpu": 4,
+    "epoch": 1,
+    "binary_sha256": "0491e577fc7da6c68f69aa726f285b09dd78d0e003720dba20584a4db21d5fe0",
+    "source": "/workspace/v7_coverage/p6f/runs/e1_cache_profile_base1/profile/1541668_tile_example_grouped_gemm_device_args_benchmark.perf",
+    "logical_tile": [
+      256,
+      256,
+      16
+    ],
+    "actual_dispatches": [
+      {
+        "grid_work_items": [
+          22020096,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 43008,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          22020096,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 43008,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          22020096,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 43008,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          22020096,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 43008,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          22020096,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 43008,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          22020096,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 43008,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          22020096,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 43008,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          22020096,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 43008,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          22020096,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 43008,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          22020096,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 43008,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          22020096,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 43008,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      }
+    ],
+    "ctas": 43008,
+    "gui_cycles": 137824703,
+    "ms_from_gui": 86.140439375,
+    "busy_cu_frac": 0.9907411857437487,
+    "mmop_active_per_simd_cycle": 0.11183820363465612,
+    "mmop_active_per_busy_simd_cycle": 0.11288336978814427,
+    "mmop_insts": 2466250752,
+    "mmop_insts_expected_padded": 2466250752.0,
+    "mmop_count_matches_padded": true,
+    "mmop_cycles_per_inst": 2.0,
+    "waves": 344064,
+    "waves_per_cta": 8.0,
+    "mean_resident_waves_per_cu": 7.908093103237088,
+    "mean_wave_lifetime_cycles": 46996.9180094401,
+    "wait_any_frac": 0.20897406769691376,
+    "l2_hit_pct": 48.81200159637079,
+    "tcp_tcc_read_latency": 809.0409168021479,
+    "tcp_read_requests": 2482765824,
+    "hbm_read_MB": 96282.88288,
+    "hbm_write_MB": 5637.144576,
+    "hbm_GBps": 1183.1844392191433,
+    "dram_credit_stall_frac": 0.07357199193456633,
+    "tcp_alloc_stall_frac": 0.31906951578919784,
+    "tcp_pending_stall_frac": 0.4898884650598522,
+    "tcp_alloc_stall_per_busy_cu": 0.322051329227494,
+    "tcp_pending_stall_per_busy_cu": 0.49446663983398775,
+    "lds_bank_conflict_frac": 0.2564102564102564,
+    "sq_insts_salu_per_wave": 2730.5,
+    "sq_insts_smem_per_wave": 8.0,
+    "sq_insts_valu_per_wave": 7998.0,
+    "sq_insts_vmem_per_wave": 474.0,
+    "sq_insts_lds_per_wave": 1936.0,
+    "sq_insts_branch_per_wave": 298.5,
+    "sq_insts_mmop_per_wave": 7168.0,
+    "valu_minus_mmop_insts_per_wave": 830.0,
+    "valu_minus_mmop_count_fraction": 0.1037759439859965,
+    "vmem_above_two_loads_per_kstage_per_wave": 26.0,
+    "note": "Counter-derived timing/ratios use existing hardware model, not formal CK time; scratch and dynamic LDS are from actual dispatch"
+  },
+  {
+    "key": "e1_cache_profile_noslc_m1",
+    "id": 781,
+    "variant": "noslc_m1",
+    "physical_gpu": 4,
+    "epoch": 1,
+    "binary_sha256": "0491e577fc7da6c68f69aa726f285b09dd78d0e003720dba20584a4db21d5fe0",
+    "source": "/workspace/v7_coverage/p6f/runs/e1_cache_profile_noslc_m1/profile/1543245_tile_example_grouped_gemm_device_args_benchmark.perf",
+    "logical_tile": [
+      256,
+      256,
+      16
+    ],
+    "actual_dispatches": [
+      {
+        "grid_work_items": [
+          22020096,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 43008,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          22020096,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 43008,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          22020096,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 43008,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          22020096,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 43008,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          22020096,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 43008,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          22020096,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 43008,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          22020096,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 43008,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          22020096,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 43008,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          22020096,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 43008,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          22020096,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 43008,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          22020096,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 43008,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      }
+    ],
+    "ctas": 43008,
+    "gui_cycles": 88368215,
+    "ms_from_gui": 55.230134375000006,
+    "busy_cu_frac": 0.9917313114223253,
+    "mmop_active_per_simd_cycle": 0.17442999386148061,
+    "mmop_active_per_busy_simd_cycle": 0.1758843265836952,
+    "mmop_insts": 2466250752,
+    "mmop_insts_expected_padded": 2466250752.0,
+    "mmop_count_matches_padded": true,
+    "mmop_cycles_per_inst": 2.0,
+    "waves": 344064,
+    "waves_per_cta": 8.0,
+    "mean_resident_waves_per_cu": 7.905999633465495,
+    "mean_wave_lifetime_cycles": 40616.45880998884,
+    "wait_any_frac": 0.1823160878265477,
+    "l2_hit_pct": 72.71413319505542,
+    "tcp_tcc_read_latency": 437.2239697955501,
+    "tcp_read_requests": 2482765824,
+    "hbm_read_MB": 51702.008256,
+    "hbm_write_MB": 5637.144576,
+    "hbm_GBps": 1038.186009881494,
+    "dram_credit_stall_frac": 0.0013289839282144603,
+    "tcp_alloc_stall_frac": 0.30773792972393976,
+    "tcp_pending_stall_frac": 0.545284785230753,
+    "tcp_alloc_stall_per_busy_cu": 0.31030373467041883,
+    "tcp_pending_stall_per_busy_cu": 0.5498311679286542,
+    "lds_bank_conflict_frac": 0.2564102564102564,
+    "sq_insts_salu_per_wave": 2730.5,
+    "sq_insts_smem_per_wave": 8.0,
+    "sq_insts_valu_per_wave": 7998.0,
+    "sq_insts_vmem_per_wave": 474.0,
+    "sq_insts_lds_per_wave": 1936.0,
+    "sq_insts_branch_per_wave": 298.5,
+    "sq_insts_mmop_per_wave": 7168.0,
+    "valu_minus_mmop_insts_per_wave": 830.0,
+    "valu_minus_mmop_count_fraction": 0.1037759439859965,
+    "vmem_above_two_loads_per_kstage_per_wave": 26.0,
+    "note": "Counter-derived timing/ratios use existing hardware model, not formal CK time; scratch and dynamic LDS are from actual dispatch"
+  },
+  {
+    "key": "e1_cache_profile_base2",
+    "id": 781,
+    "variant": "base2",
+    "physical_gpu": 4,
+    "epoch": 1,
+    "binary_sha256": "0491e577fc7da6c68f69aa726f285b09dd78d0e003720dba20584a4db21d5fe0",
+    "source": "/workspace/v7_coverage/p6f/runs/e1_cache_profile_base2/profile/1544709_tile_example_grouped_gemm_device_args_benchmark.perf",
+    "logical_tile": [
+      256,
+      256,
+      16
+    ],
+    "actual_dispatches": [
+      {
+        "grid_work_items": [
+          22020096,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 43008,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          22020096,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 43008,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          22020096,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 43008,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          22020096,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 43008,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          22020096,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 43008,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          22020096,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 43008,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          22020096,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 43008,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          22020096,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 43008,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          22020096,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 43008,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          22020096,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 43008,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          22020096,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 43008,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      }
+    ],
+    "ctas": 43008,
+    "gui_cycles": 130679267,
+    "ms_from_gui": 81.674541875,
+    "busy_cu_frac": 0.9911196137754583,
+    "mmop_active_per_simd_cycle": 0.11795342561877088,
+    "mmop_active_per_busy_simd_cycle": 0.11901028289557555,
+    "mmop_insts": 2466250752,
+    "mmop_insts_expected_padded": 2466250752.0,
+    "mmop_count_matches_padded": true,
+    "mmop_cycles_per_inst": 2.0,
+    "waves": 344064,
+    "waves_per_cta": 8.0,
+    "mean_resident_waves_per_cu": 7.910012970917567,
+    "mean_wave_lifetime_cycles": 46163.219592866444,
+    "wait_any_frac": 0.24759600262381642,
+    "l2_hit_pct": 51.27097248500591,
+    "tcp_tcc_read_latency": 665.2652181928053,
+    "tcp_read_requests": 2482765824,
+    "hbm_read_MB": 92143.342656,
+    "hbm_write_MB": 5637.144576,
+    "hbm_GBps": 1197.1966415391662,
+    "dram_credit_stall_frac": 0.03339558016881132,
+    "tcp_alloc_stall_frac": 0.5344021009660239,
+    "tcp_pending_stall_frac": 0.7170391268914907,
+    "tcp_alloc_stall_per_busy_cu": 0.5391903192494933,
+    "tcp_pending_stall_per_busy_cu": 0.7234637645400674,
+    "lds_bank_conflict_frac": 0.2564102564102564,
+    "sq_insts_salu_per_wave": 2730.5,
+    "sq_insts_smem_per_wave": 8.0,
+    "sq_insts_valu_per_wave": 7998.0,
+    "sq_insts_vmem_per_wave": 474.0,
+    "sq_insts_lds_per_wave": 1936.0,
+    "sq_insts_branch_per_wave": 298.5,
+    "sq_insts_mmop_per_wave": 7168.0,
+    "valu_minus_mmop_insts_per_wave": 830.0,
+    "valu_minus_mmop_count_fraction": 0.1037759439859965,
+    "vmem_above_two_loads_per_kstage_per_wave": 26.0,
+    "note": "Counter-derived timing/ratios use existing hardware model, not formal CK time; scratch and dynamic LDS are from actual dispatch"
+  },
+  {
+    "key": "e1_cache_profile_noslc_m5",
+    "id": 781,
+    "variant": "noslc_m5",
+    "physical_gpu": 4,
+    "epoch": 1,
+    "binary_sha256": "0491e577fc7da6c68f69aa726f285b09dd78d0e003720dba20584a4db21d5fe0",
+    "source": "/workspace/v7_coverage/p6f/runs/e1_cache_profile_noslc_m5/profile/1546298_tile_example_grouped_gemm_device_args_benchmark.perf",
+    "logical_tile": [
+      256,
+      256,
+      16
+    ],
+    "actual_dispatches": [
+      {
+        "grid_work_items": [
+          22020096,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 43008,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          22020096,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 43008,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          22020096,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 43008,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          22020096,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 43008,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          22020096,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 43008,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          22020096,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 43008,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          22020096,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 43008,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          22020096,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 43008,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          22020096,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 43008,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          22020096,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 43008,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      {
+        "grid_work_items": [
+          22020096,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 43008,
+        "lds": 65536,
+        "scratch": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      }
+    ],
+    "ctas": 43008,
+    "gui_cycles": 79172899,
+    "ms_from_gui": 49.483061875,
+    "busy_cu_frac": 0.9899471457714337,
+    "mmop_active_per_simd_cycle": 0.19468868002420878,
+    "mmop_active_per_busy_simd_cycle": 0.19666573195935041,
+    "mmop_insts": 2466250752,
+    "mmop_insts_expected_padded": 2466250752.0,
+    "mmop_count_matches_padded": true,
+    "mmop_cycles_per_inst": 2.0,
+    "waves": 344064,
+    "waves_per_cta": 8.0,
+    "mean_resident_waves_per_cu": 7.889351109272884,
+    "mean_wave_lifetime_cycles": 36275.74430047898,
+    "wait_any_frac": 0.18951313508369252,
+    "l2_hit_pct": 78.87033242049385,
+    "tcp_tcc_read_latency": 349.43970913545166,
+    "tcp_read_requests": 2482765824,
+    "hbm_read_MB": 31487.468608,
+    "hbm_write_MB": 5637.144576,
+    "hbm_GBps": 750.2489089656804,
+    "dram_credit_stall_frac": 9.472938460924615e-08,
+    "tcp_alloc_stall_frac": 0.17717323038783764,
+    "tcp_pending_stall_frac": 0.4915481547858946,
+    "tcp_alloc_stall_per_busy_cu": 0.17897241397647778,
+    "tcp_pending_stall_per_busy_cu": 0.49653979698365314,
+    "lds_bank_conflict_frac": 0.2564102564102564,
+    "sq_insts_salu_per_wave": 2771.5,
+    "sq_insts_smem_per_wave": 8.0,
+    "sq_insts_valu_per_wave": 8003.0,
+    "sq_insts_vmem_per_wave": 474.0,
+    "sq_insts_lds_per_wave": 1936.0,
+    "sq_insts_branch_per_wave": 298.5,
+    "sq_insts_mmop_per_wave": 7168.0,
+    "valu_minus_mmop_insts_per_wave": 835.0,
+    "valu_minus_mmop_count_fraction": 0.10433587404723228,
+    "vmem_above_two_loads_per_kstage_per_wave": 26.0,
+    "note": "Counter-derived timing/ratios use existing hardware model, not formal CK time; scratch and dynamic LDS are from actual dispatch"
+  }
+]

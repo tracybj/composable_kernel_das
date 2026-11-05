@@ -1,0 +1,41 @@
+{
+  "at": "2026-11-05T04:15:03.220401+00:00",
+  "suite": "regression",
+  "benchmark_sha256": "0491e577fc7da6c68f69aa726f285b09dd78d0e003720dba20584a4db21d5fe0",
+  "scope": "fixed representatives; diagnostic factor isolation; no production attribute domain inferred from winners",
+  "jobs": [
+    {
+      "key": "regression_selector_test",
+      "regression_kind": "selector_test",
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_selector_test"
+      ],
+      "kind": "regression",
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "0"
+      }
+    },
+    {
+      "key": "regression_device_args_query_test",
+      "regression_kind": "device_args_query_test",
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_query_test"
+      ],
+      "kind": "regression",
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "0"
+      }
+    },
+    {
+      "key": "regression_device_args_smoke",
+      "regression_kind": "device_args_smoke",
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_smoke"
+      ],
+      "kind": "regression",
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "0"
+      }
+    }
+  ]
+}
