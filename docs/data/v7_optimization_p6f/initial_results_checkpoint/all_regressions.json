@@ -1,0 +1,2402 @@
+[
+  {
+    "id": 76,
+    "M": 1,
+    "N": 2048,
+    "K": 768,
+    "G": 4,
+    "task": 3,
+    "variant": "k16_steady",
+    "study": "k16_steady_id76",
+    "control_instance": 5008,
+    "candidate_instance": 5015,
+    "control_scheme": "smallM_64x128x32",
+    "control_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "2"
+    },
+    "candidate_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "6"
+    },
+    "before_ms": 0.021919999,
+    "after_ms": 0.02304,
+    "before_round_ms": [
+      0.021919999,
+      0.02152,
+      0.02224
+    ],
+    "after_round_ms": [
+      0.024641,
+      0.02304,
+      0.02256
+    ],
+    "paired_delta_pct": 7.0631970260223165,
+    "round_delta_pct": [
+      12.4133262962284,
+      7.0631970260223165,
+      1.4388489208633226
+    ],
+    "before_cv": [
+      0.23780088,
+      0.075020152,
+      0.094147137
+    ],
+    "after_cv": [
+      0.063912858,
+      0.055417395,
+      0.061056457
+    ],
+    "observed_variation_band_pct": 23.780088,
+    "quality": "within_observed_variation_uncertain",
+    "frozen_BLAS_ms": 0.017047999426722527,
+    "frozen_BLAS_gpu": 0,
+    "frozen_BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+    "frozen_BLAS_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before_frozen": 0.7777372356049161,
+    "R_after_frozen": 0.7399305306737207,
+    "CK_gpu": 4,
+    "epoch": 5,
+    "binary_sha256": "3411731442660e51e3681e5341bbf852409b47b8e80fcffe15a92e52e45dbaac",
+    "last_measured_at": "2026-11-05T07:27:36.997354+00:00",
+    "source_keys": [
+      "e5_rec5_k16_steady_r1_id76_control",
+      "e5_rec5_k16_steady_r2_id76_control",
+      "e5_rec5_k16_steady_r3_id76_control",
+      "e5_rec5_k16_steady_r1_id76_candidate",
+      "e5_rec5_k16_steady_r2_id76_candidate",
+      "e5_rec5_k16_steady_r3_id76_candidate"
+    ],
+    "source_logs": [
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r1_id76_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r2_id76_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r3_id76_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r1_id76_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r2_id76_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r3_id76_candidate/run.log"
+    ],
+    "full_output_accuracy_keys": [
+      "e4_rec4_steady_acc_k16_id76"
+    ],
+    "fallback": false,
+    "selection_contract": "See frozen plan and source policy; instance chosen by default selector; expected ID is assertion only"
+  },
+  {
+    "id": 633,
+    "M": 4,
+    "N": 1024,
+    "K": 2048,
+    "G": 8,
+    "task": 3,
+    "variant": "k16_steady",
+    "study": "k16_steady_id633",
+    "control_instance": 5008,
+    "candidate_instance": 5015,
+    "control_scheme": "smallM_64x128x32",
+    "control_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "2"
+    },
+    "candidate_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "6"
+    },
+    "before_ms": 0.036800999,
+    "after_ms": 0.040959999,
+    "before_round_ms": [
+      0.036800999,
+      0.037680998,
+      0.03664
+    ],
+    "after_round_ms": [
+      0.040800001,
+      0.041280001,
+      0.040959999
+    ],
+    "paired_delta_pct": 10.866558269246983,
+    "round_delta_pct": [
+      10.866558269246983,
+      9.55124118527857,
+      11.79039028384279
+    ],
+    "before_cv": [
+      0.06469841,
+      0.065048653,
+      0.040085454
+    ],
+    "after_cv": [
+      0.035593041,
+      0.0096715761,
+      0.010756509
+    ],
+    "observed_variation_band_pct": 6.5048653,
+    "quality": "stable_direction",
+    "frozen_BLAS_ms": 0.032816000282764435,
+    "frozen_BLAS_gpu": 0,
+    "frozen_BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+    "frozen_BLAS_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before_frozen": 0.8917149309659891,
+    "R_after_frozen": 0.8011719014632895,
+    "CK_gpu": 4,
+    "epoch": 5,
+    "binary_sha256": "3411731442660e51e3681e5341bbf852409b47b8e80fcffe15a92e52e45dbaac",
+    "last_measured_at": "2026-11-05T07:28:40.102105+00:00",
+    "source_keys": [
+      "e5_rec5_k16_steady_r1_id633_control",
+      "e5_rec5_k16_steady_r2_id633_control",
+      "e5_rec5_k16_steady_r3_id633_control",
+      "e5_rec5_k16_steady_r1_id633_candidate",
+      "e5_rec5_k16_steady_r2_id633_candidate",
+      "e5_rec5_k16_steady_r3_id633_candidate"
+    ],
+    "source_logs": [
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r1_id633_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r2_id633_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r3_id633_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r1_id633_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r2_id633_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r3_id633_candidate/run.log"
+    ],
+    "full_output_accuracy_keys": [
+      "e4_rec4_steady_acc_k16_id633"
+    ],
+    "fallback": false,
+    "selection_contract": "See frozen plan and source policy; instance chosen by default selector; expected ID is assertion only"
+  },
+  {
+    "id": 681,
+    "M": 1,
+    "N": 1536,
+    "K": 2048,
+    "G": 4,
+    "task": 3,
+    "variant": "k16_steady",
+    "study": "k16_steady_id681",
+    "control_instance": 5008,
+    "candidate_instance": 5015,
+    "control_scheme": "smallM_64x128x32",
+    "control_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "2"
+    },
+    "candidate_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "6"
+    },
+    "before_ms": 0.03376,
+    "after_ms": 0.037919998,
+    "before_round_ms": [
+      0.033599999,
+      0.03376,
+      0.03376
+    ],
+    "after_round_ms": [
+      0.038079999,
+      0.037919998,
+      0.037441999
+    ],
+    "paired_delta_pct": 12.322268957345983,
+    "round_delta_pct": [
+      13.333333730158747,
+      12.322268957345983,
+      10.90639514218008
+    ],
+    "before_cv": [
+      0.034603369,
+      0.046507743,
+      0.12182031
+    ],
+    "after_cv": [
+      0.024730595,
+      0.025178346,
+      0.035088832
+    ],
+    "observed_variation_band_pct": 12.182031,
+    "quality": "stable_direction",
+    "frozen_BLAS_ms": 0.027664000168442726,
+    "frozen_BLAS_gpu": 0,
+    "frozen_BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+    "frozen_BLAS_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before_frozen": 0.8194312846102704,
+    "R_after_frozen": 0.7295359078985901,
+    "CK_gpu": 4,
+    "epoch": 5,
+    "binary_sha256": "3411731442660e51e3681e5341bbf852409b47b8e80fcffe15a92e52e45dbaac",
+    "last_measured_at": "2026-11-05T07:28:48.398488+00:00",
+    "source_keys": [
+      "e5_rec5_k16_steady_r1_id681_control",
+      "e5_rec5_k16_steady_r2_id681_control",
+      "e5_rec5_k16_steady_r3_id681_control",
+      "e5_rec5_k16_steady_r1_id681_candidate",
+      "e5_rec5_k16_steady_r2_id681_candidate",
+      "e5_rec5_k16_steady_r3_id681_candidate"
+    ],
+    "source_logs": [
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r1_id681_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r2_id681_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r3_id681_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r1_id681_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r2_id681_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r3_id681_candidate/run.log"
+    ],
+    "full_output_accuracy_keys": [
+      "e4_rec4_steady_acc_k16_id681"
+    ],
+    "fallback": false,
+    "selection_contract": "See frozen plan and source policy; instance chosen by default selector; expected ID is assertion only"
+  },
+  {
+    "id": 688,
+    "M": 128,
+    "N": 1536,
+    "K": 2048,
+    "G": 4,
+    "task": 3,
+    "variant": "k16_steady",
+    "study": "k16_steady_id688",
+    "control_instance": 5009,
+    "candidate_instance": 5000,
+    "control_scheme": "smallM_128x128x16_square",
+    "control_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "3"
+    },
+    "candidate_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "6"
+    },
+    "before_ms": 0.044801001,
+    "after_ms": 0.066239998,
+    "before_round_ms": [
+      0.04544,
+      0.044720002,
+      0.044801001
+    ],
+    "after_round_ms": [
+      0.066241004,
+      0.066239998,
+      0.066239998
+    ],
+    "paired_delta_pct": 47.85383478373617,
+    "round_delta_pct": [
+      45.77685739436621,
+      48.12163469939019,
+      47.85383478373617
+    ],
+    "before_cv": [
+      0.02976316,
+      0.02564652,
+      0.055388713
+    ],
+    "after_cv": [
+      0.012852102,
+      0.01310879,
+      0.013336974
+    ],
+    "observed_variation_band_pct": 5.5388713,
+    "quality": "stable_direction",
+    "frozen_BLAS_ms": 0.033927999436855316,
+    "frozen_BLAS_gpu": 0,
+    "frozen_BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+    "frozen_BLAS_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before_frozen": 0.757304494978925,
+    "R_after_frozen": 0.5121980745961876,
+    "CK_gpu": 4,
+    "epoch": 5,
+    "binary_sha256": "3411731442660e51e3681e5341bbf852409b47b8e80fcffe15a92e52e45dbaac",
+    "last_measured_at": "2026-11-05T07:28:56.491299+00:00",
+    "source_keys": [
+      "e5_rec5_k16_steady_r1_id688_control",
+      "e5_rec5_k16_steady_r2_id688_control",
+      "e5_rec5_k16_steady_r3_id688_control",
+      "e5_rec5_k16_steady_r1_id688_candidate",
+      "e5_rec5_k16_steady_r2_id688_candidate",
+      "e5_rec5_k16_steady_r3_id688_candidate"
+    ],
+    "source_logs": [
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r1_id688_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r2_id688_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r3_id688_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r1_id688_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r2_id688_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r3_id688_candidate/run.log"
+    ],
+    "full_output_accuracy_keys": [],
+    "fallback": true,
+    "selection_contract": "See frozen plan and source policy; instance chosen by default selector; expected ID is assertion only"
+  },
+  {
+    "id": 772,
+    "M": 64,
+    "N": 6144,
+    "K": 3584,
+    "G": 56,
+    "task": 3,
+    "variant": "k16_steady",
+    "study": "k16_steady_id772",
+    "control_instance": 5000,
+    "candidate_instance": 5015,
+    "control_scheme": "v7_256x256x16_M01_1",
+    "control_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1"
+    },
+    "candidate_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "6"
+    },
+    "before_ms": 1.9779994,
+    "after_ms": 2.320086,
+    "before_round_ms": [
+      2.068563,
+      1.972804,
+      1.9779994
+    ],
+    "after_round_ms": [
+      2.3036041,
+      2.320086,
+      2.3288035
+    ],
+    "paired_delta_pct": 17.60347201242496,
+    "round_delta_pct": [
+      11.362530413625294,
+      17.60347201242496,
+      17.735298605247294
+    ],
+    "before_cv": [
+      0.0022401012,
+      0.01115348,
+      0.010848294
+    ],
+    "after_cv": [
+      0.01801248,
+      0.021985041,
+      0.016843286
+    ],
+    "observed_variation_band_pct": 4.841204704106591,
+    "quality": "stable_direction",
+    "frozen_BLAS_ms": 2.0357272624969482,
+    "frozen_BLAS_gpu": 0,
+    "frozen_BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+    "frozen_BLAS_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before_frozen": 1.029184974725952,
+    "R_after_frozen": 0.8774361219786457,
+    "CK_gpu": 4,
+    "epoch": 5,
+    "binary_sha256": "3411731442660e51e3681e5341bbf852409b47b8e80fcffe15a92e52e45dbaac",
+    "last_measured_at": "2026-11-05T07:29:28.182471+00:00",
+    "source_keys": [
+      "e5_rec5_k16_steady_r1_id772_control",
+      "e5_rec5_k16_steady_r2_id772_control",
+      "e5_rec5_k16_steady_r3_id772_control",
+      "e5_rec5_k16_steady_r1_id772_candidate",
+      "e5_rec5_k16_steady_r2_id772_candidate",
+      "e5_rec5_k16_steady_r3_id772_candidate"
+    ],
+    "source_logs": [
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r1_id772_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r2_id772_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r3_id772_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r1_id772_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r2_id772_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r3_id772_candidate/run.log"
+    ],
+    "full_output_accuracy_keys": [
+      "e4_rec4_steady_acc_k16_id772"
+    ],
+    "fallback": false,
+    "selection_contract": "See frozen plan and source policy; instance chosen by default selector; expected ID is assertion only"
+  },
+  {
+    "id": 1186,
+    "M": 128,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "task": 3,
+    "variant": "k16_steady",
+    "study": "k16_steady_id1186",
+    "control_instance": 5009,
+    "candidate_instance": 5000,
+    "control_scheme": "smallM_128x128x16_square",
+    "control_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "3"
+    },
+    "candidate_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "6"
+    },
+    "before_ms": 0.042401999,
+    "after_ms": 0.048080001,
+    "before_round_ms": [
+      0.04208,
+      0.042401999,
+      0.042720001
+    ],
+    "after_round_ms": [
+      0.047839001,
+      0.048080001,
+      0.048319999
+    ],
+    "paired_delta_pct": 13.390882821349992,
+    "round_delta_pct": [
+      13.685838878326994,
+      13.390882821349992,
+      13.108609243712333
+    ],
+    "before_cv": [
+      0.0083282822,
+      0.030799467,
+      0.022686541
+    ],
+    "after_cv": [
+      0.027030831,
+      0.048452351,
+      0.025859004
+    ],
+    "observed_variation_band_pct": 4.8452351,
+    "quality": "stable_direction",
+    "frozen_BLAS_ms": 0.038439951837062836,
+    "frozen_BLAS_gpu": 4,
+    "frozen_BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+    "frozen_BLAS_source": "/workspace/v7_coverage/p6c/new_blas/run_config.json",
+    "R_before_frozen": 0.9065598967884234,
+    "R_after_frozen": 0.799499813593241,
+    "CK_gpu": 4,
+    "epoch": 5,
+    "binary_sha256": "3411731442660e51e3681e5341bbf852409b47b8e80fcffe15a92e52e45dbaac",
+    "last_measured_at": "2026-11-05T07:30:57.543989+00:00",
+    "source_keys": [
+      "e5_rec5_k16_steady_r1_id1186_control",
+      "e5_rec5_k16_steady_r2_id1186_control",
+      "e5_rec5_k16_steady_r3_id1186_control",
+      "e5_rec5_k16_steady_r1_id1186_candidate",
+      "e5_rec5_k16_steady_r2_id1186_candidate",
+      "e5_rec5_k16_steady_r3_id1186_candidate"
+    ],
+    "source_logs": [
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r1_id1186_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r2_id1186_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r3_id1186_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r1_id1186_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r2_id1186_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r3_id1186_candidate/run.log"
+    ],
+    "full_output_accuracy_keys": [
+      "e3_steady_acc_k32_newid1186",
+      "e4_rec4_steady_acc_k16_newid1186"
+    ],
+    "fallback": true,
+    "selection_contract": "See frozen plan and source policy; instance chosen by default selector; expected ID is assertion only"
+  },
+  {
+    "id": 1188,
+    "M": 512,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "task": 3,
+    "variant": "k16_steady",
+    "study": "k16_steady_id1188",
+    "control_instance": 5005,
+    "candidate_instance": 5000,
+    "control_scheme": "v7_256x256x16_NoSLC_M01_1",
+    "control_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "1"
+    },
+    "candidate_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "6"
+    },
+    "before_ms": 0.084077999,
+    "after_ms": 0.085759997,
+    "before_round_ms": [
+      0.083520003,
+      0.084321499,
+      0.084077999
+    ],
+    "after_round_ms": [
+      0.085759997,
+      0.085600004,
+      0.085997999
+    ],
+    "paired_delta_pct": 2.283593832912234,
+    "round_delta_pct": [
+      2.6819850569210546,
+      1.5162266031347515,
+      2.283593832912234
+    ],
+    "before_cv": [
+      0.032355284,
+      0.014178542,
+      0.017755432
+    ],
+    "after_cv": [
+      0.0090515238,
+      0.0078919981,
+      0.012358033
+    ],
+    "observed_variation_band_pct": 3.2355283999999997,
+    "quality": "within_observed_variation_uncertain",
+    "frozen_BLAS_ms": 0.08038390427827835,
+    "frozen_BLAS_gpu": 4,
+    "frozen_BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+    "frozen_BLAS_source": "/workspace/v7_coverage/p6c/new_blas/run_config.json",
+    "R_before_frozen": 0.9560634795587648,
+    "R_after_frozen": 0.937312349466131,
+    "CK_gpu": 4,
+    "epoch": 5,
+    "binary_sha256": "3411731442660e51e3681e5341bbf852409b47b8e80fcffe15a92e52e45dbaac",
+    "last_measured_at": "2026-11-05T07:31:15.185052+00:00",
+    "source_keys": [
+      "e5_rec5_k16_steady_r1_id1188_control",
+      "e5_rec5_k16_steady_r2_id1188_control",
+      "e5_rec5_k16_steady_r3_id1188_control",
+      "e5_rec5_k16_steady_r1_id1188_candidate",
+      "e5_rec5_k16_steady_r2_id1188_candidate",
+      "e5_rec5_k16_steady_r3_id1188_candidate"
+    ],
+    "source_logs": [
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r1_id1188_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r2_id1188_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r3_id1188_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r1_id1188_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r2_id1188_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r3_id1188_candidate/run.log"
+    ],
+    "full_output_accuracy_keys": [
+      "e3_steady_acc_k32_newid1188",
+      "e4_rec4_steady_acc_k16_newid1188"
+    ],
+    "fallback": true,
+    "selection_contract": "See frozen plan and source policy; instance chosen by default selector; expected ID is assertion only"
+  },
+  {
+    "id": 1189,
+    "M": 1024,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "task": 3,
+    "variant": "k16_steady",
+    "study": "k16_steady_id1189",
+    "control_instance": 5005,
+    "candidate_instance": 5000,
+    "control_scheme": "v7_256x256x16_NoSLC_M01_1",
+    "control_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "1"
+    },
+    "candidate_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "6"
+    },
+    "before_ms": 0.14488,
+    "after_ms": 0.15120099,
+    "before_round_ms": [
+      0.14527901,
+      0.14480099,
+      0.14488
+    ],
+    "after_round_ms": [
+      0.15120099,
+      0.15096,
+      0.15143999
+    ],
+    "paired_delta_pct": 4.2534308639740726,
+    "round_delta_pct": [
+      4.076280530821363,
+      4.2534308639740726,
+      4.527878244064043
+    ],
+    "before_cv": [
+      0.0129215,
+      0.013221818,
+      0.011178353
+    ],
+    "after_cv": [
+      0.013062267,
+      0.010223153,
+      0.010812139
+    ],
+    "observed_variation_band_pct": 2,
+    "quality": "stable_direction",
+    "frozen_BLAS_ms": 0.13751189410686493,
+    "frozen_BLAS_gpu": 4,
+    "frozen_BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+    "frozen_BLAS_source": "/workspace/v7_coverage/p6c/new_blas/run_config.json",
+    "R_before_frozen": 0.9491433883687529,
+    "R_after_frozen": 0.9094642442940679,
+    "CK_gpu": 4,
+    "epoch": 5,
+    "binary_sha256": "3411731442660e51e3681e5341bbf852409b47b8e80fcffe15a92e52e45dbaac",
+    "last_measured_at": "2026-11-05T07:31:24.346129+00:00",
+    "source_keys": [
+      "e5_rec5_k16_steady_r1_id1189_control",
+      "e5_rec5_k16_steady_r2_id1189_control",
+      "e5_rec5_k16_steady_r3_id1189_control",
+      "e5_rec5_k16_steady_r1_id1189_candidate",
+      "e5_rec5_k16_steady_r2_id1189_candidate",
+      "e5_rec5_k16_steady_r3_id1189_candidate"
+    ],
+    "source_logs": [
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r1_id1189_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r2_id1189_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r3_id1189_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r1_id1189_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r2_id1189_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r3_id1189_candidate/run.log"
+    ],
+    "full_output_accuracy_keys": [
+      "e3_steady_acc_k32_newid1189",
+      "e4_rec4_steady_acc_k16_newid1189"
+    ],
+    "fallback": true,
+    "selection_contract": "See frozen plan and source policy; instance chosen by default selector; expected ID is assertion only"
+  },
+  {
+    "id": 1190,
+    "M": 2048,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "task": 3,
+    "variant": "k16_steady",
+    "study": "k16_steady_id1190",
+    "control_instance": 5005,
+    "candidate_instance": 5000,
+    "control_scheme": "v7_256x256x16_NoSLC_M01_1",
+    "control_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "1"
+    },
+    "candidate_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "6"
+    },
+    "before_ms": 0.23991999,
+    "after_ms": 0.25215948,
+    "before_round_ms": [
+      0.23991999,
+      0.2400845,
+      0.23888101
+    ],
+    "after_round_ms": [
+      0.25215948,
+      0.25192451,
+      0.2552
+    ],
+    "paired_delta_pct": 5.101488208631544,
+    "round_delta_pct": [
+      5.101488208631544,
+      4.931601165422994,
+      6.831430426386742
+    ],
+    "before_cv": [
+      0.0081756482,
+      0.0074174699,
+      0.0079433831
+    ],
+    "after_cv": [
+      0.0086479958,
+      0.006301666,
+      0.011494659
+    ],
+    "observed_variation_band_pct": 2,
+    "quality": "stable_direction",
+    "frozen_BLAS_ms": 0.25936776399612427,
+    "frozen_BLAS_gpu": 4,
+    "frozen_BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+    "frozen_BLAS_source": "/workspace/v7_coverage/p6c/new_blas/run_config.json",
+    "R_before_frozen": 1.0810594148329378,
+    "R_after_frozen": 1.0285862105843662,
+    "CK_gpu": 4,
+    "epoch": 5,
+    "binary_sha256": "3411731442660e51e3681e5341bbf852409b47b8e80fcffe15a92e52e45dbaac",
+    "last_measured_at": "2026-11-05T07:31:34.720539+00:00",
+    "source_keys": [
+      "e5_rec5_k16_steady_r1_id1190_control",
+      "e5_rec5_k16_steady_r2_id1190_control",
+      "e5_rec5_k16_steady_r3_id1190_control",
+      "e5_rec5_k16_steady_r1_id1190_candidate",
+      "e5_rec5_k16_steady_r2_id1190_candidate",
+      "e5_rec5_k16_steady_r3_id1190_candidate"
+    ],
+    "source_logs": [
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r1_id1190_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r2_id1190_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r3_id1190_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r1_id1190_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r2_id1190_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r3_id1190_candidate/run.log"
+    ],
+    "full_output_accuracy_keys": [
+      "e3_steady_acc_k32_newid1190",
+      "e4_rec4_steady_acc_k16_newid1190"
+    ],
+    "fallback": true,
+    "selection_contract": "See frozen plan and source policy; instance chosen by default selector; expected ID is assertion only"
+  },
+  {
+    "id": 1191,
+    "M": 4096,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "task": 3,
+    "variant": "k16_steady",
+    "study": "k16_steady_id1191",
+    "control_instance": 5005,
+    "candidate_instance": 5000,
+    "control_scheme": "v7_256x256x16_NoSLC_M01_1",
+    "control_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "1"
+    },
+    "candidate_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "6"
+    },
+    "before_ms": 0.44143501,
+    "after_ms": 0.46495301,
+    "before_round_ms": [
+      0.43976,
+      0.62015998,
+      0.44143501
+    ],
+    "after_round_ms": [
+      0.46495301,
+      0.46568948,
+      0.46432
+    ],
+    "paired_delta_pct": 5.184226325863905,
+    "round_delta_pct": [
+      5.728808895761328,
+      -24.90816966293118,
+      5.184226325863905
+    ],
+    "before_cv": [
+      0.0096295458,
+      0.004854697,
+      0.0085311624
+    ],
+    "after_cv": [
+      0.0056689754,
+      0.0053551482,
+      0.0046916143
+    ],
+    "observed_variation_band_pct": 40.86671331301975,
+    "quality": "within_observed_variation_uncertain",
+    "frozen_BLAS_ms": 0.4744716286659241,
+    "frozen_BLAS_gpu": 4,
+    "frozen_BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+    "frozen_BLAS_source": "/workspace/v7_coverage/p6c/new_blas/run_config.json",
+    "R_before_frozen": 1.0748391448741776,
+    "R_after_frozen": 1.0204722164631734,
+    "CK_gpu": 4,
+    "epoch": 5,
+    "binary_sha256": "3411731442660e51e3681e5341bbf852409b47b8e80fcffe15a92e52e45dbaac",
+    "last_measured_at": "2026-11-05T07:31:47.198416+00:00",
+    "source_keys": [
+      "e5_rec5_k16_steady_r1_id1191_control",
+      "e5_rec5_k16_steady_r2_id1191_control",
+      "e5_rec5_k16_steady_r3_id1191_control",
+      "e5_rec5_k16_steady_r1_id1191_candidate",
+      "e5_rec5_k16_steady_r2_id1191_candidate",
+      "e5_rec5_k16_steady_r3_id1191_candidate"
+    ],
+    "source_logs": [
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r1_id1191_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r2_id1191_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r3_id1191_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r1_id1191_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r2_id1191_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r3_id1191_candidate/run.log"
+    ],
+    "full_output_accuracy_keys": [
+      "e3_steady_acc_k32_newid1191",
+      "e4_rec4_steady_acc_k16_newid1191"
+    ],
+    "fallback": true,
+    "selection_contract": "See frozen plan and source policy; instance chosen by default selector; expected ID is assertion only"
+  },
+  {
+    "id": 1192,
+    "M": 8192,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "task": 3,
+    "variant": "k16_steady",
+    "study": "k16_steady_id1192",
+    "control_instance": 5005,
+    "candidate_instance": 5000,
+    "control_scheme": "v7_256x256x16_NoSLC_M01_1",
+    "control_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "1"
+    },
+    "candidate_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "6"
+    },
+    "before_ms": 0.87399948,
+    "after_ms": 0.90808702,
+    "before_round_ms": [
+      0.87527949,
+      0.87399948,
+      0.87320197
+    ],
+    "after_round_ms": [
+      0.90496099,
+      0.9082405,
+      0.90808702
+    ],
+    "paired_delta_pct": 3.9177391730255806,
+    "round_delta_pct": [
+      3.3910882568492395,
+      3.9177391730255806,
+      3.9950722969624097
+    ],
+    "before_cv": [
+      0.006843362,
+      0.0064654743,
+      0.0042595854
+    ],
+    "after_cv": [
+      0.0091351581,
+      0.00652542,
+      0.0071915623
+    ],
+    "observed_variation_band_pct": 2,
+    "quality": "stable_direction",
+    "frozen_BLAS_ms": 0.9020551443099976,
+    "frozen_BLAS_gpu": 4,
+    "frozen_BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+    "frozen_BLAS_source": "/workspace/v7_coverage/p6c/new_blas/run_config.json",
+    "R_before_frozen": 1.0321003215127742,
+    "R_after_frozen": 0.9933576016866728,
+    "CK_gpu": 4,
+    "epoch": 5,
+    "binary_sha256": "3411731442660e51e3681e5341bbf852409b47b8e80fcffe15a92e52e45dbaac",
+    "last_measured_at": "2026-11-05T07:32:03.845704+00:00",
+    "source_keys": [
+      "e5_rec5_k16_steady_r1_id1192_control",
+      "e5_rec5_k16_steady_r2_id1192_control",
+      "e5_rec5_k16_steady_r3_id1192_control",
+      "e5_rec5_k16_steady_r1_id1192_candidate",
+      "e5_rec5_k16_steady_r2_id1192_candidate",
+      "e5_rec5_k16_steady_r3_id1192_candidate"
+    ],
+    "source_logs": [
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r1_id1192_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r2_id1192_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r3_id1192_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r1_id1192_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r2_id1192_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r3_id1192_candidate/run.log"
+    ],
+    "full_output_accuracy_keys": [
+      "e3_steady_acc_k32_newid1192",
+      "e4_rec4_steady_acc_k16_newid1192"
+    ],
+    "fallback": true,
+    "selection_contract": "See frozen plan and source policy; instance chosen by default selector; expected ID is assertion only"
+  },
+  {
+    "id": 1193,
+    "M": 16384,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "task": 3,
+    "variant": "k16_steady",
+    "study": "k16_steady_id1193",
+    "control_instance": 5005,
+    "candidate_instance": 5000,
+    "control_scheme": "v7_256x256x16_NoSLC_M01_1",
+    "control_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "1"
+    },
+    "candidate_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "6"
+    },
+    "before_ms": 1.7367206,
+    "after_ms": 1.7880905,
+    "before_round_ms": [
+      1.73727,
+      1.7367206,
+      1.7354391
+    ],
+    "after_round_ms": [
+      2.4692125,
+      1.7880905,
+      1.784562
+    ],
+    "paired_delta_pct": 2.957867834354011,
+    "round_delta_pct": [
+      42.131764204758014,
+      2.957867834354011,
+      2.830574694323751
+    ],
+    "before_cv": [
+      0.0032886313,
+      0.0053360306,
+      0.0034075179
+    ],
+    "after_cv": [
+      0.0030530819,
+      0.0052160589,
+      0.0060792716
+    ],
+    "observed_variation_band_pct": 38.28947695880045,
+    "quality": "within_observed_variation_uncertain",
+    "frozen_BLAS_ms": 1.7686866521835327,
+    "frozen_BLAS_gpu": 4,
+    "frozen_BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+    "frozen_BLAS_source": "/workspace/v7_coverage/p6c/new_blas/run_config.json",
+    "R_before_frozen": 1.0184059843497755,
+    "R_after_frozen": 0.9891482853823856,
+    "CK_gpu": 4,
+    "epoch": 5,
+    "binary_sha256": "3411731442660e51e3681e5341bbf852409b47b8e80fcffe15a92e52e45dbaac",
+    "last_measured_at": "2026-11-05T07:32:28.398667+00:00",
+    "source_keys": [
+      "e5_rec5_k16_steady_r1_id1193_control",
+      "e5_rec5_k16_steady_r2_id1193_control",
+      "e5_rec5_k16_steady_r3_id1193_control",
+      "e5_rec5_k16_steady_r1_id1193_candidate",
+      "e5_rec5_k16_steady_r2_id1193_candidate",
+      "e5_rec5_k16_steady_r3_id1193_candidate"
+    ],
+    "source_logs": [
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r1_id1193_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r2_id1193_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r3_id1193_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r1_id1193_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r2_id1193_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k16_steady_r3_id1193_candidate/run.log"
+    ],
+    "full_output_accuracy_keys": [
+      "e3_steady_acc_k32_newid1193",
+      "e4_rec4_steady_acc_k16_newid1193"
+    ],
+    "fallback": true,
+    "selection_contract": "See frozen plan and source policy; instance chosen by default selector; expected ID is assertion only"
+  },
+  {
+    "id": 358,
+    "M": 8,
+    "N": 6144,
+    "K": 2048,
+    "G": 32,
+    "task": 3,
+    "variant": "k32_steady",
+    "study": "k32_steady_id358",
+    "control_instance": 5003,
+    "candidate_instance": 5014,
+    "control_scheme": "smallM_64x128x16",
+    "control_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128"
+    },
+    "candidate_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "5"
+    },
+    "before_ms": 0.63880253,
+    "after_ms": 0.67128003,
+    "before_round_ms": [
+      0.639844,
+      0.63767946,
+      0.63880253
+    ],
+    "after_round_ms": [
+      0.67128003,
+      0.70032603,
+      0.67120498
+    ],
+    "paired_delta_pct": 5.072373461013058,
+    "round_delta_pct": [
+      4.913077250079723,
+      9.824147385898252,
+      5.072373461013058
+    ],
+    "before_cv": [
+      0.0052341557,
+      0.0046748944,
+      0.0054187205
+    ],
+    "after_cv": [
+      0.002548959,
+      0.0021287579,
+      0.0025629138
+    ],
+    "observed_variation_band_pct": 4.338137394017232,
+    "quality": "stable_direction",
+    "frozen_BLAS_ms": 0.670039713382721,
+    "frozen_BLAS_gpu": 0,
+    "frozen_BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+    "frozen_BLAS_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before_frozen": 1.0488995924651723,
+    "R_after_frozen": 0.9981523111639727,
+    "CK_gpu": 4,
+    "epoch": 5,
+    "binary_sha256": "3411731442660e51e3681e5341bbf852409b47b8e80fcffe15a92e52e45dbaac",
+    "last_measured_at": "2026-11-05T07:28:03.592358+00:00",
+    "source_keys": [
+      "e5_rec5_k32_steady_r1_id358_control",
+      "e5_rec5_k32_steady_r2_id358_control",
+      "e5_rec5_k32_steady_r3_id358_control",
+      "e5_rec5_k32_steady_r1_id358_candidate",
+      "e5_rec5_k32_steady_r2_id358_candidate",
+      "e5_rec5_k32_steady_r3_id358_candidate"
+    ],
+    "source_logs": [
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r1_id358_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r2_id358_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r3_id358_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r1_id358_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r2_id358_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r3_id358_candidate/run.log"
+    ],
+    "full_output_accuracy_keys": [
+      "e3_steady_acc_k32_id358"
+    ],
+    "fallback": false,
+    "selection_contract": "See frozen plan and source policy; instance chosen by default selector; expected ID is assertion only"
+  },
+  {
+    "id": 688,
+    "M": 128,
+    "N": 1536,
+    "K": 2048,
+    "G": 4,
+    "task": 3,
+    "variant": "k32_steady",
+    "study": "k32_steady_id688",
+    "control_instance": 5009,
+    "candidate_instance": 5000,
+    "control_scheme": "smallM_128x128x16_square",
+    "control_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "3"
+    },
+    "candidate_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "5"
+    },
+    "before_ms": 0.044801001,
+    "after_ms": 0.066239998,
+    "before_round_ms": [
+      0.044801001,
+      0.044799998,
+      0.044959001
+    ],
+    "after_round_ms": [
+      0.066239998,
+      0.066880003,
+      0.066238999
+    ],
+    "paired_delta_pct": 47.85383478373617,
+    "round_delta_pct": [
+      47.85383478373617,
+      49.285727646684265,
+      47.3320081111233
+    ],
+    "before_cv": [
+      0.019283361,
+      0.019296429,
+      0.027778154
+    ],
+    "after_cv": [
+      0.013343567,
+      0.014744891,
+      0.012780466
+    ],
+    "observed_variation_band_pct": 2.7778153999999997,
+    "quality": "stable_direction",
+    "frozen_BLAS_ms": 0.033927999436855316,
+    "frozen_BLAS_gpu": 0,
+    "frozen_BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+    "frozen_BLAS_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before_frozen": 0.757304494978925,
+    "R_after_frozen": 0.5121980745961876,
+    "CK_gpu": 4,
+    "epoch": 5,
+    "binary_sha256": "3411731442660e51e3681e5341bbf852409b47b8e80fcffe15a92e52e45dbaac",
+    "last_measured_at": "2026-11-05T07:29:00.638056+00:00",
+    "source_keys": [
+      "e5_rec5_k32_steady_r1_id688_control",
+      "e5_rec5_k32_steady_r2_id688_control",
+      "e5_rec5_k32_steady_r3_id688_control",
+      "e5_rec5_k32_steady_r1_id688_candidate",
+      "e5_rec5_k32_steady_r2_id688_candidate",
+      "e5_rec5_k32_steady_r3_id688_candidate"
+    ],
+    "source_logs": [
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r1_id688_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r2_id688_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r3_id688_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r1_id688_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r2_id688_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r3_id688_candidate/run.log"
+    ],
+    "full_output_accuracy_keys": [],
+    "fallback": true,
+    "selection_contract": "See frozen plan and source policy; instance chosen by default selector; expected ID is assertion only"
+  },
+  {
+    "id": 772,
+    "M": 64,
+    "N": 6144,
+    "K": 3584,
+    "G": 56,
+    "task": 3,
+    "variant": "k32_steady",
+    "study": "k32_steady_id772",
+    "control_instance": 5000,
+    "candidate_instance": 5014,
+    "control_scheme": "v7_256x256x16_M01_1",
+    "control_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1"
+    },
+    "candidate_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "5"
+    },
+    "before_ms": 1.978084,
+    "after_ms": 2.4414439,
+    "before_round_ms": [
+      1.971043,
+      1.981925,
+      1.978084
+    ],
+    "after_round_ms": [
+      2.4359245,
+      2.4414439,
+      2.446563
+    ],
+    "paired_delta_pct": 23.585558508870676,
+    "round_delta_pct": [
+      23.585558508870676,
+      23.18548380993226,
+      23.68347350264195
+    ],
+    "before_cv": [
+      0.010744654,
+      0.011371131,
+      0.0097360185
+    ],
+    "after_cv": [
+      0.011824148,
+      0.01118295,
+      0.010716625
+    ],
+    "observed_variation_band_pct": 2,
+    "quality": "stable_direction",
+    "frozen_BLAS_ms": 2.0357272624969482,
+    "frozen_BLAS_gpu": 0,
+    "frozen_BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+    "frozen_BLAS_source": "/workspace/bf16NN-groupgemm.csv",
+    "R_before_frozen": 1.0291409578647561,
+    "R_after_frozen": 0.833821027997796,
+    "CK_gpu": 4,
+    "epoch": 5,
+    "binary_sha256": "3411731442660e51e3681e5341bbf852409b47b8e80fcffe15a92e52e45dbaac",
+    "last_measured_at": "2026-11-05T07:29:55.476798+00:00",
+    "source_keys": [
+      "e5_rec5_k32_steady_r1_id772_control",
+      "e5_rec5_k32_steady_r2_id772_control",
+      "e5_rec5_k32_steady_r3_id772_control",
+      "e5_rec5_k32_steady_r1_id772_candidate",
+      "e5_rec5_k32_steady_r2_id772_candidate",
+      "e5_rec5_k32_steady_r3_id772_candidate"
+    ],
+    "source_logs": [
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r1_id772_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r2_id772_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r3_id772_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r1_id772_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r2_id772_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r3_id772_candidate/run.log"
+    ],
+    "full_output_accuracy_keys": [
+      "e3_steady_acc_k32_id772"
+    ],
+    "fallback": false,
+    "selection_contract": "See frozen plan and source policy; instance chosen by default selector; expected ID is assertion only"
+  },
+  {
+    "id": 1179,
+    "M": 1,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "task": 3,
+    "variant": "k32_steady",
+    "study": "k32_steady_id1179",
+    "control_instance": 5003,
+    "candidate_instance": 5014,
+    "control_scheme": "smallM_64x128x16",
+    "control_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128"
+    },
+    "candidate_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "5"
+    },
+    "before_ms": 0.032000002,
+    "after_ms": 0.034561001,
+    "before_round_ms": [
+      0.031679999,
+      0.032159999,
+      0.032000002
+    ],
+    "after_round_ms": [
+      0.034561001,
+      0.035118498,
+      0.034559999
+    ],
+    "paired_delta_pct": 9.094072256757336,
+    "round_delta_pct": [
+      9.094072256757336,
+      9.199313096993556,
+      7.999990125000611
+    ],
+    "before_cv": [
+      0.03776694,
+      0.042017007,
+      0.043774853
+    ],
+    "after_cv": [
+      0.029564942,
+      0.051572964,
+      0.016717672
+    ],
+    "observed_variation_band_pct": 5.1572964,
+    "quality": "stable_direction",
+    "frozen_BLAS_ms": 0.03193599730730057,
+    "frozen_BLAS_gpu": 4,
+    "frozen_BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+    "frozen_BLAS_source": "/workspace/v7_coverage/p6c/new_blas/run_config.json",
+    "R_before_frozen": 0.9979998534781519,
+    "R_after_frozen": 0.9240472319450633,
+    "CK_gpu": 4,
+    "epoch": 5,
+    "binary_sha256": "3411731442660e51e3681e5341bbf852409b47b8e80fcffe15a92e52e45dbaac",
+    "last_measured_at": "2026-11-05T07:30:03.667896+00:00",
+    "source_keys": [
+      "e5_rec5_k32_steady_r1_id1179_control",
+      "e5_rec5_k32_steady_r2_id1179_control",
+      "e5_rec5_k32_steady_r3_id1179_control",
+      "e5_rec5_k32_steady_r1_id1179_candidate",
+      "e5_rec5_k32_steady_r2_id1179_candidate",
+      "e5_rec5_k32_steady_r3_id1179_candidate"
+    ],
+    "source_logs": [
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r1_id1179_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r2_id1179_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r3_id1179_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r1_id1179_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r2_id1179_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r3_id1179_candidate/run.log"
+    ],
+    "full_output_accuracy_keys": [
+      "e3_steady_acc_k32_newid1179"
+    ],
+    "fallback": false,
+    "selection_contract": "See frozen plan and source policy; instance chosen by default selector; expected ID is assertion only"
+  },
+  {
+    "id": 1180,
+    "M": 2,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "task": 3,
+    "variant": "k32_steady",
+    "study": "k32_steady_id1180",
+    "control_instance": 5003,
+    "candidate_instance": 5014,
+    "control_scheme": "smallM_64x128x16",
+    "control_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128"
+    },
+    "candidate_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "5"
+    },
+    "before_ms": 0.031920999,
+    "after_ms": 0.035361499,
+    "before_round_ms": [
+      0.032000002,
+      0.031679999,
+      0.031920999
+    ],
+    "after_round_ms": [
+      0.035601001,
+      0.034559999,
+      0.035361499
+    ],
+    "paired_delta_pct": 10.778171447579066,
+    "round_delta_pct": [
+      11.253121171679936,
+      9.090909377869627,
+      10.778171447579066
+    ],
+    "before_cv": [
+      0.041167721,
+      0.018995418,
+      0.049077704
+    ],
+    "after_cv": [
+      0.047023524,
+      0.06334825,
+      0.048520819
+    ],
+    "observed_variation_band_pct": 6.3348249999999995,
+    "quality": "stable_direction",
+    "frozen_BLAS_ms": 0.03202399984002113,
+    "frozen_BLAS_gpu": 4,
+    "frozen_BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+    "frozen_BLAS_source": "/workspace/v7_coverage/p6c/new_blas/run_config.json",
+    "R_before_frozen": 1.0032267423717263,
+    "R_after_frozen": 0.9056177126433791,
+    "CK_gpu": 4,
+    "epoch": 5,
+    "binary_sha256": "3411731442660e51e3681e5341bbf852409b47b8e80fcffe15a92e52e45dbaac",
+    "last_measured_at": "2026-11-05T07:30:11.778081+00:00",
+    "source_keys": [
+      "e5_rec5_k32_steady_r1_id1180_control",
+      "e5_rec5_k32_steady_r2_id1180_control",
+      "e5_rec5_k32_steady_r3_id1180_control",
+      "e5_rec5_k32_steady_r1_id1180_candidate",
+      "e5_rec5_k32_steady_r2_id1180_candidate",
+      "e5_rec5_k32_steady_r3_id1180_candidate"
+    ],
+    "source_logs": [
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r1_id1180_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r2_id1180_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r3_id1180_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r1_id1180_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r2_id1180_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r3_id1180_candidate/run.log"
+    ],
+    "full_output_accuracy_keys": [
+      "e3_steady_acc_k32_newid1180"
+    ],
+    "fallback": false,
+    "selection_contract": "See frozen plan and source policy; instance chosen by default selector; expected ID is assertion only"
+  },
+  {
+    "id": 1181,
+    "M": 4,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "task": 3,
+    "variant": "k32_steady",
+    "study": "k32_steady_id1181",
+    "control_instance": 5003,
+    "candidate_instance": 5014,
+    "control_scheme": "smallM_64x128x16",
+    "control_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128"
+    },
+    "candidate_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "5"
+    },
+    "before_ms": 0.03184,
+    "after_ms": 0.03424,
+    "before_round_ms": [
+      0.031839497,
+      0.03184,
+      0.032159999
+    ],
+    "after_round_ms": [
+      0.034239002,
+      0.034319498,
+      0.03424
+    ],
+    "paired_delta_pct": 7.53625284972308,
+    "round_delta_pct": [
+      7.53625284972308,
+      7.78736809045224,
+      6.467665002104006
+    ],
+    "before_cv": [
+      0.039450626,
+      0.029213893,
+      0.043779507
+    ],
+    "after_cv": [
+      0.02878404,
+      0.034671854,
+      0.026747235
+    ],
+    "observed_variation_band_pct": 4.3779507,
+    "quality": "stable_direction",
+    "frozen_BLAS_ms": 0.0321200005710125,
+    "frozen_BLAS_gpu": 4,
+    "frozen_BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+    "frozen_BLAS_source": "/workspace/v7_coverage/p6c/new_blas/run_config.json",
+    "R_before_frozen": 1.0087939877830558,
+    "R_after_frozen": 0.9380841288262995,
+    "CK_gpu": 4,
+    "epoch": 5,
+    "binary_sha256": "3411731442660e51e3681e5341bbf852409b47b8e80fcffe15a92e52e45dbaac",
+    "last_measured_at": "2026-11-05T07:30:19.854610+00:00",
+    "source_keys": [
+      "e5_rec5_k32_steady_r1_id1181_control",
+      "e5_rec5_k32_steady_r2_id1181_control",
+      "e5_rec5_k32_steady_r3_id1181_control",
+      "e5_rec5_k32_steady_r1_id1181_candidate",
+      "e5_rec5_k32_steady_r2_id1181_candidate",
+      "e5_rec5_k32_steady_r3_id1181_candidate"
+    ],
+    "source_logs": [
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r1_id1181_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r2_id1181_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r3_id1181_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r1_id1181_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r2_id1181_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r3_id1181_candidate/run.log"
+    ],
+    "full_output_accuracy_keys": [
+      "e3_steady_acc_k32_newid1181"
+    ],
+    "fallback": false,
+    "selection_contract": "See frozen plan and source policy; instance chosen by default selector; expected ID is assertion only"
+  },
+  {
+    "id": 1182,
+    "M": 8,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "task": 3,
+    "variant": "k32_steady",
+    "study": "k32_steady_id1182",
+    "control_instance": 5003,
+    "candidate_instance": 5014,
+    "control_scheme": "smallM_64x128x16",
+    "control_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128"
+    },
+    "candidate_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "5"
+    },
+    "before_ms": 0.032159999,
+    "after_ms": 0.034639999,
+    "before_round_ms": [
+      0.031998999,
+      0.032159999,
+      0.032480001
+    ],
+    "after_round_ms": [
+      0.034878999,
+      0.034559999,
+      0.034639999
+    ],
+    "paired_delta_pct": 7.462686799212892,
+    "round_delta_pct": [
+      9.000281540056921,
+      7.462686799212892,
+      6.650239943034464
+    ],
+    "before_cv": [
+      0.0099506951,
+      0.03871365,
+      0.059685199
+    ],
+    "after_cv": [
+      0.050004687,
+      0.01398185,
+      0.039112751
+    ],
+    "observed_variation_band_pct": 5.9685199,
+    "quality": "stable_direction",
+    "frozen_BLAS_ms": 0.03261595219373703,
+    "frozen_BLAS_gpu": 4,
+    "frozen_BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+    "frozen_BLAS_source": "/workspace/v7_coverage/p6c/new_blas/run_config.json",
+    "R_before_frozen": 1.0141776494998345,
+    "R_after_frozen": 0.941569085892209,
+    "CK_gpu": 4,
+    "epoch": 5,
+    "binary_sha256": "3411731442660e51e3681e5341bbf852409b47b8e80fcffe15a92e52e45dbaac",
+    "last_measured_at": "2026-11-05T07:30:28.244989+00:00",
+    "source_keys": [
+      "e5_rec5_k32_steady_r1_id1182_control",
+      "e5_rec5_k32_steady_r2_id1182_control",
+      "e5_rec5_k32_steady_r3_id1182_control",
+      "e5_rec5_k32_steady_r1_id1182_candidate",
+      "e5_rec5_k32_steady_r2_id1182_candidate",
+      "e5_rec5_k32_steady_r3_id1182_candidate"
+    ],
+    "source_logs": [
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r1_id1182_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r2_id1182_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r3_id1182_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r1_id1182_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r2_id1182_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r3_id1182_candidate/run.log"
+    ],
+    "full_output_accuracy_keys": [
+      "e3_steady_acc_k32_newid1182"
+    ],
+    "fallback": false,
+    "selection_contract": "See frozen plan and source policy; instance chosen by default selector; expected ID is assertion only"
+  },
+  {
+    "id": 1183,
+    "M": 16,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "task": 3,
+    "variant": "k32_steady",
+    "study": "k32_steady_id1183",
+    "control_instance": 5003,
+    "candidate_instance": 5014,
+    "control_scheme": "smallM_64x128x16",
+    "control_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128"
+    },
+    "candidate_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "5"
+    },
+    "before_ms": 0.033599999,
+    "after_ms": 0.035519499,
+    "before_round_ms": [
+      0.033599999,
+      0.03328,
+      0.033600502
+    ],
+    "after_round_ms": [
+      0.035519499,
+      0.035920002,
+      0.035360001
+    ],
+    "paired_delta_pct": 5.712797789071367,
+    "round_delta_pct": [
+      5.712797789071367,
+      7.932698317307696,
+      5.2365259304756995
+    ],
+    "before_cv": [
+      0.12131946,
+      0.072131211,
+      0.063945791
+    ],
+    "after_cv": [
+      0.029769651,
+      0.1038225,
+      0.016620688
+    ],
+    "observed_variation_band_pct": 12.131946000000001,
+    "quality": "within_observed_variation_uncertain",
+    "frozen_BLAS_ms": 0.0329599492251873,
+    "frozen_BLAS_gpu": 4,
+    "frozen_BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+    "frozen_BLAS_source": "/workspace/v7_coverage/p6c/new_blas/run_config.json",
+    "R_before_frozen": 0.9809508989922084,
+    "R_after_frozen": 0.9279395867939269,
+    "CK_gpu": 4,
+    "epoch": 5,
+    "binary_sha256": "3411731442660e51e3681e5341bbf852409b47b8e80fcffe15a92e52e45dbaac",
+    "last_measured_at": "2026-11-05T07:30:36.284565+00:00",
+    "source_keys": [
+      "e5_rec5_k32_steady_r1_id1183_control",
+      "e5_rec5_k32_steady_r2_id1183_control",
+      "e5_rec5_k32_steady_r3_id1183_control",
+      "e5_rec5_k32_steady_r1_id1183_candidate",
+      "e5_rec5_k32_steady_r2_id1183_candidate",
+      "e5_rec5_k32_steady_r3_id1183_candidate"
+    ],
+    "source_logs": [
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r1_id1183_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r2_id1183_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r3_id1183_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r1_id1183_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r2_id1183_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r3_id1183_candidate/run.log"
+    ],
+    "full_output_accuracy_keys": [
+      "e3_steady_acc_k32_newid1183"
+    ],
+    "fallback": false,
+    "selection_contract": "See frozen plan and source policy; instance chosen by default selector; expected ID is assertion only"
+  },
+  {
+    "id": 1184,
+    "M": 32,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "task": 3,
+    "variant": "k32_steady",
+    "study": "k32_steady_id1184",
+    "control_instance": 5003,
+    "candidate_instance": 5014,
+    "control_scheme": "smallM_64x128x16",
+    "control_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128"
+    },
+    "candidate_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "5"
+    },
+    "before_ms": 0.034559999,
+    "after_ms": 0.037679002,
+    "before_round_ms": [
+      0.034720499,
+      0.03424,
+      0.034559999
+    ],
+    "after_round_ms": [
+      0.037679002,
+      0.037439998,
+      0.037679501
+    ],
+    "paired_delta_pct": 9.02633706673428,
+    "round_delta_pct": [
+      8.520911522613783,
+      9.345788551401867,
+      9.02633706673428
+    ],
+    "before_cv": [
+      0.043031615,
+      0.021871765,
+      0.02722258
+    ],
+    "after_cv": [
+      0.030069665,
+      0.049877476,
+      0.031890925
+    ],
+    "observed_variation_band_pct": 4.9877476,
+    "quality": "stable_direction",
+    "frozen_BLAS_ms": 0.033504001796245575,
+    "frozen_BLAS_gpu": 4,
+    "frozen_BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+    "frozen_BLAS_source": "/workspace/v7_coverage/p6c/new_blas/run_config.json",
+    "R_before_frozen": 0.9694445244701996,
+    "R_after_frozen": 0.8891955736047779,
+    "CK_gpu": 4,
+    "epoch": 5,
+    "binary_sha256": "3411731442660e51e3681e5341bbf852409b47b8e80fcffe15a92e52e45dbaac",
+    "last_measured_at": "2026-11-05T07:30:44.947066+00:00",
+    "source_keys": [
+      "e5_rec5_k32_steady_r1_id1184_control",
+      "e5_rec5_k32_steady_r2_id1184_control",
+      "e5_rec5_k32_steady_r3_id1184_control",
+      "e5_rec5_k32_steady_r1_id1184_candidate",
+      "e5_rec5_k32_steady_r2_id1184_candidate",
+      "e5_rec5_k32_steady_r3_id1184_candidate"
+    ],
+    "source_logs": [
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r1_id1184_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r2_id1184_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r3_id1184_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r1_id1184_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r2_id1184_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r3_id1184_candidate/run.log"
+    ],
+    "full_output_accuracy_keys": [
+      "e3_steady_acc_k32_newid1184"
+    ],
+    "fallback": false,
+    "selection_contract": "See frozen plan and source policy; instance chosen by default selector; expected ID is assertion only"
+  },
+  {
+    "id": 1185,
+    "M": 64,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "task": 3,
+    "variant": "k32_steady",
+    "study": "k32_steady_id1185",
+    "control_instance": 5003,
+    "candidate_instance": 5014,
+    "control_scheme": "smallM_64x128x16",
+    "control_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128"
+    },
+    "candidate_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "5"
+    },
+    "before_ms": 0.036079999,
+    "after_ms": 0.040961001,
+    "before_round_ms": [
+      0.03616,
+      0.036079999,
+      0.035999998
+    ],
+    "after_round_ms": [
+      0.040800501,
+      0.04104,
+      0.040961001
+    ],
+    "paired_delta_pct": 13.747231534014182,
+    "round_delta_pct": [
+      12.833243915929216,
+      13.747231534014182,
+      13.780564654475814
+    ],
+    "before_cv": [
+      0.033980651,
+      0.057159124,
+      0.050056372
+    ],
+    "after_cv": [
+      0.014628428,
+      0.014107114,
+      0.034239018
+    ],
+    "observed_variation_band_pct": 5.7159124,
+    "quality": "stable_direction",
+    "frozen_BLAS_ms": 0.03164000064134598,
+    "frozen_BLAS_gpu": 4,
+    "frozen_BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+    "frozen_BLAS_source": "/workspace/v7_coverage/p6c/new_blas/run_config.json",
+    "R_before_frozen": 0.8769401751187957,
+    "R_after_frozen": 0.7724420758502943,
+    "CK_gpu": 4,
+    "epoch": 5,
+    "binary_sha256": "3411731442660e51e3681e5341bbf852409b47b8e80fcffe15a92e52e45dbaac",
+    "last_measured_at": "2026-11-05T07:30:53.239262+00:00",
+    "source_keys": [
+      "e5_rec5_k32_steady_r1_id1185_control",
+      "e5_rec5_k32_steady_r2_id1185_control",
+      "e5_rec5_k32_steady_r3_id1185_control",
+      "e5_rec5_k32_steady_r1_id1185_candidate",
+      "e5_rec5_k32_steady_r2_id1185_candidate",
+      "e5_rec5_k32_steady_r3_id1185_candidate"
+    ],
+    "source_logs": [
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r1_id1185_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r2_id1185_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r3_id1185_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r1_id1185_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r2_id1185_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r3_id1185_candidate/run.log"
+    ],
+    "full_output_accuracy_keys": [
+      "e3_steady_acc_k32_newid1185"
+    ],
+    "fallback": false,
+    "selection_contract": "See frozen plan and source policy; instance chosen by default selector; expected ID is assertion only"
+  },
+  {
+    "id": 1186,
+    "M": 128,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "task": 3,
+    "variant": "k32_steady",
+    "study": "k32_steady_id1186",
+    "control_instance": 5009,
+    "candidate_instance": 5000,
+    "control_scheme": "smallM_128x128x16_square",
+    "control_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "3"
+    },
+    "candidate_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "5"
+    },
+    "before_ms": 0.042399999,
+    "after_ms": 0.048319999,
+    "before_round_ms": [
+      0.042400502,
+      0.042238999,
+      0.042399999
+    ],
+    "after_round_ms": [
+      0.0480805,
+      0.048398502,
+      0.048319999
+    ],
+    "paired_delta_pct": 13.962264480242093,
+    "round_delta_pct": [
+      13.396063093781297,
+      14.582502298409118,
+      13.962264480242093
+    ],
+    "before_cv": [
+      0.027819322,
+      0.0100797,
+      0.032909751
+    ],
+    "after_cv": [
+      0.031261838,
+      0.031649404,
+      0.022122501
+    ],
+    "observed_variation_band_pct": 3.2909751000000003,
+    "quality": "stable_direction",
+    "frozen_BLAS_ms": 0.038439951837062836,
+    "frozen_BLAS_gpu": 4,
+    "frozen_BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+    "frozen_BLAS_source": "/workspace/v7_coverage/p6c/new_blas/run_config.json",
+    "R_before_frozen": 0.9066026590487145,
+    "R_after_frozen": 0.7955288210387346,
+    "CK_gpu": 4,
+    "epoch": 5,
+    "binary_sha256": "3411731442660e51e3681e5341bbf852409b47b8e80fcffe15a92e52e45dbaac",
+    "last_measured_at": "2026-11-05T07:31:01.790691+00:00",
+    "source_keys": [
+      "e5_rec5_k32_steady_r1_id1186_control",
+      "e5_rec5_k32_steady_r2_id1186_control",
+      "e5_rec5_k32_steady_r3_id1186_control",
+      "e5_rec5_k32_steady_r1_id1186_candidate",
+      "e5_rec5_k32_steady_r2_id1186_candidate",
+      "e5_rec5_k32_steady_r3_id1186_candidate"
+    ],
+    "source_logs": [
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r1_id1186_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r2_id1186_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r3_id1186_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r1_id1186_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r2_id1186_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r3_id1186_candidate/run.log"
+    ],
+    "full_output_accuracy_keys": [
+      "e3_steady_acc_k32_newid1186",
+      "e4_rec4_steady_acc_k16_newid1186"
+    ],
+    "fallback": true,
+    "selection_contract": "See frozen plan and source policy; instance chosen by default selector; expected ID is assertion only"
+  },
+  {
+    "id": 1188,
+    "M": 512,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "task": 3,
+    "variant": "k32_steady",
+    "study": "k32_steady_id1188",
+    "control_instance": 5005,
+    "candidate_instance": 5000,
+    "control_scheme": "v7_256x256x16_NoSLC_M01_1",
+    "control_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "1"
+    },
+    "candidate_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "5"
+    },
+    "before_ms": 0.084002502,
+    "after_ms": 0.086081997,
+    "before_round_ms": [
+      0.084002502,
+      0.084482998,
+      0.084000997
+    ],
+    "after_round_ms": [
+      0.086081997,
+      0.086243004,
+      0.085759997
+    ],
+    "paired_delta_pct": 2.09402276499171,
+    "round_delta_pct": [
+      2.475515550715368,
+      2.0832665052913812,
+      2.09402276499171
+    ],
+    "before_cv": [
+      0.019550377,
+      0.01823919,
+      0.014695791
+    ],
+    "after_cv": [
+      0.045052497,
+      0.017240027,
+      0.017190961
+    ],
+    "observed_variation_band_pct": 4.505249699999999,
+    "quality": "within_observed_variation_uncertain",
+    "frozen_BLAS_ms": 0.08038390427827835,
+    "frozen_BLAS_gpu": 4,
+    "frozen_BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+    "frozen_BLAS_source": "/workspace/v7_coverage/p6c/new_blas/run_config.json",
+    "R_before_frozen": 0.9569227387807847,
+    "R_after_frozen": 0.9338062205768571,
+    "CK_gpu": 4,
+    "epoch": 5,
+    "binary_sha256": "3411731442660e51e3681e5341bbf852409b47b8e80fcffe15a92e52e45dbaac",
+    "last_measured_at": "2026-11-05T07:31:19.539186+00:00",
+    "source_keys": [
+      "e5_rec5_k32_steady_r1_id1188_control",
+      "e5_rec5_k32_steady_r2_id1188_control",
+      "e5_rec5_k32_steady_r3_id1188_control",
+      "e5_rec5_k32_steady_r1_id1188_candidate",
+      "e5_rec5_k32_steady_r2_id1188_candidate",
+      "e5_rec5_k32_steady_r3_id1188_candidate"
+    ],
+    "source_logs": [
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r1_id1188_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r2_id1188_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r3_id1188_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r1_id1188_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r2_id1188_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r3_id1188_candidate/run.log"
+    ],
+    "full_output_accuracy_keys": [
+      "e3_steady_acc_k32_newid1188",
+      "e4_rec4_steady_acc_k16_newid1188"
+    ],
+    "fallback": true,
+    "selection_contract": "See frozen plan and source policy; instance chosen by default selector; expected ID is assertion only"
+  },
+  {
+    "id": 1189,
+    "M": 1024,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "task": 3,
+    "variant": "k32_steady",
+    "study": "k32_steady_id1189",
+    "control_instance": 5005,
+    "candidate_instance": 5000,
+    "control_scheme": "v7_256x256x16_NoSLC_M01_1",
+    "control_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "1"
+    },
+    "candidate_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "5"
+    },
+    "before_ms": 0.14520049,
+    "after_ms": 0.1523245,
+    "before_round_ms": [
+      0.14520049,
+      0.14471701,
+      0.14583999
+    ],
+    "after_round_ms": [
+      0.1523245,
+      0.15183599,
+      0.18768001
+    ],
+    "paired_delta_pct": 4.919242043488881,
+    "round_delta_pct": [
+      4.906326418044471,
+      4.919242043488881,
+      28.688989899135354
+    ],
+    "before_cv": [
+      0.0099646097,
+      0.010676694,
+      0.016683642
+    ],
+    "after_cv": [
+      0.027069406,
+      0.016446933,
+      0.012000766
+    ],
+    "observed_variation_band_pct": 23.531355756953086,
+    "quality": "within_observed_variation_uncertain",
+    "frozen_BLAS_ms": 0.13751189410686493,
+    "frozen_BLAS_gpu": 4,
+    "frozen_BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+    "frozen_BLAS_source": "/workspace/v7_coverage/p6c/new_blas/run_config.json",
+    "R_before_frozen": 0.9470484163439458,
+    "R_after_frozen": 0.9027562480550727,
+    "CK_gpu": 4,
+    "epoch": 5,
+    "binary_sha256": "3411731442660e51e3681e5341bbf852409b47b8e80fcffe15a92e52e45dbaac",
+    "last_measured_at": "2026-11-05T07:31:28.919755+00:00",
+    "source_keys": [
+      "e5_rec5_k32_steady_r1_id1189_control",
+      "e5_rec5_k32_steady_r2_id1189_control",
+      "e5_rec5_k32_steady_r3_id1189_control",
+      "e5_rec5_k32_steady_r1_id1189_candidate",
+      "e5_rec5_k32_steady_r2_id1189_candidate",
+      "e5_rec5_k32_steady_r3_id1189_candidate"
+    ],
+    "source_logs": [
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r1_id1189_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r2_id1189_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r3_id1189_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r1_id1189_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r2_id1189_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r3_id1189_candidate/run.log"
+    ],
+    "full_output_accuracy_keys": [
+      "e3_steady_acc_k32_newid1189",
+      "e4_rec4_steady_acc_k16_newid1189"
+    ],
+    "fallback": true,
+    "selection_contract": "See frozen plan and source policy; instance chosen by default selector; expected ID is assertion only"
+  },
+  {
+    "id": 1190,
+    "M": 2048,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "task": 3,
+    "variant": "k32_steady",
+    "study": "k32_steady_id1190",
+    "control_instance": 5005,
+    "candidate_instance": 5000,
+    "control_scheme": "v7_256x256x16_NoSLC_M01_1",
+    "control_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "1"
+    },
+    "candidate_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "5"
+    },
+    "before_ms": 0.23967999,
+    "after_ms": 0.25111598,
+    "before_round_ms": [
+      0.23967999,
+      0.238401,
+      0.240079
+    ],
+    "after_round_ms": [
+      0.25199601,
+      0.251041,
+      0.25111598
+    ],
+    "paired_delta_pct": 5.138526582882452,
+    "round_delta_pct": [
+      5.138526582882452,
+      5.301991182922894,
+      4.5972284123142915
+    ],
+    "before_cv": [
+      0.016954,
+      0.0072623325,
+      0.0083863445
+    ],
+    "after_cv": [
+      0.0068063037,
+      0.012068928,
+      0.0094624465
+    ],
+    "observed_variation_band_pct": 2,
+    "quality": "stable_direction",
+    "frozen_BLAS_ms": 0.25936776399612427,
+    "frozen_BLAS_gpu": 4,
+    "frozen_BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+    "frozen_BLAS_source": "/workspace/v7_coverage/p6c/new_blas/run_config.json",
+    "R_before_frozen": 1.0821419176299376,
+    "R_after_frozen": 1.0328604495664682,
+    "CK_gpu": 4,
+    "epoch": 5,
+    "binary_sha256": "3411731442660e51e3681e5341bbf852409b47b8e80fcffe15a92e52e45dbaac",
+    "last_measured_at": "2026-11-05T07:31:40.334734+00:00",
+    "source_keys": [
+      "e5_rec5_k32_steady_r1_id1190_control",
+      "e5_rec5_k32_steady_r2_id1190_control",
+      "e5_rec5_k32_steady_r3_id1190_control",
+      "e5_rec5_k32_steady_r1_id1190_candidate",
+      "e5_rec5_k32_steady_r2_id1190_candidate",
+      "e5_rec5_k32_steady_r3_id1190_candidate"
+    ],
+    "source_logs": [
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r1_id1190_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r2_id1190_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r3_id1190_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r1_id1190_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r2_id1190_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r3_id1190_candidate/run.log"
+    ],
+    "full_output_accuracy_keys": [
+      "e3_steady_acc_k32_newid1190",
+      "e4_rec4_steady_acc_k16_newid1190"
+    ],
+    "fallback": true,
+    "selection_contract": "See frozen plan and source policy; instance chosen by default selector; expected ID is assertion only"
+  },
+  {
+    "id": 1191,
+    "M": 4096,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "task": 3,
+    "variant": "k32_steady",
+    "study": "k32_steady_id1191",
+    "control_instance": 5005,
+    "candidate_instance": 5000,
+    "control_scheme": "v7_256x256x16_NoSLC_M01_1",
+    "control_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "1"
+    },
+    "candidate_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "5"
+    },
+    "before_ms": 0.43903399,
+    "after_ms": 0.46511951,
+    "before_round_ms": [
+      0.438241,
+      0.43936101,
+      0.43903399
+    ],
+    "after_round_ms": [
+      0.46560651,
+      0.46408099,
+      0.46511951
+    ],
+    "paired_delta_pct": 5.94157185870734,
+    "round_delta_pct": [
+      6.244397489052833,
+      5.626348136808956,
+      5.94157185870734
+    ],
+    "before_cv": [
+      0.007195611,
+      0.0073206063,
+      0.0088977882
+    ],
+    "after_cv": [
+      0.0062051583,
+      0.0045790219,
+      0.0050995624
+    ],
+    "observed_variation_band_pct": 2,
+    "quality": "stable_direction",
+    "frozen_BLAS_ms": 0.4744716286659241,
+    "frozen_BLAS_gpu": 4,
+    "frozen_BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+    "frozen_BLAS_source": "/workspace/v7_coverage/p6c/new_blas/run_config.json",
+    "R_before_frozen": 1.0807173008766908,
+    "R_after_frozen": 1.0201069154590485,
+    "CK_gpu": 4,
+    "epoch": 5,
+    "binary_sha256": "3411731442660e51e3681e5341bbf852409b47b8e80fcffe15a92e52e45dbaac",
+    "last_measured_at": "2026-11-05T07:31:54.016762+00:00",
+    "source_keys": [
+      "e5_rec5_k32_steady_r1_id1191_control",
+      "e5_rec5_k32_steady_r2_id1191_control",
+      "e5_rec5_k32_steady_r3_id1191_control",
+      "e5_rec5_k32_steady_r1_id1191_candidate",
+      "e5_rec5_k32_steady_r2_id1191_candidate",
+      "e5_rec5_k32_steady_r3_id1191_candidate"
+    ],
+    "source_logs": [
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r1_id1191_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r2_id1191_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r3_id1191_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r1_id1191_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r2_id1191_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r3_id1191_candidate/run.log"
+    ],
+    "full_output_accuracy_keys": [
+      "e3_steady_acc_k32_newid1191",
+      "e4_rec4_steady_acc_k16_newid1191"
+    ],
+    "fallback": true,
+    "selection_contract": "See frozen plan and source policy; instance chosen by default selector; expected ID is assertion only"
+  },
+  {
+    "id": 1192,
+    "M": 8192,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "task": 3,
+    "variant": "k32_steady",
+    "study": "k32_steady_id1192",
+    "control_instance": 5005,
+    "candidate_instance": 5000,
+    "control_scheme": "v7_256x256x16_NoSLC_M01_1",
+    "control_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "1"
+    },
+    "candidate_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "5"
+    },
+    "before_ms": 0.87472749,
+    "after_ms": 0.90656,
+    "before_round_ms": [
+      0.87472302,
+      0.87472749,
+      0.87472802
+    ],
+    "after_round_ms": [
+      0.90543902,
+      0.90831995,
+      0.90656
+    ],
+    "paired_delta_pct": 3.6390717196872258,
+    "round_delta_pct": [
+      3.5115115639691163,
+      3.840334319434713,
+      3.6390717196872258
+    ],
+    "before_cv": [
+      0.0040105067,
+      0.0052499809,
+      0.0043569139
+    ],
+    "after_cv": [
+      0.0064452518,
+      0.0084201013,
+      0.0065244916
+    ],
+    "observed_variation_band_pct": 2,
+    "quality": "stable_direction",
+    "frozen_BLAS_ms": 0.9020551443099976,
+    "frozen_BLAS_gpu": 4,
+    "frozen_BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+    "frozen_BLAS_source": "/workspace/v7_coverage/p6c/new_blas/run_config.json",
+    "R_before_frozen": 1.0312413347269989,
+    "R_after_frozen": 0.9950308245565628,
+    "CK_gpu": 4,
+    "epoch": 5,
+    "binary_sha256": "3411731442660e51e3681e5341bbf852409b47b8e80fcffe15a92e52e45dbaac",
+    "last_measured_at": "2026-11-05T07:32:13.574387+00:00",
+    "source_keys": [
+      "e5_rec5_k32_steady_r1_id1192_control",
+      "e5_rec5_k32_steady_r2_id1192_control",
+      "e5_rec5_k32_steady_r3_id1192_control",
+      "e5_rec5_k32_steady_r1_id1192_candidate",
+      "e5_rec5_k32_steady_r2_id1192_candidate",
+      "e5_rec5_k32_steady_r3_id1192_candidate"
+    ],
+    "source_logs": [
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r1_id1192_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r2_id1192_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r3_id1192_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r1_id1192_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r2_id1192_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r3_id1192_candidate/run.log"
+    ],
+    "full_output_accuracy_keys": [
+      "e3_steady_acc_k32_newid1192",
+      "e4_rec4_steady_acc_k16_newid1192"
+    ],
+    "fallback": true,
+    "selection_contract": "See frozen plan and source policy; instance chosen by default selector; expected ID is assertion only"
+  },
+  {
+    "id": 1193,
+    "M": 16384,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "task": 3,
+    "variant": "k32_steady",
+    "study": "k32_steady_id1193",
+    "control_instance": 5005,
+    "candidate_instance": 5000,
+    "control_scheme": "v7_256x256x16_NoSLC_M01_1",
+    "control_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "1"
+    },
+    "candidate_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "5"
+    },
+    "before_ms": 1.7382505,
+    "after_ms": 1.785761,
+    "before_round_ms": [
+      1.7362415,
+      1.73857,
+      1.7382505
+    ],
+    "after_round_ms": [
+      2.459048,
+      1.783614,
+      1.785761
+    ],
+    "paired_delta_pct": 2.7332366652562445,
+    "round_delta_pct": [
+      41.630527780841554,
+      2.5908649062160283,
+      2.7332366652562445
+    ],
+    "before_cv": [
+      0.0041026966,
+      0.0032721504,
+      0.0029757451
+    ],
+    "after_cv": [
+      0.0029798763,
+      0.0049708304,
+      0.0073158297
+    ],
+    "observed_variation_band_pct": 37.82331454209158,
+    "quality": "within_observed_variation_uncertain",
+    "frozen_BLAS_ms": 1.7686866521835327,
+    "frozen_BLAS_gpu": 4,
+    "frozen_BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+    "frozen_BLAS_source": "/workspace/v7_coverage/p6c/new_blas/run_config.json",
+    "R_before_frozen": 1.017509646730165,
+    "R_after_frozen": 0.9904386153486009,
+    "CK_gpu": 4,
+    "epoch": 5,
+    "binary_sha256": "3411731442660e51e3681e5341bbf852409b47b8e80fcffe15a92e52e45dbaac",
+    "last_measured_at": "2026-11-05T07:32:43.083852+00:00",
+    "source_keys": [
+      "e5_rec5_k32_steady_r1_id1193_control",
+      "e5_rec5_k32_steady_r2_id1193_control",
+      "e5_rec5_k32_steady_r3_id1193_control",
+      "e5_rec5_k32_steady_r1_id1193_candidate",
+      "e5_rec5_k32_steady_r2_id1193_candidate",
+      "e5_rec5_k32_steady_r3_id1193_candidate"
+    ],
+    "source_logs": [
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r1_id1193_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r2_id1193_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r3_id1193_control/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r1_id1193_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r2_id1193_candidate/run.log",
+      "/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r3_id1193_candidate/run.log"
+    ],
+    "full_output_accuracy_keys": [
+      "e3_steady_acc_k32_newid1193",
+      "e4_rec4_steady_acc_k16_newid1193"
+    ],
+    "fallback": true,
+    "selection_contract": "See frozen plan and source policy; instance chosen by default selector; expected ID is assertion only"
+  }
+]

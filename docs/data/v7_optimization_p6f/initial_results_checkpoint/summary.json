@@ -1,0 +1,32 @@
+{
+  "at": "2026-11-05T08:30:03.691868+00:00",
+  "formal_jobs": 774,
+  "complete_contrasts": 129,
+  "accepted_profiles": 28,
+  "accuracy_jobs": 333,
+  "whole_output_comparisons": 1041,
+  "whole_output_elements": 63784588200,
+  "failed_keys": [
+    "e1_cache_profile_slc_m5",
+    "e2_cache_profile_rec2_noslc_m8",
+    "e3_steady_acc_k16_stages64",
+    "e4_rec4_impl_native_r1_id1187",
+    "e5_rec5_impl_profile_small_k16_id76"
+  ],
+  "tail256": {
+    "shapes": 16,
+    "all_beat_frozen_BLAS": true,
+    "R_range": [
+      1.0980432334827357,
+      1.6888020876655432
+    ]
+  },
+  "adopted_flags": [
+    "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN=1 plus CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_N_TAIL=2",
+    "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN=1 plus CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_CACHE_GRID=1"
+  ],
+  "decode_new_refactor": "No broad adoption: same-geometry changes not beyond measured noise",
+  "pending": "159-case existing-K32 resource domain and optional explicit multi-launch diagnostic; these are separate from this completed initial checkpoint",
+  "default_off": true,
+  "no1193_gpu_replay": true
+}
