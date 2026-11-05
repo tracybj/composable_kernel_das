@@ -10,7 +10,7 @@ def atomic(path,value):
 
 def main():
     ap=argparse.ArgumentParser();ap.add_argument('--output',type=Path,required=True)
-    ap.add_argument('--suite',choices=['low_n','low_n_refine','k768_formal','prefill','decode','operand_decode','shuffle_decode','deferred_decode','compact_decode','packed_direct_decode','fast_packed_decode','address32_decode','tail_prefill','tail_formal','grid_prefill','neighbor_formal','packed_output_prefill','wide_prefill'],default='low_n')
+    ap.add_argument('--suite',choices=['low_n','low_n_refine','k768_formal','prefill','decode','operand_decode','shuffle_decode','deferred_decode','compact_decode','packed_direct_decode','fast_packed_decode','address32_decode','tail_prefill','tail_formal','tail_neighbors','grid_prefill','neighbor_formal','packed_output_prefill','wide_prefill'],default='low_n')
     ap.add_argument('--warmup',type=int,default=3);ap.add_argument('--repeat',type=int,default=10);ap.add_argument('--samples',type=int,default=2)
     ap.add_argument('--validation',choices=['full','sample'],default='full');args=ap.parse_args()
     assert args.repeat>0 and args.samples>0
@@ -33,6 +33,8 @@ def main():
     targets=[dict(**{k:int(r[k]) for k in ['ID','M','N','K','G']},phase=r['phase'],target_TOPS=float(r['target_TOPS'])) for r in targets]
     if args.suite=='k768_formal':
         cases=[r for r in targets if r['N']==2048 and r['K']==768 and r['M']>=2048]
+    elif args.suite=='tail_neighbors':
+        cases=[r for r in targets if r['M']>=2048 and r['M']%256==0 and r['N']>=1536 and r['N']%384!=0 and r['N']%256==0 and 1024<=r['K']<16384 and r['K']%128==0]
     elif args.suite=='neighbor_formal':
         wanted={(m,1536,2048,g) for m in [2048,4096,8192,16384] for g in [4,8,16,32]}
         wanted|={(m,4096,1536,g) for m in [2048,4096,8192] for g in [4,8,16]}
@@ -74,6 +76,7 @@ def main():
     if args.suite=='packed_direct_decode':candidates=[('default',None,None)]+[(f'cooperative_{i}',0,i) for i in [6403,6404,6505,9041,9043,9045,9042,9046,*range(9051,9058)]]+[(f'route_{i}',i,None) for i in range(32,36)]
     if args.suite=='fast_packed_decode':candidates=[('default',None,None)]+[(f'cooperative_{i}',0,i) for i in [6505,6404]]+[(f'route_{i}',i,None) for i in range(32,40)]
     if args.suite=='address32_decode':candidates=[('default',None,None)]+[(f'route_{i}',i,None) for i in range(36,44)]
+    if args.suite=='tail_neighbors':candidates=[('default',None,None)]+[(f'route_{i}',i,None) for i in [6,12,50,58,59]]
     if args.suite=='tail_formal':candidates=[('default',None,None)]+[(f'route_{i}',i,None) for i in [12,48,50,56,58,59]]
     if args.suite=='tail_prefill':candidates=[('default',None,None)]+[(f'route_{i}',i,None) for i in [5,12,*range(48,52),*range(56,61)]]
     if args.suite=='grid_prefill':candidates=[('default',None,None)]+[(f'route_{i}',i,None) for i in [5,12,*range(48,56)]]
@@ -85,7 +88,7 @@ def main():
     assert not (out/'records.jsonl').exists(),'Existing run;inspect before restarting'
     build=Path(os.environ['CK_INT8_CACHED_BUILD']);identity=json.loads((build/'exported_api_symbols.json').read_text())
     assert identity['experimental_tuning']
-    if args.suite in ['operand_decode','shuffle_decode','deferred_decode','compact_decode','packed_direct_decode','fast_packed_decode','address32_decode','tail_prefill','tail_formal','grid_prefill','neighbor_formal','packed_output_prefill','wide_prefill']:assert identity.get('operand_paths')
+    if args.suite in ['operand_decode','shuffle_decode','deferred_decode','compact_decode','packed_direct_decode','fast_packed_decode','address32_decode','tail_prefill','tail_formal','tail_neighbors','grid_prefill','neighbor_formal','packed_output_prefill','wide_prefill']:assert identity.get('operand_paths')
     atomic(out/'manifest.json',dict(suite=args.suite,cases=cases,candidates=candidates,validation=args.validation,warmup=args.warmup,repeat=args.repeat,samples=args.samples,library=identity,compiled_sources=json.loads((build/'sources.json').read_text()),gpu=7,pci=bus.value.decode(),input_range=[-8,8],scale='FP32 scalar A + FP32 channel B',target_sha256=hashlib.sha256((E/'docs/targets_max_all_1191.csv').read_bytes()).hexdigest(),runner_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),runner_revision=os.environ.get('CK_INT8_RUNNER_REVISION') or subprocess.check_output(['git','-C',str(E.parents[2]),'rev-parse','HEAD'],text=True).strip()))
     records=[];best=[]
     try:

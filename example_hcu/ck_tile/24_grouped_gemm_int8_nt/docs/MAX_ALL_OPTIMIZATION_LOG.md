@@ -361,3 +361,19 @@ BF16 cl8在K512控制224.58→162.49 TOPS（-27.65%），K很长时回退缩小�
 针对v134的额外128条move，Masked策略只为有效consumer初始化acc；无效consumer仍完成ready、逐K阶段和所有角色共用的最终LDS sync。CoreKernel与ScaledWaspKernel在run_raw_into返回后、任何epilogue读取前检查MasksInactiveN策略并退出producer/无效consumer。此处之后的native epilogue只有wave内交换/输出，没有CTA barrier，因此不会损坏主循环同步；per-token路径也不会读取未定义acc。原默认false路径保留初始化顺序，数值和接口不变。
 
 仅已有实验56–60启用，生产分流不变；并非靠把无效acc当0或读取未初始化值来省指令。先编译检查move/资源是否实际减少，再执行同一630项full-range门禁与完整输出正式对照，不预报收益。
+
+### v135结果
+
+源码27c6cbf，full-range门禁630项PASS、360项显式域拒绝；18组252项正式完整输出PASS，warm10/repeat50/3样本中位数。逐条核对M/N/K/G/candidate/output、CSV/jsonl、中位数、TOPS和冻结目标R，目标CSV SHA与运行manifest一致。精确库SHA、runner、资源和ISA见max_all_v135_validation_resources.json。所有新kernel无spill，182VGPR/64KiB/1024threads，静态最大仍1CTA；342个旧kernel机器码完全不变。
+
+cl8的额外128条v_mov确实消失：BF16完整函数静态指令10417→10296（原对照10274），FP16 7966→7845（原对照7823）；新增加的仅控制/判定等22条净静态指令，不把静态数量当动态耗时。v134的BF16明显回退不再复现。两轮不是跨版本交错计时，因果归属仍以当前库内相同cluster的独立对照为依据。
+
+| 同几何/cluster屏蔽前后 | BF16尾块中位增益 | FP16尾块中位增益 | BF16整块控制中位增益 | FP16整块控制中位增益 |
+|---|---:|---:|---:|---:|
+| cl1:56对48 | -0.76% | +0.60% | -0.41% | +0.43% |
+| cl4:58对12 | +1.08% | +1.83% | +0.30% | +0.35% |
+| cl8:59对50 | +2.68% | +3.08% | -0.17% | +0.29% |
+
+每组11个有尾块、7个整块控制。cl1 BF16并非稳定获益，不能统一替换。M8192/N4096/K4096/G8的cl8约621.49 BF16 TOPS、R1.00826，FP16约624.78、R1.01359；M4096/N5120/K2304/G48约527.22/533.96、R0.9790/0.9915，虽比同轮默认+6.47%/+4.60%仍未严格达标。M8192/N4096/K2048/G8的BF16 R0.99934，M16384/N4096/K6144/G8的BF16 R0.99955，均不可按1算；FP16的R1.00016也没有稳定余量。
+
+归档：[完整输出正式CSV](max_all_v135_tail_formal.csv)、[门禁/代码等价/资源/ISA](max_all_v135_validation_resources.json)。默认policy仍v128，不将局部最优拼进全量结果；正式1191严格达标仍1109 BF16/1123 FP16。下一步对所有满足M>=2048且整M256、N>=1536且有BN384尾块、N%256==0、K为1024到16383且K%128==0的原始shape扩大同轮对照，确认通用尺寸分流和无回退，再决定生产启用。caseID仅识别测试行，不参与运行时dispatch。

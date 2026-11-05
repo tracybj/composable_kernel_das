@@ -1,0 +1,2367 @@
+{
+  "status": "PASS",
+  "checks": 630,
+  "rejected_before_launch": 360,
+  "library": {
+    "symbols": [
+      "ck_tile_int8_nt_cached_last_error_v1",
+      "ck_tile_int8_nt_cached_plan_create_v1",
+      "ck_tile_int8_nt_cached_plan_create_v2",
+      "ck_tile_int8_nt_cached_plan_destroy_v1",
+      "ck_tile_int8_nt_cached_plan_query_v1",
+      "ck_tile_int8_nt_cached_run_v1",
+      "ck_tile_int8_nt_cached_weights_create_v1",
+      "ck_tile_int8_nt_cached_weights_destroy_v1",
+      "ck_tile_int8_nt_cached_weights_query_v1"
+    ],
+    "library_sha256": "e8799753ec02ec945e1354a916a30f4a834269fbf40f937ed6d0ff6e1f312586",
+    "benchmark_sha256": "125dbb5895bc9f4ba8279940f3b43dcd4a78ebe551015e13f722cff4da4b2975",
+    "experimental_tuning": true,
+    "operand_paths": true
+  },
+  "source_revision": "27c6cbf051dd4b4af9fc432765095f5c7cb5a039",
+  "runner_revision": "27c6cbf051dd4b4af9fc432765095f5c7cb5a039",
+  "formal": {
+    "cases": 18,
+    "records": 252,
+    "validation": "full",
+    "input_range": [
+      -8,
+      8
+    ],
+    "warmup": 10,
+    "repeat": 50,
+    "samples": 3,
+    "statistic": "median"
+  },
+  "resources": [
+    {
+      ".args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".group_segment_fixed_size": 65536,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 768,
+      ".name": "_ZN7ck_tile6kentryILi768ELi1ENS_29GroupedInt8NtScaledWaspKernelINS_28GroupedInt8NtWaspCoreProblemILi256ELb0ELi8ELi4ELi4ELb1ELb1ELi0ELb0ELb1ELi0ELi8EEELb1ENS_31GroupedInt8NtScaledWaspEpilogueIS3_Lb1EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 40,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi768ELi1ENS_29GroupedInt8NtScaledWaspKernelINS_28GroupedInt8NtWaspCoreProblemILi256ELb0ELi8ELi4ELi4ELb1ELb1ELi0ELb0ELb1ELi0ELi8EEELb1ENS_31GroupedInt8NtScaledWaspEpilogueIS3_Lb1EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_.kd",
+      ".unfolded_args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 199,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64,
+      "demangled": "void ck_tile::kentry<768, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 8, 4, 4, true, true, 0, false, true, 0, 8>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 8, 4, 4, true, true, 0, false, true, 0, 8>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      "image": "device_1986560.hsaco",
+      "label": {
+        "kind": "wasp_grid",
+        "BM": 256,
+        "BN": 256,
+        "cluster": 4
+      }
+    },
+    {
+      ".args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".group_segment_fixed_size": 65536,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 1024,
+      ".name": "_ZN7ck_tile6kentryILi1024ELi1ENS_29GroupedInt8NtScaledWaspKernelINS_28GroupedInt8NtWaspCoreProblemILi256ELb0ELi12ELi4ELi2ELb1ELb1ELi0ELb0ELb1ELi0ELi12EEELb1ENS_31GroupedInt8NtScaledWaspEpilogueIS3_Lb1EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 40,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi1024ELi1ENS_29GroupedInt8NtScaledWaspKernelINS_28GroupedInt8NtWaspCoreProblemILi256ELb0ELi12ELi4ELi2ELb1ELb1ELi0ELb0ELb1ELi0ELi12EEELb1ENS_31GroupedInt8NtScaledWaspEpilogueIS3_Lb1EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_.kd",
+      ".unfolded_args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 183,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64,
+      "demangled": "void ck_tile::kentry<1024, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 12, 4, 2, true, true, 0, false, true, 0, 12>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 12, 4, 2, true, true, 0, false, true, 0, 12>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      "image": "device_1986560.hsaco",
+      "label": {
+        "kind": "wasp_grid",
+        "BM": 256,
+        "BN": 384,
+        "cluster": 4
+      }
+    },
+    {
+      ".args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".group_segment_fixed_size": 2048,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 128,
+      ".name": "_ZN7ck_tile6kentryILi128ELi1ENS_29GroupedInt8NtScaledTileKernelINS_31GroupedInt8NtPackedSmallProblemINS_24GroupedInt8NtTileProblemILi16ELi32ELi512ELi1ELi2ELb0ELb0ELb1ELb1ELi1ELb1ELi0EEELb0ELb0EEELb1EEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 46,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi128ELi1ENS_29GroupedInt8NtScaledTileKernelINS_31GroupedInt8NtPackedSmallProblemINS_24GroupedInt8NtTileProblemILi16ELi32ELi512ELi1ELi2ELb0ELb0ELb1ELb1ELi1ELb1ELi0EEELb0ELb0EEELb1EEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_.kd",
+      ".unfolded_args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 156,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64,
+      "demangled": "void ck_tile::kentry<128, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtPackedSmallProblem<ck_tile::GroupedInt8NtTileProblem<16, 32, 512, 1, 2, false, false, true, true, 1, true, 0>, false, false>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      "image": "device_3796992.hsaco",
+      "label": {
+        "kind": "packed_cooperative",
+        "problem": "ck_tile::GroupedInt8NtPackedSmallProblem<ck_tile::GroupedInt8NtTileProblem<16, 32, 512, 1, 2, false, false, true, true, 1, true, 0>, false, false>"
+      }
+    },
+    {
+      ".args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".group_segment_fixed_size": 4096,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 128,
+      ".name": "_ZN7ck_tile6kentryILi128ELi1ENS_29GroupedInt8NtScaledTileKernelINS_31GroupedInt8NtPackedSmallProblemINS_24GroupedInt8NtTileProblemILi16ELi64ELi256ELi1ELi2ELb0ELb0ELb1ELb1ELi1ELb1ELi0EEELb0ELb0EEELb1EEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 42,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi128ELi1ENS_29GroupedInt8NtScaledTileKernelINS_31GroupedInt8NtPackedSmallProblemINS_24GroupedInt8NtTileProblemILi16ELi64ELi256ELi1ELi2ELb0ELb0ELb1ELb1ELi1ELb1ELi0EEELb0ELb0EEELb1EEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_.kd",
+      ".unfolded_args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 128,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64,
+      "demangled": "void ck_tile::kentry<128, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtPackedSmallProblem<ck_tile::GroupedInt8NtTileProblem<16, 64, 256, 1, 2, false, false, true, true, 1, true, 0>, false, false>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      "image": "device_3796992.hsaco",
+      "label": {
+        "kind": "packed_cooperative",
+        "problem": "ck_tile::GroupedInt8NtPackedSmallProblem<ck_tile::GroupedInt8NtTileProblem<16, 64, 256, 1, 2, false, false, true, true, 1, true, 0>, false, false>"
+      }
+    },
+    {
+      ".args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".group_segment_fixed_size": 8192,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 256,
+      ".name": "_ZN7ck_tile6kentryILi256ELi1ENS_29GroupedInt8NtScaledTileKernelINS_31GroupedInt8NtPackedSmallProblemINS_24GroupedInt8NtTileProblemILi16ELi128ELi256ELi1ELi4ELb0ELb0ELb1ELb1ELi1ELb1ELi0EEELb0ELb0EEELb1EEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 42,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi256ELi1ENS_29GroupedInt8NtScaledTileKernelINS_31GroupedInt8NtPackedSmallProblemINS_24GroupedInt8NtTileProblemILi16ELi128ELi256ELi1ELi4ELb0ELb0ELb1ELb1ELi1ELb1ELi0EEELb0ELb0EEELb1EEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_.kd",
+      ".unfolded_args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 128,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64,
+      "demangled": "void ck_tile::kentry<256, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtPackedSmallProblem<ck_tile::GroupedInt8NtTileProblem<16, 128, 256, 1, 4, false, false, true, true, 1, true, 0>, false, false>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      "image": "device_3796992.hsaco",
+      "label": {
+        "kind": "packed_cooperative",
+        "problem": "ck_tile::GroupedInt8NtPackedSmallProblem<ck_tile::GroupedInt8NtTileProblem<16, 128, 256, 1, 4, false, false, true, true, 1, true, 0>, false, false>"
+      }
+    },
+    {
+      ".args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".group_segment_fixed_size": 4096,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 128,
+      ".name": "_ZN7ck_tile6kentryILi128ELi1ENS_29GroupedInt8NtScaledTileKernelINS_31GroupedInt8NtPackedSmallProblemINS_24GroupedInt8NtTileProblemILi16ELi64ELi512ELi1ELi2ELb0ELb0ELb1ELb1ELi1ELb1ELi0EEELb0ELb0EEELb1EEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 50,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi128ELi1ENS_29GroupedInt8NtScaledTileKernelINS_31GroupedInt8NtPackedSmallProblemINS_24GroupedInt8NtTileProblemILi16ELi64ELi512ELi1ELi2ELb0ELb0ELb1ELb1ELi1ELb1ELi0EEELb0ELb0EEELb1EEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_.kd",
+      ".unfolded_args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 240,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64,
+      "demangled": "void ck_tile::kentry<128, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtPackedSmallProblem<ck_tile::GroupedInt8NtTileProblem<16, 64, 512, 1, 2, false, false, true, true, 1, true, 0>, false, false>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      "image": "device_3796992.hsaco",
+      "label": {
+        "kind": "packed_cooperative",
+        "problem": "ck_tile::GroupedInt8NtPackedSmallProblem<ck_tile::GroupedInt8NtTileProblem<16, 64, 512, 1, 2, false, false, true, true, 1, true, 0>, false, false>"
+      }
+    },
+    {
+      ".args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".group_segment_fixed_size": 2048,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 128,
+      ".name": "_ZN7ck_tile6kentryILi128ELi1ENS_29GroupedInt8NtScaledTileKernelINS_31GroupedInt8NtPackedSmallProblemINS_24GroupedInt8NtTileProblemILi16ELi32ELi512ELi1ELi2ELb0ELb0ELb1ELb1ELi1ELb1ELi0EEELb1ELb0EEELb1EEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 28,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi128ELi1ENS_29GroupedInt8NtScaledTileKernelINS_31GroupedInt8NtPackedSmallProblemINS_24GroupedInt8NtTileProblemILi16ELi32ELi512ELi1ELi2ELb0ELb0ELb1ELb1ELi1ELb1ELi0EEELb1ELb0EEELb1EEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_.kd",
+      ".unfolded_args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 156,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64,
+      "demangled": "void ck_tile::kentry<128, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtPackedSmallProblem<ck_tile::GroupedInt8NtTileProblem<16, 32, 512, 1, 2, false, false, true, true, 1, true, 0>, true, false>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      "image": "device_3796992.hsaco",
+      "label": {
+        "kind": "packed_cooperative",
+        "problem": "ck_tile::GroupedInt8NtPackedSmallProblem<ck_tile::GroupedInt8NtTileProblem<16, 32, 512, 1, 2, false, false, true, true, 1, true, 0>, true, false>"
+      }
+    },
+    {
+      ".args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".group_segment_fixed_size": 4096,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 128,
+      ".name": "_ZN7ck_tile6kentryILi128ELi1ENS_29GroupedInt8NtScaledTileKernelINS_31GroupedInt8NtPackedSmallProblemINS_24GroupedInt8NtTileProblemILi16ELi64ELi256ELi1ELi2ELb0ELb0ELb1ELb1ELi1ELb1ELi0EEELb1ELb0EEELb1EEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 29,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi128ELi1ENS_29GroupedInt8NtScaledTileKernelINS_31GroupedInt8NtPackedSmallProblemINS_24GroupedInt8NtTileProblemILi16ELi64ELi256ELi1ELi2ELb0ELb0ELb1ELb1ELi1ELb1ELi0EEELb1ELb0EEELb1EEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_.kd",
+      ".unfolded_args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 128,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64,
+      "demangled": "void ck_tile::kentry<128, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtPackedSmallProblem<ck_tile::GroupedInt8NtTileProblem<16, 64, 256, 1, 2, false, false, true, true, 1, true, 0>, true, false>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      "image": "device_3796992.hsaco",
+      "label": {
+        "kind": "packed_cooperative",
+        "problem": "ck_tile::GroupedInt8NtPackedSmallProblem<ck_tile::GroupedInt8NtTileProblem<16, 64, 256, 1, 2, false, false, true, true, 1, true, 0>, true, false>"
+      }
+    },
+    {
+      ".args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".group_segment_fixed_size": 8192,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 256,
+      ".name": "_ZN7ck_tile6kentryILi256ELi1ENS_29GroupedInt8NtScaledTileKernelINS_31GroupedInt8NtPackedSmallProblemINS_24GroupedInt8NtTileProblemILi16ELi128ELi256ELi1ELi4ELb0ELb0ELb1ELb1ELi1ELb1ELi0EEELb1ELb0EEELb1EEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 29,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi256ELi1ENS_29GroupedInt8NtScaledTileKernelINS_31GroupedInt8NtPackedSmallProblemINS_24GroupedInt8NtTileProblemILi16ELi128ELi256ELi1ELi4ELb0ELb0ELb1ELb1ELi1ELb1ELi0EEELb1ELb0EEELb1EEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_.kd",
+      ".unfolded_args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 126,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64,
+      "demangled": "void ck_tile::kentry<256, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtPackedSmallProblem<ck_tile::GroupedInt8NtTileProblem<16, 128, 256, 1, 4, false, false, true, true, 1, true, 0>, true, false>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      "image": "device_3796992.hsaco",
+      "label": {
+        "kind": "packed_cooperative",
+        "problem": "ck_tile::GroupedInt8NtPackedSmallProblem<ck_tile::GroupedInt8NtTileProblem<16, 128, 256, 1, 4, false, false, true, true, 1, true, 0>, true, false>"
+      }
+    },
+    {
+      ".args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".group_segment_fixed_size": 4096,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 128,
+      ".name": "_ZN7ck_tile6kentryILi128ELi1ENS_29GroupedInt8NtScaledTileKernelINS_31GroupedInt8NtPackedSmallProblemINS_24GroupedInt8NtTileProblemILi16ELi64ELi512ELi1ELi2ELb0ELb0ELb1ELb1ELi1ELb1ELi0EEELb1ELb0EEELb1EEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 29,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi128ELi1ENS_29GroupedInt8NtScaledTileKernelINS_31GroupedInt8NtPackedSmallProblemINS_24GroupedInt8NtTileProblemILi16ELi64ELi512ELi1ELi2ELb0ELb0ELb1ELb1ELi1ELb1ELi0EEELb1ELb0EEELb1EEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_.kd",
+      ".unfolded_args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 240,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64,
+      "demangled": "void ck_tile::kentry<128, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtPackedSmallProblem<ck_tile::GroupedInt8NtTileProblem<16, 64, 512, 1, 2, false, false, true, true, 1, true, 0>, true, false>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      "image": "device_3796992.hsaco",
+      "label": {
+        "kind": "packed_cooperative",
+        "problem": "ck_tile::GroupedInt8NtPackedSmallProblem<ck_tile::GroupedInt8NtTileProblem<16, 64, 512, 1, 2, false, false, true, true, 1, true, 0>, true, false>"
+      }
+    },
+    {
+      ".args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".group_segment_fixed_size": 2048,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 128,
+      ".name": "_ZN7ck_tile6kentryILi128ELi1ENS_29GroupedInt8NtScaledTileKernelINS_31GroupedInt8NtPackedSmallProblemINS_24GroupedInt8NtTileProblemILi16ELi32ELi512ELi1ELi2ELb0ELb0ELb1ELb1ELi1ELb1ELi0EEELb1ELb1EEELb1EEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 27,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi128ELi1ENS_29GroupedInt8NtScaledTileKernelINS_31GroupedInt8NtPackedSmallProblemINS_24GroupedInt8NtTileProblemILi16ELi32ELi512ELi1ELi2ELb0ELb0ELb1ELb1ELi1ELb1ELi0EEELb1ELb1EEELb1EEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_.kd",
+      ".unfolded_args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 145,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64,
+      "demangled": "void ck_tile::kentry<128, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtPackedSmallProblem<ck_tile::GroupedInt8NtTileProblem<16, 32, 512, 1, 2, false, false, true, true, 1, true, 0>, true, true>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      "image": "device_3796992.hsaco",
+      "label": {
+        "kind": "packed_cooperative",
+        "problem": "ck_tile::GroupedInt8NtPackedSmallProblem<ck_tile::GroupedInt8NtTileProblem<16, 32, 512, 1, 2, false, false, true, true, 1, true, 0>, true, true>"
+      }
+    },
+    {
+      ".args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".group_segment_fixed_size": 4096,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 128,
+      ".name": "_ZN7ck_tile6kentryILi128ELi1ENS_29GroupedInt8NtScaledTileKernelINS_31GroupedInt8NtPackedSmallProblemINS_24GroupedInt8NtTileProblemILi16ELi64ELi256ELi1ELi2ELb0ELb0ELb1ELb1ELi1ELb1ELi0EEELb1ELb1EEELb1EEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 27,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi128ELi1ENS_29GroupedInt8NtScaledTileKernelINS_31GroupedInt8NtPackedSmallProblemINS_24GroupedInt8NtTileProblemILi16ELi64ELi256ELi1ELi2ELb0ELb0ELb1ELb1ELi1ELb1ELi0EEELb1ELb1EEELb1EEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_.kd",
+      ".unfolded_args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 119,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64,
+      "demangled": "void ck_tile::kentry<128, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtPackedSmallProblem<ck_tile::GroupedInt8NtTileProblem<16, 64, 256, 1, 2, false, false, true, true, 1, true, 0>, true, true>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      "image": "device_3796992.hsaco",
+      "label": {
+        "kind": "packed_cooperative",
+        "problem": "ck_tile::GroupedInt8NtPackedSmallProblem<ck_tile::GroupedInt8NtTileProblem<16, 64, 256, 1, 2, false, false, true, true, 1, true, 0>, true, true>"
+      }
+    },
+    {
+      ".args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".group_segment_fixed_size": 8192,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 256,
+      ".name": "_ZN7ck_tile6kentryILi256ELi1ENS_29GroupedInt8NtScaledTileKernelINS_31GroupedInt8NtPackedSmallProblemINS_24GroupedInt8NtTileProblemILi16ELi128ELi256ELi1ELi4ELb0ELb0ELb1ELb1ELi1ELb1ELi0EEELb1ELb1EEELb1EEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 27,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi256ELi1ENS_29GroupedInt8NtScaledTileKernelINS_31GroupedInt8NtPackedSmallProblemINS_24GroupedInt8NtTileProblemILi16ELi128ELi256ELi1ELi4ELb0ELb0ELb1ELb1ELi1ELb1ELi0EEELb1ELb1EEELb1EEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_.kd",
+      ".unfolded_args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 119,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64,
+      "demangled": "void ck_tile::kentry<256, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtPackedSmallProblem<ck_tile::GroupedInt8NtTileProblem<16, 128, 256, 1, 4, false, false, true, true, 1, true, 0>, true, true>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      "image": "device_3796992.hsaco",
+      "label": {
+        "kind": "packed_cooperative",
+        "problem": "ck_tile::GroupedInt8NtPackedSmallProblem<ck_tile::GroupedInt8NtTileProblem<16, 128, 256, 1, 4, false, false, true, true, 1, true, 0>, true, true>"
+      }
+    },
+    {
+      ".args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".group_segment_fixed_size": 4096,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 128,
+      ".name": "_ZN7ck_tile6kentryILi128ELi1ENS_29GroupedInt8NtScaledTileKernelINS_31GroupedInt8NtPackedSmallProblemINS_24GroupedInt8NtTileProblemILi16ELi64ELi512ELi1ELi2ELb0ELb0ELb1ELb1ELi1ELb1ELi0EEELb1ELb1EEELb1EEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 27,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi128ELi1ENS_29GroupedInt8NtScaledTileKernelINS_31GroupedInt8NtPackedSmallProblemINS_24GroupedInt8NtTileProblemILi16ELi64ELi512ELi1ELi2ELb0ELb0ELb1ELb1ELi1ELb1ELi0EEELb1ELb1EEELb1EEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_.kd",
+      ".unfolded_args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 221,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64,
+      "demangled": "void ck_tile::kentry<128, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtPackedSmallProblem<ck_tile::GroupedInt8NtTileProblem<16, 64, 512, 1, 2, false, false, true, true, 1, true, 0>, true, true>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      "image": "device_3796992.hsaco",
+      "label": {
+        "kind": "packed_cooperative",
+        "problem": "ck_tile::GroupedInt8NtPackedSmallProblem<ck_tile::GroupedInt8NtTileProblem<16, 64, 512, 1, 2, false, false, true, true, 1, true, 0>, true, true>"
+      }
+    },
+    {
+      ".args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".group_segment_fixed_size": 65536,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 1024,
+      ".name": "_ZN7ck_tile6kentryILi1024ELi1ENS_29GroupedInt8NtScaledWaspKernelINS_28GroupedInt8NtWaspCoreProblemILi256ELb0ELi12ELi1ELi2ELb1ELb1ELi0ELb0ELb1ELi0ELi12EEELb1ENS_31GroupedInt8NtScaledWaspEpilogueIS3_Lb1EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 40,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi1024ELi1ENS_29GroupedInt8NtScaledWaspKernelINS_28GroupedInt8NtWaspCoreProblemILi256ELb0ELi12ELi1ELi2ELb1ELb1ELi0ELb0ELb1ELi0ELi12EEELb1ENS_31GroupedInt8NtScaledWaspEpilogueIS3_Lb1EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_.kd",
+      ".unfolded_args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 183,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64,
+      "demangled": "void ck_tile::kentry<1024, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 12, 1, 2, true, true, 0, false, true, 0, 12>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 12, 1, 2, true, true, 0, false, true, 0, 12>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      "image": "device_5054464.hsaco",
+      "label": {
+        "kind": "wasp_grid",
+        "BM": 256,
+        "BN": 384,
+        "cluster": 1
+      }
+    },
+    {
+      ".args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".group_segment_fixed_size": 65536,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 1024,
+      ".name": "_ZN7ck_tile6kentryILi1024ELi1ENS_29GroupedInt8NtScaledWaspKernelINS_28GroupedInt8NtWaspCoreProblemILi256ELb0ELi12ELi2ELi2ELb1ELb1ELi0ELb0ELb1ELi0ELi12EEELb1ENS_31GroupedInt8NtScaledWaspEpilogueIS3_Lb1EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 40,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi1024ELi1ENS_29GroupedInt8NtScaledWaspKernelINS_28GroupedInt8NtWaspCoreProblemILi256ELb0ELi12ELi2ELi2ELb1ELb1ELi0ELb0ELb1ELi0ELi12EEELb1ENS_31GroupedInt8NtScaledWaspEpilogueIS3_Lb1EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_.kd",
+      ".unfolded_args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 183,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64,
+      "demangled": "void ck_tile::kentry<1024, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 12, 2, 2, true, true, 0, false, true, 0, 12>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 12, 2, 2, true, true, 0, false, true, 0, 12>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      "image": "device_5054464.hsaco",
+      "label": {
+        "kind": "wasp_grid",
+        "BM": 256,
+        "BN": 384,
+        "cluster": 2
+      }
+    },
+    {
+      ".args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".group_segment_fixed_size": 65536,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 1024,
+      ".name": "_ZN7ck_tile6kentryILi1024ELi1ENS_29GroupedInt8NtScaledWaspKernelINS_28GroupedInt8NtWaspCoreProblemILi256ELb0ELi12ELi8ELi2ELb1ELb1ELi0ELb0ELb1ELi0ELi12EEELb1ENS_31GroupedInt8NtScaledWaspEpilogueIS3_Lb1EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 40,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi1024ELi1ENS_29GroupedInt8NtScaledWaspKernelINS_28GroupedInt8NtWaspCoreProblemILi256ELb0ELi12ELi8ELi2ELb1ELb1ELi0ELb0ELb1ELi0ELi12EEELb1ENS_31GroupedInt8NtScaledWaspEpilogueIS3_Lb1EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_.kd",
+      ".unfolded_args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 183,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64,
+      "demangled": "void ck_tile::kentry<1024, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 12, 8, 2, true, true, 0, false, true, 0, 12>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 12, 8, 2, true, true, 0, false, true, 0, 12>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      "image": "device_5054464.hsaco",
+      "label": {
+        "kind": "wasp_grid",
+        "BM": 256,
+        "BN": 384,
+        "cluster": 8
+      }
+    },
+    {
+      ".args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".group_segment_fixed_size": 65536,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 1024,
+      ".name": "_ZN7ck_tile6kentryILi1024ELi1ENS_29GroupedInt8NtScaledWaspKernelINS_28GroupedInt8NtWaspCoreProblemILi256ELb0ELi12ELi16ELi2ELb1ELb1ELi0ELb0ELb1ELi0ELi12EEELb1ENS_31GroupedInt8NtScaledWaspEpilogueIS3_Lb1EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 40,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi1024ELi1ENS_29GroupedInt8NtScaledWaspKernelINS_28GroupedInt8NtWaspCoreProblemILi256ELb0ELi12ELi16ELi2ELb1ELb1ELi0ELb0ELb1ELi0ELi12EEELb1ENS_31GroupedInt8NtScaledWaspEpilogueIS3_Lb1EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_.kd",
+      ".unfolded_args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 183,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64,
+      "demangled": "void ck_tile::kentry<1024, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 12, 16, 2, true, true, 0, false, true, 0, 12>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 12, 16, 2, true, true, 0, false, true, 0, 12>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      "image": "device_5054464.hsaco",
+      "label": {
+        "kind": "wasp_grid",
+        "BM": 256,
+        "BN": 384,
+        "cluster": 16
+      }
+    },
+    {
+      ".args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".group_segment_fixed_size": 65536,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 768,
+      ".name": "_ZN7ck_tile6kentryILi768ELi1ENS_29GroupedInt8NtScaledWaspKernelINS_28GroupedInt8NtWaspCoreProblemILi256ELb0ELi8ELi1ELi4ELb1ELb1ELi0ELb0ELb1ELi0ELi8EEELb1ENS_31GroupedInt8NtScaledWaspEpilogueIS3_Lb1EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 40,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi768ELi1ENS_29GroupedInt8NtScaledWaspKernelINS_28GroupedInt8NtWaspCoreProblemILi256ELb0ELi8ELi1ELi4ELb1ELb1ELi0ELb0ELb1ELi0ELi8EEELb1ENS_31GroupedInt8NtScaledWaspEpilogueIS3_Lb1EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_.kd",
+      ".unfolded_args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 199,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64,
+      "demangled": "void ck_tile::kentry<768, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 8, 1, 4, true, true, 0, false, true, 0, 8>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 8, 1, 4, true, true, 0, false, true, 0, 8>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      "image": "device_5054464.hsaco",
+      "label": {
+        "kind": "wasp_grid",
+        "BM": 256,
+        "BN": 256,
+        "cluster": 1
+      }
+    },
+    {
+      ".args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".group_segment_fixed_size": 65536,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 768,
+      ".name": "_ZN7ck_tile6kentryILi768ELi1ENS_29GroupedInt8NtScaledWaspKernelINS_28GroupedInt8NtWaspCoreProblemILi256ELb0ELi8ELi2ELi4ELb1ELb1ELi0ELb0ELb1ELi0ELi8EEELb1ENS_31GroupedInt8NtScaledWaspEpilogueIS3_Lb1EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 40,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi768ELi1ENS_29GroupedInt8NtScaledWaspKernelINS_28GroupedInt8NtWaspCoreProblemILi256ELb0ELi8ELi2ELi4ELb1ELb1ELi0ELb0ELb1ELi0ELi8EEELb1ENS_31GroupedInt8NtScaledWaspEpilogueIS3_Lb1EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_.kd",
+      ".unfolded_args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 199,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64,
+      "demangled": "void ck_tile::kentry<768, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 8, 2, 4, true, true, 0, false, true, 0, 8>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 8, 2, 4, true, true, 0, false, true, 0, 8>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      "image": "device_5054464.hsaco",
+      "label": {
+        "kind": "wasp_grid",
+        "BM": 256,
+        "BN": 256,
+        "cluster": 2
+      }
+    },
+    {
+      ".args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".group_segment_fixed_size": 65536,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 768,
+      ".name": "_ZN7ck_tile6kentryILi768ELi1ENS_29GroupedInt8NtScaledWaspKernelINS_28GroupedInt8NtWaspCoreProblemILi256ELb0ELi8ELi8ELi4ELb1ELb1ELi0ELb0ELb1ELi0ELi8EEELb1ENS_31GroupedInt8NtScaledWaspEpilogueIS3_Lb1EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 40,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi768ELi1ENS_29GroupedInt8NtScaledWaspKernelINS_28GroupedInt8NtWaspCoreProblemILi256ELb0ELi8ELi8ELi4ELb1ELb1ELi0ELb0ELb1ELi0ELi8EEELb1ENS_31GroupedInt8NtScaledWaspEpilogueIS3_Lb1EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_.kd",
+      ".unfolded_args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 199,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64,
+      "demangled": "void ck_tile::kentry<768, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 8, 8, 4, true, true, 0, false, true, 0, 8>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 8, 8, 4, true, true, 0, false, true, 0, 8>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      "image": "device_5054464.hsaco",
+      "label": {
+        "kind": "wasp_grid",
+        "BM": 256,
+        "BN": 256,
+        "cluster": 8
+      }
+    },
+    {
+      ".args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".group_segment_fixed_size": 65536,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 768,
+      ".name": "_ZN7ck_tile6kentryILi768ELi1ENS_29GroupedInt8NtScaledWaspKernelINS_28GroupedInt8NtWaspCoreProblemILi256ELb0ELi8ELi16ELi4ELb1ELb1ELi0ELb0ELb1ELi0ELi8EEELb1ENS_31GroupedInt8NtScaledWaspEpilogueIS3_Lb1EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 40,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi768ELi1ENS_29GroupedInt8NtScaledWaspKernelINS_28GroupedInt8NtWaspCoreProblemILi256ELb0ELi8ELi16ELi4ELb1ELb1ELi0ELb0ELb1ELi0ELi8EEELb1ENS_31GroupedInt8NtScaledWaspEpilogueIS3_Lb1EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_.kd",
+      ".unfolded_args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 199,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64,
+      "demangled": "void ck_tile::kentry<768, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 8, 16, 4, true, true, 0, false, true, 0, 8>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 8, 16, 4, true, true, 0, false, true, 0, 8>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      "image": "device_5054464.hsaco",
+      "label": {
+        "kind": "wasp_grid",
+        "BM": 256,
+        "BN": 256,
+        "cluster": 16
+      }
+    },
+    {
+      ".args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".group_segment_fixed_size": 65536,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 1024,
+      ".name": "_ZN7ck_tile6kentryILi1024ELi1ENS_29GroupedInt8NtScaledWaspKernelIN12_GLOBAL__N_114TailMaskedG256ILi1EEELb1ENS_31GroupedInt8NtScaledWaspEpilogueIS4_Lb1EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 40,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi1024ELi1ENS_29GroupedInt8NtScaledWaspKernelIN12_GLOBAL__N_114TailMaskedG256ILi1EEELb1ENS_31GroupedInt8NtScaledWaspEpilogueIS4_Lb1EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_.kd",
+      ".unfolded_args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 182,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64,
+      "demangled": "void ck_tile::kentry<1024, 1, ck_tile::GroupedInt8NtScaledWaspKernel<(anonymous namespace)::TailMaskedG256<1>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<(anonymous namespace)::TailMaskedG256<1>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      "image": "device_5054464.hsaco",
+      "label": {
+        "kind": "wasp_tail_mask",
+        "BM": 256,
+        "BN": 384,
+        "cluster": 1
+      }
+    },
+    {
+      ".args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".group_segment_fixed_size": 65536,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 1024,
+      ".name": "_ZN7ck_tile6kentryILi1024ELi1ENS_29GroupedInt8NtScaledWaspKernelIN12_GLOBAL__N_114TailMaskedG256ILi2EEELb1ENS_31GroupedInt8NtScaledWaspEpilogueIS4_Lb1EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 40,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi1024ELi1ENS_29GroupedInt8NtScaledWaspKernelIN12_GLOBAL__N_114TailMaskedG256ILi2EEELb1ENS_31GroupedInt8NtScaledWaspEpilogueIS4_Lb1EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_.kd",
+      ".unfolded_args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 182,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64,
+      "demangled": "void ck_tile::kentry<1024, 1, ck_tile::GroupedInt8NtScaledWaspKernel<(anonymous namespace)::TailMaskedG256<2>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<(anonymous namespace)::TailMaskedG256<2>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      "image": "device_5054464.hsaco",
+      "label": {
+        "kind": "wasp_tail_mask",
+        "BM": 256,
+        "BN": 384,
+        "cluster": 2
+      }
+    },
+    {
+      ".args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".group_segment_fixed_size": 65536,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 1024,
+      ".name": "_ZN7ck_tile6kentryILi1024ELi1ENS_29GroupedInt8NtScaledWaspKernelIN12_GLOBAL__N_114TailMaskedG256ILi4EEELb1ENS_31GroupedInt8NtScaledWaspEpilogueIS4_Lb1EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 40,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi1024ELi1ENS_29GroupedInt8NtScaledWaspKernelIN12_GLOBAL__N_114TailMaskedG256ILi4EEELb1ENS_31GroupedInt8NtScaledWaspEpilogueIS4_Lb1EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_.kd",
+      ".unfolded_args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 182,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64,
+      "demangled": "void ck_tile::kentry<1024, 1, ck_tile::GroupedInt8NtScaledWaspKernel<(anonymous namespace)::TailMaskedG256<4>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<(anonymous namespace)::TailMaskedG256<4>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      "image": "device_5054464.hsaco",
+      "label": {
+        "kind": "wasp_tail_mask",
+        "BM": 256,
+        "BN": 384,
+        "cluster": 4
+      }
+    },
+    {
+      ".args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".group_segment_fixed_size": 65536,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 1024,
+      ".name": "_ZN7ck_tile6kentryILi1024ELi1ENS_29GroupedInt8NtScaledWaspKernelIN12_GLOBAL__N_114TailMaskedG256ILi8EEELb1ENS_31GroupedInt8NtScaledWaspEpilogueIS4_Lb1EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 40,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi1024ELi1ENS_29GroupedInt8NtScaledWaspKernelIN12_GLOBAL__N_114TailMaskedG256ILi8EEELb1ENS_31GroupedInt8NtScaledWaspEpilogueIS4_Lb1EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_.kd",
+      ".unfolded_args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 182,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64,
+      "demangled": "void ck_tile::kentry<1024, 1, ck_tile::GroupedInt8NtScaledWaspKernel<(anonymous namespace)::TailMaskedG256<8>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<(anonymous namespace)::TailMaskedG256<8>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      "image": "device_5054464.hsaco",
+      "label": {
+        "kind": "wasp_tail_mask",
+        "BM": 256,
+        "BN": 384,
+        "cluster": 8
+      }
+    },
+    {
+      ".args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".group_segment_fixed_size": 65536,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 1024,
+      ".name": "_ZN7ck_tile6kentryILi1024ELi1ENS_29GroupedInt8NtScaledWaspKernelIN12_GLOBAL__N_114TailMaskedG256ILi16EEELb1ENS_31GroupedInt8NtScaledWaspEpilogueIS4_Lb1EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 40,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi1024ELi1ENS_29GroupedInt8NtScaledWaspKernelIN12_GLOBAL__N_114TailMaskedG256ILi16EEELb1ENS_31GroupedInt8NtScaledWaspEpilogueIS4_Lb1EEEEEJPKNS_22GemmTransKernelArgImplILi0EEEPKNS_15Int8NtScaleArgsEEEEvDpT2_.kd",
+      ".unfolded_args": [
+        {
+          ".address_space": "global",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".address_space": "global",
+          ".offset": 8,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        }
+      ],
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 182,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64,
+      "demangled": "void ck_tile::kentry<1024, 1, ck_tile::GroupedInt8NtScaledWaspKernel<(anonymous namespace)::TailMaskedG256<16>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<(anonymous namespace)::TailMaskedG256<16>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      "image": "device_5054464.hsaco",
+      "label": {
+        "kind": "wasp_tail_mask",
+        "BM": 256,
+        "BN": 384,
+        "cluster": 16
+      }
+    }
+  ],
+  "occupancy": [
+    {
+      "geometry": [
+        256,
+        8
+      ],
+      "threads": 768,
+      "vgpr": 199,
+      "lds": 65536,
+      "api_max_active_blocks_per_mp": 1,
+      "demangled": "void ck_tile::kentry<768, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 8, 4, 4, true, true, 0, false, true, 0, 8>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 8, 4, 4, true, true, 0, false, true, 0, 8>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "geometry": [
+        256,
+        12
+      ],
+      "threads": 1024,
+      "vgpr": 183,
+      "lds": 65536,
+      "api_max_active_blocks_per_mp": 1,
+      "demangled": "void ck_tile::kentry<1024, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 12, 4, 2, true, true, 0, false, true, 0, 12>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 12, 4, 2, true, true, 0, false, true, 0, 12>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "geometry": [
+        16,
+        32,
+        512
+      ],
+      "threads": 128,
+      "vgpr": 156,
+      "lds": 2048,
+      "api_max_active_blocks_per_mp": 8,
+      "demangled": "void ck_tile::kentry<128, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtPackedSmallProblem<ck_tile::GroupedInt8NtTileProblem<16, 32, 512, 1, 2, false, false, true, true, 1, true, 0>, false, false>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "geometry": [
+        16,
+        64,
+        256
+      ],
+      "threads": 128,
+      "vgpr": 128,
+      "lds": 4096,
+      "api_max_active_blocks_per_mp": 12,
+      "demangled": "void ck_tile::kentry<128, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtPackedSmallProblem<ck_tile::GroupedInt8NtTileProblem<16, 64, 256, 1, 2, false, false, true, true, 1, true, 0>, false, false>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "geometry": [
+        16,
+        128,
+        256
+      ],
+      "threads": 256,
+      "vgpr": 128,
+      "lds": 8192,
+      "api_max_active_blocks_per_mp": 6,
+      "demangled": "void ck_tile::kentry<256, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtPackedSmallProblem<ck_tile::GroupedInt8NtTileProblem<16, 128, 256, 1, 4, false, false, true, true, 1, true, 0>, false, false>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "geometry": [
+        16,
+        64,
+        512
+      ],
+      "threads": 128,
+      "vgpr": 240,
+      "lds": 4096,
+      "api_max_active_blocks_per_mp": 6,
+      "demangled": "void ck_tile::kentry<128, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtPackedSmallProblem<ck_tile::GroupedInt8NtTileProblem<16, 64, 512, 1, 2, false, false, true, true, 1, true, 0>, false, false>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "geometry": [
+        16,
+        32,
+        512
+      ],
+      "threads": 128,
+      "vgpr": 156,
+      "lds": 2048,
+      "api_max_active_blocks_per_mp": 8,
+      "demangled": "void ck_tile::kentry<128, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtPackedSmallProblem<ck_tile::GroupedInt8NtTileProblem<16, 32, 512, 1, 2, false, false, true, true, 1, true, 0>, true, false>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "geometry": [
+        16,
+        64,
+        256
+      ],
+      "threads": 128,
+      "vgpr": 128,
+      "lds": 4096,
+      "api_max_active_blocks_per_mp": 12,
+      "demangled": "void ck_tile::kentry<128, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtPackedSmallProblem<ck_tile::GroupedInt8NtTileProblem<16, 64, 256, 1, 2, false, false, true, true, 1, true, 0>, true, false>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "geometry": [
+        16,
+        128,
+        256
+      ],
+      "threads": 256,
+      "vgpr": 126,
+      "lds": 8192,
+      "api_max_active_blocks_per_mp": 6,
+      "demangled": "void ck_tile::kentry<256, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtPackedSmallProblem<ck_tile::GroupedInt8NtTileProblem<16, 128, 256, 1, 4, false, false, true, true, 1, true, 0>, true, false>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "geometry": [
+        16,
+        64,
+        512
+      ],
+      "threads": 128,
+      "vgpr": 240,
+      "lds": 4096,
+      "api_max_active_blocks_per_mp": 6,
+      "demangled": "void ck_tile::kentry<128, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtPackedSmallProblem<ck_tile::GroupedInt8NtTileProblem<16, 64, 512, 1, 2, false, false, true, true, 1, true, 0>, true, false>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "geometry": [
+        16,
+        32,
+        512
+      ],
+      "threads": 128,
+      "vgpr": 145,
+      "lds": 2048,
+      "api_max_active_blocks_per_mp": 10,
+      "demangled": "void ck_tile::kentry<128, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtPackedSmallProblem<ck_tile::GroupedInt8NtTileProblem<16, 32, 512, 1, 2, false, false, true, true, 1, true, 0>, true, true>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "geometry": [
+        16,
+        64,
+        256
+      ],
+      "threads": 128,
+      "vgpr": 119,
+      "lds": 4096,
+      "api_max_active_blocks_per_mp": 12,
+      "demangled": "void ck_tile::kentry<128, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtPackedSmallProblem<ck_tile::GroupedInt8NtTileProblem<16, 64, 256, 1, 2, false, false, true, true, 1, true, 0>, true, true>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "geometry": [
+        16,
+        128,
+        256
+      ],
+      "threads": 256,
+      "vgpr": 119,
+      "lds": 8192,
+      "api_max_active_blocks_per_mp": 6,
+      "demangled": "void ck_tile::kentry<256, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtPackedSmallProblem<ck_tile::GroupedInt8NtTileProblem<16, 128, 256, 1, 4, false, false, true, true, 1, true, 0>, true, true>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "geometry": [
+        16,
+        64,
+        512
+      ],
+      "threads": 128,
+      "vgpr": 221,
+      "lds": 4096,
+      "api_max_active_blocks_per_mp": 6,
+      "demangled": "void ck_tile::kentry<128, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtPackedSmallProblem<ck_tile::GroupedInt8NtTileProblem<16, 64, 512, 1, 2, false, false, true, true, 1, true, 0>, true, true>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "geometry": [
+        256,
+        12
+      ],
+      "threads": 1024,
+      "vgpr": 183,
+      "lds": 65536,
+      "api_max_active_blocks_per_mp": 1,
+      "demangled": "void ck_tile::kentry<1024, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 12, 1, 2, true, true, 0, false, true, 0, 12>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 12, 1, 2, true, true, 0, false, true, 0, 12>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "geometry": [
+        256,
+        12
+      ],
+      "threads": 1024,
+      "vgpr": 183,
+      "lds": 65536,
+      "api_max_active_blocks_per_mp": 1,
+      "demangled": "void ck_tile::kentry<1024, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 12, 2, 2, true, true, 0, false, true, 0, 12>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 12, 2, 2, true, true, 0, false, true, 0, 12>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "geometry": [
+        256,
+        12
+      ],
+      "threads": 1024,
+      "vgpr": 183,
+      "lds": 65536,
+      "api_max_active_blocks_per_mp": 1,
+      "demangled": "void ck_tile::kentry<1024, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 12, 8, 2, true, true, 0, false, true, 0, 12>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 12, 8, 2, true, true, 0, false, true, 0, 12>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "geometry": [
+        256,
+        12
+      ],
+      "threads": 1024,
+      "vgpr": 183,
+      "lds": 65536,
+      "api_max_active_blocks_per_mp": 1,
+      "demangled": "void ck_tile::kentry<1024, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 12, 16, 2, true, true, 0, false, true, 0, 12>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 12, 16, 2, true, true, 0, false, true, 0, 12>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "geometry": [
+        256,
+        8
+      ],
+      "threads": 768,
+      "vgpr": 199,
+      "lds": 65536,
+      "api_max_active_blocks_per_mp": 1,
+      "demangled": "void ck_tile::kentry<768, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 8, 1, 4, true, true, 0, false, true, 0, 8>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 8, 1, 4, true, true, 0, false, true, 0, 8>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "geometry": [
+        256,
+        8
+      ],
+      "threads": 768,
+      "vgpr": 199,
+      "lds": 65536,
+      "api_max_active_blocks_per_mp": 1,
+      "demangled": "void ck_tile::kentry<768, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 8, 2, 4, true, true, 0, false, true, 0, 8>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 8, 2, 4, true, true, 0, false, true, 0, 8>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "geometry": [
+        256,
+        8
+      ],
+      "threads": 768,
+      "vgpr": 199,
+      "lds": 65536,
+      "api_max_active_blocks_per_mp": 1,
+      "demangled": "void ck_tile::kentry<768, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 8, 8, 4, true, true, 0, false, true, 0, 8>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 8, 8, 4, true, true, 0, false, true, 0, 8>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "geometry": [
+        256,
+        8
+      ],
+      "threads": 768,
+      "vgpr": 199,
+      "lds": 65536,
+      "api_max_active_blocks_per_mp": 1,
+      "demangled": "void ck_tile::kentry<768, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 8, 16, 4, true, true, 0, false, true, 0, 8>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 8, 16, 4, true, true, 0, false, true, 0, 8>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "geometry": [
+        256,
+        384
+      ],
+      "threads": 1024,
+      "vgpr": 182,
+      "lds": 65536,
+      "api_max_active_blocks_per_mp": 1,
+      "demangled": "void ck_tile::kentry<1024, 1, ck_tile::GroupedInt8NtScaledWaspKernel<(anonymous namespace)::TailMaskedG256<1>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<(anonymous namespace)::TailMaskedG256<1>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "geometry": [
+        256,
+        384
+      ],
+      "threads": 1024,
+      "vgpr": 182,
+      "lds": 65536,
+      "api_max_active_blocks_per_mp": 1,
+      "demangled": "void ck_tile::kentry<1024, 1, ck_tile::GroupedInt8NtScaledWaspKernel<(anonymous namespace)::TailMaskedG256<2>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<(anonymous namespace)::TailMaskedG256<2>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "geometry": [
+        256,
+        384
+      ],
+      "threads": 1024,
+      "vgpr": 182,
+      "lds": 65536,
+      "api_max_active_blocks_per_mp": 1,
+      "demangled": "void ck_tile::kentry<1024, 1, ck_tile::GroupedInt8NtScaledWaspKernel<(anonymous namespace)::TailMaskedG256<4>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<(anonymous namespace)::TailMaskedG256<4>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "geometry": [
+        256,
+        384
+      ],
+      "threads": 1024,
+      "vgpr": 182,
+      "lds": 65536,
+      "api_max_active_blocks_per_mp": 1,
+      "demangled": "void ck_tile::kentry<1024, 1, ck_tile::GroupedInt8NtScaledWaspKernel<(anonymous namespace)::TailMaskedG256<8>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<(anonymous namespace)::TailMaskedG256<8>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "geometry": [
+        256,
+        384
+      ],
+      "threads": 1024,
+      "vgpr": 182,
+      "lds": 65536,
+      "api_max_active_blocks_per_mp": 1,
+      "demangled": "void ck_tile::kentry<1024, 1, ck_tile::GroupedInt8NtScaledWaspKernel<(anonymous namespace)::TailMaskedG256<16>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<(anonymous namespace)::TailMaskedG256<16>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "geometry": [
+        16,
+        64,
+        256
+      ],
+      "threads": 128,
+      "vgpr": 110,
+      "lds": 21760,
+      "api_max_active_blocks_per_mp": 3,
+      "demangled": "void ck_tile::kentry<128, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtTileProblem<16, 64, 256, 1, 2, false, false, true, true, 1, true, 0>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "geometry": [
+        16,
+        128,
+        256
+      ],
+      "threads": 256,
+      "vgpr": 103,
+      "lds": 39168,
+      "api_max_active_blocks_per_mp": 1,
+      "demangled": "void ck_tile::kentry<256, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtTileProblem<16, 128, 256, 1, 4, false, false, true, true, 1, true, 0>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    },
+    {
+      "geometry": [
+        16,
+        32,
+        512
+      ],
+      "threads": 128,
+      "vgpr": 114,
+      "lds": 25344,
+      "api_max_active_blocks_per_mp": 2,
+      "demangled": "void ck_tile::kentry<128, 1, ck_tile::GroupedInt8NtScaledTileKernel<ck_tile::GroupedInt8NtTileProblem<16, 32, 512, 1, 2, false, false, true, true, 1, true, 0>, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    }
+  ],
+  "existing_code": {
+    "old_kernels": 342,
+    "new_kernels": 357,
+    "compared": 342,
+    "bit_identical": 342,
+    "different": [],
+    "old": "max_all_v133_resources",
+    "new": "max_all_v135_resources"
+  },
+  "isa": [
+    {
+      "kind": "old_bf16",
+      "bytes": 59184,
+      "static_instructions": 10274,
+      "instructions": {
+        "s_load_dwordx4": 3,
+        "s_mul_hi_u32": 7,
+        "s_mul_i32": 15,
+        "s_waitcnt": 400,
+        "s_add_u32": 20,
+        "s_addc_u32": 6,
+        "v_mov_b32_e32": 664,
+        "v_min3_i32": 1,
+        "v_cmp_gt_i32_e32": 28,
+        "s_cbranch_vccnz": 106,
+        "s_add_i32": 15,
+        "s_lshr_b32": 5,
+        "s_lshl_b32": 11,
+        "v_cvt_f32_u32_e32": 2,
+        "s_nop": 205,
+        "v_rcp_iflag_f32_e32": 2,
+        "v_mul_f32_e32": 525,
+        "v_cvt_u32_f32_e32": 2,
+        "s_sub_i32": 7,
+        "v_readfirstlane_b32": 6,
+        "s_cmp_ge_u32": 2,
+        "s_cselect_b32": 3,
+        "s_and_b32": 6,
+        "s_or_b32": 5,
+        "s_cmp_gt_i32": 3,
+        "s_cselect_b64": 41,
+        "s_cmp_gt_u32": 1,
+        "s_and_b64": 86,
+        "s_andn2_b64": 41,
+        "s_load_dword": 3,
+        "s_load_dwordx2": 1,
+        "s_cmp_lg_u32": 1,
+        "s_cmp_lt_i32": 2,
+        "s_or_b64": 38,
+        "s_cmpk_gt_u32": 3,
+        "s_mov_b64": 13,
+        "s_ashr_i32": 4,
+        "v_bfrev_b32_e32": 1,
+        "v_cmp_gt_i64_e64": 1,
+        "s_cbranch_vccz": 5,
+        "s_endpgm": 2,
+        "s_min_i32": 2,
+        "s_and_saveexec_b64": 35,
+        "s_cbranch_execz": 54,
+        "s_xor_b32": 1,
+        "s_mov_b32": 79,
+        "v_mov_b64_e32": 3,
+        "v_mul_lo_u32": 166,
+        "s_movk_i32": 38,
+        "v_mul_hi_u32": 2,
+        "v_add_u32_e32": 90,
+        "s_branch": 43,
+        "v_cvt_f32_i32_e32": 385,
+        "v_bfe_u32": 385,
+        "v_add3_u32": 385,
+        "v_lshrrev_b32_e32": 393,
+        "v_mad_i64_i32": 66,
+        "v_or_b32_sdwa": 385,
+        "v_and_b32_e32": 428,
+        "v_cmp_lt_u32_e32": 386,
+        "v_cndmask_b32_e32": 588,
+        "v_lshlrev_b64": 267,
+        "v_add_co_u32_e32": 393,
+        "v_addc_co_u32_e32": 393,
+        "v_cmp_le_i32_e32": 1,
+        "global_store_short": 1,
+        "v_sub_u32_e32": 2,
+        "v_cmp_le_u32_e32": 2,
+        "v_subrev_u32_e32": 2,
+        "v_xor_b32_e32": 72,
+        "v_mad_u64_u32": 1,
+        "flat_load_sbyte": 2,
+        "v_and_or_b32": 5,
+        "v_or_b32_e32": 156,
+        "s_cmp_eq_u32": 2,
+        "v_mad_i32_i24": 1,
+        "s_cbranch_scc0": 5,
+        "global_load_dwordx4": 2,
+        "global_load_dword": 2,
+        "v_cmp_eq_u64_e32": 2,
+        "v_ashrrev_i32_e32": 198,
+        "flat_load_dword": 164,
+        "s_cbranch_execnz": 3,
+        "s_barrier": 8,
+        "v_mbcnt_lo_u32_b32": 1,
+        "s_lshl_b64": 1,
+        "v_mbcnt_hi_u32_b32": 2,
+        "s_addk_i32": 2,
+        "v_lshl_or_b32": 19,
+        "s_cmpk_lt_u32": 2,
+        "s_cbranch_scc1": 68,
+        "buffer_load_dwordx4": 28,
+        "v_lshlrev_b32_e32": 37,
+        "v_lshl_add_u32": 2,
+        "ds_read_b128": 64,
+        "v_mmac_i32_16x16x32_i8": 256,
+        "s_cmp_ge_i32": 2,
+        "s_mul_hi_i32": 1,
+        "global_load_dwordx2": 1,
+        "v_cmp_ne_u32_e32": 1,
+        "v_cmp_ge_i32_e32": 32,
+        "v_cmp_eq_u32_e32": 33,
+        "ds_bpermute_b32": 384,
+        "v_cmp_gt_u32_e64": 34,
+        "v_cndmask_b32_e64": 992,
+        "s_cmp_eq_u64": 65,
+        "s_cmp_lg_u64": 33,
+        "v_cmp_ne_u32_e64": 32,
+        "v_perm_b32": 192,
+        "global_store_dwordx2": 96,
+        "v_cmp_eq_u32_e64": 2,
+        "flat_load_dwordx4": 2
+      },
+      "demangled": "void ck_tile::kentry<1024, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 12, 8, 2, true, true, 0, false, true, 0, 12>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 12, 8, 2, true, true, 0, false, true, 0, 12>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      "isa": "old_bf16.isa"
+    },
+    {
+      "kind": "old_fp16",
+      "bytes": 42664,
+      "static_instructions": 7823,
+      "instructions": {
+        "s_load_dwordx4": 3,
+        "s_mul_hi_u32": 7,
+        "s_mul_i32": 15,
+        "s_waitcnt": 398,
+        "s_add_u32": 20,
+        "s_addc_u32": 6,
+        "v_mov_b32_e32": 629,
+        "v_min3_i32": 1,
+        "v_cmp_gt_i32_e32": 28,
+        "s_cbranch_vccnz": 106,
+        "s_add_i32": 15,
+        "s_lshr_b32": 5,
+        "s_lshl_b32": 11,
+        "v_cvt_f32_u32_e32": 2,
+        "s_nop": 205,
+        "v_rcp_iflag_f32_e32": 2,
+        "v_mul_f32_e32": 525,
+        "v_cvt_u32_f32_e32": 2,
+        "s_sub_i32": 7,
+        "v_readfirstlane_b32": 6,
+        "s_cmp_ge_u32": 2,
+        "s_cselect_b32": 3,
+        "s_and_b32": 6,
+        "s_or_b32": 5,
+        "s_cmp_gt_i32": 3,
+        "s_cselect_b64": 41,
+        "s_cmp_gt_u32": 1,
+        "s_and_b64": 86,
+        "s_andn2_b64": 41,
+        "s_load_dword": 3,
+        "s_load_dwordx2": 1,
+        "s_cmp_lg_u32": 1,
+        "s_cmp_lt_i32": 2,
+        "s_or_b64": 38,
+        "s_cmpk_gt_u32": 3,
+        "s_mov_b64": 13,
+        "s_ashr_i32": 4,
+        "v_bfrev_b32_e32": 1,
+        "v_cmp_gt_i64_e64": 1,
+        "s_cbranch_vccz": 5,
+        "s_endpgm": 2,
+        "s_min_i32": 2,
+        "s_and_saveexec_b64": 35,
+        "s_cbranch_execz": 54,
+        "s_xor_b32": 1,
+        "s_mov_b32": 10,
+        "v_mul_lo_u32": 166,
+        "v_mov_b64_e32": 3,
+        "v_mul_hi_u32": 2,
+        "v_add_u32_e32": 90,
+        "s_branch": 43,
+        "v_cvt_f32_i32_e32": 385,
+        "v_mad_i64_i32": 66,
+        "v_cvt_f16_f32_e32": 385,
+        "v_lshlrev_b64": 267,
+        "v_add_co_u32_e32": 235,
+        "v_addc_co_u32_e32": 235,
+        "v_cmp_le_i32_e32": 1,
+        "global_store_short": 1,
+        "v_sub_u32_e32": 2,
+        "v_cmp_le_u32_e32": 2,
+        "v_cndmask_b32_e32": 587,
+        "v_subrev_u32_e32": 2,
+        "v_xor_b32_e32": 72,
+        "v_and_b32_e32": 43,
+        "v_lshrrev_b32_e32": 8,
+        "v_mad_u64_u32": 1,
+        "flat_load_sbyte": 2,
+        "v_and_or_b32": 5,
+        "v_or_b32_e32": 156,
+        "s_cmp_eq_u32": 2,
+        "v_mad_i32_i24": 1,
+        "s_cbranch_scc0": 5,
+        "global_load_dwordx4": 2,
+        "global_load_dword": 2,
+        "v_cmp_eq_u64_e32": 2,
+        "v_ashrrev_i32_e32": 198,
+        "flat_load_dword": 164,
+        "s_cbranch_execnz": 3,
+        "s_barrier": 8,
+        "v_mbcnt_lo_u32_b32": 1,
+        "s_lshl_b64": 1,
+        "v_mbcnt_hi_u32_b32": 2,
+        "s_addk_i32": 2,
+        "v_lshl_or_b32": 19,
+        "s_cmpk_lt_u32": 2,
+        "s_cbranch_scc1": 68,
+        "buffer_load_dwordx4": 28,
+        "v_lshlrev_b32_e32": 37,
+        "v_lshl_add_u32": 2,
+        "ds_read_b128": 64,
+        "v_mmac_i32_16x16x32_i8": 256,
+        "s_cmp_ge_i32": 2,
+        "s_mul_hi_i32": 1,
+        "s_movk_i32": 3,
+        "v_cmp_lt_u32_e32": 1,
+        "global_load_dwordx2": 1,
+        "v_cmp_ne_u32_e32": 1,
+        "v_cmp_ge_i32_e32": 32,
+        "v_cmp_eq_u32_e32": 35,
+        "ds_bpermute_b32": 384,
+        "v_cmp_gt_u32_e64": 34,
+        "v_cndmask_b32_e64": 608,
+        "s_cmp_eq_u64": 65,
+        "s_cmp_lg_u64": 33,
+        "v_cmp_ne_u32_e64": 32,
+        "v_pack_b32_f16": 192,
+        "global_store_dwordx2": 96,
+        "v_add_co_u32_e64": 158,
+        "v_addc_co_u32_e64": 158,
+        "flat_load_dwordx4": 2
+      },
+      "demangled": "void ck_tile::kentry<1024, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 12, 8, 2, true, true, 0, false, true, 0, 12>, false, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 12, 8, 2, true, true, 0, false, true, 0, 12>, false> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      "isa": "old_fp16.isa"
+    },
+    {
+      "kind": "mask_bf16",
+      "bytes": 59272,
+      "static_instructions": 10296,
+      "instructions": {
+        "s_load_dwordx4": 3,
+        "s_mul_hi_u32": 7,
+        "s_mul_i32": 15,
+        "s_waitcnt": 400,
+        "s_add_u32": 20,
+        "s_addc_u32": 6,
+        "v_mov_b32_e32": 664,
+        "v_min3_i32": 1,
+        "v_cmp_gt_i32_e32": 28,
+        "s_cbranch_vccnz": 106,
+        "s_add_i32": 21,
+        "s_lshr_b32": 5,
+        "s_lshl_b32": 13,
+        "v_cvt_f32_u32_e32": 2,
+        "s_nop": 205,
+        "v_rcp_iflag_f32_e32": 2,
+        "v_mul_f32_e32": 525,
+        "v_cvt_u32_f32_e32": 2,
+        "s_sub_i32": 7,
+        "v_readfirstlane_b32": 7,
+        "s_cmp_ge_u32": 2,
+        "s_cselect_b32": 3,
+        "s_and_b32": 6,
+        "s_or_b32": 5,
+        "s_cmp_gt_i32": 3,
+        "s_cselect_b64": 41,
+        "s_cmp_gt_u32": 1,
+        "s_and_b64": 88,
+        "s_andn2_b64": 41,
+        "s_load_dword": 3,
+        "s_load_dwordx2": 1,
+        "s_cmp_lg_u32": 2,
+        "s_cmp_lt_i32": 3,
+        "s_or_b64": 38,
+        "s_cmpk_gt_u32": 3,
+        "s_mov_b64": 15,
+        "s_ashr_i32": 4,
+        "v_bfrev_b32_e32": 1,
+        "v_cmp_gt_i64_e64": 1,
+        "s_cbranch_vccz": 7,
+        "s_endpgm": 2,
+        "s_min_i32": 2,
+        "s_and_saveexec_b64": 35,
+        "s_cbranch_execz": 54,
+        "s_xor_b32": 1,
+        "s_mov_b32": 79,
+        "v_mov_b64_e32": 3,
+        "v_mul_lo_u32": 166,
+        "s_movk_i32": 38,
+        "v_mul_hi_u32": 2,
+        "v_add_u32_e32": 90,
+        "s_branch": 42,
+        "v_cvt_f32_i32_e32": 385,
+        "v_bfe_u32": 385,
+        "v_add3_u32": 385,
+        "v_lshrrev_b32_e32": 393,
+        "v_mad_i64_i32": 66,
+        "v_or_b32_sdwa": 385,
+        "v_and_b32_e32": 428,
+        "v_cmp_lt_u32_e32": 386,
+        "v_cndmask_b32_e32": 588,
+        "v_lshlrev_b64": 267,
+        "v_add_co_u32_e32": 393,
+        "v_addc_co_u32_e32": 393,
+        "v_cmp_le_i32_e32": 1,
+        "global_store_short": 1,
+        "v_sub_u32_e32": 2,
+        "v_cmp_le_u32_e32": 2,
+        "v_subrev_u32_e32": 2,
+        "v_xor_b32_e32": 72,
+        "v_mad_u64_u32": 1,
+        "flat_load_sbyte": 2,
+        "v_and_or_b32": 5,
+        "v_or_b32_e32": 156,
+        "s_cmp_eq_u32": 2,
+        "v_mad_i32_i24": 1,
+        "s_cbranch_scc0": 4,
+        "global_load_dwordx4": 2,
+        "global_load_dword": 2,
+        "v_cmp_eq_u64_e32": 2,
+        "v_ashrrev_i32_e32": 198,
+        "flat_load_dword": 164,
+        "s_cbranch_execnz": 2,
+        "s_barrier": 9,
+        "s_cbranch_scc1": 73,
+        "s_lshl_b64": 1,
+        "v_mbcnt_lo_u32_b32": 2,
+        "v_mbcnt_hi_u32_b32": 2,
+        "v_lshl_or_b32": 19,
+        "s_cmpk_lt_u32": 2,
+        "buffer_load_dwordx4": 28,
+        "v_lshlrev_b32_e32": 37,
+        "v_lshl_add_u32": 2,
+        "ds_read_b128": 64,
+        "v_mmac_i32_16x16x32_i8": 256,
+        "s_cmp_ge_i32": 4,
+        "s_mul_hi_i32": 1,
+        "s_addk_i32": 1,
+        "global_load_dwordx2": 1,
+        "v_cmp_ne_u32_e32": 1,
+        "v_cmp_ge_i32_e32": 32,
+        "v_cmp_eq_u32_e32": 33,
+        "ds_bpermute_b32": 384,
+        "v_cmp_gt_u32_e64": 34,
+        "v_cndmask_b32_e64": 992,
+        "s_cmp_eq_u64": 65,
+        "s_cmp_lg_u64": 33,
+        "v_cmp_ne_u32_e64": 32,
+        "v_perm_b32": 192,
+        "global_store_dwordx2": 96,
+        "v_cmp_eq_u32_e64": 2,
+        "flat_load_dwordx4": 2
+      },
+      "demangled": "void ck_tile::kentry<1024, 1, ck_tile::GroupedInt8NtScaledWaspKernel<(anonymous namespace)::TailMaskedG256<8>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<(anonymous namespace)::TailMaskedG256<8>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      "isa": "mask_bf16.isa"
+    },
+    {
+      "kind": "mask_fp16",
+      "bytes": 42752,
+      "static_instructions": 7845,
+      "instructions": {
+        "s_load_dwordx4": 3,
+        "s_mul_hi_u32": 7,
+        "s_mul_i32": 15,
+        "s_waitcnt": 398,
+        "s_add_u32": 20,
+        "s_addc_u32": 6,
+        "v_mov_b32_e32": 629,
+        "v_min3_i32": 1,
+        "v_cmp_gt_i32_e32": 28,
+        "s_cbranch_vccnz": 106,
+        "s_add_i32": 21,
+        "s_lshr_b32": 5,
+        "s_lshl_b32": 13,
+        "v_cvt_f32_u32_e32": 2,
+        "s_nop": 205,
+        "v_rcp_iflag_f32_e32": 2,
+        "v_mul_f32_e32": 525,
+        "v_cvt_u32_f32_e32": 2,
+        "s_sub_i32": 7,
+        "v_readfirstlane_b32": 7,
+        "s_cmp_ge_u32": 2,
+        "s_cselect_b32": 3,
+        "s_and_b32": 6,
+        "s_or_b32": 5,
+        "s_cmp_gt_i32": 3,
+        "s_cselect_b64": 41,
+        "s_cmp_gt_u32": 1,
+        "s_and_b64": 88,
+        "s_andn2_b64": 41,
+        "s_load_dword": 3,
+        "s_load_dwordx2": 1,
+        "s_cmp_lg_u32": 2,
+        "s_cmp_lt_i32": 3,
+        "s_or_b64": 38,
+        "s_cmpk_gt_u32": 3,
+        "s_mov_b64": 15,
+        "s_ashr_i32": 4,
+        "v_bfrev_b32_e32": 1,
+        "v_cmp_gt_i64_e64": 1,
+        "s_cbranch_vccz": 7,
+        "s_endpgm": 2,
+        "s_min_i32": 2,
+        "s_and_saveexec_b64": 35,
+        "s_cbranch_execz": 54,
+        "s_xor_b32": 1,
+        "s_mov_b32": 10,
+        "v_mul_lo_u32": 166,
+        "v_mov_b64_e32": 3,
+        "v_mul_hi_u32": 2,
+        "v_add_u32_e32": 90,
+        "s_branch": 42,
+        "v_cvt_f32_i32_e32": 385,
+        "v_mad_i64_i32": 66,
+        "v_cvt_f16_f32_e32": 385,
+        "v_lshlrev_b64": 267,
+        "v_add_co_u32_e32": 235,
+        "v_addc_co_u32_e32": 235,
+        "v_cmp_le_i32_e32": 1,
+        "global_store_short": 1,
+        "v_sub_u32_e32": 2,
+        "v_cmp_le_u32_e32": 2,
+        "v_cndmask_b32_e32": 587,
+        "v_subrev_u32_e32": 2,
+        "v_xor_b32_e32": 72,
+        "v_and_b32_e32": 43,
+        "v_lshrrev_b32_e32": 8,
+        "v_mad_u64_u32": 1,
+        "flat_load_sbyte": 2,
+        "v_and_or_b32": 5,
+        "v_or_b32_e32": 156,
+        "s_cmp_eq_u32": 2,
+        "v_mad_i32_i24": 1,
+        "s_cbranch_scc0": 4,
+        "global_load_dwordx4": 2,
+        "global_load_dword": 2,
+        "v_cmp_eq_u64_e32": 2,
+        "v_ashrrev_i32_e32": 198,
+        "flat_load_dword": 164,
+        "s_cbranch_execnz": 2,
+        "s_barrier": 9,
+        "s_cbranch_scc1": 73,
+        "s_lshl_b64": 1,
+        "v_mbcnt_lo_u32_b32": 2,
+        "v_mbcnt_hi_u32_b32": 2,
+        "v_lshl_or_b32": 19,
+        "s_cmpk_lt_u32": 2,
+        "buffer_load_dwordx4": 28,
+        "v_lshlrev_b32_e32": 37,
+        "v_lshl_add_u32": 2,
+        "ds_read_b128": 64,
+        "v_mmac_i32_16x16x32_i8": 256,
+        "s_cmp_ge_i32": 4,
+        "s_mul_hi_i32": 1,
+        "s_movk_i32": 3,
+        "s_addk_i32": 1,
+        "v_cmp_lt_u32_e32": 1,
+        "global_load_dwordx2": 1,
+        "v_cmp_ne_u32_e32": 1,
+        "v_cmp_ge_i32_e32": 32,
+        "v_cmp_eq_u32_e32": 35,
+        "ds_bpermute_b32": 384,
+        "v_cmp_gt_u32_e64": 34,
+        "v_cndmask_b32_e64": 608,
+        "s_cmp_eq_u64": 65,
+        "s_cmp_lg_u64": 33,
+        "v_cmp_ne_u32_e64": 32,
+        "v_pack_b32_f16": 192,
+        "global_store_dwordx2": 96,
+        "v_add_co_u32_e64": 158,
+        "v_addc_co_u32_e64": 158,
+        "flat_load_dwordx4": 2
+      },
+      "demangled": "void ck_tile::kentry<1024, 1, ck_tile::GroupedInt8NtScaledWaspKernel<(anonymous namespace)::TailMaskedG256<8>, false, ck_tile::GroupedInt8NtScaledWaspEpilogue<(anonymous namespace)::TailMaskedG256<8>, false> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      "isa": "mask_fp16.isa"
+    }
+  ]
+}
