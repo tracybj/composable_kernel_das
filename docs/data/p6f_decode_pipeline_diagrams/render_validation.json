@@ -1,0 +1,29 @@
+{
+  "result": "PASS",
+  "canvases": [
+    {
+      "name": "p6f_decode_main_tail",
+      "width": 1800,
+      "height": 1800,
+      "labels": 87,
+      "min_label_size": 20
+    },
+    {
+      "name": "p6f_decode_variants",
+      "width": 1800,
+      "height": 1570,
+      "labels": 78,
+      "min_label_size": 20
+    }
+  ],
+  "checks": [
+    "All labels inside canvas",
+    "All fitted labels >=19px",
+    "Source facts checked before render"
+  ],
+  "note": "Visual inspection is required separately; no GPU commands",
+  "file_and_source_validation": "PASS",
+  "visual_review": "Both images inspected; final wording corrected and renderer rerun",
+  "pdf_pages": 2,
+  "protected_user_diff_md5": "4c7f49a5c7592767d53195a713db6b8a"
+}

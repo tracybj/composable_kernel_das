@@ -1,0 +1,139 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1800" viewBox="0 0 1800 1800" role="img">
+<title>BF16 NN Decode：P6f 主循环与收尾</title>
+<style>text{font-family:"Noto Sans CJK SC","Noto Sans SC","Microsoft YaHei",sans-serif}</style>
+<rect width="1800" height="1800" fill="white"/>
+<rect x="0" y="0" width="1800" height="112" rx="0" fill="#B5122B" stroke="none" stroke-width="2"/>
+<text x="48" y="68" font-size="44" fill="#FFFFFF" font-weight="600">BF16 NN Decode：P6f 主循环与收尾</text>
+<text x="48" y="159" font-size="25" fill="#54677B" font-weight="400">截至 P6f（c39e6df）｜以小M K16 / K32、N128为例｜每个wave累加其输出块的完整K</text>
+<rect x="48" y="184" width="565" height="45" rx="8" fill="#EAF2FC" stroke="none" stroke-width="2"/>
+<text x="179.2109375" y="216.0" font-size="24" fill="#17324D" font-weight="400">A / B 均先进入 CTA 共享 LDS</text>
+<rect x="635" y="184" width="555" height="45" rx="8" fill="#EAF2FC" stroke="none" stroke-width="2"/>
+<text x="744.6171875" y="216.0" font-size="24" fill="#17324D" font-weight="400">4槽 LDS ＋ 3组 operand 寄存器</text>
+<rect x="1212" y="184" width="540" height="45" rx="8" fill="#EAF2FC" stroke="none" stroke-width="2"/>
+<text x="1297.3671875" y="216.0" font-size="24" fill="#17324D" font-weight="400">12相位循环；小M每stage保留同步</text>
+<rect x="48" y="254" width="1704" height="48" rx="5" fill="#F2F5F9" stroke="none" stroke-width="2"/>
+<text x="65" y="288" font-size="28" fill="#17324D" font-weight="600">01  数据通路</text>
+<text x="780" y="285" font-size="22" fill="#54677B" font-weight="400">共享LDS用于协作加载；VGPR保存操作数与FP32累加值</text>
+<rect x="48" y="326" width="245" height="171" rx="14" fill="#EAF2FC" stroke="none" stroke-width="2"/>
+<text x="66.0625" y="368.0" font-size="29" fill="#17324D" font-weight="600">Global memory</text>
+<text x="113.2109375" y="415.0" font-size="27" fill="#17324D" font-weight="400">A：[M, K]</text>
+<text x="113.7578125" y="453.61" font-size="27" fill="#17324D" font-weight="400">B：[K, N]</text>
+<rect x="330" y="326" width="245" height="171" rx="14" fill="#FFF2D5" stroke="none" stroke-width="2"/>
+<text x="368.703125" y="366.0" font-size="27" fill="#17324D" font-weight="600">Direct-to-LDS</text>
+<text x="392.9375" y="411.0" font-size="22" fill="#17324D" font-weight="400">buffer_load</text>
+<text x="376.03125" y="442.46" font-size="22" fill="#17324D" font-weight="400">dwordx4 … lds</text>
+<text x="368.2734375" y="474.92" font-size="22" fill="#17324D" font-weight="400">协作写入A/B面板</text>
+<rect x="612" y="326" width="440" height="171" rx="14" fill="#FFF2D5" stroke="none" stroke-width="2"/>
+<text x="699.15625" y="370.0" font-size="29" fill="#17324D" font-weight="600">CTA共享LDS：4槽环</text>
+<rect x="630" y="399" width="94" height="53" rx="8" fill="#FFFFFF" stroke="#B9C8D6" stroke-width="2"/>
+<text x="634.4375" y="428.0" font-size="20" fill="#17324D" font-weight="400">S0 · A/B</text>
+<rect x="732" y="399" width="94" height="53" rx="8" fill="#FFFFFF" stroke="#B9C8D6" stroke-width="2"/>
+<text x="736.4375" y="428.0" font-size="20" fill="#17324D" font-weight="400">S1 · A/B</text>
+<rect x="834" y="399" width="94" height="53" rx="8" fill="#FFFFFF" stroke="#B9C8D6" stroke-width="2"/>
+<text x="838.4375" y="428.0" font-size="20" fill="#17324D" font-weight="400">S2 · A/B</text>
+<rect x="936" y="399" width="94" height="53" rx="8" fill="#FFFFFF" stroke="#B9C8D6" stroke-width="2"/>
+<text x="940.4375" y="428.0" font-size="20" fill="#17324D" font-weight="400">S3 · A/B</text>
+<text x="661.078125" y="482.0" font-size="21" fill="#17324D" font-weight="400">读槽：(t+2)%4；预取写槽：(t+5)%4</text>
+<rect x="1088" y="326" width="260" height="171" rx="14" fill="#EAF2FC" stroke="none" stroke-width="2"/>
+<text x="1129.390625" y="365.0" font-size="26" fill="#17324D" font-weight="600">Operand VGPR</text>
+<text x="1160.2734375" y="411.0" font-size="22" fill="#17324D" font-weight="400">R0 / R1 / R2</text>
+<text x="1135.9765625" y="443.46" font-size="22" fill="#17324D" font-weight="400">A：b64 / b128读</text>
+<text x="1121.1796875" y="474.92" font-size="22" fill="#17324D" font-weight="400">B：m32×16重排读</text>
+<rect x="1385" y="326" width="367" height="171" rx="14" fill="#7051A4" stroke="none" stroke-width="2"/>
+<text x="1449.0703125" y="373.0" font-size="32" fill="#FFFFFF" font-weight="600">MMAC → FP32 C</text>
+<text x="1432.5" y="432.0" font-size="25" fill="#FFFFFF" font-weight="400">K16：8条 / wave / stage</text>
+<text x="1423.21875" y="467.75" font-size="25" fill="#FFFFFF" font-weight="400">K32：16条；两次K16子步</text>
+<polyline points="298,412 325,412" fill="none" stroke="#54677B" stroke-width="3"/><polygon points="325,412 313.0,407.0 313.0,417.0" fill="#54677B"/>
+<polyline points="580,412 607,412" fill="none" stroke="#54677B" stroke-width="3"/><polygon points="607,412 595.0,407.0 595.0,417.0" fill="#54677B"/>
+<polyline points="1057,412 1083,412" fill="none" stroke="#54677B" stroke-width="3"/><polygon points="1083,412 1071.0,407.0 1071.0,417.0" fill="#54677B"/>
+<polyline points="1353,412 1380,412" fill="none" stroke="#54677B" stroke-width="3"/><polygon points="1380,412 1368.0,407.0 1368.0,417.0" fill="#54677B"/>
+<text x="48" y="542.0" font-size="25" fill="#17324D" font-weight="400">四wave按M/N分成2×2输出子块；K16/K32的64×128 tile中，每wave负责32×64。</text>
+<rect x="48" y="572" width="1704" height="72" rx="14" fill="#E6F3EE" stroke="none" stroke-width="2"/>
+<text x="414.9609375" y="614.0" font-size="26" fill="#17324D" font-weight="400">预热一次：填充前4个LDS槽 → 预读stage 0/1到寄存器 → 等待/同步 → 准备后续预取</text>
+<rect x="48" y="676" width="1704" height="48" rx="5" fill="#F2F5F9" stroke="none" stroke-width="2"/>
+<text x="65" y="710" font-size="28" fill="#17324D" font-weight="600">02  稳态主循环：两组wave错开指令次序</text>
+<text x="780" y="707" font-size="22" fill="#54677B" font-weight="400">t＝K stage编号；两组负责不同输出，不做K分片归约</text>
+<text x="75.3046875" y="795.0" font-size="26" fill="#17324D" font-weight="600">Wave 0 / 1</text>
+<text x="97.0" y="834.18" font-size="26" fill="#17324D" font-weight="400">先计算</text>
+<rect x="240" y="754" width="220" height="112" rx="14" fill="#EAF2FC" stroke="none" stroke-width="2"/>
+<text x="269.1875" y="794.0" font-size="25" fill="#17324D" font-weight="600">计算当前stage</text>
+<text x="258.5" y="837.0" font-size="22" fill="#17324D" font-weight="400">MMAC：C += A×B</text>
+<rect x="493" y="754" width="420" height="112" rx="14" fill="#FFF2D5" stroke="none" stroke-width="2"/>
+<text x="560.0" y="795.0" font-size="26" fill="#17324D" font-weight="600">读未来操作数＋全局预取</text>
+<text x="577.1171875" y="842.0" font-size="24" fill="#17324D" font-weight="400">DS读 t+2；D2L预取 t+5</text>
+<rect x="946" y="754" width="260" height="112" rx="14" fill="#EAF2FC" stroke="none" stroke-width="2"/>
+<text x="1000.2421875" y="795.0" font-size="26" fill="#17324D" font-weight="600">部分LDS等待</text>
+<text x="998.6328125" y="841.0" font-size="24" fill="#17324D" font-weight="400">lgkmcnt(4 / 6)</text>
+<text x="75.3046875" y="937.0" font-size="26" fill="#17324D" font-weight="600">Wave 2 / 3</text>
+<text x="84.0" y="976.18" font-size="26" fill="#17324D" font-weight="400">先搬数据</text>
+<rect x="240" y="896" width="420" height="112" rx="14" fill="#FFF2D5" stroke="none" stroke-width="2"/>
+<text x="307.0" y="937.0" font-size="26" fill="#17324D" font-weight="600">读未来操作数＋全局预取</text>
+<text x="324.1171875" y="984.0" font-size="24" fill="#17324D" font-weight="400">DS读 t+2；D2L预取 t+5</text>
+<rect x="693" y="896" width="260" height="112" rx="14" fill="#EAF2FC" stroke="none" stroke-width="2"/>
+<text x="747.2421875" y="937.0" font-size="26" fill="#17324D" font-weight="600">部分LDS等待</text>
+<text x="745.6328125" y="983.0" font-size="24" fill="#17324D" font-weight="400">lgkmcnt(4 / 6)</text>
+<rect x="986" y="896" width="220" height="112" rx="14" fill="#EAF2FC" stroke="none" stroke-width="2"/>
+<text x="1015.1875" y="936.0" font-size="25" fill="#17324D" font-weight="600">计算当前stage</text>
+<text x="1004.5" y="979.0" font-size="22" fill="#17324D" font-weight="400">MMAC：C += A×B</text>
+<rect x="1250" y="754" width="502" height="254" rx="14" fill="#FBEAEE" stroke="none" stroke-width="2"/>
+<text x="1340.4765625" y="801.0" font-size="28" fill="#17324D" font-weight="600">每stage末尾的共享槽保护</text>
+<text x="1321.9296875" y="859.0" font-size="23" fill="#17324D" font-weight="400">vmcnt(4 / 6)：限制未完成全局请求</text>
+<text x="1339.3671875" y="891.89" font-size="23" fill="#17324D" font-weight="400">lgkmcnt(0)：排空共享槽读操作</text>
+<text x="1335.5078125" y="924.78" font-size="23" fill="#17324D" font-weight="400">s_barrier：CTA内所有wave对齐</text>
+<text x="1313.921875" y="957.67" font-size="23" fill="#17324D" font-weight="400">12相位末次barrier在循环控制后执行</text>
+<polyline points="464,810 489,810" fill="none" stroke="#54677B" stroke-width="3"/><polygon points="489,810 477.0,805.0 477.0,815.0" fill="#54677B"/>
+<polyline points="917,810 942,810" fill="none" stroke="#54677B" stroke-width="3"/><polygon points="942,810 930.0,805.0 930.0,815.0" fill="#54677B"/>
+<polyline points="1210,810 1246,810" fill="none" stroke="#54677B" stroke-width="3"/><polygon points="1246,810 1234.0,805.0 1234.0,815.0" fill="#54677B"/>
+<polyline points="664,952 689,952" fill="none" stroke="#54677B" stroke-width="3"/><polygon points="689,952 677.0,947.0 677.0,957.0" fill="#54677B"/>
+<polyline points="957,952 982,952" fill="none" stroke="#54677B" stroke-width="3"/><polygon points="982,952 970.0,947.0 970.0,957.0" fill="#54677B"/>
+<polyline points="1210,952 1246,952" fill="none" stroke="#54677B" stroke-width="3"/><polygon points="1246,952 1234.0,947.0 1234.0,957.0" fill="#54677B"/>
+<text x="48" y="1056.0" font-size="24" fill="#54677B" font-weight="400">下一stage：LDS按4槽轮换，operand按3组轮换；完整周期为12。上述wait值对应N128。</text>
+<rect x="48" y="1100" width="1704" height="48" rx="5" fill="#F2F5F9" stroke="none" stroke-width="2"/>
+<text x="65" y="1134" font-size="28" fill="#17324D" font-weight="600">03  K方向收尾：消化已预取数据</text>
+<text x="780" y="1131" font-size="22" fill="#54677B" font-weight="400">Drain是排空K流水；N方向列尾块是另一项处理</text>
+<rect x="48" y="1173" width="548" height="207" rx="14" fill="#F2F5F9" stroke="none" stroke-width="2"/>
+<text x="66" y="1213.0" font-size="27" fill="#17324D" font-weight="600">旧K16 / K32</text>
+<text x="66" y="1262.0" font-size="25" fill="#17324D" font-weight="400">有剩余K数据就继续读operand并计算。</text>
+<text x="66" y="1297.75" font-size="25" fill="#17324D" font-weight="400">越界未来预取改读stage 0，</text>
+<text x="66" y="1333.5" font-size="25" fill="#17324D" font-weight="400">仍产生额外Global→LDS请求。</text>
+<rect x="626" y="1173" width="548" height="207" rx="14" fill="#FFF2D5" stroke="none" stroke-width="2"/>
+<text x="644" y="1213.0" font-size="27" fill="#17324D" font-weight="600">旧drain：5007</text>
+<text x="644" y="1262.0" font-size="25" fill="#17324D" font-weight="400">到尾段停止无效全局预取。</text>
+<text x="644" y="1297.75" font-size="25" fill="#17324D" font-weight="400">仍保留所需DS读取、MMAC和同步；</text>
+<text x="644" y="1333.5" font-size="25" fill="#17324D" font-weight="400">按未完成请求调整vmcnt等待。</text>
+<rect x="1204" y="1173" width="548" height="207" rx="14" fill="#E6F3EE" stroke="none" stroke-width="2"/>
+<text x="1222" y="1215.0" font-size="27" fill="#17324D" font-weight="600">P6f稳态 / 收尾：5014、5015</text>
+<text x="1222" y="1262.0" font-size="25" fill="#17324D" font-weight="400">稳态与无全局加载的尾段分离。</text>
+<text x="1222" y="1297.75" font-size="25" fill="#17324D" font-weight="400">尾部最多5个stage，继续完成MMAC；</text>
+<text x="1222" y="1333.5" font-size="25" fill="#17324D" font-weight="400">保留LGKM排空与CTA barrier。</text>
+<rect x="48" y="1420" width="1704" height="48" rx="5" fill="#F2F5F9" stroke="none" stroke-width="2"/>
+<text x="65" y="1454" font-size="28" fill="#17324D" font-weight="600">04  写回：复用LDS做输出排列</text>
+<text x="780" y="1451" font-size="22" fill="#54677B" font-weight="400">每个wave拥有自己的16行输出暂存片</text>
+<rect x="48" y="1495" width="280" height="143" rx="14" fill="#EAF2FC" stroke="none" stroke-width="2"/>
+<text x="125.5" y="1535.0" font-size="25" fill="#17324D" font-weight="600">排空并同步</text>
+<text x="80.125" y="1580.0" font-size="22" fill="#17324D" font-weight="400">vmcnt(0) ＋ s_barrier</text>
+<text x="69.3515625" y="1612.46" font-size="22" fill="#17324D" font-weight="400">避免旧D2L回写覆盖输出</text>
+<rect x="365" y="1495" width="330" height="143" rx="14" fill="#EAF2FC" stroke="none" stroke-width="2"/>
+<text x="467.5" y="1535.0" font-size="25" fill="#17324D" font-weight="600">转换并暂存</text>
+<text x="435.3046875" y="1579.0" font-size="23" fill="#17324D" font-weight="400">FP32 → BF16 RNE</text>
+<text x="406.2109375" y="1614.89" font-size="23" fill="#17324D" font-weight="400">ds_write_b16 → 私有片</text>
+<rect x="732" y="1495" width="330" height="143" rx="14" fill="#EAF2FC" stroke="none" stroke-width="2"/>
+<text x="847.0" y="1535.0" font-size="25" fill="#17324D" font-weight="600">读回向量</text>
+<text x="838.8671875" y="1581.0" font-size="23" fill="#17324D" font-weight="400">lgkmcnt(0)</text>
+<text x="821.2421875" y="1613.89" font-size="23" fill="#17324D" font-weight="400">ds_read_b128</text>
+<rect x="1099" y="1495" width="330" height="143" rx="14" fill="#EAF2FC" stroke="none" stroke-width="2"/>
+<text x="1201.5" y="1535.0" font-size="25" fill="#17324D" font-weight="600">等待并写回</text>
+<text x="1205.8671875" y="1581.0" font-size="23" fill="#17324D" font-weight="400">lgkmcnt(0)</text>
+<text x="1143.9296875" y="1613.89" font-size="23" fill="#17324D" font-weight="400">global_store_dwordx4</text>
+<rect x="1466" y="1495" width="286" height="143" rx="14" fill="#EAF2FC" stroke="none" stroke-width="2"/>
+<text x="1547.390625" y="1534.0" font-size="25" fill="#17324D" font-weight="600">C[row, col]</text>
+<text x="1518.796875" y="1581.0" font-size="22" fill="#17324D" font-weight="400">16B / 次；row &lt; M</text>
+<text x="1488.09375" y="1612.46" font-size="22" fill="#17324D" font-weight="400">整N tile契约；列尾见图2</text>
+<polyline points="332,1566 361,1566" fill="none" stroke="#54677B" stroke-width="3"/><polygon points="361,1566 349.0,1561.0 349.0,1571.0" fill="#54677B"/>
+<polyline points="699,1566 728,1566" fill="none" stroke="#54677B" stroke-width="3"/><polygon points="728,1566 716.0,1561.0 716.0,1571.0" fill="#54677B"/>
+<polyline points="1066,1566 1095,1566" fill="none" stroke="#54677B" stroke-width="3"/><polygon points="1095,1566 1083.0,1561.0 1083.0,1571.0" fill="#54677B"/>
+<polyline points="1433,1566 1462,1566" fill="none" stroke="#54677B" stroke-width="3"/><polygon points="1462,1566 1450.0,1561.0 1450.0,1571.0" fill="#54677B"/>
+<text x="48" y="1689.0" font-size="24" fill="#17324D" font-weight="400">输出片内只有LDS完成等待，无额外CTA barrier；此处做排列与存储，每个C元素已累加完整K。</text>
+<text x="48" y="1735.0" font-size="22" fill="#54677B" font-weight="400">来源：P6f源码＋最终CSV（decode 235组对照 / 191个shape）。示意图不按时钟周期或耗时比例绘制。</text>
+<text x="48" y="1776.0" font-size="21" fill="#54677B" font-weight="400">范围：P6f结束时的BF16 NN decode；后续独立原型6000不在本图中。几何与采用状态见图2。</text>
+</svg>

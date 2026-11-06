@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1570" viewBox="0 0 1800 1570" role="img">
+<title>P6f Decode：几何、尾段与采用状态</title>
+<style>text{font-family:"Noto Sans CJK SC","Noto Sans SC","Microsoft YaHei",sans-serif}</style>
+<rect width="1800" height="1570" fill="white"/>
+<rect x="0" y="0" width="1800" height="112" rx="0" fill="#B5122B" stroke="none" stroke-width="2"/>
+<text x="48" y="68" font-size="44" fill="#FFFFFF" font-weight="600">P6f Decode：几何、尾段与采用状态</text>
+<text x="48" y="159" font-size="25" fill="#54677B" font-weight="400">同一共享LDS协作骨架下的不同实现｜实例ID与实际K stage分开看｜不以文件数量定义独立架构</text>
+<rect x="48" y="191" width="1704" height="48" rx="5" fill="#F2F5F9" stroke="none" stroke-width="2"/>
+<text x="65" y="225" font-size="28" fill="#17324D" font-weight="600">01  源码核对的实现分支</text>
+<text x="780" y="222" font-size="22" fill="#54677B" font-weight="400">MMAC数按每wave、每个实际K stage统计</text>
+<rect x="48" y="260" width="1704" height="74" rx="5" fill="#17324D" stroke="none" stroke-width="2"/>
+<text x="157.0546875" y="301.0" font-size="23" fill="#FFFFFF" font-weight="600">实现 / 实例ID</text>
+<text x="468.8125" y="301.0" font-size="23" fill="#FFFFFF" font-weight="600">CTA逻辑tile：M×N×K</text>
+<text x="796.609375" y="301.0" font-size="23" fill="#FFFFFF" font-weight="600">wave数</text>
+<text x="916.8515625" y="300.0" font-size="23" fill="#FFFFFF" font-weight="600">LDS / CTA</text>
+<text x="1076.109375" y="300.0" font-size="23" fill="#FFFFFF" font-weight="600">MMAC / stage</text>
+<text x="1444.5" y="301.0" font-size="23" fill="#FFFFFF" font-weight="600">改变的内容</text>
+<rect x="48" y="334" width="1704" height="105" rx="0" fill="#F2F5F9" stroke="none" stroke-width="2"/>
+<text x="62" y="380.0" font-size="23" fill="#17324D" font-weight="600">原V7及缓存/遍历变体</text>
+<text x="62" y="411.89" font-size="23" fill="#17324D" font-weight="400">5000 / 5002 / 5005 / 5006</text>
+<text x="497.3125" y="379.0" font-size="25" fill="#17324D" font-weight="400">256 × 256 × 16</text>
+<text x="829.0625" y="379.0" font-size="25" fill="#17324D" font-weight="400">8</text>
+<text x="931.6015625" y="380.0" font-size="25" fill="#17324D" font-weight="400">64 KiB</text>
+<text x="1133.125" y="379.0" font-size="25" fill="#17324D" font-weight="400">32</text>
+<text x="1266" y="380.0" font-size="23" fill="#17324D" font-weight="400">M01与NoSLC改变遍历/提示；</text>
+<text x="1266" y="412.89" font-size="23" fill="#17324D" font-weight="400">共享LDS骨架保持不变。</text>
+<rect x="48" y="439" width="1704" height="105" rx="0" fill="#FFFFFF" stroke="none" stroke-width="2"/>
+<text x="62" y="485.0" font-size="23" fill="#17324D" font-weight="600">小M K16系列</text>
+<text x="62" y="516.89" font-size="23" fill="#17324D" font-weight="400">5003/5004/5007/5015/5017</text>
+<text x="485.4765625" y="485.0" font-size="25" fill="#17324D" font-weight="400">64 × 128/64 × 16</text>
+<text x="829.0625" y="484.0" font-size="25" fill="#17324D" font-weight="400">4</text>
+<text x="931.6015625" y="485.0" font-size="25" fill="#17324D" font-weight="400">32 KiB</text>
+<text x="1122.6328125" y="485.0" font-size="25" fill="#17324D" font-weight="400">8 / 4</text>
+<text x="1266" y="485.0" font-size="23" fill="#17324D" font-weight="400">drain、steady、NoSLC分别</text>
+<text x="1266" y="517.89" font-size="23" fill="#17324D" font-weight="400">改变尾段或A的缓存提示。</text>
+<rect x="48" y="544" width="1704" height="105" rx="0" fill="#F2F5F9" stroke="none" stroke-width="2"/>
+<text x="62" y="590.0" font-size="23" fill="#17324D" font-weight="600">小M K32系列</text>
+<text x="62" y="621.89" font-size="23" fill="#17324D" font-weight="400">5008 / 5010 / 5014</text>
+<text x="485.4765625" y="590.0" font-size="25" fill="#17324D" font-weight="400">64 × 128/64 × 32</text>
+<text x="829.0625" y="589.0" font-size="25" fill="#17324D" font-weight="400">4</text>
+<text x="909.6796875" y="589.0" font-size="24" fill="#17324D" font-weight="400">48 / 32 KiB</text>
+<text x="1115.6953125" y="590.0" font-size="25" fill="#17324D" font-weight="400">16 / 8</text>
+<text x="1266" y="590.0" font-size="23" fill="#17324D" font-weight="400">每K32 stage做两次K16子步；</text>
+<text x="1266" y="622.89" font-size="23" fill="#17324D" font-weight="400">5014是N128稳态/收尾版。</text>
+<rect x="48" y="649" width="1704" height="105" rx="0" fill="#FFFFFF" stroke="none" stroke-width="2"/>
+<text x="62" y="692.0" font-size="23" fill="#17324D" font-weight="600">square128</text>
+<text x="62" y="724.89" font-size="23" fill="#17324D" font-weight="400">5009</text>
+<text x="497.3125" y="694.0" font-size="25" fill="#17324D" font-weight="400">128 × 128 × 16</text>
+<text x="829.0625" y="694.0" font-size="25" fill="#17324D" font-weight="400">4</text>
+<text x="931.6015625" y="695.0" font-size="25" fill="#17324D" font-weight="400">32 KiB</text>
+<text x="1133.125" y="694.0" font-size="25" fill="#17324D" font-weight="400">16</text>
+<text x="1266" y="695.0" font-size="23" fill="#17324D" font-weight="400">扩大M tile与MMAC burst；</text>
+<text x="1266" y="727.89" font-size="23" fill="#17324D" font-weight="400">4槽LDS、3组operand仍保留。</text>
+<rect x="48" y="754" width="1704" height="105" rx="0" fill="#F2F5F9" stroke="none" stroke-width="2"/>
+<text x="62" y="800.0" font-size="23" fill="#17324D" font-weight="600">独立N尾块128</text>
+<text x="62" y="829.89" font-size="23" fill="#17324D" font-weight="400">5013</text>
+<text x="497.3125" y="799.0" font-size="25" fill="#17324D" font-weight="400">128 × 128 × 16</text>
+<text x="829.0625" y="799.0" font-size="25" fill="#17324D" font-weight="400">4</text>
+<text x="931.6015625" y="800.0" font-size="25" fill="#17324D" font-weight="400">32 KiB</text>
+<text x="1133.125" y="799.0" font-size="25" fill="#17324D" font-weight="400">16</text>
+<text x="1266" y="800.0" font-size="23" fill="#17324D" font-weight="400">B加载、C写回都检查列边界；</text>
+<text x="1266" y="832.89" font-size="23" fill="#17324D" font-weight="400">复用共享LDS调度方式。</text>
+<rect x="48" y="859" width="1704" height="105" rx="0" fill="#FFFFFF" stroke="none" stroke-width="2"/>
+<text x="62" y="905.0" font-size="23" fill="#17324D" font-weight="600">独立N尾块256</text>
+<text x="62" y="934.89" font-size="23" fill="#17324D" font-weight="400">5016</text>
+<text x="497.3125" y="904.0" font-size="25" fill="#17324D" font-weight="400">128 × 256 × 16</text>
+<text x="829.0625" y="904.0" font-size="25" fill="#17324D" font-weight="400">8</text>
+<text x="931.6015625" y="905.0" font-size="25" fill="#17324D" font-weight="400">48 KiB</text>
+<text x="1133.125" y="904.0" font-size="25" fill="#17324D" font-weight="400">16</text>
+<text x="1266" y="905.0" font-size="23" fill="#17324D" font-weight="400">列谓词＋8B/lane的A加载；</text>
+<text x="1266" y="937.89" font-size="23" fill="#17324D" font-weight="400">输出跳过整块无效16行片。</text>
+<text x="48" y="1004.0" font-size="22" fill="#54677B" font-weight="400">斜线表示N128 / N64两种配置；5007/5014/5015/5017仅N128。5011/5012是原V7的M01=5缓存变体。</text>
+<rect x="48" y="1040" width="1704" height="48" rx="5" fill="#F2F5F9" stroke="none" stroke-width="2"/>
+<text x="65" y="1074" font-size="28" fill="#17324D" font-weight="600">02  两个“尾”的含义</text>
+<text x="780" y="1071" font-size="22" fill="#54677B" font-weight="400">本图只描述已有实现，不引入新的优化设计</text>
+<rect x="48" y="1110" width="837" height="172" rx="14" fill="#FFF2D5" stroke="none" stroke-width="2"/>
+<text x="66" y="1152.0" font-size="27" fill="#17324D" font-weight="600">K收尾：流水排空</text>
+<text x="66" y="1196.0" font-size="22" fill="#17324D" font-weight="400">K循环接近结束，停止无效预取，完成剩余MMAC。</text>
+<text x="66" y="1227.46" font-size="22" fill="#17324D" font-weight="400">drain / steady处理此事；s_barrier仍用于共享槽复用。</text>
+<text x="66" y="1258.92" font-size="22" fill="#17324D" font-weight="400">每个C元素由所属wave累加完整K，无partial C求和。</text>
+<rect x="915" y="1110" width="837" height="172" rx="14" fill="#EAF2FC" stroke="none" stroke-width="2"/>
+<text x="933" y="1152.0" font-size="27" fill="#17324D" font-weight="600">N尾块：最后一块列不足</text>
+<text x="933" y="1196.0" font-size="22" fill="#17324D" font-weight="400">5013 / 5016处理最后一个N tile的有效列。</text>
+<text x="933" y="1227.46" font-size="22" fill="#17324D" font-weight="400">B越界列加载为0；C按完整有效的16B向量写回。</text>
+<text x="933" y="1258.92" font-size="22" fill="#17324D" font-weight="400">原V7的epilogue保持无列谓词；尾块使用独立实现。</text>
+<rect x="48" y="1324" width="1704" height="48" rx="5" fill="#F2F5F9" stroke="none" stroke-width="2"/>
+<text x="65" y="1358" font-size="28" fill="#17324D" font-weight="600">03  P6f实验结论</text>
+<text x="780" y="1355" font-size="22" fill="#54677B" font-weight="400">精度正确和结构独立，不自动等于性能提升</text>
+<rect x="48" y="1392" width="548" height="123" rx="14" fill="#E6F3EE" stroke="none" stroke-width="2"/>
+<text x="66" y="1433.0" font-size="26" fill="#17324D" font-weight="600">尾块256：限定域推荐</text>
+<text x="66" y="1480.0" font-size="24" fill="#17324D" font-weight="400">16条完整三轮；等case耗时 −79.655%。</text>
+<rect x="626" y="1392" width="548" height="123" rx="14" fill="#FBEAEE" stroke="none" stroke-width="2"/>
+<text x="644" y="1433.0" font-size="26" fill="#17324D" font-weight="600">K16 / K32 steady：不整域采用</text>
+<text x="644" y="1480.0" font-size="24" fill="#17324D" font-weight="400">K32扩围：67条改善&gt;2%、58条回退&gt;2%。</text>
+<rect x="1204" y="1392" width="548" height="123" rx="14" fill="#F2F5F9" stroke="none" stroke-width="2"/>
+<text x="1222" y="1433.0" font-size="26" fill="#17324D" font-weight="600">小M NoSLC：有限对照</text>
+<text x="1222" y="1480.0" font-size="24" fill="#17324D" font-weight="400">只测4条；未建立可推广的采用范围。</text>
+<text x="48" y="1556.0" font-size="20" fill="#54677B" font-weight="400">统计来源：P6f final_results/per_shape_results.csv 与 report.md。以上为历史有限实验状态，不是881条decode全量新实测。</text>
+</svg>

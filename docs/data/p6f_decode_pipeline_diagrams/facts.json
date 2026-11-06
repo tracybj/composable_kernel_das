@@ -1,0 +1,161 @@
+{
+  "scope": "P6f end-state only; independent6000/P6h excluded; code/CSV review only, no GPU jobs",
+  "commit": "c39e6df67de0a07d2f89ef224f421a99ed6ee9ca",
+  "csv": "docs/data/v7_optimization_p6f/final_results/per_shape_results.csv",
+  "csv_sha256": "39374c17d4f987f6c7c0c2d00055a1b3a446e2e3e2d6078add7f4916d7b8a9af",
+  "pairs": 288,
+  "unique_shapes": 209,
+  "decode_pairs": 235,
+  "unique_decode_shapes": 191,
+  "sources": [
+    {
+      "path": "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_uniform.hpp",
+      "commit": "c39e6df67de0a07d2f89ef224f421a99ed6ee9ca",
+      "sha256": "f32cfe85245031d5cdc3767e1c97a6988e29c9495f1afe3aba995fa4a9db646b"
+    },
+    {
+      "path": "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_small_m.hpp",
+      "commit": "c39e6df67de0a07d2f89ef224f421a99ed6ee9ca",
+      "sha256": "97c3d965d74db976b7487ce459609a7143bd04410998b8245ad8c9b70459dea2"
+    },
+    {
+      "path": "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_small_m_k32.hpp",
+      "commit": "c39e6df67de0a07d2f89ef224f421a99ed6ee9ca",
+      "sha256": "3b8037338e5df24b6f251b00ff23af8c8428c66f330b45447478c29b53362fe0"
+    },
+    {
+      "path": "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_small_m_drain.hpp",
+      "commit": "c39e6df67de0a07d2f89ef224f421a99ed6ee9ca",
+      "sha256": "287229846f93bbeba1dbb8e8b6c32fc7841599c29ee2be260362d86bb52449d8"
+    },
+    {
+      "path": "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_small_m_k16_steady.hpp",
+      "commit": "c39e6df67de0a07d2f89ef224f421a99ed6ee9ca",
+      "sha256": "9b8f928842687837e423c1f430eca6594cf94275aa6fa473692ee29a01b80d30"
+    },
+    {
+      "path": "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_small_m_k32_steady.hpp",
+      "commit": "c39e6df67de0a07d2f89ef224f421a99ed6ee9ca",
+      "sha256": "f365b93c6f52f9fdfda91da82812d146c6f16ea1b630c7445146535e28d03423"
+    },
+    {
+      "path": "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_small_m_noslc.hpp",
+      "commit": "c39e6df67de0a07d2f89ef224f421a99ed6ee9ca",
+      "sha256": "4f9514c20ee6871a24915577a557b224c9d9b8cf3cf3d5fbbacea77044c2e4a1"
+    },
+    {
+      "path": "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_square128.hpp",
+      "commit": "c39e6df67de0a07d2f89ef224f421a99ed6ee9ca",
+      "sha256": "633d54f13f440c4a027f394faf00f5c8b3c3480dbc117fcacd3c089220a4b041"
+    },
+    {
+      "path": "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_tail128.hpp",
+      "commit": "c39e6df67de0a07d2f89ef224f421a99ed6ee9ca",
+      "sha256": "5a027c7a5a4e4da99331a8e50e6a5a3b33a6c750b5584bc2e90bdfe980a0620b"
+    },
+    {
+      "path": "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_tail256.hpp",
+      "commit": "c39e6df67de0a07d2f89ef224f421a99ed6ee9ca",
+      "sha256": "285e6bbd814f8a8dac050b066b5cc26d3a044d3e48f5151d1850360c86d5a178"
+    },
+    {
+      "path": "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_v7_small_m_epilogue.hpp",
+      "commit": "c39e6df67de0a07d2f89ef224f421a99ed6ee9ca",
+      "sha256": "7a02cfbafd19c20d4609e7d1fab8dc768e74ac6c2f283a76e6ce927674adae53"
+    },
+    {
+      "path": "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_v7_uniform_epilogue.hpp",
+      "commit": "c39e6df67de0a07d2f89ef224f421a99ed6ee9ca",
+      "sha256": "eccccf933a4b79abe7dc1c4015fa224c838710c486122423f5fc4b51fb7272eb"
+    },
+    {
+      "path": "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_v7_tail_epilogue.hpp",
+      "commit": "c39e6df67de0a07d2f89ef224f421a99ed6ee9ca",
+      "sha256": "ab2ea1404d2de9ce7a971ff8de90f9191f1d239cefdf02ec57132d0cc789fe30"
+    },
+    {
+      "path": "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_v7_tail256_epilogue.hpp",
+      "commit": "c39e6df67de0a07d2f89ef224f421a99ed6ee9ca",
+      "sha256": "5da1231abfdd363368eeaecdba94a3e593e22babf459c605cb77a96e8f843b06"
+    }
+  ],
+  "geometry": [
+    {
+      "name": "Original V7",
+      "tile": [
+        256,
+        256,
+        16
+      ],
+      "waves": 8,
+      "lds_kib": 64,
+      "mmac_per_wave_stage": 32
+    },
+    {
+      "name": "SmallM K16 N128/N64",
+      "tile": [
+        64,
+        "128/64",
+        16
+      ],
+      "waves": 4,
+      "lds_kib": 32,
+      "mmac_per_wave_stage": "8/4"
+    },
+    {
+      "name": "SmallM K32 N128/N64",
+      "tile": [
+        64,
+        "128/64",
+        32
+      ],
+      "waves": 4,
+      "lds_kib": "48/32",
+      "mmac_per_wave_stage": "16/8"
+    },
+    {
+      "name": "Square128",
+      "tile": [
+        128,
+        128,
+        16
+      ],
+      "waves": 4,
+      "lds_kib": 32,
+      "mmac_per_wave_stage": 16
+    },
+    {
+      "name": "Tail128",
+      "tile": [
+        128,
+        128,
+        16
+      ],
+      "waves": 4,
+      "lds_kib": 32,
+      "mmac_per_wave_stage": 16
+    },
+    {
+      "name": "Tail256",
+      "tile": [
+        128,
+        256,
+        16
+      ],
+      "waves": 8,
+      "lds_kib": 48,
+      "mmac_per_wave_stage": 16
+    }
+  ],
+  "critical_facts": [
+    "Both A/B Global->CTA-shared LDS->operand VGPR in main loop",
+    "Four LDS slots and three operand banks are distinct storage levels",
+    "SmallM K16/K32 N128 per-stage vmcnt4/6 plus LGKM0 and CTA barrier",
+    "Groups alternate instruction order, not split-K ownership",
+    "K32 has two nativeK16 MMAC substeps",
+    "Legacy out-of-range prefetch goes tostage0;drain suppresses it;P6f steady splits no-global tail",
+    "Store begins withvmcnt0+CTA barrier;per-wave output slabs then use LGKM waits without further CTA barriers",
+    "Output shuffle is not partialC reduction",
+    "N-tail predicates both B loads and vectorC stores; original no column predicate"
+  ]
+}
