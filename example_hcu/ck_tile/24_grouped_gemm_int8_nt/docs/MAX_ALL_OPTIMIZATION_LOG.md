@@ -606,3 +606,15 @@ tuning域M1～16且完整N/K tile、uniform非空；不要求prepared B，route0
 2026-11-06恢复现有ck_yyc容器，卡7HIP初始化及显存查询成功，无旧测试活进程。6c133ed runner、冻结v143同库，147条/588条记录完整输出PASS，0失败/跳过。BF16同轮新/旧吞吐比min/median/max=1.001793/1.006564/1.009941，147条全部正收益，新增严格跨线346/521/1038，无丢失；FP16=0.999825/1.001392/1.005385，142条正收益，新增523，无丢失。初筛warm3/repeat10/2样本，不拼接正式1191表，不将微小收益当稳定验收。归档max_all_v143_cross_neighbors.csv。已结束PID124，不重复启动。
 
 v144现准备隔离构建/门禁，默认生产仍不变；CPU映射及域检查不能代替GPU数值证据。同时新增小M同条件profile_decode.py：固定BM16/BN32/BK512、M1/N4096/K6144/G8、BF16/真实scale，以8734/9041/9054/route32比较双LDS、单LDS、Raw双Reg、Packed双Reg。profile模式仅提交一次完整grouped kernel，准备和参考计算用kernel名称过滤排除，输入哈希用于验证相同数据，单独无profiler平衡计时。实际访存归因待报告，不沿用“相邻lane跨K必然不合并”的推断。
+
+### v144 GPU验证完成：wave私有Raw-B LDS原型不推广
+
+实现d105d06，库2f9c5f2ee91edf6c36f01df1adf10a8eae43962a5d6b489addf0880b1c276186、benchmark 2be7d9152b6e25653419d338081f00214253354d336f20daa5a910dc0c43f556。234项full-range/FP64完整输出PASS，216域外prelaunch拒绝；含M1/2/3/8、odd/even stage、padded stride、per-token/channel、NaN/Inf和INT32无scale。428个kernel无spill，旧128生产/416实验kernel机器码完全相同。新四实例BF16/FP16 VGPR61/59/93/93，LDS4/8/8/16KiB，不能据此直接声称驻留提升。
+
+全部72条小M长K邻域、864记录完整输出PASS。最优wave-private相对默认BF16 min/median/max=0.848997/0.941808/1.000450，FP16=0.848290/0.940934/1.000537，只有1171约0.05%正变化且仍未达标；没有填平缺口。BK128明显落后，BK256多数仍慢。保留负结果，不接入selector，不把失败归为整个“单侧LDS”方向无效。max_all_v144_wave_screen.csv/summary.json记录独立实验，生产1191表不拼接。
+
+四路径xprof已取得同条件证据：Raw/Packed双Reg相同几何/输入，Raw有TCP读tag冲突和地址阻塞放大，而TCC下游读请求接近；独立计时Raw0.224243ms、Packed0.173856ms。详见DECODE_XPROF_DATA_PATH_COMPARISON.md，明确SQ emulated、counter单位/覆盖边界及尚未证明的cache映射。
+
+## v145：仅为scaled masked WASP接入已验证跨半段预取
+
+保持route22/23既有M/N/K/G选择域、cluster4/8、tile和epilogue，新增scaled专用Problem调用同一WASP核心CrossHalfPrefetch；原INT32 Problem、无mask WASP、Cooperative及16bit输入接口不改。来源为v143 13条正式对照及147条全masked邻域初筛，避免把完整tile BF16负收益路径一起打开。接下来独立OFF构建、生产API/生命周期/数值门禁，再跑1191单轮正式回归；未完成前官方结果仍是v140。

@@ -134,8 +134,8 @@ template<bool BF> int dispatch(unsigned route,unsigned legacy,const void* args,c
  case 11:return wasp<BF,PackedM32N64>(args,scales,g,m,n,stream);
  case 12:return wasp<BF,PackedM256N384>(args,scales,g,m,n,stream);
  case 24:return cooperative<BF,PackedM16N64K256>(args,scales,g,m,n,stream);
- case 22:return wasp<BF,PackedM256N384MaskedM4>(args,scales,g,m,n,stream);
- case 23:return wasp<BF,PackedM256N384MaskedM8>(args,scales,g,m,n,stream);
+ case 22:return wasp<BF,ScaledPackedM256N384MaskedM4>(args,scales,g,m,n,stream);
+ case 23:return wasp<BF,ScaledPackedM256N384MaskedM8>(args,scales,g,m,n,stream);
  default:return -5;
  }
 }

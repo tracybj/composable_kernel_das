@@ -1,0 +1,99 @@
+{
+  "mode": "baseline",
+  "input_sha256": {
+    "a": "3843a64753a19721133521c0bdb03ddb9a44955f156a387173f4227a10fdd55e",
+    "b": "717bdf49f38b1709e8041c528e880d9642bf2a90e64b3d3335a0250d233aecb5",
+    "sa": "794d0c86bca547304180711cfad3134632363cc96e0d38b98bea314e6a848c43",
+    "sb": "b714256192c141ace3f1fb0823b1e573cd1280d83c563c1f90c5dc2f10479a56"
+  },
+  "output": "BF16",
+  "scale": "scalar A, per-channel B",
+  "library": {
+    "symbols": [
+      "ck_tile_int8_nt_cached_last_error_v1",
+      "ck_tile_int8_nt_cached_plan_create_v1",
+      "ck_tile_int8_nt_cached_plan_create_v2",
+      "ck_tile_int8_nt_cached_plan_destroy_v1",
+      "ck_tile_int8_nt_cached_plan_query_v1",
+      "ck_tile_int8_nt_cached_run_v1",
+      "ck_tile_int8_nt_cached_weights_create_v1",
+      "ck_tile_int8_nt_cached_weights_destroy_v1",
+      "ck_tile_int8_nt_cached_weights_query_v1"
+    ],
+    "library_sha256": "6770132c1bc0070273c6b45bd0ef98c1f14d4096b39934de3433de279446ff3b",
+    "benchmark_sha256": "df520b3f2bb98ed34450a17bde6fef763f40535d6fd77c58428e029f168b6a0c",
+    "experimental_tuning": true,
+    "operand_paths": true
+  },
+  "records": [
+    {
+      "candidate": "both_lds",
+      "M": 1,
+      "N": 4096,
+      "K": 6144,
+      "G": 8,
+      "status": "PASS",
+      "bad_elements": 0,
+      "scope": "one complete grouped kernel, all G=8",
+      "samples_ms": [
+        0.1798815280199051,
+        0.17991676926612854,
+        0.1808287799358368
+      ],
+      "ms": 0.17991676926612854,
+      "TOPS": 2.237996967388877
+    },
+    {
+      "candidate": "a_reg",
+      "M": 1,
+      "N": 4096,
+      "K": 6144,
+      "G": 8,
+      "status": "PASS",
+      "bad_elements": 0,
+      "scope": "one complete grouped kernel, all G=8",
+      "samples_ms": [
+        0.18506233394145966,
+        0.18545593321323395,
+        0.18584316968917847
+      ],
+      "ms": 0.18545593321323395,
+      "TOPS": 2.1711528826475264
+    },
+    {
+      "candidate": "raw_reg",
+      "M": 1,
+      "N": 4096,
+      "K": 6144,
+      "G": 8,
+      "status": "PASS",
+      "bad_elements": 0,
+      "scope": "one complete grouped kernel, all G=8",
+      "samples_ms": [
+        0.22421753406524658,
+        0.2242431491613388,
+        0.22558711469173431
+      ],
+      "ms": 0.2242431491613388,
+      "TOPS": 1.7956097455191304
+    },
+    {
+      "candidate": "packed_reg",
+      "M": 1,
+      "N": 4096,
+      "K": 6144,
+      "G": 8,
+      "status": "PASS",
+      "bad_elements": 0,
+      "scope": "one complete grouped kernel, all G=8",
+      "samples_ms": [
+        0.17385593056678772,
+        0.1736031323671341,
+        0.17458553612232208
+      ],
+      "ms": 0.17385593056678772,
+      "TOPS": 2.316016386023245
+    }
+  ],
+  "runner_sha256": "ba31e0e96cca2f911e587e92b9deb866dd65a2a3246164b31b1351a73de7bd6a"
+}

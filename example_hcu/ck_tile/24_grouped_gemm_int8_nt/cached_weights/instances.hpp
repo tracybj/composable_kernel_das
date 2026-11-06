@@ -25,4 +25,8 @@ using PackedM32N64 = GroupedInt8NtWaspM32Problem<false,2,1,1,true,true,0,false,t
 using PackedM256N384 = GroupedInt8NtWaspPublicWideNProblem<false,12,4,2,true,true,0,false,true,0,12>;
 using PackedM256N384MaskedM4 = GroupedInt8NtWaspMaskedWideProblem<4>;
 using PackedM256N384MaskedM8 = GroupedInt8NtWaspMaskedWideProblem<8>;
+// Cross-half A prefetch is validated for masked scaled output only. Keep the
+// original problem types for INT32 and the unmasked WASP implementations.
+using ScaledPackedM256N384MaskedM4 = GroupedInt8NtWaspScaledMaskedPrefetchProblem<4>;
+using ScaledPackedM256N384MaskedM8 = GroupedInt8NtWaspScaledMaskedPrefetchProblem<8>;
 }

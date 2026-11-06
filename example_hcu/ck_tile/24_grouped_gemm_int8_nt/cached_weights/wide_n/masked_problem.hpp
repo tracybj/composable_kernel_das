@@ -15,4 +15,16 @@ struct GroupedInt8NtWaspMaskedWideProblem
         GemmPipelineAgBgCrCompV4DefaultPolicy,12,2,true,true,0,false,true,0,true>;
     static_assert(Pipeline::BlockSize==Base::Threads && Pipeline::kWaspLdsBytes==65536);
 };
+
+// The same masked geometry with high-half A issued during the final low-half
+// MMAC batch. The original type remains unchanged for the INT32 entry point.
+template<int MGroup_>
+struct GroupedInt8NtWaspScaledMaskedPrefetchProblem
+    : GroupedInt8NtWaspMaskedWideProblem<MGroup_>
+{
+    using Base=GroupedInt8NtWaspMaskedWideProblem<MGroup_>;
+    using Pipeline=GroupedInt8NtWaspPipeline<typename Base::PipelineProblem,
+        GemmPipelineAgBgCrCompV4DefaultPolicy,12,2,true,true,0,false,true,0,true,false,true>;
+    static_assert(Pipeline::BlockSize==Base::Threads && Pipeline::kWaspLdsBytes==65536);
+};
 } // namespace ck_tile
