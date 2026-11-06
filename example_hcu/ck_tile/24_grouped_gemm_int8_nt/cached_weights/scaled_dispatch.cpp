@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 #include "scaled_kernel.hpp"
+#include "k_parallel.hpp"
 #include "instances.hpp"
 #include "ck_tile/ops/gemm/grouped_gemm_selector.hpp"
 #ifdef CK_INT8_CACHED_TUNING
@@ -117,6 +118,12 @@ template<bool BFloat> int raw(unsigned legacy,const void* args,const void* scale
     default:return cooperative<BFloat,ck_tile::GroupedInt8NtTileProblem<16,64,128,1,2,false,false,true,true,1,true>>(args,scales,g,m,n,s);
  }
 }
+template<bool BF,int Rows> int k_parallel(const void* args,const void* scales,int g,int n,hipStream_t stream){
+ using K=ck_tile::GroupedInt8NtScaledKParallelKernel<Rows,BF>;
+ ck_tile::launch_kernel(ck_tile::stream_config{stream,false},ck_tile::make_kernel<512,1>(K{},dim3((n+3)/4,1,g),dim3(512),0,static_cast<const ck_tile::GemmTransKernelArg*>(args),static_cast<const ck_tile::Int8NtScaleArgs*>(scales)));
+ return hipGetLastError()==hipSuccess?0:-100;
+}
+
 template<bool BF> int dispatch(unsigned route,unsigned legacy,const void* args,const void* scales,int g,int m,int n,hipStream_t stream){
  using namespace ck_tile::int8_nt_instances;
  switch(route){
@@ -133,6 +140,7 @@ template<bool BF> int dispatch(unsigned route,unsigned legacy,const void* args,c
  case 10:return wasp<BF,PackedM32N256>(args,scales,g,m,n,stream);
  case 11:return wasp<BF,PackedM32N64>(args,scales,g,m,n,stream);
  case 12:return wasp<BF,PackedM256N384>(args,scales,g,m,n,stream);
+ case 25:return m==1?k_parallel<BF,1>(args,scales,g,n,stream):k_parallel<BF,2>(args,scales,g,n,stream);
  case 24:return cooperative<BF,PackedM16N64K256>(args,scales,g,m,n,stream);
  case 22:return wasp<BF,ScaledPackedM256N384MaskedM4>(args,scales,g,m,n,stream);
  case 23:return wasp<BF,ScaledPackedM256N384MaskedM8>(args,scales,g,m,n,stream);

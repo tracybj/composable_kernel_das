@@ -1,0 +1,61 @@
+{
+  "status": "GATES_PASS_FULL1191_PENDING",
+  "identity": {
+    "symbols": [
+      "ck_tile_int8_nt_cached_last_error_v1",
+      "ck_tile_int8_nt_cached_plan_create_v1",
+      "ck_tile_int8_nt_cached_plan_create_v2",
+      "ck_tile_int8_nt_cached_plan_destroy_v1",
+      "ck_tile_int8_nt_cached_plan_query_v1",
+      "ck_tile_int8_nt_cached_run_v1",
+      "ck_tile_int8_nt_cached_weights_create_v1",
+      "ck_tile_int8_nt_cached_weights_destroy_v1",
+      "ck_tile_int8_nt_cached_weights_query_v1"
+    ],
+    "library_sha256": "2077dd1c7ba9f84880889ec80d9bae39476bebc3aaaed64e08cd466fd68a9a34",
+    "benchmark_sha256": "ec5389c87cf789a400f663469808af54a87079f13c0e2de38c33afeeea136d97",
+    "experimental_tuning": false,
+    "operand_paths": false
+  },
+  "scaled_checks": 447,
+  "invalid_checks": 14,
+  "new_route_lifetime_checks": 24,
+  "old_kernel_equivalence": {
+    "compared": 128,
+    "bit_identical_unchanged": 128,
+    "new_scaled_k_parallel": [
+      "void ck_tile::kentry<512, 1, ck_tile::GroupedInt8NtScaledKParallelKernel<1, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      "void ck_tile::kentry<512, 1, ck_tile::GroupedInt8NtScaledKParallelKernel<2, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      "void ck_tile::kentry<512, 1, ck_tile::GroupedInt8NtScaledKParallelKernel<1, false>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      "void ck_tile::kentry<512, 1, ck_tile::GroupedInt8NtScaledKParallelKernel<2, false>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+    ],
+    "missing": [],
+    "different": []
+  },
+  "new_kernels": [
+    {
+      "demangled": "void ck_tile::kentry<512, 1, ck_tile::GroupedInt8NtScaledKParallelKernel<1, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      ".vgpr_count": 48,
+      ".group_segment_fixed_size": 128,
+      ".private_segment_fixed_size": 0
+    },
+    {
+      "demangled": "void ck_tile::kentry<512, 1, ck_tile::GroupedInt8NtScaledKParallelKernel<2, true>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      ".vgpr_count": 70,
+      ".group_segment_fixed_size": 256,
+      ".private_segment_fixed_size": 0
+    },
+    {
+      "demangled": "void ck_tile::kentry<512, 1, ck_tile::GroupedInt8NtScaledKParallelKernel<1, false>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      ".vgpr_count": 48,
+      ".group_segment_fixed_size": 128,
+      ".private_segment_fixed_size": 0
+    },
+    {
+      "demangled": "void ck_tile::kentry<512, 1, ck_tile::GroupedInt8NtScaledKParallelKernel<2, false>, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+      ".vgpr_count": 70,
+      ".group_segment_fixed_size": 256,
+      ".private_segment_fixed_size": 0
+    }
+  ]
+}

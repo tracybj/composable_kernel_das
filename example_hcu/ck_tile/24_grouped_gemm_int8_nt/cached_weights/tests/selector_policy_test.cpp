@@ -58,6 +58,8 @@ int main(){using ck_tile::int8_cached_route;
  assert(int8_cached_scaled_small_route(0,4096,6144,8,true,80)==0);
  assert(int8_cached_scaled_small_route(16,4096,6144,8,true,80)==0);
  assert(int8_cached_scaled_small_route(1,4096,6144,16,true,80)==0);
+ for(int m:{1,2})for(int k:{7168,8192})assert(int8_cached_scaled_small_route(m,4096,k,16,false,80)==25);
+ assert(int8_cached_scaled_small_route(3,4096,8192,64,true,80)==0);
  assert(int8_cached_scaled_small_route(1,4096,6144,8,false,80)==0);
  assert(int8_cached_scaled_small_route(1,4096,6144,8,true,96)==0);
  assert(int8_cached_scaled_small_route(1,4096,8192,8,true,80)==0);

@@ -50,6 +50,9 @@ inline unsigned int8_cached_route(int m,int n,int k,int groups,bool packed_avail
 // Calibrated on M1/2/4/8, G8 and the complete long-K requirement neighborhood.
 inline unsigned int8_cached_scaled_small_route(int m,int n,int k,int groups,
                                               bool packed_available,int compute_units=80){
+ // Raw NT K-parallel reduction;requires no prepared weight layout.
+ if(compute_units==80 && (m==1 || m==2) && groups>=12 &&
+    n>=4096 && n<=6144 && n%256==0 && k>=7168 && k<=8192 && k%128==0)return 25u;
  return packed_available && compute_units==80 && m>0 && m<=8 &&
         n==4096 && (k==6144 || k==7168) && groups==8 ?24u:0u;
 }

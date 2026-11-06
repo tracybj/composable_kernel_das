@@ -59,3 +59,10 @@ base policy. Device CU count is stored from the existing weights-create query.
 For old route1/5,K>=1024,M>=2048,the integer CTA-wave model selects12 when
 ratio>=1.47,or baseline>=24waves andratio>=1.44. All new routes bind owned
 format1 weights. This version requires fresh boundary/lifetime/full1178 tests.
+
+Route25 adds scaled M1/M2 raw-NT K-parallel reduction on80-CU gfx936. The
+calibrated domain is G>=12,N4096..6144 divisible by256,K7168..8192 divisible
+by128,uniform nonempty groups. It uses original immutable source weights,
+existing uploaded group/scale descriptors,and the same stream/lifetime rules.
+INT32 selection is unchanged. Per-token/per-channel/scalar/NULL scales keep
+the existing v2 contract. Outside this domain the established policy applies.

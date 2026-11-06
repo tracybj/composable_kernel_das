@@ -106,7 +106,7 @@ def main():
                             d=gd[i];d.struct_size=C.sizeof(d);d.abi_version=2;d.a=a[i].data_ptr();d.c=output[kind][i].data_ptr();d.m=m;d.a_row_stride=k;d.c_row_stride=n;d.output_type=code;d.scale_a=sa[i:].data_ptr();d.scale_b=sb[i].data_ptr();d.scale_a_mode=0;d.scale_b_mode=1
                         plan=C.c_void_p();ok(lib.ck_tile_int8_nt_cached_plan_create_v2(handle,gd,g,C.byref(plan)));plans[kind]=plan
                         pi=plan_info(plan);assert (pi.group_count,pi.max_m,pi.n,pi.k)==(g,m,n,k)
-                        rec.update(route=pi.route,legacy_instance=pi.legacy_instance,pipeline='cooperative' if pi.route in [0,24] else 'WASP')
+                        rec.update(route=pi.route,legacy_instance=pi.legacy_instance,pipeline='cooperative' if pi.route in [0,24,25] else 'WASP')
                         benches[kind]=lib.cached_i8_bench_create(plan);assert benches[kind],lib.cached_i8_bench_error().decode()
                     torch.cuda.synchronize()
                     for kind in (['BF16','FP16'] if idx%2 else ['FP16','BF16']):

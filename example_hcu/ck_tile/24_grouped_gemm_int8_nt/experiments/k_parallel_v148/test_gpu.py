@@ -55,7 +55,9 @@ print('GPU_GATES_PASS',checks,flush=True)
 (out/'gates.json').write_text(json.dumps(dict(status='PASS',checks=checks,library_sha256=hashlib.sha256(native.read_bytes()).hexdigest())))
 targets=list(csv.DictReader((E/'docs/targets_max_all_1191.csv').open()))
 for t in targets:
- if int(t['ID']) not in [1137,1138,1143,1144,1150,1151,1165,1166,1171,1172]:continue
+ if 'neighbors' in sys.argv:
+  if not (int(t['M']) in [1,2] and 4096<=int(t['N'])<=6144 and 7168<=int(t['K'])<=8192 and int(t['G'])>=12):continue
+ elif int(t['ID']) not in [1137,1138,1143,1144,1150,1151,1165,1166,1171,1172]:continue
  g,m,n,k=[int(t[x]) for x in ['G','M','N','K']];a,b,ref=fixture(g,m,n,k);aa,bb=a.clone(),b.clone()
  weights=C.c_void_p();wd=(Weight*g)(*[init(Weight,data=b[i].data_ptr(),n=n,k=k,row_stride=k) for i in range(g)])
  ok(lib.ck_tile_int8_nt_cached_weights_create_v1(wd,g,None,C.byref(weights)))

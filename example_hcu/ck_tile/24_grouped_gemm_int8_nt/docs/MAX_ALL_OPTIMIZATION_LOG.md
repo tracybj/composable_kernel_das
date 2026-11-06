@@ -646,3 +646,13 @@ v145全量PID12091已结束并完成独立审计后才把本草案并入工作�
 新增隔离k_parallel_v148：每lane沿K连续读取16B，两次MMAC后仅抽取对角部分积，wave内与CTA内INT32归约后融合scale写出。CPU49472项覆盖PASS；140项full-range/FP64 GPU门禁PASS；24kernel无spill/private，VGPR39～107、LDS64～512B。四组wave/列数实例全部由参数定义，不按caseID分流。
 
 十条剩余decode初筛100记录完整输出PASS；固定8wave/4列实例独立10warm/50repeat/3sample配对40记录PASS，BF16/FP16共20配置全部超过P目标，最低R1.01175754，相对v145同轮加速1.04437～1.23455。详见iteration_148_k_parallel.md、max_all_v148_k_formal.csv及summary。正式1191数据仍v145，尚未接入生产selector；后续需完成维度域分流、ABI/生命周期与全量回归。
+
+## v149：K并行路径接入正式cached API
+
+新增scaled route25：80CU、uniform非空M1/2、G>=12、N4096到6144且整256、K7168到8192且整128。按尺寸与设备分流，无caseID；直接使用原始NT权重及既有group/scale描述符，INT32策略不改。API没有新增timed分配，per-token/channel/scalar/NULL scale及原生命周期契约保留。全量报告将route25标为cooperative。
+
+隔离原型的全尺寸域26条需求/两输出/两实现104条配对完整输出PASS；相对v145加速最小1.04595、中位1.09579、最大1.23491，所有新候选R>=1，最小1.01149。这仍是原型的邻域证据，不替代正式API性能。
+
+正式库SHA2077dd1c7ba9f84880889ec80d9bae39476bebc3aaaed64e08cd466fd68a9a34，tuning=OFF。447项full-range/FP64 scale门禁、14非法参数、18epilogue、65旧边界、32旧生命周期、新路径24生命周期检查全部PASS。新路径包含prepare/compute stream、scale原址更新、特殊值、queued plan销毁、输入/scale不变及guards；K7296/padded stride也通过。原128个设备kernel机器码逐字节不变；仅增加四个M1/M2 BF16/FP16 kernel，VGPR48/70、LDS128/256B，132个kernel均无private/spill。证据见max_all_v149_validation_resources.json、max_all_v148_k_neighbors.csv。
+
+下一步冻结本版在卡7做独立1191全量回归；在结果完成并审计前，正式统计仍为v145，不拼接原型局部结果。

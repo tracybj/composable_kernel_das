@@ -42,6 +42,9 @@ def main():
               ('scaled_packed_small_m2',8,[2]*8,4096,7168,False,{0:(0,8734),1:(24,0),2:(24,0)}),
               ('scaled_packed_small_padded',8,[8]*8,4096,7168,True,{0:(0,8734),1:(24,0),2:(24,0)}),
               ('special_values_packed_small',8,[8]*8,4096,6144,False,{0:(0,8734),1:(24,0),2:(24,0)})]
+    cases += [('k_parallel_m1_padded',12,[1]*12,4096,7168,True,{0:(0,8734),1:(25,0),2:(25,0)}),
+              ('k_parallel_m2',12,[2]*12,6144,8192,False,{0:(0,8734),1:(25,0),2:(25,0)}),
+              ('k_parallel_partial_k',12,[2]*12,4352,7296,True,{0:(0,8734),1:(25,0),2:(25,0)})]
     records=[];invalid_checks=0;covered=set()
     for name,g,ms,n,k,padded,expected in cases:
         astride=k+16 if padded else k;bstride=k+32 if padded else k;cstride=n+8 if padded else n
