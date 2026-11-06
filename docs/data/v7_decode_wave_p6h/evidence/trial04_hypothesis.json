@@ -1,0 +1,6 @@
+{
+  "design": "Single wave owns16/32/64x128 output tile, completeK, stage8 forK%128 else2. Same A swizzle and no-global-load drain. No duplicatedA across N waves; no duplicatedB across M16 CTAs.",
+  "evidence": "Depth8 ID772 HBM9200MB vs baseline2527MB with quarterMMOP and8xCTA; restore fullM reuse and256B global B row coalescing.",
+  "scope": "Same6+3accuracy and22representative contrasts, no100extension until assessed",
+  "canonical_note": "Initial unreleased .s2 suffix will be generalized before delivery."
+}

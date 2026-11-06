@@ -1,0 +1,16 @@
+{
+  "command": [
+    "cmake",
+    "--build",
+    "build",
+    "--target",
+    "tile_example_grouped_gemm_device_args_benchmark",
+    "tile_example_grouped_gemm_selector_test",
+    "tile_example_grouped_gemm_device_args_query_test",
+    "tile_example_grouped_gemm_device_args_smoke",
+    "-j4"
+  ],
+  "rc": 2,
+  "seconds": 162.03934580199984,
+  "sha256": "81b91dbed68d32b9a5168354dba14eb4b8d60fba6d12f04043b591ee9c110959"
+}

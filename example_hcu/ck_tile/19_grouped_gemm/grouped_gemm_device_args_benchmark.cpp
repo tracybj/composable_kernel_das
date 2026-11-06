@@ -245,6 +245,7 @@ struct Options
     bool include_args_build = true;
     bool allow_empty_groups = false;
     bool group_count_explicit = false;
+    bool output_redzone = false; // Validation-only allocation guards; default timing unchanged.
 };
 
 [[noreturn]] void print_usage_and_exit(const char* program, int code)
@@ -259,6 +260,7 @@ struct Options
        << "  --blas-lib=/path/to/libhipblaslt.so|libhipblas.so\n"
        << "  --time=1 --warmup=10 --samples=30 --correctness-repeats=3\n"
        << "  --launches-per-sample=1 (1..256; diagnostic; timings are per launch)\n"
+       << "  --output-redzone=0|1 (16 output elements before/after each allocation)\n"
        << "  --num-cu=0 --validate=0|1 --include-args-build=0|1\n"
        << "  --allow-empty-groups=0|1 --blas-streams=1|4\n"
        << "\n"
@@ -345,6 +347,13 @@ Options parse_options(int argc, char* argv[])
             options.time = parse_positive_or_zero(name, value) != 0;
         else if(name == "launches-per-sample")
             options.launches_per_sample = parse_positive_or_zero(name, value);
+        else if(name == "output-redzone")
+        {
+            const int enabled = parse_positive_or_zero(name, value);
+            if(enabled > 1)
+                throw std::runtime_error("output-redzone must be 0 or 1");
+            options.output_redzone = enabled != 0;
+        }
         else if(name == "correctness-repeats")
             options.correctness_repeats = parse_positive_or_zero(name, value);
         else if(name == "num-cu")
@@ -1167,6 +1176,11 @@ AccuracyResult compare_values(const std::vector<T>& actual,
     {
         const double a       = as_float(actual[i]);
         const double e       = as_float(expected[i]);
+        if(!std::isfinite(a) || !std::isfinite(e))
+        {
+            ++result.failed;
+            continue;
+        }
         const double abs_err = std::abs(a - e);
         const double rel_err = abs_err / std::max(std::abs(e), 1.0e-6);
         result.max_abs       = std::max(result.max_abs, abs_err);
@@ -1362,8 +1376,51 @@ int run(const Options& options)
 
     ck_tile::DeviceMem device_a(plan.a_elements * sizeof(T));
     ck_tile::DeviceMem device_b(plan.b_elements * sizeof(T));
-    ck_tile::DeviceMem device_ck(plan.c_elements * sizeof(T));
-    ck_tile::DeviceMem device_blas(plan.c_elements * sizeof(T));
+    const std::size_t redzone = options.output_redzone ? 16 : 0;
+    ck_tile::DeviceMem device_ck((plan.c_elements + 2 * redzone) * sizeof(T));
+    ck_tile::DeviceMem device_blas((plan.c_elements + 2 * redzone) * sizeof(T));
+    auto output_pointer = [&](ck_tile::DeviceMem& buffer) {
+        return static_cast<T*>(buffer.GetDeviceBuffer()) + redzone;
+    };
+    const std::vector<T> redzone_expected(2 * redzone, output_sentinel);
+    auto upload_output = [&](ck_tile::DeviceMem& buffer) {
+        if(redzone == 0)
+        {
+            buffer.ToDevice(initial_output.data());
+            return;
+        }
+        hip_check(hipMemcpy(output_pointer(buffer), initial_output.data(),
+                            plan.c_elements * sizeof(T), hipMemcpyHostToDevice), "output initialize");
+        hip_check(hipMemcpy(buffer.GetDeviceBuffer(), redzone_expected.data(),
+                            redzone * sizeof(T), hipMemcpyHostToDevice), "prefix initialize");
+        hip_check(hipMemcpy(output_pointer(buffer) + plan.c_elements, redzone_expected.data(),
+                            redzone * sizeof(T), hipMemcpyHostToDevice), "suffix initialize");
+    };
+    auto download_output = [&](ck_tile::DeviceMem& buffer, std::vector<T>& host) {
+        if(redzone == 0)
+            buffer.FromDevice(host.data());
+        else
+            hip_check(hipMemcpy(host.data(), output_pointer(buffer), plan.c_elements * sizeof(T),
+                                hipMemcpyDeviceToHost), "output download");
+    };
+    auto redzone_pass = [&](ck_tile::DeviceMem& buffer, const char* backend, int repeat) {
+        if(redzone == 0)
+            return true;
+        std::vector<T> actual(2 * redzone);
+        hip_check(hipMemcpy(actual.data(), buffer.GetDeviceBuffer(), redzone * sizeof(T),
+                            hipMemcpyDeviceToHost), "prefix download");
+        hip_check(hipMemcpy(actual.data() + redzone, output_pointer(buffer) + plan.c_elements,
+                            redzone * sizeof(T), hipMemcpyDeviceToHost), "suffix download");
+        AccuracyResult result;
+        result.checked = actual.size();
+        for(const auto value : actual)
+            if(std::memcmp(&value, &output_sentinel, sizeof(T)) != 0)
+                ++result.failed; // Also catches NaN writes into a guard.
+        std::cout << "ACCURACY backend=" << backend << " repeat=" << repeat
+                  << " checked=" << result.checked << " failed=" << result.failed
+                  << " max_abs=" << result.max_abs << std::endl;
+        return result.failed == 0;
+    };
     ck_tile::DeviceMem device_args(static_cast<std::size_t>(options.group_count) *
                                    sizeof(ck_tile::GemmTransKernelArg));
     ck_tile::DeviceMem device_group_lengths(static_cast<std::size_t>(options.group_count) *
@@ -1372,8 +1429,8 @@ int run(const Options& options)
                                             sizeof(std::int64_t));
     device_a.ToDevice(host_a.data());
     device_b.ToDevice(host_b.data());
-    device_ck.ToDevice(initial_output.data());
-    device_blas.ToDevice(initial_output.data());
+    upload_output(device_ck);
+    upload_output(device_blas);
     device_group_lengths.ToDevice(plan.lengths.data());
     device_group_offsets.ToDevice(plan.offsets.data());
     hipStream_t stream = nullptr;
@@ -1440,7 +1497,7 @@ int run(const Options& options)
             static_cast<ck_tile::GemmTransKernelArg*>(device_args.GetDeviceBuffer()),
             static_cast<const T*>(device_a.GetDeviceBuffer()),
             static_cast<const T*>(device_b.GetDeviceBuffer()),
-            static_cast<T*>(device_ck.GetDeviceBuffer()),
+            output_pointer(device_ck),
             static_cast<const std::int64_t*>(device_group_lengths.GetDeviceBuffer()),
             static_cast<const std::int64_t*>(device_group_offsets.GetDeviceBuffer()),
             options.group_count,
@@ -1495,14 +1552,14 @@ int run(const Options& options)
                                     plan,
                                     static_cast<const T*>(device_a.GetDeviceBuffer()),
                                     static_cast<const T*>(device_b.GetDeviceBuffer()),
-                                    static_cast<T*>(device_blas.GetDeviceBuffer()),
+                                    output_pointer(device_blas),
                                     stream);
         else
             hipblas->grouped_gemm(options,
                                   plan,
                                   static_cast<const T*>(device_a.GetDeviceBuffer()),
                                   static_cast<const T*>(device_b.GetDeviceBuffer()),
-                                  static_cast<T*>(device_blas.GetDeviceBuffer()),
+                                  output_pointer(device_blas),
                                   stream);
     };
 
@@ -1517,6 +1574,7 @@ int run(const Options& options)
                << " timing=" << (options.time ? "on" : "off")
                << " warmup=" << options.warmup << " samples=" << options.samples
                << " launches_per_sample=" << options.launches_per_sample
+               << " output_redzone_elements=" << redzone
                << " include_args_build=" << options.include_args_build
                << " num_cu=" << options.num_cu
                << " blas_streams=" << options.blas_streams << std::endl;
@@ -1555,10 +1613,12 @@ int run(const Options& options)
         {
             if(run_ck_backend)
             {
-                device_ck.ToDevice(initial_output.data());
+                upload_output(device_ck);
                 launch_ck();
                 hip_check(hipStreamSynchronize(stream), "CK correctness synchronize");
-                device_ck.FromDevice(host_ck.data());
+                download_output(device_ck, host_ck);
+                if(!redzone_pass(device_ck, "ck_redzone", repeat))
+                    return 2;
                 const auto cpu =
                     check_cpu_samples(options, plan, host_a, host_b, host_ck, atol, rtol);
                 std::cout << std::defaultfloat << std::setprecision(8);
@@ -1578,10 +1638,12 @@ int run(const Options& options)
             }
             if(run_blas_backend)
             {
-                device_blas.ToDevice(initial_output.data());
+                upload_output(device_blas);
                 launch_blas();
                 hip_check(hipStreamSynchronize(stream), "BLAS correctness synchronize");
-                device_blas.FromDevice(host_blas.data());
+                download_output(device_blas, host_blas);
+                if(!redzone_pass(device_blas, "blas_redzone", repeat))
+                    return 3;
                 const auto cpu =
                     check_cpu_samples(options, plan, host_a, host_b, host_blas, atol, rtol);
                 std::cout << std::defaultfloat << std::setprecision(8);

@@ -389,6 +389,22 @@ if(GPU_TARGETS MATCHES "gfx936")
         PROPERTIES POSITION_INDEPENDENT_CODE ON)
 endif()
 
+# Independent decode provider; no dependency on the V7 pipeline/codegen archive.
+if(GPU_TARGETS MATCHES "gfx936")
+    file(STRINGS ${CMAKE_CURRENT_LIST_DIR}/grouped_gemm_decode_device_args_provider_sources.txt
+        HCU_GROUPED_GEMM_DECODE_SOURCES REGEX "^[^#].+")
+    add_library(ck_tile_hcu_grouped_gemm_decode_bf16 STATIC EXCLUDE_FROM_ALL
+        ${HCU_GROUPED_GEMM_DECODE_SOURCES})
+    set_target_properties(ck_tile_hcu_grouped_gemm_decode_bf16
+        PROPERTIES POSITION_INDEPENDENT_CODE ON)
+    target_compile_options(ck_tile_hcu_grouped_gemm_decode_bf16 PRIVATE
+        "SHELL: -mllvm -support-768-vgprs=true" "-Rpass-analysis=kernel-resource-usage")
+    ck_tile_hcu_grouped_gemm_apply_codegen(ck_tile_hcu_grouped_gemm_decode_bf16)
+    target_link_libraries(ck_tile_hcu_grouped_gemm PUBLIC ck_tile_hcu_grouped_gemm_decode_bf16)
+    target_compile_definitions(ck_tile_hcu_grouped_gemm PRIVATE
+        CK_TILE_GROUPED_GEMM_DEVICE_ARGS_HAS_DECODE_BF16)
+endif()
+
 target_include_directories(ck_tile_hcu_grouped_gemm PRIVATE ${CMAKE_CURRENT_LIST_DIR})
 target_compile_definitions(ck_tile_hcu_grouped_gemm
     PRIVATE

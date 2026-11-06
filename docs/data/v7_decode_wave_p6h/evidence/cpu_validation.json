@@ -1,0 +1,19 @@
+[
+  {
+    "command": [
+      "/workspace/v7_coverage/p6h_decode_arch/selector_test_cpu"
+    ],
+    "rc": 0,
+    "stdout": "DECODE_SELECTOR_PASS checks=64800 active=792\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "/workspace/v7_coverage/p6h_decode_arch/lifetime_test.py"
+    ],
+    "rc": 0,
+    "stdout": "DECODE_CPU_LIFETIME_OUTPUT_PASS stage_transitions=16256 K32..4096 plus beyond-contract controls; not a GPU synchronization proof\n",
+    "stderr": ""
+  }
+]

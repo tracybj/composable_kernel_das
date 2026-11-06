@@ -1,0 +1,5 @@
+{
+  "key": "regression_device_args_query_test_a854d7de40",
+  "reason": "Regression runner incorrectly enabled V7 while query_test checks production-default FC2 instance1002. Actual5002 is expected with V7=1; registry37 and all7 byte-range checks passed. Corrected regression-only env V7=0, no production source/binary change or environment recovery.",
+  "raw_log_retained": true
+}

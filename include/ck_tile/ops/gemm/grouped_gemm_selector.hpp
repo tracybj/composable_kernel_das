@@ -126,6 +126,7 @@ struct GroupedGemmSelectorPolicy
     std::int32_t bf16_v7_nn_tail_tile_n = 128;
     // 0=off, 1=K16 drain, 2=K32 N128, 3=square128, 4=K32 N64.
     std::int32_t bf16_v7_nn_small_m_experiment = 0;
+    bool enable_bf16_nn_decode_wave = false; // Independent, opt-in decode architecture.
 };
 
 // Group-count bounds of the v7 instances. The kernels read the group table
@@ -192,6 +193,7 @@ enum class GroupedGemmInstanceId
     v7_bf16_nn_small_m_k16_steady = 5015,
     v7_bf16_nn_tail256 = 5016,
     v7_bf16_nn_small_m_noslc = 5017,
+    bf16_nn_decode_wave = 6000,
 
 };
 
@@ -202,6 +204,7 @@ enum class GroupedGemmCandidateFamily
     gfx938_mls,
     v4,
     v7,
+    decode,
 };
 
 struct GroupedGemmCandidateIdentity
@@ -211,7 +214,7 @@ struct GroupedGemmCandidateIdentity
     GroupedGemmCandidateFamily family;
 };
 
-inline constexpr std::array<GroupedGemmCandidateIdentity, 36>
+inline constexpr std::array<GroupedGemmCandidateIdentity, 37>
     grouped_gemm_candidate_registry{{
         {GroupedGemmInstanceId::bw_family_selected,
          "bw_family.selected",
@@ -313,6 +316,8 @@ inline constexpr std::array<GroupedGemmCandidateIdentity, 36>
         {GroupedGemmInstanceId::v7_bf16_nn_small_m_noslc,
          "v7.nn_b.small_m_noslc", GroupedGemmCandidateFamily::v7},
 
+        {GroupedGemmInstanceId::bf16_nn_decode_wave,
+         "decode.nn.wave_private.16x128x16.s2", GroupedGemmCandidateFamily::decode},
     }};
 
 constexpr const GroupedGemmCandidateIdentity*
@@ -365,6 +370,7 @@ enum class GroupedGemmSelectionReason
     v7_bf16_nn_small_m_k16_steady,
     v7_bf16_nn_tail256,
     v7_bf16_nn_small_m_noslc,
+    bf16_nn_decode_wave,
 };
 
 struct GroupedGemmSelection
@@ -464,6 +470,17 @@ constexpr GroupedGemmSelection select_grouped_gemm_candidate(
     const bool is_bf16_tn  = is_bf16 && is_tn;
     const bool has_variable_k =
         problem.k.kind == GroupedGemmDimensionKind::device_lengths_with_capacity;
+    // Initial experimental contract: common dense BF16 NN, M<=64. The new
+    // kernel has no relationship to the V7 policy or its tile/epilogue rules.
+    if(policy.enable_bf16_nn_decode_wave && problem.arch == GroupedGemmArch::gfx936 &&
+       is_bf16 && is_nn && problem.m.kind == GroupedGemmDimensionKind::common &&
+       !has_variable_k && !problem.group_lengths_are_ragged &&
+       !problem.may_have_empty_groups && problem.group_count <= 1024 &&
+       m <= 64 && n % 128 == 0 && k >= 32 && k <= 4096 && k % 32 == 0 &&
+       n <= std::int64_t{2147483647} / (2 * k) &&
+       grouped_gemm_v7_experiment_tile_bound(problem, 16, 128) <= kGroupedGemmV7MaxTiles)
+        return {GroupedGemmInstanceId::bf16_nn_decode_wave,
+                GroupedGemmSelectionReason::bf16_nn_decode_wave};
     const bool has_integral_device_m_capacity =
         problem.m.kind == GroupedGemmDimensionKind::device_lengths_with_capacity &&
         problem.m.extent % problem.group_count == 0;

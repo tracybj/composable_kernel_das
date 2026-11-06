@@ -1,0 +1,26 @@
+{
+  "binary_sha256": "2f8e5d2a19b1cfc6161d14b7bcd0b705af0f9d7e2458756e40a48800a82ec7e6",
+  "suites": {
+    "representatives": {
+      "completed": 22,
+      "active": 14,
+      "fallback": 8,
+      "improved_gt2": 0,
+      "regressed_gt2": 14,
+      "within2": 0,
+      "three_round_improved_gt2": 0,
+      "three_round_regressed_gt2": 14,
+      "high_cv": 9,
+      "median_change_pct": 16.499126023357526,
+      "sum_base_ms": 3.220799509,
+      "sum_new_ms": 12.343616499999996
+    }
+  },
+  "unique_measured_shapes": 22,
+  "all_raw_jobs": 380,
+  "failed_jobs": [
+    "regression_device_args_query_test_a854d7de40",
+    "profile_76_base_63988f65d7"
+  ],
+  "note": "Subset architecture experiment, not1193replay; historical Native baselines keep original GPU/repeat20 protocol"
+}

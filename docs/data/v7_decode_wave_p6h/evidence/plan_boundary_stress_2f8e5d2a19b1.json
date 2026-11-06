@@ -1,0 +1,40 @@
+{
+  "suite": "boundary_stress",
+  "table_sha256": "f1f32ce15d8f3e6f4b6a1cd8d00093ff03102df844a34657c96dce3e8fbfead0",
+  "binary_sha256": "2f8e5d2a19b1cfc6161d14b7bcd0b705af0f9d7e2458756e40a48800a82ec7e6",
+  "cases": [
+    {
+      "id": -101,
+      "M": 1,
+      "N": 128,
+      "K": 32,
+      "G": 1024,
+      "baseline": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+      },
+      "expected": 5000
+    },
+    {
+      "id": -102,
+      "M": 64,
+      "N": 128,
+      "K": 4096,
+      "G": 1,
+      "baseline": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+      },
+      "expected": 5000
+    },
+    {
+      "id": -103,
+      "M": 17,
+      "N": 65536,
+      "K": 32,
+      "G": 1,
+      "baseline": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+      },
+      "expected": 5000
+    }
+  ]
+}

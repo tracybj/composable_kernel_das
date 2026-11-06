@@ -1,0 +1,1586 @@
+[
+  {
+    "suite": "representatives",
+    "ID": 76,
+    "M": 1,
+    "N": 2048,
+    "K": 768,
+    "G": 4,
+    "active": true,
+    "base_instance": 5008,
+    "new_instance": 6000,
+    "base_ms": 0.02208,
+    "new_ms": 0.02032,
+    "change_pct": -7.971014492753614,
+    "round_changes_pct": [
+      -7.971014492753614,
+      -8.69564764492753,
+      -6.5693433653897575
+    ],
+    "three_round_improvement_gt2": true,
+    "three_round_regression_gt2": false,
+    "high_cv": true,
+    "frozen_BLAS_ms": "0.017047999426722527",
+    "R_new": 0.8389763497402818,
+    "BLAS_source": "/workspace/bf16NN-groupgemm.csv",
+    "epoch": 0,
+    "physical_gpu": 4,
+    "binary_sha256": "fe5b5c7402683c0a6459beec4126ec8609ff0bb8bed8b1d114f0f5fdf44997a8",
+    "round_ms": {
+      "base": [
+        0.02208,
+        0.02208,
+        0.021919999
+      ],
+      "new": [
+        0.02032,
+        0.020160001,
+        0.020479999
+      ]
+    },
+    "round_cv": {
+      "base": [
+        0.08327852,
+        0.058764166,
+        0.044390885
+      ],
+      "new": [
+        0.071685257,
+        0.075274508,
+        0.075068366
+      ]
+    },
+    "keys": [
+      "representatives_76_c5a257027743_base_acc",
+      "representatives_76_c5a257027743_new_acc",
+      "representatives_76_c5a257027743_base_r1",
+      "representatives_76_c5a257027743_new_r1",
+      "representatives_76_c5a257027743_base_r2",
+      "representatives_76_c5a257027743_new_r2",
+      "representatives_76_c5a257027743_base_r3",
+      "representatives_76_c5a257027743_new_r3"
+    ],
+    "logs": [
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_76_c5a257027743_base_acc/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_76_c5a257027743_new_acc/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_76_c5a257027743_base_r1/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_76_c5a257027743_new_r1/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_76_c5a257027743_base_r2/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_76_c5a257027743_new_r2/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_76_c5a257027743_base_r3/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_76_c5a257027743_new_r3/run.log"
+    ]
+  },
+  {
+    "suite": "representatives",
+    "ID": 633,
+    "M": 4,
+    "N": 1024,
+    "K": 2048,
+    "G": 8,
+    "active": true,
+    "base_instance": 5008,
+    "new_instance": 6000,
+    "base_ms": 0.037841,
+    "new_ms": 0.0436,
+    "change_pct": 15.218942416955162,
+    "round_changes_pct": [
+      13.775736541321981,
+      14.588673660844043,
+      18.654591795233323
+    ],
+    "three_round_improvement_gt2": false,
+    "three_round_regression_gt2": true,
+    "high_cv": true,
+    "frozen_BLAS_ms": "0.032816000282764435",
+    "R_new": 0.7526605569441385,
+    "BLAS_source": "/workspace/bf16NN-groupgemm.csv",
+    "epoch": 0,
+    "physical_gpu": 4,
+    "binary_sha256": "fe5b5c7402683c0a6459beec4126ec8609ff0bb8bed8b1d114f0f5fdf44997a8",
+    "round_ms": {
+      "base": [
+        0.038321,
+        0.037841,
+        0.036881
+      ],
+      "new": [
+        0.0436,
+        0.0433615,
+        0.043761
+      ]
+    },
+    "round_cv": {
+      "base": [
+        0.065934768,
+        0.03746372,
+        0.026094582
+      ],
+      "new": [
+        0.037268629,
+        0.045761847,
+        0.066215001
+      ]
+    },
+    "keys": [
+      "representatives_633_b12056ad30ac_base_acc",
+      "representatives_633_b12056ad30ac_new_acc",
+      "representatives_633_b12056ad30ac_base_r1",
+      "representatives_633_b12056ad30ac_new_r1",
+      "representatives_633_b12056ad30ac_base_r2",
+      "representatives_633_b12056ad30ac_new_r2",
+      "representatives_633_b12056ad30ac_base_r3",
+      "representatives_633_b12056ad30ac_new_r3"
+    ],
+    "logs": [
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_633_b12056ad30ac_base_acc/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_633_b12056ad30ac_new_acc/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_633_b12056ad30ac_base_r1/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_633_b12056ad30ac_new_r1/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_633_b12056ad30ac_base_r2/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_633_b12056ad30ac_new_r2/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_633_b12056ad30ac_base_r3/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_633_b12056ad30ac_new_r3/run.log"
+    ]
+  },
+  {
+    "suite": "representatives",
+    "ID": 681,
+    "M": 1,
+    "N": 1536,
+    "K": 2048,
+    "G": 4,
+    "active": true,
+    "base_instance": 5014,
+    "new_instance": 6000,
+    "base_ms": 0.033441,
+    "new_ms": 0.032399498,
+    "change_pct": -3.1144463383272036,
+    "round_changes_pct": [
+      -3.352172482880289,
+      -2.8708133112794965,
+      -3.344219508439883
+    ],
+    "three_round_improvement_gt2": true,
+    "three_round_regression_gt2": false,
+    "high_cv": true,
+    "frozen_BLAS_ms": "0.027664000168442726",
+    "R_new": 0.8538403949481788,
+    "BLAS_source": "/workspace/bf16NN-groupgemm.csv",
+    "epoch": 0,
+    "physical_gpu": 4,
+    "binary_sha256": "fe5b5c7402683c0a6459beec4126ec8609ff0bb8bed8b1d114f0f5fdf44997a8",
+    "round_ms": {
+      "base": [
+        0.033441,
+        0.033440001,
+        0.033520497
+      ],
+      "new": [
+        0.03232,
+        0.032480001,
+        0.032399498
+      ]
+    },
+    "round_cv": {
+      "base": [
+        0.028108061,
+        0.0047933037,
+        0.010320111
+      ],
+      "new": [
+        0.037495836,
+        0.050338033,
+        0.036839354
+      ]
+    },
+    "keys": [
+      "representatives_681_24e24b440f3d_base_acc",
+      "representatives_681_24e24b440f3d_new_acc",
+      "representatives_681_24e24b440f3d_base_r1",
+      "representatives_681_24e24b440f3d_new_r1",
+      "representatives_681_24e24b440f3d_base_r2",
+      "representatives_681_24e24b440f3d_new_r2",
+      "representatives_681_24e24b440f3d_base_r3",
+      "representatives_681_24e24b440f3d_new_r3"
+    ],
+    "logs": [
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_681_24e24b440f3d_base_acc/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_681_24e24b440f3d_new_acc/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_681_24e24b440f3d_base_r1/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_681_24e24b440f3d_new_r1/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_681_24e24b440f3d_base_r2/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_681_24e24b440f3d_new_r2/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_681_24e24b440f3d_base_r3/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_681_24e24b440f3d_new_r3/run.log"
+    ]
+  },
+  {
+    "suite": "representatives",
+    "ID": 620,
+    "M": 32,
+    "N": 1024,
+    "K": 2048,
+    "G": 32,
+    "active": true,
+    "base_instance": 5014,
+    "new_instance": 6000,
+    "base_ms": 0.139842,
+    "new_ms": 0.16792101,
+    "change_pct": 20.079096408804233,
+    "round_changes_pct": [
+      20.605433669223206,
+      20.771736246528793,
+      19.907109452095952
+    ],
+    "three_round_improvement_gt2": false,
+    "three_round_regression_gt2": true,
+    "high_cv": false,
+    "frozen_BLAS_ms": "0.1221439465880394",
+    "R_new": 0.7273893039831013,
+    "BLAS_source": "/workspace/bf16NN-groupgemm.csv",
+    "epoch": 0,
+    "physical_gpu": 4,
+    "binary_sha256": "fe5b5c7402683c0a6459beec4126ec8609ff0bb8bed8b1d114f0f5fdf44997a8",
+    "round_ms": {
+      "base": [
+        0.14016201,
+        0.13903999,
+        0.139842
+      ],
+      "new": [
+        0.169043,
+        0.16792101,
+        0.1676805
+      ]
+    },
+    "round_cv": {
+      "base": [
+        0.013701188,
+        0.018827539,
+        0.018126617
+      ],
+      "new": [
+        0.034731174,
+        0.015319686,
+        0.015495563
+      ]
+    },
+    "keys": [
+      "representatives_620_4eaca4b51adf_base_acc",
+      "representatives_620_4eaca4b51adf_new_acc",
+      "representatives_620_4eaca4b51adf_base_r1",
+      "representatives_620_4eaca4b51adf_new_r1",
+      "representatives_620_4eaca4b51adf_base_r2",
+      "representatives_620_4eaca4b51adf_new_r2",
+      "representatives_620_4eaca4b51adf_base_r3",
+      "representatives_620_4eaca4b51adf_new_r3"
+    ],
+    "logs": [
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_620_4eaca4b51adf_base_acc/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_620_4eaca4b51adf_new_acc/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_620_4eaca4b51adf_base_r1/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_620_4eaca4b51adf_new_r1/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_620_4eaca4b51adf_base_r2/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_620_4eaca4b51adf_new_r2/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_620_4eaca4b51adf_base_r3/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_620_4eaca4b51adf_new_r3/run.log"
+    ]
+  },
+  {
+    "suite": "representatives",
+    "ID": 621,
+    "M": 64,
+    "N": 1024,
+    "K": 2048,
+    "G": 32,
+    "active": true,
+    "base_instance": 5014,
+    "new_instance": 6000,
+    "base_ms": 0.146562,
+    "new_ms": 0.249521,
+    "change_pct": 70.24945074439486,
+    "round_changes_pct": [
+      71.03264649507122,
+      70.08569752050326,
+      69.6037248504622
+    ],
+    "three_round_improvement_gt2": false,
+    "three_round_regression_gt2": true,
+    "high_cv": false,
+    "frozen_BLAS_ms": "0.12682394683361053",
+    "R_new": 0.5082696319492569,
+    "BLAS_source": "/workspace/bf16NN-groupgemm.csv",
+    "epoch": 0,
+    "physical_gpu": 4,
+    "binary_sha256": "fe5b5c7402683c0a6459beec4126ec8609ff0bb8bed8b1d114f0f5fdf44997a8",
+    "round_ms": {
+      "base": [
+        0.14608,
+        0.146562,
+        0.14712
+      ],
+      "new": [
+        0.24984449,
+        0.249281,
+        0.249521
+      ]
+    },
+    "round_cv": {
+      "base": [
+        0.020260761,
+        0.015411825,
+        0.016887734
+      ],
+      "new": [
+        0.0064605364,
+        0.0098312421,
+        0.0076416516
+      ]
+    },
+    "keys": [
+      "representatives_621_7d3c61c2ac43_base_acc",
+      "representatives_621_7d3c61c2ac43_new_acc",
+      "representatives_621_7d3c61c2ac43_base_r1",
+      "representatives_621_7d3c61c2ac43_new_r1",
+      "representatives_621_7d3c61c2ac43_base_r2",
+      "representatives_621_7d3c61c2ac43_new_r2",
+      "representatives_621_7d3c61c2ac43_base_r3",
+      "representatives_621_7d3c61c2ac43_new_r3"
+    ],
+    "logs": [
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_621_7d3c61c2ac43_base_acc/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_621_7d3c61c2ac43_new_acc/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_621_7d3c61c2ac43_base_r1/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_621_7d3c61c2ac43_new_r1/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_621_7d3c61c2ac43_base_r2/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_621_7d3c61c2ac43_new_r2/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_621_7d3c61c2ac43_base_r3/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_621_7d3c61c2ac43_new_r3/run.log"
+    ]
+  },
+  {
+    "suite": "representatives",
+    "ID": 358,
+    "M": 8,
+    "N": 6144,
+    "K": 2048,
+    "G": 32,
+    "active": true,
+    "base_instance": 5017,
+    "new_instance": 6000,
+    "base_ms": 0.635602,
+    "new_ms": 0.76024497,
+    "change_pct": 19.61022306411875,
+    "round_changes_pct": [
+      19.51416578320235,
+      19.294725543976178,
+      19.622815850170383
+    ],
+    "three_round_improvement_gt2": false,
+    "three_round_regression_gt2": true,
+    "high_cv": false,
+    "frozen_BLAS_ms": "0.670039713382721",
+    "R_new": 0.8813471181305165,
+    "BLAS_source": "/workspace/bf16NN-groupgemm.csv",
+    "epoch": 0,
+    "physical_gpu": 4,
+    "binary_sha256": "fe5b5c7402683c0a6459beec4126ec8609ff0bb8bed8b1d114f0f5fdf44997a8",
+    "round_ms": {
+      "base": [
+        0.63544351,
+        0.63728297,
+        0.635602
+      ],
+      "new": [
+        0.75944501,
+        0.76024497,
+        0.76032501
+      ]
+    },
+    "round_cv": {
+      "base": [
+        0.0078344709,
+        0.0068121375,
+        0.0070554406
+      ],
+      "new": [
+        0.0067174686,
+        0.0090917379,
+        0.0067600076
+      ]
+    },
+    "keys": [
+      "representatives_358_fdd4e3f5be55_base_acc",
+      "representatives_358_fdd4e3f5be55_new_acc",
+      "representatives_358_fdd4e3f5be55_base_r1",
+      "representatives_358_fdd4e3f5be55_new_r1",
+      "representatives_358_fdd4e3f5be55_base_r2",
+      "representatives_358_fdd4e3f5be55_new_r2",
+      "representatives_358_fdd4e3f5be55_base_r3",
+      "representatives_358_fdd4e3f5be55_new_r3"
+    ],
+    "logs": [
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_358_fdd4e3f5be55_base_acc/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_358_fdd4e3f5be55_new_acc/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_358_fdd4e3f5be55_base_r1/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_358_fdd4e3f5be55_new_r1/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_358_fdd4e3f5be55_base_r2/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_358_fdd4e3f5be55_new_r2/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_358_fdd4e3f5be55_base_r3/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_358_fdd4e3f5be55_new_r3/run.log"
+    ]
+  },
+  {
+    "suite": "representatives",
+    "ID": 772,
+    "M": 64,
+    "N": 6144,
+    "K": 3584,
+    "G": 56,
+    "active": true,
+    "base_instance": 5000,
+    "new_instance": 6000,
+    "base_ms": 1.975438,
+    "new_ms": 9.8736906,
+    "change_pct": 399.82285447581745,
+    "round_changes_pct": [
+      399.84195812161056,
+      397.8036088819413,
+      401.87910225479106
+    ],
+    "three_round_improvement_gt2": false,
+    "three_round_regression_gt2": true,
+    "high_cv": false,
+    "frozen_BLAS_ms": "2.0357272624969482",
+    "R_new": 0.20617693474180246,
+    "BLAS_source": "/workspace/bf16NN-groupgemm.csv",
+    "epoch": 0,
+    "physical_gpu": 4,
+    "binary_sha256": "fe5b5c7402683c0a6459beec4126ec8609ff0bb8bed8b1d114f0f5fdf44997a8",
+    "round_ms": {
+      "base": [
+        1.9753625,
+        1.980558,
+        1.975438
+      ],
+      "new": [
+        9.8736906,
+        9.8592892,
+        9.9143105
+      ]
+    },
+    "round_cv": {
+      "base": [
+        0.0094312588,
+        0.011053656,
+        0.011046124
+      ],
+      "new": [
+        0.01408811,
+        0.018654952,
+        0.013785628
+      ]
+    },
+    "keys": [
+      "representatives_772_cb70d31aaa06_base_acc",
+      "representatives_772_cb70d31aaa06_new_acc",
+      "representatives_772_cb70d31aaa06_base_r1",
+      "representatives_772_cb70d31aaa06_new_r1",
+      "representatives_772_cb70d31aaa06_base_r2",
+      "representatives_772_cb70d31aaa06_new_r2",
+      "representatives_772_cb70d31aaa06_base_r3",
+      "representatives_772_cb70d31aaa06_new_r3"
+    ],
+    "logs": [
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_772_cb70d31aaa06_base_acc/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_772_cb70d31aaa06_new_acc/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_772_cb70d31aaa06_base_r1/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_772_cb70d31aaa06_new_r1/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_772_cb70d31aaa06_base_r2/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_772_cb70d31aaa06_new_r2/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_772_cb70d31aaa06_base_r3/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_772_cb70d31aaa06_new_r3/run.log"
+    ]
+  },
+  {
+    "suite": "representatives",
+    "ID": 1179,
+    "M": 1,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "active": true,
+    "base_instance": 5003,
+    "new_instance": 6000,
+    "base_ms": 0.0319205,
+    "new_ms": 0.029921999,
+    "change_pct": -6.260869973841254,
+    "round_changes_pct": [
+      -4.519469221105532,
+      -7.878455096825842,
+      -6.768380821102427
+    ],
+    "three_round_improvement_gt2": true,
+    "three_round_regression_gt2": false,
+    "high_cv": true,
+    "frozen_BLAS_ms": "0.03193599730730057",
+    "R_new": 1.067308280683405,
+    "BLAS_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "epoch": 0,
+    "physical_gpu": 4,
+    "binary_sha256": "fe5b5c7402683c0a6459beec4126ec8609ff0bb8bed8b1d114f0f5fdf44997a8",
+    "round_ms": {
+      "base": [
+        0.03184,
+        0.032481,
+        0.0319205
+      ],
+      "new": [
+        0.030401001,
+        0.029921999,
+        0.029759999
+      ]
+    },
+    "round_cv": {
+      "base": [
+        0.055084243,
+        0.091719474,
+        0.059206284
+      ],
+      "new": [
+        0.045793906,
+        0.054727929,
+        0.0095161448
+      ]
+    },
+    "keys": [
+      "representatives_1179_356e1ebf74b5_base_acc",
+      "representatives_1179_356e1ebf74b5_new_acc",
+      "representatives_1179_356e1ebf74b5_base_r1",
+      "representatives_1179_356e1ebf74b5_new_r1",
+      "representatives_1179_356e1ebf74b5_base_r2",
+      "representatives_1179_356e1ebf74b5_new_r2",
+      "representatives_1179_356e1ebf74b5_base_r3",
+      "representatives_1179_356e1ebf74b5_new_r3"
+    ],
+    "logs": [
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1179_356e1ebf74b5_base_acc/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1179_356e1ebf74b5_new_acc/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1179_356e1ebf74b5_base_r1/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1179_356e1ebf74b5_new_r1/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1179_356e1ebf74b5_base_r2/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1179_356e1ebf74b5_new_r2/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1179_356e1ebf74b5_base_r3/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1179_356e1ebf74b5_new_r3/run.log"
+    ]
+  },
+  {
+    "suite": "representatives",
+    "ID": 1180,
+    "M": 2,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "active": true,
+    "base_instance": 5003,
+    "new_instance": 6000,
+    "base_ms": 0.032159999,
+    "new_ms": 0.029920001,
+    "change_pct": -6.965168127026367,
+    "round_changes_pct": [
+      -6.714860283422275,
+      -6.498532992657157,
+      -8.558848689929821
+    ],
+    "three_round_improvement_gt2": true,
+    "three_round_regression_gt2": false,
+    "high_cv": true,
+    "frozen_BLAS_ms": "0.03202399984002113",
+    "R_new": 1.0703208144953316,
+    "BLAS_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "epoch": 0,
+    "physical_gpu": 4,
+    "binary_sha256": "fe5b5c7402683c0a6459beec4126ec8609ff0bb8bed8b1d114f0f5fdf44997a8",
+    "round_ms": {
+      "base": [
+        0.032159999,
+        0.031999499,
+        0.032720499
+      ],
+      "new": [
+        0.0300005,
+        0.029920001,
+        0.029920001
+      ]
+    },
+    "round_cv": {
+      "base": [
+        0.0734112,
+        0.11305071,
+        0.15361874
+      ],
+      "new": [
+        0.0351963,
+        0.03545262,
+        0.032266188
+      ]
+    },
+    "keys": [
+      "representatives_1180_0dd1fe4ecf7c_base_acc",
+      "representatives_1180_0dd1fe4ecf7c_new_acc",
+      "representatives_1180_0dd1fe4ecf7c_base_r1",
+      "representatives_1180_0dd1fe4ecf7c_new_r1",
+      "representatives_1180_0dd1fe4ecf7c_base_r2",
+      "representatives_1180_0dd1fe4ecf7c_new_r2",
+      "representatives_1180_0dd1fe4ecf7c_base_r3",
+      "representatives_1180_0dd1fe4ecf7c_new_r3"
+    ],
+    "logs": [
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1180_0dd1fe4ecf7c_base_acc/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1180_0dd1fe4ecf7c_new_acc/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1180_0dd1fe4ecf7c_base_r1/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1180_0dd1fe4ecf7c_new_r1/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1180_0dd1fe4ecf7c_base_r2/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1180_0dd1fe4ecf7c_new_r2/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1180_0dd1fe4ecf7c_base_r3/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1180_0dd1fe4ecf7c_new_r3/run.log"
+    ]
+  },
+  {
+    "suite": "representatives",
+    "ID": 1181,
+    "M": 4,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "active": true,
+    "base_instance": 5003,
+    "new_instance": 6000,
+    "base_ms": 0.032159999,
+    "new_ms": 0.0306405,
+    "change_pct": -4.724810470298834,
+    "round_changes_pct": [
+      -4.724810470298834,
+      -6.930693069306937,
+      -2.990913390037142
+    ],
+    "three_round_improvement_gt2": true,
+    "three_round_regression_gt2": false,
+    "high_cv": true,
+    "frozen_BLAS_ms": "0.0321200005710125",
+    "R_new": 1.0482857842075846,
+    "BLAS_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "epoch": 0,
+    "physical_gpu": 4,
+    "binary_sha256": "fe5b5c7402683c0a6459beec4126ec8609ff0bb8bed8b1d114f0f5fdf44997a8",
+    "round_ms": {
+      "base": [
+        0.032159999,
+        0.03232,
+        0.032080501
+      ],
+      "new": [
+        0.0306405,
+        0.03008,
+        0.031121001
+      ]
+    },
+    "round_cv": {
+      "base": [
+        0.066108943,
+        0.069242055,
+        0.060457595
+      ],
+      "new": [
+        0.043728845,
+        0.016704893,
+        0.049298081
+      ]
+    },
+    "keys": [
+      "representatives_1181_a4d04e322426_base_acc",
+      "representatives_1181_a4d04e322426_new_acc",
+      "representatives_1181_a4d04e322426_base_r1",
+      "representatives_1181_a4d04e322426_new_r1",
+      "representatives_1181_a4d04e322426_base_r2",
+      "representatives_1181_a4d04e322426_new_r2",
+      "representatives_1181_a4d04e322426_base_r3",
+      "representatives_1181_a4d04e322426_new_r3"
+    ],
+    "logs": [
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1181_a4d04e322426_base_acc/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1181_a4d04e322426_new_acc/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1181_a4d04e322426_base_r1/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1181_a4d04e322426_new_r1/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1181_a4d04e322426_base_r2/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1181_a4d04e322426_new_r2/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1181_a4d04e322426_base_r3/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1181_a4d04e322426_new_r3/run.log"
+    ]
+  },
+  {
+    "suite": "representatives",
+    "ID": 1182,
+    "M": 8,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "active": true,
+    "base_instance": 5003,
+    "new_instance": 6000,
+    "base_ms": 0.03232,
+    "new_ms": 0.030480001,
+    "change_pct": -5.6930662128712894,
+    "round_changes_pct": [
+      -5.94204315966781,
+      -5.6930662128712894,
+      -2.237213490910517
+    ],
+    "three_round_improvement_gt2": true,
+    "three_round_regression_gt2": false,
+    "high_cv": true,
+    "frozen_BLAS_ms": "0.03261595219373703",
+    "R_new": 1.0700771366030148,
+    "BLAS_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "epoch": 0,
+    "physical_gpu": 4,
+    "binary_sha256": "fe5b5c7402683c0a6459beec4126ec8609ff0bb8bed8b1d114f0f5fdf44997a8",
+    "round_ms": {
+      "base": [
+        0.032320499,
+        0.03232,
+        0.032160498
+      ],
+      "new": [
+        0.030400001,
+        0.030480001,
+        0.031440999
+      ]
+    },
+    "round_cv": {
+      "base": [
+        0.048608431,
+        0.082084232,
+        0.05411072
+      ],
+      "new": [
+        0.042110622,
+        0.034469626,
+        0.048975032
+      ]
+    },
+    "keys": [
+      "representatives_1182_d2f79e1d79e4_base_acc",
+      "representatives_1182_d2f79e1d79e4_new_acc",
+      "representatives_1182_d2f79e1d79e4_base_r1",
+      "representatives_1182_d2f79e1d79e4_new_r1",
+      "representatives_1182_d2f79e1d79e4_base_r2",
+      "representatives_1182_d2f79e1d79e4_new_r2",
+      "representatives_1182_d2f79e1d79e4_base_r3",
+      "representatives_1182_d2f79e1d79e4_new_r3"
+    ],
+    "logs": [
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1182_d2f79e1d79e4_base_acc/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1182_d2f79e1d79e4_new_acc/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1182_d2f79e1d79e4_base_r1/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1182_d2f79e1d79e4_new_r1/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1182_d2f79e1d79e4_base_r2/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1182_d2f79e1d79e4_new_r2/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1182_d2f79e1d79e4_base_r3/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1182_d2f79e1d79e4_new_r3/run.log"
+    ]
+  },
+  {
+    "suite": "representatives",
+    "ID": 1183,
+    "M": 16,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "active": true,
+    "base_instance": 5003,
+    "new_instance": 6000,
+    "base_ms": 0.033440001,
+    "new_ms": 0.03136,
+    "change_pct": -6.220098498202786,
+    "round_changes_pct": [
+      -6.669447139387308,
+      -5.741623632128478,
+      -6.0081159855769
+    ],
+    "three_round_improvement_gt2": true,
+    "three_round_regression_gt2": false,
+    "high_cv": true,
+    "frozen_BLAS_ms": "0.0329599492251873",
+    "R_new": 1.0510187890684726,
+    "BLAS_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "epoch": 0,
+    "physical_gpu": 4,
+    "binary_sha256": "fe5b5c7402683c0a6459beec4126ec8609ff0bb8bed8b1d114f0f5fdf44997a8",
+    "round_ms": {
+      "base": [
+        0.033601001,
+        0.033440001,
+        0.03328
+      ],
+      "new": [
+        0.03136,
+        0.031520002,
+        0.031280499
+      ]
+    },
+    "round_cv": {
+      "base": [
+        0.064620627,
+        0.044925784,
+        0.035315237
+      ],
+      "new": [
+        0.021444757,
+        0.017389897,
+        0.05423539
+      ]
+    },
+    "keys": [
+      "representatives_1183_a0670d752d7c_base_acc",
+      "representatives_1183_a0670d752d7c_new_acc",
+      "representatives_1183_a0670d752d7c_base_r1",
+      "representatives_1183_a0670d752d7c_new_r1",
+      "representatives_1183_a0670d752d7c_base_r2",
+      "representatives_1183_a0670d752d7c_new_r2",
+      "representatives_1183_a0670d752d7c_base_r3",
+      "representatives_1183_a0670d752d7c_new_r3"
+    ],
+    "logs": [
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1183_a0670d752d7c_base_acc/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1183_a0670d752d7c_new_acc/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1183_a0670d752d7c_base_r1/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1183_a0670d752d7c_new_r1/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1183_a0670d752d7c_base_r2/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1183_a0670d752d7c_new_r2/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1183_a0670d752d7c_base_r3/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1183_a0670d752d7c_new_r3/run.log"
+    ]
+  },
+  {
+    "suite": "representatives",
+    "ID": 1184,
+    "M": 32,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "active": true,
+    "base_instance": 5003,
+    "new_instance": 6000,
+    "base_ms": 0.034880999,
+    "new_ms": 0.032639999,
+    "change_pct": -6.4247013108770235,
+    "round_changes_pct": [
+      -5.773672222103688,
+      -5.968857141964312,
+      -9.17479402630782
+    ],
+    "three_round_improvement_gt2": true,
+    "three_round_regression_gt2": false,
+    "high_cv": true,
+    "frozen_BLAS_ms": "0.033504001796245575",
+    "R_new": 1.0264706747155712,
+    "BLAS_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "epoch": 0,
+    "physical_gpu": 4,
+    "binary_sha256": "fe5b5c7402683c0a6459beec4126ec8609ff0bb8bed8b1d114f0f5fdf44997a8",
+    "round_ms": {
+      "base": [
+        0.034639999,
+        0.034880999,
+        0.035760999
+      ],
+      "new": [
+        0.032639999,
+        0.032799002,
+        0.032480001
+      ]
+    },
+    "round_cv": {
+      "base": [
+        0.083728393,
+        0.058390703,
+        0.076848734
+      ],
+      "new": [
+        0.032085353,
+        0.020871159,
+        0.025627466
+      ]
+    },
+    "keys": [
+      "representatives_1184_9405c862225e_base_acc",
+      "representatives_1184_9405c862225e_new_acc",
+      "representatives_1184_9405c862225e_base_r1",
+      "representatives_1184_9405c862225e_new_r1",
+      "representatives_1184_9405c862225e_base_r2",
+      "representatives_1184_9405c862225e_new_r2",
+      "representatives_1184_9405c862225e_base_r3",
+      "representatives_1184_9405c862225e_new_r3"
+    ],
+    "logs": [
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1184_9405c862225e_base_acc/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1184_9405c862225e_new_acc/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1184_9405c862225e_base_r1/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1184_9405c862225e_new_r1/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1184_9405c862225e_base_r2/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1184_9405c862225e_new_r2/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1184_9405c862225e_base_r3/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1184_9405c862225e_new_r3/run.log"
+    ]
+  },
+  {
+    "suite": "representatives",
+    "ID": 1185,
+    "M": 64,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "active": true,
+    "base_instance": 5015,
+    "new_instance": 6000,
+    "base_ms": 0.03616,
+    "new_ms": 0.03968,
+    "change_pct": 9.734513274336297,
+    "round_changes_pct": [
+      10.466165268685979,
+      9.734513274336297,
+      9.252474965515557
+    ],
+    "three_round_improvement_gt2": false,
+    "three_round_regression_gt2": true,
+    "high_cv": false,
+    "frozen_BLAS_ms": "0.03164000064134598",
+    "R_new": 0.7973790484210176,
+    "BLAS_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "epoch": 0,
+    "physical_gpu": 4,
+    "binary_sha256": "fe5b5c7402683c0a6459beec4126ec8609ff0bb8bed8b1d114f0f5fdf44997a8",
+    "round_ms": {
+      "base": [
+        0.035920501,
+        0.03616,
+        0.036320001
+      ],
+      "new": [
+        0.03968,
+        0.03968,
+        0.0396805
+      ]
+    },
+    "round_cv": {
+      "base": [
+        0.034862654,
+        0.029933524,
+        0.028437234
+      ],
+      "new": [
+        0.028910885,
+        0.013217699,
+        0.01358002
+      ]
+    },
+    "keys": [
+      "representatives_1185_22d8daa4bdbf_base_acc",
+      "representatives_1185_22d8daa4bdbf_new_acc",
+      "representatives_1185_22d8daa4bdbf_base_r1",
+      "representatives_1185_22d8daa4bdbf_new_r1",
+      "representatives_1185_22d8daa4bdbf_base_r2",
+      "representatives_1185_22d8daa4bdbf_new_r2",
+      "representatives_1185_22d8daa4bdbf_base_r3",
+      "representatives_1185_22d8daa4bdbf_new_r3"
+    ],
+    "logs": [
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1185_22d8daa4bdbf_base_acc/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1185_22d8daa4bdbf_new_acc/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1185_22d8daa4bdbf_base_r1/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1185_22d8daa4bdbf_new_r1/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1185_22d8daa4bdbf_base_r2/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1185_22d8daa4bdbf_new_r2/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1185_22d8daa4bdbf_base_r3/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1185_22d8daa4bdbf_new_r3/run.log"
+    ]
+  },
+  {
+    "suite": "representatives",
+    "ID": 1186,
+    "M": 128,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "active": false,
+    "base_instance": 5009,
+    "new_instance": 5009,
+    "base_ms": 0.042720001,
+    "new_ms": 0.042560499,
+    "change_pct": -0.37336609612906857,
+    "round_changes_pct": [
+      -0.18797227443609899,
+      0.0,
+      -0.7497318396933794
+    ],
+    "three_round_improvement_gt2": false,
+    "three_round_regression_gt2": false,
+    "high_cv": false,
+    "frozen_BLAS_ms": "0.038439951837062836",
+    "R_new": 0.9031837675837127,
+    "BLAS_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "epoch": 0,
+    "physical_gpu": 4,
+    "binary_sha256": "fe5b5c7402683c0a6459beec4126ec8609ff0bb8bed8b1d114f0f5fdf44997a8",
+    "round_ms": {
+      "base": [
+        0.04256,
+        0.042720001,
+        0.042881999
+      ],
+      "new": [
+        0.042479999,
+        0.042720001,
+        0.042560499
+      ]
+    },
+    "round_cv": {
+      "base": [
+        0.042714866,
+        0.039587531,
+        0.043460871
+      ],
+      "new": [
+        0.038021193,
+        0.022414405,
+        0.036701363
+      ]
+    },
+    "keys": [
+      "representatives_1186_865d68ebee28_base_acc",
+      "representatives_1186_865d68ebee28_new_acc",
+      "representatives_1186_865d68ebee28_base_r1",
+      "representatives_1186_865d68ebee28_new_r1",
+      "representatives_1186_865d68ebee28_base_r2",
+      "representatives_1186_865d68ebee28_new_r2",
+      "representatives_1186_865d68ebee28_base_r3",
+      "representatives_1186_865d68ebee28_new_r3"
+    ],
+    "logs": [
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1186_865d68ebee28_base_acc/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1186_865d68ebee28_new_acc/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1186_865d68ebee28_base_r1/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1186_865d68ebee28_new_r1/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1186_865d68ebee28_base_r2/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1186_865d68ebee28_new_r2/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1186_865d68ebee28_base_r3/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1186_865d68ebee28_new_r3/run.log"
+    ]
+  },
+  {
+    "suite": "representatives",
+    "ID": 1187,
+    "M": 256,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "active": false,
+    "base_instance": 5005,
+    "new_instance": 5005,
+    "base_ms": 0.058079999,
+    "new_ms": 0.058400001,
+    "change_pct": 0.5509676403403496,
+    "round_changes_pct": [
+      9.368111387192002,
+      0.6887923617483471,
+      -8.795402220370319
+    ],
+    "three_round_improvement_gt2": false,
+    "three_round_regression_gt2": false,
+    "high_cv": true,
+    "frozen_BLAS_ms": "0.05039994791150093",
+    "R_new": 0.8630127919261668,
+    "BLAS_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "epoch": 0,
+    "physical_gpu": 4,
+    "binary_sha256": "fe5b5c7402683c0a6459beec4126ec8609ff0bb8bed8b1d114f0f5fdf44997a8",
+    "round_ms": {
+      "base": [
+        0.058079999,
+        0.058000498,
+        0.063680999
+      ],
+      "new": [
+        0.063520998,
+        0.058400001,
+        0.058079999
+      ]
+    },
+    "round_cv": {
+      "base": [
+        0.025051001,
+        0.0062435182,
+        0.010159777
+      ],
+      "new": [
+        0.069189164,
+        0.011513027,
+        0.010621135
+      ]
+    },
+    "keys": [
+      "representatives_1187_1cb1ab59ce73_base_acc",
+      "representatives_1187_1cb1ab59ce73_new_acc",
+      "representatives_1187_1cb1ab59ce73_base_r1",
+      "representatives_1187_1cb1ab59ce73_new_r1",
+      "representatives_1187_1cb1ab59ce73_base_r2",
+      "representatives_1187_1cb1ab59ce73_new_r2",
+      "representatives_1187_1cb1ab59ce73_base_r3",
+      "representatives_1187_1cb1ab59ce73_new_r3"
+    ],
+    "logs": [
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1187_1cb1ab59ce73_base_acc/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1187_1cb1ab59ce73_new_acc/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1187_1cb1ab59ce73_base_r1/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1187_1cb1ab59ce73_new_r1/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1187_1cb1ab59ce73_base_r2/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1187_1cb1ab59ce73_new_r2/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1187_1cb1ab59ce73_base_r3/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1187_1cb1ab59ce73_new_r3/run.log"
+    ]
+  },
+  {
+    "suite": "representatives",
+    "ID": 1188,
+    "M": 512,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "active": false,
+    "base_instance": 5005,
+    "new_instance": 5005,
+    "base_ms": 0.100163,
+    "new_ms": 0.083917499,
+    "change_pct": -16.219063925800935,
+    "round_changes_pct": [
+      -16.187206937799036,
+      -16.219063925800935,
+      -0.09313323090314185
+    ],
+    "three_round_improvement_gt2": false,
+    "three_round_regression_gt2": false,
+    "high_cv": false,
+    "frozen_BLAS_ms": "0.08038390427827835",
+    "R_new": 0.9578920396361948,
+    "BLAS_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "epoch": 0,
+    "physical_gpu": 4,
+    "binary_sha256": "fe5b5c7402683c0a6459beec4126ec8609ff0bb8bed8b1d114f0f5fdf44997a8",
+    "round_ms": {
+      "base": [
+        0.10032,
+        0.100163,
+        0.083758503
+      ],
+      "new": [
+        0.084080994,
+        0.083917499,
+        0.083680496
+      ]
+    },
+    "round_cv": {
+      "base": [
+        0.010254754,
+        0.015511756,
+        0.0098809639
+      ],
+      "new": [
+        0.0097947415,
+        0.010361419,
+        0.0094886534
+      ]
+    },
+    "keys": [
+      "representatives_1188_c724c97b3f6e_base_acc",
+      "representatives_1188_c724c97b3f6e_new_acc",
+      "representatives_1188_c724c97b3f6e_base_r1",
+      "representatives_1188_c724c97b3f6e_new_r1",
+      "representatives_1188_c724c97b3f6e_base_r2",
+      "representatives_1188_c724c97b3f6e_new_r2",
+      "representatives_1188_c724c97b3f6e_base_r3",
+      "representatives_1188_c724c97b3f6e_new_r3"
+    ],
+    "logs": [
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1188_c724c97b3f6e_base_acc/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1188_c724c97b3f6e_new_acc/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1188_c724c97b3f6e_base_r1/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1188_c724c97b3f6e_new_r1/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1188_c724c97b3f6e_base_r2/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1188_c724c97b3f6e_new_r2/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1188_c724c97b3f6e_base_r3/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1188_c724c97b3f6e_new_r3/run.log"
+    ]
+  },
+  {
+    "suite": "representatives",
+    "ID": 1189,
+    "M": 1024,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "active": false,
+    "base_instance": 5005,
+    "new_instance": 5005,
+    "base_ms": 0.14511999,
+    "new_ms": 0.14544,
+    "change_pct": 0.22051407252716704,
+    "round_changes_pct": [
+      0.32870040853778537,
+      -0.6601821192053103,
+      -19.91056679959288
+    ],
+    "three_round_improvement_gt2": false,
+    "three_round_regression_gt2": false,
+    "high_cv": false,
+    "frozen_BLAS_ms": "0.13751189410686493",
+    "R_new": 0.945488820866783,
+    "BLAS_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "epoch": 0,
+    "physical_gpu": 4,
+    "binary_sha256": "fe5b5c7402683c0a6459beec4126ec8609ff0bb8bed8b1d114f0f5fdf44997a8",
+    "round_ms": {
+      "base": [
+        0.14511999,
+        0.14496,
+        0.18159699
+      ],
+      "new": [
+        0.145597,
+        0.144003,
+        0.14544
+      ]
+    },
+    "round_cv": {
+      "base": [
+        0.011821536,
+        0.0082560125,
+        0.020306995
+      ],
+      "new": [
+        0.009314185,
+        0.016958736,
+        0.01236815
+      ]
+    },
+    "keys": [
+      "representatives_1189_00a596c661a5_base_acc",
+      "representatives_1189_00a596c661a5_new_acc",
+      "representatives_1189_00a596c661a5_base_r1",
+      "representatives_1189_00a596c661a5_new_r1",
+      "representatives_1189_00a596c661a5_base_r2",
+      "representatives_1189_00a596c661a5_new_r2",
+      "representatives_1189_00a596c661a5_base_r3",
+      "representatives_1189_00a596c661a5_new_r3"
+    ],
+    "logs": [
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1189_00a596c661a5_base_acc/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1189_00a596c661a5_new_acc/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1189_00a596c661a5_base_r1/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1189_00a596c661a5_new_r1/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1189_00a596c661a5_base_r2/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1189_00a596c661a5_new_r2/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1189_00a596c661a5_base_r3/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1189_00a596c661a5_new_r3/run.log"
+    ]
+  },
+  {
+    "suite": "representatives",
+    "ID": 1190,
+    "M": 2048,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "active": false,
+    "base_instance": 5005,
+    "new_instance": 5005,
+    "base_ms": 0.24160099,
+    "new_ms": 0.240242,
+    "change_pct": -0.5624935560073596,
+    "round_changes_pct": [
+      -0.7286725108204162,
+      0.3329908485856903,
+      -0.8906728932636443
+    ],
+    "three_round_improvement_gt2": false,
+    "three_round_regression_gt2": false,
+    "high_cv": false,
+    "frozen_BLAS_ms": "0.25936776399612427",
+    "R_new": 1.0796104094876178,
+    "BLAS_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "epoch": 0,
+    "physical_gpu": 4,
+    "binary_sha256": "fe5b5c7402683c0a6459beec4126ec8609ff0bb8bed8b1d114f0f5fdf44997a8",
+    "round_ms": {
+      "base": [
+        0.24160099,
+        0.2404,
+        0.242401
+      ],
+      "new": [
+        0.23984051,
+        0.24120051,
+        0.240242
+      ]
+    },
+    "round_cv": {
+      "base": [
+        0.010690869,
+        0.015231137,
+        0.012957904
+      ],
+      "new": [
+        0.0087180649,
+        0.0085087552,
+        0.011671876
+      ]
+    },
+    "keys": [
+      "representatives_1190_ced7d393ceb3_base_acc",
+      "representatives_1190_ced7d393ceb3_new_acc",
+      "representatives_1190_ced7d393ceb3_base_r1",
+      "representatives_1190_ced7d393ceb3_new_r1",
+      "representatives_1190_ced7d393ceb3_base_r2",
+      "representatives_1190_ced7d393ceb3_new_r2",
+      "representatives_1190_ced7d393ceb3_base_r3",
+      "representatives_1190_ced7d393ceb3_new_r3"
+    ],
+    "logs": [
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1190_ced7d393ceb3_base_acc/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1190_ced7d393ceb3_new_acc/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1190_ced7d393ceb3_base_r1/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1190_ced7d393ceb3_new_r1/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1190_ced7d393ceb3_base_r2/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1190_ced7d393ceb3_new_r2/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1190_ced7d393ceb3_base_r3/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1190_ced7d393ceb3_new_r3/run.log"
+    ]
+  },
+  {
+    "suite": "representatives",
+    "ID": 1191,
+    "M": 4096,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "active": false,
+    "base_instance": 5005,
+    "new_instance": 5005,
+    "base_ms": 0.44023901,
+    "new_ms": 0.440081,
+    "change_pct": -0.03589186701105085,
+    "round_changes_pct": [
+      -0.23601497740965982,
+      0.1829192183930628,
+      -0.09194616646280851
+    ],
+    "three_round_improvement_gt2": false,
+    "three_round_regression_gt2": false,
+    "high_cv": false,
+    "frozen_BLAS_ms": "0.4744716286659241",
+    "R_new": 1.0781461337024867,
+    "BLAS_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "epoch": 0,
+    "physical_gpu": 4,
+    "binary_sha256": "fe5b5c7402683c0a6459beec4126ec8609ff0bb8bed8b1d114f0f5fdf44997a8",
+    "round_ms": {
+      "base": [
+        0.44023901,
+        0.44007951,
+        0.44048601
+      ],
+      "new": [
+        0.43919998,
+        0.4408845,
+        0.440081
+      ]
+    },
+    "round_cv": {
+      "base": [
+        0.0091815811,
+        0.007369476,
+        0.0054406766
+      ],
+      "new": [
+        0.0076884999,
+        0.0063535574,
+        0.0078789715
+      ]
+    },
+    "keys": [
+      "representatives_1191_f404cfb7c31f_base_acc",
+      "representatives_1191_f404cfb7c31f_new_acc",
+      "representatives_1191_f404cfb7c31f_base_r1",
+      "representatives_1191_f404cfb7c31f_new_r1",
+      "representatives_1191_f404cfb7c31f_base_r2",
+      "representatives_1191_f404cfb7c31f_new_r2",
+      "representatives_1191_f404cfb7c31f_base_r3",
+      "representatives_1191_f404cfb7c31f_new_r3"
+    ],
+    "logs": [
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1191_f404cfb7c31f_base_acc/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1191_f404cfb7c31f_new_acc/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1191_f404cfb7c31f_base_r1/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1191_f404cfb7c31f_new_r1/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1191_f404cfb7c31f_base_r2/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1191_f404cfb7c31f_new_r2/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1191_f404cfb7c31f_base_r3/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1191_f404cfb7c31f_new_r3/run.log"
+    ]
+  },
+  {
+    "suite": "representatives",
+    "ID": 1192,
+    "M": 8192,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "active": false,
+    "base_instance": 5005,
+    "new_instance": 5005,
+    "base_ms": 0.87416053,
+    "new_ms": 0.8748005,
+    "change_pct": 0.0732096655061687,
+    "round_changes_pct": [
+      -0.04564328310021626,
+      0.6407368787606949,
+      0.05467760023436519
+    ],
+    "three_round_improvement_gt2": false,
+    "three_round_regression_gt2": false,
+    "high_cv": false,
+    "frozen_BLAS_ms": "0.9020551443099976",
+    "R_new": 1.03115526832689,
+    "BLAS_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "epoch": 0,
+    "physical_gpu": 4,
+    "binary_sha256": "fe5b5c7402683c0a6459beec4126ec8609ff0bb8bed8b1d114f0f5fdf44997a8",
+    "round_ms": {
+      "base": [
+        0.87519997,
+        0.87399995,
+        0.87416053
+      ],
+      "new": [
+        0.8748005,
+        0.87959999,
+        0.8746385
+      ]
+    },
+    "round_cv": {
+      "base": [
+        0.0042930442,
+        0.0046781405,
+        0.004886
+      ],
+      "new": [
+        0.0044212161,
+        0.0066732335,
+        0.0041930337
+      ]
+    },
+    "keys": [
+      "representatives_1192_ecdad52e14c6_base_acc",
+      "representatives_1192_ecdad52e14c6_new_acc",
+      "representatives_1192_ecdad52e14c6_base_r1",
+      "representatives_1192_ecdad52e14c6_new_r1",
+      "representatives_1192_ecdad52e14c6_base_r2",
+      "representatives_1192_ecdad52e14c6_new_r2",
+      "representatives_1192_ecdad52e14c6_base_r3",
+      "representatives_1192_ecdad52e14c6_new_r3"
+    ],
+    "logs": [
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1192_ecdad52e14c6_base_acc/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1192_ecdad52e14c6_new_acc/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1192_ecdad52e14c6_base_r1/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1192_ecdad52e14c6_new_r1/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1192_ecdad52e14c6_base_r2/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1192_ecdad52e14c6_new_r2/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1192_ecdad52e14c6_base_r3/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1192_ecdad52e14c6_new_r3/run.log"
+    ]
+  },
+  {
+    "suite": "representatives",
+    "ID": 1193,
+    "M": 16384,
+    "N": 256,
+    "K": 512,
+    "G": 64,
+    "active": false,
+    "base_instance": 5005,
+    "new_instance": 5005,
+    "base_ms": 1.737121,
+    "new_ms": 1.7355914,
+    "change_pct": -0.08805373949195561,
+    "round_changes_pct": [
+      -0.08325821962671398,
+      -0.2533051192054492,
+      -0.08805373949195561
+    ],
+    "three_round_improvement_gt2": false,
+    "three_round_regression_gt2": false,
+    "high_cv": false,
+    "frozen_BLAS_ms": "1.7686866521835327",
+    "R_new": 1.01906857350384,
+    "BLAS_source": "/workspace/v7_coverage/p6c/native_new15.json",
+    "epoch": 0,
+    "physical_gpu": 4,
+    "binary_sha256": "fe5b5c7402683c0a6459beec4126ec8609ff0bb8bed8b1d114f0f5fdf44997a8",
+    "round_ms": {
+      "base": [
+        1.737366,
+        1.736246,
+        1.737121
+      ],
+      "new": [
+        1.7359195,
+        1.731848,
+        1.7355914
+      ]
+    },
+    "round_cv": {
+      "base": [
+        0.0031737937,
+        0.0030561583,
+        0.0034605015
+      ],
+      "new": [
+        0.0037092883,
+        0.0033067249,
+        0.0040157054
+      ]
+    },
+    "keys": [
+      "representatives_1193_32b602d6009d_base_acc",
+      "representatives_1193_32b602d6009d_new_acc",
+      "representatives_1193_32b602d6009d_base_r1",
+      "representatives_1193_32b602d6009d_new_r1",
+      "representatives_1193_32b602d6009d_base_r2",
+      "representatives_1193_32b602d6009d_new_r2",
+      "representatives_1193_32b602d6009d_base_r3",
+      "representatives_1193_32b602d6009d_new_r3"
+    ],
+    "logs": [
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1193_32b602d6009d_base_acc/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1193_32b602d6009d_new_acc/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1193_32b602d6009d_base_r1/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1193_32b602d6009d_new_r1/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1193_32b602d6009d_base_r2/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1193_32b602d6009d_new_r2/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1193_32b602d6009d_base_r3/run.log",
+      "/workspace/v7_coverage/p6h_decode_arch/runs/representatives_1193_32b602d6009d_new_r3/run.log"
+    ]
+  }
+]

@@ -121,7 +121,7 @@ int main()
     constexpr std::uint32_t all_layout = CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NT_V1 |
                                          CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NN_V1 |
                                          CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_TN_V1;
-    constexpr std::array<CandidateExpected, 36> expected{{
+    constexpr std::array<CandidateExpected, 37> expected{{
         {CK_TILE_HCU_GROUPED_GEMM_INSTANCE_BW_FAMILY_SELECTED_V1,
          CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_FAMILY_BW_V1,
          CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX936_V1,
@@ -308,6 +308,11 @@ int main()
          CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_MASK_BF16_V1,
          CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NN_V1},
 
+        {CK_TILE_HCU_GROUPED_GEMM_INSTANCE_BF16_NN_DECODE_WAVE_V1,
+         CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_FAMILY_DECODE_V1,
+         CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX936_V1,
+         CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_MASK_BF16_V1,
+         CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NN_V1},
     }};
     std::set<std::string> names;
     bool passed = true;

@@ -1,0 +1,40 @@
+{
+  "suite": "row_geometry_stress",
+  "table_sha256": "f1f32ce15d8f3e6f4b6a1cd8d00093ff03102df844a34657c96dce3e8fbfead0",
+  "binary_sha256": "ead2073d6e488defaa52255f042493d65d2fe12c2b19649d1660fa1bf559c272",
+  "cases": [
+    {
+      "id": -201,
+      "M": 31,
+      "N": 128,
+      "K": 64,
+      "G": 1,
+      "baseline": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+      },
+      "expected": 5000
+    },
+    {
+      "id": -202,
+      "M": 33,
+      "N": 256,
+      "K": 128,
+      "G": 4,
+      "baseline": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+      },
+      "expected": 5000
+    },
+    {
+      "id": -203,
+      "M": 49,
+      "N": 128,
+      "K": 512,
+      "G": 64,
+      "baseline": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+      },
+      "expected": 5000
+    }
+  ]
+}

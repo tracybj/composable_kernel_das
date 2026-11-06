@@ -1,0 +1,5 @@
+{
+  "factor": "Depth8 private B/A prefetch with identical16x128/K16/wave-N geometry and swizzledA; Depth2 retained for K not divisible128/minimumK",
+  "counts": "2VMEM perstage; main vmcnt14 and drain14/12/10/8/6/4/2/0. No extra requests.8phases per loop instead2 is coupled to buffer-depth change.",
+  "canonical_note": "Unreleased instance6000 still carries initial .s2 registry suffix during experiments. Final delivery will generalize the name after final geometry/depth is settled; actual depth is in shader type/metadata/source and binary SHA."
+}

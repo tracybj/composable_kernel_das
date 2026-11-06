@@ -1,0 +1,5 @@
+{
+  "rejected": "Rows4Depth8 spills even at minblocks2; never GPU tested",
+  "decision": "Rows4 usesDepth4 forK%64, elseDepth2. Rows1/2 retainDepth8 forK%128, elseDepth2. All configurations share one pipeline body.",
+  "next": "Require zero scratch/spill in all6 actual gfx936 shaders before GPU use"
+}

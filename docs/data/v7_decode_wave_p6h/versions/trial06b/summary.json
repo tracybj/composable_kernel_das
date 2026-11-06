@@ -1,0 +1,62 @@
+{
+  "binary_sha256": "276fdae07237401fdfb56976c7c6c11faa61418deaf8097e4839607da1fbfc99",
+  "suites": {
+    "representatives": {
+      "completed": 22,
+      "active": 14,
+      "fallback": 8,
+      "improved_gt2": 0,
+      "regressed_gt2": 14,
+      "within2": 0,
+      "three_round_improved_gt2": 0,
+      "three_round_regressed_gt2": 12,
+      "high_cv": 9,
+      "median_change_pct": 18.704453104665543,
+      "sum_base_ms": 3.231852969,
+      "sum_new_ms": 4.500732713
+    }
+  },
+  "plans": [
+    {
+      "suite": "boundary_stress",
+      "planned": 3,
+      "complete": 3,
+      "missing": []
+    },
+    {
+      "suite": "configuration_min_stage",
+      "planned": 7,
+      "complete": 7,
+      "missing": []
+    },
+    {
+      "suite": "representatives",
+      "planned": 22,
+      "complete": 22,
+      "missing": []
+    },
+    {
+      "suite": "row_geometry_stress",
+      "planned": 3,
+      "complete": 3,
+      "missing": []
+    },
+    {
+      "suite": "sanity",
+      "planned": 6,
+      "complete": 6,
+      "missing": []
+    }
+  ],
+  "partial_current_binary_jobs": [],
+  "prior_binary_jobs": 795,
+  "unique_measured_shapes": 22,
+  "all_raw_jobs": 990,
+  "failed_jobs": [
+    "regression_device_args_query_test_a854d7de40",
+    "profile_76_base_63988f65d7",
+    "sanity_-5_7302d219676b_new_acc",
+    "row_geometry_stress_-203_aa9ad619ff92_new_acc"
+  ],
+  "note": "Subset architecture experiment, not1193replay; historical Native baselines keep original GPU/repeat20 protocol"
+}

@@ -1,0 +1,528 @@
+{
+  "result": "PASS",
+  "count": 18,
+  "kernels": {
+    "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_21GemmPipelineV7UniformINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE0EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_": {
+      "symbol": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_21GemmPipelineV7UniformINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE0EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "demangled": "void ck_tile::kentry<512, 1, ck_tile::GroupedGemmV7UniformKernel<ck_tile::GroupedGemmKernel<ck_tile::GemmSpatiallyLocalTilePartitioner<ck_tile::TileGemmShape<ck_tile::sequence<256, 256, 64>, ck_tile::sequence<4, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, 1, 1>, ck_tile::GemmPipelineV7Uniform<ck_tile::UniversalGemmPipelineProblem<unsigned short, unsigned short, float, ck_tile::TileGemmShape<ck_tile::sequence<256, 256, 64>, ck_tile::sequence<4, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, ck_tile::TileGemmUniversalTraits<false, false, false, false, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, false, false, false, 1, false, false, true, true>, (ck_tile::GemmPipelineScheduler)1, true, (ck_tile::TailNumber)10, ck_tile::null_type, ck_tile::null_type, false, 2, 2>, (ck_tile::V7UniformKind)0>, ck_tile::GroupedGemmV7UniformStoreEpilogue<unsigned short, ck_tile::V7UniformAccTile, ck_tile::V7UniformGeometry>, (ck_tile::GroupedGemmMFilter)0, 0>>, void const AS4*, int, int>(void const AS4*, int, int)",
+      "bytes": 28400,
+      "sha256": "0d3a3738eea5e7b3f4ee8df2a619128a75ef92f125eab6e657ab6ce81249fb31",
+      "without_slc_sha256": "3e5a1a9cafcf2053902f167e34e4f52bd9ba60b7ca4165f23af6384732b0264c",
+      "slc_idxen_loads": 51,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 512,
+        ".name": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_21GemmPipelineV7UniformINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE0EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 47,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_21GemmPipelineV7UniformINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE0EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_.kd",
+        ".uniform_work_group_size": 1,
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 212,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi8EEENS_21GemmPipelineV7UniformINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE0EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_": {
+      "symbol": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi8EEENS_21GemmPipelineV7UniformINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE0EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "demangled": "void ck_tile::kentry<512, 1, ck_tile::GroupedGemmV7UniformKernel<ck_tile::GroupedGemmKernel<ck_tile::GemmSpatiallyLocalTilePartitioner<ck_tile::TileGemmShape<ck_tile::sequence<256, 256, 64>, ck_tile::sequence<4, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, 1, 8>, ck_tile::GemmPipelineV7Uniform<ck_tile::UniversalGemmPipelineProblem<unsigned short, unsigned short, float, ck_tile::TileGemmShape<ck_tile::sequence<256, 256, 64>, ck_tile::sequence<4, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, ck_tile::TileGemmUniversalTraits<false, false, false, false, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, false, false, false, 1, false, false, true, true>, (ck_tile::GemmPipelineScheduler)1, true, (ck_tile::TailNumber)10, ck_tile::null_type, ck_tile::null_type, false, 2, 2>, (ck_tile::V7UniformKind)0>, ck_tile::GroupedGemmV7UniformStoreEpilogue<unsigned short, ck_tile::V7UniformAccTile, ck_tile::V7UniformGeometry>, (ck_tile::GroupedGemmMFilter)0, 0>>, void const AS4*, int, int>(void const AS4*, int, int)",
+      "bytes": 28580,
+      "sha256": "2740306b4e42c40208d6b835e08d807c30102502928916687d14f2a143239804",
+      "without_slc_sha256": "bc99928528d6f6b9d592d478cfaada8f1ac1e18593062d04475f473771f71f8c",
+      "slc_idxen_loads": 51,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 512,
+        ".name": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi8EEENS_21GemmPipelineV7UniformINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE0EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 47,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi8EEENS_21GemmPipelineV7UniformINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE0EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_.kd",
+        ".uniform_work_group_size": 1,
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 212,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_20GemmPipelineV7SmallMINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_": {
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_20GemmPipelineV7SmallMINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "demangled": "void ck_tile::kentry<256, 2, ck_tile::GroupedGemmV7UniformKernel<ck_tile::GroupedGemmKernel<ck_tile::GemmSpatiallyLocalTilePartitioner<ck_tile::TileGemmShape<ck_tile::sequence<64, 128, 64>, ck_tile::sequence<2, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, 1, 1>, ck_tile::GemmPipelineV7SmallM<ck_tile::UniversalGemmPipelineProblem<unsigned short, unsigned short, float, ck_tile::TileGemmShape<ck_tile::sequence<64, 128, 64>, ck_tile::sequence<2, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, ck_tile::TileGemmUniversalTraits<false, false, false, false, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, false, false, false, 1, false, false, true, true>, (ck_tile::GemmPipelineScheduler)1, true, (ck_tile::TailNumber)10, ck_tile::null_type, ck_tile::null_type, false, 2, 2>, 128>, ck_tile::GroupedGemmV7SmallMStoreEpilogue<unsigned short, ck_tile::V7SmallMAccTile<ck_tile::V7SmallMGeometry<128>>, ck_tile::V7SmallMGeometry<128>>, (ck_tile::GroupedGemmMFilter)0, 0>>, void const AS4*, int, int>(void const AS4*, int, int)",
+      "bytes": 13080,
+      "sha256": "84e9cc159dd62145e36bad5df25a96d939850f340ef9c5615dba227578a50b48",
+      "without_slc_sha256": "5d03dd8acee197d3c35a66850ef45f0dcf259907e04adf2493d5e0778ec93956",
+      "slc_idxen_loads": 51,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_20GemmPipelineV7SmallMINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 47,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_20GemmPipelineV7SmallMINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_.kd",
+        ".uniform_work_group_size": 1,
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 80,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi64ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_20GemmPipelineV7SmallMINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi64EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi64EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_": {
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi64ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_20GemmPipelineV7SmallMINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi64EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi64EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "demangled": "void ck_tile::kentry<256, 2, ck_tile::GroupedGemmV7UniformKernel<ck_tile::GroupedGemmKernel<ck_tile::GemmSpatiallyLocalTilePartitioner<ck_tile::TileGemmShape<ck_tile::sequence<64, 64, 64>, ck_tile::sequence<2, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, 1, 1>, ck_tile::GemmPipelineV7SmallM<ck_tile::UniversalGemmPipelineProblem<unsigned short, unsigned short, float, ck_tile::TileGemmShape<ck_tile::sequence<64, 64, 64>, ck_tile::sequence<2, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, ck_tile::TileGemmUniversalTraits<false, false, false, false, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, false, false, false, 1, false, false, true, true>, (ck_tile::GemmPipelineScheduler)1, true, (ck_tile::TailNumber)10, ck_tile::null_type, ck_tile::null_type, false, 2, 2>, 64>, ck_tile::GroupedGemmV7SmallMStoreEpilogue<unsigned short, ck_tile::V7SmallMAccTile<ck_tile::V7SmallMGeometry<64>>, ck_tile::V7SmallMGeometry<64>>, (ck_tile::GroupedGemmMFilter)0, 0>>, void const AS4*, int, int>(void const AS4*, int, int)",
+      "bytes": 10176,
+      "sha256": "dd2c433c8e31ee4e19d9c04d2d07bb039a33a4f6714058851a07827944857e1b",
+      "without_slc_sha256": "3037131573c83c5bc33eeee9aca1505f0ed55a17c8c0a1dae81319192f28d29f",
+      "slc_idxen_loads": 51,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi64ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_20GemmPipelineV7SmallMINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi64EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi64EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 51,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi64ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_20GemmPipelineV7SmallMINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi64EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi64EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_.kd",
+        ".uniform_work_group_size": 1,
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 55,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_21GemmPipelineV7UniformINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE1EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_": {
+      "symbol": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_21GemmPipelineV7UniformINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE1EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "demangled": "void ck_tile::kentry<512, 1, ck_tile::GroupedGemmV7UniformKernel<ck_tile::GroupedGemmKernel<ck_tile::GemmSpatiallyLocalTilePartitioner<ck_tile::TileGemmShape<ck_tile::sequence<256, 256, 64>, ck_tile::sequence<4, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, 1, 1>, ck_tile::GemmPipelineV7Uniform<ck_tile::UniversalGemmPipelineProblem<unsigned short, unsigned short, float, ck_tile::TileGemmShape<ck_tile::sequence<256, 256, 64>, ck_tile::sequence<4, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, ck_tile::TileGemmUniversalTraits<false, false, false, false, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, false, false, false, 1, false, false, true, true>, (ck_tile::GemmPipelineScheduler)1, true, (ck_tile::TailNumber)10, ck_tile::null_type, ck_tile::null_type, false, 2, 2>, (ck_tile::V7UniformKind)1>, ck_tile::GroupedGemmV7UniformStoreEpilogue<unsigned short, ck_tile::V7UniformAccTile, ck_tile::V7UniformGeometry>, (ck_tile::GroupedGemmMFilter)0, 0>>, void const AS4*, int, int>(void const AS4*, int, int)",
+      "bytes": 27508,
+      "sha256": "dee6deb18ab00873296329f00d755b6b645366c0250f6115383e281036acfb79",
+      "without_slc_sha256": "dee6deb18ab00873296329f00d755b6b645366c0250f6115383e281036acfb79",
+      "slc_idxen_loads": 0,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 512,
+        ".name": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_21GemmPipelineV7UniformINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE1EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 48,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_21GemmPipelineV7UniformINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE1EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_.kd",
+        ".uniform_work_group_size": 1,
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 211,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_24GemmPipelineV7CacheNoSlcINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE0EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_": {
+      "symbol": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_24GemmPipelineV7CacheNoSlcINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE0EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "demangled": "void ck_tile::kentry<512, 1, ck_tile::GroupedGemmV7UniformKernel<ck_tile::GroupedGemmKernel<ck_tile::GemmSpatiallyLocalTilePartitioner<ck_tile::TileGemmShape<ck_tile::sequence<256, 256, 64>, ck_tile::sequence<4, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, 1, 1>, ck_tile::GemmPipelineV7CacheNoSlc<ck_tile::UniversalGemmPipelineProblem<unsigned short, unsigned short, float, ck_tile::TileGemmShape<ck_tile::sequence<256, 256, 64>, ck_tile::sequence<4, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, ck_tile::TileGemmUniversalTraits<false, false, false, false, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, false, false, false, 1, false, false, true, true>, (ck_tile::GemmPipelineScheduler)1, true, (ck_tile::TailNumber)10, ck_tile::null_type, ck_tile::null_type, false, 2, 2>, (ck_tile::V7UniformKind)0>, ck_tile::GroupedGemmV7UniformStoreEpilogue<unsigned short, ck_tile::V7UniformAccTile, ck_tile::V7UniformGeometry>, (ck_tile::GroupedGemmMFilter)0, 0>>, void const AS4*, int, int>(void const AS4*, int, int)",
+      "bytes": 28400,
+      "sha256": "3e5a1a9cafcf2053902f167e34e4f52bd9ba60b7ca4165f23af6384732b0264c",
+      "without_slc_sha256": "3e5a1a9cafcf2053902f167e34e4f52bd9ba60b7ca4165f23af6384732b0264c",
+      "slc_idxen_loads": 0,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 512,
+        ".name": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_24GemmPipelineV7CacheNoSlcINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE0EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 47,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_24GemmPipelineV7CacheNoSlcINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE0EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_.kd",
+        ".uniform_work_group_size": 1,
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 212,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi8EEENS_24GemmPipelineV7CacheNoSlcINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE0EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_": {
+      "symbol": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi8EEENS_24GemmPipelineV7CacheNoSlcINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE0EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "demangled": "void ck_tile::kentry<512, 1, ck_tile::GroupedGemmV7UniformKernel<ck_tile::GroupedGemmKernel<ck_tile::GemmSpatiallyLocalTilePartitioner<ck_tile::TileGemmShape<ck_tile::sequence<256, 256, 64>, ck_tile::sequence<4, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, 1, 8>, ck_tile::GemmPipelineV7CacheNoSlc<ck_tile::UniversalGemmPipelineProblem<unsigned short, unsigned short, float, ck_tile::TileGemmShape<ck_tile::sequence<256, 256, 64>, ck_tile::sequence<4, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, ck_tile::TileGemmUniversalTraits<false, false, false, false, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, false, false, false, 1, false, false, true, true>, (ck_tile::GemmPipelineScheduler)1, true, (ck_tile::TailNumber)10, ck_tile::null_type, ck_tile::null_type, false, 2, 2>, (ck_tile::V7UniformKind)0>, ck_tile::GroupedGemmV7UniformStoreEpilogue<unsigned short, ck_tile::V7UniformAccTile, ck_tile::V7UniformGeometry>, (ck_tile::GroupedGemmMFilter)0, 0>>, void const AS4*, int, int>(void const AS4*, int, int)",
+      "bytes": 28580,
+      "sha256": "bc99928528d6f6b9d592d478cfaada8f1ac1e18593062d04475f473771f71f8c",
+      "without_slc_sha256": "bc99928528d6f6b9d592d478cfaada8f1ac1e18593062d04475f473771f71f8c",
+      "slc_idxen_loads": 0,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 512,
+        ".name": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi8EEENS_24GemmPipelineV7CacheNoSlcINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE0EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 47,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi8EEENS_24GemmPipelineV7CacheNoSlcINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE0EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_.kd",
+        ".uniform_work_group_size": 1,
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 212,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_25GemmPipelineV7SmallMDrainINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_": {
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_25GemmPipelineV7SmallMDrainINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "demangled": "void ck_tile::kentry<256, 2, ck_tile::GroupedGemmV7UniformKernel<ck_tile::GroupedGemmKernel<ck_tile::GemmSpatiallyLocalTilePartitioner<ck_tile::TileGemmShape<ck_tile::sequence<64, 128, 64>, ck_tile::sequence<2, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, 1, 1>, ck_tile::GemmPipelineV7SmallMDrain<ck_tile::UniversalGemmPipelineProblem<unsigned short, unsigned short, float, ck_tile::TileGemmShape<ck_tile::sequence<64, 128, 64>, ck_tile::sequence<2, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, ck_tile::TileGemmUniversalTraits<false, false, false, false, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, false, false, false, 1, false, false, true, true>, (ck_tile::GemmPipelineScheduler)1, true, (ck_tile::TailNumber)10, ck_tile::null_type, ck_tile::null_type, false, 2, 2>, 128>, ck_tile::GroupedGemmV7SmallMStoreEpilogue<unsigned short, ck_tile::V7SmallMAccTile<ck_tile::V7SmallMGeometry<128>>, ck_tile::V7SmallMGeometry<128>>, (ck_tile::GroupedGemmMFilter)0, 0>>, void const AS4*, int, int>(void const AS4*, int, int)",
+      "bytes": 16036,
+      "sha256": "5d60a2d15913949b2faa8b320f2a73368ee980683364563a6e9238e295f846d6",
+      "without_slc_sha256": "c59b488bd64adb13e73737e999bed4e21e6502b21c9055b7fdf55590da2ebaf6",
+      "slc_idxen_loads": 51,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_25GemmPipelineV7SmallMDrainINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 64,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_25GemmPipelineV7SmallMDrainINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_.kd",
+        ".uniform_work_group_size": 1,
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 80,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "_ZN7ck_tile6kentryILi256ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_23GemmPipelineV7SmallMK32INS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_19V7SmallMK32GeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_": {
+      "symbol": "_ZN7ck_tile6kentryILi256ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_23GemmPipelineV7SmallMK32INS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_19V7SmallMK32GeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "demangled": "void ck_tile::kentry<256, 1, ck_tile::GroupedGemmV7UniformKernel<ck_tile::GroupedGemmKernel<ck_tile::GemmSpatiallyLocalTilePartitioner<ck_tile::TileGemmShape<ck_tile::sequence<64, 128, 64>, ck_tile::sequence<2, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, 1, 1>, ck_tile::GemmPipelineV7SmallMK32<ck_tile::UniversalGemmPipelineProblem<unsigned short, unsigned short, float, ck_tile::TileGemmShape<ck_tile::sequence<64, 128, 64>, ck_tile::sequence<2, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, ck_tile::TileGemmUniversalTraits<false, false, false, false, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, false, false, false, 1, false, false, true, true>, (ck_tile::GemmPipelineScheduler)1, true, (ck_tile::TailNumber)10, ck_tile::null_type, ck_tile::null_type, false, 2, 2>, 128>, ck_tile::GroupedGemmV7SmallMStoreEpilogue<unsigned short, ck_tile::V7SmallMAccTile<ck_tile::V7SmallMK32Geometry<128>>, ck_tile::V7SmallMK32Geometry<128>>, (ck_tile::GroupedGemmMFilter)0, 0>>, void const AS4*, int, int>(void const AS4*, int, int)",
+      "bytes": 17612,
+      "sha256": "a4f5770df4b524015c4ab2f79ecb786924a443f711a0dbc742d00a48b6cceccf",
+      "without_slc_sha256": "2b7fc73ea8e45e79ffe3910b7ebbd548c70d23b7a67340f984ab5b37db812462",
+      "slc_idxen_loads": 51,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_23GemmPipelineV7SmallMK32INS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_19V7SmallMK32GeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 52,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_23GemmPipelineV7SmallMK32INS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_19V7SmallMK32GeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_.kd",
+        ".uniform_work_group_size": 1,
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 116,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi128ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_23GemmPipelineV7Square128INS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_19V7Square128GeometryEEESP_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_": {
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi128ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_23GemmPipelineV7Square128INS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_19V7Square128GeometryEEESP_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "demangled": "void ck_tile::kentry<256, 2, ck_tile::GroupedGemmV7UniformKernel<ck_tile::GroupedGemmKernel<ck_tile::GemmSpatiallyLocalTilePartitioner<ck_tile::TileGemmShape<ck_tile::sequence<128, 128, 64>, ck_tile::sequence<2, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, 1, 1>, ck_tile::GemmPipelineV7Square128<ck_tile::UniversalGemmPipelineProblem<unsigned short, unsigned short, float, ck_tile::TileGemmShape<ck_tile::sequence<128, 128, 64>, ck_tile::sequence<2, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, ck_tile::TileGemmUniversalTraits<false, false, false, false, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, false, false, false, 1, false, false, true, true>, (ck_tile::GemmPipelineScheduler)1, true, (ck_tile::TailNumber)10, ck_tile::null_type, ck_tile::null_type, false, 2, 2>, 128>, ck_tile::GroupedGemmV7SmallMStoreEpilogue<unsigned short, ck_tile::V7SmallMAccTile<ck_tile::V7Square128Geometry>, ck_tile::V7Square128Geometry>, (ck_tile::GroupedGemmMFilter)0, 0>>, void const AS4*, int, int>(void const AS4*, int, int)",
+      "bytes": 18472,
+      "sha256": "fa0cdb3651a326ef01b93be02426eeae0ee216189007faab113a37f4bc4a5bc0",
+      "without_slc_sha256": "e96d8e5003274598f8e62ed25a2f74f05ba949fb2cdade9851806a6de5dae2ca",
+      "slc_idxen_loads": 51,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi128ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_23GemmPipelineV7Square128INS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_19V7Square128GeometryEEESP_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 47,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi128ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_23GemmPipelineV7Square128INS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_19V7Square128GeometryEEESP_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_.kd",
+        ".uniform_work_group_size": 1,
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 123,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi64ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_23GemmPipelineV7SmallMK32INS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi64EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_19V7SmallMK32GeometryILi64EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_": {
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi64ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_23GemmPipelineV7SmallMK32INS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi64EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_19V7SmallMK32GeometryILi64EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "demangled": "void ck_tile::kentry<256, 2, ck_tile::GroupedGemmV7UniformKernel<ck_tile::GroupedGemmKernel<ck_tile::GemmSpatiallyLocalTilePartitioner<ck_tile::TileGemmShape<ck_tile::sequence<64, 64, 64>, ck_tile::sequence<2, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, 1, 1>, ck_tile::GemmPipelineV7SmallMK32<ck_tile::UniversalGemmPipelineProblem<unsigned short, unsigned short, float, ck_tile::TileGemmShape<ck_tile::sequence<64, 64, 64>, ck_tile::sequence<2, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, ck_tile::TileGemmUniversalTraits<false, false, false, false, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, false, false, false, 1, false, false, true, true>, (ck_tile::GemmPipelineScheduler)1, true, (ck_tile::TailNumber)10, ck_tile::null_type, ck_tile::null_type, false, 2, 2>, 64>, ck_tile::GroupedGemmV7SmallMStoreEpilogue<unsigned short, ck_tile::V7SmallMAccTile<ck_tile::V7SmallMK32Geometry<64>>, ck_tile::V7SmallMK32Geometry<64>>, (ck_tile::GroupedGemmMFilter)0, 0>>, void const AS4*, int, int>(void const AS4*, int, int)",
+      "bytes": 12008,
+      "sha256": "fa33626228c5cc0d4ce6cd4a91ef016b561e6d97e04193fb3d3566e98b081307",
+      "without_slc_sha256": "11d2afed891b26cd54b0b09db505d13318e59d058d8ce2ffbf6424bbd0c9ecb5",
+      "slc_idxen_loads": 51,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi64ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_23GemmPipelineV7SmallMK32INS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi64EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_19V7SmallMK32GeometryILi64EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 51,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi64ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_23GemmPipelineV7SmallMK32INS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi64EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_19V7SmallMK32GeometryILi64EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_.kd",
+        ".uniform_work_group_size": 1,
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 79,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi5EEENS_21GemmPipelineV7UniformINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE0EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_": {
+      "symbol": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi5EEENS_21GemmPipelineV7UniformINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE0EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "demangled": "void ck_tile::kentry<512, 1, ck_tile::GroupedGemmV7UniformKernel<ck_tile::GroupedGemmKernel<ck_tile::GemmSpatiallyLocalTilePartitioner<ck_tile::TileGemmShape<ck_tile::sequence<256, 256, 64>, ck_tile::sequence<4, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, 1, 5>, ck_tile::GemmPipelineV7Uniform<ck_tile::UniversalGemmPipelineProblem<unsigned short, unsigned short, float, ck_tile::TileGemmShape<ck_tile::sequence<256, 256, 64>, ck_tile::sequence<4, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, ck_tile::TileGemmUniversalTraits<false, false, false, false, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, false, false, false, 1, false, false, true, true>, (ck_tile::GemmPipelineScheduler)1, true, (ck_tile::TailNumber)10, ck_tile::null_type, ck_tile::null_type, false, 2, 2>, (ck_tile::V7UniformKind)0>, ck_tile::GroupedGemmV7UniformStoreEpilogue<unsigned short, ck_tile::V7UniformAccTile, ck_tile::V7UniformGeometry>, (ck_tile::GroupedGemmMFilter)0, 0>>, void const AS4*, int, int>(void const AS4*, int, int)",
+      "bytes": 28600,
+      "sha256": "146d40d4ac65d01cfc9c765e2245d3c89a4606a3a984ab12783f9d0385d0d491",
+      "without_slc_sha256": "fe34033a37d0f65a3ef0effa591ec3ef965a75c5a94c5de3803d060e868919cf",
+      "slc_idxen_loads": 51,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 512,
+        ".name": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi5EEENS_21GemmPipelineV7UniformINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE0EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 47,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi5EEENS_21GemmPipelineV7UniformINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE0EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_.kd",
+        ".uniform_work_group_size": 1,
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 212,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi5EEENS_24GemmPipelineV7CacheNoSlcINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE0EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_": {
+      "symbol": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi5EEENS_24GemmPipelineV7CacheNoSlcINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE0EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "demangled": "void ck_tile::kentry<512, 1, ck_tile::GroupedGemmV7UniformKernel<ck_tile::GroupedGemmKernel<ck_tile::GemmSpatiallyLocalTilePartitioner<ck_tile::TileGemmShape<ck_tile::sequence<256, 256, 64>, ck_tile::sequence<4, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, 1, 5>, ck_tile::GemmPipelineV7CacheNoSlc<ck_tile::UniversalGemmPipelineProblem<unsigned short, unsigned short, float, ck_tile::TileGemmShape<ck_tile::sequence<256, 256, 64>, ck_tile::sequence<4, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, ck_tile::TileGemmUniversalTraits<false, false, false, false, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, false, false, false, 1, false, false, true, true>, (ck_tile::GemmPipelineScheduler)1, true, (ck_tile::TailNumber)10, ck_tile::null_type, ck_tile::null_type, false, 2, 2>, (ck_tile::V7UniformKind)0>, ck_tile::GroupedGemmV7UniformStoreEpilogue<unsigned short, ck_tile::V7UniformAccTile, ck_tile::V7UniformGeometry>, (ck_tile::GroupedGemmMFilter)0, 0>>, void const AS4*, int, int>(void const AS4*, int, int)",
+      "bytes": 28600,
+      "sha256": "fe34033a37d0f65a3ef0effa591ec3ef965a75c5a94c5de3803d060e868919cf",
+      "without_slc_sha256": "fe34033a37d0f65a3ef0effa591ec3ef965a75c5a94c5de3803d060e868919cf",
+      "slc_idxen_loads": 0,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 512,
+        ".name": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi5EEENS_24GemmPipelineV7CacheNoSlcINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE0EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 47,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi5EEENS_24GemmPipelineV7CacheNoSlcINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE0EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_.kd",
+        ".uniform_work_group_size": 1,
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 212,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi128ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_21GemmPipelineV7Tail128INS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_30GroupedGemmV7TailStoreEpilogueItNS_15V7SmallMAccTileINS_17V7Tail128GeometryEEESP_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_": {
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi128ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_21GemmPipelineV7Tail128INS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_30GroupedGemmV7TailStoreEpilogueItNS_15V7SmallMAccTileINS_17V7Tail128GeometryEEESP_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "demangled": "void ck_tile::kentry<256, 2, ck_tile::GroupedGemmV7UniformKernel<ck_tile::GroupedGemmKernel<ck_tile::GemmSpatiallyLocalTilePartitioner<ck_tile::TileGemmShape<ck_tile::sequence<128, 128, 64>, ck_tile::sequence<2, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, 1, 1>, ck_tile::GemmPipelineV7Tail128<ck_tile::UniversalGemmPipelineProblem<unsigned short, unsigned short, float, ck_tile::TileGemmShape<ck_tile::sequence<128, 128, 64>, ck_tile::sequence<2, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, ck_tile::TileGemmUniversalTraits<false, false, false, false, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, false, false, false, 1, false, false, true, true>, (ck_tile::GemmPipelineScheduler)1, true, (ck_tile::TailNumber)10, ck_tile::null_type, ck_tile::null_type, false, 2, 2>, 128>, ck_tile::GroupedGemmV7TailStoreEpilogue<unsigned short, ck_tile::V7SmallMAccTile<ck_tile::V7Tail128Geometry>, ck_tile::V7Tail128Geometry>, (ck_tile::GroupedGemmMFilter)0, 0>>, void const AS4*, int, int>(void const AS4*, int, int)",
+      "bytes": 18556,
+      "sha256": "67b05ff42f8a5f25144004355e6bc53963ff98a84ee363501c6415a92f4b0b08",
+      "without_slc_sha256": "67b05ff42f8a5f25144004355e6bc53963ff98a84ee363501c6415a92f4b0b08",
+      "slc_idxen_loads": 0,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi128ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_21GemmPipelineV7Tail128INS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_30GroupedGemmV7TailStoreEpilogueItNS_15V7SmallMAccTileINS_17V7Tail128GeometryEEESP_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 48,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi128ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_21GemmPipelineV7Tail128INS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_30GroupedGemmV7TailStoreEpilogueItNS_15V7SmallMAccTileINS_17V7Tail128GeometryEEESP_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_.kd",
+        ".uniform_work_group_size": 1,
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 123,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "_ZN7ck_tile6kentryILi256ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_29GemmPipelineV7SmallMK32SteadyINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_19V7SmallMK32GeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_": {
+      "symbol": "_ZN7ck_tile6kentryILi256ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_29GemmPipelineV7SmallMK32SteadyINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_19V7SmallMK32GeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "demangled": "void ck_tile::kentry<256, 1, ck_tile::GroupedGemmV7UniformKernel<ck_tile::GroupedGemmKernel<ck_tile::GemmSpatiallyLocalTilePartitioner<ck_tile::TileGemmShape<ck_tile::sequence<64, 128, 64>, ck_tile::sequence<2, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, 1, 1>, ck_tile::GemmPipelineV7SmallMK32Steady<ck_tile::UniversalGemmPipelineProblem<unsigned short, unsigned short, float, ck_tile::TileGemmShape<ck_tile::sequence<64, 128, 64>, ck_tile::sequence<2, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, ck_tile::TileGemmUniversalTraits<false, false, false, false, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, false, false, false, 1, false, false, true, true>, (ck_tile::GemmPipelineScheduler)1, true, (ck_tile::TailNumber)10, ck_tile::null_type, ck_tile::null_type, false, 2, 2>, 128>, ck_tile::GroupedGemmV7SmallMStoreEpilogue<unsigned short, ck_tile::V7SmallMAccTile<ck_tile::V7SmallMK32Geometry<128>>, ck_tile::V7SmallMK32Geometry<128>>, (ck_tile::GroupedGemmMFilter)0, 0>>, void const AS4*, int, int>(void const AS4*, int, int)",
+      "bytes": 26052,
+      "sha256": "d2a00c9555c7bf359dd8563297df28f5f86abf0f0d620463dcef0e3e4ee77647",
+      "without_slc_sha256": "3b678d029456c215b775ea53e3b6ad8483c3cbcb529f134857ebcd016adcd28a",
+      "slc_idxen_loads": 51,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_29GemmPipelineV7SmallMK32SteadyINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_19V7SmallMK32GeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 70,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_29GemmPipelineV7SmallMK32SteadyINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_19V7SmallMK32GeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_.kd",
+        ".uniform_work_group_size": 1,
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 116,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_26GemmPipelineV7SmallMSteadyINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_": {
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_26GemmPipelineV7SmallMSteadyINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "demangled": "void ck_tile::kentry<256, 2, ck_tile::GroupedGemmV7UniformKernel<ck_tile::GroupedGemmKernel<ck_tile::GemmSpatiallyLocalTilePartitioner<ck_tile::TileGemmShape<ck_tile::sequence<64, 128, 64>, ck_tile::sequence<2, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, 1, 1>, ck_tile::GemmPipelineV7SmallMSteady<ck_tile::UniversalGemmPipelineProblem<unsigned short, unsigned short, float, ck_tile::TileGemmShape<ck_tile::sequence<64, 128, 64>, ck_tile::sequence<2, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, ck_tile::TileGemmUniversalTraits<false, false, false, false, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, false, false, false, 1, false, false, true, true>, (ck_tile::GemmPipelineScheduler)1, true, (ck_tile::TailNumber)10, ck_tile::null_type, ck_tile::null_type, false, 2, 2>, 128>, ck_tile::GroupedGemmV7SmallMStoreEpilogue<unsigned short, ck_tile::V7SmallMAccTile<ck_tile::V7SmallMGeometry<128>>, ck_tile::V7SmallMGeometry<128>>, (ck_tile::GroupedGemmMFilter)0, 0>>, void const AS4*, int, int>(void const AS4*, int, int)",
+      "bytes": 18776,
+      "sha256": "a759881fe324e0f4e074b49c6f84b69c5598515591852c1d8b14e208905d5b46",
+      "without_slc_sha256": "fd784614fc75f8a45c3ca4a7683344a98d053b13bfa94b745c505582701ad1ab",
+      "slc_idxen_loads": 51,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_26GemmPipelineV7SmallMSteadyINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 60,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_26GemmPipelineV7SmallMSteadyINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_.kd",
+        ".uniform_work_group_size": 1,
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 80,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi128ELi256ELi64EEEENS5_IJLi2ELi4ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_21GemmPipelineV7Tail256INS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi256EEENS_33GroupedGemmV7Tail256StoreEpilogueItNS_15V7SmallMAccTileINS_17V7Tail256GeometryEEESP_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_": {
+      "symbol": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi128ELi256ELi64EEEENS5_IJLi2ELi4ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_21GemmPipelineV7Tail256INS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi256EEENS_33GroupedGemmV7Tail256StoreEpilogueItNS_15V7SmallMAccTileINS_17V7Tail256GeometryEEESP_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "demangled": "void ck_tile::kentry<512, 1, ck_tile::GroupedGemmV7UniformKernel<ck_tile::GroupedGemmKernel<ck_tile::GemmSpatiallyLocalTilePartitioner<ck_tile::TileGemmShape<ck_tile::sequence<128, 256, 64>, ck_tile::sequence<2, 4, 1>, ck_tile::sequence<16, 16, 16>, false, false>, 1, 1>, ck_tile::GemmPipelineV7Tail256<ck_tile::UniversalGemmPipelineProblem<unsigned short, unsigned short, float, ck_tile::TileGemmShape<ck_tile::sequence<128, 256, 64>, ck_tile::sequence<2, 4, 1>, ck_tile::sequence<16, 16, 16>, false, false>, ck_tile::TileGemmUniversalTraits<false, false, false, false, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, false, false, false, 1, false, false, true, true>, (ck_tile::GemmPipelineScheduler)1, true, (ck_tile::TailNumber)10, ck_tile::null_type, ck_tile::null_type, false, 2, 2>, 256>, ck_tile::GroupedGemmV7Tail256StoreEpilogue<unsigned short, ck_tile::V7SmallMAccTile<ck_tile::V7Tail256Geometry>, ck_tile::V7Tail256Geometry>, (ck_tile::GroupedGemmMFilter)0, 0>>, void const AS4*, int, int>(void const AS4*, int, int)",
+      "bytes": 18548,
+      "sha256": "e94215e10aa080963b25304b5cd316dea56568a34fe74ae9207a648c116acc9a",
+      "without_slc_sha256": "e94215e10aa080963b25304b5cd316dea56568a34fe74ae9207a648c116acc9a",
+      "slc_idxen_loads": 0,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 512,
+        ".name": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi128ELi256ELi64EEEENS5_IJLi2ELi4ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_21GemmPipelineV7Tail256INS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi256EEENS_33GroupedGemmV7Tail256StoreEpilogueItNS_15V7SmallMAccTileINS_17V7Tail256GeometryEEESP_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 48,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi128ELi256ELi64EEEENS5_IJLi2ELi4ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_21GemmPipelineV7Tail256INS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi256EEENS_33GroupedGemmV7Tail256StoreEpilogueItNS_15V7SmallMAccTileINS_17V7Tail256GeometryEEESP_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_.kd",
+        ".uniform_work_group_size": 1,
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 124,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_25GemmPipelineV7SmallMNoSlcINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_": {
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_25GemmPipelineV7SmallMNoSlcINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "demangled": "void ck_tile::kentry<256, 2, ck_tile::GroupedGemmV7UniformKernel<ck_tile::GroupedGemmKernel<ck_tile::GemmSpatiallyLocalTilePartitioner<ck_tile::TileGemmShape<ck_tile::sequence<64, 128, 64>, ck_tile::sequence<2, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, 1, 1>, ck_tile::GemmPipelineV7SmallMNoSlc<ck_tile::UniversalGemmPipelineProblem<unsigned short, unsigned short, float, ck_tile::TileGemmShape<ck_tile::sequence<64, 128, 64>, ck_tile::sequence<2, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, ck_tile::TileGemmUniversalTraits<false, false, false, false, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, false, false, false, 1, false, false, true, true>, (ck_tile::GemmPipelineScheduler)1, true, (ck_tile::TailNumber)10, ck_tile::null_type, ck_tile::null_type, false, 2, 2>, 128>, ck_tile::GroupedGemmV7SmallMStoreEpilogue<unsigned short, ck_tile::V7SmallMAccTile<ck_tile::V7SmallMGeometry<128>>, ck_tile::V7SmallMGeometry<128>>, (ck_tile::GroupedGemmMFilter)0, 0>>, void const AS4*, int, int>(void const AS4*, int, int)",
+      "bytes": 13080,
+      "sha256": "5d03dd8acee197d3c35a66850ef45f0dcf259907e04adf2493d5e0778ec93956",
+      "without_slc_sha256": "5d03dd8acee197d3c35a66850ef45f0dcf259907e04adf2493d5e0778ec93956",
+      "slc_idxen_loads": 0,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_25GemmPipelineV7SmallMNoSlcINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 47,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_25GemmPipelineV7SmallMNoSlcINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_.kd",
+        ".uniform_work_group_size": 1,
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 80,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    }
+  }
+}

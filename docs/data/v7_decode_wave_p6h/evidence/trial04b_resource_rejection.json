@@ -1,0 +1,125 @@
+{
+  "reason": "Rows4 requires at least128acc+64A registers before operands; min-blocks4 capsVGPR192 and causes scratch. Rejected before anyGPU use. Set min-blocks2, matching dynamicLDS32KiB limit.",
+  "metadata": [
+    {
+      ".group_segment_fixed_size": 0,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 64,
+      ".name": "_ZN7ck_tile6kentryILi64ELi4ENS_18DecodeNnWaveKernelILi1ELi8EEEJPU3AS4viiEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 98,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi64ELi4ENS_18DecodeNnWaveKernelILi1ELi8EEEJPU3AS4viiEEEvDpT2_.kd",
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 103,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64
+    },
+    {
+      ".group_segment_fixed_size": 0,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 64,
+      ".name": "_ZN7ck_tile6kentryILi64ELi4ENS_18DecodeNnWaveKernelILi1ELi2EEEJPU3AS4viiEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 46,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi64ELi4ENS_18DecodeNnWaveKernelILi1ELi2EEEJPU3AS4viiEEEvDpT2_.kd",
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 67,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64
+    },
+    {
+      ".group_segment_fixed_size": 0,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 64,
+      ".name": "_ZN7ck_tile6kentryILi64ELi4ENS_18DecodeNnWaveKernelILi2ELi8EEEJPU3AS4viiEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 100,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi64ELi4ENS_18DecodeNnWaveKernelILi2ELi8EEEJPU3AS4viiEEEvDpT2_.kd",
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 149,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64
+    },
+    {
+      ".group_segment_fixed_size": 0,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 64,
+      ".name": "_ZN7ck_tile6kentryILi64ELi4ENS_18DecodeNnWaveKernelILi2ELi2EEEJPU3AS4viiEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 46,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi64ELi4ENS_18DecodeNnWaveKernelILi2ELi2EEEJPU3AS4viiEEEvDpT2_.kd",
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 131,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64
+    },
+    {
+      ".group_segment_fixed_size": 0,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 64,
+      ".name": "_ZN7ck_tile6kentryILi64ELi4ENS_18DecodeNnWaveKernelILi4ELi8EEEJPU3AS4viiEEEvDpT2_",
+      ".private_segment_fixed_size": 628,
+      ".sgpr_count": 96,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi64ELi4ENS_18DecodeNnWaveKernelILi4ELi8EEEJPU3AS4viiEEEvDpT2_.kd",
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 192,
+      ".vgpr_spill_count": 248,
+      ".wavefront_size": 64
+    },
+    {
+      ".group_segment_fixed_size": 0,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 64,
+      ".name": "_ZN7ck_tile6kentryILi64ELi4ENS_18DecodeNnWaveKernelILi4ELi2EEEJPU3AS4viiEEEvDpT2_",
+      ".private_segment_fixed_size": 20,
+      ".sgpr_count": 52,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi64ELi4ENS_18DecodeNnWaveKernelILi4ELi2EEEJPU3AS4viiEEEvDpT2_.kd",
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 192,
+      ".vgpr_spill_count": 4,
+      ".wavefront_size": 64
+    }
+  ]
+}
