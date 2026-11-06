@@ -5,6 +5,10 @@
 实例6000的A寄存器/B私有LDS或A私有LDS/B寄存器原型。所有图均由源码与既有
 CSV记录整理；本次只生成文档，没有编译或启动GPU测试。
 
+优先阅读[一页架构简版（PNG）](p6f_decode_concise.png)：只保留一条代表流水的
+主循环与收尾，把实例ID、等待数值、12相位和性能记录移到下面的参考图。
+另有[简版PDF](p6f_decode_concise.pdf)、[简版SVG](p6f_decode_concise.svg)。
+
 - [图1：主循环、K收尾与输出写回（PNG）](p6f_decode_main_tail.png)
 - [图2：各实现的几何、尾段差异及采用状态（PNG）](p6f_decode_variants.png)
 - [两页PDF，适合分享](p6f_decode_pipeline.pdf)
@@ -80,3 +84,23 @@ python3 build_diagrams.py --font /path/to/NotoSansCJKsc-Regular.otf
 
 两张PNG均已实际查看，中文、箭头、表格和边界完整；程序另检查文本边界与最小字号，
 结果见`render_validation.json`。未修改kernel、selector、shape或测试数据。
+
+简版用`build_concise.py --font /path/to/NotoSansCJKsc-Regular.otf`重新生成，
+同样只调用CPU。它以小M K16/K32为代表，不把N尾块、原V7的特殊等待或后续独立
+原型混在一个时序里。两组wave的方块宽度不表示耗时。
+
+## 与用户提供的同事示意图区别
+
+这里只比较用户图片中的标注，没有核验同事源码或性能。
+
+- NN decode图：wave沿K分片，A直达VGPR、B进入wave私有LDS，主循环0 CTA barrier，
+  尾部合并partial C。P6f这里的wave按M/N分配输出、各自遍历完整K，A/B协作进入
+  CTA共享LDS，主循环有必要CTA barrier，尾部做BF16转换和输出排列。
+- NT decode图：全员协作，A/B经过VGPR写入单缓冲共享LDS，以WAR/RAW同步保护覆盖。
+  P6f也属于协作式组织，但使用Direct-to-LDS和四槽循环，不能套用单缓冲时序。
+- NN prefill Ring4图：A/B Direct-to-LDS、四槽共享LDS、分组错开计算搬运，与P6f
+  这里最接近。按该图标注其operand是两组、读t+1/预取t+4；P6f小M源码使用三组
+  operand、读t+2/预取t+5。相近的存储层次不代表数值类型、等待计数和性能一致。
+
+此前详图同时列出了多个变体、源码细节和实验状态，信息层次比同事每张只讲一种
+流水的图更细。这是表现范围的区别，不能据图的繁简判断实现优劣或优化效果。

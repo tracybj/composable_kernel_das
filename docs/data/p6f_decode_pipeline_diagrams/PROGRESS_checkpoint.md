@@ -8,3 +8,8 @@
 - 图2列出原V7、K16/K32、square、N尾块128/256的实际tile/wave/LDS/MMAC数量及P6f采用状态，区分K流水排空与N列尾块。图1wait数值不套到原V7或N64等其他几何。
 - 重新核对最终CSV：288组/209shape，其中decode235组/191个不同shape；没有将其描述为881条decode全量实测。facts.json保留冻结源码与CSV SHA，图内保留精度通过不等于性能提升的采用边界。
 - 两图已实际查看；SVG XML、PNG尺寸/文字边界/字号、PDF两页、相对链接、14个冻结源码SHA与CSV SHA均通过检查。只用CPU和既有记录，无新GPU/编译/测试、无选核或kernel改动。用户readfirstlane diff MD5仍4c7f49a5c7592767d53195a713db6b8a；暂停P6g tools保留。
+
+
+### P6f decode架构图简化（2026-11-06；仅CPU文档）
+
+用户指出此前图把架构、细节和多版本状态混在一起，不如同事示意图清楚。新增一页简版PNG/SVG/PDF，只画P6f小M K16/K32代表结构的主循环与收尾。比较用户图片中的NN decode K分片私有LDS、NT decode单缓冲协作和NN prefill Ring4，说明P6f结构更接近第三类；同事源码/性能未核验，不从图片繁简推断性能。保留原详图供参考，README优先引导简版。图形已实际查看，SVG/PDF与文字边界验证通过；无GPU/kernel/selector/shape改动。
