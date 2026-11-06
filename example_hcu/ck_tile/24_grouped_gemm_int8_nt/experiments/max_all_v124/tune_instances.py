@@ -10,7 +10,7 @@ def atomic(path,value):
 
 def main():
     ap=argparse.ArgumentParser();ap.add_argument('--output',type=Path,required=True)
-    ap.add_argument('--suite',choices=['cross_neighbors','cross_half_prefill','finite_factor_prefill','packed_exchange_prefill','small_policy_v140','wide_policy_v139','frontier_v138','low_n','low_n_refine','k768_formal','prefill','decode','operand_decode','shuffle_decode','deferred_decode','compact_decode','packed_direct_decode','fast_packed_decode','address32_decode','tail_prefill','tail_formal','tail_neighbors','single_b_prefill','grid_prefill','neighbor_formal','packed_output_prefill','wide_prefill'],default='low_n')
+    ap.add_argument('--suite',choices=['cross_neighbors','wave_private_decode','cross_half_prefill','finite_factor_prefill','packed_exchange_prefill','small_policy_v140','wide_policy_v139','frontier_v138','low_n','low_n_refine','k768_formal','prefill','decode','operand_decode','shuffle_decode','deferred_decode','compact_decode','packed_direct_decode','fast_packed_decode','address32_decode','tail_prefill','tail_formal','tail_neighbors','single_b_prefill','grid_prefill','neighbor_formal','packed_output_prefill','wide_prefill'],default='low_n')
     ap.add_argument('--warmup',type=int,default=3);ap.add_argument('--repeat',type=int,default=10);ap.add_argument('--samples',type=int,default=2)
     ap.add_argument('--validation',choices=['full','sample'],default='full');args=ap.parse_args()
     assert args.repeat>0 and args.samples>0
@@ -35,6 +35,9 @@ def main():
         baseline=list(csv.DictReader((E/'docs/max_all_v140_1191.csv').open()))
         mask_routes={int(r['ID']):int(r['route']) for r in baseline if int(r['route']) in [22,23]}
         cases=[r for r in targets if r['ID'] in mask_routes];assert len(cases)==147
+    elif args.suite=='wave_private_decode':
+        cases=[r for r in targets if r['M']<=8 and
+               ((r['N']==6144 and r['K']==7168) or (r['N']==4096 and r['K'] in [6144,7168,8192]))]
     elif args.suite=='small_policy_v140':
         cases=[r for r in targets if r['M']<=8 and r['N']==4096 and r['K'] in [6144,7168]]
     elif args.suite=='wide_policy_v139':
@@ -63,9 +66,9 @@ def main():
         baseline_name='docs/max_all_v140_1191.csv' if args.suite in ['finite_factor_prefill','cross_half_prefill'] else 'docs/max_all_v136_1191.csv' if args.suite in ['single_b_prefill','packed_exchange_prefill','finite_factor_prefill','cross_half_prefill'] else 'docs/max_all_v128_1191.csv' if args.suite in ['grid_prefill','tail_prefill','tail_formal'] else 'docs/max_all_v123_baseline.csv'
         baseline=list(csv.DictReader((E/baseline_name).open()))
         # One representative per dimension/route family,then largest absolute misses.
-        phase='decode' if args.suite in ['operand_decode','shuffle_decode','deferred_decode','compact_decode','packed_direct_decode','fast_packed_decode','address32_decode'] else 'prefill' if args.suite in ['wide_prefill','packed_output_prefill','grid_prefill','tail_prefill','tail_formal','single_b_prefill','packed_exchange_prefill','finite_factor_prefill','cross_half_prefill'] else args.suite
+        phase='decode' if args.suite in ['wave_private_decode','operand_decode','shuffle_decode','deferred_decode','compact_decode','packed_direct_decode','fast_packed_decode','address32_decode'] else 'prefill' if args.suite in ['wide_prefill','packed_output_prefill','grid_prefill','tail_prefill','tail_formal','single_b_prefill','packed_exchange_prefill','finite_factor_prefill','cross_half_prefill'] else args.suite
         missed=[r for r in baseline if r['phase']==phase and float(r['BF16_R'])<1]
-        if args.suite in ['operand_decode','shuffle_decode','deferred_decode','compact_decode','packed_direct_decode','fast_packed_decode','address32_decode']:missed=[r for r in missed if int(r['route'])==0]
+        if args.suite in ['wave_private_decode','operand_decode','shuffle_decode','deferred_decode','compact_decode','packed_direct_decode','fast_packed_decode','address32_decode']:missed=[r for r in missed if int(r['route'])==0]
         if args.suite in ['grid_prefill','tail_prefill','tail_formal','single_b_prefill','packed_exchange_prefill','finite_factor_prefill','cross_half_prefill']:missed=[r for r in missed if int(r['K'])>=1024]
         if args.suite=='packed_output_prefill':missed=[r for r in missed if int(r['K'])>=1024]
         if args.suite=='wide_prefill':missed=[r for r in missed if int(r['K'])>=1024]
@@ -75,7 +78,7 @@ def main():
             key=(r['route'],r['N'],r['K'])
             if key not in selected:selected[key]=r
         ids={int(r['ID']) for r in list(selected.values())[:16]}
-        if args.suite in ['operand_decode','shuffle_decode','deferred_decode','compact_decode','packed_direct_decode','fast_packed_decode','address32_decode']:ids={int(r['ID']) for r in missed}|{1,6,23,25,1179,1186}
+        if args.suite in ['wave_private_decode','operand_decode','shuffle_decode','deferred_decode','compact_decode','packed_direct_decode','fast_packed_decode','address32_decode']:ids={int(r['ID']) for r in missed}|{1,6,23,25,1179,1186}
         if args.suite in ['grid_prefill','tail_prefill','tail_formal','single_b_prefill','packed_exchange_prefill','finite_factor_prefill','cross_half_prefill']:ids|={36,97,299,704}
         if args.suite=='packed_output_prefill':ids|={36,97,100,1187,1188,1189}
         if args.suite in ['packed_exchange_prefill','finite_factor_prefill','cross_half_prefill']:ids={int(r['ID']) for r in list(selected.values())[:16]}|{299,966}
@@ -85,7 +88,7 @@ def main():
     if args.suite=='low_n_refine':candidates=[('default',None,None)]+[(f'route_{r}',r,None) for r in [6,7,8,11]]
     if args.suite=='prefill':candidates=[('default',None,None)]+[(f'route_{r}',r,None) for r in [1,2,3,4,5,6,7,8,12]]
     if args.suite=='k768_formal':candidates=[('default',None,None)]+[(f'route_{r}',r,None) for r in [4,6,7]]
-    if args.suite in ['operand_decode','shuffle_decode','deferred_decode','compact_decode','packed_direct_decode','fast_packed_decode']:candidates=[('default',None,None)]+[(f'cooperative_{i}',0,i) for i in [6401,6403,6404,6505,*range(9001,9013)]]
+    if args.suite in ['wave_private_decode','operand_decode','shuffle_decode','deferred_decode','compact_decode','packed_direct_decode','fast_packed_decode']:candidates=[('default',None,None)]+[(f'cooperative_{i}',0,i) for i in [6401,6403,6404,6505,*range(9001,9013)]]
     if args.suite=='shuffle_decode':candidates=[('default',None,None)]+[(f'cooperative_{i}',0,i) for i in [6401,6403,6404,6505,*range(9001,9010),*range(9013,9022)]]
     if args.suite=='deferred_decode':candidates=[('default',None,None)]+[(f'cooperative_{i}',0,i) for i in [6401,6403,6404,6505,9013,9016,9019,9022,9023,9024,9031,9032,9034,9035,9036]]
     if args.suite=='compact_decode':candidates=[('default',None,None)]+[(f'cooperative_{i}',0,i) for i in [6401,6403,6404,6505,9005,9008,*range(9041,9050)]]
@@ -93,6 +96,7 @@ def main():
     if args.suite=='fast_packed_decode':candidates=[('default',None,None)]+[(f'cooperative_{i}',0,i) for i in [6505,6404]]+[(f'route_{i}',i,None) for i in range(32,40)]
     if args.suite=='address32_decode':candidates=[('default',None,None)]+[(f'route_{i}',i,None) for i in range(36,44)]
     if args.suite=='cross_neighbors':candidates=[('default',None,None),('cross_half',None,None)]
+    if args.suite=='wave_private_decode':candidates=[('default',None,None)]+[(f'cooperative_{i}',0,i) for i in [8734,9061,9062,9063,9064]]
     if args.suite=='single_b_prefill':candidates=[('default',None,None)]+[(f'route_{i}',i,None) for i in [12,13,*range(61,68)]]
     if args.suite=='tail_neighbors':candidates=[('default',None,None)]+[(f'route_{i}',i,None) for i in [6,12,50,58,59]]
     if args.suite=='tail_formal':candidates=[('default',None,None)]+[(f'route_{i}',i,None) for i in [12,48,50,56,58,59]]
@@ -106,7 +110,7 @@ def main():
     assert not (out/'records.jsonl').exists(),'Existing run;inspect before restarting'
     build=Path(os.environ['CK_INT8_CACHED_BUILD']);identity=json.loads((build/'exported_api_symbols.json').read_text())
     assert identity['experimental_tuning'] or args.suite in ['wide_policy_v139','small_policy_v140']
-    if args.suite in ['operand_decode','shuffle_decode','deferred_decode','compact_decode','packed_direct_decode','fast_packed_decode','address32_decode','tail_prefill','tail_formal','tail_neighbors','single_b_prefill','packed_exchange_prefill','finite_factor_prefill','cross_half_prefill','cross_neighbors','grid_prefill','neighbor_formal','packed_output_prefill','wide_prefill']:assert identity.get('operand_paths')
+    if args.suite in ['wave_private_decode','operand_decode','shuffle_decode','deferred_decode','compact_decode','packed_direct_decode','fast_packed_decode','address32_decode','tail_prefill','tail_formal','tail_neighbors','single_b_prefill','packed_exchange_prefill','finite_factor_prefill','cross_half_prefill','cross_neighbors','grid_prefill','neighbor_formal','packed_output_prefill','wide_prefill']:assert identity.get('operand_paths')
     atomic(out/'manifest.json',dict(suite=args.suite,cases=cases,candidates=candidates,candidate_policy='route22->77,route23->78' if args.suite=='cross_neighbors' else None,validation=args.validation,warmup=args.warmup,repeat=args.repeat,samples=args.samples,library=identity,compiled_sources=json.loads((build/'sources.json').read_text()),gpu=7,pci=bus.value.decode(),input_range=[-8,8],scale='FP32 scalar A + FP32 channel B',target_sha256=hashlib.sha256((E/'docs/targets_max_all_1191.csv').read_bytes()).hexdigest(),runner_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),runner_revision=os.environ.get('CK_INT8_RUNNER_REVISION') or subprocess.check_output(['git','-C',str(E.parents[2]),'rev-parse','HEAD'],text=True).strip()))
     records=[];best=[]
     try:

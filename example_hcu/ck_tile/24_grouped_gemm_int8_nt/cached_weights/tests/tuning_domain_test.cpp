@@ -68,6 +68,23 @@ int main(){
     check("36x",256,4096,7168,true,true,false);
     check("36",1,4096,7168,false,true,false,false,false);
     check("36",1,4096,7168,false,true,false,true,true);
+    auto private_check=[&](const char* id,int m,int n,int k,bool accept){
+        setenv("CK_INT8_TUNE_ROUTE","0",1);setenv("CK_INT8_TUNE_LEGACY",id,1);
+        unsigned route=0,legacy=0;bool accepted=true;
+        try{ck_tile::int8_tuning_override(true,false,false,false,true,true,m,n,k,route,legacy);}
+        catch(const std::invalid_argument&){accepted=false;}
+        assert(accepted==accept);++checks;
+    };
+    private_check("9061",1,6144,7168,true);
+    private_check("9062",2,4096,8192,true);
+    private_check("9063",3,512,640,false);
+    private_check("9061",3,512,640,true);
+    private_check("9064",16,6144,7168,true);
+    private_check("9061",17,6144,7168,false);
+    private_check("9061",1,260,512,false);
+    private_check("9061",1,256,528,false);
+    private_check("9060",1,256,512,false);
+    unsetenv("CK_INT8_TUNE_LEGACY");
     unsetenv("CK_INT8_TUNE_ROUTE");
     std::cout<<"TUNING_FULLNK_GRID_DOMAIN_PASS checks="<<checks<<"\n";
 }

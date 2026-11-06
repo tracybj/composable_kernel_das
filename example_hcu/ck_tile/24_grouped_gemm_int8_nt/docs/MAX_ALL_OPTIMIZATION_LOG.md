@@ -600,3 +600,9 @@ tuning域M1～16且完整N/K tile、uniform非空；不要求prepared B，route0
 正式BF16同Problem速度比min/median/max=0.937760/1.005057/1.008870；FP16=1.000160/1.003487/1.008258。masked BF16小幅正收益，完整N tile的部分BF16回退3%～6%。ID346/1038新R1.003849/1.008024，余量较小，尚不推广；默认仍为v140，正式1191 CSV不拼接局部结果。归档max_all_v143_cross_formal.csv与max_all_v143_summary.json。
 
 服务器恢复后，下一步cross_neighbors覆盖当前147条route22/23的全部已知需求（包含已达标对照），分别与77/78配对，BF16/FP16共588条记录，完整输出校验。ID仅用于测试夹具关联，运行时selector仍依据M/N/K/G及资源条件。v144仅本地草案，未GPU构建或验证。
+
+### 恢复后v143 masked全邻域初筛与v144准备
+
+2026-11-06恢复现有ck_yyc容器，卡7HIP初始化及显存查询成功，无旧测试活进程。6c133ed runner、冻结v143同库，147条/588条记录完整输出PASS，0失败/跳过。BF16同轮新/旧吞吐比min/median/max=1.001793/1.006564/1.009941，147条全部正收益，新增严格跨线346/521/1038，无丢失；FP16=0.999825/1.001392/1.005385，142条正收益，新增523，无丢失。初筛warm3/repeat10/2样本，不拼接正式1191表，不将微小收益当稳定验收。归档max_all_v143_cross_neighbors.csv。已结束PID124，不重复启动。
+
+v144现准备隔离构建/门禁，默认生产仍不变；CPU映射及域检查不能代替GPU数值证据。同时新增小M同条件profile_decode.py：固定BM16/BN32/BK512、M1/N4096/K6144/G8、BF16/真实scale，以8734/9041/9054/route32比较双LDS、单LDS、Raw双Reg、Packed双Reg。profile模式仅提交一次完整grouped kernel，准备和参考计算用kernel名称过滤排除，输入哈希用于验证相同数据，单独无profiler平衡计时。实际访存归因待报告，不沿用“相邻lane跨K必然不合并”的推断。

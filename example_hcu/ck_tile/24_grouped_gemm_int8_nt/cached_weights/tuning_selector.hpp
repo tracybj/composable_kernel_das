@@ -43,6 +43,13 @@ inline void int8_tuning_override(bool uniform,bool empty,bool native,bool packed
         case 9041:case 9042:case 9043:case 9044:case 9045:case 9046:
         case 9047:case 9048:case 9049:
         case 9051:case 9052:case 9053:case 9054:case 9055:case 9056:case 9057:break;
+        case 9061:case 9062:case 9063:case 9064:{
+            const int bn=(legacy==9062 || legacy==9064)?64:32;
+            const int bk=legacy>=9063?256:128;
+            if(m<=0 || m>16 || n%bn || k%bk)
+                throw std::invalid_argument("wave-private raw B requires M1..16 and full N/K tiles");
+            break;
+        }
         case 6035:case 6049:bm=128;bn=128;bk=64;aligned=true;break;
         case 6041:case 6048:bm=256;bn=256;bk=64;aligned=true;break;
         case 6042:bm=128;bn=256;bk=64;aligned=true;break;

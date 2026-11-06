@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 #include "direct_pipeline.hpp"
 #include "packed_small_pipeline.hpp"
+#include "../wave_private_v144/pipeline.hpp"
 #include "../../cached_weights/scaled_kernel.hpp"
 #include "../../grouped_int8_nt_kernel.hpp"
 namespace {
@@ -69,6 +70,10 @@ extern "C" int ck_tile_int8_operand_launch_private(unsigned output,unsigned id,c
     case 9055:return run<ck_tile::GroupedInt8NtOperandProblem<B256,false,false,true,true,false,true>>(output,args,scales,g,m,n,stream);
     case 9056:return run<ck_tile::GroupedInt8NtOperandProblem<N128,false,false,true,true,false,true>>(output,args,scales,g,m,n,stream);
     case 9057:return run<ck_tile::GroupedInt8NtOperandProblem<N64K512,false,false,true,true,false,true>>(output,args,scales,g,m,n,stream);
+    case 9061:return run<ck_tile::GroupedInt8NtWavePrivateProblem<ck_tile::GroupedInt8NtTileProblem<16,32,128,1,2,false,false,true,true,1,true>>>(output,args,scales,g,m,n,stream);
+    case 9062:return run<ck_tile::GroupedInt8NtWavePrivateProblem<ck_tile::GroupedInt8NtTileProblem<16,64,128,1,4,false,false,true,true,1,true>>>(output,args,scales,g,m,n,stream);
+    case 9063:return run<ck_tile::GroupedInt8NtWavePrivateProblem<ck_tile::GroupedInt8NtTileProblem<16,32,256,1,2,false,false,true,true,1,true>>>(output,args,scales,g,m,n,stream);
+    case 9064:return run<ck_tile::GroupedInt8NtWavePrivateProblem<ck_tile::GroupedInt8NtTileProblem<16,64,256,1,4,false,false,true,true,1,true>>>(output,args,scales,g,m,n,stream);
     default:return -5;
     }
 }

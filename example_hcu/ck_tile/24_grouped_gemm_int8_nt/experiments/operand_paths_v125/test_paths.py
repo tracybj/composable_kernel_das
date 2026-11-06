@@ -8,7 +8,7 @@ from bindings import Weight,init,lib,ok,plan_info
 from test_scaled_api import Group2
 
 def main():
-    ap=argparse.ArgumentParser();ap.add_argument('--output',type=Path,required=True);ap.add_argument('--shuffle-only',action='store_true');ap.add_argument('--deferred-only',action='store_true');ap.add_argument('--next-round-only',action='store_true');ap.add_argument('--packed-input-only',action='store_true');ap.add_argument('--fullnk-grid-only',action='store_true');ap.add_argument('--address32-only',action='store_true');ap.add_argument('--tail-mask-only',action='store_true');ap.add_argument('--single-b-only',action='store_true');ap.add_argument('--packed-exchange-only',action='store_true');ap.add_argument('--finite-factor-only',action='store_true');ap.add_argument('--cross-half-only',action='store_true');args=ap.parse_args()
+    ap=argparse.ArgumentParser();ap.add_argument('--output',type=Path,required=True);ap.add_argument('--shuffle-only',action='store_true');ap.add_argument('--deferred-only',action='store_true');ap.add_argument('--next-round-only',action='store_true');ap.add_argument('--packed-input-only',action='store_true');ap.add_argument('--fullnk-grid-only',action='store_true');ap.add_argument('--address32-only',action='store_true');ap.add_argument('--tail-mask-only',action='store_true');ap.add_argument('--single-b-only',action='store_true');ap.add_argument('--packed-exchange-only',action='store_true');ap.add_argument('--finite-factor-only',action='store_true');ap.add_argument('--cross-half-only',action='store_true');ap.add_argument('--wave-private-only',action='store_true');args=ap.parse_args()
     assert os.environ.get('HIP_VISIBLE_DEVICES')=='7'
     build=Path(os.environ['CK_INT8_CACHED_BUILD']);identity=json.loads((build/'exported_api_symbols.json').read_text());assert identity['operand_paths']
     torch.set_num_threads(4);torch.manual_seed(20261104)
@@ -44,6 +44,9 @@ def main():
         candidates=[(r,None) for r in [12,22,23,5,76,77,78,79]]
         cases += [(256,256,512,False),(512,512,640,True),
                   (256,5120,2304,False),(256,6144,2048,False),(256,7168,2048,True)]
+    if args.wave_private_only:
+        candidates=[(0,r) for r in [8734,9061,9062,9063,9064]]
+        cases += [(2,512,640,True),(3,512,384,True),(8,6144,7168,True),(2,4096,8192,False)]
     for m,n,k,padded in cases:
         g=2;astride=k+16 if padded else k;bstride=k+32 if padded else k;cstride=n+4
         a=torch.randint(-128,128,(g,m,astride),device='cuda',dtype=torch.int8);b=torch.randint(-128,128,(g,n,bstride),device='cuda',dtype=torch.int8)
@@ -85,6 +88,10 @@ def main():
                         if args.tail_mask_only:
                             expected=m%256==0 and n%256==0 and k%128==0 and 512<=k<16384
                             assert (status==0)==expected,('TAIL_MASK_DOMAIN',route,m,n,k,status,lib.ck_tile_int8_nt_cached_last_error_v1().decode())
+                        if args.wave_private_only and legacy!=8734:
+                            bk=256 if legacy>=9063 else 128;bn=64 if legacy in [9062,9064] else 32
+                            expected=0<m<=16 and n%bn==0 and k%bk==0
+                            assert (status==0)==expected,('WAVE_PRIVATE_DOMAIN',legacy,m,n,k,status,lib.ck_tile_int8_nt_cached_last_error_v1().decode())
                         if args.packed_exchange_only or args.finite_factor_only or args.cross_half_only:
                             expected=m%256==0 and n%256==0 and k%128==0 and 512<=k<16384
                             assert (status==0)==expected,('PACKED_EXCHANGE_DOMAIN',route,m,n,k,status,lib.ck_tile_int8_nt_cached_last_error_v1().decode())
@@ -94,7 +101,7 @@ def main():
                         if status:
                             # Native-domain checks must reject unsupported WASP
                             # shapes before launch;all cooperative paths are masked.
-                            assert args.packed_exchange_only or args.finite_factor_only or args.cross_half_only or route>=12,(route,legacy,m,n,k,status,lib.ck_tile_int8_nt_cached_last_error_v1().decode())
+                            assert args.packed_exchange_only or args.finite_factor_only or args.cross_half_only or args.wave_private_only and legacy!=8734 or route>=12,(route,legacy,m,n,k,status,lib.ck_tile_int8_nt_cached_last_error_v1().decode())
                             rejected+=1;del raw,out,gd;continue
                         try:
                             pi=plan_info(plan);assert pi.route==route and (legacy is None or pi.legacy_instance==legacy)
