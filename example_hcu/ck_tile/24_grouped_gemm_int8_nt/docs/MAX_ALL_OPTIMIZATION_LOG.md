@@ -586,3 +586,17 @@ CPU寄存器槽所有权244530项检查PASS，覆盖单双batch数、0～65 stag
 13条代表shape初筛78项完整输出PASS；独立正式warm10/repeat50/3样本同样78项PASS，已核对全部原始中位数及TOPS。相同Problem正式BF16速度比min/median/max为0.972103/1.000246/1.005914，FP16为0.999845/0.999979/1.000323。完整N384的route72在ID202/391/705/753/925上约-1.3%～-2.8%；masked路径ID522约+0.59%但R仍0.98516，ID302约+0.25%而R仍0.94499。ID1038 R1.000174仅有0.017%余量，不据此推广。
 
 ISA显示同一N384 BF16完整函数静态指令10264→11848，包含新增fast循环和通用fallback；VGPR仍183。该计数不是动态热路径耗时，尚未拆分判定/代码布局/调度成本，不能把回退仅归为ballot或代码大小。数学上可行不等于该实现普遍提速，不改变生产selector或v140 CSV。归档max_all_v142_finite_screen.csv、max_all_v142_finite_formal.csv、max_all_v142_summary.json。继续按优先级验证跨半段A预取。
+
+## v144：Raw B的wave私有小LDS、A直接寄存器（本地准备）
+
+新增Cooperative策略9061～9064：BM16、BN32/64（2/4wave）、BK128/256，每wave负责独立N16的原始NK权重块。沿K按16B合并读入VGPR，再写本wave独占的16×BK XOR LDS；等待本wave的写完成后按MMAC片段读取。A有效行直接预取到VGPR、无效M行显式零。输入主循环没有CTA barrier，保留VMEM依赖、wave LDS读写完成等待，C epilogue继续使用既有CTA同步并复用同一分配。
+
+tuning域M1～16且完整N/K tile、uniform非空；不要求prepared B，route0/legacy绑定原始权重，默认策略不变。BK128需要每lane两次16B copy，BK256四次，CPU逐字节覆盖和MMAC读取归属73728项PASS。计划数值覆盖长K、odd/even stages、M1/2/3/8、padded stride、所有scale模式及INT32/BF16/FP16；性能覆盖全部72条小M长K邻域及原始默认对照。不把LDS减少直接等同于实际驻留/带宽提升。当前仅本地草案，v143门禁/性能尚待结果。
+
+### v143 GPU验证与正式结果：按masked域继续验证，不全局启用
+
+实现800ef3b，库6770132c1bc0070273c6b45bd0ef98c1f14d4096b39934de3433de279446ff3b。504项full-range/FP64完整输出PASS、288项域外prelaunch拒绝。416个kernel无spill，128旧生产和404旧实验kernel机器码全同。13条代表shape初筛及独立正式各78项完整输出PASS；正式warm10/repeat50/3样本，已独立核对样本中位数、2GMNK吞吐和目标R。
+
+正式BF16同Problem速度比min/median/max=0.937760/1.005057/1.008870；FP16=1.000160/1.003487/1.008258。masked BF16小幅正收益，完整N tile的部分BF16回退3%～6%。ID346/1038新R1.003849/1.008024，余量较小，尚不推广；默认仍为v140，正式1191 CSV不拼接局部结果。归档max_all_v143_cross_formal.csv与max_all_v143_summary.json。
+
+服务器恢复后，下一步cross_neighbors覆盖当前147条route22/23的全部已知需求（包含已达标对照），分别与77/78配对，BF16/FP16共588条记录，完整输出校验。ID仅用于测试夹具关联，运行时selector仍依据M/N/K/G及资源条件。v144仅本地草案，未GPU构建或验证。

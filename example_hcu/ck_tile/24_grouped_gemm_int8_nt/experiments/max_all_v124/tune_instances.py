@@ -10,7 +10,7 @@ def atomic(path,value):
 
 def main():
     ap=argparse.ArgumentParser();ap.add_argument('--output',type=Path,required=True)
-    ap.add_argument('--suite',choices=['cross_half_prefill','finite_factor_prefill','packed_exchange_prefill','small_policy_v140','wide_policy_v139','frontier_v138','low_n','low_n_refine','k768_formal','prefill','decode','operand_decode','shuffle_decode','deferred_decode','compact_decode','packed_direct_decode','fast_packed_decode','address32_decode','tail_prefill','tail_formal','tail_neighbors','single_b_prefill','grid_prefill','neighbor_formal','packed_output_prefill','wide_prefill'],default='low_n')
+    ap.add_argument('--suite',choices=['cross_neighbors','cross_half_prefill','finite_factor_prefill','packed_exchange_prefill','small_policy_v140','wide_policy_v139','frontier_v138','low_n','low_n_refine','k768_formal','prefill','decode','operand_decode','shuffle_decode','deferred_decode','compact_decode','packed_direct_decode','fast_packed_decode','address32_decode','tail_prefill','tail_formal','tail_neighbors','single_b_prefill','grid_prefill','neighbor_formal','packed_output_prefill','wide_prefill'],default='low_n')
     ap.add_argument('--warmup',type=int,default=3);ap.add_argument('--repeat',type=int,default=10);ap.add_argument('--samples',type=int,default=2)
     ap.add_argument('--validation',choices=['full','sample'],default='full');args=ap.parse_args()
     assert args.repeat>0 and args.samples>0
@@ -31,7 +31,11 @@ def main():
     assert bus.value.decode().lower()==Path('/sys/class/drm/renderD135/device').resolve().name.lower()
     targets=list(csv.DictReader((E/'docs/targets_max_all_1191.csv').open()))
     targets=[dict(**{k:int(r[k]) for k in ['ID','M','N','K','G']},phase=r['phase'],target_TOPS=float(r['target_TOPS'])) for r in targets]
-    if args.suite=='small_policy_v140':
+    if args.suite=='cross_neighbors':
+        baseline=list(csv.DictReader((E/'docs/max_all_v140_1191.csv').open()))
+        mask_routes={int(r['ID']):int(r['route']) for r in baseline if int(r['route']) in [22,23]}
+        cases=[r for r in targets if r['ID'] in mask_routes];assert len(cases)==147
+    elif args.suite=='small_policy_v140':
         cases=[r for r in targets if r['M']<=8 and r['N']==4096 and r['K'] in [6144,7168]]
     elif args.suite=='wide_policy_v139':
         cases=[r for r in targets if r['M']>=256 and r['N']==4608 and r['K']==5120]
@@ -88,6 +92,7 @@ def main():
     if args.suite=='packed_direct_decode':candidates=[('default',None,None)]+[(f'cooperative_{i}',0,i) for i in [6403,6404,6505,9041,9043,9045,9042,9046,*range(9051,9058)]]+[(f'route_{i}',i,None) for i in range(32,36)]
     if args.suite=='fast_packed_decode':candidates=[('default',None,None)]+[(f'cooperative_{i}',0,i) for i in [6505,6404]]+[(f'route_{i}',i,None) for i in range(32,40)]
     if args.suite=='address32_decode':candidates=[('default',None,None)]+[(f'route_{i}',i,None) for i in range(36,44)]
+    if args.suite=='cross_neighbors':candidates=[('default',None,None),('cross_half',None,None)]
     if args.suite=='single_b_prefill':candidates=[('default',None,None)]+[(f'route_{i}',i,None) for i in [12,13,*range(61,68)]]
     if args.suite=='tail_neighbors':candidates=[('default',None,None)]+[(f'route_{i}',i,None) for i in [6,12,50,58,59]]
     if args.suite=='tail_formal':candidates=[('default',None,None)]+[(f'route_{i}',i,None) for i in [12,48,50,56,58,59]]
@@ -101,14 +106,16 @@ def main():
     assert not (out/'records.jsonl').exists(),'Existing run;inspect before restarting'
     build=Path(os.environ['CK_INT8_CACHED_BUILD']);identity=json.loads((build/'exported_api_symbols.json').read_text())
     assert identity['experimental_tuning'] or args.suite in ['wide_policy_v139','small_policy_v140']
-    if args.suite in ['operand_decode','shuffle_decode','deferred_decode','compact_decode','packed_direct_decode','fast_packed_decode','address32_decode','tail_prefill','tail_formal','tail_neighbors','single_b_prefill','packed_exchange_prefill','finite_factor_prefill','cross_half_prefill','grid_prefill','neighbor_formal','packed_output_prefill','wide_prefill']:assert identity.get('operand_paths')
-    atomic(out/'manifest.json',dict(suite=args.suite,cases=cases,candidates=candidates,validation=args.validation,warmup=args.warmup,repeat=args.repeat,samples=args.samples,library=identity,compiled_sources=json.loads((build/'sources.json').read_text()),gpu=7,pci=bus.value.decode(),input_range=[-8,8],scale='FP32 scalar A + FP32 channel B',target_sha256=hashlib.sha256((E/'docs/targets_max_all_1191.csv').read_bytes()).hexdigest(),runner_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),runner_revision=os.environ.get('CK_INT8_RUNNER_REVISION') or subprocess.check_output(['git','-C',str(E.parents[2]),'rev-parse','HEAD'],text=True).strip()))
+    if args.suite in ['operand_decode','shuffle_decode','deferred_decode','compact_decode','packed_direct_decode','fast_packed_decode','address32_decode','tail_prefill','tail_formal','tail_neighbors','single_b_prefill','packed_exchange_prefill','finite_factor_prefill','cross_half_prefill','cross_neighbors','grid_prefill','neighbor_formal','packed_output_prefill','wide_prefill']:assert identity.get('operand_paths')
+    atomic(out/'manifest.json',dict(suite=args.suite,cases=cases,candidates=candidates,candidate_policy='route22->77,route23->78' if args.suite=='cross_neighbors' else None,validation=args.validation,warmup=args.warmup,repeat=args.repeat,samples=args.samples,library=identity,compiled_sources=json.loads((build/'sources.json').read_text()),gpu=7,pci=bus.value.decode(),input_range=[-8,8],scale='FP32 scalar A + FP32 channel B',target_sha256=hashlib.sha256((E/'docs/targets_max_all_1191.csv').read_bytes()).hexdigest(),runner_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),runner_revision=os.environ.get('CK_INT8_RUNNER_REVISION') or subprocess.check_output(['git','-C',str(E.parents[2]),'rev-parse','HEAD'],text=True).strip()))
     records=[];best=[]
     try:
         with (out/'records.jsonl').open('w') as stream:
             for case_index,case in enumerate(cases):
                 ID,m,n,k,g=[case[x] for x in ['ID','M','N','K','G']]
-                if args.suite in ['packed_exchange_prefill','finite_factor_prefill','cross_half_prefill']:
+                if args.suite=='cross_neighbors':
+                    candidates=[('default',None,None),('cross_half',{22:77,23:78}[mask_routes[ID]],None)]
+                elif args.suite in ['packed_exchange_prefill','finite_factor_prefill','cross_half_prefill']:
                     old=next(r for r in baseline if int(r['ID'])==ID)
                     route=int(old['route']);candidate=({12:68,22:69,23:70,5:71} if args.suite=='packed_exchange_prefill' else {12:72,22:73,23:74,5:75} if args.suite=='finite_factor_prefill' else {12:76,22:77,23:78,5:79})[route]
                     candidates=[('default',None,None),(f'route_{route}',route,None),(f'route_{candidate}',candidate,None)]
