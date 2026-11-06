@@ -1,0 +1,25 @@
+{
+  "status": "EXPERIMENT_PASS_NOT_PRODUCTION",
+  "numeric_gates": 140,
+  "formal_records": 40,
+  "formal_shapes": 10,
+  "outputs": [
+    "BF16",
+    "FP16"
+  ],
+  "warmup": 10,
+  "repeat": 50,
+  "samples": 3,
+  "identity": {
+    "library_sha256": "f23898da5f8255f965a0aa6dc8f8a4163ec4b20b3c92934b581c7f431d71b590",
+    "sources": {
+      "kernel.hpp": "d8a814509456d57cd823f4236f8b9ff8d7a5d4c0d52f26ce7dcce1485aefd9c1",
+      "bridge.cpp": "2be41614097aaa92773047d416e57cd20948861c724043c1ab72f2b075ee9481"
+    }
+  },
+  "min_R": 1.0117575427289804,
+  "min_speedup": 1.0443732727612565,
+  "max_speedup": 1.2345501867457556,
+  "timing_scope": "Complete grouped call;one round with3event samples per case;independent from initial screen",
+  "production": "v145 unchanged;1191 acceptance not rerun"
+}

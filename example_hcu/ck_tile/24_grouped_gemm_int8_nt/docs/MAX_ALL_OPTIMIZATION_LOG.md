@@ -638,3 +638,11 @@ v144现准备隔离构建/门禁，默认生产仍不变；CPU映射及域检查
 只在tuning中新增9071（Raw 8734的配对）和80/81/82/83（分别与packed32/34/40/42配对）；M1～16、已准备B及FullNK/32位offset按各自域显式校验，默认与I32生产selector不改。完整wave先交换再做输出列bounds；scale读取只发生在有效坐标，tail/padded步长保留既有检查。CPU322816输出归属检查、73tuning域检查PASS；准备full-range、NaN/Inf、per-token、M/N/K尾块、两输出与I32门禁后，覆盖72条小M邻域，不能从CPU通过推断GPU或性能。
 
 v145全量PID12091已结束并完成独立审计后才把本草案并入工作树，回归期间没有改变编译/测试源码。尚未构建或GPU验证本候选。
+
+## v148：按真实scaled BLAS赢家改为连续K分工与MMAC对角归约
+
+复核P列原始scaled Matmul记录后，63条BF16缺口目标全部匹配；decode真实赢家为11845/11805，采用不同于通用BM16的数据映射。另确认该批COMPUTE32I、C=INT32、D=BF16、OUTER_VEC配置支持逐行/列scale，先前特定配置的探测失败不应泛化。
+
+新增隔离k_parallel_v148：每lane沿K连续读取16B，两次MMAC后仅抽取对角部分积，wave内与CTA内INT32归约后融合scale写出。CPU49472项覆盖PASS；140项full-range/FP64 GPU门禁PASS；24kernel无spill/private，VGPR39～107、LDS64～512B。四组wave/列数实例全部由参数定义，不按caseID分流。
+
+十条剩余decode初筛100记录完整输出PASS；固定8wave/4列实例独立10warm/50repeat/3sample配对40记录PASS，BF16/FP16共20配置全部超过P目标，最低R1.01175754，相对v145同轮加速1.04437～1.23455。详见iteration_148_k_parallel.md、max_all_v148_k_formal.csv及summary。正式1191数据仍v145，尚未接入生产selector；后续需完成维度域分流、ABI/生命周期与全量回归。
