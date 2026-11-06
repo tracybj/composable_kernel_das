@@ -1,0 +1,39 @@
+{
+  "compared": 128,
+  "bit_identical_unchanged": 124,
+  "replaced_scaled_masked": [
+    "void ck_tile::kentry<1024, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspMaskedWideProblem<4>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspMaskedWideProblem<4>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+    "void ck_tile::kentry<1024, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspMaskedWideProblem<8>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspMaskedWideProblem<8>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+    "void ck_tile::kentry<1024, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspMaskedWideProblem<4>, false, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspMaskedWideProblem<4>, false> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+    "void ck_tile::kentry<1024, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspMaskedWideProblem<8>, false, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspMaskedWideProblem<8>, false> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+  ],
+  "new_scaled_masked": [
+    "void ck_tile::kentry<1024, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspScaledMaskedPrefetchProblem<4>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspScaledMaskedPrefetchProblem<4>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+    "void ck_tile::kentry<1024, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspScaledMaskedPrefetchProblem<8>, true, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspScaledMaskedPrefetchProblem<8>, true> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+    "void ck_tile::kentry<1024, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspScaledMaskedPrefetchProblem<4>, false, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspScaledMaskedPrefetchProblem<4>, false> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)",
+    "void ck_tile::kentry<1024, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspScaledMaskedPrefetchProblem<8>, false, ck_tile::GroupedInt8NtScaledWaspEpilogue<ck_tile::GroupedInt8NtWaspScaledMaskedPrefetchProblem<8>, false> >, ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*>(ck_tile::GemmTransKernelArgImpl<0> const*, ck_tile::Int8NtScaleArgs const*)"
+  ],
+  "different_unexpected": [],
+  "tested_candidate_equivalence": [
+    {
+      "cluster": 4,
+      "bf16": true,
+      "bit_identical": true
+    },
+    {
+      "cluster": 8,
+      "bf16": true,
+      "bit_identical": true
+    },
+    {
+      "cluster": 4,
+      "bf16": false,
+      "bit_identical": true
+    },
+    {
+      "cluster": 8,
+      "bf16": false,
+      "bit_identical": true
+    }
+  ]
+}

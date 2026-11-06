@@ -618,3 +618,15 @@ v144现准备隔离构建/门禁，默认生产仍不变；CPU映射及域检查
 ## v145：仅为scaled masked WASP接入已验证跨半段预取
 
 保持route22/23既有M/N/K/G选择域、cluster4/8、tile和epilogue，新增scaled专用Problem调用同一WASP核心CrossHalfPrefetch；原INT32 Problem、无mask WASP、Cooperative及16bit输入接口不改。来源为v143 13条正式对照及147条全masked邻域初筛，避免把完整tile BF16负收益路径一起打开。接下来独立OFF构建、生产API/生命周期/数值门禁，再跑1191单轮正式回归；未完成前官方结果仍是v140。
+
+### v145正式1191回归完成并审计
+
+卡7PID12091已终态完成。独立OFF构建库beb60023b81d478bfea06117cc70f46b9ccaade94ed077f34a0926bf0d07d8ac，benchmark d4607b9d9ac2020bf75549df8bc5592f96f6505540bc4418b0343255cde29d48。生产门禁420项full-range/FP64数值检查、14非法参数、18项epilogue、65边界、32生命周期均PASS。128个正式kernel无spill；124个未改kernel机器码全同，4个scaled masked替换与v143已门禁候选逐函数机器码完全一致。I32与其它精度接口保留。
+单轮正式1191 shape，每种输出1191完整数值PASS，0失败/跳过；输入[-8,8]的FP32整数点积精确参考、TF32关闭、组合scale先FP32舍入、guards和输入/scale抽样不变。独立核对72个源码blob的Git6067115来源（9个CRLF按冻结SHA精确重建），shape/phase/E=G、三样本中位数、TOPS、目标R和三份CSV一致；开始结束源快照一致。
+| 输出 | 严格R>=1 | R>=0.99 | 未严格达标 | minR | prefill严格达标 | decode严格达标 |
+|---|---:|---:|---:|---:|---:|---:|
+| BF16 | 1128/1191 | 1140/1191 | 63 | 0.94601918 | 257/310 | 871/881 |
+| FP16 | 1134/1191 | 1153/1191 | 57 | 0.95275780 | 263/310 | 871/881 |
+
+选择route没有变化，147条route22/23改实现。BF16新增严格达标346/521/1038；FP16新增523；无丢失，未改实现跨线为空。整轮数据不拼接局部最优；前后不同轮吞吐比另记implementation_changes，配对因果证据保留v143全邻域数据。
+当前完整归档max_all_v145_1191.csv、bf16.csv、fp16.csv、remaining.csv、summary.json（均以max_all_v145_为文件名前缀）；旧v140保留。目标仍未完成，不把R>=0.99替代严格达到P列。下一轮v146在Cooperative原输入主循环上单独对照wave寄存器C重排；CPU322816映射和73域检查PASS，尚未GPU验证。
