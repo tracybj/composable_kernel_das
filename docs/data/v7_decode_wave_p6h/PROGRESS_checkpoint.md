@@ -12,3 +12,5 @@
 - 997 raw作业仅GPU4串行、epoch0，无MKFD/服务事件、无恢复/重置/换卡/终止其他进程。4失败保留：query错误继承V7开关、profile过滤未捕获、MMAC提前到LDS等待前、opaque-asm VMEM结果等待前复制；后两项精度失败已修复并换SHA完整补测，不伪装环境失败。编译/资源spill拒绝和CPU permlane16探针不支持均保留。
 - 正式benchmark复用暂停P6g已准备的默认关闭真实redzone/非有限值拒绝功能，修复float-equal构建错误；计时显式关闭redzone，未恢复P6g。两份shape SHA仍5c3ae4d1d682b919ed90adb5cfed1cec755e3b519f9003afde8c46d282e77863，用户readfirstlane diff MD5仍4c7f49a5c7592767d53195a713db6b8a、未暂存。暂停任务tools/grouped_gemm_reproduce保留不纳入提交。
 - 报告/workspace/v7_coverage/p6h_decode_arch/report.md；Git归档docs/data/v7_decode_wave_p6h/，含源码版本、全结果/负结果、所有命令/环境/SHA/健康门禁及无损压缩raw日志。binary/vendor ISA/巨型perf留现场。下一阶段候选是B合并加载与寄存器重排、共享A调度，尚未实施；现有最优方案保持不变。
+
+原型与验证本地提交：`ead12bde01bd8293edb12ec14d4d1e4b6dc9ed4d`；未push。
