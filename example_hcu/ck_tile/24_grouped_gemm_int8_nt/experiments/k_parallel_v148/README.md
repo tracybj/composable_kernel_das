@@ -16,7 +16,7 @@ API's full validation/lifetime contract. The original API remains unchanged.
 Variants 0/1/2/3 are respectively waves/columns 8/8,8/4,4/8,4/4.
 These are dimension-independent tuning variants,not caseID dispatch.
 
-Build using `python3 build.py --build <isolated-build-dir>`.
+Build using `python3 compile_experiment.py --build <isolated-build-dir>`.
 Run `python3 test_mapping.py` before GPU gates.
 With physical GPU7 selected and CK_INT8_CACHED_BENCH_LIB pointing to the frozen
 v145 benchmark library,run `python3 test_gpu.py <result-dir> <libk_parallel.so>`.
