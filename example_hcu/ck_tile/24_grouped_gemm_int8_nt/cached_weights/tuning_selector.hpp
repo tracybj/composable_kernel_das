@@ -24,7 +24,7 @@ inline void int8_tuning_override(bool uniform,bool empty,bool native,bool packed
     const char* legacy_value=std::getenv("CK_INT8_TUNE_LEGACY");
     if(!route_value && !legacy_value)return;
     if(!uniform || empty)throw std::invalid_argument("tuning requires nonempty uniform groups");
-    route=route_value?int8_tuning_uint(route_value,79):0;
+    route=route_value?int8_tuning_uint(route_value,83):0;
     if(legacy_value) {
         if(route)throw std::invalid_argument("legacy tuning requires route0");
         legacy=int8_tuning_uint(legacy_value,10000);
@@ -43,6 +43,9 @@ inline void int8_tuning_override(bool uniform,bool empty,bool native,bool packed
         case 9041:case 9042:case 9043:case 9044:case 9045:case 9046:
         case 9047:case 9048:case 9049:
         case 9051:case 9052:case 9053:case 9054:case 9055:case 9056:case 9057:break;
+        case 9071:
+            if(m<=0 || m>16)throw std::invalid_argument("wave-store raw requires M1..16");
+            break;
         case 9061:case 9062:case 9063:case 9064:{
             const int bn=(legacy==9062 || legacy==9064)?64:32;
             const int bk=legacy>=9063?256:128;
@@ -60,6 +63,15 @@ inline void int8_tuning_override(bool uniform,bool empty,bool native,bool packed
             throw std::invalid_argument("aligned tuning instance has a partial tile");
     }
     if((route>23 && route<32) || (route>43 && route<48))throw std::invalid_argument("unlisted tuning route");
+    if(route>=80 && route<=83){
+        if(!packed || m<=0 || m>16)throw std::invalid_argument("wave-store packed requires prepared weights and M1..16");
+        const bool wide=route==81 || route==83;
+        const int bn=wide?128:32,bk=wide?256:512;
+        if(route>=82 && (n%bn || k%bk))throw std::invalid_argument("wave-store FullNK has partial tiles");
+        if(route>=82 && static_cast<uint64_t>(n)*static_cast<uint64_t>(k)>static_cast<uint64_t>(std::numeric_limits<int32_t>::max()))
+            throw std::invalid_argument("wave-store packed span exceeds INT32_MAX");
+        return;
+    }
     if(route>=32 && route<=43){
         if(!packed)throw std::invalid_argument("packed cooperative requires prepared weights");
         const unsigned geometry=(route-32)%4;

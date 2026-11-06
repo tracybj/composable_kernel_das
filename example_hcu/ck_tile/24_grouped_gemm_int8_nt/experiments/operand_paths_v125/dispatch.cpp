@@ -2,6 +2,7 @@
 #include "direct_pipeline.hpp"
 #include "packed_small_pipeline.hpp"
 #include "../wave_private_v144/pipeline.hpp"
+#include "../wave_store_v146/epilogue.hpp"
 #include "../../cached_weights/scaled_kernel.hpp"
 #include "../../grouped_int8_nt_kernel.hpp"
 namespace {
@@ -70,6 +71,7 @@ extern "C" int ck_tile_int8_operand_launch_private(unsigned output,unsigned id,c
     case 9055:return run<ck_tile::GroupedInt8NtOperandProblem<B256,false,false,true,true,false,true>>(output,args,scales,g,m,n,stream);
     case 9056:return run<ck_tile::GroupedInt8NtOperandProblem<N128,false,false,true,true,false,true>>(output,args,scales,g,m,n,stream);
     case 9057:return run<ck_tile::GroupedInt8NtOperandProblem<N64K512,false,false,true,true,false,true>>(output,args,scales,g,m,n,stream);
+    case 9071:return run<ck_tile::GroupedInt8NtWaveStoreProblem<B512>>(output,args,scales,g,m,n,stream);
     case 9061:return run<ck_tile::GroupedInt8NtWavePrivateProblem<ck_tile::GroupedInt8NtTileProblem<16,32,128,1,2,false,false,true,true,1,true>>>(output,args,scales,g,m,n,stream);
     case 9062:return run<ck_tile::GroupedInt8NtWavePrivateProblem<ck_tile::GroupedInt8NtTileProblem<16,64,128,1,4,false,false,true,true,1,true>>>(output,args,scales,g,m,n,stream);
     case 9063:return run<ck_tile::GroupedInt8NtWavePrivateProblem<ck_tile::GroupedInt8NtTileProblem<16,32,256,1,2,false,false,true,true,1,true>>>(output,args,scales,g,m,n,stream);
@@ -80,6 +82,10 @@ extern "C" int ck_tile_int8_operand_launch_private(unsigned output,unsigned id,c
 
 extern "C" int ck_tile_int8_packed_small_launch_private(unsigned output,unsigned route,const void* args,const void* scales,int g,int m,int n,hipStream_t stream){
     switch(route){
+    case 80:return run<ck_tile::GroupedInt8NtWaveStoreProblem<ck_tile::GroupedInt8NtPackedSmallProblem<B512>>>(output,args,scales,g,m,n,stream);
+    case 81:return run<ck_tile::GroupedInt8NtWaveStoreProblem<ck_tile::GroupedInt8NtPackedSmallProblem<N128>>>(output,args,scales,g,m,n,stream);
+    case 82:return run<ck_tile::GroupedInt8NtWaveStoreProblem<ck_tile::GroupedInt8NtPackedSmallProblem<B512,true,true>>>(output,args,scales,g,m,n,stream);
+    case 83:return run<ck_tile::GroupedInt8NtWaveStoreProblem<ck_tile::GroupedInt8NtPackedSmallProblem<N128,true,true>>>(output,args,scales,g,m,n,stream);
     case 32:return run<ck_tile::GroupedInt8NtPackedSmallProblem<B512>>(output,args,scales,g,m,n,stream);
     case 33:return run<ck_tile::GroupedInt8NtPackedSmallProblem<B256>>(output,args,scales,g,m,n,stream);
     case 34:return run<ck_tile::GroupedInt8NtPackedSmallProblem<N128>>(output,args,scales,g,m,n,stream);

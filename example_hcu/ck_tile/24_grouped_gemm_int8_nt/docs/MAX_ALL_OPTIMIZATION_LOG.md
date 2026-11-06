@@ -630,3 +630,11 @@ v144现准备隔离构建/门禁，默认生产仍不变；CPU映射及域检查
 
 选择route没有变化，147条route22/23改实现。BF16新增严格达标346/521/1038；FP16新增523；无丢失，未改实现跨线为空。整轮数据不拼接局部最优；前后不同轮吞吐比另记implementation_changes，配对因果证据保留v143全邻域数据。
 当前完整归档max_all_v145_1191.csv、bf16.csv、fp16.csv、remaining.csv、summary.json（均以max_all_v145_为文件名前缀）；旧v140保留。目标仍未完成，不把R>=0.99替代严格达到P列。下一轮v146在Cooperative原输入主循环上单独对照wave寄存器C重排；CPU322816映射和73域检查PASS，尚未GPU验证。
+
+## v146：Cooperative的wave寄存器C重排（本地与CPU准备）
+
+不改变输入主循环，新增WaveStore Problem/Policy与epilogue策略：用4次I32 ds_bpermute将MMAC输出片段变成4连续N元素，再复用现有FP32 factor/RNE转换写BF16/FP16；无scale I32也写连续4值。每个wave只处理自己的输出，C不进入LDS，去掉原C epilogue的3次CTA同步；packed双Reg输入路径的声明共享内存降至可消除的占位，不把这直接等同于更高驻留。Raw输入仍保留原输入LDS和同步。
+
+只在tuning中新增9071（Raw 8734的配对）和80/81/82/83（分别与packed32/34/40/42配对）；M1～16、已准备B及FullNK/32位offset按各自域显式校验，默认与I32生产selector不改。完整wave先交换再做输出列bounds；scale读取只发生在有效坐标，tail/padded步长保留既有检查。CPU322816输出归属检查、73tuning域检查PASS；准备full-range、NaN/Inf、per-token、M/N/K尾块、两输出与I32门禁后，覆盖72条小M邻域，不能从CPU通过推断GPU或性能。
+
+v145全量PID12091已结束并完成独立审计后才把本草案并入工作树，回归期间没有改变编译/测试源码。尚未构建或GPU验证本候选。

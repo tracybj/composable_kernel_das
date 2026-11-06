@@ -84,7 +84,17 @@ int main(){
     private_check("9061",1,260,512,false);
     private_check("9061",1,256,528,false);
     private_check("9060",1,256,512,false);
+    private_check("9071",1,260,528,true);
+    private_check("9071",16,6144,7168,true);
+    private_check("9071",17,6144,7168,false);
     unsetenv("CK_INT8_TUNE_LEGACY");
+    check("80",1,4096,6144,false,true,true);
+    check("81",2,6144,7168,false,true,true);
+    check("82",2,512,768,false,true,false);
+    check("83",2,512,768,false,true,true);
+    check("80",2,512,640,false,true,true);
+    check("83",2,512,640,false,true,false);
+    check("80",1,4096,6144,false,false,false);
     unsetenv("CK_INT8_TUNE_ROUTE");
     std::cout<<"TUNING_FULLNK_GRID_DOMAIN_PASS checks="<<checks<<"\n";
 }
