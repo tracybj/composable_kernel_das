@@ -1,0 +1,116 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1220" viewBox="0 0 1800 1220" role="img">
+<title>BF16 NN Decode：Wave 独立八级预取流水</title>
+<style>text{font-family:"Noto Sans CJK SC","Noto Sans SC","Microsoft YaHei",sans-serif}</style>
+<rect width="1800" height="1220" fill="white"/>
+<rect x="0" y="0" width="1800" height="112" rx="0" fill="#B5122B" stroke="none" stroke-width="2"/>
+<text x="48" y="68" font-size="44" fill="#FFFFFF" font-weight="600">BF16 NN Decode：Wave 独立八级预取流水</text>
+<text x="48" y="159" font-size="25" fill="#54677B" font-weight="400">示例：16×128输出块，4个wave沿N划分；K16分块、8级预取</text>
+<rect x="48" y="195" width="1704" height="48" rx="5" fill="#F2F5F9" stroke="none" stroke-width="2"/>
+<text x="65" y="229" font-size="28" fill="#17324D" font-weight="600">阶段一  主循环：wave独立预取与计算，8槽循环复用</text>
+<text x="48" y="293.0" font-size="28" fill="#17324D" font-weight="400">A直接进入寄存器；B进入本wave私有LDS。先发出8个K块的加载，再逐块消费与补充。</text>
+<rect x="48" y="326" width="250" height="170" rx="10" fill="#FFF2D5" stroke="none" stroke-width="2"/>
+<text x="120.8828125" y="363.0" font-size="27" fill="#17324D" font-weight="600">Global A</text>
+<text x="129.2109375" y="401.61" font-size="27" fill="#17324D" font-weight="400">A[M, K]</text>
+<text x="80.109375" y="440.22" font-size="27" fill="#17324D" font-weight="400">Direct-to-VGPR</text>
+<rect x="340" y="326" width="410" height="170" rx="14" fill="#EAF2FC" stroke="none" stroke-width="2"/>
+<text x="401.75" y="365.0" font-size="27" fill="#17324D" font-weight="600">A寄存器 · 8组预取缓冲</text>
+<rect x="358" y="390" width="88" height="38" rx="5" fill="#FFFFFF" stroke="#B9C8D6" stroke-width="2"/>
+<text x="388.625" y="415.0" font-size="23" fill="#17324D" font-weight="400">A0</text>
+<rect x="453" y="390" width="88" height="38" rx="5" fill="#FFFFFF" stroke="#B9C8D6" stroke-width="2"/>
+<text x="483.625" y="415.0" font-size="23" fill="#17324D" font-weight="400">A1</text>
+<rect x="548" y="390" width="88" height="38" rx="5" fill="#FFFFFF" stroke="#B9C8D6" stroke-width="2"/>
+<text x="578.625" y="415.0" font-size="23" fill="#17324D" font-weight="400">A2</text>
+<rect x="643" y="390" width="88" height="38" rx="5" fill="#FFFFFF" stroke="#B9C8D6" stroke-width="2"/>
+<text x="673.625" y="415.0" font-size="23" fill="#17324D" font-weight="400">A3</text>
+<rect x="358" y="436" width="88" height="38" rx="5" fill="#FFFFFF" stroke="#B9C8D6" stroke-width="2"/>
+<text x="388.625" y="461.0" font-size="23" fill="#17324D" font-weight="400">A4</text>
+<rect x="453" y="436" width="88" height="38" rx="5" fill="#FFFFFF" stroke="#B9C8D6" stroke-width="2"/>
+<text x="483.625" y="461.0" font-size="23" fill="#17324D" font-weight="400">A5</text>
+<rect x="548" y="436" width="88" height="38" rx="5" fill="#FFFFFF" stroke="#B9C8D6" stroke-width="2"/>
+<text x="578.625" y="461.0" font-size="23" fill="#17324D" font-weight="400">A6</text>
+<rect x="643" y="436" width="88" height="38" rx="5" fill="#FFFFFF" stroke="#B9C8D6" stroke-width="2"/>
+<text x="673.625" y="461.0" font-size="23" fill="#17324D" font-weight="400">A7</text>
+<polyline points="304,411 334,411" fill="none" stroke="#54677B" stroke-width="3"/><polygon points="334,411 322.0,406.0 322.0,416.0" fill="#54677B"/>
+<polyline points="756,411 1198,411" fill="none" stroke="#54677B" stroke-width="3"/><polygon points="1198,411 1186.0,406.0 1186.0,416.0" fill="#54677B"/>
+<rect x="48" y="514" width="250" height="170" rx="10" fill="#FFF2D5" stroke="none" stroke-width="2"/>
+<text x="120.2265625" y="551.0" font-size="27" fill="#17324D" font-weight="600">Global B</text>
+<text x="129.7578125" y="589.61" font-size="27" fill="#17324D" font-weight="400">B[K, N]</text>
+<text x="89.203125" y="628.22" font-size="27" fill="#17324D" font-weight="400">Direct-to-LDS</text>
+<rect x="340" y="514" width="410" height="170" rx="14" fill="#FBEAEE" stroke="none" stroke-width="2"/>
+<text x="393.0078125" y="553.0" font-size="27" fill="#17324D" font-weight="600">本wave私有B-LDS · 8槽</text>
+<rect x="358" y="578" width="88" height="38" rx="5" fill="#FFFFFF" stroke="#B9C8D6" stroke-width="2"/>
+<text x="388.765625" y="603.0" font-size="23" fill="#17324D" font-weight="400">S0</text>
+<rect x="453" y="578" width="88" height="38" rx="5" fill="#FFFFFF" stroke="#B9C8D6" stroke-width="2"/>
+<text x="483.765625" y="603.0" font-size="23" fill="#17324D" font-weight="400">S1</text>
+<rect x="548" y="578" width="88" height="38" rx="5" fill="#FFFFFF" stroke="#B9C8D6" stroke-width="2"/>
+<text x="578.765625" y="603.0" font-size="23" fill="#17324D" font-weight="400">S2</text>
+<rect x="643" y="578" width="88" height="38" rx="5" fill="#FFFFFF" stroke="#B9C8D6" stroke-width="2"/>
+<text x="673.765625" y="603.0" font-size="23" fill="#17324D" font-weight="400">S3</text>
+<rect x="358" y="624" width="88" height="38" rx="5" fill="#FFFFFF" stroke="#B9C8D6" stroke-width="2"/>
+<text x="388.765625" y="649.0" font-size="23" fill="#17324D" font-weight="400">S4</text>
+<rect x="453" y="624" width="88" height="38" rx="5" fill="#FFFFFF" stroke="#B9C8D6" stroke-width="2"/>
+<text x="483.765625" y="649.0" font-size="23" fill="#17324D" font-weight="400">S5</text>
+<rect x="548" y="624" width="88" height="38" rx="5" fill="#FFFFFF" stroke="#B9C8D6" stroke-width="2"/>
+<text x="578.765625" y="649.0" font-size="23" fill="#17324D" font-weight="400">S6</text>
+<rect x="643" y="624" width="88" height="38" rx="5" fill="#FFFFFF" stroke="#B9C8D6" stroke-width="2"/>
+<text x="673.765625" y="649.0" font-size="23" fill="#17324D" font-weight="400">S7</text>
+<rect x="795" y="514" width="350" height="170" rx="10" fill="#EAF2FC" stroke="none" stroke-width="2"/>
+<text x="880.1328125" y="553.0" font-size="27" fill="#17324D" font-weight="600">B操作数寄存器</text>
+<text x="877.8359375" y="591.61" font-size="27" fill="#17324D" font-weight="400">读取当前LDS槽</text>
+<text x="850.40625" y="630.22" font-size="27" fill="#17324D" font-weight="400">就绪后供MMAC使用</text>
+<polyline points="304,599 334,599" fill="none" stroke="#54677B" stroke-width="3"/><polygon points="334,599 322.0,594.0 322.0,604.0" fill="#54677B"/>
+<polyline points="756,599 789,599" fill="none" stroke="#54677B" stroke-width="3"/><polygon points="789,599 777.0,594.0 777.0,604.0" fill="#54677B"/>
+<polyline points="1151,599 1198,599" fill="none" stroke="#54677B" stroke-width="3"/><polygon points="1198,599 1186.0,594.0 1186.0,604.0" fill="#54677B"/>
+<rect x="1204" y="326" width="548" height="358" rx="14" fill="#7051A4" stroke="none" stroke-width="2"/>
+<text x="1311.2578125" y="402.0" font-size="33" fill="#FFFFFF" font-weight="600">MMAC：计算当前K块 t</text>
+<text x="1317.5546875" y="495.0" font-size="29" fill="#FFFFFF" font-weight="400">当前A(reg) × 当前B(reg)</text>
+<text x="1284.296875" y="536.47" font-size="29" fill="#FFFFFF" font-weight="400">FP32累加到当前wave的C子块</text>
+<text x="1381.6328125" y="577.94" font-size="29" fill="#FFFFFF" font-weight="400">独立累加完整K</text>
+<rect x="48" y="714" width="399" height="47" rx="5" fill="#F2F5F9" stroke="none" stroke-width="2"/>
+<text x="108.328125" y="748.0" font-size="25" fill="#17324D" font-weight="400">Wave 0 → C0（16×32）</text>
+<rect x="483" y="714" width="399" height="47" rx="5" fill="#F2F5F9" stroke="none" stroke-width="2"/>
+<text x="543.328125" y="748.0" font-size="25" fill="#17324D" font-weight="400">Wave 1 → C1（16×32）</text>
+<rect x="918" y="714" width="399" height="47" rx="5" fill="#F2F5F9" stroke="none" stroke-width="2"/>
+<text x="978.328125" y="748.0" font-size="25" fill="#17324D" font-weight="400">Wave 2 → C2（16×32）</text>
+<rect x="1353" y="714" width="399" height="47" rx="5" fill="#F2F5F9" stroke="none" stroke-width="2"/>
+<text x="1413.328125" y="748.0" font-size="25" fill="#17324D" font-weight="400">Wave 3 → C3（16×32）</text>
+<text x="48" y="800.0" font-size="25" fill="#54677B" font-weight="400">各wave负责不同N列；B私有LDS每wave为8 KiB，整个CTA共32 KiB。</text>
+<rect x="48" y="832" width="350" height="94" rx="10" fill="#FFF2D5" stroke="none" stroke-width="2"/>
+<text x="199.0" y="868.0" font-size="24" fill="#17324D" font-weight="400">预热</text>
+<text x="125.6875" y="902.32" font-size="24" fill="#17324D" font-weight="400">发出第0～7块加载</text>
+<rect x="436" y="832" width="410" height="94" rx="10" fill="#7051A4" stroke="none" stroke-width="2"/>
+<text x="547.1015625" y="868.0" font-size="24" fill="#FFFFFF" font-weight="400">等待当前块 t 就绪</text>
+<text x="533.4375" y="902.32" font-size="24" fill="#FFFFFF" font-weight="400">读取B → MMAC计算</text>
+<rect x="884" y="832" width="500" height="94" rx="10" fill="#FFF2D5" stroke="none" stroke-width="2"/>
+<text x="1049.078125" y="868.0" font-size="24" fill="#17324D" font-weight="400">复用当前槽 t%8</text>
+<text x="1033.59375" y="902.32" font-size="24" fill="#17324D" font-weight="400">加载未来A/B块 t+8</text>
+<rect x="1422" y="832" width="330" height="94" rx="10" fill="#EAF2FC" stroke="none" stroke-width="2"/>
+<text x="1530.4765625" y="868.0" font-size="24" fill="#17324D" font-weight="400">推进到 t+1</text>
+<text x="1508.34375" y="902.32" font-size="24" fill="#17324D" font-weight="400">循环使用8个槽</text>
+<polyline points="402,879 432,879" fill="none" stroke="#54677B" stroke-width="3"/><polygon points="432,879 420.0,874.0 420.0,884.0" fill="#54677B"/>
+<polyline points="850,879 880,879" fill="none" stroke="#54677B" stroke-width="3"/><polygon points="880,879 868.0,874.0 868.0,884.0" fill="#54677B"/>
+<polyline points="1388,879 1418,879" fill="none" stroke="#54677B" stroke-width="3"/><polygon points="1418,879 1406.0,874.0 1406.0,884.0" fill="#54677B"/>
+<text x="48" y="968.0" font-size="25" fill="#54677B" font-weight="400">每消费1个K块，就补入后面第8块；各wave独立等待与推进，全程无需CTA barrier。</text>
+<rect x="48" y="995" width="1704" height="48" rx="5" fill="#F2F5F9" stroke="none" stroke-width="2"/>
+<text x="65" y="1029" font-size="28" fill="#17324D" font-weight="600">阶段二  K收尾与写回：排空预取，复用私有LDS排列输出</text>
+<rect x="48" y="1076" width="280" height="100" rx="10" fill="#7051A4" stroke="none" stroke-width="2"/>
+<text x="90.7890625" y="1115.0" font-size="27" fill="#FFFFFF" font-weight="400">排空末尾8个K块</text>
+<text x="95.40625" y="1153.61" font-size="27" fill="#FFFFFF" font-weight="400">完成剩余MMAC</text>
+<rect x="365" y="1076" width="330" height="100" rx="10" fill="#EAF2FC" stroke="none" stroke-width="2"/>
+<text x="448.1640625" y="1111.0" font-size="27" fill="#17324D" font-weight="400">FP32 → BF16</text>
+<text x="476.0" y="1153.61" font-size="27" fill="#17324D" font-weight="400">舍入转换</text>
+<rect x="732" y="1076" width="280" height="100" rx="10" fill="#FBEAEE" stroke="none" stroke-width="2"/>
+<text x="793.3359375" y="1115.0" font-size="27" fill="#17324D" font-weight="400">写入私有LDS</text>
+<text x="777.5" y="1153.61" font-size="27" fill="#17324D" font-weight="400">排列输出＋等待</text>
+<rect x="1049" y="1076" width="330" height="100" rx="10" fill="#EAF2FC" stroke="none" stroke-width="2"/>
+<text x="1136.1484375" y="1115.0" font-size="27" fill="#17324D" font-weight="400">读回16B向量</text>
+<text x="1108.3359375" y="1153.61" font-size="27" fill="#17324D" font-weight="400">等待LDS数据就绪</text>
+<rect x="1416" y="1076" width="336" height="100" rx="10" fill="#E6F3EE" stroke="none" stroke-width="2"/>
+<text x="1539.0625" y="1111.0" font-size="27" fill="#17324D" font-weight="400">Store C</text>
+<text x="1492.0390625" y="1153.61" font-size="27" fill="#17324D" font-weight="400">按有效M行写回</text>
+<polyline points="332,1126 361,1126" fill="none" stroke="#54677B" stroke-width="3"/><polygon points="361,1126 349.0,1121.0 349.0,1131.0" fill="#54677B"/>
+<polyline points="699,1126 728,1126" fill="none" stroke="#54677B" stroke-width="3"/><polygon points="728,1126 716.0,1121.0 716.0,1131.0" fill="#54677B"/>
+<polyline points="1016,1126 1045,1126" fill="none" stroke="#54677B" stroke-width="3"/><polygon points="1045,1126 1033.0,1121.0 1033.0,1131.0" fill="#54677B"/>
+<polyline points="1383,1126 1412,1126" fill="none" stroke="#54677B" stroke-width="3"/><polygon points="1412,1126 1400.0,1121.0 1400.0,1131.0" fill="#54677B"/>
+<text x="48" y="1213.0" font-size="22" fill="#17324D" font-weight="400">收尾停止全局预取；每个C元素已累加完整K，尾部仅排列写回，无跨wave归约。</text>
+</svg>
