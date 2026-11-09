@@ -59,3 +59,21 @@ base policy. Device CU count is stored from the existing weights-create query.
 For old route1/5,K>=1024,M>=2048,the integer CTA-wave model selects12 when
 ratio>=1.47,or baseline>=24waves andratio>=1.44. All new routes bind owned
 format1 weights. This version requires fresh boundary/lifetime/full1178 tests.
+
+Route25 adds scaled M1/M2 raw-NT K-parallel reduction on80-CU gfx936. The
+calibrated domain is G>=12,N4096..6144 divisible by256,K7168..8192 divisible
+by128,uniform nonempty groups. It uses original immutable source weights,
+existing uploaded group/scale descriptors,and the same stream/lifetime rules.
+INT32 selection is unchanged. Per-token/per-channel/scalar/NULL scales keep
+the existing v2 contract. Outside this domain the established policy applies.
+
+Routes26..29 use paired FP32 scale operations and16-byte stores for dense
+scaled output with scalar activation scales. They reuse WASP geometries
+5/12/22/23 within the measured80-CU gfx936 domain. The plan checks output
+strides and activation scale modes across all groups before selecting the
+paired epilogue. Per-token scales and padded output use the base geometry.
+Route30 uses the same epilogue with packed M128×N256 for N1536/K2048,
+G4, and M2048/4096/8192. The larger M and neighboring group counts
+retain their existing geometry. The BF16 paired epilogue detects NaN
+with an unordered comparison and preserves the round-to-nearest-even
+and quiet NaN rules.

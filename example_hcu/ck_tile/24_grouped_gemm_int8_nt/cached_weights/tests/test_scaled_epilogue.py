@@ -7,15 +7,22 @@ from bindings import Weight,init,lib,ok,plan_info
 from test_scaled_api import Group2
 
 def main():
-    ap=argparse.ArgumentParser();ap.add_argument('--output',type=Path,required=True);args=ap.parse_args()
+    ap=argparse.ArgumentParser();ap.add_argument('--output',type=Path,required=True)
+    ap.add_argument('--paired',action='store_true');args=ap.parse_args()
     assert os.environ.get('HIP_VISIBLE_DEVICES')=='7'
     torch.set_num_threads(4);torch.manual_seed(20261104)
     records=[]
-    for m,n,k,g,route in [(128,256,512,2,7),(256,512,512,2,3),(2048,1792,1536,2,12)]:
+    fixtures=[(128,256,512,2,7),(256,512,512,2,3),(2048,1792,1536,2,12)]
+    if args.paired:
+        fixtures += [(2048,1536,2048,8,26),(2048,3072,1536,5,27),
+                     (2048,4096,1536,4,28),(2048,4096,4096,8,29),
+                     (2048,1536,2048,4,30)]
+    for m,n,k,g,route in fixtures:
         a=torch.randint(-128,128,(g,m,k),device='cuda',dtype=torch.int8)
         b=torch.randint(-128,128,(g,n,k),device='cuda',dtype=torch.int8)
         refs=[(a[i].double()@b[i].double().T).to(torch.int32).float() for i in range(g)]
-        sa=torch.tensor([.003,-.005],device='cuda');sb=torch.rand(g,n,device='cuda')*.01
+        initial_sa=torch.tensor([.003,-.005],device='cuda').repeat((g+1)//2)[:g]
+        sa=initial_sa.clone();sb=torch.rand(g,n,device='cuda')*.01
         wd=(Weight*g)(*[init(Weight,data=b[i].data_ptr(),n=n,k=k,row_stride=k) for i in range(g)])
         weights=C.c_void_p();ok(lib.ck_tile_int8_nt_cached_weights_create_v1(wd,g,None,C.byref(weights)))
         try:
@@ -30,7 +37,7 @@ def main():
                     pi=plan_info(plan);assert pi.route==route,(m,n,k,g,pi.route,route)
                     for step in range(3):
                         if step==0:
-                            sa.copy_(torch.tensor([.003,-.005],device='cuda'));sb.uniform_(-.01,.01)
+                            sa.copy_(initial_sa);sb.uniform_(-.01,.01)
                             sb[:,:8]=torch.tensor([0.,-0.,float('inf'),float('-inf'),float('nan'),1e-35,1e30,-.5],device='cuda')
                         elif step==1:sa.mul_(2);sb[:,8:].mul_(-.5)
                         else:sa.zero_();sb.fill_(float('inf'))

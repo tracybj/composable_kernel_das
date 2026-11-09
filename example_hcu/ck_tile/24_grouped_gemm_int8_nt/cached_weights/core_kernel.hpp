@@ -28,6 +28,12 @@ template<class P> struct GroupedInt8NtWaspCoreKernel {
   }
   typename P::Pipeline::AccTile acc;const auto* ap=static_cast<const int8_t*>(a.as_ptr[0])+static_cast<long long>(mb)*a.stride_As[0];const auto* bp=static_cast<const int8_t*>(a.bs_ptr[0])+static_cast<long long>(nb)*(P::PackedB?64:a.stride_Bs[0]);
   typename P::Pipeline{}.run_raw_into(ap,a.stride_As[0],P::BM,bp,a.stride_Bs[0],a.N,nb,a.K/128,acc,smem);
+  if constexpr(P::Pipeline::MasksInactiveN){
+   // The main-loop final CTA sync has completed. No later CTA barrier exists;
+   // absent consumer stripes have no defined accumulator and no output.
+   const index_t wave=get_warp_id();
+   if(wave<P::ProducerWaves || nb+(wave-P::ProducerWaves)*32>=a.N)return;
+  }
   GroupedInt8NtWaspCoreEpilogue<P>{}(a,mb,nb,acc);
  }
 };

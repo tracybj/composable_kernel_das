@@ -1,0 +1,110 @@
+{
+  "status": "API_GATES_AND_FOCUSED_NUMERIC_PASS",
+  "source_commit": "cd4f791d462dbb6fdd567bedd601b30ca3af880a",
+  "identity": {
+    "symbols": [
+      "ck_tile_int8_nt_cached_last_error_v1",
+      "ck_tile_int8_nt_cached_plan_create_v1",
+      "ck_tile_int8_nt_cached_plan_create_v2",
+      "ck_tile_int8_nt_cached_plan_destroy_v1",
+      "ck_tile_int8_nt_cached_plan_query_v1",
+      "ck_tile_int8_nt_cached_run_v1",
+      "ck_tile_int8_nt_cached_weights_create_v1",
+      "ck_tile_int8_nt_cached_weights_destroy_v1",
+      "ck_tile_int8_nt_cached_weights_query_v1"
+    ],
+    "library_sha256": "9b708a8bdb2467c0c2266f98935319e58eaf748fcfa65ed3d4f11268cc172dfc",
+    "benchmark_sha256": "684c28583ecccce8ca703a51e2c48686a4ba7edac8ac5ac4618638e349bf6dcf",
+    "experimental_tuning": false,
+    "operand_paths": false
+  },
+  "device": {
+    "total": 142,
+    "existing_bit_identical": 136,
+    "bf16_changed_bit_identical_to_v154": 4,
+    "new_route30": 2,
+    "spill": 0,
+    "changed": [
+      "void ck_tile::kentry<768, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 8, 4, 4, true, true, 0, false, true, 0, 8>, true, ck_tile::GroupedInt8NtPairedStoreEpilogue<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 8, 4, 4, true, true, 0, false, true, 0, 8>, true> >, ck_tile::GemmTransKernelArgImpl<0>*, ck_tile::Int8NtScaleArgs*>(ck_tile::GemmTransKernelArgImpl<0>*, ck_tile::Int8NtScaleArgs*)",
+      "void ck_tile::kentry<1024, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 12, 4, 2, true, true, 0, false, true, 0, 12>, true, ck_tile::GroupedInt8NtPairedStoreEpilogue<ck_tile::GroupedInt8NtWaspCoreProblem<256, false, 12, 4, 2, true, true, 0, false, true, 0, 12>, true> >, ck_tile::GemmTransKernelArgImpl<0>*, ck_tile::Int8NtScaleArgs*>(ck_tile::GemmTransKernelArgImpl<0>*, ck_tile::Int8NtScaleArgs*)",
+      "void ck_tile::kentry<1024, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspScaledMaskedPrefetchProblem<4>, true, ck_tile::GroupedInt8NtPairedStoreEpilogue<ck_tile::GroupedInt8NtWaspScaledMaskedPrefetchProblem<4>, true> >, ck_tile::GemmTransKernelArgImpl<0>*, ck_tile::Int8NtScaleArgs*>(ck_tile::GemmTransKernelArgImpl<0>*, ck_tile::Int8NtScaleArgs*)",
+      "void ck_tile::kentry<1024, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspScaledMaskedPrefetchProblem<8>, true, ck_tile::GroupedInt8NtPairedStoreEpilogue<ck_tile::GroupedInt8NtWaspScaledMaskedPrefetchProblem<8>, true> >, ck_tile::GemmTransKernelArgImpl<0>*, ck_tile::Int8NtScaleArgs*>(ck_tile::GemmTransKernelArgImpl<0>*, ck_tile::Int8NtScaleArgs*)"
+    ],
+    "added": [
+      "void ck_tile::kentry<640, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspCoreProblem<128, false, 8, 4, 2, true, true, 0, false, true, 0, 8>, true, ck_tile::GroupedInt8NtPairedStoreEpilogue<ck_tile::GroupedInt8NtWaspCoreProblem<128, false, 8, 4, 2, true, true, 0, false, true, 0, 8>, true> >, ck_tile::GemmTransKernelArgImpl<0>*, ck_tile::Int8NtScaleArgs*>(ck_tile::GemmTransKernelArgImpl<0>*, ck_tile::Int8NtScaleArgs*)",
+      "void ck_tile::kentry<640, 1, ck_tile::GroupedInt8NtScaledWaspKernel<ck_tile::GroupedInt8NtWaspCoreProblem<128, false, 8, 4, 2, true, true, 0, false, true, 0, 8>, false, ck_tile::GroupedInt8NtPairedStoreEpilogue<ck_tile::GroupedInt8NtWaspCoreProblem<128, false, 8, 4, 2, true, true, 0, false, true, 0, 8>, false> >, ck_tile::GemmTransKernelArgImpl<0>*, ck_tile::Int8NtScaleArgs*>(ck_tile::GemmTransKernelArgImpl<0>*, ck_tile::Int8NtScaleArgs*)"
+    ]
+  },
+  "checks": {
+    "scaled": 447,
+    "invalid": 14,
+    "epilogue": 48,
+    "decode_lifetime": 24,
+    "boundary": 65,
+    "lifetime": 32
+  },
+  "key": {
+    "298": {
+      "M": 16384,
+      "N": 4096,
+      "K": 1536,
+      "G": 12,
+      "route": 28,
+      "BF16_R": 1.0207848270872337,
+      "FP16_R": 1.1070345912872477
+    },
+    "339": {
+      "M": 8192,
+      "N": 4096,
+      "K": 2048,
+      "G": 64,
+      "route": 28,
+      "BF16_R": 1.0617786805409815,
+      "FP16_R": 1.136667033140719
+    },
+    "702": {
+      "M": 2048,
+      "N": 1536,
+      "K": 2048,
+      "G": 4,
+      "route": 30,
+      "BF16_R": 1.1776851603737024,
+      "FP16_R": 1.2284679614397667
+    },
+    "703": {
+      "M": 4096,
+      "N": 1536,
+      "K": 2048,
+      "G": 4,
+      "route": 30,
+      "BF16_R": 1.0900880195515548,
+      "FP16_R": 1.1515689021257647
+    },
+    "704": {
+      "M": 8192,
+      "N": 1536,
+      "K": 2048,
+      "G": 4,
+      "route": 30,
+      "BF16_R": 1.0267397970678644,
+      "FP16_R": 1.0934668113924022
+    },
+    "705": {
+      "M": 16384,
+      "N": 1536,
+      "K": 2048,
+      "G": 4,
+      "route": 27,
+      "BF16_R": 0.9664778350945187,
+      "FP16_R": 0.9994660948648584
+    }
+  },
+  "strict": {
+    "BF16": 10,
+    "FP16": 14
+  },
+  "pair_records": 18,
+  "pair_samples": 5,
+  "api_focus_shapes": 15,
+  "scope": "focused_only"
+}

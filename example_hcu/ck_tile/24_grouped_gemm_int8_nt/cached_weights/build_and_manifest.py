@@ -16,12 +16,13 @@ def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def sources():
+def sources(tuning=False):
     extension = {}
     for path in E.rglob('*'):
         if not path.is_file():
             continue
-        if any(part in ['experiments', 'docs', 'tests', 'build', 'results', '__pycache__']
+        compiled_experiment = tuning and path.relative_to(E).parts[:2] in [('experiments', 'operand_paths_v125'),('experiments','packed_output_v129'),('experiments','packed_exchange_v141'),('experiments','finite_factor_v142'),('experiments','cross_half_v143'),('experiments','wave_private_v144'),('experiments','wave_store_v146')]
+        if not compiled_experiment and any(part in ['experiments', 'docs', 'tests', 'build', 'results', '__pycache__']
                or part.startswith('build_') for part in path.relative_to(E).parts):
             continue
         if path.suffix in ['.cpp', '.hpp', '.h', '.txt']:
@@ -39,15 +40,17 @@ def main():
     parser.add_argument('--compiler', default='/opt/dtk/bin/aicc')
     parser.add_argument('--arch', default='gfx936')
     parser.add_argument('--jobs', type=int, default=2)
+    parser.add_argument('--tuning', action='store_true', help='Isolated instance-tuning build only')
     args = parser.parse_args()
     assert args.jobs > 0
     build = args.build.resolve()
     build.mkdir(parents=True, exist_ok=True)
-    before = sources()
+    before = sources(args.tuning)
     commands = [
         ['cmake', '-S', str(E / 'cached_weights'), '-B', str(build),
          '-DCMAKE_CXX_COMPILER=' + args.compiler, '-DCMAKE_BUILD_TYPE=Release',
-         '-DCK_INT8_CACHED_ARCH=' + args.arch],
+         '-DCK_INT8_CACHED_ARCH=' + args.arch,
+         '-DCK_INT8_CACHED_TUNING=' + ('ON' if args.tuning else 'OFF')],
         ['cmake', '--build', str(build), '--target',
          'ck_tile_int8_nt_cached_benchmark', '-j' + str(args.jobs)],
     ]
@@ -56,7 +59,7 @@ def main():
         with (build / (phase + '.log')).open('w') as log:
             result = subprocess.run(command, stdout=log, stderr=subprocess.STDOUT)
         assert result.returncode == 0, (phase, build / (phase + '.log'))
-    assert before == sources(), 'Source changed during compilation'
+    assert before == sources(args.tuning), 'Source changed during compilation'
     library = build / 'libck_tile_int8_nt_cached.so'
     exports = subprocess.check_output(['nm', '-D', '--defined-only', str(library)], text=True)
     names = [line.split()[-1] for line in exports.splitlines() if line.split()]
@@ -66,7 +69,8 @@ def main():
                    or name == 'ck_tile_grouped_int8_nt_launch' for name in names)
     (build / 'sources.json').write_text(json.dumps(before, indent=2) + '\n')
     identity = dict(symbols=api, library_sha256=digest(library),
-                    benchmark_sha256=digest(build / 'libck_tile_int8_nt_cached_benchmark.so'))
+                    benchmark_sha256=digest(build / 'libck_tile_int8_nt_cached_benchmark.so'),
+                    experimental_tuning=args.tuning,operand_paths=args.tuning)
     (build / 'exported_api_symbols.json').write_text(json.dumps(identity, indent=2) + '\n')
     print(json.dumps(dict(status='BUILD_PASS_GPU_NOT_RUN', build=str(build), **identity), indent=2))
 

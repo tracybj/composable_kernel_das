@@ -7,6 +7,11 @@
 #include "core_kernel.hpp"
 #include "instances.hpp"
 #include "pack_kernel.hpp"
+#ifdef CK_INT8_CACHED_TUNING
+extern "C" int ck_tile_int8_operand_launch_private(unsigned,unsigned,const void*,const void*,int,int,int,hipStream_t);
+extern "C" int ck_tile_int8_packed_small_launch_private(unsigned,unsigned,const void*,const void*,int,int,int,hipStream_t);
+extern "C" int ck_tile_int8_experimental_wasp_launch_private(unsigned,unsigned,const void*,const void*,int,int,int,hipStream_t);
+#endif
 namespace {
 template<class P> int run(const void* args,int g,int m,int n,hipStream_t stream){
  const int mm=P::Transpose?n:m, nn=P::Transpose?m:n;
@@ -19,6 +24,11 @@ template<class P> int run(const void* args,int g,int m,int n,hipStream_t stream)
 
 }
 extern "C" int ck_tile_int8_cached_launch_private(unsigned route,unsigned legacy,const void* args,int g,int m,int n,hipStream_t stream){
+#ifdef CK_INT8_CACHED_TUNING
+ if(route==0 && legacy>=9001 && legacy<=9071)return ck_tile_int8_operand_launch_private(0,legacy,args,nullptr,g,m,n,stream);
+ if((route>=32 && route<=43) || (route>=80 && route<=83))return ck_tile_int8_packed_small_launch_private(0,route,args,nullptr,g,m,n,stream);
+ if((route>=13 && route<=21) || (route>=48 && route<=79))return ck_tile_int8_experimental_wasp_launch_private(0,route,args,nullptr,g,m,n,stream);
+#endif
  switch(route){
  case 0:return ck_tile_int8_cached_legacy_dispatch_private(legacy,args,g,m,n,stream);
  case 1:return run<ck_tile::int8_nt_instances::RawM256N256>(args,g,m,n,stream);
@@ -33,6 +43,8 @@ extern "C" int ck_tile_int8_cached_launch_private(unsigned route,unsigned legacy
  case 10:return run<ck_tile::int8_nt_instances::PackedM32N256>(args,g,m,n,stream);
  case 11:return run<ck_tile::int8_nt_instances::PackedM32N64>(args,g,m,n,stream);
  case 12:return run<ck_tile::int8_nt_instances::PackedM256N384>(args,g,m,n,stream);
+ case 22:return run<ck_tile::int8_nt_instances::PackedM256N384MaskedM4>(args,g,m,n,stream);
+ case 23:return run<ck_tile::int8_nt_instances::PackedM256N384MaskedM8>(args,g,m,n,stream);
  default:return -1;
  }
 }

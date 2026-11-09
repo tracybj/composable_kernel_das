@@ -290,7 +290,7 @@ CK_TILE_DEVICE void take_a_stage_snapshot(int slot, const char* lds)
 
 }
 
-template <typename Problem, typename Policy = GemmPipelineAgBgCrCompV4DefaultPolicy, index_t ConsumerSplit = 8,index_t AReadBatch = 1,bool APrefetch = false,bool OneBarrier = false,index_t RecordCap = 0,bool EarlyB = false,bool PackedB = false,index_t BAddress = 0>
+template <typename Problem, typename Policy = GemmPipelineAgBgCrCompV4DefaultPolicy, index_t ConsumerSplit = 8,index_t AReadBatch = 1,bool APrefetch = false,bool OneBarrier = false,index_t RecordCap = 0,bool EarlyB = false,bool PackedB = false,index_t BAddress = 0,bool MaskInactiveN = false,bool SingleB = false,bool CrossHalfPrefetch = false>
 struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Policy>
 {
     using Base = GemmPipelineAgBgCrCompV3<Problem, Policy>;
@@ -334,6 +334,7 @@ struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Poli
     using AccTile = Int8WaspAccTileCore<BlockGemmShape::kM>;
 
     static constexpr bool IsWaspPipeline = true;
+    static constexpr bool MasksInactiveN = MaskInactiveN;
 
     struct AProdSrc
     {
@@ -471,10 +472,13 @@ struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Poli
         asm volatile("ds_read_b128 %0, %1 offset:%c2" : "=&v"(out) : "v"(addr),"n"(OFF) : "memory");
     }
     static_assert(ConsumerSplit==kNumConsumerWaves && OneBarrier,"WASP core uses uniform consumers and one publication barrier per stage");
+    static_assert(!MaskInactiveN || PackedB,"inactive N consumers are gated only for prepared B");
     static_assert(AReadBatch > 0 && (AReadBatch & (AReadBatch-1)) == 0 &&
                   AccTile::kMIters % AReadBatch == 0, "A-read batch must divide M fragments");
     static_assert(BlockGemmShape::kM == 32 || BlockGemmShape::kM == 64 ||
                   BlockGemmShape::kM == 128 || BlockGemmShape::kM == 256);
+    static_assert(!CrossHalfPrefetch || (APrefetch && OneBarrier && !EarlyB && !SingleB),
+                  "cross-half schedule keeps the established late double-B protocol");
     template<index_t SLOT,bool H1> CK_TILE_DEVICE void consume_short(const AReadBases& rb,const grouped_int8_nt_wasp_core_detail::stage16_t (&b)[2],AccTile& acc) const {
         using namespace grouped_int8_nt_wasp_core_detail;
         if constexpr(!APrefetch) {
@@ -530,13 +534,14 @@ struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Poli
         (void)consumer_id;
         (void)num_loop;
         constexpr index_t SLOT = CUR * kAStageBytes;
+        constexpr index_t BSlot = SingleB ? 0 : CUR;
 
         grouped_int8_nt_wasp_core_detail::wasp_wait_vmcnt0(vmem_diag, k_stage);
         // The opposite B register slot is free after the previous stage. Issue
         // the next read before low+high MMAC instead of before high alone.
-        if constexpr(EarlyB)
+        if constexpr(EarlyB && !SingleB)
             if(k_stage+1<num_loop)load_B_stage(b_rsrc,b_pairs,k_stage+1,b_regs[CUR^1],vmem_diag);
-        consume_short<SLOT,false>(a_rb,b_regs[CUR][0],acc);
+        consume_short<SLOT,false>(a_rb,b_regs[BSlot][0],acc);
     }
     template <index_t CUR>
     CK_TILE_DEVICE void c_I2(index_t consumer_id,
@@ -552,11 +557,60 @@ struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Poli
     {
         using namespace grouped_int8_nt_wasp_core_detail;
         constexpr index_t SLOT = CUR * kAStageBytes;
+        constexpr index_t BSlot = SingleB ? 0 : CUR;
         (void)consumer_id;
 
-        if constexpr(!EarlyB)
+        if constexpr(!EarlyB && !SingleB)
             if(k_stage+1<num_loop)load_B_stage(b_rsrc,b_pairs,k_stage+1,b_regs[CUR^1],vmem_diag);
-        consume_short<SLOT,true>(a_rb,b_regs[CUR][1],acc);
+        consume_short<SLOT,true>(a_rb,b_regs[BSlot][1],acc);
+        if constexpr(SingleB)
+            // Both K halves have completed their final MMAC use. Only now may
+            // the next B stage overwrite slot0. A still has two LDS slots.
+            if(k_stage+1<num_loop)load_B_stage(b_rsrc,b_pairs,k_stage+1,b_regs[0],vmem_diag);
+    }
+    // Carry the first high-K64 A batch across the final low-K64 MMAC group.
+    // Only register prefetch lifetime changes; A-slot publication/retirement
+    // remains one barrier per K128 stage.
+    template<index_t CUR>
+    CK_TILE_DEVICE void c_pair(index_t k_stage,index_t num_loop,
+                              grouped_int8_nt_wasp_core_detail::buffer_rsrc_t b_rsrc,
+                              const BPairs& b_pairs,const AReadBases& rb,
+                              grouped_int8_nt_wasp_core_detail::stage16_t (&b)[2][2][AccTile::kNIters],
+                              grouped_int8_nt_wasp_core_detail::WaspVmemDiag& diag,AccTile& acc) const {
+        using namespace grouped_int8_nt_wasp_core_detail;
+        constexpr int Groups=AccTile::kMIters/AReadBatch;
+        constexpr index_t SLOT=CUR*kAStageBytes;
+        wasp_wait_vmcnt0(diag,k_stage);
+        stage16_t a[2][AReadBatch];
+        static_for<0,AReadBatch,1>{}([&](auto rr){constexpr int i=decltype(rr)::value;
+            read_prefetch<SLOT+i*2048>(rb.h0,a[0][i].d4);
+        });
+        static_for<0,2,1>{}([&](auto hh){constexpr int H=decltype(hh)::value;
+            // low fragments are dead, high current-B remains live.
+            if constexpr(H==1)if(k_stage+1<num_loop)
+                load_B_stage(b_rsrc,b_pairs,k_stage+1,b[CUR^1],diag);
+            static_for<0,Groups,1>{}([&](auto gg){
+                constexpr int G=decltype(gg)::value,slot=(H*Groups+G)%2,base_m=G*AReadBatch;
+                asm volatile("s_waitcnt lgkmcnt(0)" ::: "memory");
+                if constexpr(G+1<Groups){
+                    const uint32_t base=H?rb.h1:rb.h0;
+                    static_for<0,AReadBatch,1>{}([&](auto rr){constexpr int i=decltype(rr)::value;
+                        read_prefetch<SLOT+(base_m+AReadBatch+i)*2048>(base,a[slot^1][i].d4);
+                    });
+                }else if constexpr(H==0){
+                    static_for<0,AReadBatch,1>{}([&](auto rr){constexpr int i=decltype(rr)::value;
+                        read_prefetch<SLOT+i*2048>(rb.h1,a[slot^1][i].d4);
+                    });
+                }
+                static_for<0,2,1>{}([&](auto kk){constexpr int K=decltype(kk)::value;
+                    static_for<0,AReadBatch,1>{}([&](auto rr){constexpr int i=decltype(rr)::value;
+                        static_for<0,2,1>{}([&](auto nn){constexpr int N=decltype(nn)::value;
+                            acc.v[(base_m+i)*2+N]=mmac_i8(a[slot][i].frag[K],b[CUR][H][N].frag[K],acc.v[(base_m+i)*2+N]);
+                        });
+                    });
+                });
+            });
+        });
     }
     CK_TILE_DEVICE void consumer_run_c(index_t consumer_id,
                                                  index_t num_loop,
@@ -568,6 +622,16 @@ struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Poli
                                                  grouped_int8_nt_wasp_core_detail::WaspVmemDiag& vmem_diag,
                                                  AccTile& acc) const
     {
+        if constexpr(CrossHalfPrefetch){
+            for(index_t k=0;k<num_loop;k+=2){
+                c_pair<0>(k,num_loop,b_rsrc,b_pairs,a_rb,b_regs,vmem_diag,acc);
+                grouped_int8_nt_wasp_core_detail::wasp_barrier_maybe();
+                if(k+1<num_loop){
+                    c_pair<1>(k+1,num_loop,b_rsrc,b_pairs,a_rb,b_regs,vmem_diag,acc);
+                    grouped_int8_nt_wasp_core_detail::wasp_barrier_maybe();
+                }
+            }
+        }else{
         for(index_t k = 0; k < num_loop; k += 2)
         {
             c_I1<0>(consumer_id, k, num_loop, b_rsrc, b_pairs, a_rb, b_regs, a_regs, vmem_diag, acc);
@@ -600,6 +664,7 @@ struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Poli
                         acc);
                 grouped_int8_nt_wasp_core_detail::wasp_barrier_maybe();
             }
+        }
         }
     }
     CK_TILE_DEVICE static uint32_t record_stride(uint32_t physical_pitch)
@@ -676,53 +741,69 @@ struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Poli
         else
         {
 
-            acc = AccTile{};
+            if constexpr(!MaskInactiveN) acc = AccTile{};
             const index_t consumer_id = wid - kNumProducerWaves;
 
-            grouped_int8_nt_wasp_core_detail::stage16_t a_regs[AccTile::kMIters];
-
-            const uint32_t lane    = static_cast<uint32_t>(get_lane_id());
-            const uint32_t row     = lane & 15u;
-            const uint32_t r7      = row & 7u;
-            const uint32_t colg    = lane >> 4;
-            const uint32_t rowbase = static_cast<uint32_t>(reinterpret_cast<uintptr_t>(lds)) +
-                                     row * (kStageK * sizeof(ADataType));
-            const AReadBases a_rb{rowbase + ((colg ^ r7) * 16u),
-                                  rowbase + (((colg + 4u) ^ r7) * 16u)};
-            const uint32_t nrow  = static_cast<uint32_t>(consumer_id) * 32u + row;
-            const uint32_t inrow = colg * 16u;
-            const uint32_t record_pitch = record_stride(b_pitch_bytes);
-            const uint32_t quotient = b_pitch_bytes / record_pitch;
-            const uint32_t remainder = b_pitch_bytes % record_pitch;
-            // Low32 is the structured record index, high32 the byte offset.
-            // index*record_pitch+offset equals row*physical_pitch+inrow.
-            BPairs b_pr{
-                (static_cast<uint64_t>(nrow * remainder + inrow) << 32) |
-                    (nrow * quotient),
-                (static_cast<uint64_t>((nrow + 16u) * remainder + inrow) << 32) |
-                    ((nrow + 16u) * quotient)};
-
-            if constexpr(PackedB)
+            // A consumer owns a complete 32-column stripe. An entirely absent
+            // stripe has no output, but must still participate in every CTA
+            // publication/retirement epoch. The branch is uniform per wave.
+            if(!MaskInactiveN || b_n_origin + consumer_id * 32 < b_n_len)
             {
-                b_pr.p0 = static_cast<uint32_t>(consumer_id) * 2048u + lane * 16u;
-                b_pr.p1 = static_cast<uint32_t>(consumer_id) * 2048u + 1024u + lane * 16u;
-                b_pr.half_stride = static_cast<uint32_t>(b_n_len) * 64u;
-            }
-            else if constexpr(BAddress != 0)
-            {
-                b_pr.p0 = nrow * b_pitch_bytes + inrow;
-                b_pr.p1 = (nrow + 16u) * b_pitch_bytes + inrow;
-            }
-            grouped_int8_nt_wasp_core_detail::stage16_t b_regs[2][2][AccTile::kNIters];
+                if constexpr(MaskInactiveN) acc = AccTile{};
+                grouped_int8_nt_wasp_core_detail::stage16_t a_regs[AccTile::kMIters];
 
-            if(num_loop > 0)
-            {
-                load_B_stage(b_rsrc, b_pr, 0, b_regs[0], vmem_diag);
-            }
-            if constexpr(!OneBarrier)grouped_int8_nt_wasp_core_detail::wasp_barrier_maybe();
-            grouped_int8_nt_wasp_core_detail::wasp_barrier_maybe();
+                const uint32_t lane    = static_cast<uint32_t>(get_lane_id());
+                const uint32_t row     = lane & 15u;
+                const uint32_t r7      = row & 7u;
+                const uint32_t colg    = lane >> 4;
+                const uint32_t rowbase = static_cast<uint32_t>(reinterpret_cast<uintptr_t>(lds)) +
+                                         row * (kStageK * sizeof(ADataType));
+                const AReadBases a_rb{rowbase + ((colg ^ r7) * 16u),
+                                      rowbase + (((colg + 4u) ^ r7) * 16u)};
+                const uint32_t nrow  = static_cast<uint32_t>(consumer_id) * 32u + row;
+                const uint32_t inrow = colg * 16u;
+                const uint32_t record_pitch = record_stride(b_pitch_bytes);
+                const uint32_t quotient = b_pitch_bytes / record_pitch;
+                const uint32_t remainder = b_pitch_bytes % record_pitch;
+                // Low32 is the structured record index, high32 the byte offset.
+                // index*record_pitch+offset equals row*physical_pitch+inrow.
+                BPairs b_pr{
+                    (static_cast<uint64_t>(nrow * remainder + inrow) << 32) |
+                        (nrow * quotient),
+                    (static_cast<uint64_t>((nrow + 16u) * remainder + inrow) << 32) |
+                        ((nrow + 16u) * quotient)};
 
-            consumer_run_c(consumer_id,num_loop,a_rb,b_rsrc,b_pr,b_regs,a_regs,vmem_diag,acc);
+                if constexpr(PackedB)
+                {
+                    b_pr.p0 = static_cast<uint32_t>(consumer_id) * 2048u + lane * 16u;
+                    b_pr.p1 = static_cast<uint32_t>(consumer_id) * 2048u + 1024u + lane * 16u;
+                    b_pr.half_stride = static_cast<uint32_t>(b_n_len) * 64u;
+                }
+                else if constexpr(BAddress != 0)
+                {
+                    b_pr.p0 = nrow * b_pitch_bytes + inrow;
+                    b_pr.p1 = (nrow + 16u) * b_pitch_bytes + inrow;
+                }
+                grouped_int8_nt_wasp_core_detail::stage16_t b_regs[2][2][AccTile::kNIters];
+
+                if(num_loop > 0)
+                {
+                    load_B_stage(b_rsrc, b_pr, 0, b_regs[0], vmem_diag);
+                }
+                if constexpr(!OneBarrier)grouped_int8_nt_wasp_core_detail::wasp_barrier_maybe();
+                grouped_int8_nt_wasp_core_detail::wasp_barrier_maybe();
+
+                consumer_run_c(consumer_id,num_loop,a_rb,b_rsrc,b_pr,b_regs,a_regs,vmem_diag,acc);
+            }
+            else
+            {
+                // Initial A-ready epoch followed by one epoch per K stage.
+                // Do not return here: the common final LDS sync is required.
+                // No accumulator is defined for this wave. Mask-aware kernels
+                // must discard it AFTER final sync and BEFORE any epilogue read.
+                for(index_t epoch = 0; epoch <= num_loop; ++epoch)
+                    grouped_int8_nt_wasp_core_detail::wasp_barrier_maybe();
+            }
         }
 
         grouped_int8_nt_wasp_core_detail::wasp_sync_lds_maybe();

@@ -46,7 +46,7 @@ struct GroupedInt8NtScaledTileKernel
 } // namespace ck_tile
 
 namespace ck_tile {
-template<class P,bool BFloat> struct GroupedInt8NtScaledWaspKernel {
+template<class P,bool BFloat,class Epilogue=GroupedInt8NtScaledWaspEpilogue<P,BFloat>> struct GroupedInt8NtScaledWaspKernel {
  CK_TILE_DEVICE void operator()(const GemmTransKernelArg* args,const Int8NtScaleArgs* scales) const {
   const auto o=args[blockIdx.z].group_karg;if(o.M<=0 || o.N<=0 || o.K<=0)return;
   const UniversalGemmKernelArgs<> a{P::Transpose?o.bs_ptr:o.as_ptr,P::Transpose?o.as_ptr:o.bs_ptr,o.ds_ptr,o.e_ptr,
@@ -72,7 +72,13 @@ template<class P,bool BFloat> struct GroupedInt8NtScaledWaspKernel {
   }
   typename P::Pipeline::AccTile acc;const auto* ap=static_cast<const int8_t*>(a.as_ptr[0])+static_cast<long long>(mb)*a.stride_As[0];const auto* bp=static_cast<const int8_t*>(a.bs_ptr[0])+static_cast<long long>(nb)*(P::PackedB?64:a.stride_Bs[0]);
   typename P::Pipeline{}.run_raw_into(ap,a.stride_As[0],P::BM,bp,a.stride_Bs[0],a.N,nb,a.K/128,acc,smem);
-  GroupedInt8NtScaledWaspEpilogue<P,BFloat>{}(o,mb,nb,acc,scales[blockIdx.z]);
+  if constexpr(P::Pipeline::MasksInactiveN){
+   // Discard absent stripes only after every main-loop CTA barrier. This is
+   // before scalar/per-token epilogues can read an undefined accumulator.
+   const index_t wave=get_warp_id();
+   if(wave<P::ProducerWaves || nb+(wave-P::ProducerWaves)*32>=a.N)return;
+  }
+  Epilogue{}(o,mb,nb,acc,scales[blockIdx.z]);
  }
 };
 }

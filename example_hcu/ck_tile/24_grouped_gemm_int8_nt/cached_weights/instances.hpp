@@ -1,11 +1,15 @@
 // SPDX-License-Identifier: MIT
 #pragma once
 #include "problem.hpp"
+#include "../pipeline/packed_cooperative.hpp"
 #include "m128/problem.hpp"
 #include "m64/problem.hpp"
 #include "m32/problem.hpp"
 #include "wide_n/problem.hpp"
+#include "wide_n/masked_problem.hpp"
 namespace ck_tile::int8_nt_instances {
+using PackedM16N64K256 = GroupedInt8NtPackedSmallProblem<
+ GroupedInt8NtTileProblem<16,64,256,1,2,false,false,true,true,1,true>,true,true>;
 // Stable route handles identify precompiled geometry/policy, never workload IDs.
 using RawM256N256 = GroupedInt8NtWaspCachedProblem<false,8,4,4,true,true,0,false,false,1>;
 using RawM256N256Record1024 = GroupedInt8NtWaspCachedProblem<false,8,4,4,true,true,1024,false,false,1>;
@@ -19,4 +23,10 @@ using PackedM64N64 = GroupedInt8NtWaspSmallMProblem<false,2,1,2,true,true,0,fals
 using PackedM32N256 = GroupedInt8NtWaspM32Problem<false,8,1,2,true,true,0,false,true,1,8>;
 using PackedM32N64 = GroupedInt8NtWaspM32Problem<false,2,1,1,true,true,0,false,true,1,2>;
 using PackedM256N384 = GroupedInt8NtWaspPublicWideNProblem<false,12,4,2,true,true,0,false,true,0,12>;
+using PackedM256N384MaskedM4 = GroupedInt8NtWaspMaskedWideProblem<4>;
+using PackedM256N384MaskedM8 = GroupedInt8NtWaspMaskedWideProblem<8>;
+// Cross-half A prefetch is validated for masked scaled output only. Keep the
+// original problem types for INT32 and the unmasked WASP implementations.
+using ScaledPackedM256N384MaskedM4 = GroupedInt8NtWaspScaledMaskedPrefetchProblem<4>;
+using ScaledPackedM256N384MaskedM8 = GroupedInt8NtWaspScaledMaskedPrefetchProblem<8>;
 }
