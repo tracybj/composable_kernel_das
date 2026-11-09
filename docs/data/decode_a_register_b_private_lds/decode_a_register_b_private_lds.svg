@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1040" viewBox="0 0 1800 1040" role="img">
-<title>BF16 NN Decode：A寄存器、B私有LDS流水</title>
+<title>BF16 NN Decode：Wave 独立双缓冲流水</title>
 <style>text{font-family:"Noto Sans CJK SC","Noto Sans SC","Microsoft YaHei",sans-serif}</style>
 <rect width="1800" height="1040" fill="white"/>
 <rect x="0" y="0" width="1800" height="112" rx="0" fill="#B5122B" stroke="none" stroke-width="2"/>
-<text x="48" y="68" font-size="44" fill="#FFFFFF" font-weight="600">BF16 NN Decode：A寄存器、B私有LDS流水</text>
+<text x="48" y="68" font-size="44" fill="#FFFFFF" font-weight="600">BF16 NN Decode：Wave 独立双缓冲流水</text>
 <text x="48" y="159" font-size="25" fill="#54677B" font-weight="400">示例：16×128输出块，4个wave沿N划分；K16分块、双缓冲</text>
 <rect x="48" y="195" width="1704" height="48" rx="5" fill="#F2F5F9" stroke="none" stroke-width="2"/>
 <text x="65" y="229" font-size="28" fill="#17324D" font-weight="600">阶段一  主循环：wave独立搬运与计算</text>

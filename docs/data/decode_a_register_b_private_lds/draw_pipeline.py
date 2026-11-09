@@ -22,7 +22,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--font', required=True)
     args = parser.parse_args()
-    s = Scene(1040, 'BF16 NN Decode：A寄存器、B私有LDS流水',
+    s = Scene(1040, 'BF16 NN Decode：Wave 独立双缓冲流水',
               '示例：16×128输出块，4个wave沿N划分；K16分块、双缓冲', args.font)
     s.section(195, '阶段一', '主循环：wave独立搬运与计算')
     s.fit(48, 268, 1704, 35,

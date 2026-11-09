@@ -1,4 +1,4 @@
-# BF16 NN Decode：A寄存器、B私有LDS流水
+# BF16 NN Decode：Wave 独立双缓冲流水
 
 ![流水架构图](decode_a_register_b_private_lds.png)
 
