@@ -1,0 +1,111 @@
+{
+  "scope": "Frozen1193 BF16 NN GroupedGemm on gfx936, not all BLASLt kernels",
+  "source": "1178 historical kernel_name mappings plus 15 frozen added-shape mappings",
+  "gpu_jobs": 0,
+  "optimization_state": "paused",
+  "code_object_sha256": "0100605e307ec45ab645712246805a04ccff6a402c2b86de77f6a3db88a52454",
+  "total": {
+    "kernel_instances": 14,
+    "total": 1193,
+    "decode": 881,
+    "prefill": 312
+  },
+  "architectural_frameworks": 1,
+  "architectural_framework": "CTA-cooperative A/B direct-to-LDS, LDS-to-operand-register, MMAC, CTA synchronization",
+  "buffer_organization_families": 2,
+  "class_definition": "Verified K block size combined with physical LDS ring organization; groups may contain different operand/wave/wait schedules",
+  "classes": {
+    "k16_lds2": {
+      "kernel_instances": 1,
+      "total": 15,
+      "decode": 15,
+      "prefill": 0
+    },
+    "k16_lds4": {
+      "kernel_instances": 8,
+      "total": 957,
+      "decode": 645,
+      "prefill": 312
+    },
+    "k32_lds4": {
+      "kernel_instances": 5,
+      "total": 221,
+      "decode": 221,
+      "prefill": 0
+    }
+  },
+  "logical_geometries": [
+    {
+      "logical_tile": [
+        64,
+        64,
+        32
+      ],
+      "kernel_instances": 1,
+      "total": 36,
+      "decode": 36,
+      "prefill": 0
+    },
+    {
+      "logical_tile": [
+        64,
+        128,
+        32
+      ],
+      "kernel_instances": 2,
+      "total": 154,
+      "decode": 154,
+      "prefill": 0
+    },
+    {
+      "logical_tile": [
+        128,
+        128,
+        16
+      ],
+      "kernel_instances": 3,
+      "total": 547,
+      "decode": 547,
+      "prefill": 0
+    },
+    {
+      "logical_tile": [
+        128,
+        128,
+        32
+      ],
+      "kernel_instances": 2,
+      "total": 31,
+      "decode": 31,
+      "prefill": 0
+    },
+    {
+      "logical_tile": [
+        128,
+        256,
+        16
+      ],
+      "kernel_instances": 2,
+      "total": 23,
+      "decode": 23,
+      "prefill": 0
+    },
+    {
+      "logical_tile": [
+        256,
+        256,
+        16
+      ],
+      "kernel_instances": 4,
+      "total": 402,
+      "decode": 90,
+      "prefill": 312
+    }
+  ],
+  "limitations": [
+    "Steady K-loop classification, not equality of complete instruction schedules or edge/epilogue paths",
+    "Historical selection map; no new GPU selection or performance reproduction",
+    "Do not infer BLASLt library-wide counts, other dtypes, layouts or architectures",
+    "Four ring planes do not imply exactly four total stages of lookahead including operand preloads"
+  ]
+}
