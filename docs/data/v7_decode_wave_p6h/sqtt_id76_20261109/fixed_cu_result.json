@@ -1,0 +1,245 @@
+{
+  "ok": true,
+  "at": "2026-11-09T02:24:26.869178+00:00",
+  "epoch": 0,
+  "binary_sha256": "276fdae07237401fdfb56976c7c6c11faa61418deaf8097e4839607da1fbfc99",
+  "jobs": [
+    {
+      "key": "sqtt76_cu0_6b808e16f6_base",
+      "id": 76,
+      "shape": {
+        "M": 1,
+        "N": 2048,
+        "K": 768,
+        "G": 4
+      },
+      "variant": "base",
+      "kind": "profile",
+      "expected": 5008,
+      "command": [
+        "/opt/rocm-6.3.3/bin/xprof",
+        "--enable-sqtt",
+        "--enable-raw",
+        "--target-se",
+        "0",
+        "--target-cu",
+        "0",
+        "--dispatches",
+        "18",
+        "--kernels",
+        "GemmPipelineV7SmallMK32",
+        "--sections",
+        "speed_of_light,memory_workload,occupancy,memory_chart,instruction_statistics,compute_workload,scheduler_statistics,wave_state",
+        "--output-dir",
+        "/workspace/v7_coverage/p6h_decode_arch/runs/sqtt76_cu0_6b808e16f6_base/profile",
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=1",
+        "--n=2048",
+        "--k=768",
+        "--groups=4",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--validate=0",
+        "--warmup=10",
+        "--samples=1",
+        "--launches-per-sample=1",
+        "--time=1",
+        "--correctness-repeats=1",
+        "--output-redzone=0"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "2"
+      },
+      "binary": "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+      "sqtt": true,
+      "target_dispatch": 18,
+      "target_se": 0,
+      "target_cu_active_index": 0,
+      "capture_timing_is_formal": false,
+      "prior_accuracy_result": "/workspace/v7_coverage/p6h_decode_arch/sqtt_id76_20261109/result.json",
+      "capture_script": "/workspace/v7_coverage/p6h_decode_arch/sqtt_id76_20261109/capture_fixed_cu.py",
+      "capture_script_sha256": "73ae4fbca2a8c306c65a16291f3e64fe9fe9785e87388e91eee952d830148583",
+      "logical_tile": [
+        64,
+        128,
+        32
+      ],
+      "at": "2026-11-09T02:24:25.584590+00:00",
+      "epoch": 0,
+      "physical_gpu": 4,
+      "path": "/workspace/v7_coverage/p6h_decode_arch/runs/sqtt76_cu0_6b808e16f6_base",
+      "binary_sha256": "276fdae07237401fdfb56976c7c6c11faa61418deaf8097e4839607da1fbfc99",
+      "script_sha256": "13d2e0bd1f6c5a32149015924dd1df987843487c84c4df4505431f086c729a8e",
+      "gate_at": "2026-11-09T02:24:25.583602+00:00",
+      "environment": {
+        "CUDA_VISIBLE_DEVICES": "4",
+        "HIP_VISIBLE_DEVICES": "4",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "2"
+      },
+      "source_scripts_sha256": {
+        "runtime.py": "13d2e0bd1f6c5a32149015924dd1df987843487c84c4df4505431f086c729a8e",
+        "health.py": "f3e05cf36f387d86e799b9938b68b0ce1503e7523a665b46ad44e01897b68ea7",
+        "campaign.py": "3796bdd686f796af141d933894b3b5b7e69f1eb88b3649b244d7d3f6917f3937"
+      },
+      "pid": 2546267,
+      "rc": 0,
+      "seconds": 0.3163541429967154,
+      "finished_at": "2026-11-09T02:24:25.986233+00:00",
+      "ok": true,
+      "kernel_service_events": [],
+      "selected": 5008,
+      "perf_files": [
+        "/workspace/v7_coverage/p6h_decode_arch/runs/sqtt76_cu0_6b808e16f6_base/profile/2546272_tile_example_grouped_gemm_device_args_benchmark.perf"
+      ],
+      "capture_files": [
+        {
+          "path": "/workspace/v7_coverage/p6h_decode_arch/runs/sqtt76_cu0_6b808e16f6_base/profile/2546272_tile_example_grouped_gemm_device_args_benchmark.perf",
+          "bytes": 29289,
+          "sha256": "dc2dc65b8d189c3e7c91d779f1e720790e2ebcbab94e531710fee560d7104ffb"
+        },
+        {
+          "path": "/workspace/v7_coverage/p6h_decode_arch/runs/sqtt76_cu0_6b808e16f6_base/profile/results.txt",
+          "bytes": 1437,
+          "sha256": "cc685375bb79d3c21fe6d05cc94f20d2524b8ccba80182d1be8d9d5d7e04e6fa"
+        },
+        {
+          "path": "/workspace/v7_coverage/p6h_decode_arch/runs/sqtt76_cu0_6b808e16f6_base/profile/thread_trace_18__ZN7ck_tile6kentryILi256ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13_se0_cu1.out",
+          "bytes": 164800,
+          "sha256": "81fed3ceb0bb982f78c379cf6284499ce8c60a21bd7dfa51681457c4a1328a2c",
+          "raw_token_bytes": 65920,
+          "raw_words": 32960,
+          "decoded": false
+        }
+      ]
+    },
+    {
+      "key": "sqtt76_cu0_6b808e16f6_new",
+      "id": 76,
+      "shape": {
+        "M": 1,
+        "N": 2048,
+        "K": 768,
+        "G": 4
+      },
+      "variant": "new",
+      "kind": "profile",
+      "expected": 6000,
+      "command": [
+        "/opt/rocm-6.3.3/bin/xprof",
+        "--enable-sqtt",
+        "--enable-raw",
+        "--target-se",
+        "0",
+        "--target-cu",
+        "0",
+        "--dispatches",
+        "18",
+        "--kernels",
+        "DecodeNnWaveKernel",
+        "--sections",
+        "speed_of_light,memory_workload,occupancy,memory_chart,instruction_statistics,compute_workload,scheduler_statistics,wave_state",
+        "--output-dir",
+        "/workspace/v7_coverage/p6h_decode_arch/runs/sqtt76_cu0_6b808e16f6_new/profile",
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=1",
+        "--n=2048",
+        "--k=768",
+        "--groups=4",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--validate=0",
+        "--warmup=10",
+        "--samples=1",
+        "--launches-per-sample=1",
+        "--time=1",
+        "--correctness-repeats=1",
+        "--output-redzone=0"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "2",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_WAVE": "1"
+      },
+      "binary": "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+      "sqtt": true,
+      "target_dispatch": 18,
+      "target_se": 0,
+      "target_cu_active_index": 0,
+      "capture_timing_is_formal": false,
+      "prior_accuracy_result": "/workspace/v7_coverage/p6h_decode_arch/sqtt_id76_20261109/result.json",
+      "capture_script": "/workspace/v7_coverage/p6h_decode_arch/sqtt_id76_20261109/capture_fixed_cu.py",
+      "capture_script_sha256": "73ae4fbca2a8c306c65a16291f3e64fe9fe9785e87388e91eee952d830148583",
+      "logical_tile": [
+        16,
+        128,
+        32
+      ],
+      "at": "2026-11-09T02:24:26.273572+00:00",
+      "epoch": 0,
+      "physical_gpu": 4,
+      "path": "/workspace/v7_coverage/p6h_decode_arch/runs/sqtt76_cu0_6b808e16f6_new",
+      "binary_sha256": "276fdae07237401fdfb56976c7c6c11faa61418deaf8097e4839607da1fbfc99",
+      "script_sha256": "13d2e0bd1f6c5a32149015924dd1df987843487c84c4df4505431f086c729a8e",
+      "gate_at": "2026-11-09T02:24:26.272645+00:00",
+      "environment": {
+        "CUDA_VISIBLE_DEVICES": "4",
+        "HIP_VISIBLE_DEVICES": "4",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "2",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_WAVE": "1"
+      },
+      "source_scripts_sha256": {
+        "runtime.py": "13d2e0bd1f6c5a32149015924dd1df987843487c84c4df4505431f086c729a8e",
+        "health.py": "f3e05cf36f387d86e799b9938b68b0ce1503e7523a665b46ad44e01897b68ea7",
+        "campaign.py": "3796bdd686f796af141d933894b3b5b7e69f1eb88b3649b244d7d3f6917f3937"
+      },
+      "pid": 2546308,
+      "rc": 0,
+      "seconds": 0.317089776013745,
+      "finished_at": "2026-11-09T02:24:26.675771+00:00",
+      "ok": true,
+      "kernel_service_events": [],
+      "selected": 6000,
+      "perf_files": [
+        "/workspace/v7_coverage/p6h_decode_arch/runs/sqtt76_cu0_6b808e16f6_new/profile/2546313_tile_example_grouped_gemm_device_args_benchmark.perf"
+      ],
+      "capture_files": [
+        {
+          "path": "/workspace/v7_coverage/p6h_decode_arch/runs/sqtt76_cu0_6b808e16f6_new/profile/2546313_tile_example_grouped_gemm_device_args_benchmark.perf",
+          "bytes": 36690,
+          "sha256": "a68b92b4fd982e98db1e7167ff43c1ba1d5da36d3a70a426ba66d4107c9bfa22"
+        },
+        {
+          "path": "/workspace/v7_coverage/p6h_decode_arch/runs/sqtt76_cu0_6b808e16f6_new/profile/results.txt",
+          "bytes": 427,
+          "sha256": "d6d9cb9c8c9743d8f49e84c4fd9f404780f4006b693f9addbbe5145255795842"
+        },
+        {
+          "path": "/workspace/v7_coverage/p6h_decode_arch/runs/sqtt76_cu0_6b808e16f6_new/profile/thread_trace_18__ZN7ck_tile6kentryILi256ELi4ENS_18DecodeNnWaveKernelILi1ELi2EEEJPU3AS4viiEEEvDpT2__se0_cu1.out",
+          "bytes": 212080,
+          "sha256": "8963b38d02b088d9d301b08a8699124aa882484c78b9ff43933cad54e579f9ea",
+          "raw_token_bytes": 84832,
+          "raw_words": 42416,
+          "decoded": false
+        }
+      ]
+    }
+  ],
+  "initial_attempt": "/workspace/v7_coverage/p6h_decode_arch/sqtt_id76_20261109/result.json",
+  "accuracy_jobs": [
+    "sqtt76_ab464b1bd1_base_acc",
+    "sqtt76_ab464b1bd1_new_acc"
+  ],
+  "scope": "First active CU in first active SE; compare sampled waves, not the entire device",
+  "sparse_auto_cu_baseline": "Retained; 800 token bytes, not selected as instruction evidence",
+  "capture_timing_is_formal": false,
+  "instruction_latency_decoded_locally": false
+}

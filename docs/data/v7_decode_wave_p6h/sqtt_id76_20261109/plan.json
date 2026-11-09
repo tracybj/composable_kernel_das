@@ -1,0 +1,23 @@
+{
+  "at": "2026-11-09T02:23:02.354921+00:00",
+  "id": 76,
+  "shape": {
+    "M": 1,
+    "N": 2048,
+    "K": 768,
+    "G": 4
+  },
+  "binary": "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+  "binary_sha256": "276fdae07237401fdfb56976c7c6c11faa61418deaf8097e4839607da1fbfc99",
+  "physical_gpu": 4,
+  "variants": {
+    "base": 5008,
+    "new": 6000
+  },
+  "target_dispatch": 18,
+  "scope": "First active shader engine, automatically selected CU; sampled scope, not every CU",
+  "capture_timing_is_formal": false,
+  "p6g_state": "remains paused",
+  "attempt": "ab464b1bd1",
+  "script_sha256": "beef189be95367ea4297ae7f882e22bca908590a74c6c266e89a4b71d3509a25"
+}

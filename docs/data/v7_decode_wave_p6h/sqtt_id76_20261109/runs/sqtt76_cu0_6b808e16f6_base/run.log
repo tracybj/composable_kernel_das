@@ -1,0 +1,34 @@
+******** Profiling Configs ********
+sqtt status: enabled
+sqtt mode: kernel
+    output raw data: enabled
+    trace buffer size: auto
+total 8 sections:
+    speed_of_light, memory_workload, occupancy, memory_chart, instruction_statistics, compute_workload, scheduler_statistics, wave_state, 
+total 0 metrics:
+    
+metrics mode: pmc
+import metrics path: /opt/rocm-6.3.3/lib/xprofiler/metrics.xml
+output directory: /workspace/v7_coverage/p6h_decode_arch/runs/sqtt76_cu0_6b808e16f6_base/profile
+filters:
+    gpu_index: 
+    kernel: GemmPipelineV7SmallMK32, 
+    dispatch: [18 : 19)
+**********************************
+CONFIG arch=gfx936 dtype=bf16 layout=NN groups=4 m=1 n=2048 k=768 variable_axis=none effective_length=4 variable_capacity=4 timing=on warmup=10 samples=1 launches_per_sample=1 output_redzone_elements=0 include_args_build=0 num_cu=0 blas_streams=1
+GROUP_LENGTHS values=1,1,1,1
+SELECT instance_id=5008 instance_name=ck.gg.gfx936.bf16.NN.v7.nn_b.small_m.64x128x32 contract_flags=0
+== dispatch kernel [18]: begin(250698486713032 ns), end(250698486734792 ns), execution(21760 ns) ==
+== replay kernel [18:1]: begin(250698500567419 ns), end(250698500588539 ns), execution(21120 ns) ==
+== replay kernel [18:2]: begin(250698501737658 ns), end(250698501755418 ns), execution(17760 ns) ==
+== replay kernel [18:3]: begin(250698502849337 ns), end(250698502866937 ns), execution(17600 ns) ==
+== replay kernel [18:4]: begin(250698503852216 ns), end(250698503869816 ns), execution(17600 ns) ==
+== replay kernel [18:5]: begin(250698504817815 ns), end(250698504835415 ns), execution(17600 ns) ==
+== replay kernel [18:6]: begin(250698505788054 ns), end(250698505805494 ns), execution(17440 ns) ==
+== replay kernel [18:7]: begin(250698506744853 ns), end(250698506762613 ns), execution(17760 ns) ==
+== replay kernel [18:8]: begin(250698507685173 ns), end(250698507702933 ns), execution(17760 ns) ==
+== replay kernel [18:9]: begin(250698508567412 ns), end(250698508585332 ns), execution(17920 ns) ==
+== replay kernel [18:10]: begin(250698509398931 ns), end(250698509416691 ns), execution(17760 ns) ==
+output profiling results [18] ...
+PERF backend=ck_device_args median_ms=64.62999 mean_ms=64.62999 min_ms=64.62999 max_ms=64.62999 cv=0 tflops=0.00019469154
+SUMMARY result=PASS

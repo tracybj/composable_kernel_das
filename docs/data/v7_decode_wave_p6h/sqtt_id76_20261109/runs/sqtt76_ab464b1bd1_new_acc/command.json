@@ -1,0 +1,58 @@
+{
+  "key": "sqtt76_ab464b1bd1_new_acc",
+  "id": 76,
+  "shape": {
+    "M": 1,
+    "N": 2048,
+    "K": 768,
+    "G": 4
+  },
+  "variant": "new",
+  "kind": "accuracy",
+  "expected": 6000,
+  "command": [
+    "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+    "--dtype=bf16",
+    "--layout=NN",
+    "--m=1",
+    "--n=2048",
+    "--k=768",
+    "--groups=4",
+    "--backend=both",
+    "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+    "--include-args-build=0",
+    "--validate=1",
+    "--warmup=10",
+    "--samples=30",
+    "--launches-per-sample=1",
+    "--time=0",
+    "--correctness-repeats=3",
+    "--output-redzone=1"
+  ],
+  "env": {
+    "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+    "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "2",
+    "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_WAVE": "1"
+  },
+  "capture_plan": "/workspace/v7_coverage/p6h_decode_arch/sqtt_id76_20261109/plan.json",
+  "binary": "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+  "at": "2026-11-09T02:23:05.760255+00:00",
+  "epoch": 0,
+  "physical_gpu": 4,
+  "path": "/workspace/v7_coverage/p6h_decode_arch/runs/sqtt76_ab464b1bd1_new_acc",
+  "binary_sha256": "276fdae07237401fdfb56976c7c6c11faa61418deaf8097e4839607da1fbfc99",
+  "script_sha256": "13d2e0bd1f6c5a32149015924dd1df987843487c84c4df4505431f086c729a8e",
+  "gate_at": "2026-11-09T02:23:05.759474+00:00",
+  "environment": {
+    "CUDA_VISIBLE_DEVICES": "4",
+    "HIP_VISIBLE_DEVICES": "4",
+    "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+    "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "2",
+    "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_WAVE": "1"
+  },
+  "source_scripts_sha256": {
+    "runtime.py": "13d2e0bd1f6c5a32149015924dd1df987843487c84c4df4505431f086c729a8e",
+    "health.py": "f3e05cf36f387d86e799b9938b68b0ce1503e7523a665b46ad44e01897b68ea7",
+    "campaign.py": "3796bdd686f796af141d933894b3b5b7e69f1eb88b3649b244d7d3f6917f3937"
+  }
+}

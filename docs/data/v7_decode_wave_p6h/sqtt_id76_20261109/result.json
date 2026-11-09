@@ -1,0 +1,416 @@
+{
+  "plan": {
+    "at": "2026-11-09T02:23:02.354921+00:00",
+    "id": 76,
+    "shape": {
+      "M": 1,
+      "N": 2048,
+      "K": 768,
+      "G": 4
+    },
+    "binary": "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+    "binary_sha256": "276fdae07237401fdfb56976c7c6c11faa61418deaf8097e4839607da1fbfc99",
+    "physical_gpu": 4,
+    "variants": {
+      "base": 5008,
+      "new": 6000
+    },
+    "target_dispatch": 18,
+    "scope": "First active shader engine, automatically selected CU; sampled scope, not every CU",
+    "capture_timing_is_formal": false,
+    "p6g_state": "remains paused",
+    "attempt": "ab464b1bd1",
+    "script_sha256": "beef189be95367ea4297ae7f882e22bca908590a74c6c266e89a4b71d3509a25"
+  },
+  "ok": true,
+  "finished_at": "2026-11-09T02:23:10.025585+00:00",
+  "epoch": 0,
+  "jobs": [
+    {
+      "key": "sqtt76_ab464b1bd1_base_acc",
+      "id": 76,
+      "shape": {
+        "M": 1,
+        "N": 2048,
+        "K": 768,
+        "G": 4
+      },
+      "variant": "base",
+      "kind": "accuracy",
+      "expected": 5008,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=1",
+        "--n=2048",
+        "--k=768",
+        "--groups=4",
+        "--backend=both",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--launches-per-sample=1",
+        "--time=0",
+        "--correctness-repeats=3",
+        "--output-redzone=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "2"
+      },
+      "capture_plan": "/workspace/v7_coverage/p6h_decode_arch/sqtt_id76_20261109/plan.json",
+      "binary": "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+      "at": "2026-11-09T02:23:02.640122+00:00",
+      "epoch": 0,
+      "physical_gpu": 4,
+      "path": "/workspace/v7_coverage/p6h_decode_arch/runs/sqtt76_ab464b1bd1_base_acc",
+      "binary_sha256": "276fdae07237401fdfb56976c7c6c11faa61418deaf8097e4839607da1fbfc99",
+      "script_sha256": "13d2e0bd1f6c5a32149015924dd1df987843487c84c4df4505431f086c729a8e",
+      "gate_at": "2026-11-09T02:23:02.639334+00:00",
+      "environment": {
+        "CUDA_VISIBLE_DEVICES": "4",
+        "HIP_VISIBLE_DEVICES": "4",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "2"
+      },
+      "source_scripts_sha256": {
+        "runtime.py": "13d2e0bd1f6c5a32149015924dd1df987843487c84c4df4505431f086c729a8e",
+        "health.py": "f3e05cf36f387d86e799b9938b68b0ce1503e7523a665b46ad44e01897b68ea7",
+        "campaign.py": "3796bdd686f796af141d933894b3b5b7e69f1eb88b3649b244d7d3f6917f3937"
+      },
+      "pid": 2545266,
+      "rc": 0,
+      "seconds": 2.769613135023974,
+      "finished_at": "2026-11-09T02:23:05.494053+00:00",
+      "ok": true,
+      "kernel_service_events": [],
+      "selected": 5008,
+      "comparisons": [
+        [
+          "0",
+          "8192",
+          "0",
+          "0"
+        ],
+        [
+          "1",
+          "8192",
+          "0",
+          "0"
+        ],
+        [
+          "2",
+          "8192",
+          "0",
+          "0"
+        ]
+      ]
+    },
+    {
+      "key": "sqtt76_ab464b1bd1_new_acc",
+      "id": 76,
+      "shape": {
+        "M": 1,
+        "N": 2048,
+        "K": 768,
+        "G": 4
+      },
+      "variant": "new",
+      "kind": "accuracy",
+      "expected": 6000,
+      "command": [
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=1",
+        "--n=2048",
+        "--k=768",
+        "--groups=4",
+        "--backend=both",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--validate=1",
+        "--warmup=10",
+        "--samples=30",
+        "--launches-per-sample=1",
+        "--time=0",
+        "--correctness-repeats=3",
+        "--output-redzone=1"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "2",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_WAVE": "1"
+      },
+      "capture_plan": "/workspace/v7_coverage/p6h_decode_arch/sqtt_id76_20261109/plan.json",
+      "binary": "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+      "at": "2026-11-09T02:23:05.760255+00:00",
+      "epoch": 0,
+      "physical_gpu": 4,
+      "path": "/workspace/v7_coverage/p6h_decode_arch/runs/sqtt76_ab464b1bd1_new_acc",
+      "binary_sha256": "276fdae07237401fdfb56976c7c6c11faa61418deaf8097e4839607da1fbfc99",
+      "script_sha256": "13d2e0bd1f6c5a32149015924dd1df987843487c84c4df4505431f086c729a8e",
+      "gate_at": "2026-11-09T02:23:05.759474+00:00",
+      "environment": {
+        "CUDA_VISIBLE_DEVICES": "4",
+        "HIP_VISIBLE_DEVICES": "4",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "2",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_WAVE": "1"
+      },
+      "source_scripts_sha256": {
+        "runtime.py": "13d2e0bd1f6c5a32149015924dd1df987843487c84c4df4505431f086c729a8e",
+        "health.py": "f3e05cf36f387d86e799b9938b68b0ce1503e7523a665b46ad44e01897b68ea7",
+        "campaign.py": "3796bdd686f796af141d933894b3b5b7e69f1eb88b3649b244d7d3f6917f3937"
+      },
+      "pid": 2545322,
+      "rc": 0,
+      "seconds": 2.7193010869959835,
+      "finished_at": "2026-11-09T02:23:08.564829+00:00",
+      "ok": true,
+      "kernel_service_events": [],
+      "selected": 6000,
+      "comparisons": [
+        [
+          "0",
+          "8192",
+          "0",
+          "0"
+        ],
+        [
+          "1",
+          "8192",
+          "0",
+          "0"
+        ],
+        [
+          "2",
+          "8192",
+          "0",
+          "0"
+        ]
+      ]
+    },
+    {
+      "key": "sqtt76_ab464b1bd1_base",
+      "id": 76,
+      "shape": {
+        "M": 1,
+        "N": 2048,
+        "K": 768,
+        "G": 4
+      },
+      "variant": "base",
+      "kind": "profile",
+      "expected": 5008,
+      "command": [
+        "/opt/rocm-6.3.3/bin/xprof",
+        "--enable-sqtt",
+        "--enable-raw",
+        "--target-se",
+        "0",
+        "--dispatches",
+        "18",
+        "--kernels",
+        "GemmPipelineV7SmallMK32",
+        "--sections",
+        "speed_of_light,memory_workload,occupancy,memory_chart,instruction_statistics,compute_workload,scheduler_statistics,wave_state",
+        "--output-dir",
+        "/workspace/v7_coverage/p6h_decode_arch/runs/sqtt76_ab464b1bd1_base/profile",
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=1",
+        "--n=2048",
+        "--k=768",
+        "--groups=4",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--validate=0",
+        "--warmup=10",
+        "--samples=1",
+        "--launches-per-sample=1",
+        "--time=1",
+        "--correctness-repeats=1",
+        "--output-redzone=0"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "2"
+      },
+      "binary": "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+      "capture_plan": "/workspace/v7_coverage/p6h_decode_arch/sqtt_id76_20261109/plan.json",
+      "sqtt": true,
+      "target_dispatch": 18,
+      "capture_timing_is_formal": false,
+      "logical_tile": [
+        64,
+        128,
+        32
+      ],
+      "at": "2026-11-09T02:23:08.823001+00:00",
+      "epoch": 0,
+      "physical_gpu": 4,
+      "path": "/workspace/v7_coverage/p6h_decode_arch/runs/sqtt76_ab464b1bd1_base",
+      "binary_sha256": "276fdae07237401fdfb56976c7c6c11faa61418deaf8097e4839607da1fbfc99",
+      "script_sha256": "13d2e0bd1f6c5a32149015924dd1df987843487c84c4df4505431f086c729a8e",
+      "gate_at": "2026-11-09T02:23:08.821906+00:00",
+      "environment": {
+        "CUDA_VISIBLE_DEVICES": "4",
+        "HIP_VISIBLE_DEVICES": "4",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "2"
+      },
+      "source_scripts_sha256": {
+        "runtime.py": "13d2e0bd1f6c5a32149015924dd1df987843487c84c4df4505431f086c729a8e",
+        "health.py": "f3e05cf36f387d86e799b9938b68b0ce1503e7523a665b46ad44e01897b68ea7",
+        "campaign.py": "3796bdd686f796af141d933894b3b5b7e69f1eb88b3649b244d7d3f6917f3937"
+      },
+      "pid": 2545373,
+      "rc": 0,
+      "seconds": 0.2661933249910362,
+      "finished_at": "2026-11-09T02:23:09.173357+00:00",
+      "ok": true,
+      "kernel_service_events": [],
+      "selected": 5008,
+      "perf_files": [
+        "/workspace/v7_coverage/p6h_decode_arch/runs/sqtt76_ab464b1bd1_base/profile/2545378_tile_example_grouped_gemm_device_args_benchmark.perf"
+      ],
+      "capture_files": [
+        {
+          "path": "/workspace/v7_coverage/p6h_decode_arch/runs/sqtt76_ab464b1bd1_base/profile/2545378_tile_example_grouped_gemm_device_args_benchmark.perf",
+          "bytes": 20496,
+          "sha256": "59a6a9cb21fa225b8523a4f209026b7ed3958e8349a5c69bb23e1378cca62c3e"
+        },
+        {
+          "path": "/workspace/v7_coverage/p6h_decode_arch/runs/sqtt76_ab464b1bd1_base/profile/results.txt",
+          "bytes": 1435,
+          "sha256": "8fc753f75f6c0f3d837acc916a9e653f6c681cf959acf6ecfe8d73f8f52bc48e"
+        },
+        {
+          "path": "/workspace/v7_coverage/p6h_decode_arch/runs/sqtt76_ab464b1bd1_base/profile/thread_trace_18__ZN7ck_tile6kentryILi256ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13_se0_cu10.out",
+          "bytes": 2000,
+          "sha256": "5712d439e98bda63f54ed0fdc1e93f24649778d7ecee353f08ab7caddfd3f5ed",
+          "raw_token_bytes": 800,
+          "raw_words": 400,
+          "decoded": false
+        }
+      ]
+    },
+    {
+      "key": "sqtt76_ab464b1bd1_new",
+      "id": 76,
+      "shape": {
+        "M": 1,
+        "N": 2048,
+        "K": 768,
+        "G": 4
+      },
+      "variant": "new",
+      "kind": "profile",
+      "expected": 6000,
+      "command": [
+        "/opt/rocm-6.3.3/bin/xprof",
+        "--enable-sqtt",
+        "--enable-raw",
+        "--target-se",
+        "0",
+        "--dispatches",
+        "18",
+        "--kernels",
+        "DecodeNnWaveKernel",
+        "--sections",
+        "speed_of_light,memory_workload,occupancy,memory_chart,instruction_statistics,compute_workload,scheduler_statistics,wave_state",
+        "--output-dir",
+        "/workspace/v7_coverage/p6h_decode_arch/runs/sqtt76_ab464b1bd1_new/profile",
+        "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+        "--dtype=bf16",
+        "--layout=NN",
+        "--m=1",
+        "--n=2048",
+        "--k=768",
+        "--groups=4",
+        "--backend=ck",
+        "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+        "--include-args-build=0",
+        "--validate=0",
+        "--warmup=10",
+        "--samples=1",
+        "--launches-per-sample=1",
+        "--time=1",
+        "--correctness-repeats=1",
+        "--output-redzone=0"
+      ],
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "2",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_WAVE": "1"
+      },
+      "binary": "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+      "capture_plan": "/workspace/v7_coverage/p6h_decode_arch/sqtt_id76_20261109/plan.json",
+      "sqtt": true,
+      "target_dispatch": 18,
+      "capture_timing_is_formal": false,
+      "logical_tile": [
+        16,
+        128,
+        32
+      ],
+      "at": "2026-11-09T02:23:09.433851+00:00",
+      "epoch": 0,
+      "physical_gpu": 4,
+      "path": "/workspace/v7_coverage/p6h_decode_arch/runs/sqtt76_ab464b1bd1_new",
+      "binary_sha256": "276fdae07237401fdfb56976c7c6c11faa61418deaf8097e4839607da1fbfc99",
+      "script_sha256": "13d2e0bd1f6c5a32149015924dd1df987843487c84c4df4505431f086c729a8e",
+      "gate_at": "2026-11-09T02:23:09.433000+00:00",
+      "environment": {
+        "CUDA_VISIBLE_DEVICES": "4",
+        "HIP_VISIBLE_DEVICES": "4",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "2",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_WAVE": "1"
+      },
+      "source_scripts_sha256": {
+        "runtime.py": "13d2e0bd1f6c5a32149015924dd1df987843487c84c4df4505431f086c729a8e",
+        "health.py": "f3e05cf36f387d86e799b9938b68b0ce1503e7523a665b46ad44e01897b68ea7",
+        "campaign.py": "3796bdd686f796af141d933894b3b5b7e69f1eb88b3649b244d7d3f6917f3937"
+      },
+      "pid": 2545401,
+      "rc": 0,
+      "seconds": 0.31622701199376024,
+      "finished_at": "2026-11-09T02:23:09.834759+00:00",
+      "ok": true,
+      "kernel_service_events": [],
+      "selected": 6000,
+      "perf_files": [
+        "/workspace/v7_coverage/p6h_decode_arch/runs/sqtt76_ab464b1bd1_new/profile/2545406_tile_example_grouped_gemm_device_args_benchmark.perf"
+      ],
+      "capture_files": [
+        {
+          "path": "/workspace/v7_coverage/p6h_decode_arch/runs/sqtt76_ab464b1bd1_new/profile/2545406_tile_example_grouped_gemm_device_args_benchmark.perf",
+          "bytes": 36559,
+          "sha256": "f7c757e677ffb7ff21f4e34bcbdf938e753a692cd21a8399870b1d86bc200d16"
+        },
+        {
+          "path": "/workspace/v7_coverage/p6h_decode_arch/runs/sqtt76_ab464b1bd1_new/profile/results.txt",
+          "bytes": 427,
+          "sha256": "edbc4fbe533c702cd80b688f94d6af8f9c6859452bc2fa44828b8a8e13630c2c"
+        },
+        {
+          "path": "/workspace/v7_coverage/p6h_decode_arch/runs/sqtt76_ab464b1bd1_new/profile/thread_trace_18__ZN7ck_tile6kentryILi256ELi4ENS_18DecodeNnWaveKernelILi1ELi2EEEJPU3AS4viiEEEvDpT2__se0_cu10.out",
+          "bytes": 214960,
+          "sha256": "979be14507977137cf886d271f80075e7d67747646f806e1c5817b6c0cd44b8d",
+          "raw_token_bytes": 85984,
+          "raw_words": 42992,
+          "decoded": false
+        }
+      ]
+    }
+  ],
+  "instruction_latency_decoded_locally": false,
+  "note": "SQTT tokens captured for XCompute GUI review; capture timings are not formal benchmark results."
+}

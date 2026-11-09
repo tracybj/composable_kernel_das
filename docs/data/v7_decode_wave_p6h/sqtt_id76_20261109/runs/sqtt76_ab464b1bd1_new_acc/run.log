@@ -1,0 +1,28 @@
+CONFIG arch=gfx936 dtype=bf16 layout=NN groups=4 m=1 n=2048 k=768 variable_axis=none effective_length=4 variable_capacity=4 timing=off warmup=0 samples=0 launches_per_sample=1 output_redzone_elements=16 include_args_build=0 num_cu=0 blas_streams=1
+GROUP_LENGTHS values=1,1,1,1
+SELECT instance_id=6000 instance_name=ck.gg.gfx936.bf16.NN.decode.nn.wave_private.16x128x16.s2 contract_flags=0
+BLAS library=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so mode=hipblaslt_sequential_per_group streams=1 workspace_bytes=33554432
+BLAS dependency=/workspace/Grouped_Geem/hipblaslt-install/lib/liborigami.so.1 load_mode=RTLD_GLOBAL
+ACCURACY backend=ck_redzone repeat=0 checked=32 failed=0 max_abs=0
+ACCURACY backend=ck repeat=0 checked=1028 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=ck_guard repeat=0 checked=0 failed=0 max_abs=0
+ACCURACY backend=blas_redzone repeat=0 checked=32 failed=0 max_abs=0
+ACCURACY backend=blas repeat=0 checked=1028 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=blas_guard repeat=0 checked=0 failed=0 max_abs=0
+ACCURACY backend=ck_vs_blas repeat=0 checked=8192 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=ck_redzone repeat=1 checked=32 failed=0 max_abs=0
+ACCURACY backend=ck repeat=1 checked=1028 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=ck_guard repeat=1 checked=0 failed=0 max_abs=0
+ACCURACY backend=blas_redzone repeat=1 checked=32 failed=0 max_abs=0
+ACCURACY backend=blas repeat=1 checked=1028 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=blas_guard repeat=1 checked=0 failed=0 max_abs=0
+ACCURACY backend=ck_vs_blas repeat=1 checked=8192 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=ck_redzone repeat=2 checked=32 failed=0 max_abs=0
+ACCURACY backend=ck repeat=2 checked=1028 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=ck_guard repeat=2 checked=0 failed=0 max_abs=0
+ACCURACY backend=blas_redzone repeat=2 checked=32 failed=0 max_abs=0
+ACCURACY backend=blas repeat=2 checked=1028 failed=0 max_abs=0 max_rel=0
+ACCURACY backend=blas_guard repeat=2 checked=0 failed=0 max_abs=0
+ACCURACY backend=ck_vs_blas repeat=2 checked=8192 failed=0 max_abs=0 max_rel=0
+TIMING status=off warmup=0 samples=0
+SUMMARY result=PASS
