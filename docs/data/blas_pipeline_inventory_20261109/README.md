@@ -75,3 +75,10 @@ python3 -B -u /workspace/v7_coverage/blas_pipeline_inventory_20261109/summarize.
 冻结BLAS code object SHA256：0100605e307ec45ab645712246805a04ccff6a402c2b86de77f6a3db88a52454。输入和工具依赖见dependencies.json。
 
 本目录脚本是现场审计副本。运行inventory.py需要先复制至CK仓库之外的工作目录并保持既有本地依赖；脚本会拒绝在CK仓库内写入vendor ISA。
+
+
+## 双缓冲组的15条shape及历史性能数据
+
+完整数值、CK方案/实例、GPU与计时协议、质量标签及来源见[k16_double_buffer_15_shapes.csv](k16_double_buffer_15_shapes.csv)。ID为147–153和598–605，G均为392。性能字段逐字保留P6f的policy_overlay_incremental_1193.csv；其frozen_BLAS_ms与原bf16NN-groupgemm.csv的BLAS ms逐行相同。该组15条在historical_envelope_incremental_1193.csv中的CK数值和实例也相同。
+
+147–153的CK使用5016独立N尾块，其数据有P6f per_shape_results.csv完整对照记录；598–605为汇总表沿用的历史行，不在P6f本轮per_shape_results.csv里。这15条CK为GPU4/single launch，冻结BLAS为GPU0/repeat20；R=冻结BLAS毫秒/CK毫秒，是历史表比值，不是本次统一口径复测。未启动GPU，实验继续暂停。
