@@ -1,0 +1,28 @@
+{
+  "commit": "53d1417eec8a4a704a472fdc89f711d291d3f673",
+  "parent": "731e590a06695572beb5e4dc432f991ec64d59db",
+  "files": [
+    "include/ck_tile/ops/gemm/grouped_gemm_selector.hpp",
+    "include/ck_tile/ops/gemm/grouped_gemm_device_args.h",
+    "example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_device_args_provider.hpp",
+    "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args.cpp",
+    "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args_query_test.cpp",
+    "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_decode_device_args_provider_sources.txt",
+    "example_hcu/ck_tile/19_grouped_gemm/CMakeLists.txt",
+    "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_depth8.hpp",
+    "example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_bf16_nn_decode_depth8_device_args.cpp",
+    "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_decode_depth8_selector_test.cpp",
+    "tools/grouped_gemm_depth8_reproduce/README.md",
+    "tools/grouped_gemm_depth8_reproduce/fake_benchmark.py",
+    "tools/grouped_gemm_depth8_reproduce/health.py",
+    "tools/grouped_gemm_depth8_reproduce/plan.py",
+    "tools/grouped_gemm_depth8_reproduce/qualify.py",
+    "tools/grouped_gemm_depth8_reproduce/report.py",
+    "tools/grouped_gemm_depth8_reproduce/reproduce.py",
+    "tools/grouped_gemm_depth8_reproduce/runtime.py",
+    "tools/grouped_gemm_depth8_reproduce/selector_probe.cpp",
+    "tools/grouped_gemm_depth8_reproduce/test_reproduce.py"
+  ],
+  "pushed": false,
+  "preexisting_edits_not_staged": true
+}

@@ -1,0 +1,45 @@
+[
+  {
+    "command": [
+      "cmake",
+      "--build",
+      "build",
+      "--target",
+      "tile_example_grouped_gemm_device_args_benchmark",
+      "tile_example_grouped_gemm_device_args_query_test",
+      "tile_example_grouped_gemm_device_args_smoke",
+      "tile_example_grouped_gemm_selector_test",
+      "tile_example_grouped_gemm_decode_depth8_selector_test",
+      "-j4"
+    ],
+    "at": "2026-11-10T06:07:32.691045+00:00",
+    "deadline_epoch": 1794326453.0,
+    "pid": 10,
+    "rc": 2,
+    "seconds": 3265.817879736016,
+    "finished_at": "2026-11-10T07:01:58.508911+00:00",
+    "benchmark_sha256": "76642f45892426cb97e758306f780d22c95567b38f9da475105aa38a0456b5ae"
+  },
+  {
+    "command": [
+      "cmake",
+      "--build",
+      "build",
+      "--target",
+      "tile_example_grouped_gemm_device_args_benchmark",
+      "tile_example_grouped_gemm_device_args_query_test",
+      "tile_example_grouped_gemm_device_args_smoke",
+      "tile_example_grouped_gemm_selector_test",
+      "tile_example_grouped_gemm_decode_depth8_selector_test",
+      "-j4"
+    ],
+    "at": "2026-11-10T07:03:54.499403+00:00",
+    "attempt": 2,
+    "reason": "Retry after CMake regenerated the new CPU test rule; the initial outer Make invocation used its prior target graph",
+    "pid": 10,
+    "rc": 0,
+    "seconds": 4.3210735589964315,
+    "finished_at": "2026-11-10T07:03:58.820474+00:00",
+    "benchmark_sha256": "76642f45892426cb97e758306f780d22c95567b38f9da475105aa38a0456b5ae"
+  }
+]

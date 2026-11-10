@@ -1,0 +1,316 @@
+diff --git a/example_hcu/ck_tile/19_grouped_gemm/CMakeLists.txt b/example_hcu/ck_tile/19_grouped_gemm/CMakeLists.txt
+index 92e43c7..2155ed7 100644
+--- a/example_hcu/ck_tile/19_grouped_gemm/CMakeLists.txt
++++ b/example_hcu/ck_tile/19_grouped_gemm/CMakeLists.txt
+@@ -391,6 +391,8 @@ endif()
+ 
+ # Independent decode provider; no dependency on the V7 pipeline/codegen archive.
+ if(GPU_TARGETS MATCHES "gfx936")
++    set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
++        ${CMAKE_CURRENT_LIST_DIR}/grouped_gemm_decode_device_args_provider_sources.txt)
+     file(STRINGS ${CMAKE_CURRENT_LIST_DIR}/grouped_gemm_decode_device_args_provider_sources.txt
+         HCU_GROUPED_GEMM_DECODE_SOURCES REGEX "^[^#].+")
+     add_library(ck_tile_hcu_grouped_gemm_decode_bf16 STATIC EXCLUDE_FROM_ALL
+diff --git a/example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_decode_device_args_provider_sources.txt b/example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_decode_device_args_provider_sources.txt
+index e83936f..a65b37a 100644
+--- a/example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_decode_device_args_provider_sources.txt
++++ b/example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_decode_device_args_provider_sources.txt
+@@ -1,2 +1,3 @@
+ # Independent BF16 NN decode provider, target-local compile options in CMakeLists.txt.
+ instances/grouped_gemm_bf16_nn_decode_wave_device_args.cpp
++instances/grouped_gemm_bf16_nn_decode_bvector_device_args.cpp
+diff --git a/example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args.cpp b/example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args.cpp
+index 711cad5..db87462 100644
+--- a/example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args.cpp
++++ b/example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args.cpp
+@@ -96,6 +96,8 @@ extern "C" int ck_tile_hcu_grouped_gemm_v8_bf16_tn_device_args(
+ #if defined(CK_TILE_GROUPED_GEMM_DEVICE_ARGS_HAS_DECODE_BF16)
+ extern "C" int ck_tile_hcu_grouped_gemm_bf16_nn_decode_wave_device_args(
+     void*, int, hipStream_t, std::uint64_t, int, int, int);
++extern "C" int ck_tile_hcu_grouped_gemm_bf16_nn_decode_bvector_device_args(
++    void*, int, hipStream_t, std::uint64_t, int, int, int, int);
+ #endif
+ 
+ namespace {
+@@ -364,8 +366,15 @@ int convert_problem(const ck_tile_hcu_grouped_gemm_problem_v1* source,
+     policy.enable_bf16_nn_decode_wave = decode_enable != nullptr &&
+         decode_enable[0] == '1' && decode_enable[1] == '\0' &&
+         !(decode_disable != nullptr && decode_disable[0] == '1' && decode_disable[1] == '\0');
++    const char* bvector_enable = std::getenv("CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_BVECTOR");
++    const char* bvector_disable = std::getenv("CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_BVECTOR");
++    if(bvector_enable != nullptr && (bvector_enable[0] == '1' || bvector_enable[0] == '2') &&
++       bvector_enable[1] == '\0' &&
++       !(bvector_disable != nullptr && bvector_disable[0] == '1' && bvector_disable[1] == '\0'))
++        policy.bf16_nn_decode_bvector = bvector_enable[0] - '0';
+ #if !defined(CK_TILE_GROUPED_GEMM_DEVICE_ARGS_HAS_DECODE_BF16)
+     policy.enable_bf16_nn_decode_wave = false;
++    policy.bf16_nn_decode_bvector = 0;
+ #endif
+     // Local experimental adapter: no public ABI flags or shared provider header.
+     const char* experiment = std::getenv("CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT");
+@@ -584,6 +593,19 @@ int dispatch_registry_candidate(const ck_tile::GroupedGemmProblem& problem,
+                 device_args, groups, launch.num_cu, stream,
+                 v7_uniform_launch::block_id_range(problem, launch.num_cu),
+                 v7_uniform_launch::tiles_per_group(problem));
++#endif
++        break;
++    case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_bvector2:
++    case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_bvector4:
++#if defined(CK_TILE_GROUPED_GEMM_DEVICE_ARGS_HAS_DECODE_BF16)
++        if(dtype == ck_tile::GroupedGemmDataType::bf16 && layout == ck_tile::GroupedGemmLayout::nn)
++        {
++            const auto tpg = static_cast<int>(problem.n.extent / 128);
++            const int width = instance_id == ck_tile::GroupedGemmInstanceId::bf16_nn_decode_bvector2 ? 2 : 4;
++            return ck_tile_hcu_grouped_gemm_bf16_nn_decode_bvector_device_args(
++                device_args, groups, stream, static_cast<std::uint64_t>(tpg) * groups, tpg,
++                static_cast<int>(problem.m.extent), static_cast<int>(problem.k.extent), width);
++        }
+ #endif
+         break;
+     case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_wave:
+@@ -855,6 +877,8 @@ void candidate_masks(ck_tile::GroupedGemmInstanceId id,
+         data_type_mask     = DTypeFp16;
+         layout_mask        = LayoutNn;
+         break;
++    case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_bvector2:
++    case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_bvector4:
+     case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_wave:
+     case ck_tile::GroupedGemmInstanceId::v7_bf16_nn:
+     case ck_tile::GroupedGemmInstanceId::v7_bf16_nn_m01_8:
+diff --git a/example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args_query_test.cpp b/example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args_query_test.cpp
+index 0033f18..ae6f67d 100644
+--- a/example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args_query_test.cpp
++++ b/example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args_query_test.cpp
+@@ -121,7 +121,7 @@ int main()
+     constexpr std::uint32_t all_layout = CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NT_V1 |
+                                          CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NN_V1 |
+                                          CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_TN_V1;
+-    constexpr std::array<CandidateExpected, 37> expected{{
++    constexpr std::array<CandidateExpected, 39> expected{{
+         {CK_TILE_HCU_GROUPED_GEMM_INSTANCE_BW_FAMILY_SELECTED_V1,
+          CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_FAMILY_BW_V1,
+          CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX936_V1,
+@@ -313,6 +313,16 @@ int main()
+          CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX936_V1,
+          CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_MASK_BF16_V1,
+          CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NN_V1},
++        {CK_TILE_HCU_GROUPED_GEMM_INSTANCE_BF16_NN_DECODE_BVECTOR2_V1,
++         CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_FAMILY_DECODE_V1,
++         CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX936_V1,
++         CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_MASK_BF16_V1,
++         CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NN_V1},
++        {CK_TILE_HCU_GROUPED_GEMM_INSTANCE_BF16_NN_DECODE_BVECTOR4_V1,
++         CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_FAMILY_DECODE_V1,
++         CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX936_V1,
++         CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_MASK_BF16_V1,
++         CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NN_V1},
+     }};
+     std::set<std::string> names;
+     bool passed = true;
+diff --git a/example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_device_args_provider.hpp b/example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_device_args_provider.hpp
+index d5fe93b..49cd320 100644
+--- a/example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_device_args_provider.hpp
++++ b/example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_device_args_provider.hpp
+@@ -177,6 +177,8 @@ int launch_registry_candidate(ck_tile::GroupedGemmInstanceId instance_id,
+     case ck_tile::GroupedGemmInstanceId::v7_bf16_nn_tail256:
+     case ck_tile::GroupedGemmInstanceId::v7_bf16_nn_small_m_noslc:
+     case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_wave:
++    case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_bvector2:
++    case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_bvector4:
+     case ck_tile::GroupedGemmInstanceId::v8_bf16_tn: break;
+ #if defined(CK_TILE_GROUPED_GEMM_DEVICE_ARGS_REGISTRY_GFX936)
+     case ck_tile::GroupedGemmInstanceId::gfx936_v3_256_m_only_padding:
+diff --git a/include/ck_tile/ops/gemm/grouped_gemm_device_args.h b/include/ck_tile/ops/gemm/grouped_gemm_device_args.h
+index a0589ff..d345c78 100644
+--- a/include/ck_tile/ops/gemm/grouped_gemm_device_args.h
++++ b/include/ck_tile/ops/gemm/grouped_gemm_device_args.h
+@@ -86,6 +86,8 @@ typedef enum ck_tile_hcu_grouped_gemm_instance_id_v1
+     CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V7_BF16_NN_TAIL256_V1 = 5016,
+     CK_TILE_HCU_GROUPED_GEMM_INSTANCE_V7_BF16_NN_SMALL_M_NOSLC_V1 = 5017,
+     CK_TILE_HCU_GROUPED_GEMM_INSTANCE_BF16_NN_DECODE_WAVE_V1 = 6000,
++    CK_TILE_HCU_GROUPED_GEMM_INSTANCE_BF16_NN_DECODE_BVECTOR2_V1 = 6001,
++    CK_TILE_HCU_GROUPED_GEMM_INSTANCE_BF16_NN_DECODE_BVECTOR4_V1 = 6002,
+ 
+ } ck_tile_hcu_grouped_gemm_instance_id_v1;
+ 
+diff --git a/include/ck_tile/ops/gemm/grouped_gemm_selector.hpp b/include/ck_tile/ops/gemm/grouped_gemm_selector.hpp
+index 191436c..363c2f9 100644
+--- a/include/ck_tile/ops/gemm/grouped_gemm_selector.hpp
++++ b/include/ck_tile/ops/gemm/grouped_gemm_selector.hpp
+@@ -127,6 +127,8 @@ struct GroupedGemmSelectorPolicy
+     // 0=off, 1=K16 drain, 2=K32 N128, 3=square128, 4=K32 N64.
+     std::int32_t bf16_v7_nn_small_m_experiment = 0;
+     bool enable_bf16_nn_decode_wave = false; // Independent, opt-in decode architecture.
++    // P6i: 0=off, 1=two adjacent BF16, 2=four adjacent BF16 per B load.
++    std::int32_t bf16_nn_decode_bvector = 0;
+ };
+ 
+ // Group-count bounds of the v7 instances. The kernels read the group table
+@@ -194,6 +196,8 @@ enum class GroupedGemmInstanceId
+     v7_bf16_nn_tail256 = 5016,
+     v7_bf16_nn_small_m_noslc = 5017,
+     bf16_nn_decode_wave = 6000,
++    bf16_nn_decode_bvector2 = 6001,
++    bf16_nn_decode_bvector4 = 6002,
+ 
+ };
+ 
+@@ -214,7 +218,7 @@ struct GroupedGemmCandidateIdentity
+     GroupedGemmCandidateFamily family;
+ };
+ 
+-inline constexpr std::array<GroupedGemmCandidateIdentity, 37>
++inline constexpr std::array<GroupedGemmCandidateIdentity, 39>
+     grouped_gemm_candidate_registry{{
+         {GroupedGemmInstanceId::bw_family_selected,
+          "bw_family.selected",
+@@ -318,6 +322,10 @@ inline constexpr std::array<GroupedGemmCandidateIdentity, 37>
+ 
+         {GroupedGemmInstanceId::bf16_nn_decode_wave,
+          "decode.nn.wave_private.16x128x16.s2", GroupedGemmCandidateFamily::decode},
++        {GroupedGemmInstanceId::bf16_nn_decode_bvector2,
++         "decode.nn.a_lds.b_vec2.m16_32_64.n128.k32.s2", GroupedGemmCandidateFamily::decode},
++        {GroupedGemmInstanceId::bf16_nn_decode_bvector4,
++         "decode.nn.a_lds.b_vec4.m16_32_64.n128.k32.s2", GroupedGemmCandidateFamily::decode},
+     }};
+ 
+ constexpr const GroupedGemmCandidateIdentity*
+@@ -371,6 +379,7 @@ enum class GroupedGemmSelectionReason
+     v7_bf16_nn_tail256,
+     v7_bf16_nn_small_m_noslc,
+     bf16_nn_decode_wave,
++    bf16_nn_decode_bvector,
+ };
+ 
+ struct GroupedGemmSelection
+@@ -472,15 +481,24 @@ constexpr GroupedGemmSelection select_grouped_gemm_candidate(
+         problem.k.kind == GroupedGemmDimensionKind::device_lengths_with_capacity;
+     // Initial experimental contract: common dense BF16 NN, M<=64. The new
+     // kernel has no relationship to the V7 policy or its tile/epilogue rules.
+-    if(policy.enable_bf16_nn_decode_wave && problem.arch == GroupedGemmArch::gfx936 &&
++    if((policy.enable_bf16_nn_decode_wave || policy.bf16_nn_decode_bvector == 1 ||
++        policy.bf16_nn_decode_bvector == 2) && problem.arch == GroupedGemmArch::gfx936 &&
+        is_bf16 && is_nn && problem.m.kind == GroupedGemmDimensionKind::common &&
+        !has_variable_k && !problem.group_lengths_are_ragged &&
+        !problem.may_have_empty_groups && problem.group_count <= 1024 &&
+        m <= 64 && n % 128 == 0 && k >= 32 && k <= 4096 && k % 32 == 0 &&
+        n <= std::int64_t{2147483647} / (2 * k) &&
+        grouped_gemm_v7_experiment_tile_bound(problem, 16, 128) <= kGroupedGemmV7MaxTiles)
++    {
++        if(policy.bf16_nn_decode_bvector == 1)
++            return {GroupedGemmInstanceId::bf16_nn_decode_bvector2,
++                    GroupedGemmSelectionReason::bf16_nn_decode_bvector};
++        if(policy.bf16_nn_decode_bvector == 2)
++            return {GroupedGemmInstanceId::bf16_nn_decode_bvector4,
++                    GroupedGemmSelectionReason::bf16_nn_decode_bvector};
+         return {GroupedGemmInstanceId::bf16_nn_decode_wave,
+                 GroupedGemmSelectionReason::bf16_nn_decode_wave};
++    }
+     const bool has_integral_device_m_capacity =
+         problem.m.kind == GroupedGemmDimensionKind::device_lengths_with_capacity &&
+         problem.m.extent % problem.group_count == 0;
+diff --git a/include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_wave.hpp b/include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_wave.hpp
+index 363d581..5a9ea14 100644
+--- a/include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_wave.hpp
++++ b/include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_wave.hpp
+@@ -106,12 +106,39 @@ CK_TILE_DEVICE void consume(const U32x4 (&b)[2][2], uint32_t slot,
+         });
+     });
+ }
+-template<int Rows, int Depth>
++// Keep the scalar prototype available as an unchanged control. Only B loading,
++// register layout and its VMEM count are supplied by the experimental policy.
++struct ScalarBPolicy
++{
++    using Registers = U32x4;
++    static constexpr int Loads = 16;
++    CK_TILE_DEVICE static uint32_t offset(const Params& p, uint32_t lane, int wave)
++    {
++        return ((lane >> 4) * 4u * (uint32_t)p.ldb +
++                (uint32_t)p.n0 + (uint32_t)wave * 32u + (lane & 15u)) * 2u;
++    }
++    template<int Pending>
++    CK_TILE_DEVICE static void wait(Registers (&b)[2][2]) { wait_global<Pending>(b); }
++    template<int Rows, int Slot>
++    CK_TILE_DEVICE static void load(Srd a_srd, const uint64_t (&a_pair)[Rows], Srd b_srd,
++                                    uint32_t b_offset, uint32_t wave_base, int ldb,
++                                    int k, Registers (&b)[2][2])
++    {
++        prefetch<Rows, Slot>(a_srd, a_pair, b_srd, b_offset, wave_base, ldb, k, b);
++    }
++    template<int Rows>
++    CK_TILE_DEVICE static void compute(const Registers (&b)[2][2], uint32_t slot,
++                                       uint32_t lane, F32x4 (&c)[Rows][2])
++    {
++        consume<Rows>(b, slot, lane, c);
++    }
++};
++template<int Rows, int Depth, class BPolicy = ScalarBPolicy>
+ CK_TILE_DEVICE void run(const Params& p)
+ {
+     static_assert(Rows == 1 || Rows == 2 || Rows == 4);
+     static_assert(Depth == 2);
+-    constexpr int Loads = Rows + 16;
++    constexpr int Loads = Rows + BPolicy::Loads;
+     const uint32_t lane = (uint32_t)threadIdx.x & 63u;
+     const int wave = __builtin_amdgcn_readfirstlane((int)threadIdx.x >> 6);
+     const uint32_t wave_base = (uint32_t)wave * (Depth * Rows * 1024u);
+@@ -133,9 +160,8 @@ CK_TILE_DEVICE void run(const Params& p)
+         const uint32_t offset = row * (pitch - stride) + octet * 16u;
+         a_pair[m] = (uint64_t)record | ((uint64_t)offset << 32);
+     });
+-    const uint32_t b_offset = ((lane >> 4) * 4u * (uint32_t)p.ldb +
+-        (uint32_t)p.n0 + (uint32_t)wave * 32u + (lane & 15u)) * 2u;
+-    U32x4 b[Depth][2][2];
++    const uint32_t b_offset = BPolicy::offset(p, lane, wave);
++    typename BPolicy::Registers b[Depth][2][2];
+     F32x4 c[Rows][2];
+     static_for<0, Rows * 2, 1>{}([&](auto index) {
+         constexpr int m = decltype(index)::value / 2;
+@@ -145,7 +171,7 @@ CK_TILE_DEVICE void run(const Params& p)
+     static_for<0, Depth, 1>{}([&](auto index) {
+         constexpr int j = decltype(index)::value;
+         if(j * 32 < p.k)
+-            prefetch<Rows, j>(a_srd, a_pair, b_srd, b_offset, wave_base, p.ldb, j * 32, b[j]);
++            BPolicy::template load<Rows, j>(a_srd, a_pair, b_srd, b_offset, wave_base, p.ldb, j * 32, b[j]);
+     });
+     // K32 can have one stage. It is a real cold path, never an unused
+     // prefetch beyond the supported K. The common path has two-stage overlap.
+@@ -155,10 +181,10 @@ CK_TILE_DEVICE void run(const Params& p)
+     {
+         static_for<0, Depth, 1>{}([&](auto index) {
+             constexpr int j = decltype(index)::value;
+-            wait_global<Loads * (Depth - 1)>(b[j]);
+-            consume(b[j], wave_base + j * Rows * 1024u, lane, c);
++            BPolicy::template wait<Loads * (Depth - 1)>(b[j]);
++            BPolicy::template compute<Rows>(b[j], wave_base + j * Rows * 1024u, lane, c);
+             if(stage + Depth + j < stages)
+-                prefetch<Rows, j>(a_srd, a_pair, b_srd, b_offset, wave_base, p.ldb,
++                BPolicy::template load<Rows, j>(a_srd, a_pair, b_srd, b_offset, wave_base, p.ldb,
+                                  (stage + Depth + j) * 32, b[j]);
+         });
+     }
+@@ -168,8 +194,8 @@ CK_TILE_DEVICE void run(const Params& p)
+         {
+             // The final group can have one stage: vmcnt0 is deliberately
+             // conservative here until the variable-count drain is proven.
+-            wait_global<0>(b[j]);
+-            consume(b[j], wave_base + j * Rows * 1024u, lane, c);
++            BPolicy::template wait<0>(b[j]);
++            BPolicy::template compute<Rows>(b[j], wave_base + j * Rows * 1024u, lane, c);
+         }
+     });
+     const uint32_t row_lane = lane & 15u;
+diff --git a/include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_uniform.hpp b/include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_uniform.hpp
+index 977a59a..6ddf52a 100644
+--- a/include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_uniform.hpp
++++ b/include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_uniform.hpp
+@@ -693,7 +693,7 @@ CK_TILE_DEVICE void GemmPipelineV7Uniform<Problem, kKind>::run_tile(
+             (uint32_t)(((G::kPrefetchDist - 1) % G::kNumStages) * G::kLdsBytesPerStage);
+         // Runtime, not constexpr: it wraps to 0 when the K extent is exactly the
+         // ring's own depth (K == kNumStages * kStageK), same as the reference.
+-        const int kPre4 = (S.n_stages > (int)G::kPrefetchDist - 1) ? (int)G::kPrefetchDist - 1 : 0;
++        const int kPre4 = __builtin_amdgcn_readfirstlane((S.n_stages > (int)G::kPrefetchDist - 1) ? (int)G::kPrefetchDist - 1 : 0);
+         const uint32_t so_a =
+             (uint32_t)(kPre4 * (int)G::kStageK *
+                        (kKind == V7UniformKind::NN ? 2u : (uint32_t)S.a_stride_bytes));

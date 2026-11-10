@@ -1,0 +1,1198 @@
+[
+  {
+    "ID": 32,
+    "M": 64,
+    "N": 2048,
+    "K": 512,
+    "G": 8,
+    "phase": "decode",
+    "expected": 5007,
+    "env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "1"
+    },
+    "historical_expected": 5007,
+    "historical_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "1"
+    },
+    "historical_scheme": "smallM_64x128x16_drain",
+    "configured_scheme": "smallM_64x128x16_drain",
+    "candidate_overlay_applied": false,
+    "accuracy_repeats": 1,
+    "historical_CK_ms": 0.0276,
+    "historical_R": 0.9423188622231069,
+    "frozen_BLAS_ms": 0.02600800059735775,
+    "BLAS_gpu": 0,
+    "BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+    "BLAS_source": "/workspace/bf16NN-groupgemm.csv",
+    "BLAS_high_span_warning": "False",
+    "historical_source_type": "historical_current_retained",
+    "historical_source": "/workspace/v7_coverage/p6e/jobs.jsonl",
+    "historical_binary_sha256": "6e96b7aa83bd5b65812a0c737971756dfee780df23acb6a9d0fa92c097daa1ab",
+    "historical_quality": "near_tie_within2pct;high_variation;gap_within_reported_variation",
+    "actual_instance": 5007,
+    "CK_ms": 0.028318999,
+    "R_frozen": 0.9183940646121619,
+    "historical_delta_pct": 2.605068840579716,
+    "quality": "uncertain",
+    "quality_flags": [
+      "high_sample_cv"
+    ],
+    "high_cv": true,
+    "near_bucket_boundary": false,
+    "observed_variation_band_pct": 6.862812,
+    "round_median_ms": [
+      0.028318999,
+      0.02832,
+      0.02816
+    ],
+    "round_min_ms": [
+      0.023039,
+      0.022879999,
+      0.02272
+    ],
+    "round_max_ms": [
+      0.035519,
+      0.035519999,
+      0.035519999
+    ],
+    "round_cv": [
+      0.067142034,
+      0.058690268,
+      0.06862812
+    ],
+    "physical_gpu": 4,
+    "epoch": 0,
+    "attempt": "9439cedd6b074ece",
+    "binary_sha256": "76642f45892426cb97e758306f780d22c95567b38f9da475105aa38a0456b5ae",
+    "plan_sha256": "3b35ed82ebfc1f9f3f3f407b2a968ab90236dad6cb22498216741d38d800300a",
+    "full_output_key": "e0_id32_accuracy_f8f16eb884",
+    "comparisons": [
+      [
+        "0",
+        "1048576",
+        "0",
+        "0"
+      ]
+    ],
+    "redzone_elements_each_backend": 32,
+    "source_keys": [
+      "e0_id32_accuracy_f8f16eb884",
+      "e0_id32_r1_c49808095c",
+      "e0_id32_r2_6ea7824e76",
+      "e0_id32_r3_13adc2222a"
+    ],
+    "source_logs": [
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id32_accuracy_f8f16eb884/run.log",
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id32_r1_c49808095c/run.log",
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id32_r2_6ea7824e76/run.log",
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id32_r3_13adc2222a/run.log"
+    ],
+    "measured_at": "2026-11-10T07:20:13.256487+00:00",
+    "source_type": "p6k_fresh_full_output_and_three_rounds"
+  },
+  {
+    "ID": 34,
+    "M": 256,
+    "N": 2048,
+    "K": 512,
+    "G": 8,
+    "phase": "decode",
+    "expected": 5000,
+    "env": {
+      "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+    },
+    "historical_expected": 5000,
+    "historical_env": {
+      "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+    },
+    "historical_scheme": "v7_256x256x16_M01_1",
+    "configured_scheme": "v7_256x256x16_M01_1",
+    "candidate_overlay_applied": false,
+    "accuracy_repeats": 1,
+    "historical_CK_ms": 0.037119001,
+    "historical_R": 0.9547671187795045,
+    "frozen_BLAS_ms": 0.035440001636743546,
+    "BLAS_gpu": 0,
+    "BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+    "BLAS_source": "/workspace/bf16NN-groupgemm.csv",
+    "BLAS_high_span_warning": "False",
+    "historical_source_type": "historical_current_retained",
+    "historical_source": "/workspace/v7_coverage/full1178/perf/summary.txt",
+    "historical_binary_sha256": "",
+    "historical_quality": "single_series_no3round_confirmation",
+    "actual_instance": 5000,
+    "CK_ms": 0.038720001,
+    "R_frozen": 0.9152892748309471,
+    "historical_delta_pct": 4.313154871813496,
+    "quality": "measured",
+    "quality_flags": [],
+    "high_cv": false,
+    "near_bucket_boundary": false,
+    "observed_variation_band_pct": 25.20790998946513,
+    "round_median_ms": [
+      0.047200501,
+      0.038720001,
+      0.037439998
+    ],
+    "round_min_ms": [
+      0.04544,
+      0.033119999,
+      0.032480001
+    ],
+    "round_max_ms": [
+      0.048641,
+      0.039039999,
+      0.038079999
+    ],
+    "round_cv": [
+      0.015528758,
+      0.030196268,
+      0.02551473
+    ],
+    "physical_gpu": 4,
+    "epoch": 0,
+    "attempt": "1b1a99f874f44b1e",
+    "binary_sha256": "76642f45892426cb97e758306f780d22c95567b38f9da475105aa38a0456b5ae",
+    "plan_sha256": "3b35ed82ebfc1f9f3f3f407b2a968ab90236dad6cb22498216741d38d800300a",
+    "full_output_key": "e0_id34_accuracy_512f0a7c35",
+    "comparisons": [
+      [
+        "0",
+        "4194304",
+        "0",
+        "0"
+      ]
+    ],
+    "redzone_elements_each_backend": 32,
+    "source_keys": [
+      "e0_id34_accuracy_512f0a7c35",
+      "e0_id34_r1_be030b4c70",
+      "e0_id34_r2_18034cd310",
+      "e0_id34_r3_982143bd50"
+    ],
+    "source_logs": [
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id34_accuracy_512f0a7c35/run.log",
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id34_r1_be030b4c70/run.log",
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id34_r2_18034cd310/run.log",
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id34_r3_982143bd50/run.log"
+    ],
+    "measured_at": "2026-11-10T07:20:22.232675+00:00",
+    "source_type": "p6k_fresh_full_output_and_three_rounds"
+  },
+  {
+    "ID": 77,
+    "M": 2,
+    "N": 2048,
+    "K": 768,
+    "G": 4,
+    "phase": "decode",
+    "expected": 5008,
+    "env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "2"
+    },
+    "historical_expected": 5008,
+    "historical_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "2"
+    },
+    "historical_scheme": "smallM_64x128x32",
+    "configured_scheme": "smallM_64x128x32",
+    "candidate_overlay_applied": false,
+    "accuracy_repeats": 1,
+    "historical_CK_ms": 0.021600001,
+    "historical_R": 0.7911110620458889,
+    "frozen_BLAS_ms": 0.01708799973130226,
+    "BLAS_gpu": 0,
+    "BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+    "BLAS_source": "/workspace/bf16NN-groupgemm.csv",
+    "BLAS_high_span_warning": "False",
+    "historical_source_type": "historical_current_retained",
+    "historical_source": "/workspace/v7_coverage/p6e/jobs.jsonl",
+    "historical_binary_sha256": "6e96b7aa83bd5b65812a0c737971756dfee780df23acb6a9d0fa92c097daa1ab",
+    "historical_quality": "high_variation;gap_within_reported_variation",
+    "actual_instance": 5008,
+    "CK_ms": 0.022399999,
+    "R_frozen": 0.7628571649178315,
+    "historical_delta_pct": 3.7036942729771205,
+    "quality": "uncertain",
+    "quality_flags": [
+      "high_sample_cv",
+      "near_bucket_boundary"
+    ],
+    "high_cv": true,
+    "near_bucket_boundary": true,
+    "observed_variation_band_pct": 10.961744,
+    "round_median_ms": [
+      0.02224,
+      0.0232,
+      0.022399999
+    ],
+    "round_min_ms": [
+      0.016799999,
+      0.0176,
+      0.016799999
+    ],
+    "round_max_ms": [
+      0.034559999,
+      0.032960001,
+      0.022879999
+    ],
+    "round_cv": [
+      0.10961744,
+      0.10151822,
+      0.046800072
+    ],
+    "physical_gpu": 4,
+    "epoch": 0,
+    "attempt": "22970bccf26942a8",
+    "binary_sha256": "76642f45892426cb97e758306f780d22c95567b38f9da475105aa38a0456b5ae",
+    "plan_sha256": "3b35ed82ebfc1f9f3f3f407b2a968ab90236dad6cb22498216741d38d800300a",
+    "full_output_key": "e0_id77_accuracy_393de96a89",
+    "comparisons": [
+      [
+        "0",
+        "16384",
+        "0",
+        "0"
+      ]
+    ],
+    "redzone_elements_each_backend": 32,
+    "source_keys": [
+      "e0_id77_accuracy_393de96a89",
+      "e0_id77_r1_c035fe25d1",
+      "e0_id77_r2_7774d85370",
+      "e0_id77_r3_0d172c39c3"
+    ],
+    "source_logs": [
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id77_accuracy_393de96a89/run.log",
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id77_r1_c035fe25d1/run.log",
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id77_r2_7774d85370/run.log",
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id77_r3_0d172c39c3/run.log"
+    ],
+    "measured_at": "2026-11-10T07:25:49.977706+00:00",
+    "source_type": "p6k_fresh_full_output_and_three_rounds"
+  },
+  {
+    "ID": 83,
+    "M": 128,
+    "N": 2048,
+    "K": 768,
+    "G": 4,
+    "phase": "decode",
+    "expected": 5009,
+    "env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "3"
+    },
+    "historical_expected": 5009,
+    "historical_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "3"
+    },
+    "historical_scheme": "smallM_128x128x16_square",
+    "configured_scheme": "smallM_128x128x16_square",
+    "candidate_overlay_applied": false,
+    "accuracy_repeats": 1,
+    "historical_CK_ms": 0.027039999,
+    "historical_R": 0.7650888251307371,
+    "frozen_BLAS_ms": 0.020688001066446304,
+    "BLAS_gpu": 0,
+    "BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+    "BLAS_source": "/workspace/bf16NN-groupgemm.csv",
+    "BLAS_high_span_warning": "False",
+    "historical_source_type": "historical_current_retained",
+    "historical_source": "/workspace/v7_coverage/p6e/jobs.jsonl",
+    "historical_binary_sha256": "6e96b7aa83bd5b65812a0c737971756dfee780df23acb6a9d0fa92c097daa1ab",
+    "historical_quality": "high_variation;gap_within_reported_variation",
+    "actual_instance": 5009,
+    "CK_ms": 0.02768,
+    "R_frozen": 0.7473988824583202,
+    "historical_delta_pct": 2.366867691082386,
+    "quality": "measured",
+    "quality_flags": [],
+    "high_cv": false,
+    "near_bucket_boundary": false,
+    "observed_variation_band_pct": 4.9122139,
+    "round_median_ms": [
+      0.027759999,
+      0.027519999,
+      0.02768
+    ],
+    "round_min_ms": [
+      0.02224,
+      0.02224,
+      0.022399999
+    ],
+    "round_max_ms": [
+      0.02864,
+      0.02816,
+      0.02816
+    ],
+    "round_cv": [
+      0.038028397,
+      0.049122139,
+      0.035666903
+    ],
+    "physical_gpu": 4,
+    "epoch": 0,
+    "attempt": "3cce6d5d52ee4685",
+    "binary_sha256": "76642f45892426cb97e758306f780d22c95567b38f9da475105aa38a0456b5ae",
+    "plan_sha256": "3b35ed82ebfc1f9f3f3f407b2a968ab90236dad6cb22498216741d38d800300a",
+    "full_output_key": "e0_id83_accuracy_6c697861be",
+    "comparisons": [
+      [
+        "0",
+        "1048576",
+        "0",
+        "0"
+      ]
+    ],
+    "redzone_elements_each_backend": 32,
+    "source_keys": [
+      "e0_id83_accuracy_6c697861be",
+      "e0_id83_r1_632a7d0459",
+      "e0_id83_r2_598f20cc74",
+      "e0_id83_r3_bb7cde0f72"
+    ],
+    "source_logs": [
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id83_accuracy_6c697861be/run.log",
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id83_r1_632a7d0459/run.log",
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id83_r2_598f20cc74/run.log",
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id83_r3_bb7cde0f72/run.log"
+    ],
+    "measured_at": "2026-11-10T07:26:16.730141+00:00",
+    "source_type": "p6k_fresh_full_output_and_three_rounds"
+  },
+  {
+    "ID": 97,
+    "M": 2048,
+    "N": 2048,
+    "K": 768,
+    "G": 4,
+    "phase": "prefill",
+    "expected": 5000,
+    "env": {
+      "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+    },
+    "historical_expected": 5000,
+    "historical_env": {
+      "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+    },
+    "historical_scheme": "v7_256x256x16_M01_1",
+    "configured_scheme": "v7_256x256x16_M01_1",
+    "candidate_overlay_applied": false,
+    "accuracy_repeats": 1,
+    "historical_CK_ms": 0.12768,
+    "historical_R": 1.0944858548187075,
+    "frozen_BLAS_ms": 0.13974395394325256,
+    "BLAS_gpu": 0,
+    "BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+    "BLAS_source": "/workspace/bf16NN-groupgemm.csv",
+    "BLAS_high_span_warning": "False",
+    "historical_source_type": "historical_current_retained",
+    "historical_source": "/workspace/v7_coverage/full1178_p4b/perf/summary.txt",
+    "historical_binary_sha256": "",
+    "historical_quality": "only_one_scheme_measured;single_series_no3round_confirmation;legacy_environment_warning",
+    "actual_instance": 5000,
+    "CK_ms": 0.13104101,
+    "R_frozen": 1.0664138954915912,
+    "historical_delta_pct": 2.6323699874686968,
+    "quality": "measured",
+    "quality_flags": [],
+    "high_cv": false,
+    "near_bucket_boundary": false,
+    "observed_variation_band_pct": 2,
+    "round_median_ms": [
+      0.13071699,
+      0.13135999,
+      0.13104101
+    ],
+    "round_min_ms": [
+      0.127676,
+      0.12720001,
+      0.12527999
+    ],
+    "round_max_ms": [
+      0.132477,
+      0.13392,
+      0.133441
+    ],
+    "round_cv": [
+      0.0078134612,
+      0.01134241,
+      0.012573616
+    ],
+    "physical_gpu": 4,
+    "epoch": 0,
+    "attempt": "9a004056bca04169",
+    "binary_sha256": "76642f45892426cb97e758306f780d22c95567b38f9da475105aa38a0456b5ae",
+    "plan_sha256": "3b35ed82ebfc1f9f3f3f407b2a968ab90236dad6cb22498216741d38d800300a",
+    "full_output_key": "e0_id97_accuracy_227c8356da",
+    "comparisons": [
+      [
+        "0",
+        "16777216",
+        "0",
+        "0"
+      ]
+    ],
+    "redzone_elements_each_backend": 32,
+    "source_keys": [
+      "e0_id97_accuracy_227c8356da",
+      "e0_id97_r1_cf60ead042",
+      "e0_id97_r2_db8cc4a5cf",
+      "e0_id97_r3_b32886a3f7"
+    ],
+    "source_logs": [
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id97_accuracy_227c8356da/run.log",
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id97_r1_cf60ead042/run.log",
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id97_r2_db8cc4a5cf/run.log",
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id97_r3_b32886a3f7/run.log"
+    ],
+    "measured_at": "2026-11-10T07:28:40.955194+00:00",
+    "source_type": "p6k_fresh_full_output_and_three_rounds"
+  },
+  {
+    "ID": 276,
+    "M": 4096,
+    "N": 4096,
+    "K": 1536,
+    "G": 32,
+    "phase": "prefill",
+    "expected": 5000,
+    "env": {
+      "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+    },
+    "historical_expected": 5000,
+    "historical_env": {
+      "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+    },
+    "historical_scheme": "v7_256x256x16_M01_1",
+    "configured_scheme": "v7_256x256x16_M01_1",
+    "candidate_overlay_applied": false,
+    "accuracy_repeats": 1,
+    "historical_CK_ms": 5.0948858,
+    "historical_R": 1.087689656712618,
+    "frozen_BLAS_ms": 5.541654586791992,
+    "BLAS_gpu": 0,
+    "BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+    "BLAS_source": "/workspace/bf16NN-groupgemm.csv",
+    "BLAS_high_span_warning": "False",
+    "historical_source_type": "historical_current_retained",
+    "historical_source": "/workspace/v7_coverage/full1178/perf/summary.txt",
+    "historical_binary_sha256": "",
+    "historical_quality": "only_one_scheme_measured;single_series_no3round_confirmation",
+    "actual_instance": 5000,
+    "CK_ms": 5.5300112,
+    "R_frozen": 1.0021054906348097,
+    "historical_delta_pct": 8.540434802287411,
+    "quality": "uncertain",
+    "quality_flags": [
+      "near_bucket_boundary"
+    ],
+    "high_cv": false,
+    "near_bucket_boundary": true,
+    "observed_variation_band_pct": 7.865443382827144,
+    "round_median_ms": [
+      5.0955272,
+      5.5300112,
+      5.5304871
+    ],
+    "round_min_ms": [
+      5.086731,
+      5.5211301,
+      5.5251279
+    ],
+    "round_max_ms": [
+      5.1051269,
+      5.5355301,
+      5.535368
+    ],
+    "round_cv": [
+      0.00074806614,
+      0.00062184144,
+      0.00048079767
+    ],
+    "physical_gpu": 4,
+    "epoch": 0,
+    "attempt": "58bf5ce9b63144a9",
+    "binary_sha256": "76642f45892426cb97e758306f780d22c95567b38f9da475105aa38a0456b5ae",
+    "plan_sha256": "3b35ed82ebfc1f9f3f3f407b2a968ab90236dad6cb22498216741d38d800300a",
+    "full_output_key": "e0_id276_accuracy_ad84129d15",
+    "comparisons": [
+      [
+        "0",
+        "536870912",
+        "0",
+        "0"
+      ]
+    ],
+    "redzone_elements_each_backend": 32,
+    "source_keys": [
+      "e0_id276_accuracy_ad84129d15",
+      "e0_id276_r1_dc2ecfc002",
+      "e0_id276_r2_1c970a5297",
+      "e0_id276_r3_4bce2b1718"
+    ],
+    "source_logs": [
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id276_accuracy_ad84129d15/run.log",
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id276_r1_dc2ecfc002/run.log",
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id276_r2_1c970a5297/run.log",
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id276_r3_4bce2b1718/run.log"
+    ],
+    "measured_at": "2026-11-10T07:56:41.097642+00:00",
+    "source_type": "p6k_fresh_full_output_and_three_rounds"
+  },
+  {
+    "ID": 447,
+    "M": 64,
+    "N": 7168,
+    "K": 2048,
+    "G": 8,
+    "phase": "decode",
+    "expected": 5000,
+    "env": {
+      "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+    },
+    "historical_expected": 5000,
+    "historical_env": {
+      "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+    },
+    "historical_scheme": "v7_256x256x16_M01_1",
+    "configured_scheme": "v7_256x256x16_M01_1",
+    "candidate_overlay_applied": false,
+    "accuracy_repeats": 1,
+    "historical_CK_ms": 0.198875,
+    "historical_R": 1.0201378036489432,
+    "frozen_BLAS_ms": 0.2028799057006836,
+    "BLAS_gpu": 0,
+    "BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+    "BLAS_source": "/workspace/bf16NN-groupgemm.csv",
+    "BLAS_high_span_warning": "False",
+    "historical_source_type": "historical_current_retained",
+    "historical_source": "/workspace/v7_coverage/full1178/perf/summary.txt",
+    "historical_binary_sha256": "",
+    "historical_quality": "single_series_no3round_confirmation;gap_within_reported_variation",
+    "actual_instance": 5000,
+    "CK_ms": 0.20288,
+    "R_frozen": 0.9999995351965871,
+    "historical_delta_pct": 2.0138277812696392,
+    "quality": "uncertain",
+    "quality_flags": [
+      "near_bucket_boundary"
+    ],
+    "high_cv": false,
+    "near_bucket_boundary": true,
+    "observed_variation_band_pct": 12.973176261829662,
+    "round_median_ms": [
+      0.22576049,
+      0.19944051,
+      0.20288
+    ],
+    "round_min_ms": [
+      0.22416,
+      0.19632,
+      0.19632
+    ],
+    "round_max_ms": [
+      0.23168001,
+      0.20688,
+      0.20496
+    ],
+    "round_cv": [
+      0.0061201796,
+      0.01406377,
+      0.012810652
+    ],
+    "physical_gpu": 4,
+    "epoch": 0,
+    "attempt": "f39b4f4e35a54328",
+    "binary_sha256": "76642f45892426cb97e758306f780d22c95567b38f9da475105aa38a0456b5ae",
+    "plan_sha256": "3b35ed82ebfc1f9f3f3f407b2a968ab90236dad6cb22498216741d38d800300a",
+    "full_output_key": "e0_id447_accuracy_cdd86648aa",
+    "comparisons": [
+      [
+        "0",
+        "3670016",
+        "0",
+        "0"
+      ]
+    ],
+    "redzone_elements_each_backend": 32,
+    "source_keys": [
+      "e0_id447_accuracy_cdd86648aa",
+      "e0_id447_r1_7f334b801c",
+      "e0_id447_r2_4a4188cb60",
+      "e0_id447_r3_5a22a1f7a5"
+    ],
+    "source_logs": [
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id447_accuracy_cdd86648aa/run.log",
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id447_r1_7f334b801c/run.log",
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id447_r2_4a4188cb60/run.log",
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id447_r3_5a22a1f7a5/run.log"
+    ],
+    "measured_at": "2026-11-10T08:38:19.197919+00:00",
+    "source_type": "p6k_fresh_full_output_and_three_rounds"
+  },
+  {
+    "ID": 498,
+    "M": 2048,
+    "N": 8192,
+    "K": 2048,
+    "G": 64,
+    "phase": "prefill",
+    "expected": 5000,
+    "env": {
+      "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+    },
+    "historical_expected": 5000,
+    "historical_env": {
+      "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+    },
+    "historical_scheme": "v7_256x256x16_M01_1",
+    "configured_scheme": "v7_256x256x16_M01_1",
+    "candidate_overlay_applied": false,
+    "accuracy_repeats": 1,
+    "historical_CK_ms": 12.847446,
+    "historical_R": 1.0725846234411363,
+    "frozen_BLAS_ms": 13.779973030090332,
+    "BLAS_gpu": 0,
+    "BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+    "BLAS_source": "/workspace/bf16NN-groupgemm.csv",
+    "BLAS_high_span_warning": "False",
+    "historical_source_type": "historical_current_retained",
+    "historical_source": "/workspace/v7_coverage/full1178/perf/summary.txt",
+    "historical_binary_sha256": "",
+    "historical_quality": "only_one_scheme_measured;single_series_no3round_confirmation",
+    "actual_instance": 5000,
+    "CK_ms": 14.589355,
+    "R_frozen": 0.9445224295447148,
+    "historical_delta_pct": 13.558406861566109,
+    "quality": "measured",
+    "quality_flags": [],
+    "high_cv": false,
+    "near_bucket_boundary": false,
+    "observed_variation_band_pct": 11.941247574001729,
+    "round_median_ms": [
+      12.848163,
+      14.590314,
+      14.589355
+    ],
+    "round_min_ms": [
+      12.828644,
+      14.58127,
+      14.575844
+    ],
+    "round_max_ms": [
+      12.868644,
+      14.600311,
+      14.606086
+    ],
+    "round_cv": [
+      0.00063234537,
+      0.00035670426,
+      0.00040488595
+    ],
+    "physical_gpu": 4,
+    "epoch": 0,
+    "attempt": "a36797228a374d27",
+    "binary_sha256": "76642f45892426cb97e758306f780d22c95567b38f9da475105aa38a0456b5ae",
+    "plan_sha256": "3b35ed82ebfc1f9f3f3f407b2a968ab90236dad6cb22498216741d38d800300a",
+    "full_output_key": "e0_id498_accuracy_9af38ddab2",
+    "comparisons": [
+      [
+        "0",
+        "1073741824",
+        "0",
+        "0"
+      ]
+    ],
+    "redzone_elements_each_backend": 32,
+    "source_keys": [
+      "e0_id498_accuracy_9af38ddab2",
+      "e0_id498_r1_f278099b3f",
+      "e0_id498_r2_67a021db39",
+      "e0_id498_r3_d1ec651094"
+    ],
+    "source_logs": [
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id498_accuracy_9af38ddab2/run.log",
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id498_r1_f278099b3f/run.log",
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id498_r2_67a021db39/run.log",
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id498_r3_d1ec651094/run.log"
+    ],
+    "measured_at": "2026-11-10T09:04:06.026350+00:00",
+    "source_type": "p6k_fresh_full_output_and_three_rounds"
+  },
+  {
+    "ID": 732,
+    "M": 2,
+    "N": 3072,
+    "K": 3072,
+    "G": 8,
+    "phase": "decode",
+    "expected": 5003,
+    "env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128"
+    },
+    "historical_expected": 5003,
+    "historical_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128"
+    },
+    "historical_scheme": "smallM_64x128x16",
+    "configured_scheme": "smallM_64x128x16",
+    "candidate_overlay_applied": false,
+    "accuracy_repeats": 1,
+    "historical_CK_ms": 0.1485635,
+    "historical_R": 0.8733231822004365,
+    "frozen_BLAS_ms": 0.12974394857883453,
+    "BLAS_gpu": 0,
+    "BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+    "BLAS_source": "/workspace/bf16NN-groupgemm.csv",
+    "BLAS_high_span_warning": "False",
+    "historical_source_type": "historical_current_retained",
+    "historical_source": "/workspace/v7_coverage/p6c/jobs.jsonl",
+    "historical_binary_sha256": "",
+    "historical_quality": "clear_numerical_lead_low_reported_variation_not_paired_proof",
+    "actual_instance": 5003,
+    "CK_ms": 0.1517625,
+    "R_frozen": 0.8549144128413445,
+    "historical_delta_pct": 2.153287987964747,
+    "quality": "measured",
+    "quality_flags": [],
+    "high_cv": false,
+    "near_bucket_boundary": false,
+    "observed_variation_band_pct": 4.4421925,
+    "round_median_ms": [
+      0.1517625,
+      0.15144199,
+      0.1524
+    ],
+    "round_min_ms": [
+      0.14432301,
+      0.14128099,
+      0.14176001
+    ],
+    "round_max_ms": [
+      0.168322,
+      0.158563,
+      0.18128
+    ],
+    "round_cv": [
+      0.030499662,
+      0.028832596,
+      0.044421925
+    ],
+    "physical_gpu": 4,
+    "epoch": 0,
+    "attempt": "bb78ccc9d2b142b2",
+    "binary_sha256": "76642f45892426cb97e758306f780d22c95567b38f9da475105aa38a0456b5ae",
+    "plan_sha256": "3b35ed82ebfc1f9f3f3f407b2a968ab90236dad6cb22498216741d38d800300a",
+    "full_output_key": "e0_id732_accuracy_e57af17585",
+    "comparisons": [
+      [
+        "0",
+        "49152",
+        "0",
+        "0"
+      ]
+    ],
+    "redzone_elements_each_backend": 32,
+    "source_keys": [
+      "e0_id732_accuracy_e57af17585",
+      "e0_id732_r1_bf14546eca",
+      "e0_id732_r2_a7ccdb2e90",
+      "e0_id732_r3_f420ab2269"
+    ],
+    "source_logs": [
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id732_accuracy_e57af17585/run.log",
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id732_r1_bf14546eca/run.log",
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id732_r2_a7ccdb2e90/run.log",
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id732_r3_f420ab2269/run.log"
+    ],
+    "measured_at": "2026-11-10T09:57:18.623897+00:00",
+    "source_type": "p6k_fresh_full_output_and_three_rounds"
+  },
+  {
+    "ID": 788,
+    "M": 8,
+    "N": 2048,
+    "K": 4096,
+    "G": 128,
+    "phase": "decode",
+    "expected": 5000,
+    "env": {
+      "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+    },
+    "historical_expected": 5000,
+    "historical_env": {
+      "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+    },
+    "historical_scheme": "v7_256x256x16_M01_1",
+    "configured_scheme": "v7_256x256x16_M01_1",
+    "candidate_overlay_applied": false,
+    "accuracy_repeats": 1,
+    "historical_CK_ms": 1.627677,
+    "historical_R": 1.0175333728526048,
+    "frozen_BLAS_ms": 1.6562156677246094,
+    "BLAS_gpu": 0,
+    "BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+    "BLAS_source": "/workspace/bf16NN-groupgemm.csv",
+    "BLAS_high_span_warning": "False",
+    "historical_source_type": "historical_current_retained",
+    "historical_source": "/workspace/v7_coverage/p6c/jobs.jsonl",
+    "historical_binary_sha256": "",
+    "historical_quality": "clear_numerical_lead_low_reported_variation_not_paired_proof",
+    "actual_instance": 5000,
+    "CK_ms": 1.72456,
+    "R_frozen": 0.9603699887070379,
+    "historical_delta_pct": 5.952225165066527,
+    "quality": "measured",
+    "quality_flags": [],
+    "high_cv": false,
+    "near_bucket_boundary": false,
+    "observed_variation_band_pct": 5.9099712390406784,
+    "round_median_ms": [
+      1.72456,
+      1.730881,
+      1.62896
+    ],
+    "round_min_ms": [
+      1.67328,
+      1.676481,
+      1.6152
+    ],
+    "round_max_ms": [
+      1.7438411,
+      1.747201,
+      1.643361
+    ],
+    "round_cv": [
+      0.010826464,
+      0.012093975,
+      0.0043873322
+    ],
+    "physical_gpu": 4,
+    "epoch": 0,
+    "attempt": "f1000cab50034a53",
+    "binary_sha256": "76642f45892426cb97e758306f780d22c95567b38f9da475105aa38a0456b5ae",
+    "plan_sha256": "3b35ed82ebfc1f9f3f3f407b2a968ab90236dad6cb22498216741d38d800300a",
+    "full_output_key": "e0_id788_accuracy_db0e5311aa",
+    "comparisons": [
+      [
+        "0",
+        "2097152",
+        "0",
+        "0"
+      ]
+    ],
+    "redzone_elements_each_backend": 32,
+    "source_keys": [
+      "e0_id788_accuracy_db0e5311aa",
+      "e0_id788_r1_466b52a7ac",
+      "e0_id788_r2_01b8421a4a",
+      "e0_id788_r3_384431aff1"
+    ],
+    "source_logs": [
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id788_accuracy_db0e5311aa/run.log",
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id788_r1_466b52a7ac/run.log",
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id788_r2_01b8421a4a/run.log",
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id788_r3_384431aff1/run.log"
+    ],
+    "measured_at": "2026-11-10T10:25:05.890939+00:00",
+    "source_type": "p6k_fresh_full_output_and_three_rounds"
+  },
+  {
+    "ID": 861,
+    "M": 4,
+    "N": 3072,
+    "K": 4096,
+    "G": 8,
+    "phase": "decode",
+    "expected": 5003,
+    "env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128"
+    },
+    "historical_expected": 5003,
+    "historical_env": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128"
+    },
+    "historical_scheme": "smallM_64x128x16",
+    "configured_scheme": "smallM_64x128x16",
+    "candidate_overlay_applied": false,
+    "accuracy_repeats": 1,
+    "historical_CK_ms": 0.19280201,
+    "historical_R": 0.8686628692789988,
+    "frozen_BLAS_ms": 0.16747994720935822,
+    "BLAS_gpu": 0,
+    "BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+    "BLAS_source": "/workspace/bf16NN-groupgemm.csv",
+    "BLAS_high_span_warning": "False",
+    "historical_source_type": "historical_current_retained",
+    "historical_source": "/workspace/v7_coverage/p6c/jobs.jsonl",
+    "historical_binary_sha256": "",
+    "historical_quality": "clear_numerical_lead_low_reported_variation_not_paired_proof",
+    "actual_instance": 5003,
+    "CK_ms": 0.19696,
+    "R_frozen": 0.850324671046701,
+    "historical_delta_pct": 2.1566113340830917,
+    "quality": "measured",
+    "quality_flags": [],
+    "high_cv": false,
+    "near_bucket_boundary": false,
+    "observed_variation_band_pct": 3.6682091,
+    "round_median_ms": [
+      0.1924825,
+      0.19824301,
+      0.19696
+    ],
+    "round_min_ms": [
+      0.189282,
+      0.186562,
+      0.18719999
+    ],
+    "round_max_ms": [
+      0.226403,
+      0.212163,
+      0.22032
+    ],
+    "round_cv": [
+      0.036682091,
+      0.027085618,
+      0.033446782
+    ],
+    "physical_gpu": 4,
+    "epoch": 0,
+    "attempt": "cef4986026c04c46",
+    "binary_sha256": "76642f45892426cb97e758306f780d22c95567b38f9da475105aa38a0456b5ae",
+    "plan_sha256": "3b35ed82ebfc1f9f3f3f407b2a968ab90236dad6cb22498216741d38d800300a",
+    "full_output_key": "e0_id861_accuracy_c324d3f8c5",
+    "comparisons": [
+      [
+        "0",
+        "98304",
+        "0",
+        "0"
+      ]
+    ],
+    "redzone_elements_each_backend": 32,
+    "source_keys": [
+      "e0_id861_accuracy_c324d3f8c5",
+      "e0_id861_r1_2c3f55d00a",
+      "e0_id861_r2_a491696ff2",
+      "e0_id861_r3_85b3d65697"
+    ],
+    "source_logs": [
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id861_accuracy_c324d3f8c5/run.log",
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id861_r1_2c3f55d00a/run.log",
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id861_r2_a491696ff2/run.log",
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id861_r3_85b3d65697/run.log"
+    ],
+    "measured_at": "2026-11-10T10:41:09.989700+00:00",
+    "source_type": "p6k_fresh_full_output_and_three_rounds"
+  },
+  {
+    "ID": 1054,
+    "M": 128,
+    "N": 4096,
+    "K": 7168,
+    "G": 96,
+    "phase": "decode",
+    "expected": 5006,
+    "env": {
+      "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "0",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "1"
+    },
+    "historical_expected": 5006,
+    "historical_env": {
+      "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "0",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "1"
+    },
+    "historical_scheme": "v7_256x256x16_NoSLC_M01_8",
+    "configured_scheme": "v7_256x256x16_NoSLC_M01_8",
+    "candidate_overlay_applied": false,
+    "accuracy_repeats": 1,
+    "historical_CK_ms": 4.3031197,
+    "historical_R": 1.0565502184429116,
+    "frozen_BLAS_ms": 4.546462059020996,
+    "BLAS_gpu": 0,
+    "BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+    "BLAS_source": "/workspace/bf16NN-groupgemm.csv",
+    "BLAS_high_span_warning": "False",
+    "historical_source_type": "historical_current_retained",
+    "historical_source": "/workspace/v7_coverage/p6e/jobs.jsonl",
+    "historical_binary_sha256": "1052b95c681371b0713c357ade4e3ede659df08dd4d763e3cf6023e9ab5d0d2d",
+    "historical_quality": "clear_numerical_lead_low_reported_variation_not_paired_proof",
+    "actual_instance": 5006,
+    "CK_ms": 4.4749594,
+    "R_frozen": 1.015978392791898,
+    "historical_delta_pct": 3.993374853132736,
+    "quality": "measured",
+    "quality_flags": [],
+    "high_cv": false,
+    "near_bucket_boundary": false,
+    "observed_variation_band_pct": 4.118920050984141,
+    "round_median_ms": [
+      4.4749594,
+      4.486959,
+      4.302639
+    ],
+    "round_min_ms": [
+      4.45856,
+      4.4611192,
+      4.2878389
+    ],
+    "round_max_ms": [
+      4.530879,
+      4.5663991,
+      4.3225589
+    ],
+    "round_cv": [
+      0.0034892898,
+      0.0048835039,
+      0.0023892302
+    ],
+    "physical_gpu": 4,
+    "epoch": 0,
+    "attempt": "b6edd16b1a3e450b",
+    "binary_sha256": "76642f45892426cb97e758306f780d22c95567b38f9da475105aa38a0456b5ae",
+    "plan_sha256": "3b35ed82ebfc1f9f3f3f407b2a968ab90236dad6cb22498216741d38d800300a",
+    "full_output_key": "e0_id1054_accuracy_c07597edb9",
+    "comparisons": [
+      [
+        "0",
+        "50331648",
+        "0",
+        "0"
+      ]
+    ],
+    "redzone_elements_each_backend": 32,
+    "source_keys": [
+      "e0_id1054_accuracy_c07597edb9",
+      "e0_id1054_r1_4df071a1ff",
+      "e0_id1054_r2_43ff0d8514",
+      "e0_id1054_r3_cca7408bb1"
+    ],
+    "source_logs": [
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id1054_accuracy_c07597edb9/run.log",
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id1054_r1_4df071a1ff/run.log",
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id1054_r2_43ff0d8514/run.log",
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id1054_r3_cca7408bb1/run.log"
+    ],
+    "measured_at": "2026-11-10T11:49:52.810898+00:00",
+    "source_type": "p6k_fresh_full_output_and_three_rounds"
+  },
+  {
+    "ID": 1174,
+    "M": 8,
+    "N": 4096,
+    "K": 8192,
+    "G": 64,
+    "phase": "decode",
+    "expected": 5006,
+    "env": {
+      "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "0",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "1"
+    },
+    "historical_expected": 5006,
+    "historical_env": {
+      "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "0",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "1"
+    },
+    "historical_scheme": "v7_256x256x16_NoSLC_M01_8",
+    "configured_scheme": "v7_256x256x16_NoSLC_M01_8",
+    "candidate_overlay_applied": false,
+    "accuracy_repeats": 1,
+    "historical_CK_ms": 3.2809577,
+    "historical_R": 1.0427951966610036,
+    "frozen_BLAS_ms": 3.4213669300079346,
+    "BLAS_gpu": 0,
+    "BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+    "BLAS_source": "/workspace/bf16NN-groupgemm.csv",
+    "BLAS_high_span_warning": "False",
+    "historical_source_type": "historical_current_retained",
+    "historical_source": "/workspace/v7_coverage/p6e/jobs.jsonl",
+    "historical_binary_sha256": "1052b95c681371b0713c357ade4e3ede659df08dd4d763e3cf6023e9ab5d0d2d",
+    "historical_quality": "near_tie_within2pct;gap_within_reported_variation",
+    "actual_instance": 5006,
+    "CK_ms": 3.3600807,
+    "R_frozen": 1.0182395113331457,
+    "historical_delta_pct": 2.411582447405536,
+    "quality": "measured",
+    "quality_flags": [],
+    "high_cv": false,
+    "near_bucket_boundary": false,
+    "observed_variation_band_pct": 2.13566001554665,
+    "round_median_ms": [
+      3.3600807,
+      3.289361,
+      3.3611209
+    ],
+    "round_min_ms": [
+      3.3460801,
+      3.232161,
+      3.33792
+    ],
+    "round_max_ms": [
+      3.3740809,
+      3.3147211,
+      3.3747201
+    ],
+    "round_cv": [
+      0.0020759069,
+      0.0055095093,
+      0.0029733397
+    ],
+    "physical_gpu": 4,
+    "epoch": 0,
+    "attempt": "8aa01757b5f44b46",
+    "binary_sha256": "76642f45892426cb97e758306f780d22c95567b38f9da475105aa38a0456b5ae",
+    "plan_sha256": "3b35ed82ebfc1f9f3f3f407b2a968ab90236dad6cb22498216741d38d800300a",
+    "full_output_key": "e0_id1174_accuracy_2c30a568ed",
+    "comparisons": [
+      [
+        "0",
+        "2097152",
+        "0",
+        "0"
+      ]
+    ],
+    "redzone_elements_each_backend": 32,
+    "source_keys": [
+      "e0_id1174_accuracy_2c30a568ed",
+      "e0_id1174_r1_f219123f48",
+      "e0_id1174_r2_02dac7cf57",
+      "e0_id1174_r3_04f9453243"
+    ],
+    "source_logs": [
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id1174_accuracy_2c30a568ed/run.log",
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id1174_r1_f219123f48/run.log",
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id1174_r2_02dac7cf57/run.log",
+      "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/jobs/e0_id1174_r3_04f9453243/run.log"
+    ],
+    "measured_at": "2026-11-10T12:56:57.453242+00:00",
+    "source_type": "p6k_fresh_full_output_and_three_rounds"
+  }
+]

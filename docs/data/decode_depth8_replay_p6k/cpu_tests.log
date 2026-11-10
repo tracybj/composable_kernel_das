@@ -1,0 +1,44 @@
+test_actual_recipe_dimensions_and_commands (test_reproduce.Tests) ... ok
+test_depth8_flag_is_cleared_and_disable_wins_in_probe (test_reproduce.Tests) ... ok
+test_depth8_overlay_changes_only_six_recipes_and_keeps_history (test_reproduce.Tests) ... ok
+test_dry_run_has_no_gpu_or_health_commands (test_reproduce.Tests) ... ok
+test_environment_does_not_inherit_previous_recipe (test_reproduce.Tests) ... ok
+test_fresh_health_requires_target_clean_rc_and_idle (test_reproduce.Tests) ... ok
+test_frozen_binary_change_stops (test_reproduce.Tests) ... ok
+test_full_output_and_real_redzones_required (test_reproduce.Tests) ... ok
+test_gpu_deadline_is_two_hours_before_total_and_never_reset (test_reproduce.Tests) ... ok
+test_instance_error_mkfd_rc0_and_bad_timing_rejected (test_reproduce.Tests) ... ok
+test_known_correct_probe_failure_stops (test_reproduce.Tests) ... ok
+test_low_memory_stops_without_gpu (test_reproduce.Tests) ... ok
+test_observation_timeout_leaves_process_and_stops_submissions (test_reproduce.Tests) ... ok
+test_original_and_overlay_rows_share_a_csv_schema (test_reproduce.Tests) ... ok
+test_qualification_jobs_are_never_accepted_as_full_replay_rows (test_reproduce.Tests) ... ok
+test_rc0_service_event_excludes_actual_fake_child (test_reproduce.Tests) ... START e0_fake_service_1e9bcf6f3d
+DONE e0_fake_service_1e9bcf6f3d ok=False sec=0.07
+ok
+test_real_cpu_child_interruption_resumes_whole_shape (test_reproduce.Tests) ... START e0_id1_accuracy_2528ca4eb6
+DONE e0_id1_accuracy_2528ca4eb6 ok=True sec=0.07
+START e0_id1_r1_e7ff0ffa76
+DONE e0_id1_r1_e7ff0ffa76 ok=True sec=0.07
+START e0_id1_accuracy_bb85782fab
+DONE e0_id1_accuracy_bb85782fab ok=True sec=0.07
+START e0_id1_r1_4cd3f4f6a7
+DONE e0_id1_r1_4cd3f4f6a7 ok=True sec=0.07
+START e0_id1_r2_c1bae99822
+DONE e0_id1_r2_c1bae99822 ok=True sec=0.07
+START e0_id1_r3_9b92553247
+DONE e0_id1_r3_9b92553247 ok=True sec=0.07
+SHAPE_COMPLETE 1 1 /1193
+PILOT_PASS continuing frozen1193 plan
+ok
+test_recovery_90minute_limit_blocks_probe (test_reproduce.Tests) ... ok
+test_recovery_max3_and_probe_failure_are_terminal (test_reproduce.Tests) ... ok
+test_recovery_three_observations_spaced_and_fresh_probe (test_reproduce.Tests) ... RECOVERY_PASS epoch=1
+ok
+test_service_event_before_job_marks_environment (test_reproduce.Tests) ... ok
+test_unreadable_kernel_log_stops_before_any_gpu (test_reproduce.Tests) ... ok
+
+----------------------------------------------------------------------
+Ran 22 tests in 3.359s
+
+OK

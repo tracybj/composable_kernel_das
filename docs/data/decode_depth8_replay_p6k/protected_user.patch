@@ -1,0 +1,13 @@
+diff --git a/include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_uniform.hpp b/include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_uniform.hpp
+index 977a59a..6ddf52a 100644
+--- a/include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_uniform.hpp
++++ b/include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_uniform.hpp
+@@ -693,7 +693,7 @@ CK_TILE_DEVICE void GemmPipelineV7Uniform<Problem, kKind>::run_tile(
+             (uint32_t)(((G::kPrefetchDist - 1) % G::kNumStages) * G::kLdsBytesPerStage);
+         // Runtime, not constexpr: it wraps to 0 when the K extent is exactly the
+         // ring's own depth (K == kNumStages * kStageK), same as the reference.
+-        const int kPre4 = (S.n_stages > (int)G::kPrefetchDist - 1) ? (int)G::kPrefetchDist - 1 : 0;
++        const int kPre4 = __builtin_amdgcn_readfirstlane((S.n_stages > (int)G::kPrefetchDist - 1) ? (int)G::kPrefetchDist - 1 : 0);
+         const uint32_t so_a =
+             (uint32_t)(kPre4 * (int)G::kStageK *
+                        (kKind == V7UniformKind::NN ? 2u : (uint32_t)S.a_stride_bytes));

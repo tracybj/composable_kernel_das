@@ -1,0 +1,21 @@
+{
+  "stage": "full",
+  "at": "2026-11-10T07:17:31.830468+00:00",
+  "command": [
+    "python3",
+    "-B",
+    "-u",
+    "/workspace/composable_kernel/tools/grouped_gemm_depth8_reproduce/reproduce.py",
+    "--output",
+    "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z",
+    "--plan",
+    "/workspace/composable_kernel/docs/data/v7_optimization_p6f/final_results/policy_overlay_incremental_1193.csv",
+    "--depth8",
+    "--resume"
+  ],
+  "log": "/workspace/v7_coverage/p6k_depth8_replay/run_20261110T060053Z/full_controller.log",
+  "rc": 0,
+  "pid": 3107469,
+  "finished_at": "2026-11-10T13:02:16.465556+00:00",
+  "seconds": 20684.635821593984
+}
