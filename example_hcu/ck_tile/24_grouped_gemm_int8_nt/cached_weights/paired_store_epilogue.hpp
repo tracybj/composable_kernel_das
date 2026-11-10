@@ -14,6 +14,25 @@ CK_TILE_DEVICE FloatPair multiply(FloatPair values, FloatPair factors)
     return result;
 }
 
+CK_TILE_DEVICE float canonicalize_factor(float f)
+{
+    const uint32_t bits = bit_cast<uint32_t>(f);
+    const uint32_t nan = (bits & 0xffff0000U) | 0x00400000U;
+    uint32_t out;
+    asm volatile("v_cmp_u_f32 vcc, %1, %1\n\t"
+                 "v_cndmask_b32 %0, %1, %2, vcc"
+                 : "=v"(out)
+                 : "v"(f), "v"(nan)
+                 : "vcc");
+    return bit_cast<float>(out);
+}
+
+CK_TILE_DEVICE uint32_t round_bf16_bits(float result)
+{
+    const uint32_t bits = bit_cast<uint32_t>(result);
+    return bits + 0x7fffU + ((bits >> 16) & 1U);
+}
+
 template<bool BFloat>
 CK_TILE_DEVICE uint16_t convert(float result)
 {
@@ -39,8 +58,19 @@ CK_TILE_DEVICE uint32_t scale_pair(int32_t first, int32_t second, FloatPair fact
 {
     const FloatPair values{static_cast<float>(first), static_cast<float>(second)};
     const FloatPair result = multiply(values, factors);
-    return uint32_t(convert<BFloat>(result[0])) |
-           (uint32_t(convert<BFloat>(result[1])) << 16);
+    if constexpr(BFloat)
+    {
+        const uint32_t r0 = round_bf16_bits(result[0]);
+        const uint32_t r1 = round_bf16_bits(result[1]);
+        uint32_t packed;
+        asm volatile("v_perm_b32 %0, %1, %2, %3"
+                     : "=v"(packed)
+                     : "v"(r1), "v"(r0), "s"(0x07060302U));
+        return packed;
+    }
+    else
+        return uint32_t(convert<false>(result[0])) |
+               (uint32_t(convert<false>(result[1])) << 16);
 }
 
 // Swap one lane bit and one register index bit. Both halves of each packed
@@ -69,7 +99,8 @@ struct GroupedInt8NtPairedStoreEpilogue
     {
         using namespace int8_nt_paired_store;
         static_assert(!Problem::Transpose);
-        if(scale.a_stride != 0 || arg.stride_E % 8 != 0 ||
+        if(scale.a_stride != 0 || (scale.b && scale.b_stride != 1) ||
+           arg.stride_E % 8 != 0 ||
            reinterpret_cast<uintptr_t>(arg.e_ptr) % 16 != 0)
         {
             GroupedInt8NtScaledWaspEpilogue<Problem, BFloat>{}(arg, mb, nb, tile, scale);
@@ -83,15 +114,28 @@ struct GroupedInt8NtPairedStoreEpilogue
 
         // Factors use original MMAC columns. Preserve the FP32 multiplication
         // boundary before applying them to the integer accumulators.
+        float left[4] = {1.0f, 1.0f, 1.0f, 1.0f};
+        float right[4] = {1.0f, 1.0f, 1.0f, 1.0f};
+        if(scale.b)
+        {
+            const float* sb = scale.b + (stripe + lane / 16);
+            static_for<0, 4, 1>{}([&](auto pair) {
+                constexpr int p = decltype(pair)::value;
+                left[p] = sb[p * 8];
+                right[p] = sb[p * 8 + 4];
+            });
+        }
         const float activation_scale = scale.a ? scale.a[0] : 1.0f;
         FloatPair factors[4];
         static_for<0, 4, 1>{}([&](auto pair) {
             constexpr int p = decltype(pair)::value;
-            const int col = stripe + lane / 16 + p * 8;
-            const float left = scale.b ? scale.b[col * scale.b_stride] : 1.0f;
-            const float right = scale.b ? scale.b[(col + 4) * scale.b_stride] : 1.0f;
             factors[p] = multiply(FloatPair{activation_scale, activation_scale},
-                                  FloatPair{left, right});
+                                  FloatPair{left[p], right[p]});
+            if constexpr(BFloat)
+            {
+                factors[p] = FloatPair{canonicalize_factor(factors[p][0]),
+                                       canonicalize_factor(factors[p][1])};
+            }
         });
         static_for<0, Problem::BM / 16, 1>{}([&](auto block) {
             constexpr int i = decltype(block)::value;

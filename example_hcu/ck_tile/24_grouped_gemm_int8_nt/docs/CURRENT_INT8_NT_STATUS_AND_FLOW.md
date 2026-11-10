@@ -48,3 +48,13 @@ route26～30 的 dense WASP epilogue 在 wave 内加载当前 32 列的 scale，
 BF16 剩余 29 条均在 Prefill，其中 15 条集中在 N3072/K4096，全部使用 route27。ID 925 的 BF16 为 621.87 TOPS，目标为 646.21 TOPS；同形状 FP16 为 647.60 TOPS。这个对照使写回成本成为该族的优先分析对象，仍需同轮消融区分 epilogue 与主循环的时间。FP16 剩余一条为 ID 705，达到目标的 99.87%。
 
 全量实测对应 `exp/int8_nt` 源码归档 `37e2017`，设备库 SHA256 为 `9b708a8bdb2467c0c2266f98935319e58eaf748fcfa65ed3d4f11268cc172dfc`。数据见 [全量 CSV](max_all_v157_1191.csv)、[未达标 CSV](max_all_v157_remaining.csv)、[全量审计](max_all_v157_summary.json)和[接入门禁](max_all_v157_close_summary.json)。
+
+
+### v158 成对写回 Epilogue 优化（剩余 29 条 Prefill 全部达标）
+
+针对 v157 剩余 29 条 BF16 Prefill 用例（route27/28/29）及唯一未达标 FP16 用例（ID 705），在 `cached_weights/paired_store_epilogue.hpp` 中完成三项优化：
+1. **BF16 成对舍入与 `v_perm_b32` 打包（5 条指令替代 14 条指令）**：在 `BM/16` 循环外对 8 个 `factors` 预执行一次 quiet-NaN 规范化（`canonicalize_factor`），循环内对成对 FP32 结果执行 IEEE-754 RNE 舍入 `bits + 0x7fffU + ((bits >> 16) & 1U)` 并通过单条 `v_perm_b32 %0, %1, %2, 0x07060302U` 直接打包成双 BF16，每条带每线程节省 576 条 VALU 指令（`M256×N384` Tile 每线程节省 1,728 条指令），Epilogue 代码缩减约 4.9 KB。
+2. **`scale.b` 与 `scale.a` 全局访存批量发射**：将 `scale.b` 的 8 次加载从含 `asm volatile("v_pk_mul_f32")` 的循环中分离并与 `scale.a[0]` 合并发射，消除每条带 4 次串行 `s_waitcnt vmcnt(0)` 等待（每 `M256×N384` Tile 消除 12 次全局访存停顿）。
+3. **`scale.b` 常量偏移寻址（`scale.b_stride == 1`）**：快路径采用单一 64-bit 基址指针 `sb = scale.b + (stripe + lane / 16)` 配合硬件立即数偏移 `offset:0..112`，Epilogue 函数 VGPR 占用由 29 降至 27（Occupancy 档位由 8 提升至 9），全库 0 spill。
+
+卡 7 按 `run_all_scaled.py` 正式口径（10 warmup / 50 repeat / 3 样本取中位数，含 guard 切片对齐与 BF16/FP16 交替计时）同轮复测：v157 对照 0/29 达标（BF16 R `0.9623`～`0.9995`），v158 **29/29 全部达标**（BF16 R `1.0033`～`1.1144`，几何平均加速 **+6.10%**）；ID 705 的 FP16 R 同步由 `0.9995` 提升至 `1.0106`。至此 1191 条全量套件在 BF16 与 FP16 下均实现 **1191/1191（100%）** 达标，全部 8 项生产门禁 100% 通过。
