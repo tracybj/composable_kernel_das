@@ -1,0 +1,339 @@
+{
+  "ok": true,
+  "archived_official_benchmark": "/workspace/v7_coverage/p6h_decode_arch/trial03/benchmark",
+  "archived_binary_sha256": "fe5b5c7402683c0a6459beec4126ec8609ff0bb8bed8b1d114f0f5fdf44997a8",
+  "saved_current_binary_sha256": "4ac20b152ba54ac87e6d0214881ee2e8875734ad86663b971d400216e0c34052",
+  "source_sha256": {
+    "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_wave.hpp": "2bfe9d3f17de109dfc82dd12c3e71b92aa08362407ec7b46e51273b4e74372ed",
+    "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args.cpp": "3ead270e8a515d7093fe35ed2532ecebed11749cbe017be90623ace5c9960ec1",
+    "example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_bf16_nn_decode_wave_device_args.cpp": "0da97a64da346ffbff87d09c048e0800ea01b7b7e4a91d79195da07976b98775"
+  },
+  "preserved_control_shaders": [
+    {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_21GemmPipelineV7UniformINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE0EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "sha256": "0d3a3738eea5e7b3f4ee8df2a619128a75ef92f125eab6e657ab6ce81249fb31"
+    },
+    {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_21GemmPipelineV7UniformINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE0EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "sha256": "f10e0665af5ec61567d919073b93a43ab88bcef71ba1b2eb79936c08cb7b580f"
+    },
+    {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi8EEENS_21GemmPipelineV7UniformINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE0EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "sha256": "2740306b4e42c40208d6b835e08d807c30102502928916687d14f2a143239804"
+    },
+    {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi8EEENS_21GemmPipelineV7UniformINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE0EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "sha256": "04a0caec03c4e314c85d62fccf0b113af3ad92bdcd35bcd891244eb9fdf36d19"
+    },
+    {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_20GemmPipelineV7SmallMINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "sha256": "84e9cc159dd62145e36bad5df25a96d939850f340ef9c5615dba227578a50b48"
+    },
+    {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_20GemmPipelineV7SmallMINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "sha256": "7febecaf37b477bd393ed2814be9ac3dad1fe78104d39315b45340cc2a0144c9"
+    },
+    {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi64ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_20GemmPipelineV7SmallMINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi64EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi64EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "sha256": "dd2c433c8e31ee4e19d9c04d2d07bb039a33a4f6714058851a07827944857e1b"
+    },
+    {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi64ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_20GemmPipelineV7SmallMINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi64EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi64EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "sha256": "8bdfec4aed759f081c2a77fa191a74684e7e3cf79b599a83473b3b05f0b05bbf"
+    },
+    {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_21GemmPipelineV7UniformINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE1EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "sha256": "dee6deb18ab00873296329f00d755b6b645366c0250f6115383e281036acfb79"
+    },
+    {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_21GemmPipelineV7UniformINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE1EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "sha256": "8506378f82b4a78112aad041b49a921b585f6db9383f725f294defebdd1756e7"
+    },
+    {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_24GemmPipelineV7CacheNoSlcINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE0EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "sha256": "3e5a1a9cafcf2053902f167e34e4f52bd9ba60b7ca4165f23af6384732b0264c"
+    },
+    {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_24GemmPipelineV7CacheNoSlcINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE0EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "sha256": "9944dee936b47f8b19f475cb664b6708bd7403ac1e204271b8c50d40e84362b1"
+    },
+    {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi8EEENS_24GemmPipelineV7CacheNoSlcINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE0EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "sha256": "bc99928528d6f6b9d592d478cfaada8f1ac1e18593062d04475f473771f71f8c"
+    },
+    {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi8EEENS_24GemmPipelineV7CacheNoSlcINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE0EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "sha256": "cc7e938816471939873d382ac2016910af57bc20755774612f77ea3cd5c62625"
+    },
+    {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_25GemmPipelineV7SmallMDrainINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "sha256": "5d60a2d15913949b2faa8b320f2a73368ee980683364563a6e9238e295f846d6"
+    },
+    {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_25GemmPipelineV7SmallMDrainINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "sha256": "d03e0cdaf7ec97e3b8fef95704ba781b241d042504fa98787d2ed6b156650d67"
+    },
+    {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_23GemmPipelineV7SmallMK32INS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_19V7SmallMK32GeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "sha256": "a4f5770df4b524015c4ab2f79ecb786924a443f711a0dbc742d00a48b6cceccf"
+    },
+    {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_23GemmPipelineV7SmallMK32INS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_19V7SmallMK32GeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "sha256": "6e2f8a3a2adf34522f656a2bcf8ba8d4f0198a7b1f81329ff9cb4f223bc5810a"
+    },
+    {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi128ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_23GemmPipelineV7Square128INS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_19V7Square128GeometryEEESP_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "sha256": "fa0cdb3651a326ef01b93be02426eeae0ee216189007faab113a37f4bc4a5bc0"
+    },
+    {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi128ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_23GemmPipelineV7Square128INS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_19V7Square128GeometryEEESP_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "sha256": "d465e95ba49236a374ad04cf472188a494a193ebc0c08f2a95abbddc4c5cd52f"
+    },
+    {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi64ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_23GemmPipelineV7SmallMK32INS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi64EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_19V7SmallMK32GeometryILi64EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "sha256": "fa33626228c5cc0d4ce6cd4a91ef016b561e6d97e04193fb3d3566e98b081307"
+    },
+    {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi64ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_23GemmPipelineV7SmallMK32INS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi64EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_19V7SmallMK32GeometryILi64EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "sha256": "8cc29b568e4a54e96fc680a964ec600866dc75ad38e4f22d74314ef949e64626"
+    },
+    {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi5EEENS_21GemmPipelineV7UniformINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE0EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "sha256": "146d40d4ac65d01cfc9c765e2245d3c89a4606a3a984ab12783f9d0385d0d491"
+    },
+    {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi5EEENS_21GemmPipelineV7UniformINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE0EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "sha256": "0f6d43a54956045bbec52c1bb8a3258b460adfd8c0f4150a7956d3832af4e686"
+    },
+    {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi5EEENS_24GemmPipelineV7CacheNoSlcINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE0EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "sha256": "fe34033a37d0f65a3ef0effa591ec3ef965a75c5a94c5de3803d060e868919cf"
+    },
+    {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi5EEENS_24GemmPipelineV7CacheNoSlcINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE0EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "sha256": "244d7e6c053eaa6c9e2706e6c6f3c05ab7db6a9b509498a83a844f65877bbdf8"
+    },
+    {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi128ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_21GemmPipelineV7Tail128INS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_30GroupedGemmV7TailStoreEpilogueItNS_15V7SmallMAccTileINS_17V7Tail128GeometryEEESP_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "sha256": "67b05ff42f8a5f25144004355e6bc53963ff98a84ee363501c6415a92f4b0b08"
+    },
+    {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi128ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_21GemmPipelineV7Tail128INS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_30GroupedGemmV7TailStoreEpilogueItNS_15V7SmallMAccTileINS_17V7Tail128GeometryEEESP_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "sha256": "f8c3554d85f8616a6d235ae56189ae109e5019e1ddeb864025f84ac20a162ab1"
+    },
+    {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_29GemmPipelineV7SmallMK32SteadyINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_19V7SmallMK32GeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "sha256": "d2a00c9555c7bf359dd8563297df28f5f86abf0f0d620463dcef0e3e4ee77647"
+    },
+    {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_29GemmPipelineV7SmallMK32SteadyINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_19V7SmallMK32GeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "sha256": "b80a0e17ea0e7e5ea926d11b2a84cce90ee4f157597cca4baae528548d471d1a"
+    },
+    {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_26GemmPipelineV7SmallMSteadyINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "sha256": "a759881fe324e0f4e074b49c6f84b69c5598515591852c1d8b14e208905d5b46"
+    },
+    {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_26GemmPipelineV7SmallMSteadyINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "sha256": "7d7bac60e76f91af8bfe476b7ea8012641e6cec63947acef7cd9dfb257a8a633"
+    },
+    {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi128ELi256ELi64EEEENS5_IJLi2ELi4ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_21GemmPipelineV7Tail256INS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi256EEENS_33GroupedGemmV7Tail256StoreEpilogueItNS_15V7SmallMAccTileINS_17V7Tail256GeometryEEESP_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "sha256": "e94215e10aa080963b25304b5cd316dea56568a34fe74ae9207a648c116acc9a"
+    },
+    {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi128ELi256ELi64EEEENS5_IJLi2ELi4ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_21GemmPipelineV7Tail256INS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi256EEENS_33GroupedGemmV7Tail256StoreEpilogueItNS_15V7SmallMAccTileINS_17V7Tail256GeometryEEESP_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "sha256": "ac41953bd543a96f475675c23287c92c38f98f32b7107cecf5b78deaee47738e"
+    },
+    {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_25GemmPipelineV7SmallMNoSlcINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "sha256": "5d03dd8acee197d3c35a66850ef45f0dcf259907e04adf2493d5e0778ec93956"
+    },
+    {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_25GemmPipelineV7SmallMNoSlcINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      "sha256": "50213a04a9a16646e1e25c5359627f26f7af92ef96ad6e7d44675473449dfc30"
+    }
+  ],
+  "depth8_isa": {
+    "tag": "trial03_depth8",
+    "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_18DecodeNnWaveKernelILi8EEEJPU3AS4viiEEEvDpT2_",
+    "code_object": "/workspace/v7_coverage/p6h_decode_arch/trial03_gfx936.co",
+    "address": "0x1c00",
+    "bytes": 2292,
+    "sha256": "e252c83b232adef02ccbe90f2e009e601803d14bdef5928a15113ecd2e5ce925",
+    "metadata": {
+      ".group_segment_fixed_size": 0,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 256,
+      ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_18DecodeNnWaveKernelILi8EEEJPU3AS4viiEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 54,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_18DecodeNnWaveKernelILi8EEEJPU3AS4viiEEEvDpT2_.kd",
+      ".unfolded_args": [
+        {
+          ".address_space": "constant",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".offset": 8,
+          ".size": 4,
+          ".value_kind": "by_value"
+        },
+        {
+          ".offset": 12,
+          ".size": 4,
+          ".value_kind": "by_value"
+        }
+      ],
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 47,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64
+    },
+    "assembly": "/workspace/v7_coverage/p6h_decode_arch/isa/trial03_depth8.s",
+    "command": [
+      "/opt/dtk/aillvm/bin/llvm-objdump",
+      "-d",
+      "--mcpu=gfx936",
+      "--start-address=0x1c00",
+      "--stop-address=0x24f4",
+      "/workspace/v7_coverage/p6h_decode_arch/trial03_gfx936.co"
+    ],
+    "static_instructions": 415,
+    "opcodes": {
+      "s_load_dwordx2": 3,
+      "s_waitcnt": 38,
+      "s_ashr_i32": 8,
+      "s_add_i32": 25,
+      "s_xor_b32": 8,
+      "v_cvt_f32_u32_e32": 2,
+      "s_nop": 2,
+      "v_rcp_iflag_f32_e32": 2,
+      "v_mul_f32_e32": 2,
+      "v_cvt_u32_f32_e32": 2,
+      "s_sub_i32": 13,
+      "v_readfirstlane_b32": 3,
+      "s_mul_i32": 19,
+      "s_mul_hi_u32": 4,
+      "s_cmp_ge_u32": 4,
+      "s_cselect_b32": 6,
+      "s_cmp_ge_i32": 2,
+      "s_cbranch_scc1": 2,
+      "s_mul_hi_i32": 1,
+      "s_add_u32": 3,
+      "s_addc_u32": 3,
+      "s_load_dwordx4": 2,
+      "s_load_dword": 2,
+      "s_lshr_b32": 1,
+      "s_lshl_b32": 13,
+      "s_mov_b32": 26,
+      "s_cmp_le_u32": 1,
+      "s_cselect_b64": 2,
+      "s_cmpk_lt_u32": 1,
+      "s_and_b64": 2,
+      "s_cbranch_vccnz": 1,
+      "v_lshrrev_b32_e32": 10,
+      "v_and_b32_e32": 4,
+      "s_or_b32": 9,
+      "v_or_b32_e32": 12,
+      "v_mul_lo_u32": 2,
+      "v_cmp_gt_i32_e32": 2,
+      "v_cndmask_b32_e32": 1,
+      "v_bfe_u32": 10,
+      "v_lshl_add_u32": 2,
+      "v_xor_b32_e32": 5,
+      "v_add_u32_e32": 1,
+      "v_lshlrev_b32_e32": 5,
+      "buffer_load_dwordx2": 16,
+      "buffer_load_dwordx4": 16,
+      "s_movk_i32": 7,
+      "s_cmpk_lt_i32": 1,
+      "v_mov_b32_e32": 17,
+      "s_mulk_i32": 1,
+      "s_addk_i32": 2,
+      "ds_read_m32x16_b16": 16,
+      "v_mmac_f32_16x16x16_bf16": 32,
+      "s_cbranch_scc0": 1,
+      "s_branch": 1,
+      "v_lshl_or_b32": 1,
+      "v_or3_b32": 9,
+      "v_add3_u32": 8,
+      "ds_write_b16": 8,
+      "ds_read_b128": 1,
+      "s_and_saveexec_b64": 1,
+      "s_cbranch_execz": 1,
+      "v_mad_i64_i32": 1,
+      "v_lshlrev_b64": 1,
+      "s_lshl_b64": 2,
+      "v_add_co_u32_e32": 2,
+      "v_addc_co_u32_e32": 2,
+      "global_store_dwordx4": 1,
+      "s_endpgm": 1
+    },
+    "wait_operands": {
+      "lgkmcnt(0)": 22,
+      "vmcnt(14)": 9,
+      "vmcnt(12)": 1,
+      "vmcnt(10)": 1,
+      "vmcnt(8)": 1,
+      "vmcnt(6)": 1,
+      "vmcnt(4)": 1,
+      "vmcnt(2)": 1,
+      "vmcnt(0)": 1
+    },
+    "labels": [
+      "0000000000001c00 <_ZN7ck_tile6kentryILi256ELi2ENS_18DecodeNnWaveKernelILi8EEEJPU3AS4viiEEEvDpT2_>:"
+    ],
+    "direct_lds_loads": 16,
+    "unknown_lines": 0,
+    "declared_dynamic_lds_bytes": 32768,
+    "depth": 8
+  },
+  "protocol": "Both arms use the archived official benchmark through its formal build/bin entry; original binary restored after the run",
+  "gpu_jobs": 0
+}

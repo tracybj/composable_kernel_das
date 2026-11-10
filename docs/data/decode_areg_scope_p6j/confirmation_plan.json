@@ -1,0 +1,477 @@
+{
+  "at": "2026-11-10T03:06:02.583115+00:00",
+  "predicates": [
+    "n256_k512_g64"
+  ],
+  "cases": [
+    {
+      "id": 1179,
+      "M": 1,
+      "N": 256,
+      "K": 512,
+      "G": 64,
+      "baseline": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128"
+      },
+      "expected": 5003,
+      "historical": {
+        "ID": "1179",
+        "M": "1",
+        "N": "256",
+        "K": "512",
+        "G": "64",
+        "phase": "decode",
+        "scheme": "smallM_64x128x16",
+        "instance_id": "5003",
+        "CK_ms": "0.031599998",
+        "frozen_BLAS_ms": "0.03193599730730057",
+        "R_frozen": "1.0106328901445047",
+        "CK_gpu": "4",
+        "BLAS_gpu": "4",
+        "BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+        "BLAS_source": "/workspace/v7_coverage/p6c/native_new15.json",
+        "BLAS_high_span_warning": "False",
+        "CK_protocol": "single_launch_warmup10_samples30_include_args_build0",
+        "enable_env": "{\"CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN\":\"1\",\"CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M\":\"128\"}",
+        "source_type": "historical_current_retained",
+        "source": "/workspace/v7_coverage/p6c/jobs.jsonl",
+        "source_keys": "[\"perf_r1_id1179_n128\",\"perf_r2_id1179_n128\",\"perf_r3_id1179_n128\"]",
+        "source_logs": "[]",
+        "binary_sha256": "",
+        "epoch": "",
+        "round_ms": "[0.031599998,0.03176,0.031520002]",
+        "round_cv": "[]",
+        "max_sample_cv": "0.055853541",
+        "quality": "near_tie_within2pct;high_variation;gap_within_reported_variation",
+        "full_output_accuracy_keys": "[]",
+        "original_scheme": "smallM_64x128x16",
+        "original_CK_ms": "0.031599998",
+        "original_R": "1.0106328901445047",
+        "note": "Historical source retained; no new1193-shape GPU run or unified per-shape dispatch policy"
+      }
+    },
+    {
+      "id": 1180,
+      "M": 2,
+      "N": 256,
+      "K": 512,
+      "G": 64,
+      "baseline": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128"
+      },
+      "expected": 5003,
+      "historical": {
+        "ID": "1180",
+        "M": "2",
+        "N": "256",
+        "K": "512",
+        "G": "64",
+        "phase": "decode",
+        "scheme": "smallM_64x128x16",
+        "instance_id": "5003",
+        "CK_ms": "0.031679999",
+        "frozen_BLAS_ms": "0.03202399984002113",
+        "R_frozen": "1.0108586127171637",
+        "CK_gpu": "4",
+        "BLAS_gpu": "4",
+        "BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+        "BLAS_source": "/workspace/v7_coverage/p6c/native_new15.json",
+        "BLAS_high_span_warning": "False",
+        "CK_protocol": "single_launch_warmup10_samples30_include_args_build0",
+        "enable_env": "{\"CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN\":\"1\",\"CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M\":\"128\"}",
+        "source_type": "historical_current_retained",
+        "source": "/workspace/v7_coverage/p6e/jobs.jsonl",
+        "source_keys": "[\"rec3_smallperf_r1_id1180_drain_before\",\"rec3_smallperf_r2_id1180_drain_before\",\"rec3_smallperf_r3_id1180_drain_before\"]",
+        "source_logs": "[]",
+        "binary_sha256": "6e96b7aa83bd5b65812a0c737971756dfee780df23acb6a9d0fa92c097daa1ab",
+        "epoch": "",
+        "round_ms": "[0.031679999,0.031679999,0.031679001]",
+        "round_cv": "[]",
+        "max_sample_cv": "0.04653564",
+        "quality": "near_tie_within2pct;gap_within_reported_variation",
+        "full_output_accuracy_keys": "[]",
+        "original_scheme": "smallM_64x128x16",
+        "original_CK_ms": "0.031679999",
+        "original_R": "1.0108586127171637",
+        "note": "Historical source retained; no new1193-shape GPU run or unified per-shape dispatch policy"
+      }
+    },
+    {
+      "id": 1181,
+      "M": 4,
+      "N": 256,
+      "K": 512,
+      "G": 64,
+      "baseline": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128"
+      },
+      "expected": 5003,
+      "historical": {
+        "ID": "1181",
+        "M": "4",
+        "N": "256",
+        "K": "512",
+        "G": "64",
+        "phase": "decode",
+        "scheme": "P6f_k32_steady_control",
+        "instance_id": "5003",
+        "CK_ms": "0.03184",
+        "frozen_BLAS_ms": "0.0321200005710125",
+        "R_frozen": "1.0087939877830558",
+        "CK_gpu": "4",
+        "BLAS_gpu": "4",
+        "BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+        "BLAS_source": "/workspace/v7_coverage/p6c/native_new15.json",
+        "BLAS_high_span_warning": "False",
+        "CK_protocol": "single_launch_warmup10_samples30_include_args_build0",
+        "enable_env": "{\"CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN\":\"1\",\"CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M\":\"128\"}",
+        "source_type": "p6f_fresh_three_round_series",
+        "source": "/workspace/v7_coverage/p6f/jobs.jsonl",
+        "source_keys": "[\"e5_rec5_k32_steady_r1_id1181_control\",\"e5_rec5_k32_steady_r2_id1181_control\",\"e5_rec5_k32_steady_r3_id1181_control\"]",
+        "source_logs": "[\"/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r1_id1181_control/run.log\",\"/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r2_id1181_control/run.log\",\"/workspace/v7_coverage/p6f/runs/e5_rec5_k32_steady_r3_id1181_control/run.log\"]",
+        "binary_sha256": "3411731442660e51e3681e5341bbf852409b47b8e80fcffe15a92e52e45dbaac",
+        "epoch": "5",
+        "round_ms": "[0.031839497,0.03184,0.032159999]",
+        "round_cv": "[0.039450626,0.029213893,0.043779507]",
+        "max_sample_cv": "0.043779507",
+        "quality": "stable_direction",
+        "full_output_accuracy_keys": "[\"e4_rec4_steady_baseline_acc_id1181\"]",
+        "original_scheme": "smallM_64x128x16",
+        "original_CK_ms": "0.031840499",
+        "original_R": "1.0087781780999254",
+        "note": "Numerical minimum of historical baseline and complete current-code P6f series; not a deployed oracle or stable-optimality proof"
+      }
+    },
+    {
+      "id": 1182,
+      "M": 8,
+      "N": 256,
+      "K": 512,
+      "G": 64,
+      "baseline": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128"
+      },
+      "expected": 5003,
+      "historical": {
+        "ID": "1182",
+        "M": "8",
+        "N": "256",
+        "K": "512",
+        "G": "64",
+        "phase": "decode",
+        "scheme": "smallM_64x128x16",
+        "instance_id": "5003",
+        "CK_ms": "0.03184",
+        "frozen_BLAS_ms": "0.03261595219373703",
+        "R_frozen": "1.0243703578434997",
+        "CK_gpu": "4",
+        "BLAS_gpu": "4",
+        "BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+        "BLAS_source": "/workspace/v7_coverage/p6c/native_new15.json",
+        "BLAS_high_span_warning": "False",
+        "CK_protocol": "single_launch_warmup10_samples30_include_args_build0",
+        "enable_env": "{\"CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN\":\"1\",\"CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M\":\"128\"}",
+        "source_type": "historical_current_retained",
+        "source": "/workspace/v7_coverage/p6e/jobs.jsonl",
+        "source_keys": "[\"rec3_smallperf_r1_id1182_drain_before\",\"rec3_smallperf_r2_id1182_drain_before\",\"rec3_smallperf_r3_id1182_drain_before\"]",
+        "source_logs": "[]",
+        "binary_sha256": "6e96b7aa83bd5b65812a0c737971756dfee780df23acb6a9d0fa92c097daa1ab",
+        "epoch": "",
+        "round_ms": "[0.032480001,0.03184,0.03184]",
+        "round_cv": "[]",
+        "max_sample_cv": "0.051271513",
+        "quality": "near_tie_within2pct;high_variation;gap_within_reported_variation",
+        "full_output_accuracy_keys": "[]",
+        "original_scheme": "smallM_64x128x16",
+        "original_CK_ms": "0.03184",
+        "original_R": "1.0243703578434997",
+        "note": "Historical source retained; no new1193-shape GPU run or unified per-shape dispatch policy"
+      }
+    },
+    {
+      "id": 1183,
+      "M": 16,
+      "N": 256,
+      "K": 512,
+      "G": 64,
+      "baseline": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128"
+      },
+      "expected": 5003,
+      "historical": {
+        "ID": "1183",
+        "M": "16",
+        "N": "256",
+        "K": "512",
+        "G": "64",
+        "phase": "decode",
+        "scheme": "smallM_64x128x16",
+        "instance_id": "5003",
+        "CK_ms": "0.032960001",
+        "frozen_BLAS_ms": "0.0329599492251873",
+        "R_frozen": "0.9999984291622837",
+        "CK_gpu": "4",
+        "BLAS_gpu": "4",
+        "BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+        "BLAS_source": "/workspace/v7_coverage/p6c/native_new15.json",
+        "BLAS_high_span_warning": "False",
+        "CK_protocol": "single_launch_warmup10_samples30_include_args_build0",
+        "enable_env": "{\"CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN\":\"1\",\"CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M\":\"128\"}",
+        "source_type": "historical_current_retained",
+        "source": "/workspace/v7_coverage/p6c/jobs.jsonl",
+        "source_keys": "[\"perf_r1_id1183_n128\",\"perf_r2_id1183_n128\",\"perf_r3_id1183_n128\"]",
+        "source_logs": "[]",
+        "binary_sha256": "",
+        "epoch": "",
+        "round_ms": "[0.033119999,0.032960001,0.032958999]",
+        "round_cv": "[]",
+        "max_sample_cv": "0.04018548",
+        "quality": "near_tie_within2pct;gap_within_reported_variation",
+        "full_output_accuracy_keys": "[]",
+        "original_scheme": "smallM_64x128x16",
+        "original_CK_ms": "0.032960001",
+        "original_R": "0.9999984291622837",
+        "note": "Historical source retained; no new1193-shape GPU run or unified per-shape dispatch policy"
+      }
+    },
+    {
+      "id": 1184,
+      "M": 32,
+      "N": 256,
+      "K": 512,
+      "G": 64,
+      "baseline": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128"
+      },
+      "expected": 5003,
+      "historical": {
+        "ID": "1184",
+        "M": "32",
+        "N": "256",
+        "K": "512",
+        "G": "64",
+        "phase": "decode",
+        "scheme": "smallM_64x128x16",
+        "instance_id": "5003",
+        "CK_ms": "0.034400001",
+        "frozen_BLAS_ms": "0.033504001796245575",
+        "R_frozen": "0.9739535122759321",
+        "CK_gpu": "4",
+        "BLAS_gpu": "4",
+        "BLAS_protocol": "frozen_native_groupedgemm_repeat20",
+        "BLAS_source": "/workspace/v7_coverage/p6c/native_new15.json",
+        "BLAS_high_span_warning": "False",
+        "CK_protocol": "single_launch_warmup10_samples30_include_args_build0",
+        "enable_env": "{\"CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN\":\"1\",\"CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M\":\"128\"}",
+        "source_type": "historical_current_retained",
+        "source": "/workspace/v7_coverage/p6c/jobs.jsonl",
+        "source_keys": "[\"perf_r1_id1184_n128\",\"perf_r2_id1184_n128\",\"perf_r3_id1184_n128\"]",
+        "source_logs": "[]",
+        "binary_sha256": "",
+        "epoch": "",
+        "round_ms": "[0.034400001,0.034400001,0.034559999]",
+        "round_cv": "[]",
+        "max_sample_cv": "0.041522517",
+        "quality": "near_tie_within2pct;gap_within_reported_variation",
+        "full_output_accuracy_keys": "[]",
+        "original_scheme": "smallM_64x128x16",
+        "original_CK_ms": "0.034400001",
+        "original_R": "0.9739535122759321",
+        "note": "Historical source retained; no new1193-shape GPU run or unified per-shape dispatch policy"
+      }
+    },
+    {
+      "id": -1012,
+      "M": 17,
+      "N": 256,
+      "K": 512,
+      "G": 64
+    },
+    {
+      "id": -1013,
+      "M": 3,
+      "N": 256,
+      "K": 512,
+      "G": 64
+    },
+    {
+      "id": -1014,
+      "M": 7,
+      "N": 256,
+      "K": 512,
+      "G": 64
+    },
+    {
+      "id": -1015,
+      "M": 15,
+      "N": 256,
+      "K": 512,
+      "G": 64
+    },
+    {
+      "id": -1016,
+      "M": 31,
+      "N": 256,
+      "K": 512,
+      "G": 64
+    },
+    {
+      "id": -2105,
+      "M": 5,
+      "N": 256,
+      "K": 512,
+      "G": 64
+    },
+    {
+      "id": -2106,
+      "M": 6,
+      "N": 256,
+      "K": 512,
+      "G": 64
+    },
+    {
+      "id": -2109,
+      "M": 9,
+      "N": 256,
+      "K": 512,
+      "G": 64
+    },
+    {
+      "id": -2110,
+      "M": 10,
+      "N": 256,
+      "K": 512,
+      "G": 64
+    },
+    {
+      "id": -2111,
+      "M": 11,
+      "N": 256,
+      "K": 512,
+      "G": 64
+    },
+    {
+      "id": -2112,
+      "M": 12,
+      "N": 256,
+      "K": 512,
+      "G": 64
+    },
+    {
+      "id": -2113,
+      "M": 13,
+      "N": 256,
+      "K": 512,
+      "G": 64
+    },
+    {
+      "id": -2114,
+      "M": 14,
+      "N": 256,
+      "K": 512,
+      "G": 64
+    },
+    {
+      "id": -2118,
+      "M": 18,
+      "N": 256,
+      "K": 512,
+      "G": 64
+    },
+    {
+      "id": -2119,
+      "M": 19,
+      "N": 256,
+      "K": 512,
+      "G": 64
+    },
+    {
+      "id": -2120,
+      "M": 20,
+      "N": 256,
+      "K": 512,
+      "G": 64
+    },
+    {
+      "id": -2121,
+      "M": 21,
+      "N": 256,
+      "K": 512,
+      "G": 64
+    },
+    {
+      "id": -2122,
+      "M": 22,
+      "N": 256,
+      "K": 512,
+      "G": 64
+    },
+    {
+      "id": -2123,
+      "M": 23,
+      "N": 256,
+      "K": 512,
+      "G": 64
+    },
+    {
+      "id": -2124,
+      "M": 24,
+      "N": 256,
+      "K": 512,
+      "G": 64
+    },
+    {
+      "id": -2125,
+      "M": 25,
+      "N": 256,
+      "K": 512,
+      "G": 64
+    },
+    {
+      "id": -2126,
+      "M": 26,
+      "N": 256,
+      "K": 512,
+      "G": 64
+    },
+    {
+      "id": -2127,
+      "M": 27,
+      "N": 256,
+      "K": 512,
+      "G": 64
+    },
+    {
+      "id": -2128,
+      "M": 28,
+      "N": 256,
+      "K": 512,
+      "G": 64
+    },
+    {
+      "id": -2129,
+      "M": 29,
+      "N": 256,
+      "K": 512,
+      "G": 64
+    },
+    {
+      "id": -2130,
+      "M": 30,
+      "N": 256,
+      "K": 512,
+      "G": 64
+    }
+  ],
+  "selection": "Every case satisfying any whole eligible predeclared predicate; no winner-ID selection",
+  "discovery_summary_sha256": "d5d574c7d0240c3be06ae7f797ad31ac7aaf40a7e2cbca875157bb81721ac448",
+  "scope_plan_sha256": "d012466bc6016e9d84dbe9d4aab395d1219632e528a874d186559933299b8706",
+  "second_pass_rounds": 3,
+  "accuracy_first": true
+}

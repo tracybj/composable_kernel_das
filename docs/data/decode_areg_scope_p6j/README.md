@@ -1,0 +1,76 @@
+# A寄存器/B私有LDS八级原型：属性范围验证
+
+本轮按属性选取80条现有shape、24条此前未在1193表中出现的新shape及4条边界。没有运行1193全量，没有修改kernel、selector或默认开关，P6i B加载实验与P6g复现继续暂停。
+
+## 可重复收益的候选范围
+
+**gfx936、BF16 NN、packed dense，M=1～32的整数，N=256、K=512、G=64；使用八级A寄存器/B私有LDS原型。** 该规则依据算子属性，不依据shape ID。
+
+独立确认覆盖全部32个M值，其中32条耗时下降超过2%、0条回退超过2%；耗时变化中位数-6.35%。逐条结果见bounded_candidate_results.csv。
+
+最终状态：`direction_confirmed_but_sample_variation_unresolved`。确认中29条的候选或所选控制存在单轮样本CV>5%；预声明规则不允许将高CV结果直接当作已验收推广。不能把这一窄候选扩大成所有短K、小M，也没有新测Native GroupedGemm BLAS性能。
+
+## 结果与采用边界
+
+|预声明属性域|初筛数量|改善>2%|回退>2%|变化中位数|状态|
+|---|---:|---:|---:|---:|---|
+|short_all|93|59|22|-3.39%|not_qualified_in_discovery|
+|short_low_cta|54|42|6|-4.86%|not_qualified_in_discovery|
+|short_narrow_n|22|21|0|-7.11%|not_qualified_in_discovery|
+|n256_k512_g64|11|11|0|-5.99%|direction_confirmed_but_sample_variation_unresolved|
+|tiny_low_group|20|12|7|-3.45%|not_qualified_in_discovery|
+|tiny_compact|4|4|0|-7.06%|not_qualified_in_discovery|
+
+状态verified_bounded_scope表示通过本轮预设的有限验证；direction_confirmed_but_sample_variation_unresolved只确认重复计时方向，样本CV仍大于5%，不宣称达到推广门槛。所有候选保持默认关闭。
+
+属性表达式见scope_plan.json；组间可重叠，不将各行数量相加。初筛要求完整属性域中每条三轮都改善>2%、中位收益至少3%、至少4条新shape；合格域才进入独立第二次确认。确认要求无>2%回退、域中位收益至少3%，高CV继续标为不确定。
+
+## 现有80条与新shape
+
+|分组|数量|改善>2%|回退>2%|±2%|耗时变化中位数|逐case耗时和变化|高CV|
+|---|---:|---:|---:|---:|---:|---:|---:|
+|现有80条|80|43|27|10|-2.35%|+7.94%|40|
+|新shape|24|20|2|2|-7.78%|-8.73%|24|
+
+负数表示候选更快。耗时和仅是每个case各调用一次的诊断权重，不代表生产调用频率。所有完整负结果均保留，不按赢家ID启用。
+
+现有shape的对照来自历史数值包络表中可启用配置，但本轮重新计时，不把历史耗时混入A/B。新shape比较四个预声明控制：V7开启的默认selector（保持真实回退）、小M K16、K16 drain、K32；以本轮中位数最小的控制作为更严格的参照。
+
+## 独立确认
+
+- n256_k512_g64：32条，改善>2% 32、回退>2% 0，变化中位数-6.35%，高CV 29条。
+  N256/K512/G64的确认覆盖M=1～32全部整数，包含初筛未出现的21个M值；不会只保留表现好的M。
+
+## 精度、协议和版本
+
+1290次全输出比较，520,008,576个元素，failed=0/max_abs=0，CK/BLAS真实首尾guard均通过。所有计时臂均先通过同shape/实例/二进制的3次全输出。
+物理GPU4、统一锁串行、每作业fresh hy-smi空闲及可读dmesg/MKFD门禁；warmup10/samples30、单launch、include_args_build0、默认selector，轮换两臂或多臂顺序。高CV=候选或所选控制任一轮CV>5%，不按快慢删除样本或轮次。
+本轮性能比较只有CK两臂或多臂；逐组BLAS用于全输出精度，不把其heuristic时间当作冻结Native GroupedGemm性能。历史1193的CK/BLAS数据与分桶均未更新。
+使用归档的官方benchmark，SHA fe5b5c7402683c0a6459beec4126ec8609ff0bb8bed8b1d114f0f5fdf44997a8，八级shader SHA e252c83b232adef02ccbe90f2e009e601803d14bdef5928a15113ecd2e5ce925。其36个V7/V8控制shader与当前构建机器码逐字节相同；没有重写流水或引入新的实例。
+收益仅对应该归档八级原型。当前开发构建的6000已是后续A-LDS/B寄存器原型；本轮没有把八级原型重新接回当前源码的selector，不能用当前构建的同名开关代替本报告的归档程序。
+为了沿用正式build/bin入口，控制器持锁临时安装该归档程序，每次退出均恢复原程序SHA 4ac20b152ba54ac87e6d0214881ee2e8875734ad86663b971d400216e0c34052。binary_lease.json与最终SHA检查确认已恢复；当前P6i未提交源码、原readfirstlane差异及暂停tools均保留。
+任意自定义stride等完整生产契约未验收；范围判断限定gfx936、packed dense BF16 NN、common非空非ragged，N整除128、K整除128及地址/grid边界。不能外推到其他精度/转置/硬件或所有未来shape。
+
+## 排除与修正
+
+新shape N128的首个控制精度作业正确回退4002，但测试脚本最初误期望5000，因此实例核对失败。其3次全输出和guard通过；停止队列并恢复原benchmark后，已用CPU selector计算全部新shape控制预期，重新运行完整组。原失败记录保留，不作成绩、不归因MKFD、不删负结果。该修正只改核对预期，没有改shape集合、kernel或计时命令。
+
+## 文件与实际命令
+
+- results.csv/results.json：所有完整组的shape、实例、三轮耗时、CV与原始日志键。
+- scope_plan.json、confirmation_extension.json、confirmation_plan.json：GPU前范围与独立确认清单。
+- decision.json、summary.json、binary_audit.json：采用判断、完整审计及旧/新二进制身份。
+- raw_logs.tar.gz：实际命令、环境、门禁、精度和计时日志、所有失败/排除记录。
+- archived_source/：归档八级原型的源快照；GPU二进制留现场，不写入Git。
+
+```bash
+python3 -B /workspace/v7_coverage/p6j_areg_scope/plan.py
+python3 -B /workspace/v7_coverage/p6j_areg_scope/verify_binary.py
+python3 -B -u /workspace/v7_coverage/p6j_areg_scope/run.py discovery
+python3 -B /workspace/v7_coverage/p6j_areg_scope/analyze.py
+python3 -B /workspace/v7_coverage/p6j_areg_scope/confirmation_plan.py
+# 只有确认清单非空时：run.py confirmation，然后重新analyze.py
+python3 -B /workspace/v7_coverage/p6j_areg_scope/decide.py
+```
+
+CPU期望修正和204项预期在selector_expected_correction.json/selector_expectations.json；脚本为现场审计副本。P6g原有期限及Goal状态没有改变。

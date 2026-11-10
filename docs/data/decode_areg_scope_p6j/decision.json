@@ -1,0 +1,119 @@
+{
+  "at": "2026-11-10T03:18:22.268301+00:00",
+  "complete": true,
+  "decisions": {
+    "short_all": {
+      "status": "not_qualified_in_discovery",
+      "predicate": "M<=32; N<=4096 and N%128=0; 128<=K<=1024 and K%128=0; G<=64",
+      "reason": "Did not pass whole-predicate discovery criterion or had fewer than four unseen probes",
+      "discovery": {
+        "cases": 93,
+        "improved_gt2": 59,
+        "regressed_gt2": 22,
+        "within2": 12,
+        "three_round_improved_gt2": 53,
+        "high_cv": 56,
+        "median_change_pct": -3.3857351351953557,
+        "sum_change_pct": 6.620211167841328,
+        "worst_change_pct": 56.89659664079991
+      }
+    },
+    "short_low_cta": {
+      "status": "not_qualified_in_discovery",
+      "predicate": "short_all and ceil(M/16)*(N/128)*G<=320",
+      "reason": "Did not pass whole-predicate discovery criterion or had fewer than four unseen probes",
+      "discovery": {
+        "cases": 54,
+        "improved_gt2": 42,
+        "regressed_gt2": 6,
+        "within2": 6,
+        "three_round_improved_gt2": 39,
+        "high_cv": 53,
+        "median_change_pct": -4.858581345569229,
+        "sum_change_pct": -4.849288374722505,
+        "worst_change_pct": 19.379485066402967
+      }
+    },
+    "short_narrow_n": {
+      "status": "not_qualified_in_discovery",
+      "predicate": "short_all and N<=512",
+      "reason": "Did not pass whole-predicate discovery criterion or had fewer than four unseen probes",
+      "discovery": {
+        "cases": 22,
+        "improved_gt2": 21,
+        "regressed_gt2": 0,
+        "within2": 1,
+        "three_round_improved_gt2": 20,
+        "high_cv": 22,
+        "median_change_pct": -7.106137545323038,
+        "sum_change_pct": -10.992174046099146,
+        "worst_change_pct": -1.4222001609916934
+      }
+    },
+    "n256_k512_g64": {
+      "status": "direction_confirmed_but_sample_variation_unresolved",
+      "predicate": "1<=M<=32; N=256; K=512; G=64",
+      "discovery": {
+        "cases": 11,
+        "improved_gt2": 11,
+        "regressed_gt2": 0,
+        "within2": 0,
+        "three_round_improved_gt2": 11,
+        "high_cv": 11,
+        "median_change_pct": -5.9907862903225695,
+        "sum_change_pct": -6.091500094487845,
+        "worst_change_pct": -3.9800965167940516
+      },
+      "confirmation": {
+        "cases": 32,
+        "improved_gt2": 32,
+        "regressed_gt2": 0,
+        "three_round_improved_gt2": 32,
+        "high_cv": 29,
+        "median_change_pct": -6.345645207264223,
+        "worst_change_pct": -4.144817073170726,
+        "sum_change_pct": -6.390484250477401
+      },
+      "all_integer_m_1_through_32_checked": true
+    },
+    "tiny_low_group": {
+      "status": "not_qualified_in_discovery",
+      "predicate": "M=1; N<=4096 and N%128=0; 128<=K<=2048 and K%128=0; G<=8",
+      "reason": "Did not pass whole-predicate discovery criterion or had fewer than four unseen probes",
+      "discovery": {
+        "cases": 20,
+        "improved_gt2": 12,
+        "regressed_gt2": 7,
+        "within2": 1,
+        "three_round_improved_gt2": 11,
+        "high_cv": 17,
+        "median_change_pct": -3.454975218395245,
+        "sum_change_pct": 0.9919350488808876,
+        "worst_change_pct": 20.001355434745772
+      }
+    },
+    "tiny_compact": {
+      "status": "not_qualified_in_discovery",
+      "predicate": "tiny_low_group and N<=2048 and K>=512 and G<=4",
+      "reason": "Did not pass whole-predicate discovery criterion or had fewer than four unseen probes",
+      "discovery": {
+        "cases": 4,
+        "improved_gt2": 4,
+        "regressed_gt2": 0,
+        "within2": 0,
+        "three_round_improved_gt2": 3,
+        "high_cv": 3,
+        "median_change_pct": -7.0588285424323445,
+        "sum_change_pct": -7.596900046571687,
+        "worst_change_pct": -2.8708133112794965
+      }
+    }
+  },
+  "verified_scopes": [],
+  "production_enabled": false,
+  "historical1193_updated": false,
+  "p6i_state": "paused",
+  "p6g_state": "paused",
+  "implementation_contract": "Archived Depth8 on gfx936, packed dense BF16 NN, common nonempty/nonragged, N%128=0 and K%128=0; tested finite dimensions only",
+  "scope": "Establish evidence for a property-based range; do not select winner shape IDs or silently remove high-CV/negative results"
+}
