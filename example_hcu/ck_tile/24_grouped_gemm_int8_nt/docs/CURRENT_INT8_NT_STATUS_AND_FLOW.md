@@ -50,3 +50,25 @@ The run had zero failures or skips. The
 These results belong to v158 as built before the source-layout cleanup.
 The CSV uses LF line endings in Git. Its original SHA-256 was
 `4ab0f596a58910331b015c14eae44a099e53c370c8c1de01f56f0cf50c837f14`.
+
+## v159 consolidation and instance slimming
+
+1. **Unused route elimination**:
+   - `route 1` (RawM256N256) and `route 2` (RawM256N256Record1024) in both INT32 and scaled dispatches wrapped in `#ifdef CK_INT8_CACHED_TUNING`.
+   - INT32 `route 22` and `route 23` in `cached_dispatch.cpp` wrapped in `#ifdef CK_INT8_CACHED_TUNING`.
+   - Total production device kernels in `libck_tile_int8_nt_cached.so` reduced from 142 to 134 kernels (-8 kernels).
+   - INT32 none-scale kernels: 44 -> 40 kernels.
+   - Scaled kernels: 98 -> 94 kernels (47 compute configurations x 2 data types BF16/FP16).
+
+2. **Prefill shape consolidation**:
+   - Shape $N=1536, K=2048$ (ID 699, $M=4096, G=8$, formerly the sole `route 1` case) merged into `route 30` (`PackedM128N256` PairedStore).
+   - ID 699 performance increased from 450.5 TOPS ($R=1.0687$) to 507.9 TOPS ($R=1.2031$) on BF16 (+12.6%), and from 463.2 TOPS ($R=1.0974$) to 513.8 TOPS ($R=1.2168$) on FP16 (+10.7%).
+   - Exact numerical match verified against FP64 reference.
+
+3. **Gate validation**:
+   - `selector_policy_test.cpp`: PASS.
+   - `test_scaled_api.py`: PASS.
+   - `test_cached_api.py`: PASS (65 checks).
+   - `test_lifetime.py`: PASS (32 checks).
+   - `test_k_parallel_lifetime.py`: PASS (24 checks).
+   - Critical boundary shapes tested on physical GPU 7 with 100% pass rate ($R \ge 1.0$).

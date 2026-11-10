@@ -48,8 +48,10 @@ extern "C" int ck_tile_int8_cached_launch_private(
     switch(route)
     {
     case 0: return ck_tile_int8_cached_legacy_dispatch_private(legacy, args, g, m, n, stream);
+#ifdef CK_INT8_CACHED_TUNING
     case 1: return run<ck_tile::int8_nt_instances::RawM256N256>(args, g, m, n, stream);
     case 2: return run<ck_tile::int8_nt_instances::RawM256N256Record1024>(args, g, m, n, stream);
+#endif
     case 3: return run<ck_tile::int8_nt_instances::RawTransposeM256N256>(args, g, m, n, stream);
     case 4:
         return run<ck_tile::int8_nt_instances::RawTransposeM256N256Record1024>(
@@ -62,8 +64,10 @@ extern "C" int ck_tile_int8_cached_launch_private(
     case 10: return run<ck_tile::int8_nt_instances::PackedM32N256>(args, g, m, n, stream);
     case 11: return run<ck_tile::int8_nt_instances::PackedM32N64>(args, g, m, n, stream);
     case 12: return run<ck_tile::int8_nt_instances::PackedM256N384>(args, g, m, n, stream);
+#ifdef CK_INT8_CACHED_TUNING
     case 22: return run<ck_tile::int8_nt_instances::PackedM256N384MaskedM4>(args, g, m, n, stream);
     case 23: return run<ck_tile::int8_nt_instances::PackedM256N384MaskedM8>(args, g, m, n, stream);
+#endif
     default: return -1;
     }
 }

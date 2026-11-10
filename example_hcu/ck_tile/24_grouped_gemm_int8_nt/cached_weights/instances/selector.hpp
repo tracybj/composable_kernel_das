@@ -39,8 +39,6 @@ inline unsigned int8_cached_base_route(int m, int n, int k, int groups, bool pac
     const bool power_of_two = (k & (k - 1)) == 0;
     if(m == 256 || k < 1024 || (k == 2048 && n <= 1024 && (m <= 4096 || groups <= 16)))
         return power_of_two ? 3u : 4u;
-    if(k == 2048 && n > 1024 && n < 2048 && m >= 4096)
-        return 1u;
     return packed_available ? 5u : 0u;
 }
 // Both candidate M256 kernels reserve64KiB LDS:one CTA perCU on gfx936.
@@ -49,7 +47,7 @@ inline unsigned
 int8_cached_route(int m, int n, int k, int groups, bool packed_available, int compute_units = 80)
 {
     const unsigned base = int8_cached_base_route(m, n, k, groups, packed_available);
-    if(!packed_available || (base != 1u && base != 5u) || m < 2048 || k < 1024 ||
+    if(!packed_available || base != 5u || m < 2048 || k < 1024 ||
        compute_units <= 0)
         return base;
     const std::uint64_t mt         = (std::uint64_t(m) + 255u) / 256u;
@@ -87,10 +85,10 @@ inline unsigned int8_cached_paired_store_route(
     if(!dense_scalar || compute_units != 80 || m < 2048 || m > 16384 || n < 1536 || n > 8192 ||
        k < 1024 || k > 8192 || groups < 4 || groups > 224)
         return route;
-    // With four experts this narrow family benefits from more M tiles. Keep the
-    // larger M and other group counts on the existing WASP geometry.
-    if((route == 1u || route == 5u || route == 12u) && n == 1536 && k == 2048 && groups == 4 &&
-       m <= 8192 && (m & (m - 1)) == 0)
+    // With four experts (and M=4096 G=8) this narrow family benefits from more M tiles.
+    // Keep the larger M and other group counts on the existing WASP geometry.
+    if((route == 5u || route == 12u) && n == 1536 && k == 2048 &&
+       (groups == 4 || (groups == 8 && m == 4096)) && m <= 8192 && (m & (m - 1)) == 0)
         return 30u;
     switch(route)
     {

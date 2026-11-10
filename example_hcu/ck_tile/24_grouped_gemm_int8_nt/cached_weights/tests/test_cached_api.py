@@ -222,9 +222,9 @@ for index, (lengths, n, k) in enumerate(cases):
     gc.collect()
     torch.cuda.empty_cache()
 covered = {x['route'] for x in results}
-assert {0, 1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12} <= covered, (
+assert {0, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12} <= covered, (
     'Missing production routes',
-    {0, 1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12} - covered,
+    {0, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12} - covered,
     'observed',
     covered,
 )

@@ -9,7 +9,7 @@ int main()
     assert(int8_cached_route(2048, 1536, 2048, 4, true, 96) == 5);
     assert(int8_cached_route(2048, 3072, 4096, 4, true, 80) == 5);
     assert(int8_cached_route(2048, 3072, 4096, 6, true, 80) == 12);
-    assert(int8_cached_route(8192, 1536, 2048, 4, true, 80) == 1);
+    assert(int8_cached_route(8192, 1536, 2048, 4, true, 80) == 5);
     assert(int8_cached_route(16384, 4096, 7168, 8, true, 80) == 12);
     assert(int8_cached_route(32, 3072, 4096, 4, true, 80) == 11);
     assert(int8_cached_route(32, 4096, 7168, 8, true, 80) == 10);
@@ -84,10 +84,12 @@ int main()
     using ck_tile::int8_cached_paired_store_route;
     assert(int8_cached_paired_store_route(12, 2048, 1536, 2048, 4, 80, true) == 30);
     for(int m : {4096, 8192})
-        assert(int8_cached_paired_store_route(1, m, 1536, 2048, 4, 80, true) == 30);
+        assert(int8_cached_paired_store_route(5, m, 1536, 2048, 4, 80, true) == 30);
+    assert(int8_cached_paired_store_route(5, 4096, 1536, 2048, 8, 80, true) == 30);
+    assert(int8_cached_paired_store_route(5, 2048, 1536, 2048, 8, 80, true) == 26);
     assert(int8_cached_paired_store_route(12, 6144, 1536, 2048, 4, 80, true) == 27);
     assert(int8_cached_paired_store_route(12, 16384, 1536, 2048, 4, 80, true) == 27);
-    assert(int8_cached_paired_store_route(1, 8192, 1536, 2048, 4, 80, false) == 1);
+    assert(int8_cached_paired_store_route(5, 8192, 1536, 2048, 4, 80, false) == 5);
     assert(int8_cached_paired_store_route(12, 8192, 1536, 2048, 8, 80, true) == 27);
     assert(int8_cached_paired_store_route(22, 2048, 4096, 1536, 4, 80, true) == 28);
     assert(int8_cached_paired_store_route(23, 2048, 4096, 4096, 8, 80, false) == 23);

@@ -323,8 +323,10 @@ def main():
                         output
                         and not padded
                         and mode in ['none', 'scalar', 'channel']
-                        and (g, n, k) == (4, 1536, 2048)
-                        and maxm in (2048, 4096, 8192)
+                        and (
+                            ((g, n, k) == (4, 1536, 2048) and maxm in (2048, 4096, 8192))
+                            or ((g, n, k) == (8, 1536, 2048) and maxm == 4096)
+                        )
                     ):
                         want = (30, 0)
                     geometry = {26: 5, 27: 12, 28: 22, 29: 23}.get(pi.route, pi.route)

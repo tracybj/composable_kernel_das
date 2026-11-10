@@ -238,8 +238,10 @@ int dispatch(unsigned route,
     switch(route)
     {
     case 0: return raw<BF>(legacy, args, scales, g, m, n, stream);
+#ifdef CK_INT8_CACHED_TUNING
     case 1: return wasp<BF, RawM256N256>(args, scales, g, m, n, stream);
     case 2: return wasp<BF, RawM256N256Record1024>(args, scales, g, m, n, stream);
+#endif
     case 3: return wasp<BF, RawTransposeM256N256>(args, scales, g, m, n, stream);
     case 4: return wasp<BF, RawTransposeM256N256Record1024>(args, scales, g, m, n, stream);
     case 5: return wasp<BF, PackedM256N256>(args, scales, g, m, n, stream);
