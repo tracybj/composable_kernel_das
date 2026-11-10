@@ -7,7 +7,7 @@ The existing FP16/BF16-input providers are unchanged.
 
 ## Contract
 
-For group `g`,output row `m`,and output channel `n`:
+For group `g`, output row `m`, and output channel `n`:
 
 ```
 acc[g,m,n] = sum_k int32(A[g,m,k]) * int32(B[g,n,k])
@@ -16,34 +16,34 @@ D[g,m,n] = RNE_output(FP32(acc[g,m,n]) * combined_scale)
 ```
 
 Scale modes independently select a device FP32 scalar or an outer vector.
-The activation vector has M entries;the weight vector has N entries
-(per-channel). A NULL pointer has value1. Scale mode is not a K-axis scale:
-per-K/block quantization is not supported. There are no zero points,bias,
-nonzero beta,activation functions or output requantization in this interface.
+The activation vector has M entries. The weight vector has N entries
+(per-channel). A NULL pointer has value 1. Scale mode is not a K-axis scale:
+per-K/block quantization is not supported. There are no zero points, bias,
+nonzero beta, activation functions or output requantization in this interface.
 
 | Setting | Output | Entry |
 |---|---|---|
 | Original no-scale interface | INT32 | Original `plan_create_v1` |
-| v2,no scale,output_type=0 | INT32 | `plan_create_v2` |
-| v2,output_type=1 | BF16 | FP32 scale in GEMM epilogue |
-| v2,output_type=2 | FP16 | FP32 scale in GEMM epilogue |
+| v2, no scale, output_type=0 | INT32 | `plan_create_v2` |
+| v2, output_type=1 | BF16 | FP32 scale in GEMM epilogue |
+| v2, output_type=2 | FP16 | FP32 scale in GEMM epilogue |
 
 All groups in one plan must use the same output type. INT32 rejects non-NULL
 scales and non-scalar scale modes. Explicit BF16/FP16 identity conversion is
 allowed with NULL scales. FP16 overflow produces infinity;it is not clamped.
-Conversion uses round-to-nearest,ties-to-even. BF16 NaNs are quieted and retain
+Conversion uses round-to-nearest, ties-to-even. BF16 NaNs are quieted and retain
 a NaN classification;payload equality is not required by numerical gates.
 
-`ck_tile_int8_nt_cached_group_desc_v2` has `abi_version=2`,the exact struct
-size,and zero reserved fields. Strides count elements of the corresponding
+`ck_tile_int8_nt_cached_group_desc_v2` has `abi_version=2`, the exact struct
+size, and zero reserved fields. Strides count elements of the corresponding
 tensor. Existing alignment/stride domains apply (16-byte A/D base alignment,
-A row stride a multiple of16,output row stride a multiple of4).
+A row stride a multiple of 16,output row stride a multiple of 4).
 
 Weights retain the existing create/destroy and INT8-only packing contract.
 Plans retain the existing run/query/destroy entry points. Scale tensors are
-borrowed,not packed or cached by value. They must remain valid until all runs
+borrowed and are neither packed nor cached by value. They must remain valid until all runs
 complete. Update their contents only with correct compute-stream ordering.
-Plan creation uploads descriptors;run allocates no device memory.
+Plan creation uploads descriptors. Run allocates no device memory.
 
 Example initialization:
 
@@ -62,19 +62,19 @@ d.scale_b_mode=CK_TILE_INT8_SCALE_OUTER_VECTOR_V2;
 
 ## Reference calculation and BLASLt behavior
 
-The archived 1178-case INT32 acceptance uses inputs[-8,8],TF32 off,and a full
+The archived 1178-case INT32 acceptance uses inputs [-8,8], TF32 off, and a full
 PyTorch FP32 matrix product cast to INT32. That input domain makes the integer
 result exactly representable in FP32. The old boundary gates separately use
 full-range INT8 and FP64 references. Neither test validated scaling or 16-bit
 output conversion.
 
-The new gate uses full-range INT8[-128,127] and computes the integer dot in
-FP64,casts to INT32,then follows the FP32 operation order above and casts to the
-selected output type. It compares all output elements,not just samples.
+The new gate uses full-range INT8 [-128,127] and computes the integer dot in
+FP64, casts to INT32, then follows the FP32 operation order above and casts to the
+selected output type. It compares all output elements.
 
 On the installed `/workspace/GroupGemm/baseline/hipblaslt-install` library on
-gfx936,native GroupedGemm scalar-scale probes execute INT8 to BF16 and FP16
-with `HIPBLAS_COMPUTE_32F`,C/D both the selected16-bit type,and non-NULL scalar
+gfx936, native GroupedGemm scalar-scale probes execute INT8 to BF16 and FP16
+with `HIPBLAS_COMPUTE_32F`, C/D both the selected 16-bit type, and non-NULL scalar
 scaleA/scaleB. The underlying product is an integer MMAC result. Nontrivial
 random-input probes identify `acc * FP32(scaleA*scaleB)` as the matching
 operation order. Multiplying `acc*scaleA` then `*scaleB` can differ after
@@ -113,38 +113,24 @@ plus7 invalid-descriptor checks. It covers20 production route/legacy-instance
 families,the13 added low-N shapes,and the special boundary/rounding cases.
 All6 native BLASLt comparisons have zero mismatched16-bit output patterns.
 The same final library passes65 old INT32 boundary checks and32 lifetime checks.
-The initial v122 validation is archived in [validation identity and coverage](scale_v122_validation.json).
+The initial v122 validation is archived in [validation identity and coverage](https://github.com/tracybj/composable_kernel_das/blob/aed28615896065b68b602a1bb9ccbfcce03f362c/example_hcu/ck_tile/24_grouped_gemm_int8_nt/docs/scale_v122_validation.json).
 The optimized v123 scalar-A epilogue, current validation, and performance
-evidence are described in [scale epilogue optimization](SCALE_EPILOGUE_V123.md).
+evidence are described in [scale epilogue optimization](https://github.com/tracybj/composable_kernel_das/blob/aed28615896065b68b602a1bb9ccbfcce03f362c/example_hcu/ck_tile/24_grouped_gemm_int8_nt/docs/SCALE_EPILOGUE_V123.md).
 
 ## Build and gates
 
 Use the existing DTK toolchain and physical GPU7:
 
-```sh
-E=/workspace/GroupGemm/composable_kernel/example_hcu/ck_tile/24_grouped_gemm_int8_nt
-B=$E/build/scale_v123
-python3 "$E/cached_weights/build_and_manifest.py" --build "$B" --jobs 2
-export HIP_VISIBLE_DEVICES=7 CUDA_VISIBLE_DEVICES=7 DTK_VISIBLE_DEVICES=7
-export CK_INT8_CACHED_BUILD="$B"
-export CK_INT8_CACHED_BENCH_LIB="$B/libck_tile_int8_nt_cached_benchmark.so"
-export CK_INT8_TEST_VERSION=v123
-export LD_LIBRARY_PATH="$B:/workspace/GroupGemm/baseline/hipblaslt-install/lib:/opt/dtk/lib:/opt/dtk/hip/lib:/opt/dtk/llvm/lib:$LD_LIBRARY_PATH"
-ulimit -c 0
-python3 "$E/cached_weights/tests/test_acceptance_host.py"
-python3 "$E/cached_weights/tests/test_cached_api.py"
-python3 "$E/cached_weights/tests/test_lifetime.py"
-python3 "$E/cached_weights/tests/test_scaled_api.py" --output "$E/results/scaled_validation.json"
-```
+Follow the [build and validation steps](../README.md#build-and-reproduce).
 
-To enable native BLAS cross-checks,compile `tests/blas_scale_reference.cpp`
-as a shared test bridge against the explicit installed BLASLt library,then
+
+To enable native BLAS cross-checks, compile [blas_scale_reference.cpp](../cached_weights/tests/blas_scale_reference.cpp)
+as a shared test bridge against the explicit installed BLASLt library, then
 pass `--blas-reference /path/to/blas_scale_reference.so`. Set
 `CK_INT8_BLAS_LIBRARY` to the expected library path to enforce its identity.
 The bridge is a test oracle only and never participates in CK dispatch.
 
-The gate covers the production route/legacy-instance families found in the
-1178-shape CSV,the13 added low-N shapes,padded/tail/ragged/empty groups,
-NaN/Inf/overflow/underflow and rounding ties. It checks the original INT32 API
-as well. It is not a new1191-shape full performance run;the published v121
-INT32 throughput must not be relabeled as scaled BF16/FP16 performance.
+The boundary gate covers the historical route and legacy-instance fixtures,
+the 13 added low-N shapes, and padded, ragged, and empty groups. It also checks
+NaN, infinity, rounding ties, and the original INT32 output. The
+[release report](CURRENT_INT8_NT_STATUS_AND_FLOW.md) covers the full run.

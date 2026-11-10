@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-#include "grouped_int8_nt_tile.hpp"
-#include "grouped_int8_nt_wasp_kernel.hpp"
-#include "grouped_int8_nt_direct.hpp"
-#include "grouped_int8_nt_direct_epilogue.hpp"
+#include "kernels/grouped_int8_nt_tile.hpp"
+#include "kernels/grouped_int8_nt_wasp_kernel.hpp"
+#include "kernels/grouped_int8_nt_direct.hpp"
+#include "kernels/grouped_int8_nt_direct_epilogue.hpp"
 #include "ck_tile/ops/gemm/grouped_gemm_selector.hpp"
 #include <hip/hip_runtime.h>
 namespace {
@@ -26,21 +26,25 @@ int launch(const void* args, int groups, int m, int n, hipStream_t stream)
                                static_cast<const ck_tile::GemmTransKernelArg*>(args)));
     return hipGetLastError() == hipSuccess ? 0 : -100;
 }
-template<int Batch,bool Transpose,int RecordCap=0>
-int launch_wasp(const void* args,int groups,int m,int n,hipStream_t stream)
+template <int Batch, bool Transpose, int RecordCap = 0>
+int launch_wasp(const void* args, int groups, int m, int n, hipStream_t stream)
 {
-    using P=ck_tile::GroupedInt8NtWaspProblem<Transpose,8,4,Batch,true,true,RecordCap>;
-    const int mm=Transpose?n:m,nn=Transpose?m:n;
-    const int mt=(mm+255)/256,nt=(nn+255)/256;
-    dim3 grid(((mt+P::MGroup-1)/P::MGroup)*P::MGroup*nt,1,groups);
-    ck_tile::launch_kernel(ck_tile::stream_config{stream,false},
-        ck_tile::make_kernel<P::Threads,1>(ck_tile::GroupedInt8NtWaspKernel<P>{},
-            grid,dim3(P::Threads),0,static_cast<const ck_tile::GemmTransKernelArg*>(args)));
-    return hipGetLastError()==hipSuccess?0:-100;
+    using P      = ck_tile::GroupedInt8NtWaspProblem<Transpose, 8, 4, Batch, true, true, RecordCap>;
+    const int mm = Transpose ? n : m, nn = Transpose ? m : n;
+    const int mt = (mm + 255) / 256, nt = (nn + 255) / 256;
+    dim3 grid(((mt + P::MGroup - 1) / P::MGroup) * P::MGroup * nt, 1, groups);
+    ck_tile::launch_kernel(
+        ck_tile::stream_config{stream, false},
+        ck_tile::make_kernel<P::Threads, 1>(ck_tile::GroupedInt8NtWaspKernel<P>{},
+                                            grid,
+                                            dim3(P::Threads),
+                                            0,
+                                            static_cast<const ck_tile::GemmTransKernelArg*>(args)));
+    return hipGetLastError() == hipSuccess ? 0 : -100;
 }
 } // namespace
-extern "C" int
-ck_tile_grouped_int8_nt_launch(unsigned instance_id, const void* args, int g, int m, int n, void* stream)
+extern "C" int ck_tile_grouped_int8_nt_launch(
+    unsigned instance_id, const void* args, int g, int m, int n, void* stream)
 {
     if(!args || g <= 0 || g > 65535 || m <= 0 || n <= 0)
         return -1;
@@ -61,9 +65,12 @@ ck_tile_grouped_int8_nt_launch(unsigned instance_id, const void* args, int g, in
                                          static_cast<const ck_tile::GemmTransKernelArg*>(args)));
         return hipGetLastError() == hipSuccess ? 0 : -100;
     }
-    case Instance::int8_nt_m32: return launch<ck_tile::GroupedInt8NtTileProblem<32, 128>>(args, g, m, n, s);
-    case Instance::int8_nt_m64: return launch<ck_tile::GroupedInt8NtTileProblem<64, 128>>(args, g, m, n, s);
-    case Instance::int8_nt_m128: return launch<ck_tile::GroupedInt8NtTileProblem<128, 128>>(args, g, m, n, s);
+    case Instance::int8_nt_m32:
+        return launch<ck_tile::GroupedInt8NtTileProblem<32, 128>>(args, g, m, n, s);
+    case Instance::int8_nt_m64:
+        return launch<ck_tile::GroupedInt8NtTileProblem<64, 128>>(args, g, m, n, s);
+    case Instance::int8_nt_m128:
+        return launch<ck_tile::GroupedInt8NtTileProblem<128, 128>>(args, g, m, n, s);
     case Instance::int8_nt_m128_n256:
         return launch<ck_tile::GroupedInt8NtTileProblem<128, 256, 64, 2, 4>>(args, g, m, n, s);
     case Instance::int8_nt_m128_aligned:
@@ -111,42 +118,61 @@ ck_tile_grouped_int8_nt_launch(unsigned instance_id, const void* args, int g, in
             ck_tile::GroupedInt8NtTileProblem<16, 256, 64, 1, 4, false, true, true, true, 1, true>>(
             args, g, m, n, s);
     case Instance::int8_nt_small_m_n64_k128:
-        return launch<ck_tile::GroupedInt8NtTileProblem<16, 64, 128, 1, 2,
-            false, false, true, true, 1, true>>(args, g, m, n, s);
+        return launch<
+            ck_tile::
+                GroupedInt8NtTileProblem<16, 64, 128, 1, 2, false, false, true, true, 1, true>>(
+            args, g, m, n, s);
     case Instance::int8_nt_small_m_n64_k256:
-        return launch<ck_tile::GroupedInt8NtTileProblem<16, 64, 256, 1, 2,
-            false, false, true, true, 1, true>>(args, g, m, n, s);
+        return launch<
+            ck_tile::
+                GroupedInt8NtTileProblem<16, 64, 256, 1, 2, false, false, true, true, 1, true>>(
+            args, g, m, n, s);
     case Instance::int8_nt_small_m_n128_k256:
-        return launch<ck_tile::GroupedInt8NtTileProblem<16, 128, 256, 1, 4,
-            false, false, true, true, 1, true>>(args, g, m, n, s);
+        return launch<
+            ck_tile::
+                GroupedInt8NtTileProblem<16, 128, 256, 1, 4, false, false, true, true, 1, true>>(
+            args, g, m, n, s);
     case Instance::int8_nt_small_g_n32_k512:
-        return launch<ck_tile::GroupedInt8NtTileProblem<16, 32, 512, 1, 2,
-            false, false, true, true, 1, true>>(args, g, m, n, s);
+        return launch<
+            ck_tile::
+                GroupedInt8NtTileProblem<16, 32, 512, 1, 2, false, false, true, true, 1, true>>(
+            args, g, m, n, s);
     case Instance::int8_nt_m32_n64_k128:
-        return launch<ck_tile::GroupedInt8NtTileProblem<32,64,128,1,2,
-            false, false, true, true, 1, true>>(args, g, m, n, s);
+        return launch<
+            ck_tile::
+                GroupedInt8NtTileProblem<32, 64, 128, 1, 2, false, false, true, true, 1, true>>(
+            args, g, m, n, s);
     case Instance::int8_nt_m32_n64_k256:
-        return launch<ck_tile::GroupedInt8NtTileProblem<32,64,256,1,2,
-            false, false, true, true, 1, true>>(args, g, m, n, s);
+        return launch<
+            ck_tile::
+                GroupedInt8NtTileProblem<32, 64, 256, 1, 2, false, false, true, true, 1, true>>(
+            args, g, m, n, s);
     case Instance::int8_nt_m32_n128_k256:
-        return launch<ck_tile::GroupedInt8NtTileProblem<32,128,256,2,2,
-            false, false, true, true, 1, true>>(args, g, m, n, s);
+        return launch<
+            ck_tile::
+                GroupedInt8NtTileProblem<32, 128, 256, 2, 2, false, false, true, true, 1, true>>(
+            args, g, m, n, s);
     case Instance::int8_nt_m64_n128_k128:
-        return launch<ck_tile::GroupedInt8NtTileProblem<64,128,128,2,2,
-            false, false, true, true, 1, true>>(args, g, m, n, s);
+        return launch<
+            ck_tile::
+                GroupedInt8NtTileProblem<64, 128, 128, 2, 2, false, false, true, true, 1, true>>(
+            args, g, m, n, s);
     case Instance::int8_nt_m64_n128_k256:
-        return launch<ck_tile::GroupedInt8NtTileProblem<64,128,256,2,2,
-            false, false, true, true, 1, true>>(args, g, m, n, s);
+        return launch<
+            ck_tile::
+                GroupedInt8NtTileProblem<64, 128, 256, 2, 2, false, false, true, true, 1, true>>(
+            args, g, m, n, s);
     case Instance::int8_nt_small_m_n32_k512_direct: {
-        using P = ck_tile::GroupedInt8NtTileProblem<16,32,512,1,2,
-            false,false,true,true,1,true>;
-        return launch<P,ck_tile::GroupedInt8NtDirectEpilogue<P>>(args,g,m,n,s);
+        using P =
+            ck_tile::GroupedInt8NtTileProblem<16, 32, 512, 1, 2, false, false, true, true, 1, true>;
+        return launch<P, ck_tile::GroupedInt8NtDirectEpilogue<P>>(args, g, m, n, s);
     }
-    case Instance::int8_nt_wasp_a4_transposed: return launch_wasp<4,true>(args,g,m,n,s);
-    case Instance::int8_nt_wasp_a8_transposed: return launch_wasp<8,true>(args,g,m,n,s);
-    case Instance::int8_nt_wasp_a4: return launch_wasp<4,false>(args,g,m,n,s);
-    case Instance::int8_nt_wasp_record1024_a4: return launch_wasp<4,false,1024>(args,g,m,n,s);
-    case Instance::int8_nt_wasp_record1024_a4_transposed: return launch_wasp<4,true,1024>(args,g,m,n,s);
+    case Instance::int8_nt_wasp_a4_transposed: return launch_wasp<4, true>(args, g, m, n, s);
+    case Instance::int8_nt_wasp_a8_transposed: return launch_wasp<8, true>(args, g, m, n, s);
+    case Instance::int8_nt_wasp_a4: return launch_wasp<4, false>(args, g, m, n, s);
+    case Instance::int8_nt_wasp_record1024_a4: return launch_wasp<4, false, 1024>(args, g, m, n, s);
+    case Instance::int8_nt_wasp_record1024_a4_transposed:
+        return launch_wasp<4, true, 1024>(args, g, m, n, s);
     default: return -5;
     }
 }

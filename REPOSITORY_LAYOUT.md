@@ -16,9 +16,6 @@
   FP16/BF16 ABI and dispatch remain unchanged. Latest INT8 performance uses
   immutable prepared weights; packing time/storage are reported separately.
 
-The v120 stopping point kept the accepted v112 production policy. Experimental
-M192/stagger candidates are historical investigations, not production defaults.
-The new verification report is recorded separately in the example's `docs/`.
-
-The small `probe_bridge.cpp` benchmark adapter is retained because the frozen
-source manifest references it; it is not compiled by the production cached target.
+The INT8 NT example [README](example_hcu/ck_tile/24_grouped_gemm_int8_nt/README.md)
+describes the maintained source layout and v158 acceptance. Historical
+benchmarks and adapters remain accessible from their source revisions.

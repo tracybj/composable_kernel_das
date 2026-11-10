@@ -38,7 +38,7 @@ target_include_directories(ck_tile_hcu_grouped_gemm_int8_nt PRIVATE
 set_target_properties(ck_tile_hcu_grouped_gemm_int8_nt PROPERTIES POSITION_INDEPENDENT_CODE ON)
 ck_tile_hcu_grouped_gemm_apply_codegen(ck_tile_hcu_grouped_gemm_int8_nt)
 
-add_library(ck_tile_grouped_int8_nt_benchmark_api SHARED EXCLUDE_FROM_ALL public_bridge.cpp)
+add_library(ck_tile_grouped_int8_nt_benchmark_api SHARED EXCLUDE_FROM_ALL benchmarks/public_bridge.cpp)
 target_link_libraries(ck_tile_grouped_int8_nt_benchmark_api PRIVATE ck_tile_hcu_grouped_gemm_int8_nt)
 target_compile_definitions(ck_tile_grouped_int8_nt_benchmark_api PRIVATE
     CK_ENABLE_INT8 CK_EXPERIMENTAL_BIT_INT_EXTENSION)
@@ -48,7 +48,7 @@ set_target_properties(ck_tile_grouped_int8_nt_benchmark_api PROPERTIES
 set(HIPBLASLT_INSTALL "" CACHE PATH "INT8 reference hipBLASLt installation")
 if(HIPBLASLT_INSTALL)
     add_library(ck_tile_grouped_int8_nt_benchmark_support STATIC EXCLUDE_FROM_ALL
-        public_bridge.cpp int8_benchmark.cpp blas_bridge.cpp)
+        benchmarks/public_bridge.cpp benchmarks/int8_benchmark.cpp benchmarks/blas_bridge.cpp)
     target_include_directories(ck_tile_grouped_int8_nt_benchmark_support PRIVATE
         ${HIPBLASLT_INSTALL}/include)
     target_compile_definitions(ck_tile_grouped_int8_nt_benchmark_support PRIVATE
@@ -56,7 +56,7 @@ if(HIPBLASLT_INSTALL)
     target_link_libraries(ck_tile_grouped_int8_nt_benchmark_support PUBLIC
         ${HIPBLASLT_INSTALL}/lib/libhipblaslt.so.0.10 dl)
 
-    add_executable(tile_example_grouped_gemm_int8_nt EXCLUDE_FROM_ALL int8_benchmark_main.cpp)
+    add_executable(tile_example_grouped_gemm_int8_nt EXCLUDE_FROM_ALL benchmarks/int8_benchmark_main.cpp)
     target_link_libraries(tile_example_grouped_gemm_int8_nt PRIVATE
         ck_tile_grouped_int8_nt_benchmark_support ck_tile_hcu_grouped_gemm_int8_nt)
     set_target_properties(tile_example_grouped_gemm_int8_nt PROPERTIES

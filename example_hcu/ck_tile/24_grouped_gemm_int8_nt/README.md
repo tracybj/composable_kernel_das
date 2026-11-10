@@ -1,56 +1,65 @@
-# INT8 NT grouped GEMM v157
+# INT8 NT grouped GEMM
 
-This example provides cached signed INT8 grouped GEMM in NT layout, with INT32
-accumulation and alpha=1, beta=0. The v1 API writes INT32. The v2 plan also
-supports fused FP32 scales with BF16 or FP16 output. Expert weights can be
-prepared once and reused across calls.
+Each expert computes `C[M_e,N] = A[M_e,K] × B[N,K]ᵀ` from signed INT8 inputs.
+The raw provider and the cached-weight v1 API write INT32. The cached-weight
+v2 API also supports fused FP32 scales with BF16 or FP16 output. Expert weights
+can be prepared once and reused across calls.
 
-The card 7 full run covered all 1191 shapes. Both outputs passed all numerical
-checks. Against the frozen workbook target, BF16 reached 1162/1191 and FP16
-reached 1190/1191. See the [current implementation](docs/CURRENT_INT8_NT_STATUS_AND_FLOW.md),
-[scale contract](docs/INT8_SCALE_OUTPUT.md), and [audited CSV](docs/max_all_v157_1191.csv).
+The v158 release on card 7 passed numerical validation and reached the frozen
+BLASLt workbook target on all 1191 shapes for both scaled outputs. See the
+[implementation and acceptance report](docs/CURRENT_INT8_NT_STATUS_AND_FLOW.md),
+[scale contract](docs/INT8_SCALE_OUTPUT.md), and
+[full benchmark CSV](docs/benchmark/v158/results.csv).
+
+## Source layout
+
+| Location | Responsibility |
+| --- | --- |
+| [instances.cpp](instances.cpp) | Raw INT8 provider entry used by `19_grouped_gemm`. |
+| [kernels/](kernels/) | Raw provider problems, kernel wrappers, and epilogues. |
+| [pipeline/](pipeline/) | Shared cooperative and WASP main loops. |
+| [cached_weights/](cached_weights/README.md) | Cached API and weight lifecycle. Its `instances/` selects and launches precompiled instances, and its `kernels/` holds private problems, kernels, and epilogues. |
+| [benchmarks/](benchmarks/) | Reproduction scripts, benchmark bridges, and frozen input data. |
+| [tests/](tests/) and [cached_weights/tests/](cached_weights/tests/) | Selector, numerical, and lifecycle checks. |
+| [tuning/](tuning/) | Candidates compiled only with `CK_INT8_CACHED_TUNING=ON`. |
+
+The example owns its headers. The original provider manifest and the
+16-bit-input grouped GEMM providers remain in `19_grouped_gemm`.
 
 ## Build and reproduce
 
 Set `E` to the absolute path of this example in the `ck_yyc` container.
-Build the production cached API and benchmark bridge with DTK.
 
 ```bash
-python3 "$E/cached_weights/build_and_manifest.py" \
-  --build "$E/build/v157_release" --compiler /opt/dtk/bin/aicc --arch gfx936 --jobs 2
-```
+B="$E/build/cached"
+python3 "$E/cached_weights/build_and_manifest.py" --build "$B" --jobs 2
 
-Use physical card 7. Run the numerical, boundary and lifetime gates before the
-full run. Use a new output directory for each benchmark.
-
-```bash
 export HIP_VISIBLE_DEVICES=7 CUDA_VISIBLE_DEVICES=7 DTK_VISIBLE_DEVICES=7
-export CK_INT8_CACHED_BUILD="$E/build/v157_release"
-export CK_INT8_CACHED_BENCH_LIB="$CK_INT8_CACHED_BUILD/libck_tile_int8_nt_cached_benchmark.so"
-export CK_INT8_TEST_VERSION=v157
-export LD_LIBRARY_PATH="$CK_INT8_CACHED_BUILD:/opt/dtk/lib:/opt/dtk/hip/lib:/opt/dtk/llvm/lib:${LD_LIBRARY_PATH:-}"
-GATES="$E/results/max_all_v157_gates"
+export CK_INT8_CACHED_BUILD="$B"
+export CK_INT8_TEST_VERSION=v158
+export CK_INT8_CACHED_BENCH_LIB="$B/libck_tile_int8_nt_cached_benchmark.so"
+export LD_LIBRARY_PATH="$B:/opt/dtk/lib:/opt/dtk/hip/lib:/opt/dtk/llvm/lib:${LD_LIBRARY_PATH:-}"
+GATES="$E/results/validation"
 mkdir -p "$GATES"
 export CK_INT8_K_LIFETIME_OUTPUT="$GATES/k_parallel_lifetime.json"
 ulimit -c 0
+python3 "$E/cached_weights/tests/test_acceptance_host.py"
 python3 "$E/cached_weights/tests/test_scaled_api.py" --output "$GATES/scaled_validation.json"
 python3 "$E/cached_weights/tests/test_scaled_epilogue.py" --paired --output "$GATES/epilogue_validation.json"
 python3 "$E/cached_weights/tests/test_cached_api.py"
 python3 "$E/cached_weights/tests/test_lifetime.py"
 python3 "$E/cached_weights/tests/test_k_parallel_lifetime.py"
-python3 "$E/experiments/max_all_v136/run_all_scaled.py" --output "$E/results/v157_release_run"
+python3 "$E/benchmarks/run_scaled.py" --output "$E/results/scaled_run"
 ```
 
-The runner measures one round with 10 warmups, 50 repetitions per sample,
-and three samples summarized by the median. Weight preparation is recorded
-separately. Throughput uses two operations per INT8 multiply-accumulate.
-The reference target comes from [the frozen workbook extract](docs/targets_max_all_1191.csv).
+The scaled runner times one formal round, with 10 warmups and 50 repetitions per
+sample. The reported time is the median of three samples. Weight preparation is
+recorded separately. Throughput counts two operations per INT8 multiply-accumulate.
+Use a new output directory for each run.
 
-## Source and validation history
+The [raw INT32 case list](benchmarks/data/cases_int8_nt_1178.csv) can also be
+used with the [CSV driver from example 19](../19_grouped_gemm/run_grouped_gemm_device_args_cases.py).
 
-`main` contains the complete CK source, the maintained INT8 NT example, and the
-v157 acceptance artifacts. The files under `experiments/` in this branch support
-the optional tuning build and the maintained acceptance runner. Iteration
-scripts, intermediate results, and the full optimization log are on
-[`exp/int8_nt`](https://github.com/tracybj/composable_kernel_das/tree/exp/int8_nt/example_hcu/ck_tile/24_grouped_gemm_int8_nt).
-Original licenses and source provenance are retained.
+Historical reports and probes are available in the
+[v158 source snapshot](https://github.com/tracybj/composable_kernel_das/tree/aed28615896065b68b602a1bb9ccbfcce03f362c/example_hcu/ck_tile/24_grouped_gemm_int8_nt)
+and the [experiment branch](https://github.com/tracybj/composable_kernel_das/tree/exp/int8_nt/example_hcu/ck_tile/24_grouped_gemm_int8_nt).
