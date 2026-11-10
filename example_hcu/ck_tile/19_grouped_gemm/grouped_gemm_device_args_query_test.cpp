@@ -121,7 +121,7 @@ int main()
     constexpr std::uint32_t all_layout = CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NT_V1 |
                                          CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NN_V1 |
                                          CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_TN_V1;
-    constexpr std::array<CandidateExpected, 37> expected{{
+    constexpr std::array<CandidateExpected, 38> expected{{
         {CK_TILE_HCU_GROUPED_GEMM_INSTANCE_BW_FAMILY_SELECTED_V1,
          CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_FAMILY_BW_V1,
          CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX936_V1,
@@ -308,6 +308,11 @@ int main()
          CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_MASK_BF16_V1,
          CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NN_V1},
 
+        {CK_TILE_HCU_GROUPED_GEMM_INSTANCE_BF16_NN_DECODE_DEPTH8_V1,
+         CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_FAMILY_DECODE_V1,
+         CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX936_V1,
+         CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_MASK_BF16_V1,
+         CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NN_V1},
         {CK_TILE_HCU_GROUPED_GEMM_INSTANCE_BF16_NN_DECODE_WAVE_V1,
          CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_FAMILY_DECODE_V1,
          CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX936_V1,
@@ -592,6 +597,34 @@ int main()
         }
         else
             std::cout << "QUERY_V7_BYTE_RANGE_SKIP reason=v7_not_available_in_this_build\n";
+    }
+
+    if(target == ck_tile::hcu_target_enum::gfx936)
+    {
+        const char* enable = "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_DEPTH8";
+        const char* disable = "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_DEPTH8";
+        passed &= ::setenv(enable, "1", 1) == 0;
+        passed &= ::setenv(disable, "0", 1) == 0;
+        for(int m = 1; m <= 32; ++m)
+        {
+            auto probe = make_fixed_m_problem(CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_BF16_V1,
+                CK_TILE_HCU_GROUPED_GEMM_LAYOUT_NN_V1, 64, m, 256, 512);
+            passed &= expect_selection(probe, 6003, "depth8_all_integer_m");
+        }
+        auto probe = make_fixed_m_problem(CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_BF16_V1,
+            CK_TILE_HCU_GROUPED_GEMM_LAYOUT_NN_V1, 64, 32, 256, 512);
+        passed &= ::setenv(disable, "1", 1) == 0;
+        auto disabled = make_selection();
+        passed &= ck_tile_hcu_grouped_gemm_select_device_args_v1(&probe, &disabled) == 0;
+        passed &= disabled.instance_id != 6003;
+        passed &= ::setenv(enable, "yes", 1) == 0;
+        passed &= ::setenv(disable, "0", 1) == 0;
+        auto malformed = make_selection();
+        passed &= ck_tile_hcu_grouped_gemm_select_device_args_v1(&probe, &malformed) == 0;
+        passed &= malformed.instance_id == disabled.instance_id;
+        passed &= ::unsetenv(enable) == 0;
+        passed &= ::unsetenv(disable) == 0;
+        std::cout << "QUERY_DEPTH8_PASS cases=34\n";
     }
 
     std::cout << "DEVICE_ARGS_QUERY_" << (passed ? "PASS" : "FAIL")

@@ -176,6 +176,7 @@ int launch_registry_candidate(ck_tile::GroupedGemmInstanceId instance_id,
     case ck_tile::GroupedGemmInstanceId::v7_bf16_nn_small_m_k16_steady:
     case ck_tile::GroupedGemmInstanceId::v7_bf16_nn_tail256:
     case ck_tile::GroupedGemmInstanceId::v7_bf16_nn_small_m_noslc:
+    case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_depth8:
     case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_wave:
     case ck_tile::GroupedGemmInstanceId::v8_bf16_tn: break;
 #if defined(CK_TILE_GROUPED_GEMM_DEVICE_ARGS_REGISTRY_GFX936)

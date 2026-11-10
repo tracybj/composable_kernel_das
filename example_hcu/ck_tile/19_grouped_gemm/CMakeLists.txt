@@ -389,7 +389,8 @@ if(GPU_TARGETS MATCHES "gfx936")
         PROPERTIES POSITION_INDEPENDENT_CODE ON)
 endif()
 
-# Independent decode provider; no dependency on the V7 pipeline/codegen archive.
+# Independent decode providers, including opt-in A-register/B-private-LDS Depth8.
+# The manifest below owns all provider TUs; no dependency on V7 pipeline/codegen.
 if(GPU_TARGETS MATCHES "gfx936")
     file(STRINGS ${CMAKE_CURRENT_LIST_DIR}/grouped_gemm_decode_device_args_provider_sources.txt
         HCU_GROUPED_GEMM_DECODE_SOURCES REGEX "^[^#].+")
@@ -570,6 +571,14 @@ add_executable(tile_example_grouped_gemm_selector_test EXCLUDE_FROM_ALL
 add_test(NAME tile_example_grouped_gemm_selector_test
     COMMAND $<TARGET_FILE:tile_example_grouped_gemm_selector_test>)
 set_tests_properties(tile_example_grouped_gemm_selector_test
+    PROPERTIES LABELS "hcu;ck_tile;grouped_gemm;selector")
+
+# Host-only gate for the opt-in archived Depth8 decode range and rollback.
+add_executable(tile_example_grouped_gemm_decode_depth8_selector_test EXCLUDE_FROM_ALL
+    grouped_gemm_decode_depth8_selector_test.cpp)
+add_test(NAME tile_example_grouped_gemm_decode_depth8_selector_test
+    COMMAND $<TARGET_FILE:tile_example_grouped_gemm_decode_depth8_selector_test>)
+set_tests_properties(tile_example_grouped_gemm_decode_depth8_selector_test
     PROPERTIES LABELS "hcu;ck_tile;grouped_gemm;selector")
 
 # Host-only quant contract/selector test. It covers the reported gfx938
