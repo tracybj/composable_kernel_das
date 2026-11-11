@@ -19,7 +19,7 @@ BLASLt workbook target on all 1191 shapes for both scaled outputs. See the
 | [instances/](instances/) | Dispatchers, selectors, routes, and tuning selectors for raw, cached, and scaled routes. |
 | [kernels/](kernels/) | INT8 NT kernels, epilogues, WASP/core kernels, K-parallel, and sub-tile problems. |
 | [pipeline/](pipeline/) | Shared cooperative and WASP main loops. |
-| [cached_api.cpp](cached_api.cpp) | Cached weights lifecycle & plan management API implementation. |
+| [grouped_int8_nt_cached_api.cpp](grouped_int8_nt_cached_api.cpp) | Cached weights lifecycle & plan management API implementation. |
 | [include/](include/) | Public & internal headers for cached weights, scaling, and K-parallel args. |
 | [benchmarks/](benchmarks/) | Reproduction scripts, benchmark bridges, and frozen input data. |
 | [tests/](tests/) | Selector, numerical, and lifecycle checks. |

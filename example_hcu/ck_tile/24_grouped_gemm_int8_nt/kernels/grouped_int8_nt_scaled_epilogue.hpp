@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 #pragma once
 #include "grouped_int8_nt_policy.hpp"
-#include "../include/scale_args.hpp"
+#include "../include/grouped_int8_nt_scale_args.hpp"
 namespace ck_tile {
 // Keep the FP32 rounding boundary before the selected 16-bit conversion.
 // Explicit select avoids a divergent NaN-handling region for every BF16 value.

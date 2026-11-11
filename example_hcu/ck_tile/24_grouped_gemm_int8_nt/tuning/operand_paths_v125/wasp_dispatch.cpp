@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
-#include "../../kernels/scaled_kernel.hpp"
-#include "../../kernels/core_kernel.hpp"
-#include "../../instances/instances.hpp"
+#include "../../kernels/grouped_int8_nt_scaled_kernel.hpp"
+#include "../../kernels/grouped_int8_nt_wasp_core_kernel.hpp"
+#include "../../instances/grouped_int8_nt_instances.hpp"
 #include "../packed_output_v129/epilogue.hpp"
 #include "../packed_exchange_v141/epilogue.hpp"
 #include "../finite_factor_v142/epilogue.hpp"

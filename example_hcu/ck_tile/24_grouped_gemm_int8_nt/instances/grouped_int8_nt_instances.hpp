@@ -1,12 +1,7 @@
 // SPDX-License-Identifier: MIT
 #pragma once
-#include "../kernels/problem.hpp"
+#include "../kernels/grouped_int8_nt_wasp_subtile_problem.hpp"
 #include "../pipeline/packed_cooperative.hpp"
-#include "../kernels/m128/problem.hpp"
-#include "../kernels/m64/problem.hpp"
-#include "../kernels/m32/problem.hpp"
-#include "../kernels/wide_n/problem.hpp"
-#include "../kernels/wide_n/masked_problem.hpp"
 namespace ck_tile::int8_nt_instances {
 using PackedM16N64K256 = GroupedInt8NtPackedSmallProblem<
     GroupedInt8NtTileProblem<16, 64, 256, 1, 2, false, false, true, true, 1, true>,

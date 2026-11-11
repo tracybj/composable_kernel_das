@@ -1,4 +1,4 @@
-#include "selector.hpp"
+#include "../instances/grouped_int8_nt_selector.hpp"
 #include <cassert>
 #include <array>
 #include <iostream>

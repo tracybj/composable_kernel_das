@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 #pragma once
 
-#include "scaled_epilogue.hpp"
+#include "grouped_int8_nt_scaled_epilogue.hpp"
 
 namespace ck_tile {
 namespace int8_nt_paired_store {

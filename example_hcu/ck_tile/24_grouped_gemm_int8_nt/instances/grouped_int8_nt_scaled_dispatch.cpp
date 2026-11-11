@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
-#include "../kernels/scaled_kernel.hpp"
-#include "../kernels/k_parallel.hpp"
-#include "../kernels/paired_store_epilogue.hpp"
-#include "instances.hpp"
-#include "routes.hpp"
+#include "../kernels/grouped_int8_nt_scaled_kernel.hpp"
+#include "../kernels/grouped_int8_nt_k_parallel.hpp"
+#include "../kernels/grouped_int8_nt_paired_store_epilogue.hpp"
+#include "grouped_int8_nt_instances.hpp"
+#include "grouped_int8_nt_routes.hpp"
 #include "ck_tile/ops/gemm/grouped_gemm_selector.hpp"
 #ifdef CK_INT8_CACHED_TUNING
 extern "C" int ck_tile_int8_operand_launch_private(

@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 #pragma once
 #include "grouped_int8_nt_problem.hpp"
-#include "scaled_epilogue.hpp"
-#include "../include/k_parallel_args.hpp"
+#include "grouped_int8_nt_scaled_epilogue.hpp"
+#include "../include/grouped_int8_nt_k_parallel_args.hpp"
 namespace ck_tile {
 template <int Waves_, int Cols_>
 struct Int8NtKParallelProblem

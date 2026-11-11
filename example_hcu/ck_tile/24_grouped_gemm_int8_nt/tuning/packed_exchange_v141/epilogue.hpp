@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 #pragma once
-#include "../../kernels/scaled_epilogue.hpp"
+#include "../../kernels/grouped_int8_nt_scaled_epilogue.hpp"
 namespace ck_tile {
 // Experimental scalar-A BF16 path: preserve conversion/scale rounding, then
 // exchange two packed16 lanes at once. No change to the GEMM main loop.

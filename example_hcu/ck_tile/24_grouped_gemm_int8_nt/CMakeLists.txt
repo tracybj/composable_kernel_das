@@ -89,10 +89,10 @@ endif()
 find_package(Threads REQUIRED)
 
 add_library(ck_tile_int8_nt_cached SHARED
-    cached_api.cpp
+    grouped_int8_nt_cached_api.cpp
     instances.cpp
-    instances/cached_dispatch.cpp
-    instances/scaled_dispatch.cpp)
+    instances/grouped_int8_nt_cached_dispatch.cpp
+    instances/grouped_int8_nt_scaled_dispatch.cpp)
 target_link_libraries(ck_tile_int8_nt_cached PRIVATE Threads::Threads)
 target_include_directories(ck_tile_int8_nt_cached PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}

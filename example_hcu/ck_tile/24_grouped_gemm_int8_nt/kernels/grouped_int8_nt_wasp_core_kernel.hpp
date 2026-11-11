@@ -1,57 +1,11 @@
 // SPDX-License-Identifier: MIT
 #pragma once
-#include "scaled_epilogue.hpp"
-#include "core_problem.hpp"
-#include "grouped_int8_nt_pipeline.hpp"
+#include "grouped_int8_nt_wasp_core_epilogue.hpp"
 namespace ck_tile {
-template <class P, bool BFloat>
-struct GroupedInt8NtScaledTileKernel
+template <class P>
+struct GroupedInt8NtWaspCoreKernel
 {
-    CK_TILE_DEVICE void operator()(const GemmTransKernelArg* args,
-                                   const Int8NtScaleArgs* scales) const
-    {
-        const index_t tid = get_thread_id();
-        __builtin_assume(tid < P::Threads);
-        using ArgStorage = std::
-            conditional_t<P::CopyArg, UniversalGemmKernelArgs<>, const UniversalGemmKernelArgs<>&>;
-        const ArgStorage a = args[blockIdx.z].group_karg;
-        index_t mb, nb;
-        if constexpr(P::MGroup > 0)
-        {
-            if(a.M <= 0 || a.N <= 0 || a.K <= 0)
-                return;
-            const index_t nt      = (a.N + P::BN - 1) / P::BN;
-            const index_t linear  = blockIdx.x;
-            const index_t cluster = linear / (P::MGroup * nt);
-            const index_t inner   = linear % (P::MGroup * nt);
-            mb                    = (cluster * P::MGroup + inner % P::MGroup) * P::BM;
-            nb                    = (inner / P::MGroup) * P::BN;
-            if(mb >= a.M || nb >= a.N)
-                return;
-        }
-        else
-        {
-            mb = (P::MFirst ? blockIdx.x : blockIdx.y) * P::BM;
-            nb = (P::MFirst ? blockIdx.y : blockIdx.x) * P::BN;
-        }
-        if constexpr(!P::Aligned)
-            if(a.M <= 0 || a.N <= 0 || a.K <= 0 || mb >= a.M || nb >= a.N)
-                return;
-        using Policy = GroupedInt8NtTilePolicy<P>;
-        __shared__ __align__(16) int8_t smem[Policy::SmemBytes];
-        typename P::Mmac::CVecType c[P::MR][P::NR]{};
-        GroupedInt8NtTilePipeline<P>{}(a, mb, nb, smem, c);
-        GroupedInt8NtScaledTileEpilogue<P, BFloat>{}(a, mb, nb, smem, c, scales[blockIdx.z]);
-    }
-};
-} // namespace ck_tile
-
-namespace ck_tile {
-template <class P, bool BFloat, class Epilogue = GroupedInt8NtScaledWaspEpilogue<P, BFloat>>
-struct GroupedInt8NtScaledWaspKernel
-{
-    CK_TILE_DEVICE void operator()(const GemmTransKernelArg* args,
-                                   const Int8NtScaleArgs* scales) const
+    CK_TILE_DEVICE void operator()(const GemmTransKernelArg* args) const
     {
         const auto o = args[blockIdx.z].group_karg;
         if(o.M <= 0 || o.N <= 0 || o.K <= 0)
@@ -106,9 +60,7 @@ struct GroupedInt8NtScaledWaspKernel
                 }
                 const long long co = P::Transpose ? static_cast<long long>(col) * a.stride_E + row
                                                   : static_cast<long long>(row) * a.stride_E + col;
-                (void)co;
-                Int8NtDequantStore<BFloat>{scales[blockIdx.z]}.one(
-                    o, P::Transpose ? col : row, P::Transpose ? row : col, sum);
+                static_cast<int32_t*>(a.e_ptr)[co] = sum;
             }
             return;
         }
@@ -121,13 +73,13 @@ struct GroupedInt8NtScaledWaspKernel
             ap, a.stride_As[0], P::BM, bp, a.stride_Bs[0], a.N, nb, a.K / 128, acc, smem);
         if constexpr(P::Pipeline::MasksInactiveN)
         {
-            // Discard absent stripes only after every main-loop CTA barrier. This is
-            // before scalar/per-token epilogues can read an undefined accumulator.
+            // The main-loop final CTA sync has completed. No later CTA barrier exists;
+            // absent consumer stripes have no defined accumulator and no output.
             const index_t wave = get_warp_id();
             if(wave < P::ProducerWaves || nb + (wave - P::ProducerWaves) * 32 >= a.N)
                 return;
         }
-        Epilogue{}(o, mb, nb, acc, scales[blockIdx.z]);
+        GroupedInt8NtWaspCoreEpilogue<P>{}(a, mb, nb, acc);
     }
 };
 } // namespace ck_tile

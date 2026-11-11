@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-#include "../kernels/core_kernel.hpp"
-#include "instances.hpp"
-#include "routes.hpp"
-#include "../kernels/pack_kernel.hpp"
+#include "../kernels/grouped_int8_nt_wasp_core_kernel.hpp"
+#include "grouped_int8_nt_instances.hpp"
+#include "grouped_int8_nt_routes.hpp"
+#include "../kernels/grouped_int8_nt_pack_kernel.hpp"
 
 extern "C" int ck_tile_grouped_int8_nt_launch(
     unsigned instance_id, const void* args, int g, int m, int n, void* stream);

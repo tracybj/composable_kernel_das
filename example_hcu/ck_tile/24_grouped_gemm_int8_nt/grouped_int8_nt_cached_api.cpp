@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 #include "include/ck_tile_int8_nt_cached.h"
-#include "kernels/pack_kernel.hpp"
-#include "instances/routes.hpp"
-#include "instances/selector.hpp"
-#include "include/scale_args.hpp"
-#include "include/k_parallel_args.hpp"
+#include "kernels/grouped_int8_nt_pack_kernel.hpp"
+#include "instances/grouped_int8_nt_routes.hpp"
+#include "instances/grouped_int8_nt_selector.hpp"
+#include "include/grouped_int8_nt_scale_args.hpp"
+#include "include/grouped_int8_nt_k_parallel_args.hpp"
 #ifdef CK_INT8_CACHED_TUNING
-#include "instances/tuning_selector.hpp"
+#include "instances/grouped_int8_nt_tuning_selector.hpp"
 #endif
 #include "ck_tile/ops/gemm/grouped_gemm_selector.hpp"
 #include "ck_tile/ops/gemm/kernel/gemm_tile_partitioner.hpp"

@@ -2,7 +2,7 @@
 #pragma once
 
 #include <cstdint>
-#include "routes.hpp"
+#include "grouped_int8_nt_routes.hpp"
 
 namespace ck_tile {
 

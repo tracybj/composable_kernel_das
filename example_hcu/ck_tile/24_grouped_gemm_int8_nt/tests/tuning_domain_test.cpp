@@ -1,5 +1,5 @@
 // CPU-only safety gates for experimental FullNK and grid-order instances.
-#include "tuning_selector.hpp"
+#include "../instances/grouped_int8_nt_tuning_selector.hpp"
 #include <cassert>
 #include <cstdlib>
 #include <iostream>
