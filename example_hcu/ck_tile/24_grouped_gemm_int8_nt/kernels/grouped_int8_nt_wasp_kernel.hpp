@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 #pragma once
+#include "grouped_int8_nt_wasp_problem.hpp"
 #include "grouped_int8_nt_epilogue.hpp"
 #include "grouped_int8_nt_wasp_fallback.hpp"
 namespace ck_tile {
