@@ -329,7 +329,7 @@ def main():
                         )
                     ):
                         want = (30, 0)
-                    geometry = {26: 5, 27: 12, 28: 22, 29: 23}.get(pi.route, pi.route)
+                    geometry = {26: 5, 27: 12, 28: 22, 29: 23, 30: 6 if want != (30, 0) else 30}.get(pi.route, pi.route)
                     assert (
                         geometry,
                         pi.legacy_instance if geometry == 0 else 0,

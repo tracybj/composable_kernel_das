@@ -82,8 +82,8 @@ inline unsigned int8_cached_scaled_small_route(
 inline unsigned int8_cached_paired_store_route(
     unsigned route, int m, int n, int k, int groups, int compute_units, bool dense_scalar)
 {
-    if(!dense_scalar || compute_units != 80 || m < 2048 || m > 16384 || n < 1536 || n > 8192 ||
-       k < 1024 || k > 8192 || groups < 4 || groups > 224)
+    if(!dense_scalar || compute_units != 80 || m < 2048 || m > 16384 || n < 256 || n > 8192 ||
+       k < 512 || k > 8192 || groups < 4 || groups > 224)
         return route;
     // With four experts (and M=4096 G=8) this narrow family benefits from more M tiles.
     // Keep the larger M and other group counts on the existing WASP geometry.
@@ -93,6 +93,7 @@ inline unsigned int8_cached_paired_store_route(
     switch(route)
     {
     case 5: return 26;
+    case 6: return 30;
     case 12: return 27;
     case 22: return 28;
     case 23: return 29;

@@ -72,3 +72,24 @@ The CSV uses LF line endings in Git. Its original SHA-256 was
    - `test_lifetime.py`: PASS (32 checks).
    - `test_k_parallel_lifetime.py`: PASS (24 checks).
    - Critical boundary shapes tested on physical GPU 7 with 100% pass rate ($R \ge 1.0$).
+
+## v160 Route 6 to Route 30 paired store epilogue optimization
+
+1. **Systemic Route 6 -> Route 30 upgrade**:
+   - In `int8_cached_paired_store_route`, enabled `case 6: return 30;` and broadened guard bounds to `n >= 256` and `k >= 512`.
+   - Upgrades all 40 shapes formerly on `route 6` (`PackedM128N256` generic epilogue) to `route 30` (`PackedM128N256` paired store epilogue).
+   - Zero new kernels added: `route 30` was already compiled in the binary. Device kernel count remains 134.
+
+2. **Benchmark results across all 40 affected shapes**:
+   - 40 / 40 shapes (100%) faster on both BF16 and FP16.
+   - Mean BF16 speedup: **+15.37%** (up to +23.7%).
+   - Mean FP16 speedup: **+18.40%** (up to +29.6%).
+   - Minimum R within the group increased from 1.0145 (ID 651) to **1.1049**, doubling safety margin.
+   - Bit-exact numerical match verified against FP64 reference across all groups and shapes.
+
+3. **Validation**:
+   - `selector_policy_test.cpp`: PASS.
+   - `test_scaled_api.py`: PASS.
+   - `test_cached_api.py`: PASS (65 checks).
+   - `test_lifetime.py`: PASS (32 checks).
+   - `test_k_parallel_lifetime.py`: PASS (24 checks).

@@ -91,6 +91,10 @@ int main()
     assert(int8_cached_paired_store_route(12, 16384, 1536, 2048, 4, 80, true) == 27);
     assert(int8_cached_paired_store_route(5, 8192, 1536, 2048, 4, 80, false) == 5);
     assert(int8_cached_paired_store_route(12, 8192, 1536, 2048, 8, 80, true) == 27);
+    assert(int8_cached_paired_store_route(6, 2048, 1024, 2048, 8, 80, true) == 30);
+    assert(int8_cached_paired_store_route(6, 2048, 2048, 768, 4, 80, true) == 30);
+    assert(int8_cached_paired_store_route(6, 2048, 256, 512, 64, 80, true) == 30);
+    assert(int8_cached_paired_store_route(6, 2048, 1024, 2048, 8, 80, false) == 6);
     assert(int8_cached_paired_store_route(22, 2048, 4096, 1536, 4, 80, true) == 28);
     assert(int8_cached_paired_store_route(23, 2048, 4096, 4096, 8, 80, false) == 23);
     assert(int8_cached_paired_store_route(5, 2048, 1536, 2048, 8, 96, true) == 5);
