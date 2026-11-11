@@ -2,7 +2,7 @@
 #pragma once
 #include "scaled_epilogue.hpp"
 #include "core_problem.hpp"
-#include "../../kernels/grouped_int8_nt_pipeline.hpp"
+#include "grouped_int8_nt_pipeline.hpp"
 namespace ck_tile {
 template <class P, bool BFloat>
 struct GroupedInt8NtScaledTileKernel

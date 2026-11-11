@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 #pragma once
-#include "../../cached_weights/kernels/scaled_epilogue.hpp"
+#include "../../kernels/scaled_epilogue.hpp"
 
 namespace ck_tile {
 // Keep the same arithmetic/rounding contract. Exchange packed16-bit output

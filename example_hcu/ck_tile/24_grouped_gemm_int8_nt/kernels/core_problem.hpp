@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 #pragma once
-#include "../../kernels/grouped_int8_nt_problem.hpp"
+#include "grouped_int8_nt_problem.hpp"
 #include "ck_tile/ops/gemm.hpp"
-#include "../../pipeline/wasp.hpp"
+#include "../pipeline/wasp.hpp"
 namespace ck_tile {
 template <int Rows_,
           bool Transpose_    = false,

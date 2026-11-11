@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 #pragma once
-#include "../../cached_weights/kernels/scaled_epilogue.hpp"
+#include "../../kernels/scaled_epilogue.hpp"
 namespace ck_tile {
 // The factor, not each input scale, must be finite after its FP32 product.
 // Integer accumulators are finite, so only this wave-uniform branch may use

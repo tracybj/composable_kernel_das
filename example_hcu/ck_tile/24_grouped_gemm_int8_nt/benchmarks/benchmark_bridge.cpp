@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // Test/benchmark adapter only;the production API is ck_tile_int8_nt_cached.h.
-#include "ck_tile_int8_nt_cached.h"
+#include "../include/ck_tile_int8_nt_cached.h"
 #include <hip/hip_runtime.h>
 #include <memory>
 #include <stdexcept>

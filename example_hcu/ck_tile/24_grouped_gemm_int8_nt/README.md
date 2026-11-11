@@ -16,11 +16,13 @@ BLASLt workbook target on all 1191 shapes for both scaled outputs. See the
 | Location | Responsibility |
 | --- | --- |
 | [instances.cpp](instances.cpp) | Raw INT8 provider entry used by `19_grouped_gemm`. |
-| [kernels/](kernels/) | Raw provider problems, kernel wrappers, and epilogues. |
+| [instances/](instances/) | Dispatchers, selectors, routes, and tuning selectors for raw, cached, and scaled routes. |
+| [kernels/](kernels/) | INT8 NT kernels, epilogues, WASP/core kernels, K-parallel, and sub-tile problems. |
 | [pipeline/](pipeline/) | Shared cooperative and WASP main loops. |
-| [cached_weights/](cached_weights/README.md) | Cached API and weight lifecycle. Its `instances/` selects and launches precompiled instances, and its `kernels/` holds private problems, kernels, and epilogues. |
+| [cached_api.cpp](cached_api.cpp) | Cached weights lifecycle & plan management API implementation. |
+| [include/](include/) | Public & internal headers for cached weights, scaling, and K-parallel args. |
 | [benchmarks/](benchmarks/) | Reproduction scripts, benchmark bridges, and frozen input data. |
-| [tests/](tests/) and [cached_weights/tests/](cached_weights/tests/) | Selector, numerical, and lifecycle checks. |
+| [tests/](tests/) | Selector, numerical, and lifecycle checks. |
 | [tuning/](tuning/) | Candidates compiled only with `CK_INT8_CACHED_TUNING=ON`. |
 
 The example owns its headers. The original provider manifest and the
@@ -32,7 +34,7 @@ Set `E` to the absolute path of this example in the `ck_yyc` container.
 
 ```bash
 B="$E/build/cached"
-python3 "$E/cached_weights/build_and_manifest.py" --build "$B" --jobs 2
+python3 "$E/build_and_manifest.py" --build "$B" --jobs 2
 
 export HIP_VISIBLE_DEVICES=7 CUDA_VISIBLE_DEVICES=7 DTK_VISIBLE_DEVICES=7
 export CK_INT8_CACHED_BUILD="$B"
@@ -43,12 +45,12 @@ GATES="$E/results/validation"
 mkdir -p "$GATES"
 export CK_INT8_K_LIFETIME_OUTPUT="$GATES/k_parallel_lifetime.json"
 ulimit -c 0
-python3 "$E/cached_weights/tests/test_acceptance_host.py"
-python3 "$E/cached_weights/tests/test_scaled_api.py" --output "$GATES/scaled_validation.json"
-python3 "$E/cached_weights/tests/test_scaled_epilogue.py" --paired --output "$GATES/epilogue_validation.json"
-python3 "$E/cached_weights/tests/test_cached_api.py"
-python3 "$E/cached_weights/tests/test_lifetime.py"
-python3 "$E/cached_weights/tests/test_k_parallel_lifetime.py"
+python3 "$E/tests/test_acceptance_host.py"
+python3 "$E/tests/test_scaled_api.py" --output "$GATES/scaled_validation.json"
+python3 "$E/tests/test_scaled_epilogue.py" --paired --output "$GATES/epilogue_validation.json"
+python3 "$E/tests/test_cached_api.py"
+python3 "$E/tests/test_lifetime.py"
+python3 "$E/tests/test_k_parallel_lifetime.py"
 python3 "$E/benchmarks/run_scaled.py" --output "$E/results/scaled_run"
 ```
 

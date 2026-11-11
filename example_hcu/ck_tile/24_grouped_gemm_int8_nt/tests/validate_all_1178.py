@@ -19,7 +19,7 @@ import subprocess
 import time
 import traceback
 
-E = Path(__file__).resolve().parents[2]
+E = Path(__file__).resolve().parents[1]
 ROOT = E.parents[2]
 BUILD = Path(os.environ.get('CK_INT8_CACHED_BUILD', E / 'build/cached'))
 FIELDS = [
@@ -96,7 +96,7 @@ def snapshot():
         compiled_sources=identity,
         test_sources={
             str(p.relative_to(E)): digest(p)
-            for p in (E / 'cached_weights/tests').glob('*.py')
+            for p in (E / 'tests').glob('*.py')
         },
     )
 

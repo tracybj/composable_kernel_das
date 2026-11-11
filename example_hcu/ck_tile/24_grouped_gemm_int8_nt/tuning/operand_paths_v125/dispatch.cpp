@@ -3,7 +3,7 @@
 #include "packed_small_pipeline.hpp"
 #include "../wave_private_v144/pipeline.hpp"
 #include "../wave_store_v146/epilogue.hpp"
-#include "../../cached_weights/kernels/scaled_kernel.hpp"
+#include "../../kernels/scaled_kernel.hpp"
 #include "../../kernels/grouped_int8_nt_kernel.hpp"
 namespace {
 template <class P>

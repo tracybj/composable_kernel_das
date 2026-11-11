@@ -9,7 +9,7 @@ import hashlib
 import json
 import subprocess
 
-E = Path(__file__).resolve().parents[1]
+E = Path(__file__).resolve().parent
 ROOT = E.parents[2]
 
 
@@ -62,7 +62,7 @@ def main():
         [
             'cmake',
             '-S',
-            str(E / 'cached_weights'),
+            str(E),
             '-B',
             str(build),
             '-DCMAKE_CXX_COMPILER=' + args.compiler,

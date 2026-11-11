@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 #pragma once
 #include "../kernels/problem.hpp"
-#include "../../pipeline/packed_cooperative.hpp"
+#include "../pipeline/packed_cooperative.hpp"
 #include "../kernels/m128/problem.hpp"
 #include "../kernels/m64/problem.hpp"
 #include "../kernels/m32/problem.hpp"

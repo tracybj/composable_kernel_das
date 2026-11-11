@@ -1,13 +1,11 @@
 // SPDX-License-Identifier: MIT
-// The existing INT8 provider is compiled under a PRIVATE symbol. No old ABI
-// owner or FP16/BF16 provider is defined by this extension.
-#define ck_tile_grouped_int8_nt_launch ck_tile_int8_cached_legacy_dispatch_private
-#include "../../instances.cpp"
-#undef ck_tile_grouped_int8_nt_launch
 #include "../kernels/core_kernel.hpp"
 #include "instances.hpp"
 #include "routes.hpp"
 #include "../kernels/pack_kernel.hpp"
+
+extern "C" int ck_tile_grouped_int8_nt_launch(
+    unsigned instance_id, const void* args, int g, int m, int n, void* stream);
 #ifdef CK_INT8_CACHED_TUNING
 extern "C" int ck_tile_int8_operand_launch_private(
     unsigned, unsigned, const void*, const void*, int, int, int, hipStream_t);
@@ -51,7 +49,7 @@ extern "C" int ck_tile_int8_cached_launch_private(
     switch(route)
     {
     case int8_routes::LegacyRaw:
-        return ck_tile_int8_cached_legacy_dispatch_private(legacy, args, g, m, n, stream);
+        return ck_tile_grouped_int8_nt_launch(legacy, args, g, m, n, stream);
 #ifdef CK_INT8_CACHED_TUNING
     case int8_routes::LinearRaw:
         return run<ck_tile::int8_nt_instances::RawM256N256>(args, g, m, n, stream);

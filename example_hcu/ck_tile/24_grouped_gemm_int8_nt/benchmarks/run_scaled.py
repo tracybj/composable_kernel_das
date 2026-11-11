@@ -6,7 +6,7 @@ import argparse, csv, json, os, sys, time, datetime, hashlib, statistics, math, 
 resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
 E = Path(__file__).resolve().parents[1]
 B = Path(os.environ['CK_INT8_CACHED_BUILD'])
-sys.path.insert(0, str(E / 'cached_weights/tests'))
+sys.path.insert(0, str(E / 'tests'))
 import validate_all_1178 as original
 
 FIELDS = [

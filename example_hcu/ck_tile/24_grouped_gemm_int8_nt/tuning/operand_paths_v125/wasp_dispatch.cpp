@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
-#include "../../cached_weights/kernels/scaled_kernel.hpp"
-#include "../../cached_weights/kernels/core_kernel.hpp"
-#include "../../cached_weights/instances/instances.hpp"
+#include "../../kernels/scaled_kernel.hpp"
+#include "../../kernels/core_kernel.hpp"
+#include "../../instances/instances.hpp"
 #include "../packed_output_v129/epilogue.hpp"
 #include "../packed_exchange_v141/epilogue.hpp"
 #include "../finite_factor_v142/epilogue.hpp"

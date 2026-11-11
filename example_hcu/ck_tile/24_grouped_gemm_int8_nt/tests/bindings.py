@@ -70,11 +70,11 @@ def init(kind, **fields):
     return x
 
 
-E = Path(__file__).resolve().parents[2]
+E = Path(__file__).resolve().parents[1]
 libpath = Path(
     os.environ.get(
         'CK_INT8_CACHED_BENCH_LIB',
-        str(E / 'build/cached/libck_tile_int8_nt_cached_benchmark.so'),
+        str(E / 'build/libck_tile_int8_nt_cached_benchmark.so'),
     )
 )
 lib = C.CDLL(str(libpath))
