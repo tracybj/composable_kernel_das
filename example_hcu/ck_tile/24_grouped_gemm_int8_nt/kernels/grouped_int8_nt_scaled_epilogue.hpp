@@ -166,7 +166,7 @@ struct GroupedInt8NtScaledWaspEpilogue
         if(wave < P::ProducerWaves)
             return;
         const index_t consumer = wave - P::ProducerWaves, h = lane / 16;
-        if constexpr(P::BN == 384)
+        if constexpr(P::BN == 384 || P::Pipeline::MasksInactiveN)
             if(nb + consumer * 32 >= (P::Transpose ? original.M : original.N))
                 return;
         if constexpr(P::Transpose)

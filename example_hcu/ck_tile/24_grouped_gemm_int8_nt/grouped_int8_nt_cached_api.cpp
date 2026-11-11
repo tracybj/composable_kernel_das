@@ -5,9 +5,6 @@
 #include "instances/grouped_int8_nt_selector.hpp"
 #include "include/grouped_int8_nt_scale_args.hpp"
 #include "include/grouped_int8_nt_k_parallel_args.hpp"
-#ifdef CK_INT8_CACHED_TUNING
-#include "instances/grouped_int8_nt_tuning_selector.hpp"
-#endif
 #include "ck_tile/ops/gemm/grouped_gemm_selector.hpp"
 #include "ck_tile/ops/gemm/kernel/gemm_tile_partitioner.hpp"
 #include "ck_tile/ops/gemm/kernel/grouped_gemm_kernel.hpp"
@@ -367,19 +364,6 @@ make_plan(ck_tile_int8_nt_cached_weights_handle_v1 w,
          p->route == ck_tile::int8_routes::LinearTransposedRecord1024) &&
         !raw_transposed))
         p->route = ck_tile::int8_routes::LegacyRaw;
-#ifdef CK_INT8_CACHED_TUNING
-    ck_tile::int8_tuning_override(uniform,
-                                  empty,
-                                  native_domain,
-                                  w->packable,
-                                  raw_original,
-                                  raw_transposed,
-                                  max_m,
-                                  w->n,
-                                  w->k,
-                                  p->route,
-                                  p->legacy_instance);
-#endif
     if(p->route == CK_TILE_INT8_CACHED_RAW_K_PARALLEL_M1_M2_V1)
     {
         require(scales,
@@ -429,12 +413,7 @@ make_plan(ck_tile_int8_nt_cached_weights_handle_v1 w,
                             p->route == CK_TILE_INT8_CACHED_PACKED_M256_N384_MASKED_M8_V1 ||
                             p->route == CK_TILE_INT8_CACHED_PACKED_M16_N64_K256_V1 ||
                             (p->route >= CK_TILE_INT8_CACHED_PAIRED_M256_N256_V1 &&
-                             p->route <= CK_TILE_INT8_CACHED_PAIRED_M128_N256_V1)
-#ifdef CK_INT8_CACHED_TUNING
-                            || (p->route >= 13 && p->route <= 21) ||
-                            (p->route >= 32 && p->route <= 43) || (p->route >= 48 && p->route <= 83)
-#endif
-            ;
+                             p->route <= CK_TILE_INT8_CACHED_PAIRED_M128_N256_V1);
         const void* b = packed ? w->packed + uint64_t(i) * per_group : w->raw[i].data;
         ck_tile::UniversalGemmKernelArgs<1, 1, 0> arg{{a.a},
                                                       {b},

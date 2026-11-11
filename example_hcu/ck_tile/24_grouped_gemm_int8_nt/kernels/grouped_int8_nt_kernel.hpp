@@ -1,12 +1,17 @@
 // SPDX-License-Identifier: MIT
 #pragma once
+
 #include "grouped_int8_nt_pipeline.hpp"
 #include "grouped_int8_nt_epilogue.hpp"
+#include "grouped_int8_nt_scaled_epilogue.hpp"
+
 namespace ck_tile {
+
 template <class P, class Epilogue = GroupedInt8NtTileEpilogue<P>>
 struct GroupedInt8NtTileKernel
 {
-    CK_TILE_DEVICE void operator()(const GemmTransKernelArg* args) const
+    template <class EpiFn>
+    CK_TILE_DEVICE static void run_tile(const GemmTransKernelArg* args, EpiFn&& epi_fn)
     {
         const index_t tid = get_thread_id();
         __builtin_assume(tid < P::Threads);
@@ -39,7 +44,30 @@ struct GroupedInt8NtTileKernel
         __shared__ __align__(16) int8_t smem[Policy::SmemBytes];
         typename P::Mmac::CVecType c[P::MR][P::NR]{};
         GroupedInt8NtTilePipeline<P>{}(a, mb, nb, smem, c);
-        Epilogue{}(a, mb, nb, smem, c);
+        epi_fn(a, mb, nb, smem, c);
+    }
+
+    // Raw INT32 entry point
+    CK_TILE_DEVICE void operator()(const GemmTransKernelArg* args) const
+    {
+        run_tile(args, [](const auto& a, index_t mb, index_t nb, int8_t* smem, const auto& c) {
+            Epilogue{}(a, mb, nb, smem, c);
+        });
+    }
+
+    // Fused Scaled (BF16 / FP16) entry point
+    CK_TILE_DEVICE void operator()(const GemmTransKernelArg* args,
+                                   const Int8NtScaleArgs* scales) const
+    {
+        run_tile(
+            args, [scales](const auto& a, index_t mb, index_t nb, int8_t* smem, const auto& c) {
+                Epilogue{}(a, mb, nb, smem, c, scales[blockIdx.z]);
+            });
     }
 };
+
+template <class P, bool BFloat>
+using GroupedInt8NtScaledTileKernel =
+    GroupedInt8NtTileKernel<P, GroupedInt8NtScaledTileEpilogue<P, BFloat>>;
+
 } // namespace ck_tile

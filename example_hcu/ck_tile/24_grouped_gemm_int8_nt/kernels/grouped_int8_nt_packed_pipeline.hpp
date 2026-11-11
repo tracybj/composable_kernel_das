@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 #pragma once
-#include "../kernels/grouped_int8_nt_pipeline.hpp"
+#include "grouped_int8_nt_pipeline.hpp"
 
 namespace ck_tile {
 // Cooperative load-next/compute-current with private input registers. Each
-// K64 stripe is consumed as two interleaved K32 sets;both operands use exactly
-// the same K permutation. No wave exchange is needed for the16B lane vector.
+// K64 stripe is consumed as two interleaved K32 sets; both operands use exactly
+// the same K permutation. No wave exchange is needed for the 16B lane vector.
 template <class Base, bool FullNK_ = false, bool Address32_ = false>
 struct GroupedInt8NtPackedSmallProblem : Base
 {
@@ -78,7 +78,7 @@ struct GroupedInt8NtTilePipeline<GroupedInt8NtPackedSmallProblem<Base, F, U>, Po
                 if(P::FullNK || (row < arg.N && k + 16 <= arg.K))
                 {
                     // Existing prepared layout:[K/64,N/16,4,16,16]. A wave reads
-                    // one contiguous1024-byte N16/K64 block;raw activation stays MK.
+                    // one contiguous 1024-byte N16/K64 block; raw activation stays MK.
                     if constexpr(P::Address32)
                     {
                         // Prepared B has exactly N*K bytes per group. Host rejects

@@ -2,7 +2,7 @@
 #pragma once
 
 #include "grouped_int8_nt_policy.hpp"
-#include "grouped_int8_nt_wasp_core_problem.hpp"
+#include "grouped_int8_nt_wasp_problem.hpp"
 
 namespace ck_tile {
 
@@ -183,7 +183,7 @@ struct GroupedInt8NtWaspCoreEpilogue
         if(wave < P::ProducerWaves)
             return;
         const index_t consumer = wave - P::ProducerWaves, h = lane / 16;
-        if constexpr(P::BN == 384)
+        if constexpr(P::BN == 384 || P::Pipeline::MasksInactiveN)
             if(nb + consumer * 32 >= a.N)
                 return; // Whole 32-column consumer stripe outside N.
         static_for<0, P::BM / 16, 1>{}([&](auto i) {
