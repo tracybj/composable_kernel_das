@@ -567,9 +567,8 @@ void candidate_masks(ck_tile::GroupedGemmInstanceId id,
     case ck_tile::GroupedGemmInstanceId::int8_nt_wasp_a4:
     case ck_tile::GroupedGemmInstanceId::int8_nt_wasp_record1024_a4:
     case ck_tile::GroupedGemmInstanceId::int8_nt_wasp_record1024_a4_transposed:
-
-
-
+    case ck_tile::GroupedGemmInstanceId::int8_nt_wasp_m128_a2:
+    case ck_tile::GroupedGemmInstanceId::int8_nt_wasp_m128_record1024_a2:
         architecture_mask = ArchGfx936;
         data_type_mask = CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_MASK_INT8_INT32_V1;
         layout_mask = LayoutNt;

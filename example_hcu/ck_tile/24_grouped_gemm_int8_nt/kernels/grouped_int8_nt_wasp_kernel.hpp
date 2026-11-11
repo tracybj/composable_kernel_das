@@ -76,12 +76,15 @@ struct GroupedInt8NtWaspFallback
 template <class P, bool BFloat = false, class Epilogue = GroupedInt8NtWaspCoreEpilogue<P>>
 struct GroupedInt8NtWaspKernel
 {
+    template <bool AllowTransposedMTail = false>
     CK_TILE_DEVICE static bool is_native(const UniversalGemmKernelArgs<>& a, index_t nb)
     {
+        constexpr index_t m_align =
+            (AllowTransposedMTail && P::Transpose && P::Pipeline::MasksInactiveN) ? 16 : P::BM;
         constexpr index_t n_align = (P::BN == 384 || P::Pipeline::MasksInactiveN) ? 32 : P::BN;
-        return a.M % P::BM == 0 && a.N % n_align == 0 && a.K % 128 == 0 &&
+        return a.M % m_align == 0 && a.N % n_align == 0 && a.K % 128 == 0 &&
                a.stride_Bs[0] > 0 && a.stride_Bs[0] < 16384 &&
-               static_cast<long long>(P::BM) * a.stride_As[0] <= 0x7fffffffLL &&
+               static_cast<long long>(min(index_t(P::BM), a.M)) * a.stride_As[0] <= 0x7fffffffLL &&
                static_cast<long long>(a.N - nb) * a.stride_Bs[0] <= 0x7fffffffLL;
     }
 
@@ -132,16 +135,20 @@ struct GroupedInt8NtWaspKernel
                                           o.stride_Ds,
                                           o.stride_E,
                                           o.k_batch};
-        const index_t nt = (a.N + P::BN - 1) / P::BN, cluster = blockIdx.x / (P::MGroup * nt),
-                      inner = blockIdx.x % (P::MGroup * nt);
-        const index_t mb    = (cluster * P::MGroup + inner % P::MGroup) * P::BM,
-                      nb    = (inner / P::MGroup) * P::BN;
+        const index_t mt = (a.M + P::BM - 1) / P::BM, nt = (a.N + P::BN - 1) / P::BN;
+        if(blockIdx.x >= mt * nt)
+            return;
+        const index_t cluster = blockIdx.x / (P::MGroup * nt),
+                      inner   = blockIdx.x % (P::MGroup * nt),
+                      mg      = min(index_t(P::MGroup), mt - cluster * P::MGroup);
+        const index_t mb      = (cluster * P::MGroup + inner % mg) * P::BM,
+                      nb      = (inner / mg) * P::BN;
         if(mb >= a.M || nb >= a.N)
             return;
         __shared__ __align__(16) int8_t smem[P::Pipeline::kWaspLdsBytes];
-        if(!is_native(a, nb))
+        if(!is_native<true>(a, nb))
         {
-            if constexpr(P::BM == 256 && P::BN == 256 && !P::PackedB && !P::Pipeline::MasksInactiveN)
+            if constexpr(P::BM == 256 && P::BN == 256 && !P::PackedB)
             {
                 GroupedInt8NtWaspFallback<P>{}(a, mb, nb, smem);
             }
@@ -161,8 +168,16 @@ struct GroupedInt8NtWaspKernel
             static_cast<const int8_t*>(a.as_ptr[0]) + static_cast<long long>(mb) * a.stride_As[0];
         const auto* bp = static_cast<const int8_t*>(a.bs_ptr[0]) +
                          static_cast<long long>(nb) * (P::PackedB ? 64 : a.stride_Bs[0]);
-        typename P::Pipeline{}.run_raw_into(
-            ap, a.stride_As[0], P::BM, bp, a.stride_Bs[0], a.N, nb, a.K / 128, acc, smem);
+        typename P::Pipeline{}.run_raw_into(ap,
+                                            a.stride_As[0],
+                                            min(index_t(P::BM), a.M - mb),
+                                            bp,
+                                            a.stride_Bs[0],
+                                            a.N,
+                                            nb,
+                                            a.K / 128,
+                                            acc,
+                                            smem);
         if constexpr(P::Pipeline::MasksInactiveN)
         {
             const index_t wave = get_warp_id();
@@ -191,14 +206,18 @@ struct GroupedInt8NtWaspKernel
                                           o.stride_Ds,
                                           o.stride_E,
                                           o.k_batch};
-        const index_t nt = (a.N + P::BN - 1) / P::BN, cluster = blockIdx.x / (P::MGroup * nt),
-                      inner = blockIdx.x % (P::MGroup * nt);
-        const index_t mb    = (cluster * P::MGroup + inner % P::MGroup) * P::BM,
-                      nb    = (inner / P::MGroup) * P::BN;
+        const index_t mt = (a.M + P::BM - 1) / P::BM, nt = (a.N + P::BN - 1) / P::BN;
+        if(blockIdx.x >= mt * nt)
+            return;
+        const index_t cluster = blockIdx.x / (P::MGroup * nt),
+                      inner   = blockIdx.x % (P::MGroup * nt),
+                      mg      = min(index_t(P::MGroup), mt - cluster * P::MGroup);
+        const index_t mb      = (cluster * P::MGroup + inner % mg) * P::BM,
+                      nb      = (inner / mg) * P::BN;
         if(mb >= a.M || nb >= a.N)
             return;
         __shared__ __align__(16) int8_t smem[P::Pipeline::kWaspLdsBytes];
-        if(!is_native(a, nb))
+        if(!is_native<!P::PackedB>(a, nb))
         {
             scalar_fallback(a, mb, nb, [&](index_t row, index_t col, int32_t sum) {
                 Int8NtDequantStore<BFloat>{scales[blockIdx.z]}.one(
@@ -211,8 +230,16 @@ struct GroupedInt8NtWaspKernel
             static_cast<const int8_t*>(a.as_ptr[0]) + static_cast<long long>(mb) * a.stride_As[0];
         const auto* bp = static_cast<const int8_t*>(a.bs_ptr[0]) +
                          static_cast<long long>(nb) * (P::PackedB ? 64 : a.stride_Bs[0]);
-        typename P::Pipeline{}.run_raw_into(
-            ap, a.stride_As[0], P::BM, bp, a.stride_Bs[0], a.N, nb, a.K / 128, acc, smem);
+        typename P::Pipeline{}.run_raw_into(ap,
+                                            a.stride_As[0],
+                                            min(index_t(P::BM), a.M - mb),
+                                            bp,
+                                            a.stride_Bs[0],
+                                            a.N,
+                                            nb,
+                                            a.K / 128,
+                                            acc,
+                                            smem);
         if constexpr(P::Pipeline::MasksInactiveN)
         {
             const index_t wave = get_warp_id();

@@ -174,10 +174,8 @@ enum class GroupedGemmInstanceId
     int8_nt_wasp_a4 = 19003,
     int8_nt_wasp_record1024_a4 = 19004,
     int8_nt_wasp_record1024_a4_transposed = 19005,
-
-
-
-
+    int8_nt_wasp_m128_a2 = 19006,
+    int8_nt_wasp_m128_record1024_a2 = 19007,
 };
 
 enum class GroupedGemmCandidateFamily
@@ -197,7 +195,7 @@ struct GroupedGemmCandidateIdentity
     GroupedGemmCandidateFamily family;
 };
 
-inline constexpr std::array<GroupedGemmCandidateIdentity, 49>
+inline constexpr std::array<GroupedGemmCandidateIdentity, 51>
     grouped_gemm_candidate_registry{{
         {GroupedGemmInstanceId::bw_family_selected,
          "bw_family.selected",
@@ -293,9 +291,8 @@ inline constexpr std::array<GroupedGemmCandidateIdentity, 49>
         {GroupedGemmInstanceId::int8_nt_wasp_a4, "int8_nt_wasp_a4", GroupedGemmCandidateFamily::int8_nt},
         {GroupedGemmInstanceId::int8_nt_wasp_record1024_a4, "int8_nt_wasp_record1024_a4", GroupedGemmCandidateFamily::int8_nt},
         {GroupedGemmInstanceId::int8_nt_wasp_record1024_a4_transposed, "int8_nt_wasp_record1024_a4_transposed", GroupedGemmCandidateFamily::int8_nt},
-
-
-
+        {GroupedGemmInstanceId::int8_nt_wasp_m128_a2, "int8_nt_wasp_m128_a2", GroupedGemmCandidateFamily::int8_nt},
+        {GroupedGemmInstanceId::int8_nt_wasp_m128_record1024_a2, "int8_nt_wasp_m128_record1024_a2", GroupedGemmCandidateFamily::int8_nt},
     }};
 
 constexpr const GroupedGemmCandidateIdentity*
@@ -450,12 +447,9 @@ constexpr GroupedGemmSelection select_grouped_gemm_candidate(
                      : GroupedGemmInstanceId::int8_nt_m64_n128_k256;
         // Uniform large-M WASP: the host rule uses dimensions only. The kernel
         // retains a packed-load fallback for unsupported per-group strides.
-        if(uniform && m >= 256 && m % 256 == 0 && problem.n.extent % 256 == 0 &&
+        if(uniform && m >= 256 && m % 256 == 0 && problem.n.extent % 32 == 0 &&
            problem.k.extent % 128 == 0 && problem.k.extent < 16384)
         {
-            // Non-power-of-two K benefits from separating the
-            // structured-buffer record stride from row pitch. The kernel keeps
-            // physical per-group strides and its existing native/fallback guards.
             const auto k = problem.k.extent;
             if((k & (k - 1)) != 0)
                 id = (m <= 256 || k < 1024)
@@ -465,6 +459,14 @@ constexpr GroupedGemmSelection select_grouped_gemm_candidate(
                 id = m <= 2048 ? GroupedGemmInstanceId::int8_nt_wasp_a4_transposed
                      : k <= 768 ? GroupedGemmInstanceId::int8_nt_wasp_a8_transposed
                                 : GroupedGemmInstanceId::int8_nt_wasp_a4;
+        }
+        else if(uniform && m >= 128 && m % 128 == 0 && problem.n.extent % 32 == 0 &&
+                problem.k.extent % 128 == 0 && problem.k.extent < 16384)
+        {
+            const auto k = problem.k.extent;
+            id           = ((k & (k - 1)) != 0)
+                               ? GroupedGemmInstanceId::int8_nt_wasp_m128_record1024_a2
+                               : GroupedGemmInstanceId::int8_nt_wasp_m128_a2;
         }
         return {id, GroupedGemmSelectionReason::int8_nt};
     }

@@ -135,17 +135,26 @@ int dispatch_grouped_int8_nt_instance(GroupedGemmInstanceId id,
     case Instance::int8_nt_small_m_n32_k512_direct:
         return on_direct_epi(TypeTag<DirectSmallMTileProblem>{});
     case Instance::int8_nt_wasp_a4_transposed:
-        return on_wasp(TypeTag<GroupedInt8NtWaspCoreProblem<256, true, 8, 4, 4, true, true, 0>>{});
+        return on_wasp(
+            TypeTag<GroupedInt8NtWaspCoreProblem<256, true, 8, 4, 4, true, true, 0, false, false, 0, 8, true>>{});
     case Instance::int8_nt_wasp_a8_transposed:
-        return on_wasp(TypeTag<GroupedInt8NtWaspCoreProblem<256, true, 8, 4, 8, true, true, 0>>{});
+        return on_wasp(
+            TypeTag<GroupedInt8NtWaspCoreProblem<256, true, 8, 4, 8, true, true, 0, false, false, 0, 8, true>>{});
     case Instance::int8_nt_wasp_a4:
-        return on_wasp(TypeTag<GroupedInt8NtWaspCoreProblem<256, false, 8, 4, 4, true, true, 0>>{});
+        return on_wasp(
+            TypeTag<GroupedInt8NtWaspCoreProblem<256, false, 8, 4, 4, true, true, 0, false, false, 0, 8, true>>{});
     case Instance::int8_nt_wasp_record1024_a4:
         return on_wasp(
-            TypeTag<GroupedInt8NtWaspCoreProblem<256, false, 8, 4, 4, true, true, 1024>>{});
+            TypeTag<GroupedInt8NtWaspCoreProblem<256, false, 8, 4, 4, true, true, 1024, false, false, 0, 8, true>>{});
     case Instance::int8_nt_wasp_record1024_a4_transposed:
         return on_wasp(
-            TypeTag<GroupedInt8NtWaspCoreProblem<256, true, 8, 4, 4, true, true, 1024>>{});
+            TypeTag<GroupedInt8NtWaspCoreProblem<256, true, 8, 4, 4, true, true, 1024, false, false, 0, 8, true>>{});
+    case Instance::int8_nt_wasp_m128_a2:
+        return on_wasp(
+            TypeTag<GroupedInt8NtWaspCoreProblem<128, false, 8, 1, 2, true, true, 0, false, false, 0, 8, true>>{});
+    case Instance::int8_nt_wasp_m128_record1024_a2:
+        return on_wasp(
+            TypeTag<GroupedInt8NtWaspCoreProblem<128, false, 8, 1, 2, true, true, 1024, false, false, 0, 8, true>>{});
     default:
         return on_default();
     }

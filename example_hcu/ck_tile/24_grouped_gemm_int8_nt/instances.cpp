@@ -36,7 +36,7 @@ int launch_wasp(const void* args, int groups, int m, int n, hipStream_t stream)
 {
     const int mm = P::Transpose ? n : m, nn = P::Transpose ? m : n;
     const int mt = (mm + P::BM - 1) / P::BM, nt = (nn + P::BN - 1) / P::BN;
-    dim3 grid(((mt + P::MGroup - 1) / P::MGroup) * P::MGroup * nt, 1, groups);
+    dim3 grid(mt * nt, 1, groups);
     ck_tile::launch_kernel(
         ck_tile::stream_config{stream, false},
         ck_tile::make_kernel<P::Threads, 1>(ck_tile::GroupedInt8NtWaspKernel<P>{},

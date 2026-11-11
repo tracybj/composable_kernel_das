@@ -188,6 +188,9 @@ struct GroupedInt8NtWaspCoreEpilogue
                 return; // Whole 32-column consumer stripe outside N.
         static_for<0, P::BM / 16, 1>{}([&](auto i) {
             constexpr index_t mi = decltype(i)::value;
+            if constexpr(P::Transpose && P::Pipeline::MasksInactiveN)
+                if(mb + mi * 16 >= a.M)
+                    return;
             const index_t row    = mb + mi * 16 + lane % 16;
             static_for<0, 2, 1>{}([&](auto j) {
                 constexpr index_t ni = decltype(j)::value;

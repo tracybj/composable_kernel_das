@@ -173,10 +173,16 @@ struct GroupedInt8NtScaledWaspEpilogue
         {
             float factor[P::BM / 16];
             static_for<0, P::BM / 16, 1>{}([&](auto i) {
+                if constexpr(P::Pipeline::MasksInactiveN)
+                    if(mb + decltype(i)::value * 16 >= original.N)
+                        return;
                 const index_t col          = mb + decltype(i)::value * 16 + lane % 16;
                 factor[decltype(i)::value] = sa * (ChannelB ? scale.b[col] : sb);
             });
             static_for<0, P::BM / 16, 1>{}([&](auto i) {
+                if constexpr(P::Pipeline::MasksInactiveN)
+                    if(mb + decltype(i)::value * 16 >= original.N)
+                        return;
                 const index_t col = mb + decltype(i)::value * 16 + lane % 16;
                 static_for<0, 2, 1>{}([&](auto j) {
                     const auto v       = tile.v[decltype(i)::value * 2 + decltype(j)::value];
