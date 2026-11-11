@@ -2,7 +2,7 @@
 #pragma once
 
 #include <cstdint>
-#include "../ck_tile_int8_nt_cached.h"
+#include "../include/ck_tile_int8_nt_cached.h"
 
 namespace ck_tile {
 
