@@ -3,6 +3,7 @@
 #include "../kernels/k_parallel.hpp"
 #include "../kernels/paired_store_epilogue.hpp"
 #include "instances.hpp"
+#include "routes.hpp"
 #include "ck_tile/ops/gemm/grouped_gemm_selector.hpp"
 #ifdef CK_INT8_CACHED_TUNING
 extern "C" int ck_tile_int8_operand_launch_private(
@@ -27,7 +28,8 @@ int wasp(const void* args, const void* scales, int g, int m, int n, hipStream_t 
                                             0,
                                             static_cast<const ck_tile::GemmTransKernelArg*>(args),
                                             static_cast<const ck_tile::Int8NtScaleArgs*>(scales)));
-    return hipGetLastError() == hipSuccess ? 0 : -100;
+    return hipGetLastError() == hipSuccess ? CK_TILE_INT8_CACHED_SUCCESS_V1
+                                           : CK_TILE_INT8_CACHED_INTERNAL_ERROR_V1;
 }
 template <bool BF, int Batch, bool Transpose, int Cap = 0>
 int legacy_wasp(const void* args, const void* scales, int g, int m, int n, hipStream_t stream)
@@ -54,7 +56,8 @@ int cooperative(const void* args, const void* scales, int groups, int m, int n, 
                                0,
                                static_cast<const ck_tile::GemmTransKernelArg*>(args),
                                static_cast<const ck_tile::Int8NtScaleArgs*>(scales)));
-    return hipGetLastError() == hipSuccess ? 0 : -100;
+    return hipGetLastError() == hipSuccess ? CK_TILE_INT8_CACHED_SUCCESS_V1
+                                           : CK_TILE_INT8_CACHED_INTERNAL_ERROR_V1;
 }
 template <bool BFloat>
 int raw(unsigned legacy, const void* args, const void* scales, int g, int m, int n, hipStream_t s)
@@ -214,7 +217,8 @@ int k_parallel(const void* args, int g, int n, hipStream_t stream)
                                      dim3(512),
                                      0,
                                      static_cast<const ck_tile::Int8NtKParallelArgs*>(args)));
-    return hipGetLastError() == hipSuccess ? 0 : -100;
+    return hipGetLastError() == hipSuccess ? CK_TILE_INT8_CACHED_SUCCESS_V1
+                                           : CK_TILE_INT8_CACHED_INTERNAL_ERROR_V1;
 }
 
 template <bool BF, class P>
@@ -234,36 +238,37 @@ int dispatch(unsigned route,
              int n,
              hipStream_t stream)
 {
+    using namespace ck_tile;
     using namespace ck_tile::int8_nt_instances;
     switch(route)
     {
-    case 0: return raw<BF>(legacy, args, scales, g, m, n, stream);
+    case int8_routes::LegacyRaw: return raw<BF>(legacy, args, scales, g, m, n, stream);
 #ifdef CK_INT8_CACHED_TUNING
-    case 1: return wasp<BF, RawM256N256>(args, scales, g, m, n, stream);
-    case 2: return wasp<BF, RawM256N256Record1024>(args, scales, g, m, n, stream);
+    case int8_routes::LinearRaw: return wasp<BF, RawM256N256>(args, scales, g, m, n, stream);
+    case int8_routes::LinearRawRecord1024: return wasp<BF, RawM256N256Record1024>(args, scales, g, m, n, stream);
 #endif
-    case 3: return wasp<BF, RawTransposeM256N256>(args, scales, g, m, n, stream);
-    case 4: return wasp<BF, RawTransposeM256N256Record1024>(args, scales, g, m, n, stream);
-    case 5: return wasp<BF, PackedM256N256>(args, scales, g, m, n, stream);
-    case 6: return wasp<BF, PackedM128N256>(args, scales, g, m, n, stream);
-    case 7: return wasp<BF, PackedM128N128>(args, scales, g, m, n, stream);
-    case 8: return wasp<BF, PackedM64N256>(args, scales, g, m, n, stream);
-    case 9: return wasp<BF, PackedM64N64>(args, scales, g, m, n, stream);
-    case 10: return wasp<BF, PackedM32N256>(args, scales, g, m, n, stream);
-    case 11: return wasp<BF, PackedM32N64>(args, scales, g, m, n, stream);
-    case 12: return wasp<BF, PackedM256N384>(args, scales, g, m, n, stream);
-    case 25:
+    case int8_routes::LinearTransposedRaw: return wasp<BF, RawTransposeM256N256>(args, scales, g, m, n, stream);
+    case int8_routes::LinearTransposedRecord1024: return wasp<BF, RawTransposeM256N256Record1024>(args, scales, g, m, n, stream);
+    case int8_routes::PackedWeightM256N256: return wasp<BF, PackedM256N256>(args, scales, g, m, n, stream);
+    case int8_routes::PackedM128N256: return wasp<BF, PackedM128N256>(args, scales, g, m, n, stream);
+    case int8_routes::PackedM128N128: return wasp<BF, PackedM128N128>(args, scales, g, m, n, stream);
+    case int8_routes::PackedM64N256: return wasp<BF, PackedM64N256>(args, scales, g, m, n, stream);
+    case int8_routes::PackedM64N64: return wasp<BF, PackedM64N64>(args, scales, g, m, n, stream);
+    case int8_routes::PackedM32N256: return wasp<BF, PackedM32N256>(args, scales, g, m, n, stream);
+    case int8_routes::PackedM32N64: return wasp<BF, PackedM32N64>(args, scales, g, m, n, stream);
+    case int8_routes::PackedM256N384: return wasp<BF, PackedM256N384>(args, scales, g, m, n, stream);
+    case int8_routes::KParallelDecode:
         return m == 1 ? k_parallel<BF, 1>(args, g, n, stream)
                       : k_parallel<BF, 2>(args, g, n, stream);
-    case 24: return cooperative<BF, PackedM16N64K256>(args, scales, g, m, n, stream);
-    case 22: return wasp<BF, ScaledPackedM256N384MaskedM4>(args, scales, g, m, n, stream);
-    case 23: return wasp<BF, ScaledPackedM256N384MaskedM8>(args, scales, g, m, n, stream);
-    case 26: return paired_wasp<BF, PackedM256N256>(args, scales, g, m, n, stream);
-    case 27: return paired_wasp<BF, PackedM256N384>(args, scales, g, m, n, stream);
-    case 28: return paired_wasp<BF, ScaledPackedM256N384MaskedM4>(args, scales, g, m, n, stream);
-    case 29: return paired_wasp<BF, ScaledPackedM256N384MaskedM8>(args, scales, g, m, n, stream);
-    case 30: return paired_wasp<BF, PackedM128N256>(args, scales, g, m, n, stream);
-    default: return -5;
+    case int8_routes::PackedCooperativeM1N256: return cooperative<BF, PackedM16N64K256>(args, scales, g, m, n, stream);
+    case int8_routes::PackedM256N384MaskedM4: return wasp<BF, ScaledPackedM256N384MaskedM4>(args, scales, g, m, n, stream);
+    case int8_routes::PackedM256N384MaskedM8: return wasp<BF, ScaledPackedM256N384MaskedM8>(args, scales, g, m, n, stream);
+    case int8_routes::PairedM256N256: return paired_wasp<BF, PackedM256N256>(args, scales, g, m, n, stream);
+    case int8_routes::PairedM256N384: return paired_wasp<BF, PackedM256N384>(args, scales, g, m, n, stream);
+    case int8_routes::PairedM256N384MaskedM4: return paired_wasp<BF, ScaledPackedM256N384MaskedM4>(args, scales, g, m, n, stream);
+    case int8_routes::PairedM256N384MaskedM8: return paired_wasp<BF, ScaledPackedM256N384MaskedM8>(args, scales, g, m, n, stream);
+    case int8_routes::PairedM128N256: return paired_wasp<BF, PackedM128N256>(args, scales, g, m, n, stream);
+    default: return CK_TILE_INT8_CACHED_UNSUPPORTED_V1;
     }
 }
 } // namespace
@@ -287,6 +292,7 @@ extern "C" int ck_tile_int8_scaled_launch_private(unsigned output,
         return ck_tile_int8_experimental_wasp_launch_private(
             output, route, args, scales, g, m, n, stream);
 #endif
-    return output == 1 ? dispatch<true>(route, legacy, args, scales, g, m, n, stream)
-                       : dispatch<false>(route, legacy, args, scales, g, m, n, stream);
+    return output == ck_tile::int8_output_types::Bf16
+               ? dispatch<true>(route, legacy, args, scales, g, m, n, stream)
+               : dispatch<false>(route, legacy, args, scales, g, m, n, stream);
 }

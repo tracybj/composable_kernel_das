@@ -3,6 +3,7 @@
 #include "kernels/grouped_int8_nt_wasp_kernel.hpp"
 #include "kernels/grouped_int8_nt_direct.hpp"
 #include "kernels/grouped_int8_nt_direct_epilogue.hpp"
+#include "ck_tile/ops/gemm/grouped_gemm_device_args.h"
 #include "ck_tile/ops/gemm/grouped_gemm_selector.hpp"
 #include <hip/hip_runtime.h>
 namespace {
@@ -24,7 +25,8 @@ int launch(const void* args, int groups, int m, int n, hipStream_t stream)
                                dim3(P::Threads),
                                0,
                                static_cast<const ck_tile::GemmTransKernelArg*>(args)));
-    return hipGetLastError() == hipSuccess ? 0 : -100;
+    return hipGetLastError() == hipSuccess ? CK_TILE_HCU_GROUPED_GEMM_DEVICE_ARGS_SUCCESS_V1
+                                           : CK_TILE_HCU_GROUPED_GEMM_DEVICE_ARGS_INTERNAL_ERROR_V1;
 }
 template <int Batch, bool Transpose, int RecordCap = 0>
 int launch_wasp(const void* args, int groups, int m, int n, hipStream_t stream)
@@ -40,14 +42,15 @@ int launch_wasp(const void* args, int groups, int m, int n, hipStream_t stream)
                                             dim3(P::Threads),
                                             0,
                                             static_cast<const ck_tile::GemmTransKernelArg*>(args)));
-    return hipGetLastError() == hipSuccess ? 0 : -100;
+    return hipGetLastError() == hipSuccess ? CK_TILE_HCU_GROUPED_GEMM_DEVICE_ARGS_SUCCESS_V1
+                                           : CK_TILE_HCU_GROUPED_GEMM_DEVICE_ARGS_INTERNAL_ERROR_V1;
 }
 } // namespace
 extern "C" int ck_tile_grouped_int8_nt_launch(
     unsigned instance_id, const void* args, int g, int m, int n, void* stream)
 {
     if(!args || g <= 0 || g > 65535 || m <= 0 || n <= 0)
-        return -1;
+        return CK_TILE_HCU_GROUPED_GEMM_DEVICE_ARGS_INVALID_ARGUMENT_V1;
     auto s = reinterpret_cast<hipStream_t>(stream);
     // The public selector chooses this precompiled instance from M/N/K/G,
     // layout and alignment. instance_id is an ABI kernel handle, not a test-case ID.
@@ -63,7 +66,8 @@ extern "C" int ck_tile_grouped_int8_nt_launch(
                                          dim3(256),
                                          0,
                                          static_cast<const ck_tile::GemmTransKernelArg*>(args)));
-        return hipGetLastError() == hipSuccess ? 0 : -100;
+        return hipGetLastError() == hipSuccess ? CK_TILE_HCU_GROUPED_GEMM_DEVICE_ARGS_SUCCESS_V1
+                                               : CK_TILE_HCU_GROUPED_GEMM_DEVICE_ARGS_INTERNAL_ERROR_V1;
     }
     case Instance::int8_nt_m32:
         return launch<ck_tile::GroupedInt8NtTileProblem<32, 128>>(args, g, m, n, s);
@@ -173,6 +177,6 @@ extern "C" int ck_tile_grouped_int8_nt_launch(
     case Instance::int8_nt_wasp_record1024_a4: return launch_wasp<4, false, 1024>(args, g, m, n, s);
     case Instance::int8_nt_wasp_record1024_a4_transposed:
         return launch_wasp<4, true, 1024>(args, g, m, n, s);
-    default: return -5;
+    default: return CK_TILE_HCU_GROUPED_GEMM_DEVICE_ARGS_UNSUPPORTED_V1;
     }
 }

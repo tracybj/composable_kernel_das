@@ -65,7 +65,7 @@ extern "C" void* int8_create(const Desc* ds, int g)
         auto p            = std::make_unique<Context>();
         auto& pr          = p->problem;
         pr.struct_size    = sizeof(pr);
-        pr.abi_version    = 1;
+        pr.abi_version    = CK_TILE_HCU_GROUPED_GEMM_DEVICE_ARGS_ABI_VERSION;
         pr.data_type      = CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_INT8_INT32_V1;
         pr.layout         = CK_TILE_HCU_GROUPED_GEMM_LAYOUT_NT_V1;
         pr.group_count    = g;
@@ -87,18 +87,23 @@ extern "C" void* int8_create(const Desc* ds, int g)
                 {d.a}, {d.b}, {}, d.c, d.m, d.n, d.k, {d.sa}, {d.sb}, {}, d.sc, 1};
             args.emplace_back(std::move(a));
         }
-        pr.m = {same ? 0u : 1u, 0, same ? std::max(ds[0].m, 1) : std::max(total_m, 1LL)};
-        pr.n = {0, 0, ds[0].n};
-        pr.k = {0, 0, ds[0].k};
-        pr.problem_flags         = (empty ? 1u : 0u) | (same ? 0u : 2u);
+        pr.m = {same ? CK_TILE_HCU_GROUPED_GEMM_DIMENSION_COMMON_V1
+                     : CK_TILE_HCU_GROUPED_GEMM_DIMENSION_DEVICE_LENGTHS_WITH_CAPACITY_V1,
+                0,
+                same ? std::max(ds[0].m, 1) : std::max(total_m, 1LL)};
+        pr.n = {CK_TILE_HCU_GROUPED_GEMM_DIMENSION_COMMON_V1, 0, ds[0].n};
+        pr.k = {CK_TILE_HCU_GROUPED_GEMM_DIMENSION_COMMON_V1, 0, ds[0].k};
+        pr.problem_flags =
+            (empty ? CK_TILE_HCU_GROUPED_GEMM_PROBLEM_MAY_HAVE_EMPTY_GROUPS_V1 : 0u) |
+            (same ? 0u : CK_TILE_HCU_GROUPED_GEMM_PROBLEM_GROUP_LENGTHS_RAGGED_V1);
         p->selection.struct_size = sizeof(p->selection);
-        p->selection.abi_version = 1;
+        p->selection.abi_version = CK_TILE_HCU_GROUPED_GEMM_DEVICE_ARGS_ABI_VERSION;
         int s = ck_tile_hcu_grouped_gemm_select_device_args_v1(&pr, &p->selection);
         if(s)
             throw std::runtime_error("public select failed: " + std::to_string(s));
         ck_tile_hcu_grouped_gemm_candidate_info_v1 info{};
         info.struct_size = sizeof(info);
-        info.abi_version = 1;
+        info.abi_version = CK_TILE_HCU_GROUPED_GEMM_DEVICE_ARGS_ABI_VERSION;
         s = ck_tile_hcu_grouped_gemm_query_instance_v1(p->selection.instance_id, &info);
         if(s || info.data_type_mask != CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_MASK_INT8_INT32_V1 ||
            info.layout_mask != CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NT_V1)
@@ -106,7 +111,7 @@ extern "C" void* int8_create(const Desc* ds, int g)
         hs(hipMalloc(&p->args, args.size() * sizeof(args[0])));
         hs(hipMemcpy(p->args, args.data(), args.size() * sizeof(args[0]), hipMemcpyHostToDevice));
         p->launch.struct_size          = sizeof(p->launch);
-        p->launch.abi_version          = 1;
+        p->launch.abi_version          = CK_TILE_HCU_GROUPED_GEMM_DEVICE_ARGS_ABI_VERSION;
         p->launch.device_args          = p->args;
         p->launch.expected_instance_id = p->selection.instance_id;
         hs(hipEventCreate(&p->start));
@@ -124,7 +129,7 @@ extern "C" float int8_run(void* c, int warm, int repeat)
     try
     {
         if(!c || warm < 0 || repeat < 1)
-            return -1;
+            return CK_TILE_HCU_GROUPED_GEMM_DEVICE_ARGS_INVALID_ARGUMENT_V1;
         auto& p = *static_cast<Context*>(c);
         for(int i = 0; i < warm; ++i)
             p.run();
@@ -141,7 +146,7 @@ extern "C" float int8_run(void* c, int warm, int repeat)
     catch(const std::exception& e)
     {
         error = e.what();
-        return -100;
+        return CK_TILE_HCU_GROUPED_GEMM_DEVICE_ARGS_INTERNAL_ERROR_V1;
     }
 }
 extern "C" void int8_destroy(void* c) { delete static_cast<Context*>(c); }

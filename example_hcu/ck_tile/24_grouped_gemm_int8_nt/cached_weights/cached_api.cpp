@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 #include "ck_tile_int8_nt_cached.h"
 #include "kernels/pack_kernel.hpp"
+#include "instances/routes.hpp"
 #include "instances/selector.hpp"
 #include "scale_args.hpp"
 #include "k_parallel_args.hpp"
@@ -133,8 +134,8 @@ struct ck_tile_int8_nt_cached_plan_impl
     ck_tile_int8_nt_cached_weights_impl* weights;
     void* args = nullptr;
     int g = 0, max_m = 0, launch_m = 1, n = 0, k = 0;
-    unsigned route = 0, legacy_instance = 0;
-    unsigned output_type             = 0;
+    unsigned route = ck_tile::int8_routes::LegacyRaw, legacy_instance = 0;
+    unsigned output_type             = ck_tile::int8_output_types::Int32;
     ck_tile::Int8NtScaleArgs* scales = nullptr;
     std::vector<hipStream_t> streams;
     std::mutex mutex;
@@ -254,7 +255,8 @@ ck_tile_int8_nt_cached_weights_query_v1(ck_tile_int8_nt_cached_weights_handle_v1
         value.group_count        = w->g;
         value.n                  = w->n;
         value.k                  = w->k;
-        value.format             = w->packable ? 1 : 0;
+        value.format =
+            w->packable ? ck_tile::int8_weight_formats::Packed : ck_tile::int8_weight_formats::Raw;
         value.packed_device_data = w->packed;
         value.packed_bytes       = w->packed_bytes;
         *info                    = value;
@@ -342,7 +344,7 @@ make_plan(ck_tile_int8_nt_cached_weights_handle_v1 w,
                                         groups[0].m, w->n, w->k, g, w->packable, w->compute_units)
                                         : ck_tile::int8_cached_route(
                                         groups[0].m, w->n, w->k, g, w->packable, w->compute_units))
-                         : 0;
+                         : ck_tile::int8_routes::LegacyRaw;
     if(output_type && uniform && !empty)
     {
         const unsigned small = ck_tile::int8_cached_scaled_small_route(
@@ -358,9 +360,13 @@ make_plan(ck_tile_int8_nt_cached_weights_handle_v1 w,
         p->route = ck_tile::int8_cached_paired_store_route(
             p->route, max_m, w->n, w->k, g, w->compute_units, dense_scalar);
     }
-    if(((p->route == 1 || p->route == 2) && !raw_original) ||
-       ((p->route == 3 || p->route == 4) && !raw_transposed))
-        p->route = 0;
+    if(((p->route == ck_tile::int8_routes::LinearRaw ||
+         p->route == ck_tile::int8_routes::LinearRawRecord1024) &&
+        !raw_original) ||
+       ((p->route == ck_tile::int8_routes::LinearTransposedRaw ||
+         p->route == ck_tile::int8_routes::LinearTransposedRecord1024) &&
+        !raw_transposed))
+        p->route = ck_tile::int8_routes::LegacyRaw;
 #ifdef CK_INT8_CACHED_TUNING
     ck_tile::int8_tuning_override(uniform,
                                   empty,

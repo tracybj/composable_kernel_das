@@ -6,6 +6,7 @@
 #undef ck_tile_grouped_int8_nt_launch
 #include "../kernels/core_kernel.hpp"
 #include "instances.hpp"
+#include "routes.hpp"
 #include "../kernels/pack_kernel.hpp"
 #ifdef CK_INT8_CACHED_TUNING
 extern "C" int ck_tile_int8_operand_launch_private(
@@ -29,13 +30,15 @@ int run(const void* args, int g, int m, int n, hipStream_t stream)
                                             dim3(P::Threads),
                                             0,
                                             static_cast<const ck_tile::GemmTransKernelArg*>(args)));
-    return hipGetLastError() == hipSuccess ? 0 : -100;
+    return hipGetLastError() == hipSuccess ? CK_TILE_INT8_CACHED_SUCCESS_V1
+                                           : CK_TILE_INT8_CACHED_INTERNAL_ERROR_V1;
 }
 
 } // namespace
 extern "C" int ck_tile_int8_cached_launch_private(
     unsigned route, unsigned legacy, const void* args, int g, int m, int n, hipStream_t stream)
 {
+    using namespace ck_tile;
 #ifdef CK_INT8_CACHED_TUNING
     if(route == 0 && legacy >= 9001 && legacy <= 9071)
         return ck_tile_int8_operand_launch_private(0, legacy, args, nullptr, g, m, n, stream);
@@ -47,28 +50,43 @@ extern "C" int ck_tile_int8_cached_launch_private(
 #endif
     switch(route)
     {
-    case 0: return ck_tile_int8_cached_legacy_dispatch_private(legacy, args, g, m, n, stream);
+    case int8_routes::LegacyRaw:
+        return ck_tile_int8_cached_legacy_dispatch_private(legacy, args, g, m, n, stream);
 #ifdef CK_INT8_CACHED_TUNING
-    case 1: return run<ck_tile::int8_nt_instances::RawM256N256>(args, g, m, n, stream);
-    case 2: return run<ck_tile::int8_nt_instances::RawM256N256Record1024>(args, g, m, n, stream);
+    case int8_routes::LinearRaw:
+        return run<ck_tile::int8_nt_instances::RawM256N256>(args, g, m, n, stream);
+    case int8_routes::LinearRawRecord1024:
+        return run<ck_tile::int8_nt_instances::RawM256N256Record1024>(args, g, m, n, stream);
 #endif
-    case 3: return run<ck_tile::int8_nt_instances::RawTransposeM256N256>(args, g, m, n, stream);
-    case 4:
+    case int8_routes::LinearTransposedRaw:
+        return run<ck_tile::int8_nt_instances::RawTransposeM256N256>(args, g, m, n, stream);
+    case int8_routes::LinearTransposedRecord1024:
         return run<ck_tile::int8_nt_instances::RawTransposeM256N256Record1024>(
             args, g, m, n, stream);
-    case 5: return run<ck_tile::int8_nt_instances::PackedM256N256>(args, g, m, n, stream);
-    case 6: return run<ck_tile::int8_nt_instances::PackedM128N256>(args, g, m, n, stream);
-    case 7: return run<ck_tile::int8_nt_instances::PackedM128N128>(args, g, m, n, stream);
-    case 8: return run<ck_tile::int8_nt_instances::PackedM64N256>(args, g, m, n, stream);
-    case 9: return run<ck_tile::int8_nt_instances::PackedM64N64>(args, g, m, n, stream);
-    case 10: return run<ck_tile::int8_nt_instances::PackedM32N256>(args, g, m, n, stream);
-    case 11: return run<ck_tile::int8_nt_instances::PackedM32N64>(args, g, m, n, stream);
-    case 12: return run<ck_tile::int8_nt_instances::PackedM256N384>(args, g, m, n, stream);
+    case int8_routes::PackedWeightM256N256:
+        return run<ck_tile::int8_nt_instances::PackedM256N256>(args, g, m, n, stream);
+    case int8_routes::PackedM128N256:
+        return run<ck_tile::int8_nt_instances::PackedM128N256>(args, g, m, n, stream);
+    case int8_routes::PackedM128N128:
+        return run<ck_tile::int8_nt_instances::PackedM128N128>(args, g, m, n, stream);
+    case int8_routes::PackedM64N256:
+        return run<ck_tile::int8_nt_instances::PackedM64N256>(args, g, m, n, stream);
+    case int8_routes::PackedM64N64:
+        return run<ck_tile::int8_nt_instances::PackedM64N64>(args, g, m, n, stream);
+    case int8_routes::PackedM32N256:
+        return run<ck_tile::int8_nt_instances::PackedM32N256>(args, g, m, n, stream);
+    case int8_routes::PackedM32N64:
+        return run<ck_tile::int8_nt_instances::PackedM32N64>(args, g, m, n, stream);
+    case int8_routes::PackedM256N384:
+        return run<ck_tile::int8_nt_instances::PackedM256N384>(args, g, m, n, stream);
 #ifdef CK_INT8_CACHED_TUNING
-    case 22: return run<ck_tile::int8_nt_instances::PackedM256N384MaskedM4>(args, g, m, n, stream);
-    case 23: return run<ck_tile::int8_nt_instances::PackedM256N384MaskedM8>(args, g, m, n, stream);
+    case int8_routes::PackedM256N384MaskedM4:
+        return run<ck_tile::int8_nt_instances::PackedM256N384MaskedM4>(args, g, m, n, stream);
+    case int8_routes::PackedM256N384MaskedM8:
+        return run<ck_tile::int8_nt_instances::PackedM256N384MaskedM8>(args, g, m, n, stream);
 #endif
-    default: return -1;
+    default:
+        return CK_TILE_INT8_CACHED_UNSUPPORTED_V1;
     }
 }
 extern "C" int ck_tile_int8_cached_pack_private(
@@ -80,5 +98,6 @@ extern "C" int ck_tile_int8_cached_pack_private(
         ck_tile::stream_config{stream, false},
         ck_tile::make_kernel<P::Threads, 1>(
             ck_tile::Int8CachedWeightPackKernel<P>{}, grid, dim3(P::Threads), 0, args));
-    return hipGetLastError() == hipSuccess ? 0 : -100;
+    return hipGetLastError() == hipSuccess ? CK_TILE_INT8_CACHED_SUCCESS_V1
+                                           : CK_TILE_INT8_CACHED_INTERNAL_ERROR_V1;
 }
