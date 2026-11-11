@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 #pragma once
-#include "grouped_int8_nt_wasp_core_epilogue.hpp"
+#include "grouped_int8_nt_epilogue.hpp"
 namespace ck_tile {
 template <class P>
 struct GroupedInt8NtWaspCoreKernel

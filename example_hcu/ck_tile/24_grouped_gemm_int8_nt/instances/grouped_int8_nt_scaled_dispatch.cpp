@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 #include "../kernels/grouped_int8_nt_scaled_kernel.hpp"
 #include "../kernels/grouped_int8_nt_k_parallel.hpp"
-#include "../kernels/grouped_int8_nt_paired_store_epilogue.hpp"
+#include "../kernels/grouped_int8_nt_scaled_epilogue.hpp"
 #include "grouped_int8_nt_instances.hpp"
 #include "grouped_int8_nt_routes.hpp"
 #include "ck_tile/ops/gemm/grouped_gemm_selector.hpp"

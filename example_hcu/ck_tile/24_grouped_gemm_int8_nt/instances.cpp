@@ -2,7 +2,7 @@
 #include "kernels/grouped_int8_nt_tile.hpp"
 #include "kernels/grouped_int8_nt_wasp_kernel.hpp"
 #include "kernels/grouped_int8_nt_direct.hpp"
-#include "kernels/grouped_int8_nt_direct_epilogue.hpp"
+#include "kernels/grouped_int8_nt_epilogue.hpp"
 #include "ck_tile/ops/gemm/grouped_gemm_device_args.h"
 #include "ck_tile/ops/gemm/grouped_gemm_selector.hpp"
 #include <hip/hip_runtime.h>
