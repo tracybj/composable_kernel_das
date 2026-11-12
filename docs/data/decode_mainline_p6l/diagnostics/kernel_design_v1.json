@@ -1,0 +1,77 @@
+{
+  "at": "2026-11-12T03:38:08.486688+00:00",
+  "research_plan_sha256": "8bcb893c119c2bfa353fc87b8d629cbaa09fb8a6a8333a7ad9a381b5125bbc81",
+  "state": "Frozen first structural hypothesis before candidate code/build/GPU",
+  "evidence": [
+    "Same-card16 diagnostic audit passed, 128 jobs epoch0, current binary76642f...",
+    "ID805 current256CTA/212VGPR/64KiBLDS/usefulMMAC0.25 versus Native512CTA/188allocatedVGPR/64KiB/usefulMMAC1",
+    "ID1072 current usefulMMAC2/256 versus Native2/64; both almost one-copy HBM, so large duplicated B traffic is not proven",
+    "ID621 current usefulMMAC1 versus Native0.5 yet slower; current HBM156.90MB versus142.62MB, attribution to A/B unresolved",
+    "ID76 current64CTA/48KiB versusNative128CTA/32KiB, both usefulMMAC1/64; short-K profile does not establish an MMAC-only bottleneck"
+  ],
+  "mainline": {
+    "hypothesis": "H1: one CTA owns all M<=64; each N wave reuses one coalesced B LDS panel across all M fragments; A registers; separate global ring and B operand lookahead",
+    "variants": [
+      {
+        "instance": 6004,
+        "depth": 4,
+        "N": 128,
+        "operand_lookahead": true
+      },
+      {
+        "instance": 6005,
+        "depth": 8,
+        "N": 128,
+        "operand_lookahead": true
+      },
+      {
+        "instance": 6006,
+        "depth": 4,
+        "N": 128,
+        "operand_lookahead": false,
+        "role": "serial operand control"
+      }
+    ],
+    "predicate": "gfx936 BF16 NN dense common M/K; 1<=M<=64,1024<=N<=4096,N%128=0,2048<=K<=8192,K%128=0,1<=G<=1024; checked tile/byte bounds",
+    "expected_observations": [
+      "No CTA barriers, no repeated B panels due to M splitting, no scratch/spills",
+      "Fewer padded MMACs for M<=16 and paths currently M256",
+      "Reduced LDS footprint and reads; future B read issued before current MMAC in lookahead variants",
+      "Any gain must exceed current best CK, not just serial prototype"
+    ],
+    "costs": [
+      "A is reloaded by each N wave; potentially more A cache traffic",
+      "Operand lookahead requires next B global completion and reduces effective global distance by one stage",
+      "Depth8 consumes more A registers and LDS; deeper prefetch is not an objective"
+    ]
+  },
+  "short": {
+    "hypothesis": "S1: direct common-shape kernel plus N split and shallow ring reduce prologue/synchronization cost and increase CTA count",
+    "variants": [
+      {
+        "instance": 6007,
+        "depth": 2,
+        "N": 64,
+        "waves": 2,
+        "operand_lookahead": false
+      },
+      {
+        "instance": 6008,
+        "depth": 2,
+        "N": 32,
+        "waves": 1,
+        "operand_lookahead": false
+      }
+    ],
+    "predicate": "gfx936 BF16 NN dense common M/K;1<=M<=64,128<=N<=4096,N%128=0,64<=K<2048,K%32=0,1<=G<=32; checked tile/byte bounds",
+    "costs": [
+      "More CTA descriptors and repeated A loads along N; no claim that CTA-internal K splitting increases CTA count",
+      "Short-K path uses simpler serial LDS consumption to preserve one-stage global lookahead at depth2"
+    ]
+  },
+  "iteration_limits": {
+    "main_structures_max": 3,
+    "short_structures_max": 2
+  },
+  "changes_pending": true
+}

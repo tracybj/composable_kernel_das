@@ -1,0 +1,1728 @@
+[
+  {
+    "ID": 76,
+    "shape": {
+      "M": 1,
+      "N": 2048,
+      "K": 768,
+      "G": 4
+    },
+    "dtype": "BF16",
+    "layout": "NN",
+    "physical_gpu": 4,
+    "arm": "current_best",
+    "stage": "discover",
+    "key": "e0_id76_current_best_discover_8d98bb3f_c1ede8558e",
+    "epoch": 0,
+    "benchmark_sha256": "76642f45892426cb97e758306f780d22c95567b38f9da475105aa38a0456b5ae",
+    "binary_sha256": "76642f45892426cb97e758306f780d22c95567b38f9da475105aa38a0456b5ae",
+    "actual_instance": 5008,
+    "algorithm_id": null,
+    "kernel_filter": "GroupedGemmV7UniformKernel",
+    "dispatches": [
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18
+    ],
+    "selected_dispatch": 18,
+    "XCD": 0,
+    "SE": 0,
+    "active_CU_index": 0,
+    "sqtt": false,
+    "capture_timing_is_formal": false,
+    "collection_command": [
+      "/opt/rocm-6.3.3/bin/xprof",
+      "--kernels",
+      "GroupedGemmV7UniformKernel",
+      "--sections",
+      "speed_of_light,memory_workload,occupancy,memory_chart,instruction_statistics,compute_workload,scheduler_statistics,wave_state",
+      "--output-dir",
+      "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles/id76_current_best_discover_8d98bb3f",
+      "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+      "--dtype=bf16",
+      "--layout=NN",
+      "--m=1",
+      "--n=2048",
+      "--k=768",
+      "--groups=4",
+      "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+      "--include-args-build=0",
+      "--validate=0",
+      "--warmup=10",
+      "--samples=1",
+      "--launches-per-sample=1",
+      "--correctness-repeats=1",
+      "--backend=ck",
+      "--time=1",
+      "--output-redzone=0"
+    ],
+    "environment": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "2",
+      "HIP_VISIBLE_DEVICES": "4",
+      "CUDA_VISIBLE_DEVICES": "4",
+      "OMP_NUM_THREADS": "4"
+    },
+    "prior_accuracy_keys": [
+      "e0_diag_id76_124168fca1e2_ck_accuracy_62afa25233",
+      "e0_diag_id76_124168fca1e2_native_accuracy_d74f5a2a78"
+    ],
+    "script_sha256": {
+      "analyze_diagnostics.py": "f2085aefa31e09e109b6f3eacf48c44cdfe9346fc1a880a4e114eedfe3bdfe90",
+      "analyze_profiles.py": "bd2d04b862939a4915479e33c8ff2b32b61eab1ed703b57bd319c8da00f4e086",
+      "campaign.py": "e1998b64b19f2b5507c9e1939a7f86e2a4b2751c8488539b388658f38f010760",
+      "deliver_profiles.py": "1211f095741a37a87a338e497023447ab1d78c07d56ac8b2ec32847302a56018",
+      "extract_profile_isa.py": "37fb9b15bc38d994813632c56cbb6ec2804b081bde9dfd762010469ce57f39b8",
+      "health.py": "0ab45d69e01c7b1ab3c49461b063faffb16de65b1d34b77489a4a47fb259b438",
+      "native_replay.py": "a2fa97d9a96785128ec4c247e15d96ef601f2d12164921cd558ed9639200ce81",
+      "plan.py": "e6db4d016e77318064c6502d04a2ec45b61db2adfd8f34055b6df0e765792602",
+      "profile_capture.py": "8aec55a33e72d2741920eca2bd0008575d1e9ecff406cc118dc5721243480e06",
+      "runtime.py": "7287d4e544ccd0a0b8f7cc7a068bdd346a6db8fe2f72b379b0edc81da155f04c",
+      "shader_audit.py": "640c7716d6fcd9588a51359db9c2d0e6e18dde989d59538b069db970e82572d9"
+    },
+    "worktree_source_sha256": {
+      "include/ck_tile/ops/gemm/grouped_gemm_selector.hpp": "4290c3c0c552d7a29144d6eb677552c067115fc2fce6ce14b40cb1f702b0dff3",
+      "include/ck_tile/ops/gemm/grouped_gemm_device_args.h": "f6f3defcfb5a25698ca360f7b213c1574359c319f48b45a20bd9f9a24390c1c7",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_uniform.hpp": "eacd5ccc4bf73676c64c3edd5035f5c39e000ef4741385b1054c025c27907e65",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_wave.hpp": "38599490edcef2fc0efdbbccf520e3954b887bcaaeb81ccc93d4a2a1fc49dcb4",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_bvector.hpp": "159fc8d6e229a5ca758e5706242303afc44c007fbeec8fd2a7e9379bd0d8290e",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_depth8.hpp": "4be4ebab974c948ccde7c9f5cb7b898dca303b5fbbc2afbe94f7e2c9d67cb600",
+      "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args.cpp": "18bf50595d7861ac4ba18dab79a5a2542d571974128c273e20702e16a6eed679"
+    },
+    "plan_sha256": "16651870b97bbaf4ddbd61a21e8a5f8a95e6b3ac88fa87d2e52407b0e542093b",
+    "raw_log": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/jobs/e0_id76_current_best_discover_8d98bb3f_c1ede8558e/run.log",
+    "files": [
+      {
+        "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles/id76_current_best_discover_8d98bb3f/93316_tile_example_grouped_gemm_device_args_benchmark.perf",
+        "bytes": 149120,
+        "sha256": "a22493c5bf25abd7714f1a4890a1372d16e08bedaebc9626047f1781a371a6dd"
+      }
+    ],
+    "raw_token_bytes": 0
+  },
+  {
+    "ID": 76,
+    "shape": {
+      "M": 1,
+      "N": 2048,
+      "K": 768,
+      "G": 4
+    },
+    "dtype": "BF16",
+    "layout": "NN",
+    "physical_gpu": 4,
+    "arm": "frozen_native",
+    "stage": "discover",
+    "key": "e0_id76_frozen_native_discover_39153340_3426a19a2e",
+    "epoch": 0,
+    "benchmark_sha256": "76642f45892426cb97e758306f780d22c95567b38f9da475105aa38a0456b5ae",
+    "binary_sha256": "a0706c9474aadc00147b93d9b5d930c22e05670c66d59029786f4c81149c4f96",
+    "actual_instance": null,
+    "algorithm_id": 11285,
+    "kernel_filter": "Custom_Cijk_Ailk_Bljk_BBS_BH_Bias_GG_AS_SAV_UserArgs_MT64x64x32_MI16x16x1_SN_GSU1_K1_MIWT2_2",
+    "dispatches": [
+      18,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30
+    ],
+    "selected_dispatch": 30,
+    "XCD": 0,
+    "SE": 0,
+    "active_CU_index": 0,
+    "sqtt": false,
+    "capture_timing_is_formal": false,
+    "collection_command": [
+      "/opt/rocm-6.3.3/bin/xprof",
+      "--kernels",
+      "Custom_Cijk_Ailk_Bljk_BBS_BH_Bias_GG_AS_SAV_UserArgs_MT64x64x32_MI16x16x1_SN_GSU1_K1_MIWT2_2",
+      "--sections",
+      "speed_of_light,memory_workload,occupancy,memory_chart,instruction_statistics,compute_workload,scheduler_statistics,wave_state",
+      "--output-dir",
+      "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles/id76_frozen_native_discover_39153340",
+      "/usr/bin/python3",
+      "-B",
+      "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/native_replay.py",
+      "--id",
+      "76",
+      "--mode",
+      "profile"
+    ],
+    "environment": {
+      "HIP_VISIBLE_DEVICES": "4",
+      "CUDA_VISIBLE_DEVICES": "4",
+      "OMP_NUM_THREADS": "4"
+    },
+    "prior_accuracy_keys": [
+      "e0_diag_id76_124168fca1e2_ck_accuracy_62afa25233",
+      "e0_diag_id76_124168fca1e2_native_accuracy_d74f5a2a78"
+    ],
+    "script_sha256": {
+      "analyze_diagnostics.py": "f2085aefa31e09e109b6f3eacf48c44cdfe9346fc1a880a4e114eedfe3bdfe90",
+      "analyze_profiles.py": "bd2d04b862939a4915479e33c8ff2b32b61eab1ed703b57bd319c8da00f4e086",
+      "campaign.py": "e1998b64b19f2b5507c9e1939a7f86e2a4b2751c8488539b388658f38f010760",
+      "deliver_profiles.py": "1211f095741a37a87a338e497023447ab1d78c07d56ac8b2ec32847302a56018",
+      "extract_profile_isa.py": "37fb9b15bc38d994813632c56cbb6ec2804b081bde9dfd762010469ce57f39b8",
+      "health.py": "0ab45d69e01c7b1ab3c49461b063faffb16de65b1d34b77489a4a47fb259b438",
+      "native_replay.py": "a2fa97d9a96785128ec4c247e15d96ef601f2d12164921cd558ed9639200ce81",
+      "plan.py": "e6db4d016e77318064c6502d04a2ec45b61db2adfd8f34055b6df0e765792602",
+      "profile_capture.py": "8aec55a33e72d2741920eca2bd0008575d1e9ecff406cc118dc5721243480e06",
+      "runtime.py": "7287d4e544ccd0a0b8f7cc7a068bdd346a6db8fe2f72b379b0edc81da155f04c",
+      "shader_audit.py": "640c7716d6fcd9588a51359db9c2d0e6e18dde989d59538b069db970e82572d9"
+    },
+    "worktree_source_sha256": {
+      "include/ck_tile/ops/gemm/grouped_gemm_selector.hpp": "4290c3c0c552d7a29144d6eb677552c067115fc2fce6ce14b40cb1f702b0dff3",
+      "include/ck_tile/ops/gemm/grouped_gemm_device_args.h": "f6f3defcfb5a25698ca360f7b213c1574359c319f48b45a20bd9f9a24390c1c7",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_uniform.hpp": "eacd5ccc4bf73676c64c3edd5035f5c39e000ef4741385b1054c025c27907e65",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_wave.hpp": "38599490edcef2fc0efdbbccf520e3954b887bcaaeb81ccc93d4a2a1fc49dcb4",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_bvector.hpp": "159fc8d6e229a5ca758e5706242303afc44c007fbeec8fd2a7e9379bd0d8290e",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_depth8.hpp": "4be4ebab974c948ccde7c9f5cb7b898dca303b5fbbc2afbe94f7e2c9d67cb600",
+      "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args.cpp": "18bf50595d7861ac4ba18dab79a5a2542d571974128c273e20702e16a6eed679"
+    },
+    "plan_sha256": "16651870b97bbaf4ddbd61a21e8a5f8a95e6b3ac88fa87d2e52407b0e542093b",
+    "raw_log": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/jobs/e0_id76_frozen_native_discover_39153340_3426a19a2e/run.log",
+    "files": [
+      {
+        "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles/id76_frozen_native_discover_39153340/93351_python3.10.perf",
+        "bytes": 47927965,
+        "sha256": "ad7955fc13ae87cbfbf7f9a9d386d247273a6da7bf339cf508764e2ae93e676e"
+      }
+    ],
+    "raw_token_bytes": 0
+  },
+  {
+    "ID": 621,
+    "shape": {
+      "M": 64,
+      "N": 1024,
+      "K": 2048,
+      "G": 32
+    },
+    "dtype": "BF16",
+    "layout": "NN",
+    "physical_gpu": 4,
+    "arm": "current_best",
+    "stage": "discover",
+    "key": "e0_id621_current_best_discover_72cb74ef_2bedf5d124",
+    "epoch": 0,
+    "benchmark_sha256": "76642f45892426cb97e758306f780d22c95567b38f9da475105aa38a0456b5ae",
+    "binary_sha256": "76642f45892426cb97e758306f780d22c95567b38f9da475105aa38a0456b5ae",
+    "actual_instance": 5003,
+    "algorithm_id": null,
+    "kernel_filter": "GroupedGemmV7UniformKernel",
+    "dispatches": [
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18
+    ],
+    "selected_dispatch": 18,
+    "XCD": 0,
+    "SE": 0,
+    "active_CU_index": 0,
+    "sqtt": false,
+    "capture_timing_is_formal": false,
+    "collection_command": [
+      "/opt/rocm-6.3.3/bin/xprof",
+      "--kernels",
+      "GroupedGemmV7UniformKernel",
+      "--sections",
+      "speed_of_light,memory_workload,occupancy,memory_chart,instruction_statistics,compute_workload,scheduler_statistics,wave_state",
+      "--output-dir",
+      "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles/id621_current_best_discover_72cb74ef",
+      "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+      "--dtype=bf16",
+      "--layout=NN",
+      "--m=64",
+      "--n=1024",
+      "--k=2048",
+      "--groups=32",
+      "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+      "--include-args-build=0",
+      "--validate=0",
+      "--warmup=10",
+      "--samples=1",
+      "--launches-per-sample=1",
+      "--correctness-repeats=1",
+      "--backend=ck",
+      "--time=1",
+      "--output-redzone=0"
+    ],
+    "environment": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128",
+      "HIP_VISIBLE_DEVICES": "4",
+      "CUDA_VISIBLE_DEVICES": "4",
+      "OMP_NUM_THREADS": "4"
+    },
+    "prior_accuracy_keys": [
+      "e0_diag_id621_3d04e08df34f_ck_accuracy_c51f326143",
+      "e0_diag_id621_3d04e08df34f_native_accuracy_eeec81c5b4"
+    ],
+    "script_sha256": {
+      "analyze_diagnostics.py": "f2085aefa31e09e109b6f3eacf48c44cdfe9346fc1a880a4e114eedfe3bdfe90",
+      "analyze_profiles.py": "bd2d04b862939a4915479e33c8ff2b32b61eab1ed703b57bd319c8da00f4e086",
+      "campaign.py": "e1998b64b19f2b5507c9e1939a7f86e2a4b2751c8488539b388658f38f010760",
+      "deliver_profiles.py": "1211f095741a37a87a338e497023447ab1d78c07d56ac8b2ec32847302a56018",
+      "extract_profile_isa.py": "37fb9b15bc38d994813632c56cbb6ec2804b081bde9dfd762010469ce57f39b8",
+      "health.py": "0ab45d69e01c7b1ab3c49461b063faffb16de65b1d34b77489a4a47fb259b438",
+      "native_replay.py": "a2fa97d9a96785128ec4c247e15d96ef601f2d12164921cd558ed9639200ce81",
+      "plan.py": "e6db4d016e77318064c6502d04a2ec45b61db2adfd8f34055b6df0e765792602",
+      "profile_capture.py": "8aec55a33e72d2741920eca2bd0008575d1e9ecff406cc118dc5721243480e06",
+      "runtime.py": "7287d4e544ccd0a0b8f7cc7a068bdd346a6db8fe2f72b379b0edc81da155f04c",
+      "shader_audit.py": "640c7716d6fcd9588a51359db9c2d0e6e18dde989d59538b069db970e82572d9"
+    },
+    "worktree_source_sha256": {
+      "include/ck_tile/ops/gemm/grouped_gemm_selector.hpp": "4290c3c0c552d7a29144d6eb677552c067115fc2fce6ce14b40cb1f702b0dff3",
+      "include/ck_tile/ops/gemm/grouped_gemm_device_args.h": "f6f3defcfb5a25698ca360f7b213c1574359c319f48b45a20bd9f9a24390c1c7",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_uniform.hpp": "eacd5ccc4bf73676c64c3edd5035f5c39e000ef4741385b1054c025c27907e65",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_wave.hpp": "38599490edcef2fc0efdbbccf520e3954b887bcaaeb81ccc93d4a2a1fc49dcb4",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_bvector.hpp": "159fc8d6e229a5ca758e5706242303afc44c007fbeec8fd2a7e9379bd0d8290e",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_depth8.hpp": "4be4ebab974c948ccde7c9f5cb7b898dca303b5fbbc2afbe94f7e2c9d67cb600",
+      "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args.cpp": "18bf50595d7861ac4ba18dab79a5a2542d571974128c273e20702e16a6eed679"
+    },
+    "plan_sha256": "16651870b97bbaf4ddbd61a21e8a5f8a95e6b3ac88fa87d2e52407b0e542093b",
+    "raw_log": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/jobs/e0_id621_current_best_discover_72cb74ef_2bedf5d124/run.log",
+    "files": [
+      {
+        "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles/id621_current_best_discover_72cb74ef/93728_tile_example_grouped_gemm_device_args_benchmark.perf",
+        "bytes": 148814,
+        "sha256": "8d0e733f05ddef2dad0f81ae7ff01081e8d00b50efc712bcb54da697e0ee506d"
+      }
+    ],
+    "raw_token_bytes": 0
+  },
+  {
+    "ID": 621,
+    "shape": {
+      "M": 64,
+      "N": 1024,
+      "K": 2048,
+      "G": 32
+    },
+    "dtype": "BF16",
+    "layout": "NN",
+    "physical_gpu": 4,
+    "arm": "frozen_native",
+    "stage": "discover",
+    "key": "e0_id621_frozen_native_discover_811f321a_6e3a143b19",
+    "epoch": 0,
+    "benchmark_sha256": "76642f45892426cb97e758306f780d22c95567b38f9da475105aa38a0456b5ae",
+    "binary_sha256": "a0706c9474aadc00147b93d9b5d930c22e05670c66d59029786f4c81149c4f96",
+    "actual_instance": null,
+    "algorithm_id": 313,
+    "kernel_filter": "Cijk_Ailk_Bljk_BBS_BH_GG_AS_UserArgs_MT128x128x16_MI16x16x1_SN_AFC1_DTL1_EPS1_GRVWA8_GRVWB8_GSU1_GSUAMB_K1_LRVW4_MIWT8_2_NLCA1_NLCB1_OBAFM1_OLDSR0_ONLL1_PGR4_PLR1_SU0_SUS0_TLDS1_ULDSWM1_USFGRO0_USSB1_WSS0_WG16_16_1_WGM1",
+    "dispatches": [
+      60,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72
+    ],
+    "selected_dispatch": 72,
+    "XCD": 0,
+    "SE": 0,
+    "active_CU_index": 0,
+    "sqtt": false,
+    "capture_timing_is_formal": false,
+    "collection_command": [
+      "/opt/rocm-6.3.3/bin/xprof",
+      "--kernels",
+      "Cijk_Ailk_Bljk_BBS_BH_GG_AS_UserArgs_MT128x128x16_MI16x16x1_SN_AFC1_DTL1_EPS1_GRVWA8_GRVWB8_GSU1_GSUAMB_K1_LRVW4_MIWT8_2_NLCA1_NLCB1_OBAFM1_OLDSR0_ONLL1_PGR4_PLR1_SU0_SUS0_TLDS1_ULDSWM1_USFGRO0_USSB1_WSS0_WG16_16_1_WGM1",
+      "--sections",
+      "speed_of_light,memory_workload,occupancy,memory_chart,instruction_statistics,compute_workload,scheduler_statistics,wave_state",
+      "--output-dir",
+      "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles/id621_frozen_native_discover_811f321a",
+      "/usr/bin/python3",
+      "-B",
+      "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/native_replay.py",
+      "--id",
+      "621",
+      "--mode",
+      "profile"
+    ],
+    "environment": {
+      "HIP_VISIBLE_DEVICES": "4",
+      "CUDA_VISIBLE_DEVICES": "4",
+      "OMP_NUM_THREADS": "4"
+    },
+    "prior_accuracy_keys": [
+      "e0_diag_id621_3d04e08df34f_ck_accuracy_c51f326143",
+      "e0_diag_id621_3d04e08df34f_native_accuracy_eeec81c5b4"
+    ],
+    "script_sha256": {
+      "analyze_diagnostics.py": "f2085aefa31e09e109b6f3eacf48c44cdfe9346fc1a880a4e114eedfe3bdfe90",
+      "analyze_profiles.py": "bd2d04b862939a4915479e33c8ff2b32b61eab1ed703b57bd319c8da00f4e086",
+      "campaign.py": "e1998b64b19f2b5507c9e1939a7f86e2a4b2751c8488539b388658f38f010760",
+      "deliver_profiles.py": "1211f095741a37a87a338e497023447ab1d78c07d56ac8b2ec32847302a56018",
+      "extract_profile_isa.py": "37fb9b15bc38d994813632c56cbb6ec2804b081bde9dfd762010469ce57f39b8",
+      "health.py": "0ab45d69e01c7b1ab3c49461b063faffb16de65b1d34b77489a4a47fb259b438",
+      "native_replay.py": "a2fa97d9a96785128ec4c247e15d96ef601f2d12164921cd558ed9639200ce81",
+      "plan.py": "e6db4d016e77318064c6502d04a2ec45b61db2adfd8f34055b6df0e765792602",
+      "profile_capture.py": "8aec55a33e72d2741920eca2bd0008575d1e9ecff406cc118dc5721243480e06",
+      "runtime.py": "7287d4e544ccd0a0b8f7cc7a068bdd346a6db8fe2f72b379b0edc81da155f04c",
+      "shader_audit.py": "640c7716d6fcd9588a51359db9c2d0e6e18dde989d59538b069db970e82572d9"
+    },
+    "worktree_source_sha256": {
+      "include/ck_tile/ops/gemm/grouped_gemm_selector.hpp": "4290c3c0c552d7a29144d6eb677552c067115fc2fce6ce14b40cb1f702b0dff3",
+      "include/ck_tile/ops/gemm/grouped_gemm_device_args.h": "f6f3defcfb5a25698ca360f7b213c1574359c319f48b45a20bd9f9a24390c1c7",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_uniform.hpp": "eacd5ccc4bf73676c64c3edd5035f5c39e000ef4741385b1054c025c27907e65",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_wave.hpp": "38599490edcef2fc0efdbbccf520e3954b887bcaaeb81ccc93d4a2a1fc49dcb4",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_bvector.hpp": "159fc8d6e229a5ca758e5706242303afc44c007fbeec8fd2a7e9379bd0d8290e",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_depth8.hpp": "4be4ebab974c948ccde7c9f5cb7b898dca303b5fbbc2afbe94f7e2c9d67cb600",
+      "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args.cpp": "18bf50595d7861ac4ba18dab79a5a2542d571974128c273e20702e16a6eed679"
+    },
+    "plan_sha256": "16651870b97bbaf4ddbd61a21e8a5f8a95e6b3ac88fa87d2e52407b0e542093b",
+    "raw_log": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/jobs/e0_id621_frozen_native_discover_811f321a_6e3a143b19/run.log",
+    "files": [
+      {
+        "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles/id621_frozen_native_discover_811f321a/93769_python3.10.perf",
+        "bytes": 47927965,
+        "sha256": "d1620b5b17e958d5735f13d4346b33ff93be3c595a3bdb600d33c7d462348eca"
+      }
+    ],
+    "raw_token_bytes": 0
+  },
+  {
+    "ID": 805,
+    "shape": {
+      "M": 64,
+      "N": 2048,
+      "K": 4096,
+      "G": 32
+    },
+    "dtype": "BF16",
+    "layout": "NN",
+    "physical_gpu": 4,
+    "arm": "current_best",
+    "stage": "discover",
+    "key": "e0_id805_current_best_discover_2f83d2e5_cef116ee9f",
+    "epoch": 0,
+    "benchmark_sha256": "76642f45892426cb97e758306f780d22c95567b38f9da475105aa38a0456b5ae",
+    "binary_sha256": "76642f45892426cb97e758306f780d22c95567b38f9da475105aa38a0456b5ae",
+    "actual_instance": 5000,
+    "algorithm_id": null,
+    "kernel_filter": "GroupedGemmV7UniformKernel",
+    "dispatches": [
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18
+    ],
+    "selected_dispatch": 18,
+    "XCD": 0,
+    "SE": 0,
+    "active_CU_index": 0,
+    "sqtt": false,
+    "capture_timing_is_formal": false,
+    "collection_command": [
+      "/opt/rocm-6.3.3/bin/xprof",
+      "--kernels",
+      "GroupedGemmV7UniformKernel",
+      "--sections",
+      "speed_of_light,memory_workload,occupancy,memory_chart,instruction_statistics,compute_workload,scheduler_statistics,wave_state",
+      "--output-dir",
+      "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles/id805_current_best_discover_2f83d2e5",
+      "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+      "--dtype=bf16",
+      "--layout=NN",
+      "--m=64",
+      "--n=2048",
+      "--k=4096",
+      "--groups=32",
+      "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+      "--include-args-build=0",
+      "--validate=0",
+      "--warmup=10",
+      "--samples=1",
+      "--launches-per-sample=1",
+      "--correctness-repeats=1",
+      "--backend=ck",
+      "--time=1",
+      "--output-redzone=0"
+    ],
+    "environment": {
+      "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "HIP_VISIBLE_DEVICES": "4",
+      "CUDA_VISIBLE_DEVICES": "4",
+      "OMP_NUM_THREADS": "4"
+    },
+    "prior_accuracy_keys": [
+      "e0_diag_id805_953f57d2fe5d_ck_accuracy_0dffbc59e4",
+      "e0_diag_id805_953f57d2fe5d_native_accuracy_9388f37224"
+    ],
+    "script_sha256": {
+      "analyze_diagnostics.py": "f2085aefa31e09e109b6f3eacf48c44cdfe9346fc1a880a4e114eedfe3bdfe90",
+      "analyze_profiles.py": "bd2d04b862939a4915479e33c8ff2b32b61eab1ed703b57bd319c8da00f4e086",
+      "campaign.py": "e1998b64b19f2b5507c9e1939a7f86e2a4b2751c8488539b388658f38f010760",
+      "deliver_profiles.py": "1211f095741a37a87a338e497023447ab1d78c07d56ac8b2ec32847302a56018",
+      "extract_profile_isa.py": "37fb9b15bc38d994813632c56cbb6ec2804b081bde9dfd762010469ce57f39b8",
+      "health.py": "0ab45d69e01c7b1ab3c49461b063faffb16de65b1d34b77489a4a47fb259b438",
+      "native_replay.py": "a2fa97d9a96785128ec4c247e15d96ef601f2d12164921cd558ed9639200ce81",
+      "plan.py": "e6db4d016e77318064c6502d04a2ec45b61db2adfd8f34055b6df0e765792602",
+      "profile_capture.py": "8aec55a33e72d2741920eca2bd0008575d1e9ecff406cc118dc5721243480e06",
+      "runtime.py": "7287d4e544ccd0a0b8f7cc7a068bdd346a6db8fe2f72b379b0edc81da155f04c",
+      "shader_audit.py": "640c7716d6fcd9588a51359db9c2d0e6e18dde989d59538b069db970e82572d9"
+    },
+    "worktree_source_sha256": {
+      "include/ck_tile/ops/gemm/grouped_gemm_selector.hpp": "4290c3c0c552d7a29144d6eb677552c067115fc2fce6ce14b40cb1f702b0dff3",
+      "include/ck_tile/ops/gemm/grouped_gemm_device_args.h": "f6f3defcfb5a25698ca360f7b213c1574359c319f48b45a20bd9f9a24390c1c7",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_uniform.hpp": "eacd5ccc4bf73676c64c3edd5035f5c39e000ef4741385b1054c025c27907e65",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_wave.hpp": "38599490edcef2fc0efdbbccf520e3954b887bcaaeb81ccc93d4a2a1fc49dcb4",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_bvector.hpp": "159fc8d6e229a5ca758e5706242303afc44c007fbeec8fd2a7e9379bd0d8290e",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_depth8.hpp": "4be4ebab974c948ccde7c9f5cb7b898dca303b5fbbc2afbe94f7e2c9d67cb600",
+      "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args.cpp": "18bf50595d7861ac4ba18dab79a5a2542d571974128c273e20702e16a6eed679"
+    },
+    "plan_sha256": "16651870b97bbaf4ddbd61a21e8a5f8a95e6b3ac88fa87d2e52407b0e542093b",
+    "raw_log": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/jobs/e0_id805_current_best_discover_2f83d2e5_cef116ee9f/run.log",
+    "files": [
+      {
+        "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles/id805_current_best_discover_2f83d2e5/94134_tile_example_grouped_gemm_device_args_benchmark.perf",
+        "bytes": 151579,
+        "sha256": "335cb1ccadfed9d918945bf0275e9346f6195ec6d4370ff11696cfa42d7655b0"
+      }
+    ],
+    "raw_token_bytes": 0
+  },
+  {
+    "ID": 805,
+    "shape": {
+      "M": 64,
+      "N": 2048,
+      "K": 4096,
+      "G": 32
+    },
+    "dtype": "BF16",
+    "layout": "NN",
+    "physical_gpu": 4,
+    "arm": "frozen_native",
+    "stage": "discover",
+    "key": "e0_id805_frozen_native_discover_0730f805_e7b93015bc",
+    "epoch": 0,
+    "benchmark_sha256": "76642f45892426cb97e758306f780d22c95567b38f9da475105aa38a0456b5ae",
+    "binary_sha256": "a0706c9474aadc00147b93d9b5d930c22e05670c66d59029786f4c81149c4f96",
+    "actual_instance": null,
+    "algorithm_id": 11279,
+    "kernel_filter": "Custom_Cijk_Ailk_Bljk_BBS_BH_Bias_GG_AS_SAV_UserArgs_MT128x64x32_MI16x16x1_SN_GSU1_K1_MIWT4_2_WGM8",
+    "dispatches": [
+      207,
+      209,
+      210,
+      211,
+      212,
+      213,
+      214,
+      215,
+      216,
+      217,
+      218,
+      219
+    ],
+    "selected_dispatch": 219,
+    "XCD": 0,
+    "SE": 0,
+    "active_CU_index": 0,
+    "sqtt": false,
+    "capture_timing_is_formal": false,
+    "collection_command": [
+      "/opt/rocm-6.3.3/bin/xprof",
+      "--kernels",
+      "Custom_Cijk_Ailk_Bljk_BBS_BH_Bias_GG_AS_SAV_UserArgs_MT128x64x32_MI16x16x1_SN_GSU1_K1_MIWT4_2_WGM8",
+      "--sections",
+      "speed_of_light,memory_workload,occupancy,memory_chart,instruction_statistics,compute_workload,scheduler_statistics,wave_state",
+      "--output-dir",
+      "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles/id805_frozen_native_discover_0730f805",
+      "/usr/bin/python3",
+      "-B",
+      "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/native_replay.py",
+      "--id",
+      "805",
+      "--mode",
+      "profile"
+    ],
+    "environment": {
+      "HIP_VISIBLE_DEVICES": "4",
+      "CUDA_VISIBLE_DEVICES": "4",
+      "OMP_NUM_THREADS": "4"
+    },
+    "prior_accuracy_keys": [
+      "e0_diag_id805_953f57d2fe5d_ck_accuracy_0dffbc59e4",
+      "e0_diag_id805_953f57d2fe5d_native_accuracy_9388f37224"
+    ],
+    "script_sha256": {
+      "analyze_diagnostics.py": "f2085aefa31e09e109b6f3eacf48c44cdfe9346fc1a880a4e114eedfe3bdfe90",
+      "analyze_profiles.py": "bd2d04b862939a4915479e33c8ff2b32b61eab1ed703b57bd319c8da00f4e086",
+      "campaign.py": "e1998b64b19f2b5507c9e1939a7f86e2a4b2751c8488539b388658f38f010760",
+      "deliver_profiles.py": "1211f095741a37a87a338e497023447ab1d78c07d56ac8b2ec32847302a56018",
+      "extract_profile_isa.py": "37fb9b15bc38d994813632c56cbb6ec2804b081bde9dfd762010469ce57f39b8",
+      "health.py": "0ab45d69e01c7b1ab3c49461b063faffb16de65b1d34b77489a4a47fb259b438",
+      "native_replay.py": "a2fa97d9a96785128ec4c247e15d96ef601f2d12164921cd558ed9639200ce81",
+      "plan.py": "e6db4d016e77318064c6502d04a2ec45b61db2adfd8f34055b6df0e765792602",
+      "profile_capture.py": "8aec55a33e72d2741920eca2bd0008575d1e9ecff406cc118dc5721243480e06",
+      "runtime.py": "7287d4e544ccd0a0b8f7cc7a068bdd346a6db8fe2f72b379b0edc81da155f04c",
+      "shader_audit.py": "640c7716d6fcd9588a51359db9c2d0e6e18dde989d59538b069db970e82572d9"
+    },
+    "worktree_source_sha256": {
+      "include/ck_tile/ops/gemm/grouped_gemm_selector.hpp": "4290c3c0c552d7a29144d6eb677552c067115fc2fce6ce14b40cb1f702b0dff3",
+      "include/ck_tile/ops/gemm/grouped_gemm_device_args.h": "f6f3defcfb5a25698ca360f7b213c1574359c319f48b45a20bd9f9a24390c1c7",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_uniform.hpp": "eacd5ccc4bf73676c64c3edd5035f5c39e000ef4741385b1054c025c27907e65",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_wave.hpp": "38599490edcef2fc0efdbbccf520e3954b887bcaaeb81ccc93d4a2a1fc49dcb4",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_bvector.hpp": "159fc8d6e229a5ca758e5706242303afc44c007fbeec8fd2a7e9379bd0d8290e",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_depth8.hpp": "4be4ebab974c948ccde7c9f5cb7b898dca303b5fbbc2afbe94f7e2c9d67cb600",
+      "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args.cpp": "18bf50595d7861ac4ba18dab79a5a2542d571974128c273e20702e16a6eed679"
+    },
+    "plan_sha256": "16651870b97bbaf4ddbd61a21e8a5f8a95e6b3ac88fa87d2e52407b0e542093b",
+    "raw_log": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/jobs/e0_id805_frozen_native_discover_0730f805_e7b93015bc/run.log",
+    "files": [
+      {
+        "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles/id805_frozen_native_discover_0730f805/94213_python3.10.perf",
+        "bytes": 47927965,
+        "sha256": "85f9760cd19b618df11265c33c8b6f0edd04e80e6bafa800ca85712af27c4c72"
+      }
+    ],
+    "raw_token_bytes": 0
+  },
+  {
+    "ID": 1072,
+    "shape": {
+      "M": 2,
+      "N": 4096,
+      "K": 7168,
+      "G": 16
+    },
+    "dtype": "BF16",
+    "layout": "NN",
+    "physical_gpu": 4,
+    "arm": "current_best",
+    "stage": "discover",
+    "key": "e0_id1072_current_best_discover_fa514eda_598252300c",
+    "epoch": 0,
+    "benchmark_sha256": "76642f45892426cb97e758306f780d22c95567b38f9da475105aa38a0456b5ae",
+    "binary_sha256": "76642f45892426cb97e758306f780d22c95567b38f9da475105aa38a0456b5ae",
+    "actual_instance": 5006,
+    "algorithm_id": null,
+    "kernel_filter": "GroupedGemmV7UniformKernel",
+    "dispatches": [
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18
+    ],
+    "selected_dispatch": 18,
+    "XCD": 0,
+    "SE": 0,
+    "active_CU_index": 0,
+    "sqtt": false,
+    "capture_timing_is_formal": false,
+    "collection_command": [
+      "/opt/rocm-6.3.3/bin/xprof",
+      "--kernels",
+      "GroupedGemmV7UniformKernel",
+      "--sections",
+      "speed_of_light,memory_workload,occupancy,memory_chart,instruction_statistics,compute_workload,scheduler_statistics,wave_state",
+      "--output-dir",
+      "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles/id1072_current_best_discover_fa514eda",
+      "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+      "--dtype=bf16",
+      "--layout=NN",
+      "--m=2",
+      "--n=4096",
+      "--k=7168",
+      "--groups=16",
+      "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+      "--include-args-build=0",
+      "--validate=0",
+      "--warmup=10",
+      "--samples=1",
+      "--launches-per-sample=1",
+      "--correctness-repeats=1",
+      "--backend=ck",
+      "--time=1",
+      "--output-redzone=0"
+    ],
+    "environment": {
+      "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "0",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "1",
+      "HIP_VISIBLE_DEVICES": "4",
+      "CUDA_VISIBLE_DEVICES": "4",
+      "OMP_NUM_THREADS": "4"
+    },
+    "prior_accuracy_keys": [
+      "e0_diag_id1072_0386e2cb05cd_ck_accuracy_1a1fa13d7a",
+      "e0_diag_id1072_0386e2cb05cd_native_accuracy_f687b5c2e0"
+    ],
+    "script_sha256": {
+      "analyze_diagnostics.py": "f2085aefa31e09e109b6f3eacf48c44cdfe9346fc1a880a4e114eedfe3bdfe90",
+      "analyze_profiles.py": "bd2d04b862939a4915479e33c8ff2b32b61eab1ed703b57bd319c8da00f4e086",
+      "campaign.py": "e1998b64b19f2b5507c9e1939a7f86e2a4b2751c8488539b388658f38f010760",
+      "deliver_profiles.py": "1211f095741a37a87a338e497023447ab1d78c07d56ac8b2ec32847302a56018",
+      "extract_profile_isa.py": "37fb9b15bc38d994813632c56cbb6ec2804b081bde9dfd762010469ce57f39b8",
+      "health.py": "0ab45d69e01c7b1ab3c49461b063faffb16de65b1d34b77489a4a47fb259b438",
+      "native_replay.py": "a2fa97d9a96785128ec4c247e15d96ef601f2d12164921cd558ed9639200ce81",
+      "plan.py": "e6db4d016e77318064c6502d04a2ec45b61db2adfd8f34055b6df0e765792602",
+      "profile_capture.py": "8aec55a33e72d2741920eca2bd0008575d1e9ecff406cc118dc5721243480e06",
+      "runtime.py": "7287d4e544ccd0a0b8f7cc7a068bdd346a6db8fe2f72b379b0edc81da155f04c",
+      "shader_audit.py": "640c7716d6fcd9588a51359db9c2d0e6e18dde989d59538b069db970e82572d9"
+    },
+    "worktree_source_sha256": {
+      "include/ck_tile/ops/gemm/grouped_gemm_selector.hpp": "4290c3c0c552d7a29144d6eb677552c067115fc2fce6ce14b40cb1f702b0dff3",
+      "include/ck_tile/ops/gemm/grouped_gemm_device_args.h": "f6f3defcfb5a25698ca360f7b213c1574359c319f48b45a20bd9f9a24390c1c7",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_uniform.hpp": "eacd5ccc4bf73676c64c3edd5035f5c39e000ef4741385b1054c025c27907e65",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_wave.hpp": "38599490edcef2fc0efdbbccf520e3954b887bcaaeb81ccc93d4a2a1fc49dcb4",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_bvector.hpp": "159fc8d6e229a5ca758e5706242303afc44c007fbeec8fd2a7e9379bd0d8290e",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_depth8.hpp": "4be4ebab974c948ccde7c9f5cb7b898dca303b5fbbc2afbe94f7e2c9d67cb600",
+      "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args.cpp": "18bf50595d7861ac4ba18dab79a5a2542d571974128c273e20702e16a6eed679"
+    },
+    "plan_sha256": "16651870b97bbaf4ddbd61a21e8a5f8a95e6b3ac88fa87d2e52407b0e542093b",
+    "raw_log": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/jobs/e0_id1072_current_best_discover_fa514eda_598252300c/run.log",
+    "files": [
+      {
+        "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles/id1072_current_best_discover_fa514eda/94613_tile_example_grouped_gemm_device_args_benchmark.perf",
+        "bytes": 151805,
+        "sha256": "bb682ff28f0eeb2c5c66f766a69f6b60293021b11b63a38ec38191c9ef43ce52"
+      }
+    ],
+    "raw_token_bytes": 0
+  },
+  {
+    "ID": 1072,
+    "shape": {
+      "M": 2,
+      "N": 4096,
+      "K": 7168,
+      "G": 16
+    },
+    "dtype": "BF16",
+    "layout": "NN",
+    "physical_gpu": 4,
+    "arm": "frozen_native",
+    "stage": "discover",
+    "key": "e0_id1072_frozen_native_discover_251e61db_ecdf710b45",
+    "epoch": 0,
+    "benchmark_sha256": "76642f45892426cb97e758306f780d22c95567b38f9da475105aa38a0456b5ae",
+    "binary_sha256": "a0706c9474aadc00147b93d9b5d930c22e05670c66d59029786f4c81149c4f96",
+    "actual_instance": null,
+    "algorithm_id": 11278,
+    "kernel_filter": "Custom_Cijk_Ailk_Bljk_BBS_BH_Bias_GG_AS_SAV_UserArgs_MT128x64x32_MI16x16x1_SN_GSU1_K1_MIWT4_2_WGM1",
+    "dispatches": [
+      348,
+      350,
+      351,
+      352,
+      353,
+      354,
+      355,
+      356,
+      357,
+      358,
+      359,
+      360
+    ],
+    "selected_dispatch": 360,
+    "XCD": 0,
+    "SE": 0,
+    "active_CU_index": 0,
+    "sqtt": false,
+    "capture_timing_is_formal": false,
+    "collection_command": [
+      "/opt/rocm-6.3.3/bin/xprof",
+      "--kernels",
+      "Custom_Cijk_Ailk_Bljk_BBS_BH_Bias_GG_AS_SAV_UserArgs_MT128x64x32_MI16x16x1_SN_GSU1_K1_MIWT4_2_WGM1",
+      "--sections",
+      "speed_of_light,memory_workload,occupancy,memory_chart,instruction_statistics,compute_workload,scheduler_statistics,wave_state",
+      "--output-dir",
+      "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles/id1072_frozen_native_discover_251e61db",
+      "/usr/bin/python3",
+      "-B",
+      "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/native_replay.py",
+      "--id",
+      "1072",
+      "--mode",
+      "profile"
+    ],
+    "environment": {
+      "HIP_VISIBLE_DEVICES": "4",
+      "CUDA_VISIBLE_DEVICES": "4",
+      "OMP_NUM_THREADS": "4"
+    },
+    "prior_accuracy_keys": [
+      "e0_diag_id1072_0386e2cb05cd_ck_accuracy_1a1fa13d7a",
+      "e0_diag_id1072_0386e2cb05cd_native_accuracy_f687b5c2e0"
+    ],
+    "script_sha256": {
+      "analyze_diagnostics.py": "f2085aefa31e09e109b6f3eacf48c44cdfe9346fc1a880a4e114eedfe3bdfe90",
+      "analyze_profiles.py": "bd2d04b862939a4915479e33c8ff2b32b61eab1ed703b57bd319c8da00f4e086",
+      "campaign.py": "e1998b64b19f2b5507c9e1939a7f86e2a4b2751c8488539b388658f38f010760",
+      "deliver_profiles.py": "1211f095741a37a87a338e497023447ab1d78c07d56ac8b2ec32847302a56018",
+      "extract_profile_isa.py": "37fb9b15bc38d994813632c56cbb6ec2804b081bde9dfd762010469ce57f39b8",
+      "health.py": "0ab45d69e01c7b1ab3c49461b063faffb16de65b1d34b77489a4a47fb259b438",
+      "native_replay.py": "a2fa97d9a96785128ec4c247e15d96ef601f2d12164921cd558ed9639200ce81",
+      "plan.py": "e6db4d016e77318064c6502d04a2ec45b61db2adfd8f34055b6df0e765792602",
+      "profile_capture.py": "8aec55a33e72d2741920eca2bd0008575d1e9ecff406cc118dc5721243480e06",
+      "runtime.py": "7287d4e544ccd0a0b8f7cc7a068bdd346a6db8fe2f72b379b0edc81da155f04c",
+      "shader_audit.py": "640c7716d6fcd9588a51359db9c2d0e6e18dde989d59538b069db970e82572d9"
+    },
+    "worktree_source_sha256": {
+      "include/ck_tile/ops/gemm/grouped_gemm_selector.hpp": "4290c3c0c552d7a29144d6eb677552c067115fc2fce6ce14b40cb1f702b0dff3",
+      "include/ck_tile/ops/gemm/grouped_gemm_device_args.h": "f6f3defcfb5a25698ca360f7b213c1574359c319f48b45a20bd9f9a24390c1c7",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_uniform.hpp": "eacd5ccc4bf73676c64c3edd5035f5c39e000ef4741385b1054c025c27907e65",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_wave.hpp": "38599490edcef2fc0efdbbccf520e3954b887bcaaeb81ccc93d4a2a1fc49dcb4",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_bvector.hpp": "159fc8d6e229a5ca758e5706242303afc44c007fbeec8fd2a7e9379bd0d8290e",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_depth8.hpp": "4be4ebab974c948ccde7c9f5cb7b898dca303b5fbbc2afbe94f7e2c9d67cb600",
+      "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args.cpp": "18bf50595d7861ac4ba18dab79a5a2542d571974128c273e20702e16a6eed679"
+    },
+    "plan_sha256": "16651870b97bbaf4ddbd61a21e8a5f8a95e6b3ac88fa87d2e52407b0e542093b",
+    "raw_log": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/jobs/e0_id1072_frozen_native_discover_251e61db_ecdf710b45/run.log",
+    "files": [
+      {
+        "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles/id1072_frozen_native_discover_251e61db/94722_python3.10.perf",
+        "bytes": 47927965,
+        "sha256": "75f742bbf3575d0acca3b90a1ec87c61435a0a1fa134282be05d60e386bfdf37"
+      }
+    ],
+    "raw_token_bytes": 0
+  },
+  {
+    "ID": 76,
+    "shape": {
+      "M": 1,
+      "N": 2048,
+      "K": 768,
+      "G": 4
+    },
+    "dtype": "BF16",
+    "layout": "NN",
+    "physical_gpu": 4,
+    "arm": "current_best",
+    "stage": "sqtt",
+    "key": "e0_id76_current_best_sqtt_02bd5874_daee0ada17",
+    "epoch": 0,
+    "benchmark_sha256": "76642f45892426cb97e758306f780d22c95567b38f9da475105aa38a0456b5ae",
+    "binary_sha256": "76642f45892426cb97e758306f780d22c95567b38f9da475105aa38a0456b5ae",
+    "actual_instance": 5008,
+    "algorithm_id": null,
+    "kernel_filter": "GroupedGemmV7UniformKernel",
+    "dispatches": [
+      18
+    ],
+    "selected_dispatch": 18,
+    "XCD": 0,
+    "SE": 0,
+    "active_CU_index": 0,
+    "sqtt": true,
+    "capture_timing_is_formal": false,
+    "collection_command": [
+      "/opt/rocm-6.3.3/bin/xprof",
+      "--enable-sqtt",
+      "--enable-raw",
+      "--target-se",
+      "0",
+      "--target-cu",
+      "0",
+      "--dispatches",
+      "18",
+      "--kernels",
+      "GroupedGemmV7UniformKernel",
+      "--sections",
+      "speed_of_light,memory_workload,occupancy,memory_chart,instruction_statistics,compute_workload,scheduler_statistics,wave_state",
+      "--output-dir",
+      "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles/id76_current_best_sqtt_02bd5874",
+      "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+      "--dtype=bf16",
+      "--layout=NN",
+      "--m=1",
+      "--n=2048",
+      "--k=768",
+      "--groups=4",
+      "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+      "--include-args-build=0",
+      "--validate=0",
+      "--warmup=10",
+      "--samples=1",
+      "--launches-per-sample=1",
+      "--correctness-repeats=1",
+      "--backend=ck",
+      "--time=1",
+      "--output-redzone=0"
+    ],
+    "environment": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "2",
+      "HIP_VISIBLE_DEVICES": "4",
+      "CUDA_VISIBLE_DEVICES": "4",
+      "OMP_NUM_THREADS": "4"
+    },
+    "prior_accuracy_keys": [
+      "e0_diag_id76_124168fca1e2_ck_accuracy_62afa25233",
+      "e0_diag_id76_124168fca1e2_native_accuracy_d74f5a2a78"
+    ],
+    "script_sha256": {
+      "analyze_diagnostics.py": "f2085aefa31e09e109b6f3eacf48c44cdfe9346fc1a880a4e114eedfe3bdfe90",
+      "analyze_profiles.py": "72d32fa12e17357935f6c5334a5197fb266af8f28a6bff3f5da463138e845899",
+      "campaign.py": "e1998b64b19f2b5507c9e1939a7f86e2a4b2751c8488539b388658f38f010760",
+      "deliver_profiles.py": "1211f095741a37a87a338e497023447ab1d78c07d56ac8b2ec32847302a56018",
+      "extract_profile_isa.py": "37fb9b15bc38d994813632c56cbb6ec2804b081bde9dfd762010469ce57f39b8",
+      "health.py": "0ab45d69e01c7b1ab3c49461b063faffb16de65b1d34b77489a4a47fb259b438",
+      "native_replay.py": "a2fa97d9a96785128ec4c247e15d96ef601f2d12164921cd558ed9639200ce81",
+      "plan.py": "e6db4d016e77318064c6502d04a2ec45b61db2adfd8f34055b6df0e765792602",
+      "profile_capture.py": "8aec55a33e72d2741920eca2bd0008575d1e9ecff406cc118dc5721243480e06",
+      "runtime.py": "7287d4e544ccd0a0b8f7cc7a068bdd346a6db8fe2f72b379b0edc81da155f04c",
+      "shader_audit.py": "640c7716d6fcd9588a51359db9c2d0e6e18dde989d59538b069db970e82572d9"
+    },
+    "worktree_source_sha256": {
+      "include/ck_tile/ops/gemm/grouped_gemm_selector.hpp": "4290c3c0c552d7a29144d6eb677552c067115fc2fce6ce14b40cb1f702b0dff3",
+      "include/ck_tile/ops/gemm/grouped_gemm_device_args.h": "f6f3defcfb5a25698ca360f7b213c1574359c319f48b45a20bd9f9a24390c1c7",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_uniform.hpp": "eacd5ccc4bf73676c64c3edd5035f5c39e000ef4741385b1054c025c27907e65",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_wave.hpp": "38599490edcef2fc0efdbbccf520e3954b887bcaaeb81ccc93d4a2a1fc49dcb4",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_bvector.hpp": "159fc8d6e229a5ca758e5706242303afc44c007fbeec8fd2a7e9379bd0d8290e",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_depth8.hpp": "4be4ebab974c948ccde7c9f5cb7b898dca303b5fbbc2afbe94f7e2c9d67cb600",
+      "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args.cpp": "18bf50595d7861ac4ba18dab79a5a2542d571974128c273e20702e16a6eed679"
+    },
+    "plan_sha256": "16651870b97bbaf4ddbd61a21e8a5f8a95e6b3ac88fa87d2e52407b0e542093b",
+    "raw_log": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/jobs/e0_id76_current_best_sqtt_02bd5874_daee0ada17/run.log",
+    "files": [
+      {
+        "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles/id76_current_best_sqtt_02bd5874/95566_tile_example_grouped_gemm_device_args_benchmark.perf",
+        "bytes": 29409,
+        "sha256": "29849d52ef735989c1861bc88bd497e53eb116b29c75dac6f3bbe362a5b2acfa"
+      },
+      {
+        "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles/id76_current_best_sqtt_02bd5874/results.txt",
+        "bytes": 1437,
+        "sha256": "ccb29c609135d81a50fde14973a55318b7d90dedbdbb29534a0472e17816b039"
+      },
+      {
+        "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles/id76_current_best_sqtt_02bd5874/thread_trace_18__ZN7ck_tile6kentryILi256ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13_se0_cu1.out",
+        "bytes": 165920,
+        "sha256": "9d952c292bbd6fb2c79d5fe062009122aa1a634030c778d9a5abe03eda39a62f",
+        "raw_token_bytes": 66368
+      }
+    ],
+    "raw_token_bytes": 66368
+  },
+  {
+    "ID": 76,
+    "shape": {
+      "M": 1,
+      "N": 2048,
+      "K": 768,
+      "G": 4
+    },
+    "dtype": "BF16",
+    "layout": "NN",
+    "physical_gpu": 4,
+    "arm": "frozen_native",
+    "stage": "sqtt",
+    "key": "e0_id76_frozen_native_sqtt_352a066a_84f84ac65d",
+    "epoch": 0,
+    "benchmark_sha256": "76642f45892426cb97e758306f780d22c95567b38f9da475105aa38a0456b5ae",
+    "binary_sha256": "a0706c9474aadc00147b93d9b5d930c22e05670c66d59029786f4c81149c4f96",
+    "actual_instance": null,
+    "algorithm_id": 11285,
+    "kernel_filter": "Custom_Cijk_Ailk_Bljk_BBS_BH_Bias_GG_AS_SAV_UserArgs_MT64x64x32_MI16x16x1_SN_GSU1_K1_MIWT2_2",
+    "dispatches": [
+      30
+    ],
+    "selected_dispatch": 30,
+    "XCD": 0,
+    "SE": 0,
+    "active_CU_index": 0,
+    "sqtt": true,
+    "capture_timing_is_formal": false,
+    "collection_command": [
+      "/opt/rocm-6.3.3/bin/xprof",
+      "--enable-sqtt",
+      "--enable-raw",
+      "--target-se",
+      "0",
+      "--target-cu",
+      "0",
+      "--dispatches",
+      "30",
+      "--kernels",
+      "Custom_Cijk_Ailk_Bljk_BBS_BH_Bias_GG_AS_SAV_UserArgs_MT64x64x32_MI16x16x1_SN_GSU1_K1_MIWT2_2",
+      "--sections",
+      "speed_of_light,memory_workload,occupancy,memory_chart,instruction_statistics,compute_workload,scheduler_statistics,wave_state",
+      "--output-dir",
+      "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles/id76_frozen_native_sqtt_352a066a",
+      "/usr/bin/python3",
+      "-B",
+      "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/native_replay.py",
+      "--id",
+      "76",
+      "--mode",
+      "profile"
+    ],
+    "environment": {
+      "HIP_VISIBLE_DEVICES": "4",
+      "CUDA_VISIBLE_DEVICES": "4",
+      "OMP_NUM_THREADS": "4"
+    },
+    "prior_accuracy_keys": [
+      "e0_diag_id76_124168fca1e2_ck_accuracy_62afa25233",
+      "e0_diag_id76_124168fca1e2_native_accuracy_d74f5a2a78"
+    ],
+    "script_sha256": {
+      "analyze_diagnostics.py": "f2085aefa31e09e109b6f3eacf48c44cdfe9346fc1a880a4e114eedfe3bdfe90",
+      "analyze_profiles.py": "72d32fa12e17357935f6c5334a5197fb266af8f28a6bff3f5da463138e845899",
+      "campaign.py": "e1998b64b19f2b5507c9e1939a7f86e2a4b2751c8488539b388658f38f010760",
+      "deliver_profiles.py": "1211f095741a37a87a338e497023447ab1d78c07d56ac8b2ec32847302a56018",
+      "extract_profile_isa.py": "37fb9b15bc38d994813632c56cbb6ec2804b081bde9dfd762010469ce57f39b8",
+      "health.py": "0ab45d69e01c7b1ab3c49461b063faffb16de65b1d34b77489a4a47fb259b438",
+      "native_replay.py": "a2fa97d9a96785128ec4c247e15d96ef601f2d12164921cd558ed9639200ce81",
+      "plan.py": "e6db4d016e77318064c6502d04a2ec45b61db2adfd8f34055b6df0e765792602",
+      "profile_capture.py": "8aec55a33e72d2741920eca2bd0008575d1e9ecff406cc118dc5721243480e06",
+      "runtime.py": "7287d4e544ccd0a0b8f7cc7a068bdd346a6db8fe2f72b379b0edc81da155f04c",
+      "shader_audit.py": "640c7716d6fcd9588a51359db9c2d0e6e18dde989d59538b069db970e82572d9"
+    },
+    "worktree_source_sha256": {
+      "include/ck_tile/ops/gemm/grouped_gemm_selector.hpp": "4290c3c0c552d7a29144d6eb677552c067115fc2fce6ce14b40cb1f702b0dff3",
+      "include/ck_tile/ops/gemm/grouped_gemm_device_args.h": "f6f3defcfb5a25698ca360f7b213c1574359c319f48b45a20bd9f9a24390c1c7",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_uniform.hpp": "eacd5ccc4bf73676c64c3edd5035f5c39e000ef4741385b1054c025c27907e65",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_wave.hpp": "38599490edcef2fc0efdbbccf520e3954b887bcaaeb81ccc93d4a2a1fc49dcb4",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_bvector.hpp": "159fc8d6e229a5ca758e5706242303afc44c007fbeec8fd2a7e9379bd0d8290e",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_depth8.hpp": "4be4ebab974c948ccde7c9f5cb7b898dca303b5fbbc2afbe94f7e2c9d67cb600",
+      "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args.cpp": "18bf50595d7861ac4ba18dab79a5a2542d571974128c273e20702e16a6eed679"
+    },
+    "plan_sha256": "16651870b97bbaf4ddbd61a21e8a5f8a95e6b3ac88fa87d2e52407b0e542093b",
+    "raw_log": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/jobs/e0_id76_frozen_native_sqtt_352a066a_84f84ac65d/run.log",
+    "files": [
+      {
+        "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles/id76_frozen_native_sqtt_352a066a/95597_python3.10.perf",
+        "bytes": 47810367,
+        "sha256": "6cf4106582a1c115538105b0020cd86879da14f1efedf57967a432a64c28b058"
+      },
+      {
+        "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles/id76_frozen_native_sqtt_352a066a/results.txt",
+        "bytes": 423,
+        "sha256": "02949d5d11083be513bf30828ea09d11975f6b826defd8fe8adb68cd5235632a"
+      },
+      {
+        "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles/id76_frozen_native_sqtt_352a066a/thread_trace_30_Custom_Cijk_Ailk_Bljk_BBS_BH_Bias_GG_AS_SAV_UserArgs_MT64x64x32_MI16x16x1_SN_GSU1_K1_MIWT2_2_se0_cu1.out",
+        "bytes": 303280,
+        "sha256": "dbb5ba6ed7c92ea719cce9d7fa9a5e65a130793f21daff64795172d9266c9a3b",
+        "raw_token_bytes": 121312
+      }
+    ],
+    "raw_token_bytes": 121312
+  },
+  {
+    "ID": 621,
+    "shape": {
+      "M": 64,
+      "N": 1024,
+      "K": 2048,
+      "G": 32
+    },
+    "dtype": "BF16",
+    "layout": "NN",
+    "physical_gpu": 4,
+    "arm": "current_best",
+    "stage": "sqtt",
+    "key": "e0_id621_current_best_sqtt_039fec8b_efdcc52e5a",
+    "epoch": 0,
+    "benchmark_sha256": "76642f45892426cb97e758306f780d22c95567b38f9da475105aa38a0456b5ae",
+    "binary_sha256": "76642f45892426cb97e758306f780d22c95567b38f9da475105aa38a0456b5ae",
+    "actual_instance": 5003,
+    "algorithm_id": null,
+    "kernel_filter": "GroupedGemmV7UniformKernel",
+    "dispatches": [
+      18
+    ],
+    "selected_dispatch": 18,
+    "XCD": 0,
+    "SE": 0,
+    "active_CU_index": 0,
+    "sqtt": true,
+    "capture_timing_is_formal": false,
+    "collection_command": [
+      "/opt/rocm-6.3.3/bin/xprof",
+      "--enable-sqtt",
+      "--enable-raw",
+      "--target-se",
+      "0",
+      "--target-cu",
+      "0",
+      "--dispatches",
+      "18",
+      "--kernels",
+      "GroupedGemmV7UniformKernel",
+      "--sections",
+      "speed_of_light,memory_workload,occupancy,memory_chart,instruction_statistics,compute_workload,scheduler_statistics,wave_state",
+      "--output-dir",
+      "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles/id621_current_best_sqtt_039fec8b",
+      "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+      "--dtype=bf16",
+      "--layout=NN",
+      "--m=64",
+      "--n=1024",
+      "--k=2048",
+      "--groups=32",
+      "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+      "--include-args-build=0",
+      "--validate=0",
+      "--warmup=10",
+      "--samples=1",
+      "--launches-per-sample=1",
+      "--correctness-repeats=1",
+      "--backend=ck",
+      "--time=1",
+      "--output-redzone=0"
+    ],
+    "environment": {
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128",
+      "HIP_VISIBLE_DEVICES": "4",
+      "CUDA_VISIBLE_DEVICES": "4",
+      "OMP_NUM_THREADS": "4"
+    },
+    "prior_accuracy_keys": [
+      "e0_diag_id621_3d04e08df34f_ck_accuracy_c51f326143",
+      "e0_diag_id621_3d04e08df34f_native_accuracy_eeec81c5b4"
+    ],
+    "script_sha256": {
+      "analyze_diagnostics.py": "f2085aefa31e09e109b6f3eacf48c44cdfe9346fc1a880a4e114eedfe3bdfe90",
+      "analyze_profiles.py": "72d32fa12e17357935f6c5334a5197fb266af8f28a6bff3f5da463138e845899",
+      "campaign.py": "e1998b64b19f2b5507c9e1939a7f86e2a4b2751c8488539b388658f38f010760",
+      "deliver_profiles.py": "1211f095741a37a87a338e497023447ab1d78c07d56ac8b2ec32847302a56018",
+      "extract_profile_isa.py": "37fb9b15bc38d994813632c56cbb6ec2804b081bde9dfd762010469ce57f39b8",
+      "health.py": "0ab45d69e01c7b1ab3c49461b063faffb16de65b1d34b77489a4a47fb259b438",
+      "native_replay.py": "a2fa97d9a96785128ec4c247e15d96ef601f2d12164921cd558ed9639200ce81",
+      "plan.py": "e6db4d016e77318064c6502d04a2ec45b61db2adfd8f34055b6df0e765792602",
+      "profile_capture.py": "8aec55a33e72d2741920eca2bd0008575d1e9ecff406cc118dc5721243480e06",
+      "runtime.py": "7287d4e544ccd0a0b8f7cc7a068bdd346a6db8fe2f72b379b0edc81da155f04c",
+      "shader_audit.py": "640c7716d6fcd9588a51359db9c2d0e6e18dde989d59538b069db970e82572d9"
+    },
+    "worktree_source_sha256": {
+      "include/ck_tile/ops/gemm/grouped_gemm_selector.hpp": "4290c3c0c552d7a29144d6eb677552c067115fc2fce6ce14b40cb1f702b0dff3",
+      "include/ck_tile/ops/gemm/grouped_gemm_device_args.h": "f6f3defcfb5a25698ca360f7b213c1574359c319f48b45a20bd9f9a24390c1c7",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_uniform.hpp": "eacd5ccc4bf73676c64c3edd5035f5c39e000ef4741385b1054c025c27907e65",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_wave.hpp": "38599490edcef2fc0efdbbccf520e3954b887bcaaeb81ccc93d4a2a1fc49dcb4",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_bvector.hpp": "159fc8d6e229a5ca758e5706242303afc44c007fbeec8fd2a7e9379bd0d8290e",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_depth8.hpp": "4be4ebab974c948ccde7c9f5cb7b898dca303b5fbbc2afbe94f7e2c9d67cb600",
+      "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args.cpp": "18bf50595d7861ac4ba18dab79a5a2542d571974128c273e20702e16a6eed679"
+    },
+    "plan_sha256": "16651870b97bbaf4ddbd61a21e8a5f8a95e6b3ac88fa87d2e52407b0e542093b",
+    "raw_log": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/jobs/e0_id621_current_best_sqtt_039fec8b_efdcc52e5a/run.log",
+    "files": [
+      {
+        "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles/id621_current_best_sqtt_039fec8b/95953_tile_example_grouped_gemm_device_args_benchmark.perf",
+        "bytes": 143990,
+        "sha256": "6b7afb9284b10de0314522680c38a3315aa5f4214abca9b444a5a37a9d0e1111"
+      },
+      {
+        "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles/id621_current_best_sqtt_039fec8b/results.txt",
+        "bytes": 1428,
+        "sha256": "c8a29086dcc724577afaad8b9eee7f5b4d2609a00c175ca66b29aecbe8cb624f"
+      },
+      {
+        "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles/id621_current_best_sqtt_039fec8b/thread_trace_18__ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13_se0_cu1.out",
+        "bytes": 1595760,
+        "sha256": "fa6e536e5275bd360f9d1a5b70e307902b1d44e9c3013110dffef78056b8334a",
+        "raw_token_bytes": 638304
+      }
+    ],
+    "raw_token_bytes": 638304
+  },
+  {
+    "ID": 621,
+    "shape": {
+      "M": 64,
+      "N": 1024,
+      "K": 2048,
+      "G": 32
+    },
+    "dtype": "BF16",
+    "layout": "NN",
+    "physical_gpu": 4,
+    "arm": "frozen_native",
+    "stage": "sqtt",
+    "key": "e0_id621_frozen_native_sqtt_6b351944_0c12ddf6ae",
+    "epoch": 0,
+    "benchmark_sha256": "76642f45892426cb97e758306f780d22c95567b38f9da475105aa38a0456b5ae",
+    "binary_sha256": "a0706c9474aadc00147b93d9b5d930c22e05670c66d59029786f4c81149c4f96",
+    "actual_instance": null,
+    "algorithm_id": 313,
+    "kernel_filter": "Cijk_Ailk_Bljk_BBS_BH_GG_AS_UserArgs_MT128x128x16_MI16x16x1_SN_AFC1_DTL1_EPS1_GRVWA8_GRVWB8_GSU1_GSUAMB_K1_LRVW4_MIWT8_2_NLCA1_NLCB1_OBAFM1_OLDSR0_ONLL1_PGR4_PLR1_SU0_SUS0_TLDS1_ULDSWM1_USFGRO0_USSB1_WSS0_WG16_16_1_WGM1",
+    "dispatches": [
+      72
+    ],
+    "selected_dispatch": 72,
+    "XCD": 0,
+    "SE": 0,
+    "active_CU_index": 0,
+    "sqtt": true,
+    "capture_timing_is_formal": false,
+    "collection_command": [
+      "/opt/rocm-6.3.3/bin/xprof",
+      "--enable-sqtt",
+      "--enable-raw",
+      "--target-se",
+      "0",
+      "--target-cu",
+      "0",
+      "--dispatches",
+      "72",
+      "--kernels",
+      "Cijk_Ailk_Bljk_BBS_BH_GG_AS_UserArgs_MT128x128x16_MI16x16x1_SN_AFC1_DTL1_EPS1_GRVWA8_GRVWB8_GSU1_GSUAMB_K1_LRVW4_MIWT8_2_NLCA1_NLCB1_OBAFM1_OLDSR0_ONLL1_PGR4_PLR1_SU0_SUS0_TLDS1_ULDSWM1_USFGRO0_USSB1_WSS0_WG16_16_1_WGM1",
+      "--sections",
+      "speed_of_light,memory_workload,occupancy,memory_chart,instruction_statistics,compute_workload,scheduler_statistics,wave_state",
+      "--output-dir",
+      "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles/id621_frozen_native_sqtt_6b351944",
+      "/usr/bin/python3",
+      "-B",
+      "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/native_replay.py",
+      "--id",
+      "621",
+      "--mode",
+      "profile"
+    ],
+    "environment": {
+      "HIP_VISIBLE_DEVICES": "4",
+      "CUDA_VISIBLE_DEVICES": "4",
+      "OMP_NUM_THREADS": "4"
+    },
+    "prior_accuracy_keys": [
+      "e0_diag_id621_3d04e08df34f_ck_accuracy_c51f326143",
+      "e0_diag_id621_3d04e08df34f_native_accuracy_eeec81c5b4"
+    ],
+    "script_sha256": {
+      "analyze_diagnostics.py": "f2085aefa31e09e109b6f3eacf48c44cdfe9346fc1a880a4e114eedfe3bdfe90",
+      "analyze_profiles.py": "72d32fa12e17357935f6c5334a5197fb266af8f28a6bff3f5da463138e845899",
+      "campaign.py": "e1998b64b19f2b5507c9e1939a7f86e2a4b2751c8488539b388658f38f010760",
+      "deliver_profiles.py": "1211f095741a37a87a338e497023447ab1d78c07d56ac8b2ec32847302a56018",
+      "extract_profile_isa.py": "37fb9b15bc38d994813632c56cbb6ec2804b081bde9dfd762010469ce57f39b8",
+      "health.py": "0ab45d69e01c7b1ab3c49461b063faffb16de65b1d34b77489a4a47fb259b438",
+      "native_replay.py": "a2fa97d9a96785128ec4c247e15d96ef601f2d12164921cd558ed9639200ce81",
+      "plan.py": "e6db4d016e77318064c6502d04a2ec45b61db2adfd8f34055b6df0e765792602",
+      "profile_capture.py": "8aec55a33e72d2741920eca2bd0008575d1e9ecff406cc118dc5721243480e06",
+      "runtime.py": "7287d4e544ccd0a0b8f7cc7a068bdd346a6db8fe2f72b379b0edc81da155f04c",
+      "shader_audit.py": "640c7716d6fcd9588a51359db9c2d0e6e18dde989d59538b069db970e82572d9"
+    },
+    "worktree_source_sha256": {
+      "include/ck_tile/ops/gemm/grouped_gemm_selector.hpp": "4290c3c0c552d7a29144d6eb677552c067115fc2fce6ce14b40cb1f702b0dff3",
+      "include/ck_tile/ops/gemm/grouped_gemm_device_args.h": "f6f3defcfb5a25698ca360f7b213c1574359c319f48b45a20bd9f9a24390c1c7",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_uniform.hpp": "eacd5ccc4bf73676c64c3edd5035f5c39e000ef4741385b1054c025c27907e65",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_wave.hpp": "38599490edcef2fc0efdbbccf520e3954b887bcaaeb81ccc93d4a2a1fc49dcb4",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_bvector.hpp": "159fc8d6e229a5ca758e5706242303afc44c007fbeec8fd2a7e9379bd0d8290e",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_depth8.hpp": "4be4ebab974c948ccde7c9f5cb7b898dca303b5fbbc2afbe94f7e2c9d67cb600",
+      "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args.cpp": "18bf50595d7861ac4ba18dab79a5a2542d571974128c273e20702e16a6eed679"
+    },
+    "plan_sha256": "16651870b97bbaf4ddbd61a21e8a5f8a95e6b3ac88fa87d2e52407b0e542093b",
+    "raw_log": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/jobs/e0_id621_frozen_native_sqtt_6b351944_0c12ddf6ae/run.log",
+    "files": [
+      {
+        "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles/id621_frozen_native_sqtt_6b351944/95996_python3.10.perf",
+        "bytes": 47857688,
+        "sha256": "9fedc0a23d92ef9c8c3ba1f68d25182c554447d730c77ceda85151304d7b126b"
+      },
+      {
+        "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles/id621_frozen_native_sqtt_6b351944/results.txt",
+        "bytes": 547,
+        "sha256": "78ce8d77278bcf8e20ff4284f17af5807e46802384d778ef754fea345aec9f20"
+      },
+      {
+        "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles/id621_frozen_native_sqtt_6b351944/thread_trace_72_Cijk_Ailk_Bljk_BBS_BH_GG_AS_UserArgs_MT128x128x16_MI16x16x1_SN_AFC1_DTL1_EPS1_GRVWA8_GRVWB8_GSU1_GSUAMB_K1_LRVW4_MIWT8_2_NLCA1_N_se0_cu1.out",
+        "bytes": 1873280,
+        "sha256": "affaa15d4bf46bc2ddb82697b3de557344207d8a92f3653a896579e5b789c7e7",
+        "raw_token_bytes": 749312
+      }
+    ],
+    "raw_token_bytes": 749312
+  },
+  {
+    "ID": 805,
+    "shape": {
+      "M": 64,
+      "N": 2048,
+      "K": 4096,
+      "G": 32
+    },
+    "dtype": "BF16",
+    "layout": "NN",
+    "physical_gpu": 4,
+    "arm": "current_best",
+    "stage": "sqtt",
+    "key": "e0_id805_current_best_sqtt_b9ff83af_b8441bb58b",
+    "epoch": 0,
+    "benchmark_sha256": "76642f45892426cb97e758306f780d22c95567b38f9da475105aa38a0456b5ae",
+    "binary_sha256": "76642f45892426cb97e758306f780d22c95567b38f9da475105aa38a0456b5ae",
+    "actual_instance": 5000,
+    "algorithm_id": null,
+    "kernel_filter": "GroupedGemmV7UniformKernel",
+    "dispatches": [
+      18
+    ],
+    "selected_dispatch": 18,
+    "XCD": 0,
+    "SE": 0,
+    "active_CU_index": 0,
+    "sqtt": true,
+    "capture_timing_is_formal": false,
+    "collection_command": [
+      "/opt/rocm-6.3.3/bin/xprof",
+      "--enable-sqtt",
+      "--enable-raw",
+      "--target-se",
+      "0",
+      "--target-cu",
+      "0",
+      "--dispatches",
+      "18",
+      "--kernels",
+      "GroupedGemmV7UniformKernel",
+      "--sections",
+      "speed_of_light,memory_workload,occupancy,memory_chart,instruction_statistics,compute_workload,scheduler_statistics,wave_state",
+      "--output-dir",
+      "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles/id805_current_best_sqtt_b9ff83af",
+      "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+      "--dtype=bf16",
+      "--layout=NN",
+      "--m=64",
+      "--n=2048",
+      "--k=4096",
+      "--groups=32",
+      "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+      "--include-args-build=0",
+      "--validate=0",
+      "--warmup=10",
+      "--samples=1",
+      "--launches-per-sample=1",
+      "--correctness-repeats=1",
+      "--backend=ck",
+      "--time=1",
+      "--output-redzone=0"
+    ],
+    "environment": {
+      "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "HIP_VISIBLE_DEVICES": "4",
+      "CUDA_VISIBLE_DEVICES": "4",
+      "OMP_NUM_THREADS": "4"
+    },
+    "prior_accuracy_keys": [
+      "e0_diag_id805_953f57d2fe5d_ck_accuracy_0dffbc59e4",
+      "e0_diag_id805_953f57d2fe5d_native_accuracy_9388f37224"
+    ],
+    "script_sha256": {
+      "analyze_diagnostics.py": "f2085aefa31e09e109b6f3eacf48c44cdfe9346fc1a880a4e114eedfe3bdfe90",
+      "analyze_profiles.py": "72d32fa12e17357935f6c5334a5197fb266af8f28a6bff3f5da463138e845899",
+      "campaign.py": "e1998b64b19f2b5507c9e1939a7f86e2a4b2751c8488539b388658f38f010760",
+      "deliver_profiles.py": "1211f095741a37a87a338e497023447ab1d78c07d56ac8b2ec32847302a56018",
+      "extract_profile_isa.py": "392cd5e34f55e052573533337b2827306b3ce093695eda0a161d770af4c7e17b",
+      "health.py": "0ab45d69e01c7b1ab3c49461b063faffb16de65b1d34b77489a4a47fb259b438",
+      "native_replay.py": "a2fa97d9a96785128ec4c247e15d96ef601f2d12164921cd558ed9639200ce81",
+      "plan.py": "e6db4d016e77318064c6502d04a2ec45b61db2adfd8f34055b6df0e765792602",
+      "profile_capture.py": "8aec55a33e72d2741920eca2bd0008575d1e9ecff406cc118dc5721243480e06",
+      "runtime.py": "7287d4e544ccd0a0b8f7cc7a068bdd346a6db8fe2f72b379b0edc81da155f04c",
+      "shader_audit.py": "640c7716d6fcd9588a51359db9c2d0e6e18dde989d59538b069db970e82572d9"
+    },
+    "worktree_source_sha256": {
+      "include/ck_tile/ops/gemm/grouped_gemm_selector.hpp": "4290c3c0c552d7a29144d6eb677552c067115fc2fce6ce14b40cb1f702b0dff3",
+      "include/ck_tile/ops/gemm/grouped_gemm_device_args.h": "f6f3defcfb5a25698ca360f7b213c1574359c319f48b45a20bd9f9a24390c1c7",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_uniform.hpp": "eacd5ccc4bf73676c64c3edd5035f5c39e000ef4741385b1054c025c27907e65",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_wave.hpp": "38599490edcef2fc0efdbbccf520e3954b887bcaaeb81ccc93d4a2a1fc49dcb4",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_bvector.hpp": "159fc8d6e229a5ca758e5706242303afc44c007fbeec8fd2a7e9379bd0d8290e",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_depth8.hpp": "4be4ebab974c948ccde7c9f5cb7b898dca303b5fbbc2afbe94f7e2c9d67cb600",
+      "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args.cpp": "18bf50595d7861ac4ba18dab79a5a2542d571974128c273e20702e16a6eed679"
+    },
+    "plan_sha256": "16651870b97bbaf4ddbd61a21e8a5f8a95e6b3ac88fa87d2e52407b0e542093b",
+    "raw_log": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/jobs/e0_id805_current_best_sqtt_b9ff83af_b8441bb58b/run.log",
+    "files": [
+      {
+        "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles/id805_current_best_sqtt_b9ff83af/96359_tile_example_grouped_gemm_device_args_benchmark.perf",
+        "bytes": 233786,
+        "sha256": "305a39ea122534ed147567d62e4e229281080d5cacc8133a1876bc22b792cabb"
+      },
+      {
+        "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles/id805_current_best_sqtt_b9ff83af/results.txt",
+        "bytes": 1420,
+        "sha256": "1dff42e8295abd6c0e65f499ecb17d568cc4f966e8a6865dc8e6c27c01b402f7"
+      },
+      {
+        "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles/id805_current_best_sqtt_b9ff83af/thread_trace_18__ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13_se0_cu1.out",
+        "bytes": 7006240,
+        "sha256": "fbcf82d0bd92d0e275e5b9a280eb5b41bf5c02984dd585993b9947fa45e9fee5",
+        "raw_token_bytes": 2802496
+      }
+    ],
+    "raw_token_bytes": 2802496
+  },
+  {
+    "ID": 805,
+    "shape": {
+      "M": 64,
+      "N": 2048,
+      "K": 4096,
+      "G": 32
+    },
+    "dtype": "BF16",
+    "layout": "NN",
+    "physical_gpu": 4,
+    "arm": "frozen_native",
+    "stage": "sqtt",
+    "key": "e0_id805_frozen_native_sqtt_3b6b79db_f465fff8ca",
+    "epoch": 0,
+    "benchmark_sha256": "76642f45892426cb97e758306f780d22c95567b38f9da475105aa38a0456b5ae",
+    "binary_sha256": "a0706c9474aadc00147b93d9b5d930c22e05670c66d59029786f4c81149c4f96",
+    "actual_instance": null,
+    "algorithm_id": 11279,
+    "kernel_filter": "Custom_Cijk_Ailk_Bljk_BBS_BH_Bias_GG_AS_SAV_UserArgs_MT128x64x32_MI16x16x1_SN_GSU1_K1_MIWT4_2_WGM8",
+    "dispatches": [
+      219
+    ],
+    "selected_dispatch": 219,
+    "XCD": 0,
+    "SE": 0,
+    "active_CU_index": 0,
+    "sqtt": true,
+    "capture_timing_is_formal": false,
+    "collection_command": [
+      "/opt/rocm-6.3.3/bin/xprof",
+      "--enable-sqtt",
+      "--enable-raw",
+      "--target-se",
+      "0",
+      "--target-cu",
+      "0",
+      "--dispatches",
+      "219",
+      "--kernels",
+      "Custom_Cijk_Ailk_Bljk_BBS_BH_Bias_GG_AS_SAV_UserArgs_MT128x64x32_MI16x16x1_SN_GSU1_K1_MIWT4_2_WGM8",
+      "--sections",
+      "speed_of_light,memory_workload,occupancy,memory_chart,instruction_statistics,compute_workload,scheduler_statistics,wave_state",
+      "--output-dir",
+      "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles/id805_frozen_native_sqtt_3b6b79db",
+      "/usr/bin/python3",
+      "-B",
+      "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/native_replay.py",
+      "--id",
+      "805",
+      "--mode",
+      "profile"
+    ],
+    "environment": {
+      "HIP_VISIBLE_DEVICES": "4",
+      "CUDA_VISIBLE_DEVICES": "4",
+      "OMP_NUM_THREADS": "4"
+    },
+    "prior_accuracy_keys": [
+      "e0_diag_id805_953f57d2fe5d_ck_accuracy_0dffbc59e4",
+      "e0_diag_id805_953f57d2fe5d_native_accuracy_9388f37224"
+    ],
+    "script_sha256": {
+      "analyze_diagnostics.py": "f2085aefa31e09e109b6f3eacf48c44cdfe9346fc1a880a4e114eedfe3bdfe90",
+      "analyze_profiles.py": "72d32fa12e17357935f6c5334a5197fb266af8f28a6bff3f5da463138e845899",
+      "campaign.py": "e1998b64b19f2b5507c9e1939a7f86e2a4b2751c8488539b388658f38f010760",
+      "deliver_profiles.py": "1211f095741a37a87a338e497023447ab1d78c07d56ac8b2ec32847302a56018",
+      "extract_profile_isa.py": "392cd5e34f55e052573533337b2827306b3ce093695eda0a161d770af4c7e17b",
+      "health.py": "0ab45d69e01c7b1ab3c49461b063faffb16de65b1d34b77489a4a47fb259b438",
+      "native_replay.py": "a2fa97d9a96785128ec4c247e15d96ef601f2d12164921cd558ed9639200ce81",
+      "plan.py": "e6db4d016e77318064c6502d04a2ec45b61db2adfd8f34055b6df0e765792602",
+      "profile_capture.py": "8aec55a33e72d2741920eca2bd0008575d1e9ecff406cc118dc5721243480e06",
+      "runtime.py": "7287d4e544ccd0a0b8f7cc7a068bdd346a6db8fe2f72b379b0edc81da155f04c",
+      "shader_audit.py": "640c7716d6fcd9588a51359db9c2d0e6e18dde989d59538b069db970e82572d9"
+    },
+    "worktree_source_sha256": {
+      "include/ck_tile/ops/gemm/grouped_gemm_selector.hpp": "4290c3c0c552d7a29144d6eb677552c067115fc2fce6ce14b40cb1f702b0dff3",
+      "include/ck_tile/ops/gemm/grouped_gemm_device_args.h": "f6f3defcfb5a25698ca360f7b213c1574359c319f48b45a20bd9f9a24390c1c7",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_uniform.hpp": "eacd5ccc4bf73676c64c3edd5035f5c39e000ef4741385b1054c025c27907e65",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_wave.hpp": "38599490edcef2fc0efdbbccf520e3954b887bcaaeb81ccc93d4a2a1fc49dcb4",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_bvector.hpp": "159fc8d6e229a5ca758e5706242303afc44c007fbeec8fd2a7e9379bd0d8290e",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_depth8.hpp": "4be4ebab974c948ccde7c9f5cb7b898dca303b5fbbc2afbe94f7e2c9d67cb600",
+      "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args.cpp": "18bf50595d7861ac4ba18dab79a5a2542d571974128c273e20702e16a6eed679"
+    },
+    "plan_sha256": "16651870b97bbaf4ddbd61a21e8a5f8a95e6b3ac88fa87d2e52407b0e542093b",
+    "raw_log": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/jobs/e0_id805_frozen_native_sqtt_3b6b79db_f465fff8ca/run.log",
+    "files": [
+      {
+        "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles/id805_frozen_native_sqtt_3b6b79db/96419_python3.10.perf",
+        "bytes": 47903304,
+        "sha256": "dc25c1e3dc6e0a79fcf72eb5427563f1a77dfd85cdbac6738eae95e4fc881a98"
+      },
+      {
+        "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles/id805_frozen_native_sqtt_3b6b79db/results.txt",
+        "bytes": 433,
+        "sha256": "3cbbadba4120a976c59556aa067c04503272c6d9111199f1e0f2ee8a1c9e0290"
+      },
+      {
+        "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles/id805_frozen_native_sqtt_3b6b79db/thread_trace_219_Custom_Cijk_Ailk_Bljk_BBS_BH_Bias_GG_AS_SAV_UserArgs_MT128x64x32_MI16x16x1_SN_GSU1_K1_MIWT4_2_WGM8_se0_cu1.out",
+        "bytes": 3955200,
+        "sha256": "d1ba7b84db3683fb56766bb13b29f4eeb95e8e19e63a90acbb2b4db503be925e",
+        "raw_token_bytes": 1582080
+      }
+    ],
+    "raw_token_bytes": 1582080
+  },
+  {
+    "ID": 1072,
+    "shape": {
+      "M": 2,
+      "N": 4096,
+      "K": 7168,
+      "G": 16
+    },
+    "dtype": "BF16",
+    "layout": "NN",
+    "physical_gpu": 4,
+    "arm": "current_best",
+    "stage": "sqtt",
+    "key": "e0_id1072_current_best_sqtt_869739e0_5a59428cb2",
+    "epoch": 0,
+    "benchmark_sha256": "76642f45892426cb97e758306f780d22c95567b38f9da475105aa38a0456b5ae",
+    "binary_sha256": "76642f45892426cb97e758306f780d22c95567b38f9da475105aa38a0456b5ae",
+    "actual_instance": 5006,
+    "algorithm_id": null,
+    "kernel_filter": "GroupedGemmV7UniformKernel",
+    "dispatches": [
+      18
+    ],
+    "selected_dispatch": 18,
+    "XCD": 0,
+    "SE": 0,
+    "active_CU_index": 0,
+    "sqtt": true,
+    "capture_timing_is_formal": false,
+    "collection_command": [
+      "/opt/rocm-6.3.3/bin/xprof",
+      "--enable-sqtt",
+      "--enable-raw",
+      "--target-se",
+      "0",
+      "--target-cu",
+      "0",
+      "--dispatches",
+      "18",
+      "--kernels",
+      "GroupedGemmV7UniformKernel",
+      "--sections",
+      "speed_of_light,memory_workload,occupancy,memory_chart,instruction_statistics,compute_workload,scheduler_statistics,wave_state",
+      "--output-dir",
+      "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles/id1072_current_best_sqtt_869739e0",
+      "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+      "--dtype=bf16",
+      "--layout=NN",
+      "--m=2",
+      "--n=4096",
+      "--k=7168",
+      "--groups=16",
+      "--blas-lib=/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+      "--include-args-build=0",
+      "--validate=0",
+      "--warmup=10",
+      "--samples=1",
+      "--launches-per-sample=1",
+      "--correctness-repeats=1",
+      "--backend=ck",
+      "--time=1",
+      "--output-redzone=0"
+    ],
+    "environment": {
+      "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "0",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+      "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "1",
+      "HIP_VISIBLE_DEVICES": "4",
+      "CUDA_VISIBLE_DEVICES": "4",
+      "OMP_NUM_THREADS": "4"
+    },
+    "prior_accuracy_keys": [
+      "e0_diag_id1072_0386e2cb05cd_ck_accuracy_1a1fa13d7a",
+      "e0_diag_id1072_0386e2cb05cd_native_accuracy_f687b5c2e0"
+    ],
+    "script_sha256": {
+      "analyze_diagnostics.py": "f2085aefa31e09e109b6f3eacf48c44cdfe9346fc1a880a4e114eedfe3bdfe90",
+      "analyze_profiles.py": "72d32fa12e17357935f6c5334a5197fb266af8f28a6bff3f5da463138e845899",
+      "campaign.py": "e1998b64b19f2b5507c9e1939a7f86e2a4b2751c8488539b388658f38f010760",
+      "deliver_profiles.py": "1211f095741a37a87a338e497023447ab1d78c07d56ac8b2ec32847302a56018",
+      "extract_profile_isa.py": "392cd5e34f55e052573533337b2827306b3ce093695eda0a161d770af4c7e17b",
+      "health.py": "0ab45d69e01c7b1ab3c49461b063faffb16de65b1d34b77489a4a47fb259b438",
+      "native_replay.py": "a2fa97d9a96785128ec4c247e15d96ef601f2d12164921cd558ed9639200ce81",
+      "plan.py": "e6db4d016e77318064c6502d04a2ec45b61db2adfd8f34055b6df0e765792602",
+      "profile_capture.py": "8aec55a33e72d2741920eca2bd0008575d1e9ecff406cc118dc5721243480e06",
+      "runtime.py": "7287d4e544ccd0a0b8f7cc7a068bdd346a6db8fe2f72b379b0edc81da155f04c",
+      "shader_audit.py": "640c7716d6fcd9588a51359db9c2d0e6e18dde989d59538b069db970e82572d9"
+    },
+    "worktree_source_sha256": {
+      "include/ck_tile/ops/gemm/grouped_gemm_selector.hpp": "4290c3c0c552d7a29144d6eb677552c067115fc2fce6ce14b40cb1f702b0dff3",
+      "include/ck_tile/ops/gemm/grouped_gemm_device_args.h": "f6f3defcfb5a25698ca360f7b213c1574359c319f48b45a20bd9f9a24390c1c7",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_uniform.hpp": "eacd5ccc4bf73676c64c3edd5035f5c39e000ef4741385b1054c025c27907e65",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_wave.hpp": "38599490edcef2fc0efdbbccf520e3954b887bcaaeb81ccc93d4a2a1fc49dcb4",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_bvector.hpp": "159fc8d6e229a5ca758e5706242303afc44c007fbeec8fd2a7e9379bd0d8290e",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_depth8.hpp": "4be4ebab974c948ccde7c9f5cb7b898dca303b5fbbc2afbe94f7e2c9d67cb600",
+      "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args.cpp": "18bf50595d7861ac4ba18dab79a5a2542d571974128c273e20702e16a6eed679"
+    },
+    "plan_sha256": "16651870b97bbaf4ddbd61a21e8a5f8a95e6b3ac88fa87d2e52407b0e542093b",
+    "raw_log": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/jobs/e0_id1072_current_best_sqtt_869739e0_5a59428cb2/run.log",
+    "files": [
+      {
+        "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles/id1072_current_best_sqtt_869739e0/96784_tile_example_grouped_gemm_device_args_benchmark.perf",
+        "bytes": 365598,
+        "sha256": "a7f9a0c55669ab2f6aa9d33d6147778eef8df4d7ff17377770f6d11dae8b91d9"
+      },
+      {
+        "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles/id1072_current_best_sqtt_869739e0/results.txt",
+        "bytes": 1423,
+        "sha256": "7ff47faa633b79caace693494770d9759586de8df96d8e36356c87a62a52400b"
+      },
+      {
+        "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles/id1072_current_best_sqtt_869739e0/thread_trace_18__ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13_se0_cu1.out",
+        "bytes": 11950720,
+        "sha256": "ca09ab2d5ce2708a1d7dcc567759c1e258b9f00be5d9b2818f20788757416548",
+        "raw_token_bytes": 4780288
+      }
+    ],
+    "raw_token_bytes": 4780288
+  },
+  {
+    "ID": 1072,
+    "shape": {
+      "M": 2,
+      "N": 4096,
+      "K": 7168,
+      "G": 16
+    },
+    "dtype": "BF16",
+    "layout": "NN",
+    "physical_gpu": 4,
+    "arm": "frozen_native",
+    "stage": "sqtt",
+    "key": "e0_id1072_frozen_native_sqtt_94b604a7_eb0cae4109",
+    "epoch": 0,
+    "benchmark_sha256": "76642f45892426cb97e758306f780d22c95567b38f9da475105aa38a0456b5ae",
+    "binary_sha256": "a0706c9474aadc00147b93d9b5d930c22e05670c66d59029786f4c81149c4f96",
+    "actual_instance": null,
+    "algorithm_id": 11278,
+    "kernel_filter": "Custom_Cijk_Ailk_Bljk_BBS_BH_Bias_GG_AS_SAV_UserArgs_MT128x64x32_MI16x16x1_SN_GSU1_K1_MIWT4_2_WGM1",
+    "dispatches": [
+      360
+    ],
+    "selected_dispatch": 360,
+    "XCD": 0,
+    "SE": 0,
+    "active_CU_index": 0,
+    "sqtt": true,
+    "capture_timing_is_formal": false,
+    "collection_command": [
+      "/opt/rocm-6.3.3/bin/xprof",
+      "--enable-sqtt",
+      "--enable-raw",
+      "--target-se",
+      "0",
+      "--target-cu",
+      "0",
+      "--dispatches",
+      "360",
+      "--kernels",
+      "Custom_Cijk_Ailk_Bljk_BBS_BH_Bias_GG_AS_SAV_UserArgs_MT128x64x32_MI16x16x1_SN_GSU1_K1_MIWT4_2_WGM1",
+      "--sections",
+      "speed_of_light,memory_workload,occupancy,memory_chart,instruction_statistics,compute_workload,scheduler_statistics,wave_state",
+      "--output-dir",
+      "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles/id1072_frozen_native_sqtt_94b604a7",
+      "/usr/bin/python3",
+      "-B",
+      "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/native_replay.py",
+      "--id",
+      "1072",
+      "--mode",
+      "profile"
+    ],
+    "environment": {
+      "HIP_VISIBLE_DEVICES": "4",
+      "CUDA_VISIBLE_DEVICES": "4",
+      "OMP_NUM_THREADS": "4"
+    },
+    "prior_accuracy_keys": [
+      "e0_diag_id1072_0386e2cb05cd_ck_accuracy_1a1fa13d7a",
+      "e0_diag_id1072_0386e2cb05cd_native_accuracy_f687b5c2e0"
+    ],
+    "script_sha256": {
+      "analyze_diagnostics.py": "f2085aefa31e09e109b6f3eacf48c44cdfe9346fc1a880a4e114eedfe3bdfe90",
+      "analyze_profiles.py": "72d32fa12e17357935f6c5334a5197fb266af8f28a6bff3f5da463138e845899",
+      "campaign.py": "e1998b64b19f2b5507c9e1939a7f86e2a4b2751c8488539b388658f38f010760",
+      "deliver_profiles.py": "1211f095741a37a87a338e497023447ab1d78c07d56ac8b2ec32847302a56018",
+      "extract_profile_isa.py": "392cd5e34f55e052573533337b2827306b3ce093695eda0a161d770af4c7e17b",
+      "health.py": "0ab45d69e01c7b1ab3c49461b063faffb16de65b1d34b77489a4a47fb259b438",
+      "native_replay.py": "a2fa97d9a96785128ec4c247e15d96ef601f2d12164921cd558ed9639200ce81",
+      "plan.py": "e6db4d016e77318064c6502d04a2ec45b61db2adfd8f34055b6df0e765792602",
+      "profile_capture.py": "8aec55a33e72d2741920eca2bd0008575d1e9ecff406cc118dc5721243480e06",
+      "runtime.py": "7287d4e544ccd0a0b8f7cc7a068bdd346a6db8fe2f72b379b0edc81da155f04c",
+      "shader_audit.py": "640c7716d6fcd9588a51359db9c2d0e6e18dde989d59538b069db970e82572d9"
+    },
+    "worktree_source_sha256": {
+      "include/ck_tile/ops/gemm/grouped_gemm_selector.hpp": "4290c3c0c552d7a29144d6eb677552c067115fc2fce6ce14b40cb1f702b0dff3",
+      "include/ck_tile/ops/gemm/grouped_gemm_device_args.h": "f6f3defcfb5a25698ca360f7b213c1574359c319f48b45a20bd9f9a24390c1c7",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_uniform.hpp": "eacd5ccc4bf73676c64c3edd5035f5c39e000ef4741385b1054c025c27907e65",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_wave.hpp": "38599490edcef2fc0efdbbccf520e3954b887bcaaeb81ccc93d4a2a1fc49dcb4",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_bvector.hpp": "159fc8d6e229a5ca758e5706242303afc44c007fbeec8fd2a7e9379bd0d8290e",
+      "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_depth8.hpp": "4be4ebab974c948ccde7c9f5cb7b898dca303b5fbbc2afbe94f7e2c9d67cb600",
+      "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args.cpp": "18bf50595d7861ac4ba18dab79a5a2542d571974128c273e20702e16a6eed679"
+    },
+    "plan_sha256": "16651870b97bbaf4ddbd61a21e8a5f8a95e6b3ac88fa87d2e52407b0e542093b",
+    "raw_log": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/jobs/e0_id1072_frozen_native_sqtt_94b604a7_eb0cae4109/run.log",
+    "files": [
+      {
+        "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles/id1072_frozen_native_sqtt_94b604a7/96851_python3.10.perf",
+        "bytes": 47949654,
+        "sha256": "c33e03e639f1ec6827ecf21a69cfeb990421c55335b770bd37af569ed30556ab"
+      },
+      {
+        "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles/id1072_frozen_native_sqtt_94b604a7/results.txt",
+        "bytes": 433,
+        "sha256": "f098b9ac20082394995848517f9ab0a80b0d66e2b2f5e6561f0c683f8499e911"
+      },
+      {
+        "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles/id1072_frozen_native_sqtt_94b604a7/thread_trace_360_Custom_Cijk_Ailk_Bljk_BBS_BH_Bias_GG_AS_SAV_UserArgs_MT128x64x32_MI16x16x1_SN_GSU1_K1_MIWT4_2_WGM1_se0_cu1.out",
+        "bytes": 7441200,
+        "sha256": "b362fd64df543eee8ddfac960ea7db35d65ab1a9c30449354d32ac644bab9bee",
+        "raw_token_bytes": 2976480
+      }
+    ],
+    "raw_token_bytes": 2976480
+  }
+]

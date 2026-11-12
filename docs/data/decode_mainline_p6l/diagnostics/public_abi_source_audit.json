@@ -1,0 +1,22 @@
+{
+  "passed": true,
+  "public_structs_unchanged": {
+    "ck_tile_hcu_grouped_gemm_dimension_v1": "46c23b46d4ab2ddda5d4ed154b3fd3c47a5fb387871e5752fa443bad379afd2d",
+    "ck_tile_hcu_grouped_gemm_problem_v1": "6e8419ddd13b1041fda2c2dedf280e74c0afbc04a156123032804b6d9bc22d1a",
+    "ck_tile_hcu_grouped_gemm_selection_v1": "23160e32744cf5263455d184e626f02885927500ffcd6397523867ff6dd02fc4",
+    "ck_tile_hcu_grouped_gemm_launch_v1": "de34a146fcddf54f5879240a941d01d57f07c7fadd67cdf808856cda2b700bd8",
+    "ck_tile_hcu_grouped_gemm_candidate_info_v1": "85645f90ca43f51852065bd829f3275ab66a152136d22d44e9599f8521b0c029"
+  },
+  "existing_explicit_constants_preserved": 87,
+  "new_constants": [
+    "CK_TILE_HCU_GROUPED_GEMM_INSTANCE_BF16_NN_DECODE_BVECTOR2_V1",
+    "CK_TILE_HCU_GROUPED_GEMM_INSTANCE_BF16_NN_DECODE_BVECTOR4_V1",
+    "CK_TILE_HCU_GROUPED_GEMM_INSTANCE_BF16_NN_DECODE_MAINLINE_D4_V1",
+    "CK_TILE_HCU_GROUPED_GEMM_INSTANCE_BF16_NN_DECODE_MAINLINE_D8_V1",
+    "CK_TILE_HCU_GROUPED_GEMM_INSTANCE_BF16_NN_DECODE_MAINLINE_SERIAL_V1",
+    "CK_TILE_HCU_GROUPED_GEMM_INSTANCE_BF16_NN_DECODE_SHORT_N64_V1",
+    "CK_TILE_HCU_GROUPED_GEMM_INSTANCE_BF16_NN_DECODE_SHORT_N32_V1"
+  ],
+  "public_struct_layout_change": false,
+  "scope": "Exact public struct definitions and previous explicit enum/flag values versus HEAD; no field additions or reorder"
+}
