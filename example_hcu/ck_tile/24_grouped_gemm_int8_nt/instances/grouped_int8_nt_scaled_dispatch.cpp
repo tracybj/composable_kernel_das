@@ -5,8 +5,17 @@
 #include "../kernels/grouped_int8_nt_scaled_epilogue.hpp"
 #include "grouped_int8_nt_instances.hpp"
 #include "grouped_int8_nt_routes.hpp"
+#ifdef CK_INT8_CACHED_TUNING
+#include "../tuning/grouped_int8_nt_tuning_internal.hpp"
+#endif
 
 namespace {
+
+template <bool BF>
+using PairedM256N384Problem = std::conditional_t<
+    BF,
+    ck_tile::GroupedInt8NtWaspPublicWideNProblem<false, 12, 1, 2, true, true, 0, false, true, 0, 12>,
+    ck_tile::int8_nt_instances::PackedM256N384>;
 
 template <bool BF, class P, class Epi = ck_tile::GroupedInt8NtScaledWaspEpilogue<P, BF>>
 int wasp(const void* args, const void* scales, int g, int m, int n, hipStream_t stream)
@@ -109,56 +118,107 @@ int dispatch(unsigned route,
     switch(route)
     {
     case int8_routes::LegacyRaw: return raw<BF>(legacy, args, scales, g, m, n, stream);
-    case int8_routes::LinearTransposedRaw:
-        return wasp<BF, RawTransposeM256N256>(args, scales, g, m, n, stream);
-    case int8_routes::LinearTransposedRecord1024:
-        return wasp<BF, RawTransposeM256N256Record1024>(args, scales, g, m, n, stream);
-    case int8_routes::PackedWeightM256N256:
-        return wasp<BF, PackedM256N256>(args, scales, g, m, n, stream);
-    case int8_routes::PackedM128N256:
-        return wasp<BF, PackedM128N256>(args, scales, g, m, n, stream);
-    case int8_routes::PackedM128N128:
-        return wasp<BF, PackedM128N128>(args, scales, g, m, n, stream);
-    case int8_routes::PackedM64N256:
-        return wasp<BF, PackedM64N256>(args, scales, g, m, n, stream);
-    case int8_routes::PackedM64N64:
-        return wasp<BF, PackedM64N64>(args, scales, g, m, n, stream);
-    case int8_routes::PackedM32N256:
-        return wasp<BF, PackedM32N256>(args, scales, g, m, n, stream);
-    case int8_routes::PackedM32N64:
-        return wasp<BF, PackedM32N64>(args, scales, g, m, n, stream);
-    case int8_routes::PackedM256N384:
-        return wasp<BF, PackedM256N384>(args, scales, g, m, n, stream);
-    case int8_routes::RawAlignedM16N32K512:
-        return cooperative<BF, RawAlignedM16N32K512>(args, scales, g, m, n, stream);
-    case int8_routes::RawM32N64K256W4:
-        return cooperative<BF, RawM32N64K256W4>(args, scales, g, m, n, stream);
-    case int8_routes::KParallelDecode:
-        return m == 1 ? k_parallel<BF, 1>(args, g, n, stream)
+#define CK_INT8_SCALED_COOPERATIVE(id, P) \
+    case int8_routes::id: return cooperative<BF, P>(args, scales, g, m, n, stream);
+#define CK_INT8_SCALED_WASP(id, P) \
+    case int8_routes::id: return wasp<BF, P>(args, scales, g, m, n, stream);
+#define CK_INT8_SCALED_PAIRED_WASP(id, P) \
+    case int8_routes::id: return paired_wasp<BF, P>(args, scales, g, m, n, stream);
+#define CK_INT8_SCALED_K_PARALLEL(id) \
+    case int8_routes::id: \
+        return m == 1 ? k_parallel<BF, 1>(args, g, n, stream) \
                       : k_parallel<BF, 2>(args, g, n, stream);
-    case int8_routes::PackedCooperativeM1N256:
-        return cooperative<BF, PackedM16N64K256>(args, scales, g, m, n, stream);
-    case int8_routes::PackedM256N384MaskedM4:
-        return wasp<BF, ScaledPackedM256N384MaskedM4>(args, scales, g, m, n, stream);
-    case int8_routes::PackedM256N384MaskedM8:
-        return wasp<BF, ScaledPackedM256N384MaskedM8>(args, scales, g, m, n, stream);
-    case int8_routes::PairedM256N256:
-        return paired_wasp<BF, PackedM256N256>(args, scales, g, m, n, stream);
-    case int8_routes::PairedM256N384:
-        return paired_wasp<BF, std::conditional_t<BF,
-            GroupedInt8NtWaspPublicWideNProblem<false, 12, 1, 2, true, true, 0, false, true, 0, 12>,
-            PackedM256N384>>(args, scales, g, m, n, stream);
-    case int8_routes::PairedM256N384MaskedM4:
-        return paired_wasp<BF, ScaledPackedM256N384MaskedM4>(args, scales, g, m, n, stream);
-    case int8_routes::PairedM256N384MaskedM8:
-        return paired_wasp<BF, ScaledPackedM256N384MaskedM8>(args, scales, g, m, n, stream);
-    case int8_routes::PairedM128N256:
-        return paired_wasp<BF, PackedM128N256>(args, scales, g, m, n, stream);
+#include "grouped_int8_nt_scaled_routes.inc"
+#undef CK_INT8_SCALED_K_PARALLEL
+#undef CK_INT8_SCALED_PAIRED_WASP
+#undef CK_INT8_SCALED_WASP
+#undef CK_INT8_SCALED_COOPERATIVE
     default: return CK_TILE_INT8_CACHED_UNSUPPORTED_V1;
     }
 }
 
 } // namespace
+
+#ifdef CK_INT8_CACHED_TUNING
+namespace ck_tile::int8_nt_tuning {
+namespace {
+template <class P, bool Packed = false>
+void add_tile(std::vector<Candidate>& out, const Domain& d, unsigned route, unsigned instance)
+{
+    if constexpr(Packed)
+    {
+        if(!d.packed || d.n % P::BN != 0 || d.k % P::BK != 0)
+            return;
+    }
+    if constexpr(P::Aligned)
+        if(d.m % P::BM != 0 || d.n % P::BN != 0 || d.k % P::BK != 0)
+            return;
+    out.push_back({route, instance, P::BM, P::BN, P::BK, P::Threads, Packed});
+}
+
+template <class P, bool Paired = false>
+void add_wasp(std::vector<Candidate>& out, const Domain& d, unsigned route, unsigned instance)
+{
+    if((P::PackedB && !d.packed) || (Paired && !d.paired))
+        return;
+    const int m = P::Transpose ? d.n : d.m;
+    const int n = P::Transpose ? d.m : d.n;
+    const int a_stride = P::Transpose ? d.max_b_stride : d.max_a_stride;
+    const int b_stride = P::Transpose ? d.max_a_stride : (P::PackedB ? d.k : d.max_b_stride);
+    // Match the native geometry in GroupedInt8NtWaspKernel::is_native.
+    constexpr int ma = P::Transpose && !P::PackedB && P::Pipeline::MasksInactiveN ? 16 : P::BM;
+    constexpr int na = P::BN == 384 || P::Pipeline::MasksInactiveN ? 32 : P::BN;
+    if(m % ma != 0 || n % na != 0 || d.k % P::BK != 0 || b_stride >= 16384 ||
+       int64_t(P::BM < m ? P::BM : m) * a_stride > INT32_MAX ||
+       int64_t(n) * b_stride > INT32_MAX)
+        return;
+    out.push_back({route, instance, P::BM, P::BN, P::BK, P::Threads, P::PackedB});
+}
+
+template <bool BF>
+std::vector<Candidate> enumerate_for_output(const Domain& d)
+{
+    using namespace ck_tile::int8_nt_instances;
+    using Instance = GroupedGemmInstanceId;
+    std::vector<Candidate> out;
+    // NT loads require full 16-byte K vectors. The tile epilogue stores groups
+    // of four columns. These restrictions cover the scaled benchmark contract.
+    if(d.m <= 0 || d.n % 4 != 0 || d.k % 16 != 0)
+        return out;
+#define CK_INT8_LEGACY_TILE(id, ...) \
+    add_tile<__VA_ARGS__>(out, d, int8_routes::LegacyRaw, static_cast<unsigned>(Instance::id));
+#define CK_INT8_LEGACY_WASP(id, ...) \
+    add_wasp<__VA_ARGS__>(out, d, int8_routes::LegacyRaw, static_cast<unsigned>(Instance::id));
+#define CK_INT8_LEGACY_DIRECT(id) CK_INT8_LEGACY_TILE(id, DefaultFallbackTileProblem)
+#define CK_INT8_LEGACY_DIRECT_EPI(id, ...) CK_INT8_LEGACY_TILE(id, __VA_ARGS__)
+#include "grouped_int8_nt_legacy_instances.inc"
+#undef CK_INT8_LEGACY_DIRECT_EPI
+#undef CK_INT8_LEGACY_DIRECT
+#undef CK_INT8_LEGACY_WASP
+#undef CK_INT8_LEGACY_TILE
+#define CK_INT8_SCALED_COOPERATIVE(id, P) \
+    add_tile<P, std::is_same_v<P, PackedM16N64K256>>(out, d, int8_routes::id, 0);
+#define CK_INT8_SCALED_WASP(id, P) add_wasp<P>(out, d, int8_routes::id, 0);
+#define CK_INT8_SCALED_PAIRED_WASP(id, P) add_wasp<P, true>(out, d, int8_routes::id, 0);
+#define CK_INT8_SCALED_K_PARALLEL(id)                                                   \
+    if(d.m <= 2)                                                                     \
+        out.push_back({int8_routes::id, 0, d.m, 4, Int8NtKParallelProblem<8, 4>::KSpan, 512, 0});
+#include "grouped_int8_nt_scaled_routes.inc"
+#undef CK_INT8_SCALED_K_PARALLEL
+#undef CK_INT8_SCALED_PAIRED_WASP
+#undef CK_INT8_SCALED_WASP
+#undef CK_INT8_SCALED_COOPERATIVE
+    return out;
+}
+} // namespace
+
+std::vector<Candidate> enumerate(const Domain& domain, unsigned output_type)
+{
+    return output_type == int8_output_types::Bf16 ? enumerate_for_output<true>(domain)
+                                                 : enumerate_for_output<false>(domain);
+}
+} // namespace ck_tile::int8_nt_tuning
+#endif
 
 extern "C" int ck_tile_int8_scaled_launch_private(unsigned output,
                                                   unsigned route,

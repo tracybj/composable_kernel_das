@@ -29,7 +29,7 @@ def sources(tuning=False):
             for part in path.relative_to(E).parts
         ):
             continue
-        if path.suffix in ['.cpp', '.hpp', '.h', '.txt']:
+        if path.suffix in ['.cpp', '.hpp', '.h', '.inc', '.txt']:
             extension[str(path.relative_to(ROOT))] = digest(path)
     context = [
         'include/ck_tile/ops/gemm/grouped_gemm_selector.hpp',
@@ -92,6 +92,11 @@ def main():
     names = [line.split()[-1] for line in exports.splitlines() if line.split()]
     api = [name for name in names if name.startswith('ck_tile_int8_nt_cached_')]
     assert len(api) == 9 and 'ck_tile_int8_nt_cached_plan_create_v2' in api, api
+    tuning_api = sorted(name for name in names if name.startswith('ck_tile_int8_nt_tuning_'))
+    assert tuning_api == ([
+        'ck_tile_int8_nt_tuning_list_v1',
+        'ck_tile_int8_nt_tuning_plan_create_v1',
+    ] if args.tuning else []), tuning_api
     assert not any(
         name.startswith('ck_tile_hcu_grouped_gemm_')
         or name == 'ck_tile_grouped_int8_nt_launch'
@@ -103,7 +108,8 @@ def main():
         library_sha256=digest(library),
         benchmark_sha256=digest(build / 'libck_tile_int8_nt_cached_benchmark.so'),
         experimental_tuning=args.tuning,
-        operand_paths=args.tuning,
+        operand_paths=False,
+        tuning_symbols=tuning_api,
     )
     (build / 'exported_api_symbols.json').write_text(
         json.dumps(identity, indent=2) + '\n'

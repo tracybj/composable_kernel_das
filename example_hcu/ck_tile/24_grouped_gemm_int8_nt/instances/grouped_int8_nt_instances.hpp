@@ -74,91 +74,15 @@ int dispatch_grouped_int8_nt_instance(GroupedGemmInstanceId id,
     using Instance = GroupedGemmInstanceId;
     switch(id)
     {
-    case Instance::int8_nt_direct_m16:
-        return on_direct_m16();
-    case Instance::int8_nt_m32:
-        return on_tile(TypeTag<GroupedInt8NtTileProblem<32, 128>>{});
-    case Instance::int8_nt_m64:
-        return on_tile(TypeTag<GroupedInt8NtTileProblem<64, 128>>{});
-    case Instance::int8_nt_m128:
-        return on_tile(TypeTag<GroupedInt8NtTileProblem<128, 128>>{});
-    case Instance::int8_nt_m128_n256:
-        return on_tile(TypeTag<GroupedInt8NtTileProblem<128, 256, 64, 2, 4>>{});
-    case Instance::int8_nt_m128_aligned:
-        return on_tile(TypeTag<
-            GroupedInt8NtTileProblem<128, 128, 64, 2, 2, true, true, true, true, 1, false>>{});
-    case Instance::int8_nt_m256_n256_aligned:
-        return on_tile(TypeTag<
-            GroupedInt8NtTileProblem<256, 256, 64, 4, 2, true, true, true, false, 1, true>>{});
-    case Instance::int8_nt_m128_n256_aligned:
-        return on_tile(TypeTag<
-            GroupedInt8NtTileProblem<128, 256, 64, 2, 4, true, true, true, false, 2, true>>{});
-    case Instance::int8_nt_m256_n256_padded:
-        return on_tile(TypeTag<
-            GroupedInt8NtTileProblem<256, 256, 64, 4, 2, true, false, true, false, 1, true>>{});
-    case Instance::int8_nt_m128_padded:
-        return on_tile(TypeTag<
-            GroupedInt8NtTileProblem<128, 128, 64, 2, 2, true, false, true, false, 1, true>>{});
-    case Instance::int8_nt_m256_n256_ngroup:
-        return on_tile(TypeTag<
-            GroupedInt8NtTileProblem<256, 256, 64, 4, 2, true, true, true, false, 1, true, 1>>{});
-    case Instance::int8_nt_m128_mgroup8:
-        return on_tile(TypeTag<
-            GroupedInt8NtTileProblem<128, 128, 64, 2, 2, true, true, true, true, 1, false, 8>>{});
-    case Instance::int8_nt_m128_padded_mgroup8:
-        return on_tile(TypeTag<
-            GroupedInt8NtTileProblem<128, 128, 64, 2, 2, true, false, true, false, 1, true, 8>>{});
-    case Instance::int8_nt_m16_n256_aligned:
-        return on_tile(TypeTag<
-            GroupedInt8NtTileProblem<16, 256, 64, 1, 4, false, true, true, true, 1, true>>{});
-    case Instance::int8_nt_small_m_n64_k128:
-        return on_tile(TypeTag<DefaultFallbackTileProblem>{});
-    case Instance::int8_nt_small_m_n64_k256:
-        return on_tile(TypeTag<
-            GroupedInt8NtTileProblem<16, 64, 256, 1, 2, false, false, true, true, 1, true>>{});
-    case Instance::int8_nt_small_m_n128_k256:
-        return on_tile(TypeTag<
-            GroupedInt8NtTileProblem<16, 128, 256, 1, 4, false, false, true, true, 1, true>>{});
-    case Instance::int8_nt_small_g_n32_k512:
-        return on_tile(TypeTag<DirectSmallMTileProblem>{});
-    case Instance::int8_nt_m32_n64_k128:
-        return on_tile(TypeTag<
-            GroupedInt8NtTileProblem<32, 64, 128, 1, 2, false, false, true, true, 1, true>>{});
-    case Instance::int8_nt_m32_n64_k256:
-        return on_tile(TypeTag<
-            GroupedInt8NtTileProblem<32, 64, 256, 1, 2, false, false, true, true, 1, true>>{});
-    case Instance::int8_nt_m32_n128_k256:
-        return on_tile(TypeTag<
-            GroupedInt8NtTileProblem<32, 128, 256, 2, 2, false, false, true, true, 1, true>>{});
-    case Instance::int8_nt_m64_n128_k128:
-        return on_tile(TypeTag<
-            GroupedInt8NtTileProblem<64, 128, 128, 2, 2, false, false, true, true, 1, true>>{});
-    case Instance::int8_nt_m64_n128_k256:
-        return on_tile(TypeTag<
-            GroupedInt8NtTileProblem<64, 128, 256, 2, 2, false, false, true, true, 1, true>>{});
-    case Instance::int8_nt_small_m_n32_k512_direct:
-        return on_direct_epi(TypeTag<DirectSmallMTileProblem>{});
-    case Instance::int8_nt_wasp_a4_transposed:
-        return on_wasp(
-            TypeTag<GroupedInt8NtWaspCoreProblem<256, true, 8, 4, 4, true, true, 0, false, false, 0, 8, true>>{});
-    case Instance::int8_nt_wasp_a8_transposed:
-        return on_wasp(
-            TypeTag<GroupedInt8NtWaspCoreProblem<256, true, 8, 4, 8, true, true, 0, false, false, 0, 8, true>>{});
-    case Instance::int8_nt_wasp_a4:
-        return on_wasp(
-            TypeTag<GroupedInt8NtWaspCoreProblem<256, false, 8, 4, 4, true, true, 0, false, false, 0, 8, true>>{});
-    case Instance::int8_nt_wasp_record1024_a4:
-        return on_wasp(
-            TypeTag<GroupedInt8NtWaspCoreProblem<256, false, 8, 4, 4, true, true, 1024, false, false, 0, 8, true>>{});
-    case Instance::int8_nt_wasp_record1024_a4_transposed:
-        return on_wasp(
-            TypeTag<GroupedInt8NtWaspCoreProblem<256, true, 8, 4, 4, true, true, 1024, false, false, 0, 8, true>>{});
-    case Instance::int8_nt_wasp_m128_a2:
-        return on_wasp(
-            TypeTag<GroupedInt8NtWaspCoreProblem<128, false, 8, 1, 2, true, true, 0, false, false, 0, 8, true>>{});
-    case Instance::int8_nt_wasp_m128_record1024_a2:
-        return on_wasp(
-            TypeTag<GroupedInt8NtWaspCoreProblem<128, false, 8, 1, 2, true, true, 1024, false, false, 0, 8, true>>{});
+#define CK_INT8_LEGACY_TILE(id, ...) case Instance::id: return on_tile(TypeTag<__VA_ARGS__>{});
+#define CK_INT8_LEGACY_WASP(id, ...) case Instance::id: return on_wasp(TypeTag<__VA_ARGS__>{});
+#define CK_INT8_LEGACY_DIRECT(id) case Instance::id: return on_direct_m16();
+#define CK_INT8_LEGACY_DIRECT_EPI(id, ...) case Instance::id: return on_direct_epi(TypeTag<__VA_ARGS__>{});
+#include "grouped_int8_nt_legacy_instances.inc"
+#undef CK_INT8_LEGACY_DIRECT_EPI
+#undef CK_INT8_LEGACY_DIRECT
+#undef CK_INT8_LEGACY_WASP
+#undef CK_INT8_LEGACY_TILE
     default:
         return on_default();
     }

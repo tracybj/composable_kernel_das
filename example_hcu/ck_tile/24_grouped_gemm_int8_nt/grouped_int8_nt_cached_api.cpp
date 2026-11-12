@@ -5,6 +5,9 @@
 #include "instances/grouped_int8_nt_selector.hpp"
 #include "include/grouped_int8_nt_scale_args.hpp"
 #include "include/grouped_int8_nt_k_parallel_args.hpp"
+#ifdef CK_INT8_CACHED_TUNING
+#include "tuning/grouped_int8_nt_tuning_internal.hpp"
+#endif
 #include "ck_tile/ops/gemm/grouped_gemm_selector.hpp"
 #include "ck_tile/ops/gemm/kernel/gemm_tile_partitioner.hpp"
 #include "ck_tile/ops/gemm/kernel/grouped_gemm_kernel.hpp"
@@ -274,12 +277,24 @@ ck_tile_int8_nt_cached_weights_destroy_v1(ck_tile_int8_nt_cached_weights_handle_
 }
 
 namespace {
+#ifdef CK_INT8_CACHED_TUNING
+struct TuningSelection
+{
+    std::vector<ck_tile::int8_nt_tuning::Candidate>* list;
+    unsigned route, legacy;
+};
+#endif
+
 std::unique_ptr<ck_tile_int8_nt_cached_plan_impl>
 make_plan(ck_tile_int8_nt_cached_weights_handle_v1 w,
           const ck_tile_int8_nt_cached_group_desc_v1* groups,
           int32_t g,
           unsigned output_type,
-          const ck_tile::Int8NtScaleArgs* scales = nullptr)
+          const ck_tile::Int8NtScaleArgs* scales = nullptr
+#ifdef CK_INT8_CACHED_TUNING
+          , const TuningSelection* tuning = nullptr
+#endif
+          )
 {
     require(w && groups && g == w->g,
             CK_TILE_INT8_CACHED_INVALID_ARGUMENT_V1,
@@ -364,6 +379,35 @@ make_plan(ck_tile_int8_nt_cached_weights_handle_v1 w,
          p->route == ck_tile::int8_routes::LinearTransposedRecord1024) &&
         !raw_transposed))
         p->route = ck_tile::int8_routes::LegacyRaw;
+#ifdef CK_INT8_CACHED_TUNING
+    if(tuning)
+    {
+        require(output_type && scales && uniform && !empty,
+                CK_TILE_INT8_CACHED_UNSUPPORTED_V1,
+                "tuning requires uniform nonempty scaled groups");
+        ck_tile::int8_nt_tuning::Domain domain{max_m, w->n, w->k, 0, 0, w->packable, true};
+        for(int i = 0; i < g; ++i)
+        {
+            domain.max_a_stride = std::max(domain.max_a_stride, groups[i].a_row_stride);
+            domain.max_b_stride = std::max(domain.max_b_stride, w->raw[i].row_stride);
+            domain.paired &= groups[i].c_row_stride % 8 == 0 && scales[i].a_stride == 0 &&
+                             (!scales[i].b || scales[i].b_stride == 1);
+        }
+        auto candidates = ck_tile::int8_nt_tuning::enumerate(domain, output_type);
+        if(tuning->list)
+        {
+            *tuning->list = std::move(candidates);
+            return nullptr;
+        }
+        const auto it = std::find_if(candidates.begin(), candidates.end(), [&](const auto& entry) {
+            return entry.route == tuning->route && entry.legacy_instance == tuning->legacy;
+        });
+        require(it != candidates.end(), CK_TILE_INT8_CACHED_UNSUPPORTED_V1,
+                "tuning candidate is not legal for these descriptors");
+        p->route = it->route;
+        p->legacy_instance = it->legacy_instance;
+    }
+#endif
     if(p->route == CK_TILE_INT8_CACHED_RAW_K_PARALLEL_M1_M2_V1)
     {
         require(scales,
@@ -510,11 +554,15 @@ ck_tile_int8_nt_cached_plan_destroy_v1(ck_tile_int8_nt_cached_plan_handle_v1 p)
     });
 }
 
-extern "C" CK_TILE_INT8_CACHED_API int
-ck_tile_int8_nt_cached_plan_create_v2(ck_tile_int8_nt_cached_weights_handle_v1 w,
-                                      const ck_tile_int8_nt_cached_group_desc_v2* groups,
-                                      int32_t g,
-                                      ck_tile_int8_nt_cached_plan_handle_v1* result)
+namespace {
+int create_plan_v2(ck_tile_int8_nt_cached_weights_handle_v1 w,
+                   const ck_tile_int8_nt_cached_group_desc_v2* groups,
+                   int32_t g,
+                   ck_tile_int8_nt_cached_plan_handle_v1* result
+#ifdef CK_INT8_CACHED_TUNING
+                   , const TuningSelection* tuning = nullptr
+#endif
+                   )
 {
     return api([&] {
         require(result, CK_TILE_INT8_CACHED_INVALID_ARGUMENT_V1, "null plan result");
@@ -564,7 +612,15 @@ ck_tile_int8_nt_cached_plan_create_v2(ck_tile_int8_nt_cached_weights_handle_v1 w
                               static_cast<int32_t>(a.scale_a_mode),
                               static_cast<int32_t>(a.scale_b_mode)};
         }
-        auto p = make_plan(w, legacy.data(), g, groups[0].output_type, scales.data());
+        auto p = make_plan(w, legacy.data(), g, groups[0].output_type, scales.data()
+#ifdef CK_INT8_CACHED_TUNING
+                           , tuning
+#endif
+        );
+#ifdef CK_INT8_CACHED_TUNING
+        if(!p) // Enumeration completes before allocating GPU plan buffers.
+            return;
+#endif
         if(p->output_type && p->route != CK_TILE_INT8_CACHED_RAW_K_PARALLEL_M1_M2_V1)
         {
             hip_check(hipMalloc(reinterpret_cast<void**>(&p->scales), sizeof(scales[0]) * g));
@@ -574,3 +630,58 @@ ck_tile_int8_nt_cached_plan_create_v2(ck_tile_int8_nt_cached_weights_handle_v1 w
         *result = p.release();
     });
 }
+} // namespace
+
+extern "C" CK_TILE_INT8_CACHED_API int
+ck_tile_int8_nt_cached_plan_create_v2(ck_tile_int8_nt_cached_weights_handle_v1 w,
+                                      const ck_tile_int8_nt_cached_group_desc_v2* groups,
+                                      int32_t g,
+                                      ck_tile_int8_nt_cached_plan_handle_v1* result)
+{
+    return create_plan_v2(w, groups, g, result);
+}
+
+#ifdef CK_INT8_CACHED_TUNING
+extern "C" CK_TILE_INT8_CACHED_API int ck_tile_int8_nt_tuning_list_v1(
+    ck_tile_int8_nt_cached_weights_handle_v1 w,
+    const ck_tile_int8_nt_cached_group_desc_v2* groups,
+    int32_t g,
+    ck_tile_int8_nt_tuning_candidate_v1* buffer,
+    size_t capacity,
+    size_t* count)
+{
+    if(!count || (!buffer && capacity))
+        return api([&] {
+            require(false, CK_TILE_INT8_CACHED_INVALID_ARGUMENT_V1, "invalid candidate buffer");
+        });
+    *count = 0;
+    std::vector<ck_tile_int8_nt_tuning_candidate_v1> candidates;
+    ck_tile_int8_nt_cached_plan_handle_v1 unused = nullptr;
+    const TuningSelection selection{&candidates, 0, 0};
+    const int status = create_plan_v2(w, groups, g, &unused, &selection);
+    if(status != CK_TILE_INT8_CACHED_SUCCESS_V1)
+        return status;
+    *count = candidates.size();
+    return api([&] {
+        if(buffer)
+        {
+            require(capacity >= candidates.size(),
+                    CK_TILE_INT8_CACHED_BAD_STRUCT_SIZE_V1,
+                    "candidate buffer is too small");
+            std::copy(candidates.begin(), candidates.end(), buffer);
+        }
+    });
+}
+
+extern "C" CK_TILE_INT8_CACHED_API int ck_tile_int8_nt_tuning_plan_create_v1(
+    ck_tile_int8_nt_cached_weights_handle_v1 w,
+    const ck_tile_int8_nt_cached_group_desc_v2* groups,
+    int32_t g,
+    uint32_t route,
+    uint32_t legacy_instance,
+    ck_tile_int8_nt_cached_plan_handle_v1* result)
+{
+    const TuningSelection selection{nullptr, route, legacy_instance};
+    return create_plan_v2(w, groups, g, result, &selection);
+}
+#endif

@@ -87,6 +87,7 @@ endif()
 # INT8 NT Cached Weights and Fused Scale Extension API
 # ---------------------------------------------------------------------------
 find_package(Threads REQUIRED)
+option(CK_INT8_CACHED_TUNING "Build the offline scaled INT8 NT tuning API" OFF)
 
 add_library(ck_tile_int8_nt_cached SHARED
     grouped_int8_nt_cached_api.cpp
@@ -102,7 +103,8 @@ target_include_directories(ck_tile_int8_nt_cached PRIVATE
 target_compile_features(ck_tile_int8_nt_cached PRIVATE cxx_std_17)
 target_compile_definitions(ck_tile_int8_nt_cached PRIVATE
     CK_ENABLE_INT8
-    CK_EXPERIMENTAL_BIT_INT_EXTENSION)
+    CK_EXPERIMENTAL_BIT_INT_EXTENSION
+    $<$<BOOL:${CK_INT8_CACHED_TUNING}>:CK_INT8_CACHED_TUNING>)
 ck_tile_hcu_grouped_gemm_apply_codegen(ck_tile_int8_nt_cached)
 set_target_properties(ck_tile_int8_nt_cached PROPERTIES
     POSITION_INDEPENDENT_CODE ON
