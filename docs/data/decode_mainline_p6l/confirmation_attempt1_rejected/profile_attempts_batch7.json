@@ -1,0 +1,250 @@
+[
+  {
+    "at": "2026-11-12T16:26:14.330208+00:00",
+    "pair": "original_312_main",
+    "role": "base",
+    "CU_index": 0,
+    "job_key": "e1_h3r_id312_base_cu0_04d87a6f_f6ffc64233",
+    "raw_token_bytes": 6545504,
+    "accepted_token_gate": true,
+    "inventory": {
+      "files": [
+        {
+          "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles_h3_regressions/h3r_id312_base_cu0_04d87a6f/513588_tile_example_grouped_gemm_device_args_benchmark.perf",
+          "bytes": 607524,
+          "sha256": "17584e82ca1a717c8d3b3152fe72b0e9c7bcd8b3d0049198a30a20d41aef3ee6"
+        },
+        {
+          "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles_h3_regressions/h3r_id312_base_cu0_04d87a6f/results.txt",
+          "bytes": 1415,
+          "sha256": "e6196f67a40d464ef640dce803d9091f7b2e2c93e7601ef00bfd98da51f80663"
+        },
+        {
+          "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles_h3_regressions/h3r_id312_base_cu0_04d87a6f/thread_trace_18__ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13_se0_cu1.out",
+          "bytes": 16363760,
+          "sha256": "e9f98ce7fcbba875cd3ff69f013572b9edc9e0dfe344e7a2856b27bd3f0fa166",
+          "raw_token_bytes": 6545504
+        }
+      ],
+      "raw_token_bytes": 6545504
+    },
+    "actual_kernel": "void ck_tile::kentry<512, 1, ck_tile::GroupedGemmV7UniformKernel<ck_tile::GroupedGemmKernel<ck_tile::GemmSpatiallyLocalTilePartitioner<ck_tile::TileGemmShape<ck_tile::sequence<256, 256, 64>, ck_tile::sequence<4, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, 1, 1>, ck_tile::GemmPipelineV7Uniform<ck_tile::UniversalGemmPipelineProblem<unsigned short, unsigned short, float, ck_tile::TileGemmShape<ck_tile::sequence<256, 256, 64>, ck_tile::sequence<4, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, ck_tile::TileGemmUniversalTraits<false, false, false, false, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, false, false, false, 1, false, false, true, true>, (ck_tile::GemmPipelineScheduler)1, true, (ck_tile::TailNumber)10, ck_tile::null_type, ck_tile::null_type, false, 2, 2>, (ck_tile::V7UniformKind)0>, ck_tile::GroupedGemmV7UniformStoreEpilogue<unsigned short, ck_tile::V7UniformAccTile, ck_tile::V7UniformGeometry>, (ck_tile::GroupedGemmMFilter)0, 0> >, void const AS4*, int, int>(void const AS4*, int, int)"
+  },
+  {
+    "at": "2026-11-12T16:26:18.433979+00:00",
+    "pair": "original_312_main",
+    "role": "candidate",
+    "CU_index": 0,
+    "job_key": "e1_h3r_id312_candidate_cu0_b03dc674_6488e2f12d",
+    "raw_token_bytes": 3184128,
+    "accepted_token_gate": true,
+    "inventory": {
+      "files": [
+        {
+          "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles_h3_regressions/h3r_id312_candidate_cu0_b03dc674/513675_tile_example_grouped_gemm_device_args_benchmark.perf",
+          "bytes": 437040,
+          "sha256": "f1ae8ac6c16c3050f178a9082d75758bb2427e99c65ab6e8aa955548f004a3fe"
+        },
+        {
+          "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles_h3_regressions/h3r_id312_candidate_cu0_b03dc674/results.txt",
+          "bytes": 440,
+          "sha256": "e48709bc13e1f49348fac8e9f455aab4366826aacbb8ac5d3df45e109e8afe51"
+        },
+        {
+          "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles_h3_regressions/h3r_id312_candidate_cu0_b03dc674/thread_trace_18__ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi2ELi32ELi5EEEJPU3AS4viiEEEvDpT2__se0_cu1.out",
+          "bytes": 7960320,
+          "sha256": "e229135bf8765c24358020f719f2543c86b76d394ef43634f6f390fb51d4f80c",
+          "raw_token_bytes": 3184128
+        }
+      ],
+      "raw_token_bytes": 3184128
+    },
+    "actual_kernel": "void ck_tile::kentry<256, 2, ck_tile::DecodeNnCooperativeKernel<2, 32, 5>, void AS4*, int, int>(void AS4*, int, int)"
+  },
+  {
+    "at": "2026-11-12T16:26:20.075956+00:00",
+    "pair": "original_327_main",
+    "role": "base",
+    "CU_index": 0,
+    "job_key": "e1_h3r_id327_base_cu0_2d4ba5c6_cac2cabff1",
+    "raw_token_bytes": 1150528,
+    "accepted_token_gate": true,
+    "inventory": {
+      "files": [
+        {
+          "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles_h3_regressions/h3r_id327_base_cu0_2d4ba5c6/513742_tile_example_grouped_gemm_device_args_benchmark.perf",
+          "bytes": 235341,
+          "sha256": "b0097bde1f973a5ed09fcef5440a846f372adb0b4a4c89209f570170bd1825e5"
+        },
+        {
+          "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles_h3_regressions/h3r_id327_base_cu0_2d4ba5c6/results.txt",
+          "bytes": 1425,
+          "sha256": "cffaa6ae17decc50fad5d8e108799e09a6077c6a923a937fdb4fa84b371e1aba"
+        },
+        {
+          "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles_h3_regressions/h3r_id327_base_cu0_2d4ba5c6/thread_trace_18__ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13_se0_cu1.out",
+          "bytes": 2876320,
+          "sha256": "87517a4b3a6a31bd2db48aee72e3caf4fd47fb0f76bd2fa52e79b1bb26a92255",
+          "raw_token_bytes": 1150528
+        }
+      ],
+      "raw_token_bytes": 1150528
+    },
+    "actual_kernel": "void ck_tile::kentry<256, 2, ck_tile::GroupedGemmV7UniformKernel<ck_tile::GroupedGemmKernel<ck_tile::GemmSpatiallyLocalTilePartitioner<ck_tile::TileGemmShape<ck_tile::sequence<64, 128, 64>, ck_tile::sequence<2, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, 1, 1>, ck_tile::GemmPipelineV7SmallM<ck_tile::UniversalGemmPipelineProblem<unsigned short, unsigned short, float, ck_tile::TileGemmShape<ck_tile::sequence<64, 128, 64>, ck_tile::sequence<2, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, ck_tile::TileGemmUniversalTraits<false, false, false, false, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, false, false, false, 1, false, false, true, true>, (ck_tile::GemmPipelineScheduler)1, true, (ck_tile::TailNumber)10, ck_tile::null_type, ck_tile::null_type, false, 2, 2>, 128>, ck_tile::GroupedGemmV7SmallMStoreEpilogue<unsigned short, ck_tile::V7SmallMAccTile<ck_tile::V7SmallMGeometry<128> >, ck_tile::V7SmallMGeometry<128> >, (ck_tile::GroupedGemmMFilter)0, 0> >, void const AS4*, int, int>(void const AS4*, int, int)"
+  },
+  {
+    "at": "2026-11-12T16:26:21.480043+00:00",
+    "pair": "original_327_main",
+    "role": "candidate",
+    "CU_index": 0,
+    "job_key": "e1_h3r_id327_candidate_cu0_0bf9b365_3f3adb803f",
+    "raw_token_bytes": 739136,
+    "accepted_token_gate": true,
+    "inventory": {
+      "files": [
+        {
+          "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles_h3_regressions/h3r_id327_candidate_cu0_0bf9b365/513782_tile_example_grouped_gemm_device_args_benchmark.perf",
+          "bytes": 136384,
+          "sha256": "80b63d448cb75932cd1a79dbec1b197487c66dd8534a9b9f2a0db33d734a916c"
+        },
+        {
+          "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles_h3_regressions/h3r_id327_candidate_cu0_0bf9b365/results.txt",
+          "bytes": 439,
+          "sha256": "e465e88c7ba803058ab608e6e5fe5a031860449a46e9586ead206b7253683b1b"
+        },
+        {
+          "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles_h3_regressions/h3r_id327_candidate_cu0_0bf9b365/thread_trace_18__ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi2ELi32ELi5EEEJPU3AS4viiEEEvDpT2__se0_cu1.out",
+          "bytes": 1847840,
+          "sha256": "8ae67f9af43b6ea14f133f20f7c3cde2f34d7c0d8a9354da9efb98ae20f68b01",
+          "raw_token_bytes": 739136
+        }
+      ],
+      "raw_token_bytes": 739136
+    },
+    "actual_kernel": "void ck_tile::kentry<256, 2, ck_tile::DecodeNnCooperativeKernel<2, 32, 5>, void AS4*, int, int>(void AS4*, int, int)"
+  },
+  {
+    "at": "2026-11-12T16:26:22.969719+00:00",
+    "pair": "original_328_main",
+    "role": "base",
+    "CU_index": 0,
+    "job_key": "e1_h3r_id328_base_cu0_4ed10680_161806093f",
+    "raw_token_bytes": 1009120,
+    "accepted_token_gate": true,
+    "inventory": {
+      "files": [
+        {
+          "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles_h3_regressions/h3r_id328_base_cu0_4ed10680/513823_tile_example_grouped_gemm_device_args_benchmark.perf",
+          "bytes": 213318,
+          "sha256": "889543b67e52f1cb3ef71b539696a6fe8f2eae0d87495b6a1bb0185191e545a6"
+        },
+        {
+          "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles_h3_regressions/h3r_id328_base_cu0_4ed10680/results.txt",
+          "bytes": 1425,
+          "sha256": "2ce990cececad8ae023b0e6cfa57ee148fcd7f965e077637b17cbdb6d989613a"
+        },
+        {
+          "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles_h3_regressions/h3r_id328_base_cu0_4ed10680/thread_trace_18__ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13_se0_cu1.out",
+          "bytes": 2522800,
+          "sha256": "53be12a982a65941803c2e8d8c17ed1087b9e06f06f9680fd9c36e232038ba44",
+          "raw_token_bytes": 1009120
+        }
+      ],
+      "raw_token_bytes": 1009120
+    },
+    "actual_kernel": "void ck_tile::kentry<256, 2, ck_tile::GroupedGemmV7UniformKernel<ck_tile::GroupedGemmKernel<ck_tile::GemmSpatiallyLocalTilePartitioner<ck_tile::TileGemmShape<ck_tile::sequence<64, 128, 64>, ck_tile::sequence<2, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, 1, 1>, ck_tile::GemmPipelineV7SmallM<ck_tile::UniversalGemmPipelineProblem<unsigned short, unsigned short, float, ck_tile::TileGemmShape<ck_tile::sequence<64, 128, 64>, ck_tile::sequence<2, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, ck_tile::TileGemmUniversalTraits<false, false, false, false, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, false, false, false, 1, false, false, true, true>, (ck_tile::GemmPipelineScheduler)1, true, (ck_tile::TailNumber)10, ck_tile::null_type, ck_tile::null_type, false, 2, 2>, 128>, ck_tile::GroupedGemmV7SmallMStoreEpilogue<unsigned short, ck_tile::V7SmallMAccTile<ck_tile::V7SmallMGeometry<128> >, ck_tile::V7SmallMGeometry<128> >, (ck_tile::GroupedGemmMFilter)0, 0> >, void const AS4*, int, int>(void const AS4*, int, int)"
+  },
+  {
+    "at": "2026-11-12T16:26:24.526372+00:00",
+    "pair": "original_328_main",
+    "role": "candidate",
+    "CU_index": 0,
+    "job_key": "e1_h3r_id328_candidate_cu0_7881ddd9_aca4f5a17c",
+    "raw_token_bytes": 1101152,
+    "accepted_token_gate": true,
+    "inventory": {
+      "files": [
+        {
+          "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles_h3_regressions/h3r_id328_candidate_cu0_7881ddd9/513863_tile_example_grouped_gemm_device_args_benchmark.perf",
+          "bytes": 137705,
+          "sha256": "7cc828485763e89b62993fb765c3d22baf4a90820122fc50d2fbe54a4ade6015"
+        },
+        {
+          "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles_h3_regressions/h3r_id328_candidate_cu0_7881ddd9/results.txt",
+          "bytes": 435,
+          "sha256": "3bdadc2ec47e1ee27951dd6d6482473700af3116f24bc9af7b5f76b60fbb42b3"
+        },
+        {
+          "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles_h3_regressions/h3r_id328_candidate_cu0_7881ddd9/thread_trace_18__ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi4ELi32ELi5EEEJPU3AS4viiEEEvDpT2__se0_cu1.out",
+          "bytes": 2752880,
+          "sha256": "d6dbc0406554edb8c3d4a07a2c58e761083b5ef36d863244cf71c83d23299ece",
+          "raw_token_bytes": 1101152
+        }
+      ],
+      "raw_token_bytes": 1101152
+    },
+    "actual_kernel": "void ck_tile::kentry<256, 2, ck_tile::DecodeNnCooperativeKernel<4, 32, 5>, void AS4*, int, int>(void AS4*, int, int)"
+  },
+  {
+    "at": "2026-11-12T16:26:25.561327+00:00",
+    "pair": "original_335_main",
+    "role": "base",
+    "CU_index": 0,
+    "job_key": "e1_h3r_id335_base_cu0_890964b3_15658385c9",
+    "raw_token_bytes": 502208,
+    "accepted_token_gate": true,
+    "inventory": {
+      "files": [
+        {
+          "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles_h3_regressions/h3r_id335_base_cu0_890964b3/513910_tile_example_grouped_gemm_device_args_benchmark.perf",
+          "bytes": 94859,
+          "sha256": "753aba1761056d1ace10ac8119fae39882f83223204472b6e952a46600eac8f1"
+        },
+        {
+          "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles_h3_regressions/h3r_id335_base_cu0_890964b3/results.txt",
+          "bytes": 1423,
+          "sha256": "180fc1bd17630e47eae48816eb777edc48267e5eeb7c4a5dbf2c1ecda1acb23d"
+        },
+        {
+          "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles_h3_regressions/h3r_id335_base_cu0_890964b3/thread_trace_18__ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13_se0_cu1.out",
+          "bytes": 1255520,
+          "sha256": "5a641ba960fdbf399194a3bf5885e0657d5bb4703879b5b152776c75854e142a",
+          "raw_token_bytes": 502208
+        }
+      ],
+      "raw_token_bytes": 502208
+    },
+    "actual_kernel": "void ck_tile::kentry<256, 2, ck_tile::GroupedGemmV7UniformKernel<ck_tile::GroupedGemmKernel<ck_tile::GemmSpatiallyLocalTilePartitioner<ck_tile::TileGemmShape<ck_tile::sequence<64, 128, 64>, ck_tile::sequence<2, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, 1, 1>, ck_tile::GemmPipelineV7SmallM<ck_tile::UniversalGemmPipelineProblem<unsigned short, unsigned short, float, ck_tile::TileGemmShape<ck_tile::sequence<64, 128, 64>, ck_tile::sequence<2, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, ck_tile::TileGemmUniversalTraits<false, false, false, false, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, false, false, false, 1, false, false, true, true>, (ck_tile::GemmPipelineScheduler)1, true, (ck_tile::TailNumber)10, ck_tile::null_type, ck_tile::null_type, false, 2, 2>, 128>, ck_tile::GroupedGemmV7SmallMStoreEpilogue<unsigned short, ck_tile::V7SmallMAccTile<ck_tile::V7SmallMGeometry<128> >, ck_tile::V7SmallMGeometry<128> >, (ck_tile::GroupedGemmMFilter)0, 0> >, void const AS4*, int, int>(void const AS4*, int, int)"
+  },
+  {
+    "at": "2026-11-12T16:26:26.512352+00:00",
+    "pair": "original_335_main",
+    "role": "candidate",
+    "CU_index": 0,
+    "job_key": "e1_h3r_id335_candidate_cu0_c1e97c9f_c43ac561bb",
+    "raw_token_bytes": 477984,
+    "accepted_token_gate": true,
+    "inventory": {
+      "files": [
+        {
+          "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles_h3_regressions/h3r_id335_candidate_cu0_c1e97c9f/513944_tile_example_grouped_gemm_device_args_benchmark.perf",
+          "bytes": 90469,
+          "sha256": "d855ff53195f2b90dbbccf1ae4aee823fd81c5cf0a62e58e58c98da52ea96dae"
+        },
+        {
+          "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles_h3_regressions/h3r_id335_candidate_cu0_c1e97c9f/results.txt",
+          "bytes": 433,
+          "sha256": "ce2dae806440990cd8db2cdd56414e2b1649aa2d6b71b96d2f8854acd09ad987"
+        },
+        {
+          "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/profiles_h3_regressions/h3r_id335_candidate_cu0_c1e97c9f/thread_trace_18__ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi4ELi32ELi5EEEJPU3AS4viiEEEvDpT2__se0_cu1.out",
+          "bytes": 1194960,
+          "sha256": "7896122587718e357b4a1d4bff909c34214cc8b0abcc2724379d087db7b38816",
+          "raw_token_bytes": 477984
+        }
+      ],
+      "raw_token_bytes": 477984
+    },
+    "actual_kernel": "void ck_tile::kentry<256, 2, ck_tile::DecodeNnCooperativeKernel<4, 32, 5>, void AS4*, int, int>(void AS4*, int, int)"
+  }
+]

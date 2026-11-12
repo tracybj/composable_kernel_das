@@ -1,0 +1,399 @@
+{
+  "at": "2026-11-12T14:30:40.578103+00:00",
+  "schema": 1,
+  "manifest_sha256": "c2ff3f42cc9813e95947e28ff1bac04a13f65dc12d1d93b5b723559c1c839469",
+  "binary_sha256": "f8facea69107f345acfc98ce3e6e6deb1cca41ac803e2731bc0ab925e6736bfb",
+  "compiled_source_files": 19,
+  "runner_files": 45,
+  "files": [
+    {
+      "kind": "compiled_sources",
+      "path": "include/ck_tile/ops/gemm/grouped_gemm_selector.hpp",
+      "bytes": 53893,
+      "sha256": "8c7f9d927e034903f40757063804393616ee55a3671067131f59e25e56c91ca6"
+    },
+    {
+      "kind": "compiled_sources",
+      "path": "include/ck_tile/ops/gemm/grouped_gemm_device_args.h",
+      "bytes": 12396,
+      "sha256": "0d4096c9093fc4b5482f2d5caae5ad69632d4dab2afbf991340be3fe83601cee"
+    },
+    {
+      "kind": "compiled_sources",
+      "path": "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_uniform.hpp",
+      "bytes": 38069,
+      "sha256": "eacd5ccc4bf73676c64c3edd5035f5c39e000ef4741385b1054c025c27907e65"
+    },
+    {
+      "kind": "compiled_sources",
+      "path": "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_wave.hpp",
+      "bytes": 10350,
+      "sha256": "38599490edcef2fc0efdbbccf520e3954b887bcaaeb81ccc93d4a2a1fc49dcb4"
+    },
+    {
+      "kind": "compiled_sources",
+      "path": "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_bvector.hpp",
+      "bytes": 6796,
+      "sha256": "159fc8d6e229a5ca758e5706242303afc44c007fbeec8fd2a7e9379bd0d8290e"
+    },
+    {
+      "kind": "compiled_sources",
+      "path": "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_depth8.hpp",
+      "bytes": 7280,
+      "sha256": "4be4ebab974c948ccde7c9f5cb7b898dca303b5fbbc2afbe94f7e2c9d67cb600"
+    },
+    {
+      "kind": "compiled_sources",
+      "path": "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args.cpp",
+      "bytes": 61631,
+      "sha256": "4cbd7ad795ed7f1336ae83c082ad02f331b688ed4ea3d7b2779b7de54e7ec4b7"
+    },
+    {
+      "kind": "compiled_sources",
+      "path": "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_mainline.hpp",
+      "bytes": 10521,
+      "sha256": "22738f8f406c63e16ec096641ed8f56e618c8950a260cadc775997cb810de84b"
+    },
+    {
+      "kind": "compiled_sources",
+      "path": "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args_query_test.cpp",
+      "bytes": 45588,
+      "sha256": "9d582f0f823f88aa1a6f60f601b18c6ba0cb88e9df9801619090465e1a1c5287"
+    },
+    {
+      "kind": "compiled_sources",
+      "path": "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_decode_mainline_selector_test.cpp",
+      "bytes": 5732,
+      "sha256": "fd82bec8b5c2f4d0e87561faf6c7d5474c611581b7c653b0e1c3f872505bc8b6"
+    },
+    {
+      "kind": "compiled_sources",
+      "path": "example_hcu/ck_tile/19_grouped_gemm/CMakeLists.txt",
+      "bytes": 48251,
+      "sha256": "c29de72564ed813ee458515ade18a4f390d8daa174bd737b879a54a19629d703"
+    },
+    {
+      "kind": "compiled_sources",
+      "path": "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_decode_device_args_provider_sources.txt",
+      "bytes": 459,
+      "sha256": "c4545e45777ba08489dfd69437a06fc838d8cbbd73346a08c59b0d6e002dc4b8"
+    },
+    {
+      "kind": "compiled_sources",
+      "path": "example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_bf16_nn_decode_mainline_device_args.cpp",
+      "bytes": 3925,
+      "sha256": "16f6be7eb86b81dff195724a29f79cb8ccf39909e16a67d7134694767df39b9e"
+    },
+    {
+      "kind": "compiled_sources",
+      "path": "example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_device_args_provider.hpp",
+      "bytes": 15209,
+      "sha256": "41b898f0eb760c7260c802bb8e6f8d0fcc56e109b5b3f175b3ff3b58697a3ab6"
+    },
+    {
+      "kind": "compiled_sources",
+      "path": "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_shared.hpp",
+      "bytes": 9006,
+      "sha256": "0d51952b65c39a1f7d807155f76bfd524bad97b67c95f05df201d2a645536e9b"
+    },
+    {
+      "kind": "compiled_sources",
+      "path": "example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_bf16_nn_decode_shared_device_args.cpp",
+      "bytes": 7809,
+      "sha256": "6935af0593567ebdb7aeb5957850e3698533f4ed15563998c2ded0ee69e15490"
+    },
+    {
+      "kind": "compiled_sources",
+      "path": "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_shared_tuned.hpp",
+      "bytes": 7336,
+      "sha256": "d4340cd9b480d620a5edaeecb60481d61777057803276a61b24633edfac1edec"
+    },
+    {
+      "kind": "compiled_sources",
+      "path": "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_cooperative.hpp",
+      "bytes": 10789,
+      "sha256": "4cdac01fe6e0004b8eebe99d11b028340015145543a45487b247577ab7b5d89b"
+    },
+    {
+      "kind": "compiled_sources",
+      "path": "example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_bf16_nn_decode_cooperative_device_args.cpp",
+      "bytes": 3466,
+      "sha256": "f3d98e8092632ca5bd4ec8bdd9024b22ac5f92385e3e8fe119b37331d0328e8e"
+    },
+    {
+      "kind": "runners",
+      "path": "plan.py",
+      "bytes": 1631,
+      "sha256": "a80e80dc66f99938447d584a49bf2472277f7ecb45b0ca7ae207678bcce1e205"
+    },
+    {
+      "kind": "runners",
+      "path": "runtime.py",
+      "bytes": 16276,
+      "sha256": "7287d4e544ccd0a0b8f7cc7a068bdd346a6db8fe2f72b379b0edc81da155f04c"
+    },
+    {
+      "kind": "runners",
+      "path": "health.py",
+      "bytes": 5096,
+      "sha256": "0ab45d69e01c7b1ab3c49461b063faffb16de65b1d34b77489a4a47fb259b438"
+    },
+    {
+      "kind": "runners",
+      "path": "campaign.py",
+      "bytes": 5076,
+      "sha256": "e1998b64b19f2b5507c9e1939a7f86e2a4b2751c8488539b388658f38f010760"
+    },
+    {
+      "kind": "runners",
+      "path": "native_replay.py",
+      "bytes": 3585,
+      "sha256": "a2fa97d9a96785128ec4c247e15d96ef601f2d12164921cd558ed9639200ce81"
+    },
+    {
+      "kind": "runners",
+      "path": "mainline_campaign.py",
+      "bytes": 10622,
+      "sha256": "da5b856caeb7486a2b8b71784c5fbf3a384a3b45af15f4e2f26fac07811b5e21"
+    },
+    {
+      "kind": "runners",
+      "path": "mainline_selector_probe.cpp",
+      "bytes": 1586,
+      "sha256": "5af1cf85270174881574b084e0991791c6e49f0e627efedbe610578f594e5846"
+    },
+    {
+      "kind": "runners",
+      "path": "acceptance.py",
+      "bytes": 3327,
+      "sha256": "5c02b2dbf12e6c24675ac00b1ef7898c961e999a365f047996691f17e9cb82d0"
+    },
+    {
+      "kind": "runners",
+      "path": "after_build.py",
+      "bytes": 3218,
+      "sha256": "df794bd627fb7d57179d3454e76aac831a43d410a6d982d557522199933cab7d"
+    },
+    {
+      "kind": "runners",
+      "path": "active_build.json",
+      "bytes": 221,
+      "sha256": "d0e3c5599a822b9fc80d913e4cd32f9887a255b3a09214ccbeba8c1fdac99fb9"
+    },
+    {
+      "kind": "runners",
+      "path": "heldout_protocol.json",
+      "bytes": 1597,
+      "sha256": "3eb59b84f487e42749a28ca5c91ddb43869c83de463fe5465cd117798e17b472"
+    },
+    {
+      "kind": "runners",
+      "path": "shared_campaign.py",
+      "bytes": 10616,
+      "sha256": "8305e889e452e6b6ccf216eb7e21ebde638b7b4a59ef2c1032456fdfae577cbc"
+    },
+    {
+      "kind": "runners",
+      "path": "h2_hypothesis.json",
+      "bytes": 3206,
+      "sha256": "dd4b8e9c29eeefe95a204a5149fb4071157f2f0ec9f7804a5e97f1e5987e0eeb"
+    },
+    {
+      "kind": "runners",
+      "path": "after_shared_build.py",
+      "bytes": 3224,
+      "sha256": "c17ea0df0de0e6a141814fcdda99b34ca92a20ca8d5a3ec954f2afcdefc1dcba"
+    },
+    {
+      "kind": "runners",
+      "path": "tuning_campaign.py",
+      "bytes": 13441,
+      "sha256": "40ee6c487378ddd18a8136f2cc02a2e4a2805ab46ac058c5024733848cd7fef6"
+    },
+    {
+      "kind": "runners",
+      "path": "tuning_hypothesis.json",
+      "bytes": 3419,
+      "sha256": "b857afbdb86d611938c7d8ba36d53efccb2f7e5c294f3bbdaece96a580bd1a08"
+    },
+    {
+      "kind": "runners",
+      "path": "after_tuning_build.py",
+      "bytes": 3231,
+      "sha256": "364f5f54ca893fed8f47b15656065fd35d1d07e592c5aa8066594734baa3ecdb"
+    },
+    {
+      "kind": "runners",
+      "path": "h3_campaign.py",
+      "bytes": 12178,
+      "sha256": "b59aad5ef1a30552b6617b1ebbe5d16368fb9cf2c81e85993252ddeed4f84084"
+    },
+    {
+      "kind": "runners",
+      "path": "h3_hypothesis.json",
+      "bytes": 4546,
+      "sha256": "6e61b5b898eee425d14e9826cee216b310a510ccc962f4c7dcf2976411205f85"
+    },
+    {
+      "kind": "runners",
+      "path": "h3_cpu_model.py",
+      "bytes": 2391,
+      "sha256": "859cb994f87f677b32fa6597dc7cb1e81fd523e6459f46021e6eed0ca1671dda"
+    },
+    {
+      "kind": "runners",
+      "path": "after_h3_build.py",
+      "bytes": 3212,
+      "sha256": "e8a59a6bb66a7d243f27063c50fb1adfc58ee22526ebe8d5fe41e2b475613d23"
+    },
+    {
+      "kind": "runners",
+      "path": "resume_h3_after_permissions.py",
+      "bytes": 3263,
+      "sha256": "9290a45f586211beb8005c15c7460f4938bea22ad4199574187cf69db86e536e"
+    },
+    {
+      "kind": "runners",
+      "path": "profile_after_h3_v2.py",
+      "bytes": 2805,
+      "sha256": "dc0aa17a21bc65c64922125b8da74aba8f2c424ab0655aeed61f7bebfbeeea0f"
+    },
+    {
+      "kind": "runners",
+      "path": "profile_h3.py",
+      "bytes": 6516,
+      "sha256": "27c808078a01f1b43eb5b1de53ab600772576ea64bb3b008c891008d47bcbc60"
+    },
+    {
+      "kind": "runners",
+      "path": "h3_profile_selection_rule.json",
+      "bytes": 1264,
+      "sha256": "517c46b9776dc8b59a21f8b6bdaf33d662d569bb83a7e7ac79bbfc5bbd100daf"
+    },
+    {
+      "kind": "runners",
+      "path": "analyze_h3_discovery.py",
+      "bytes": 6857,
+      "sha256": "7510b864f075ad931c4273d9267eb476dacabdc8434f0036d9f23a27babe9979"
+    },
+    {
+      "kind": "runners",
+      "path": "analyze_h3_profiles.py",
+      "bytes": 1569,
+      "sha256": "571b72f56fdc4d84f60a3f96147c7cad5dd13a3b484f373a6e9fc2475e043ea4"
+    },
+    {
+      "kind": "runners",
+      "path": "h3_isa_schedule.py",
+      "bytes": 5478,
+      "sha256": "f9ac9005e6330eb40523d5bdd9273ed7090693cbdeec010faf42e67adaecc190"
+    },
+    {
+      "kind": "runners",
+      "path": "deliver_h3.py",
+      "bytes": 8137,
+      "sha256": "7f5f0049d0ebeec2b9042a669d09bd27b081b1a72616d5ab68bd9ddd0370d751"
+    },
+    {
+      "kind": "runners",
+      "path": "h3_factors_campaign.py",
+      "bytes": 14368,
+      "sha256": "3efaac542e1cadba513eb33f7c6656a989cb5bff4937e40bec3920af7b01f241"
+    },
+    {
+      "kind": "runners",
+      "path": "h3_factors_hypothesis.json",
+      "bytes": 2992,
+      "sha256": "a1852d7a579c8957e567985336d1820178348fd20abcc70458798139801d794e"
+    },
+    {
+      "kind": "runners",
+      "path": "after_h3_factors_build.py",
+      "bytes": 3783,
+      "sha256": "d678ec05354d66bb7397ac5310360b9a5b1b5ff3c7ca2c8cfba3c01763a02d80"
+    },
+    {
+      "kind": "runners",
+      "path": "h3_factors_preregistration_addendum.json",
+      "bytes": 523,
+      "sha256": "23868a2be273439067a332ef1bec1bcd52f3dc7e6b1b378f7a17e88d9b898b34"
+    },
+    {
+      "kind": "runners",
+      "path": "h3_factors_discovery_plan.json",
+      "bytes": 324507,
+      "sha256": "8b01900c5b15389feaedf1faeee7abe3b10b46f5a661c516d31675cd77e81c7f"
+    },
+    {
+      "kind": "runners",
+      "path": "build_h3_factors.py",
+      "bytes": 2666,
+      "sha256": "80812e93369fcd3e8c27b68a0ca956f8af1096bbed653d4f79cc7b1bafebdec4"
+    },
+    {
+      "kind": "runners",
+      "path": "audit_h3_factors_isa.py",
+      "bytes": 2795,
+      "sha256": "94b22ecdec034669eb67d273998b1550113b55f37b35b6f57cd6f6bf95e2dab3"
+    },
+    {
+      "kind": "runners",
+      "path": "cpu_h3_policy_factors.py",
+      "bytes": 9347,
+      "sha256": "de9440f5c89fc239956059e9950736b85c7b3d3d850c9e679d926b53e41b3670"
+    },
+    {
+      "kind": "runners",
+      "path": "profile_h3_factors.py",
+      "bytes": 7408,
+      "sha256": "c240f908313e00422a8631b725f3d5f3458a52ccdb2a0500539c51f43e85c0b8"
+    },
+    {
+      "kind": "runners",
+      "path": "h3_factors_profile_selection_rule.json",
+      "bytes": 1387,
+      "sha256": "08be433fdfba4af9ab9f04ced54facd5bc76a0d300a1a8aab911e2545cf594da"
+    },
+    {
+      "kind": "runners",
+      "path": "analyze_h3_factors_discovery.py",
+      "bytes": 6894,
+      "sha256": "6737b41d77f4278a6a46d68ebc8a48bddbf5eb54b97f11f0af1d45d13adf0853"
+    },
+    {
+      "kind": "runners",
+      "path": "analyze_h3_factors_profiles.py",
+      "bytes": 1585,
+      "sha256": "156b2a52a33b92c664e94f6fa02e4d0f376653549d4af7063e282bbcc7c53cf7"
+    },
+    {
+      "kind": "runners",
+      "path": "deliver_h3_factors.py",
+      "bytes": 8486,
+      "sha256": "0e3714089b827736f0968a486895faf68e3aff6914a1b173c5b582aafe1eb45c"
+    },
+    {
+      "kind": "runners",
+      "path": "final_confirmation.py",
+      "bytes": 25871,
+      "sha256": "55469eac288187c6f6fd949697c5ce4b66d155aae22d7377322bda54f9d5d4fb"
+    },
+    {
+      "kind": "runners",
+      "path": "final_active.json",
+      "bytes": 204,
+      "sha256": "770c66535f75f6d269698f7fd60edbd071b9f6c9c05332a416e7da71b4e1b007"
+    },
+    {
+      "kind": "runners",
+      "path": "final_attempts/attempt_1/plan.json",
+      "bytes": 702957,
+      "sha256": "20dc673bdff225d479d44fcc19fc33ff859445d3920abb81ebef4fc4b4865447"
+    }
+  ],
+  "source_and_runners_verified": true,
+  "gpu": false,
+  "binary_copied": false,
+  "vendor_ISA_copied": false,
+  "scope": "Immutable actual measured source/runner bytes, captured while attempt1 is still frozen. No new build and no modification to measured inputs."
+}
