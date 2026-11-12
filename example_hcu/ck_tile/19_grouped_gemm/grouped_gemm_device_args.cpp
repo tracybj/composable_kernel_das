@@ -318,6 +318,57 @@ int convert_problem(const ck_tile_hcu_grouped_gemm_problem_v1* source,
         return status;
     }
 
+    // Only explicit new decode requests can skip unrelated policy parsing.
+    // Read these existing switches once and keep every legacy fallback below.
+    const auto decode_switch = [](const char* enable, const char* disable) {
+        const char* e = std::getenv(enable);
+        const char* d = std::getenv(disable);
+        return e != nullptr && e[0] == '1' && e[1] == '\0' &&
+            !(d != nullptr && d[0] == '1' && d[1] == '\0');
+    };
+    const auto decode_variant = [](const char* name, int maximum) {
+        const char* v = std::getenv(name);
+        if(v == nullptr) return 0;
+        if(v[0] < '0' || v[0] > '9') return -1;
+        int value = v[0] - '0';
+        if(v[1] != '\0')
+        {
+            if(value == 0 || v[1] < '0' || v[1] > '9' || v[2] != '\0') return -1;
+            value = value * 10 + v[1] - '0';
+        }
+        return value <= maximum ? value : -1;
+    };
+    policy.enable_bf16_nn_decode_mainline = decode_switch(
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE");
+    policy.bf16_nn_decode_mainline_variant = decode_variant(
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT", 16);
+    policy.enable_bf16_nn_decode_short = decode_switch(
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_SHORT",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_SHORT");
+    policy.bf16_nn_decode_short_variant = decode_variant(
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_SHORT_VARIANT", 5);
+#if defined(CK_TILE_GROUPED_GEMM_DEVICE_ARGS_HAS_DECODE_BF16)
+    const bool priority_decode_requested =
+        (policy.enable_bf16_nn_decode_mainline &&
+         policy.bf16_nn_decode_mainline_variant >= 6 &&
+         policy.bf16_nn_decode_mainline_variant <= 16) ||
+        (policy.enable_bf16_nn_decode_short &&
+         policy.bf16_nn_decode_short_variant >= 3 &&
+         policy.bf16_nn_decode_short_variant <= 5);
+    if(priority_decode_requested && decode_switch(
+           "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY",
+           "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY"))
+    {
+        const auto priority_decode_candidate =
+            ck_tile::select_grouped_gemm_candidate(problem, policy);
+        const int priority_decode_id = static_cast<int>(priority_decode_candidate.instance_id);
+        if((priority_decode_id >= 6013 && priority_decode_id <= 6018) ||
+           (priority_decode_id >= 6020 && priority_decode_id <= 6023))
+            return CK_TILE_HCU_GROUPED_GEMM_DEVICE_ARGS_SUCCESS_V1;
+    }
+#endif
+
     const auto disabled = source->policy_disable_flags;
     policy.enable_bw_family =
         (disabled & CK_TILE_HCU_GROUPED_GEMM_POLICY_DISABLE_BW_FAMILY_V1) == 0;
@@ -372,34 +423,6 @@ int convert_problem(const ck_tile_hcu_grouped_gemm_problem_v1* source,
     policy.enable_bf16_nn_decode_depth8 = depth8_enable != nullptr &&
         depth8_enable[0] == '1' && depth8_enable[1] == '\0' &&
         !(depth8_disable != nullptr && depth8_disable[0] == '1' && depth8_disable[1] == '\0');
-    const auto decode_switch = [](const char* enable, const char* disable) {
-        const char* e = std::getenv(enable);
-        const char* d = std::getenv(disable);
-        return e != nullptr && e[0] == '1' && e[1] == '\0' &&
-            !(d != nullptr && d[0] == '1' && d[1] == '\0');
-    };
-    const auto decode_variant = [](const char* name, int maximum) {
-        const char* v = std::getenv(name);
-        if(v == nullptr) return 0;
-        if(v[0] < '0' || v[0] > '9') return -1;
-        int value = v[0] - '0';
-        if(v[1] != '\0')
-        {
-            if(value == 0 || v[1] < '0' || v[1] > '9' || v[2] != '\0') return -1;
-            value = value * 10 + v[1] - '0';
-        }
-        return value <= maximum ? value : -1;
-    };
-    policy.enable_bf16_nn_decode_mainline = decode_switch(
-        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE",
-        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE");
-    policy.bf16_nn_decode_mainline_variant = decode_variant(
-        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT", 11);
-    policy.enable_bf16_nn_decode_short = decode_switch(
-        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_SHORT",
-        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_SHORT");
-    policy.bf16_nn_decode_short_variant = decode_variant(
-        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_SHORT_VARIANT", 5);
     const char* decode_enable = std::getenv("CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_WAVE");
     const char* decode_disable = std::getenv("CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_WAVE");
     policy.enable_bf16_nn_decode_wave = decode_enable != nullptr &&
@@ -656,6 +679,7 @@ int dispatch_registry_candidate(const ck_tile::GroupedGemmProblem& problem,
     case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_coop_k16_d4:
     case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_coop_k16_d8:
     case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_coop_k32_d4:
+    case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_coop_k32_d5:
 #if defined(CK_TILE_GROUPED_GEMM_DEVICE_ARGS_HAS_DECODE_BF16)
         if(dtype == ck_tile::GroupedGemmDataType::bf16 && layout == ck_tile::GroupedGemmLayout::nn)
         {
@@ -980,6 +1004,7 @@ void candidate_masks(ck_tile::GroupedGemmInstanceId id,
     case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_coop_k16_d4:
     case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_coop_k16_d8:
     case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_coop_k32_d4:
+    case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_coop_k32_d5:
     case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_mainline_d4:
     case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_mainline_d8:
     case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_mainline_serial:

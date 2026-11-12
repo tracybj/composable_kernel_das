@@ -50,6 +50,7 @@ CK_TILE_HOST int dispatch_decode_cooperative(void* args, int groups, hipStream_t
     case 0: return launch_decode_cooperative<Rows, 16, 4>(args, groups, stream, tiles, tiles_per_group);
     case 1: return launch_decode_cooperative<Rows, 16, 8>(args, groups, stream, tiles, tiles_per_group);
     case 2: return launch_decode_cooperative<Rows, 32, 4>(args, groups, stream, tiles, tiles_per_group);
+    case 3: return launch_decode_cooperative<Rows, 32, 5>(args, groups, stream, tiles, tiles_per_group);
     default: return -1;
     }
 }
@@ -60,7 +61,7 @@ extern "C" int ck_tile_hcu_grouped_gemm_bf16_nn_decode_cooperative_device_args(
     int m, int n, int k, int variant)
 {
     if(args == nullptr || groups < 1 || groups > 1024 || m < 1 || m > 64 ||
-       variant < 0 || variant > 2 || n < 1024 || n > 4096 || n % 128 != 0 ||
+       variant < 0 || variant > 3 || n < 1024 || n > 4096 || n % 128 != 0 ||
        k < 2048 || k > 8192 || k % 128 != 0 || tiles_per_group != n / 128 ||
        tiles != static_cast<uint64_t>(groups) * tiles_per_group) return -1;
     if(m <= 16) return ck_tile::dispatch_decode_cooperative<1>(args, groups, stream, tiles, tiles_per_group, variant);

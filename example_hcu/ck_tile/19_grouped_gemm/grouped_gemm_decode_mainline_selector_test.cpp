@@ -12,6 +12,15 @@ int main()
     const auto original = policy;
     bool pass = !policy.enable_bf16_nn_decode_mainline && !policy.enable_bf16_nn_decode_short;
     int checks = 0;
+    const auto main_expected = [](int variant, int m, std::int64_t k) {
+        if(variant >= 13 && variant <= 16 && m < 17 && k < 6144) return 0;
+        if(variant == 12 || variant == 14) return 6023;
+        if(variant == 13) return 6022;
+        if(variant == 15) return 6013;
+        if(variant == 16) return 6015;
+        return variant >= 9 ? 6020 + variant - 9 : variant >= 6 ? 6013 + variant - 6 :
+               variant >= 3 ? 6009 + variant - 3 : 6004 + variant;
+    };
     auto check = [&](const GroupedGemmProblem& p, int expected) {
         const auto got = select_grouped_gemm_candidate(p, policy);
         const auto old = select_grouped_gemm_candidate(p, original);
@@ -34,7 +43,7 @@ int main()
         policy.enable_bf16_nn_decode_mainline = !short_path;
         policy.enable_bf16_nn_decode_short = short_path;
         p.k.extent = short_path ? 768 : 2048;
-        for(int variant = 0; variant < (short_path ? 6 : 12); ++variant)
+        for(int variant = 0; variant < (short_path ? 6 : 17); ++variant)
         {
             policy.bf16_nn_decode_mainline_variant = variant;
             policy.bf16_nn_decode_short_variant = variant;
@@ -42,8 +51,7 @@ int main()
             {
                 p.m = GroupedGemmDimensionSummary::Common(m);
                 const int expected = short_path ? (variant >= 3 ? 6016 + variant - 3 : variant == 2 ? 6012 : 6007 + variant) :
-                    (variant >= 9 ? 6020 + variant - 9 : variant >= 6 ? 6013 + variant - 6 :
-                     variant >= 3 ? 6009 + variant - 3 : 6004 + variant);
+                    main_expected(variant, m, p.k.extent);
                 pass &= check(p, expected);
             }
         }
@@ -89,6 +97,19 @@ int main()
         { p.k.extent = k; pass &= check(p, 6016 + variant - 3); }
         for(int k : {96, 160, 2016})
         { p.k.extent = k; pass &= check(p, 0); }
+    }
+    policy.enable_bf16_nn_decode_mainline = true;
+    policy.enable_bf16_nn_decode_short = false;
+    for(int variant : {12, 13, 14, 15, 16})
+    {
+        policy.bf16_nn_decode_mainline_variant = variant;
+        for(int m : {1, 16, 17, 32, 33, 64})
+        for(int k : {2048, 3072, 4096, 6144, 7168, 8192})
+        {
+            p.m = GroupedGemmDimensionSummary::Common(m);
+            p.k.extent = k;
+            pass &= check(p, main_expected(variant, m, k));
+        }
     }
     std::cout << "DECODE_MAINLINE_SELECTOR_" << (pass ? "PASS" : "FAIL")
               << " cases=" << checks << '\n';

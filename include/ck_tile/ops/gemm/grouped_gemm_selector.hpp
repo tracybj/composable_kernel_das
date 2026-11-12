@@ -219,6 +219,7 @@ enum class GroupedGemmInstanceId
     bf16_nn_decode_coop_k16_d4 = 6020,
     bf16_nn_decode_coop_k16_d8 = 6021,
     bf16_nn_decode_coop_k32_d4 = 6022,
+    bf16_nn_decode_coop_k32_d5 = 6023,
 
 };
 
@@ -239,7 +240,7 @@ struct GroupedGemmCandidateIdentity
     GroupedGemmCandidateFamily family;
 };
 
-inline constexpr std::array<GroupedGemmCandidateIdentity, 56>
+inline constexpr std::array<GroupedGemmCandidateIdentity, 57>
     grouped_gemm_candidate_registry{{
         {GroupedGemmInstanceId::bw_family_selected,
          "bw_family.selected",
@@ -381,6 +382,8 @@ inline constexpr std::array<GroupedGemmCandidateIdentity, 56>
          "decode.nn.full_m.cooperative_ab.n128.k16.d8.op3", GroupedGemmCandidateFamily::decode},
         {GroupedGemmInstanceId::bf16_nn_decode_coop_k32_d4,
          "decode.nn.full_m.cooperative_ab.n128.k32.d4.op3", GroupedGemmCandidateFamily::decode},
+        {GroupedGemmInstanceId::bf16_nn_decode_coop_k32_d5,
+         "decode.nn.full_m.cooperative_ab.n128.k32.d5.op3", GroupedGemmCandidateFamily::decode},
 
     }};
 
@@ -575,6 +578,30 @@ constexpr GroupedGemmSelection select_grouped_gemm_candidate(
                         GroupedGemmSelectionReason::bf16_nn_decode_mainline};
         case 11: return {GroupedGemmInstanceId::bf16_nn_decode_coop_k32_d4,
                         GroupedGemmSelectionReason::bf16_nn_decode_mainline};
+        case 12: return {GroupedGemmInstanceId::bf16_nn_decode_coop_k32_d5,
+                        GroupedGemmSelectionReason::bf16_nn_decode_mainline};
+        // Experimental attribute domain; every member still needs independent
+        // confirmation, including existing winners and unseen geometries.
+        case 13:
+            if(m >= 17 || k >= 6144)
+                return {GroupedGemmInstanceId::bf16_nn_decode_coop_k32_d4,
+                        GroupedGemmSelectionReason::bf16_nn_decode_mainline};
+            break;
+        case 14:
+            if(m >= 17 || k >= 6144)
+                return {GroupedGemmInstanceId::bf16_nn_decode_coop_k32_d5,
+                        GroupedGemmSelectionReason::bf16_nn_decode_mainline};
+            break;
+        case 15:
+            if(m >= 17 || k >= 6144)
+                return {GroupedGemmInstanceId::bf16_nn_decode_direct_main_xor,
+                        GroupedGemmSelectionReason::bf16_nn_decode_mainline};
+            break;
+        case 16:
+            if(m >= 17 || k >= 6144)
+                return {GroupedGemmInstanceId::bf16_nn_decode_direct_main_both,
+                        GroupedGemmSelectionReason::bf16_nn_decode_mainline};
+            break;
         default: break;
         }
     }

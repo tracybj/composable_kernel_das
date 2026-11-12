@@ -121,7 +121,7 @@ int main()
     constexpr std::uint32_t all_layout = CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NT_V1 |
                                          CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NN_V1 |
                                          CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_TN_V1;
-    constexpr std::array<CandidateExpected, 56> expected{{
+    constexpr std::array<CandidateExpected, 57> expected{{
         {CK_TILE_HCU_GROUPED_GEMM_INSTANCE_BW_FAMILY_SELECTED_V1,
          CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_FAMILY_BW_V1,
          CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX936_V1,
@@ -404,6 +404,11 @@ int main()
          CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_MASK_BF16_V1,
          CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NN_V1},
         {CK_TILE_HCU_GROUPED_GEMM_INSTANCE_BF16_NN_DECODE_COOP_K32_D4_V1,
+         CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_FAMILY_DECODE_V1,
+         CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX936_V1,
+         CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_MASK_BF16_V1,
+         CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NN_V1},
+        {CK_TILE_HCU_GROUPED_GEMM_INSTANCE_BF16_NN_DECODE_COOP_K32_D5_V1,
          CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_FAMILY_DECODE_V1,
          CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX936_V1,
          CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_MASK_BF16_V1,
@@ -730,7 +735,7 @@ int main()
             const char* variant = short_path ? "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_SHORT_VARIANT" :
                                                 "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT";
             decode_pass &= ::setenv(enable, "1", 1) == 0;
-            for(int v = 0; v < (short_path ? 6 : 12); ++v)
+            for(int v = 0; v < (short_path ? 6 : 17); ++v)
             {
                 const std::string value = std::to_string(v);
                 decode_pass &= ::setenv(variant, value.c_str(), 1) == 0;
@@ -738,9 +743,18 @@ int main()
                 {
                     auto probe = make_fixed_m_problem(CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_BF16_V1,
                         CK_TILE_HCU_GROUPED_GEMM_LAYOUT_NN_V1, 32, m, 1024, short_path ? 768 : 2048);
-                    const int expected_decode = short_path ? (v >= 3 ? 6016 + v - 3 : v == 2 ? 6012 : 6007 + v) :
-                        (v >= 9 ? 6020 + v - 9 : v >= 6 ? 6013 + v - 6 :
+                    int expected_decode = short_path ? (v >= 3 ? 6016 + v - 3 : v == 2 ? 6012 : 6007 + v) :
+                        (v == 12 || v == 14 ? 6023 : v == 13 ? 6022 : v == 15 ? 6013 : v == 16 ? 6015 :
+                         v >= 9 ? 6020 + v - 9 : v >= 6 ? 6013 + v - 6 :
                          v >= 3 ? 6009 + v - 3 : 6004 + v);
+                    if(!short_path && v >= 13 && m < 17)
+                    {
+                        decode_pass &= ::setenv(disable, "1", 1) == 0;
+                        auto scoped_fallback_selection = make_selection();
+                        decode_pass &= ck_tile_hcu_grouped_gemm_select_device_args_v1(&probe, &scoped_fallback_selection) == 0;
+                        expected_decode = static_cast<int>(scoped_fallback_selection.instance_id);
+                        decode_pass &= ::setenv(disable, "0", 1) == 0;
+                    }
                     decode_pass &= expect_selection(probe, expected_decode, "decode_full_m_variants");
                     ++cases;
                 }
@@ -750,13 +764,13 @@ int main()
             decode_pass &= ::setenv(disable, "1", 1) == 0;
             auto off = make_selection();
             decode_pass &= ck_tile_hcu_grouped_gemm_select_device_args_v1(&probe, &off) == 0;
-            decode_pass &= off.instance_id < 6004 || off.instance_id > 6022;
+            decode_pass &= off.instance_id < 6004 || off.instance_id > 6023;
             decode_pass &= ::setenv(disable, "0", 1) == 0;
             decode_pass &= ::setenv(variant, "invalid", 1) == 0;
             auto invalid_decode_variant = make_selection();
             decode_pass &= ck_tile_hcu_grouped_gemm_select_device_args_v1(&probe, &invalid_decode_variant) == 0;
             decode_pass &= invalid_decode_variant.instance_id == off.instance_id;
-            for(const char* value : {"", "01", "001", "-1", "+1", "1x", "100", "12", "99"})
+            for(const char* value : {"", "01", "001", "-1", "+1", "1x", "100", "17", "99"})
             {
                 decode_pass &= ::setenv(variant, value, 1) == 0;
                 auto malformed_variant_selection = make_selection();
@@ -774,6 +788,30 @@ int main()
             decode_pass &= ::unsetenv(variant) == 0;
             cases += 3;
         }
+        for(bool fast_short : {false, true})
+        {
+            const char* fast_family_enable = fast_short ? "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_SHORT" : "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE";
+            const char* fast_family_disable = fast_short ? "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_SHORT" : "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE";
+            const char* fast_family_variant = fast_short ? "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_SHORT_VARIANT" : "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT";
+            decode_pass &= ::setenv(fast_family_enable, "1", 1) == 0;
+            decode_pass &= ::setenv(fast_family_disable, "0", 1) == 0;
+            decode_pass &= ::setenv(fast_family_variant, fast_short ? "3" : "12", 1) == 0;
+            auto fast_policy_probe = make_fixed_m_problem(CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_BF16_V1,
+                CK_TILE_HCU_GROUPED_GEMM_LAYOUT_NN_V1, 8, 17, 1024, fast_short ? 768 : 2048);
+            for(const char* fast_enable_value : {"0", "1", "yes"})
+            for(const char* fast_disable_value : {"0", "1"})
+            {
+                decode_pass &= ::setenv("CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY", fast_enable_value, 1) == 0;
+                decode_pass &= ::setenv("CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY", fast_disable_value, 1) == 0;
+                decode_pass &= expect_selection(fast_policy_probe, fast_short ? 6016 : 6023, "decode_fast_policy_selection_equivalence");
+                ++cases;
+            }
+            decode_pass &= ::unsetenv(fast_family_enable) == 0;
+            decode_pass &= ::unsetenv(fast_family_disable) == 0;
+            decode_pass &= ::unsetenv(fast_family_variant) == 0;
+        }
+        decode_pass &= ::unsetenv("CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY") == 0;
+        decode_pass &= ::unsetenv("CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY") == 0;
         passed &= decode_pass;
         std::cout << "QUERY_DECODE_MAINLINE_" << (decode_pass ? "PASS" : "FAIL") << " cases=" << cases << '\n';
     }

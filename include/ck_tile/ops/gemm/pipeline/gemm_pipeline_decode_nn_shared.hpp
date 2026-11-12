@@ -25,7 +25,7 @@ struct Geometry
     static constexpr int LdsBytes = Depth * StageBytes;
     static_assert(Rows == 1 || Rows == 2 || Rows == 4);
     static_assert(BlockK == 16 || BlockK == 32);
-    static_assert(Depth == 4 || Depth == 8);
+    static_assert(Depth == 4 || Depth == 5 || Depth == 8);
     static_assert(LdsBytes <= 65536);
 };
 
