@@ -1,0 +1,128 @@
+{
+  "rule_sha256": "517c46b9776dc8b59a21f8b6bdaf33d662d569bb83a7e7ac79bbfc5bbd100daf",
+  "discovery_sha256": "cc814fce041bbdf74dd2abfe793ae7a471dead0cd66c32ffafee7b4d716e6107",
+  "plan_sha256": "cc0686082f5db0f2ddc8e47ca5a9015ef2bec9a37257d7f55d7bfc18f94650e3",
+  "epoch": 1,
+  "chosen_coop_variant": "coop_k32_d4",
+  "chosen_main_variant": "coop_k32_d4",
+  "chosen_short_variant": "direct_short_both",
+  "chosen": [
+    {
+      "pair": "id621_coop_k32_d4",
+      "ID": 621,
+      "variant": "coop_k32_d4",
+      "category": "gain",
+      "delta_pct": -13.034999999999997,
+      "high_cv": false,
+      "route_compare": false,
+      "precision_keys": [
+        "e1_h3_id621_coop_k32_d4_a5dc281722e0_base_accuracy_c7be41b278",
+        "e1_h3_id621_coop_k32_d4_a5dc281722e0_candidate_accuracy_1de359c865"
+      ]
+    },
+    {
+      "pair": "id805_coop_k32_d4",
+      "ID": 805,
+      "variant": "coop_k32_d4",
+      "category": "gain",
+      "delta_pct": -10.268544006981228,
+      "high_cv": false,
+      "route_compare": false,
+      "precision_keys": [
+        "e1_h3_id805_coop_k32_d4_14c735b330bc_base_accuracy_aa44ec3644",
+        "e1_h3_id805_coop_k32_d4_14c735b330bc_candidate_accuracy_5c4b924b0b"
+      ]
+    },
+    {
+      "pair": "id1072_coop_k32_d4",
+      "ID": 1072,
+      "variant": "coop_k32_d4",
+      "category": "gain",
+      "delta_pct": -7.887422127573174,
+      "high_cv": false,
+      "route_compare": false,
+      "precision_keys": [
+        "e1_h3_id1072_coop_k32_d4_fa4f7f46b830_base_accuracy_fb8e7939bd",
+        "e1_h3_id1072_coop_k32_d4_fa4f7f46b830_candidate_accuracy_8536c23ba9"
+      ]
+    },
+    {
+      "pair": "id76_direct_short_both",
+      "ID": 76,
+      "variant": "direct_short_both",
+      "category": "flat",
+      "delta_pct": 0.0,
+      "high_cv": true,
+      "route_compare": false,
+      "precision_keys": [
+        "e1_h3_id76_direct_short_both_adf5f2662336_base_accuracy_ebe954c461",
+        "e1_h3_id76_direct_short_both_adf5f2662336_candidate_accuracy_ca19c88f64"
+      ]
+    },
+    {
+      "pair": "id31_direct_short_xor",
+      "ID": 31,
+      "variant": "direct_short_xor",
+      "category": "loss",
+      "delta_pct": 6.358385115606935,
+      "high_cv": true,
+      "route_compare": false,
+      "precision_keys": [
+        "e1_h3_id31_direct_short_xor_342f90bced54_base_accuracy_3e697f09af",
+        "e1_h3_id31_direct_short_xor_342f90bced54_candidate_accuracy_22f6e1583b"
+      ]
+    },
+    {
+      "pair": "route_id621_direct_main_both",
+      "ID": 621,
+      "variant": "direct_main_both_route",
+      "category": "flat",
+      "delta_pct": 0.103745825608903,
+      "high_cv": false,
+      "route_compare": true,
+      "precision_keys": [
+        "e1_h3_route_id621_direct_main_both_557f2b74a309_base_accuracy_067a7deacb",
+        "e1_h3_route_id621_direct_main_both_557f2b74a309_candidate_accuracy_1a8117b8c0"
+      ]
+    },
+    {
+      "pair": "route_id1072_direct_main_both",
+      "ID": 1072,
+      "variant": "direct_main_both_route",
+      "category": "flat",
+      "delta_pct": -0.37907514518047414,
+      "high_cv": false,
+      "route_compare": true,
+      "precision_keys": [
+        "e1_h3_route_id1072_direct_main_both_622e5997a43d_base_accuracy_3767c68cdc",
+        "e1_h3_route_id1072_direct_main_both_622e5997a43d_candidate_accuracy_d09e8ace2d"
+      ]
+    },
+    {
+      "pair": "route_id76_direct_short_xor",
+      "ID": 76,
+      "variant": "direct_short_xor_route",
+      "category": "gain",
+      "delta_pct": -3.716055065242174,
+      "high_cv": true,
+      "route_compare": true,
+      "precision_keys": [
+        "e1_h3_route_id76_direct_short_xor_dff5449b89b9_base_accuracy_89567af4f1",
+        "e1_h3_route_id76_direct_short_xor_dff5449b89b9_candidate_accuracy_5bfdfef39f"
+      ]
+    },
+    {
+      "pair": "route_id257_direct_short_xor",
+      "ID": 257,
+      "variant": "direct_short_xor_route",
+      "category": "flat",
+      "delta_pct": -1.6233746270976956,
+      "high_cv": false,
+      "route_compare": true,
+      "precision_keys": [
+        "e1_h3_route_id257_direct_short_xor_67f3f95a55b0_base_accuracy_b43eeb7607",
+        "e1_h3_route_id257_direct_short_xor_67f3f95a55b0_candidate_accuracy_6fc493461f"
+      ]
+    }
+  ]
+}

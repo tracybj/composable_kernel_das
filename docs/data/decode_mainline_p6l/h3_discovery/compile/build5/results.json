@@ -1,0 +1,38 @@
+[
+  {
+    "at": "2026-11-12T09:25:29.193805+00:00",
+    "command": [
+      "cmake",
+      "-S",
+      "/workspace/composable_kernel",
+      "-B",
+      "/workspace/composable_kernel/build"
+    ],
+    "gpu": false,
+    "pid": 9,
+    "rc": 0,
+    "seconds": 2.3048817349990713,
+    "finished_at": "2026-11-12T09:25:31.498837+00:00"
+  },
+  {
+    "at": "2026-11-12T09:25:31.500135+00:00",
+    "command": [
+      "cmake",
+      "--build",
+      "/workspace/composable_kernel/build",
+      "--target",
+      "tile_example_grouped_gemm_device_args_benchmark",
+      "tile_example_grouped_gemm_device_args_query_test",
+      "tile_example_grouped_gemm_device_args_smoke",
+      "tile_example_grouped_gemm_selector_test",
+      "tile_example_grouped_gemm_decode_depth8_selector_test",
+      "tile_example_grouped_gemm_decode_mainline_selector_test",
+      "-j4"
+    ],
+    "gpu": false,
+    "pid": 36,
+    "rc": 2,
+    "seconds": 3225.537295495,
+    "finished_at": "2026-11-12T10:19:17.037220+00:00"
+  }
+]

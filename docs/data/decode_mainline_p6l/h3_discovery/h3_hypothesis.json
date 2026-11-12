@@ -1,0 +1,112 @@
+{
+  "at": "2026-11-12T09:10:53.393457+00:00",
+  "status": "Frozen design before H3 code/GPU; do not claim any performance yet",
+  "main_structure_number": 3,
+  "short_structure_number": 2,
+  "main_last_structure": true,
+  "evidence": {
+    "tuning_results_sha256": "ae7b481ae6ef70f335d374b9d752e10888947836c0096f2f93c7523f7ea47b49",
+    "tuning_profile_sha256": "0f8665a24c8d0c40cc963d9fc2c9f002d3cac0a424e2913350e549d034095da6"
+  },
+  "facts": [
+    "H2 best factor GMs .964208(both)/.964332(xor), still main losses and all short combinations lose overall",
+    "ID621/805 XOR+early LDSconflict/active .414/.407 vsplain .667; longM2 .254 vsplain .501, so layout fix partial",
+    "B private N32-row loading has much more TCP translation/pending pressure than the cooperative full-N reference; HBM bulk stays near onecopy",
+    "Formal EventTimer records start before run_device_args_v1 call, so selector/dispatch enqueue gaps can contribute; NOT a measured causal proof",
+    "Short76 profile kernel16.64us vsbase21.12us, yet formal candidate24us/base22.08us in independent runs; direct-host-route control needed, no substitution of profile for formal timing"
+  ],
+  "H3_geometry": {
+    "CTA": "complete M<=64, N128; 4waves",
+    "wave_partition": "Mpad16/32:1M x4N, Mpad64:2M x2N; preserves complete CTA M ownership",
+    "A": "cooperative DirectLDS padded rows; inverse row/chunk XOR load+read, SLC",
+    "B": "cooperative full128-column rows, four K rows per wave for eachK16half; row-parity XOR4; shared across M-waves",
+    "operands": "3 banks, current t / already-read t+1 / read t+2, future global t+D+1 into slot(t+1)%D after prior readers retire",
+    "writeback": "FP32->BF16, wave-private1KiB scratch reuse, M/N wave offsets,16B stores; no K reduction"
+  },
+  "H3_protocol_proof": {
+    "prologue": "load0..D-1; wait/publish0&1; readop0 andop1 with LG0; CTA barrier retires both; refillglobalD into slot0",
+    "steady": "outstanding global t+2..t+D (D-1 panels); wait pendingD-2 for t+2, LG0+barrier; readop(t+2)%3 fromslot(t+2)%D; loadglobalt+D+1 into slot(t+1)%D whose op(t+1) readers retired; computeop(t)%3",
+    "unroll": "Cycle=3D, divisible by3 andD. Bulk whenbase+Cycle+D<stages, tail up toCycle+D+1 guarded iterations",
+    "tail": "pending=min(D-2,max(0,stages-t-3)) for reading t+2; template immediate selection, no future read/load beyondstages; last2 iterations drain0; final LG0/CTAbarrier before scratch reuse"
+  },
+  "new_instances": {
+    "6013": "direct H2K16D8 XOR",
+    "6014": "direct H2K16D8 EARLY",
+    "6015": "direct H2K16D8 BOTH",
+    "6016": "direct shortH2K16D4 XOR",
+    "6017": "direct shortH2K16D4 EARLY",
+    "6018": "direct shortH2K16D4 BOTH",
+    "6020": "H3 K16D4",
+    "6021": "H3 K16D8",
+    "6022": "H3 K32D4"
+  },
+  "selector_variants": {
+    "main6_7_8": "direct6013..15",
+    "main9_10_11": "H3 6020..22",
+    "short3_4_5": "direct6016..18"
+  },
+  "host_route_rules": [
+    "Legacy6009..12 factor flags remain defaultoff/DISABLE wins and retain old meaning",
+    "New directIDs have fixed tuning bits in their identity, skip provider getenv. They use MAINLINE/SHORT defaultoff and familyDISABLE priority. Legacy per-factor environment only controls legacy IDs.",
+    "Two-digit mainVAR10/11 parsed strictly; reject leading-zero multi-digit, malformed or out-of-range values",
+    "No publicstruct/GemmTransKernelArg changes, no hot allocation/readback/sync, no model/ID whitelist"
+  ],
+  "discovery_variants": [
+    "coop_k16_d4",
+    "coop_k16_d8",
+    "coop_k32_d4",
+    "direct_main_xor",
+    "direct_main_both",
+    "legacy_main_both",
+    "direct_short_xor",
+    "direct_short_both",
+    "legacy_short_xor"
+  ],
+  "main_ids": [
+    620,
+    621,
+    633,
+    788,
+    805,
+    948,
+    1009,
+    1072
+  ],
+  "short_ids": [
+    26,
+    31,
+    32,
+    76,
+    82,
+    122,
+    128,
+    257,
+    263
+  ],
+  "route_diagnostic_pairs": [
+    621,
+    1072,
+    76,
+    257
+  ],
+  "route_pair_count_toward_goal": false,
+  "standard_pairs": 75,
+  "fallback_controls": 6,
+  "route_pairs": 4,
+  "total_discovery_pairs": 85,
+  "qualification_accuracy_cases": 81,
+  "qualification_with_query_smoke": 83,
+  "qualification_M": [
+    1,
+    15,
+    16,
+    17,
+    31,
+    32,
+    33,
+    63,
+    64
+  ],
+  "protocol": "unchanged full3/guards then3AB/BA rounds, no7block claim; complete registered groups before adoption",
+  "limits": "No more main ownership architectures beyondH3. Short remainsS2; direct host route is same GPU code. No1193/881 fullGPU. Original cutoff/harddeadline unchanged."
+}

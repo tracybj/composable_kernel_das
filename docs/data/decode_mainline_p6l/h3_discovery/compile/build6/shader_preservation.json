@@ -1,0 +1,3131 @@
+{
+  "ok": true,
+  "binary": "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+  "binary_sha256": "673cb992940688de653142386323bbd8a21352c9286a9f80184ba75e1a6814cc",
+  "original_count": 1574,
+  "preserved_count": 1574,
+  "missing": [],
+  "changed": [],
+  "added": {
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi1ELi4ELi4ELb1EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi1ELi4ELi4ELb1EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "112b82443fd8e4abc4340e7c02efedde6acd813f21946273f0acfd6cabcd7a91",
+      "bytes": 1520,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi1ELi4ELi4ELb1EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 33,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi1ELi4ELi4ELb1EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 37,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi1ELi8ELi4ELb1EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi1ELi8ELi4ELb1EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "e2b4590c394232d33f938b9b236d70010793c468c869218e7f09b73b32819e71",
+      "bytes": 2108,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi1ELi8ELi4ELb1EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 42,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi1ELi8ELi4ELb1EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 49,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi1ELi4ELi4ELb0EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi1ELi4ELi4ELb0EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "0e61b7f531791b0237fc0bcfe6a452b39f4b6703316cf7112490aaae8e3bd35b",
+      "bytes": 1516,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi1ELi4ELi4ELb0EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 33,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi1ELi4ELi4ELb0EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 33,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi128ELi2ENS_22DecodeNnMainlineKernelILi1ELi2ELi2ELb0EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi128ELi2ENS_22DecodeNnMainlineKernelILi1ELi2ELi2ELb0EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "5cd57bcb68b90791f22cf2ce9fc5f0fb1d59e2863bc8bb4b69a358b9b18f90d3",
+      "bytes": 1232,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 128,
+        ".name": "_ZN7ck_tile6kentryILi128ELi2ENS_22DecodeNnMainlineKernelILi1ELi2ELi2ELb0EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 28,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi128ELi2ENS_22DecodeNnMainlineKernelILi1ELi2ELi2ELb0EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 25,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi64ELi2ENS_22DecodeNnMainlineKernelILi1ELi2ELi1ELb0EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi64ELi2ENS_22DecodeNnMainlineKernelILi1ELi2ELi1ELb0EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "33c40e1b3b0b0f5f393e3072d4be12098b974db4fb54f2170fbd35e19c54bcef",
+      "bytes": 1212,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 64,
+        ".name": "_ZN7ck_tile6kentryILi64ELi2ENS_22DecodeNnMainlineKernelILi1ELi2ELi1ELb0EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 28,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi64ELi2ENS_22DecodeNnMainlineKernelILi1ELi2ELi1ELb0EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 25,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi2ELi4ELi4ELb1EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi2ELi4ELi4ELb1EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "2ad1668cc7198de2e33bd647518dfe59ec097d5df955ac7e37223f0685ffc28f",
+      "bytes": 2140,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi2ELi4ELi4ELb1EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 33,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi2ELi4ELi4ELb1EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 53,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi2ELi8ELi4ELb1EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi2ELi8ELi4ELb1EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "6a68898e4e3c54f7c3dc06ea8a506416d95fd8916fafbe1ae620e9b9942f67ee",
+      "bytes": 2920,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi2ELi8ELi4ELb1EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 42,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi2ELi8ELi4ELb1EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 73,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi2ELi4ELi4ELb0EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi2ELi4ELi4ELb0EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "93833e0eb75726dc89c817541c211682f706a40aea035140192f04f93a3efd93",
+      "bytes": 2136,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi2ELi4ELi4ELb0EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 33,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi2ELi4ELi4ELb0EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 49,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi128ELi2ENS_22DecodeNnMainlineKernelILi2ELi2ELi2ELb0EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi128ELi2ENS_22DecodeNnMainlineKernelILi2ELi2ELi2ELb0EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "da327512cbf26e15cf0959b0dbae33e136289c1476746f8e8a958e4cc0a7edee",
+      "bytes": 1756,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 128,
+        ".name": "_ZN7ck_tile6kentryILi128ELi2ENS_22DecodeNnMainlineKernelILi2ELi2ELi2ELb0EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 28,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi128ELi2ENS_22DecodeNnMainlineKernelILi2ELi2ELi2ELb0EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 39,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi64ELi2ENS_22DecodeNnMainlineKernelILi2ELi2ELi1ELb0EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi64ELi2ENS_22DecodeNnMainlineKernelILi2ELi2ELi1ELb0EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "300732b8717768dc8a3bef8ccb28ef3ebf8e391182e7f40b9889880049544235",
+      "bytes": 1736,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 64,
+        ".name": "_ZN7ck_tile6kentryILi64ELi2ENS_22DecodeNnMainlineKernelILi2ELi2ELi1ELb0EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 28,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi64ELi2ENS_22DecodeNnMainlineKernelILi2ELi2ELi1ELb0EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 39,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi4ELi4ELi4ELb1EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi4ELi4ELi4ELb1EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "729c1bef8a7531609d52193eca03c4d1bf4b355348376f3cb75ff7ba8d4339fa",
+      "bytes": 3384,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi4ELi4ELi4ELb1EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 33,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi4ELi4ELi4ELb1EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 89,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi4ELi8ELi4ELb1EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi4ELi8ELi4ELb1EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "944827c4d82b9138f5f8d1193e55f9e8e6746e62e6574fdbf1ef506bede7df95",
+      "bytes": 4548,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi4ELi8ELi4ELb1EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 42,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi4ELi8ELi4ELb1EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 125,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi4ELi4ELi4ELb0EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi4ELi4ELi4ELb0EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "457394b98e7697aad51c81aecbd7eeb344c8f008a929abb44e844d7004b9d35c",
+      "bytes": 3380,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi4ELi4ELi4ELb0EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 33,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi4ELi4ELi4ELb0EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 85,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi128ELi2ENS_22DecodeNnMainlineKernelILi4ELi2ELi2ELb0EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi128ELi2ENS_22DecodeNnMainlineKernelILi4ELi2ELi2ELb0EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "c75924033aaeba7b5ce65293f1030ce37c85e401daa113b64f0c065eaf187291",
+      "bytes": 2808,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 128,
+        ".name": "_ZN7ck_tile6kentryILi128ELi2ENS_22DecodeNnMainlineKernelILi4ELi2ELi2ELb0EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 28,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi128ELi2ENS_22DecodeNnMainlineKernelILi4ELi2ELi2ELb0EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 67,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi64ELi2ENS_22DecodeNnMainlineKernelILi4ELi2ELi1ELb0EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi64ELi2ENS_22DecodeNnMainlineKernelILi4ELi2ELi1ELb0EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "3cc0ecfc6dd43584b445dcc90d2194536e3d1caaba80a045131ec6458d371b86",
+      "bytes": 2788,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 64,
+        ".name": "_ZN7ck_tile6kentryILi64ELi2ENS_22DecodeNnMainlineKernelILi4ELi2ELi1ELb0EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 28,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi64ELi2ENS_22DecodeNnMainlineKernelILi4ELi2ELi1ELb0EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 67,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi1ELi4ELi4ELb1EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi1ELi4ELi4ELb1EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "eef551152e204ffcbd4efef70b141900cbdc7251e634566ee88073f8028e0d21",
+      "bytes": 1516,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi1ELi4ELi4ELb1EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 33,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi1ELi4ELi4ELb1EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 37,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi1ELi8ELi4ELb1EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi1ELi8ELi4ELb1EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "0848b2ef683f9503e3687ce084d838cdf8ec0515a09dbf66aff85898ab811fb2",
+      "bytes": 2104,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi1ELi8ELi4ELb1EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 42,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi1ELi8ELi4ELb1EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 49,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi1ELi4ELi4ELb0EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi1ELi4ELi4ELb0EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "f90acdc917c4d04132bd6b256d505d76d43348df481a578f27f4e1de154333e4",
+      "bytes": 1512,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi1ELi4ELi4ELb0EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 33,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi1ELi4ELi4ELb0EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 31,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi128ELi2ENS_22DecodeNnMainlineKernelILi1ELi2ELi2ELb0EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi128ELi2ENS_22DecodeNnMainlineKernelILi1ELi2ELi2ELb0EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "e6e2f6ae1f7a670b090ad245a55664d3366565f351d2c52c2f9aaada9070e527",
+      "bytes": 1224,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 128,
+        ".name": "_ZN7ck_tile6kentryILi128ELi2ENS_22DecodeNnMainlineKernelILi1ELi2ELi2ELb0EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 28,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi128ELi2ENS_22DecodeNnMainlineKernelILi1ELi2ELi2ELb0EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 25,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi64ELi2ENS_22DecodeNnMainlineKernelILi1ELi2ELi1ELb0EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi64ELi2ENS_22DecodeNnMainlineKernelILi1ELi2ELi1ELb0EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "cc111dc0859070e3863d75a5a17371b11cffa8ba76d3ae34e66e95aaf371b00e",
+      "bytes": 1204,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 64,
+        ".name": "_ZN7ck_tile6kentryILi64ELi2ENS_22DecodeNnMainlineKernelILi1ELi2ELi1ELb0EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 28,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi64ELi2ENS_22DecodeNnMainlineKernelILi1ELi2ELi1ELb0EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 25,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi2ELi4ELi4ELb1EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi2ELi4ELi4ELb1EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "a31922700914e33d04c82cbf0fe15d77decf8202ec9845613bbe843d4181ad84",
+      "bytes": 2136,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi2ELi4ELi4ELb1EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 33,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi2ELi4ELi4ELb1EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 53,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi2ELi8ELi4ELb1EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi2ELi8ELi4ELb1EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "f0ca41de7621da720cb2741031e31e577ca409ba6f4536b39d597f4c57cc6c68",
+      "bytes": 2916,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi2ELi8ELi4ELb1EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 42,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi2ELi8ELi4ELb1EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 73,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi2ELi4ELi4ELb0EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi2ELi4ELi4ELb0EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "6b1d84e5bfbdbdc0cd1ac9ab366b1c27ef69f692a4643485b0da0b9d7b1525dc",
+      "bytes": 2132,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi2ELi4ELi4ELb0EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 33,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi2ELi4ELi4ELb0EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 49,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi128ELi2ENS_22DecodeNnMainlineKernelILi2ELi2ELi2ELb0EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi128ELi2ENS_22DecodeNnMainlineKernelILi2ELi2ELi2ELb0EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "8cf36a630bdffd73b05f7d43979674cb7de5ab43374d7ece022be69452846353",
+      "bytes": 1752,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 128,
+        ".name": "_ZN7ck_tile6kentryILi128ELi2ENS_22DecodeNnMainlineKernelILi2ELi2ELi2ELb0EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 28,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi128ELi2ENS_22DecodeNnMainlineKernelILi2ELi2ELi2ELb0EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 39,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi64ELi2ENS_22DecodeNnMainlineKernelILi2ELi2ELi1ELb0EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi64ELi2ENS_22DecodeNnMainlineKernelILi2ELi2ELi1ELb0EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "b7134e6447ed047e7c321bcd6d1b8123e8031f93715124a53a06e6aec26fd515",
+      "bytes": 1732,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 64,
+        ".name": "_ZN7ck_tile6kentryILi64ELi2ENS_22DecodeNnMainlineKernelILi2ELi2ELi1ELb0EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 28,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi64ELi2ENS_22DecodeNnMainlineKernelILi2ELi2ELi1ELb0EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 39,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi4ELi4ELi4ELb1EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi4ELi4ELi4ELb1EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "aec9e35639e2048cee20b4a09d7fa37eae8ec6e77561b273abb705f46bb9a165",
+      "bytes": 3380,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi4ELi4ELi4ELb1EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 33,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi4ELi4ELi4ELb1EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 89,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi4ELi8ELi4ELb1EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi4ELi8ELi4ELb1EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "82cbed4d4922382e32e8fa43622f4fe55418943400b81e8d5f6a75efbc78a11f",
+      "bytes": 4544,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi4ELi8ELi4ELb1EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 42,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi4ELi8ELi4ELb1EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 125,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi4ELi4ELi4ELb0EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi4ELi4ELi4ELb0EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "f01efe112da84af836e3d0d25994eb5078d8f7c49d217d1366d7c8e7aea5dcc9",
+      "bytes": 3376,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi4ELi4ELi4ELb0EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 33,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_22DecodeNnMainlineKernelILi4ELi4ELi4ELb0EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 85,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi128ELi2ENS_22DecodeNnMainlineKernelILi4ELi2ELi2ELb0EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi128ELi2ENS_22DecodeNnMainlineKernelILi4ELi2ELi2ELb0EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "6e8316df886b5b4ceeeacb9a2469ed9753aac66b14d9ede044295bc626dac68d",
+      "bytes": 2804,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 128,
+        ".name": "_ZN7ck_tile6kentryILi128ELi2ENS_22DecodeNnMainlineKernelILi4ELi2ELi2ELb0EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 28,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi128ELi2ENS_22DecodeNnMainlineKernelILi4ELi2ELi2ELb0EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 67,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi64ELi2ENS_22DecodeNnMainlineKernelILi4ELi2ELi1ELb0EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi64ELi2ENS_22DecodeNnMainlineKernelILi4ELi2ELi1ELb0EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "597eb3754fd26a393b6499d6786230c5f0804afd7a7a3df4e3f6ae9f0b7fdbe8",
+      "bytes": 2784,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 64,
+        ".name": "_ZN7ck_tile6kentryILi64ELi2ENS_22DecodeNnMainlineKernelILi4ELi2ELi1ELb0EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 28,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi64ELi2ENS_22DecodeNnMainlineKernelILi4ELi2ELi1ELb0EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 67,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi16ELi4ELb1ELb1EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi16ELi4ELb1ELb1EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "2805e7d5b8edadc4ff02edb29ccaadf389bd3537a18f236e1caaf1e7474eb1d6",
+      "bytes": 2180,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi16ELi4ELb1ELb1EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 42,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi16ELi4ELb1ELb1EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 35,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi16ELi8ELb1ELb1EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi16ELi8ELb1ELb1EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "9c3e52b3a36a5a26ca6ab86a84ba157845ee41b09dc853658da10fc73c2355e1",
+      "bytes": 3308,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi16ELi8ELb1ELb1EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 54,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi16ELi8ELb1ELb1EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 47,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi32ELi4ELb1ELb1EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi32ELi4ELb1ELb1EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "b9a3f5db871f73c4798ba7d01fd5636a911692dde4d36e253659dfcd3baa252a",
+      "bytes": 2792,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi32ELi4ELb1ELb1EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 50,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi32ELi4ELb1ELb1EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 60,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi16ELi4ELb1ELb0EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi16ELi4ELb1ELb0EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "cdc970d244724429c12c99bb594bb91b939eeba08b63ad922adf9c8641d00543",
+      "bytes": 2160,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi16ELi4ELb1ELb0EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 42,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi16ELi4ELb1ELb0EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 35,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi16ELi8ELb1ELb0EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi16ELi8ELb1ELb0EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "80bf4e7c58dae196b2132aca114f683c6f2c9e42b8c0d4f20795a32808823ae8",
+      "bytes": 3292,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi16ELi8ELb1ELb0EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 54,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi16ELi8ELb1ELb0EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 47,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi32ELi4ELb1ELb0EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi32ELi4ELb1ELb0EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "3d3db9c4bd23a03b79a923b021bc7ca3cf9292562185f6a364005a6b56a5193f",
+      "bytes": 2764,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi32ELi4ELb1ELb0EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 50,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi32ELi4ELb1ELb0EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 58,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi16ELi4ELb0ELb1EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi16ELi4ELb0ELb1EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "c6b24f1216a14e4992315a692c8a30d1e15360370f0e206a382ecbe40bbe41cf",
+      "bytes": 2192,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi16ELi4ELb0ELb1EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 42,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi16ELi4ELb0ELb1EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 35,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi16ELi8ELb0ELb1EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi16ELi8ELb0ELb1EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "a3ad4407b4864a9dc949bd08cf91a3f25f7dab304c90e61cac990fd047c959fa",
+      "bytes": 3320,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi16ELi8ELb0ELb1EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 54,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi16ELi8ELb0ELb1EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 47,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi32ELi4ELb0ELb1EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi32ELi4ELb0ELb1EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "9154f37b08b53f3bbb8b6dd20b0ebe90f8a12a18873f3f3bc58c4da21560c3e0",
+      "bytes": 2804,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi32ELi4ELb0ELb1EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 50,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi32ELi4ELb0ELb1EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 60,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi1ELi16ELi4EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi1ELi16ELi4EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "df3b994d597f5af3c07bdb9ea89e72949a90863a95254bfc184c7cff26f5c569",
+      "bytes": 2172,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi1ELi16ELi4EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 42,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi1ELi16ELi4EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 35,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi1ELi16ELi8EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi1ELi16ELi8EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "600e345cc8bd6a66dd8e6ced6cce784245df0bb0f90af2327904a45d2458d7bf",
+      "bytes": 3304,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi1ELi16ELi8EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 54,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi1ELi16ELi8EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 47,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi1ELi32ELi4EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi1ELi32ELi4EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "6041ce204daf10db90631d344fed0b95b26b795acf52fc0dc68317b0f05c4636",
+      "bytes": 2776,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi1ELi32ELi4EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 50,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi1ELi32ELi4EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 58,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi16ELi4ELb1ELb1EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi16ELi4ELb1ELb1EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "61af1995f6a0b78393909aaef4c9bac350149458d0a16c92bb03c71363382490",
+      "bytes": 2840,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi16ELi4ELb1ELb1EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 42,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi16ELi4ELb1ELb1EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 51,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi16ELi8ELb1ELb1EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi16ELi8ELb1ELb1EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "b31f0a2b896ac4fe85378f911c0610dcfdc355f73ac525528e0907b1ad87cef7",
+      "bytes": 4224,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi16ELi8ELb1ELb1EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 54,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi16ELi8ELb1ELb1EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 65,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi32ELi4ELb1ELb1EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi32ELi4ELb1ELb1EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "23d16b889329db3bc88ee1c6eb5e8c0a34d84d1bcbf57d6a1e6b87a8a414351f",
+      "bytes": 3708,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi32ELi4ELb1ELb1EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 50,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi32ELi4ELb1ELb1EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 84,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi16ELi4ELb1ELb0EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi16ELi4ELb1ELb0EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "cffedbe0eec39375f99585ecad75b362cfc10d737617cd639f04164aec0bace8",
+      "bytes": 2816,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi16ELi4ELb1ELb0EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 42,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi16ELi4ELb1ELb0EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 51,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi16ELi8ELb1ELb0EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi16ELi8ELb1ELb0EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "546f09afb26e6d6ee303f54ec4cd9631134604226ed9b5a84334bbc2d6f9b65b",
+      "bytes": 4204,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi16ELi8ELb1ELb0EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 54,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi16ELi8ELb1ELb0EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 65,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi32ELi4ELb1ELb0EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi32ELi4ELb1ELb0EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "165a4c92872eca2d3ddcf4ce320f810c1bc3e63e33b40b3a095f530ee8b70d29",
+      "bytes": 3680,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi32ELi4ELb1ELb0EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 50,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi32ELi4ELb1ELb0EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 82,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi16ELi4ELb0ELb1EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi16ELi4ELb0ELb1EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "c9f12d8f39658e5635ed9d9c3796be67551e3e5911416c8a018e2d760b90f4fb",
+      "bytes": 2852,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi16ELi4ELb0ELb1EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 42,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi16ELi4ELb0ELb1EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 51,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi16ELi8ELb0ELb1EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi16ELi8ELb0ELb1EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "daac06e70198d5fc0779ab732571fd1ae20ea9881454f263f8aa94070c763381",
+      "bytes": 4236,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi16ELi8ELb0ELb1EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 54,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi16ELi8ELb0ELb1EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 65,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi32ELi4ELb0ELb1EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi32ELi4ELb0ELb1EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "b4ead0ef19c946164d5905f1854f2216e941bd85eadfccaa0295b25f31cc696d",
+      "bytes": 3720,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi32ELi4ELb0ELb1EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 50,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi32ELi4ELb0ELb1EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 84,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi2ELi16ELi4EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi2ELi16ELi4EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "dceb6df405a7765c559da287a62d207e81bcff2d3c99f0f06b52f0588f5d7cdb",
+      "bytes": 2828,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi2ELi16ELi4EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 42,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi2ELi16ELi4EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 51,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi2ELi16ELi8EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi2ELi16ELi8EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "85e3d1730be0d20624bbea120546a9dba8eaaee6b99685a2eb92d922061ce593",
+      "bytes": 4216,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi2ELi16ELi8EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 54,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi2ELi16ELi8EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 65,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi2ELi32ELi4EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi2ELi32ELi4EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "0ebd31b9710ea2c7cbaf800854f76b569da9945931da8a2be1d79f2a04cb8381",
+      "bytes": 3692,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi2ELi32ELi4EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 50,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi2ELi32ELi4EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 82,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi16ELi4ELb1ELb1EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi16ELi4ELb1ELb1EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "0277f60127106a10c8966dbe3cfd9bfb8d1c01a2f158ebae72c3ef056d195ad2",
+      "bytes": 4168,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi16ELi4ELb1ELb1EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 42,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi16ELi4ELb1ELb1EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 83,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi16ELi8ELb1ELb1EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi16ELi8ELb1ELb1EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "9216c268393f1627be85d99232473a76597d22532bf5341f083b20aa74dc07f9",
+      "bytes": 6072,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi16ELi8ELb1ELb1EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 54,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi16ELi8ELb1ELb1EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 109,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi32ELi4ELb1ELb1EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi32ELi4ELb1ELb1EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "c6ca6e29694d92e07673dab69c3b3a69608d44c44cd6f247e506761a0788a87a",
+      "bytes": 5532,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi32ELi4ELb1ELb1EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 50,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi32ELi4ELb1ELb1EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 132,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi16ELi4ELb1ELb0EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi16ELi4ELb1ELb0EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "16e0f44f930002d056c3a1da7e1482318a36dd7a60ac7755f5761952a9693b97",
+      "bytes": 4136,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi16ELi4ELb1ELb0EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 42,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi16ELi4ELb1ELb0EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 83,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi16ELi8ELb1ELb0EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi16ELi8ELb1ELb0EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "55a91e3dd50ab3781360f45b8886b0acae8dd374744f713d13304628462a8d2f",
+      "bytes": 6048,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi16ELi8ELb1ELb0EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 54,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi16ELi8ELb1ELb0EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 109,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi32ELi4ELb1ELb0EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi32ELi4ELb1ELb0EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "112b19e961fb8ec6931136b5810e43cc22571883d2a54e10c9d8667fc392d5a5",
+      "bytes": 5504,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi32ELi4ELb1ELb0EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 50,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi32ELi4ELb1ELb0EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 130,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi16ELi4ELb0ELb1EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi16ELi4ELb0ELb1EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "9052e3b672e5c06c38e6c3b64f5b6064d3a6d0281c1f870260005ca32559d96c",
+      "bytes": 4180,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi16ELi4ELb0ELb1EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 42,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi16ELi4ELb0ELb1EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 83,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi16ELi8ELb0ELb1EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi16ELi8ELb0ELb1EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "d1a6cb527cad4fcf48279c83ea0c2014dd10e998f11a66109d9e854bfcad7df4",
+      "bytes": 6084,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi16ELi8ELb0ELb1EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 54,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi16ELi8ELb0ELb1EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 109,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi32ELi4ELb0ELb1EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi32ELi4ELb0ELb1EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "71d2b96c9420bc4d191243770c615e03f0c236836e99fd428d0b5ad75a075229",
+      "bytes": 5544,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi32ELi4ELb0ELb1EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 50,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi32ELi4ELb0ELb1EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 132,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi4ELi16ELi4EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi4ELi16ELi4EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "2a17c8aa9e6fb2bf529f8330f90b19cf0aa6819e59194669d7a39b93dcc68162",
+      "bytes": 4148,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi4ELi16ELi4EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 42,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi4ELi16ELi4EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 83,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi4ELi16ELi8EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi4ELi16ELi8EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "6d568f9575b9152efbfd01d396f9db94d8e4179437eecaeab666645d2e89c7c5",
+      "bytes": 6060,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi4ELi16ELi8EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 54,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi4ELi16ELi8EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 109,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi4ELi32ELi4EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi4ELi32ELi4EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "f97fbeb38943a0835c9a0a8c7d4e7fc13b256d253239241dd384275c4bbb36ca",
+      "bytes": 5516,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi4ELi32ELi4EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 50,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi4ELi32ELi4EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 130,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi16ELi4ELb1ELb1EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi16ELi4ELb1ELb1EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "8ccf06125373721d822ea82e385ebc5360b1718eb79c89be29413cadaac8b577",
+      "bytes": 2180,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi16ELi4ELb1ELb1EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 42,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi16ELi4ELb1ELb1EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 35,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi16ELi8ELb1ELb1EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi16ELi8ELb1ELb1EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "069f6ec23290d866a754babeac6ef3e9bcd5f7474d7e9b73de9916e020532c74",
+      "bytes": 3308,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi16ELi8ELb1ELb1EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 54,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi16ELi8ELb1ELb1EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 47,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi32ELi4ELb1ELb1EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi32ELi4ELb1ELb1EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "a806315ec5f30c411c50e04be969b9f54be099accf64971c65da113c64a80010",
+      "bytes": 2788,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi32ELi4ELb1ELb1EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 50,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi32ELi4ELb1ELb1EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 60,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi16ELi4ELb1ELb0EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi16ELi4ELb1ELb0EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "f2837dcaa5f324630b405e9fc86e931b36c093644c7846baa16ecb63c33a1a03",
+      "bytes": 2160,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi16ELi4ELb1ELb0EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 42,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi16ELi4ELb1ELb0EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 35,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi16ELi8ELb1ELb0EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi16ELi8ELb1ELb0EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "c241958f29ad93e6f10af4c2769c72895a94bd1aea7c3bd04fb6cc7940ddbd33",
+      "bytes": 3292,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi16ELi8ELb1ELb0EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 54,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi16ELi8ELb1ELb0EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 47,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi32ELi4ELb1ELb0EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi32ELi4ELb1ELb0EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "b907a32113c70a7d1b4607bcc413395518fdce16095afd13b8f05ea5b48063f4",
+      "bytes": 2760,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi32ELi4ELb1ELb0EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 50,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi32ELi4ELb1ELb0EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 58,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi16ELi4ELb0ELb1EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi16ELi4ELb0ELb1EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "e0b8ad1ba2063ea0a0f33bc5291e7f3e58f3b3d3f51ffa7dd23401eee93d1939",
+      "bytes": 2192,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi16ELi4ELb0ELb1EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 42,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi16ELi4ELb0ELb1EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 35,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi16ELi8ELb0ELb1EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi16ELi8ELb0ELb1EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "9aa3f4d586736bc5e0e1b0781d60d101e9d6026ff940accb093d9327822eb34f",
+      "bytes": 3320,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi16ELi8ELb0ELb1EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 54,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi16ELi8ELb0ELb1EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 47,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi32ELi4ELb0ELb1EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi32ELi4ELb0ELb1EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "e7cbd6dcc046af4f59a6d54440d91b3acf96e664b68cead1e220207d17d058c7",
+      "bytes": 2800,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi32ELi4ELb0ELb1EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 50,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi1ELi32ELi4ELb0ELb1EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 60,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi1ELi16ELi4EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi1ELi16ELi4EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "a3a17b44e290bed0b2d6e72dea5ff400132d4d4782b995ac75066e49f8ef37a7",
+      "bytes": 2172,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi1ELi16ELi4EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 42,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi1ELi16ELi4EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 35,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi1ELi16ELi8EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi1ELi16ELi8EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "99f9c8a2294e2f88cfcfe072d96996369577cf30b5f91cb53e298d38fe2d3a7c",
+      "bytes": 3304,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi1ELi16ELi8EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 54,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi1ELi16ELi8EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 47,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi1ELi32ELi4EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi1ELi32ELi4EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "466e41b334d0956a3bfff9b5032ce9dcae83df439e63e0189f81fef2a10b6c12",
+      "bytes": 2772,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi1ELi32ELi4EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 50,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi1ELi32ELi4EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 58,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi16ELi4ELb1ELb1EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi16ELi4ELb1ELb1EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "34d8db45f2cc807ea5614a17437d1cca71b569b3ab27c7dbcb72b2a9ee5a523b",
+      "bytes": 2840,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi16ELi4ELb1ELb1EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 42,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi16ELi4ELb1ELb1EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 51,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi16ELi8ELb1ELb1EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi16ELi8ELb1ELb1EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "5a6cfe631b4040d6ac5692ee08048fb8d3b502635a462b032ecca2efa00643bf",
+      "bytes": 4224,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi16ELi8ELb1ELb1EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 54,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi16ELi8ELb1ELb1EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 65,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi32ELi4ELb1ELb1EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi32ELi4ELb1ELb1EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "697c6b3142d2cad6daad6fc8e661dba1d7dede3b66f6e9cd4ca68516f0f6f8c7",
+      "bytes": 3704,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi32ELi4ELb1ELb1EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 50,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi32ELi4ELb1ELb1EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 84,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi16ELi4ELb1ELb0EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi16ELi4ELb1ELb0EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "6eed0313dc7229756ee375320ddfc5b418d6b0dc2eb14f24969189a76e73596d",
+      "bytes": 2812,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi16ELi4ELb1ELb0EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 42,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi16ELi4ELb1ELb0EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 51,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi16ELi8ELb1ELb0EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi16ELi8ELb1ELb0EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "2fa422188a391087579e565aad154e3977b026cb4b8facb1feb6b3533fead291",
+      "bytes": 4200,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi16ELi8ELb1ELb0EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 54,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi16ELi8ELb1ELb0EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 65,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi32ELi4ELb1ELb0EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi32ELi4ELb1ELb0EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "bb21a46a63b46e0321e0a9d389ad8f3cd544cb4f9e0a59fa9cbf592974021050",
+      "bytes": 3676,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi32ELi4ELb1ELb0EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 50,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi32ELi4ELb1ELb0EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 82,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi16ELi4ELb0ELb1EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi16ELi4ELb0ELb1EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "066ca638697fc77e5c61b5e8ecbd7643c4f893de1d9054a78e6bbacba0430efc",
+      "bytes": 2852,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi16ELi4ELb0ELb1EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 42,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi16ELi4ELb0ELb1EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 51,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi16ELi8ELb0ELb1EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi16ELi8ELb0ELb1EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "393b25f4a194d465424be5468dcc964fea90db5ee96306ea02d99975d22fff55",
+      "bytes": 4236,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi16ELi8ELb0ELb1EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 54,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi16ELi8ELb0ELb1EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 65,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi32ELi4ELb0ELb1EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi32ELi4ELb0ELb1EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "3fdaf36ce906ae4278b4409e04caebaf41fd53d0dd014a19f739ec6786893246",
+      "bytes": 3716,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi32ELi4ELb0ELb1EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 50,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi2ELi32ELi4ELb0ELb1EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 84,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi2ELi16ELi4EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi2ELi16ELi4EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "54de267191c766469cdf66bb9004198a66d7560a91a34035a195100d69d1506e",
+      "bytes": 2824,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi2ELi16ELi4EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 42,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi2ELi16ELi4EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 51,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi2ELi16ELi8EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi2ELi16ELi8EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "08ecc18d20792d14e47537c93e4a6b871f530bf5cea9e19ee15cc4b038c7b525",
+      "bytes": 4212,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi2ELi16ELi8EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 54,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi2ELi16ELi8EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 65,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi2ELi32ELi4EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi2ELi32ELi4EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "f15447cae474730b6a99dc3e4fee1093199cfde84db54f7c0f6872fa1feb73cb",
+      "bytes": 3688,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi2ELi32ELi4EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 50,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi2ELi32ELi4EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 82,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi16ELi4ELb1ELb1EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi16ELi4ELb1ELb1EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "0abf8a3165e763115847ad9ba089e7a79355529c4104f79884d3583128f3fcf3",
+      "bytes": 4164,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi16ELi4ELb1ELb1EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 42,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi16ELi4ELb1ELb1EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 83,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi16ELi8ELb1ELb1EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi16ELi8ELb1ELb1EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "2f95f2bc6da891559a87ae66ea78c5e7fb1b7c4d0b1aaf7929ef96bad32de2f0",
+      "bytes": 6068,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi16ELi8ELb1ELb1EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 54,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi16ELi8ELb1ELb1EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 109,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi32ELi4ELb1ELb1EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi32ELi4ELb1ELb1EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "61ce8faddf83425f030297cef1f2a8b6453c91a92ac8a5e5f61ee5b087ef33f9",
+      "bytes": 5516,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi32ELi4ELb1ELb1EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 50,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi32ELi4ELb1ELb1EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 132,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi16ELi4ELb1ELb0EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi16ELi4ELb1ELb0EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "8e492cf07b9ac5bfaabc17fe36c316446f488604fd93803902800f02702e68fc",
+      "bytes": 4132,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi16ELi4ELb1ELb0EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 42,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi16ELi4ELb1ELb0EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 83,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi16ELi8ELb1ELb0EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi16ELi8ELb1ELb0EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "0cbc600a3fcd1deb72b2fd1fb09656316c7b6cae2de5dcae38b69484878f16d0",
+      "bytes": 6044,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi16ELi8ELb1ELb0EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 54,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi16ELi8ELb1ELb0EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 109,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi32ELi4ELb1ELb0EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi32ELi4ELb1ELb0EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "929b03a22f941e5d30ad82b3091e92ce28040fc548589dae48d3e7aa03d98fa7",
+      "bytes": 5488,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi32ELi4ELb1ELb0EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 50,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi32ELi4ELb1ELb0EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 130,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi16ELi4ELb0ELb1EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi16ELi4ELb0ELb1EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "4430e16a20e97d6eb4ae2f7b6a98b1d43fc2b41524202cd0806d0f2333d8a8e5",
+      "bytes": 4176,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi16ELi4ELb0ELb1EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 42,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi16ELi4ELb0ELb1EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 83,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi16ELi8ELb0ELb1EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi16ELi8ELb0ELb1EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "8ed63fe26ab277ee29e13db5f8ac370765cfcdc2b02927d397c5c497ed62bd3f",
+      "bytes": 6080,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi16ELi8ELb0ELb1EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 54,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi16ELi8ELb0ELb1EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 109,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi32ELi4ELb0ELb1EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi32ELi4ELb0ELb1EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "b694b027fccbfb7ee4a68125d5826b12ac36abe8d2954b33a08447c031f3bdc9",
+      "bytes": 5528,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi32ELi4ELb0ELb1EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 50,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnSharedTunedKernelILi4ELi32ELi4ELb0ELb1EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 132,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi4ELi16ELi4EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi4ELi16ELi4EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "b28c2a00d6c0e9a8d2f109b13277bf404c2bbf8e952751367484ff973c056aeb",
+      "bytes": 4144,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi4ELi16ELi4EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 42,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi4ELi16ELi4EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 83,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi4ELi16ELi8EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi4ELi16ELi8EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "e86dda9eea61f4b85ffe587c5e3fd58b5ab0edfb78ea88becc0c90b6c8b7c59d",
+      "bytes": 6056,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi4ELi16ELi8EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 54,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi4ELi16ELi8EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 109,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi4ELi32ELi4EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi4ELi32ELi4EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "bdc67206e6c27ee17eb2dea656ea6c2e466aeb1c033bc7231aca6f4913959aa9",
+      "bytes": 5500,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi4ELi32ELi4EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 50,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_20DecodeNnSharedKernelILi4ELi32ELi4EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 130,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi1ELi16ELi4EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi1ELi16ELi4EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "b19768e56b534449c04f6d69d45ba842b2250bb4463d2c984abef2928f39e3e1",
+      "bytes": 8072,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi1ELi16ELi4EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 54,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi1ELi16ELi4EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 53,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi1ELi16ELi8EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi1ELi16ELi8EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "376f93605c0fd0fca50bb5dd87a44ad17246cb936b92caa94e4f40ea948cc2f8",
+      "bytes": 21808,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi1ELi16ELi8EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 74,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi1ELi16ELi8EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 59,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi1ELi32ELi4EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi1ELi32ELi4EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "309019b95b1b53a6f78eab0414ee1eddf3a620767d01ca423e15aa952259a851",
+      "bytes": 9688,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi1ELi32ELi4EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 71,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi1ELi32ELi4EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 83,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi2ELi16ELi4EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi2ELi16ELi4EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "d6d4ffb998615cc4fc594deb4bd7743b32548f78afa43b0d62ed8d4f8552c8d7",
+      "bytes": 9236,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi2ELi16ELi4EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 52,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi2ELi16ELi4EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 64,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi2ELi16ELi8EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi2ELi16ELi8EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "eb148341f2c9030bfb23e0ddcf2a2d9703025fcf6e8d903979f4ce4b9924fde5",
+      "bytes": 23740,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi2ELi16ELi8EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 72,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi2ELi16ELi8EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 74,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi2ELi32ELi4EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi2ELi32ELi4EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "ddbe445d1fce982d25f3a07fa53b786e3b64384c817fd84920321cd09b2074f0",
+      "bytes": 11676,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi2ELi32ELi4EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 70,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi2ELi32ELi4EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 113,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi4ELi16ELi4EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi4ELi16ELi4EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "49c2062bc560ef3baf3da63e1c46e293dcf32cc1d3a2f5d5bbdbcbc20b81f068",
+      "bytes": 11264,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi4ELi16ELi4EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 53,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi4ELi16ELi4EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 104,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi4ELi16ELi8EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi4ELi16ELi8EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "2e6eca7bcf63b5f64d132dac402df0900b77558ed65eb11cb42a4a782c567d65",
+      "bytes": 26972,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi4ELi16ELi8EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 73,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi4ELi16ELi8EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 116,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx936::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi4ELi32ELi4EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx936",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi4ELi32ELi4EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "4bc2be82a7409419b37d9181578b708e18acc7fe6ac6675a7fc0944d57bccb1f",
+      "bytes": 14940,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi4ELi32ELi4EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 71,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi4ELi32ELi4EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 166,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi1ELi16ELi4EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi1ELi16ELi4EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "2c315d17aa56d5ba0f197e8934f2ee4908eed40564d95e675e43587b8e81f7c9",
+      "bytes": 8064,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi1ELi16ELi4EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 54,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi1ELi16ELi4EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 51,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi1ELi16ELi8EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi1ELi16ELi8EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "91b0e38d42dc4e7d319b5a82683adcff47d66f3a2af25221f04d8f0f6dac20cf",
+      "bytes": 21800,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi1ELi16ELi8EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 74,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi1ELi16ELi8EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 59,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi1ELi32ELi4EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi1ELi32ELi4EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "811473a2487e6fb39b1ad2ef4a60993ae7bbdd2d2c4e53372c4920a0cad5dd9b",
+      "bytes": 9680,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi1ELi32ELi4EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 71,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi1ELi32ELi4EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 83,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi2ELi16ELi4EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi2ELi16ELi4EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "5320161ae26e116974f6616f267513ba1ef60f68f33b80926bc575cd9389989d",
+      "bytes": 9224,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi2ELi16ELi4EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 52,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi2ELi16ELi4EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 64,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi2ELi16ELi8EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi2ELi16ELi8EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "1d182bbe6cd31a7c456ea16e34a730156cbbac25f0309fb6c72ee8c8af14f2eb",
+      "bytes": 23728,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi2ELi16ELi8EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 72,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi2ELi16ELi8EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 74,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi2ELi32ELi4EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi2ELi32ELi4EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "45a733d780f7c0cc2fc221a08baae8543eaffff15dcf97a223662f6f4daf28b2",
+      "bytes": 11664,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi2ELi32ELi4EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 70,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi2ELi32ELi4EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 113,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi4ELi16ELi4EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi4ELi16ELi4EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "548929df1f62508cf82d6b97f759f916833c8670b32c5093ccf2437d7f0b044f",
+      "bytes": 11244,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi4ELi16ELi4EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 53,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi4ELi16ELi4EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 104,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi4ELi16ELi8EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi4ELi16ELi8EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "234d2549684cf6b3d10cdd7c60f349de78f4c44d74c51fe8f550e2c65fd523b5",
+      "bytes": 26952,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi4ELi16ELi8EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 73,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi4ELi16ELi8EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 116,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    },
+    "hipv4-amdgcn-amd-amdhsa--gfx938::_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi4ELi32ELi4EEEJPU3AS4viiEEEvDpT2_": {
+      "target": "hipv4-amdgcn-amd-amdhsa--gfx938",
+      "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi4ELi32ELi4EEEJPU3AS4viiEEEvDpT2_",
+      "machine_sha256": "1cf3202b81d5290b295074a6414f4156857cbcde5c8c066645a94c2d08467cf7",
+      "bytes": 14920,
+      "metadata": {
+        ".group_segment_fixed_size": 0,
+        ".kernarg_segment_align": 8,
+        ".kernarg_segment_size": 16,
+        ".language": "OpenCL C",
+        ".language_version": [
+          2,
+          0
+        ],
+        ".max_flat_workgroup_size": 256,
+        ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi4ELi32ELi4EEEJPU3AS4viiEEEvDpT2_",
+        ".private_segment_fixed_size": 0,
+        ".sgpr_count": 71,
+        ".sgpr_spill_count": 0,
+        ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_25DecodeNnCooperativeKernelILi4ELi32ELi4EEEJPU3AS4viiEEEvDpT2_.kd",
+        ".uses_dynamic_stack": false,
+        ".vgpr_count": 166,
+        ".vgpr_spill_count": 0,
+        ".wavefront_size": 64
+      }
+    }
+  }
+}

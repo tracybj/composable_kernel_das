@@ -1,0 +1,42 @@
+{
+  "at": "2026-11-12T10:09:52.064248+00:00",
+  "cpu_source_only": true,
+  "initial_head": "1fb597f6166d4302e1f278efbba2dc68b8b2167e",
+  "public_structures_unchanged": {
+    "ck_tile_hcu_grouped_gemm_dimension_v1": "46c23b46d4ab2ddda5d4ed154b3fd3c47a5fb387871e5752fa443bad379afd2d",
+    "ck_tile_hcu_grouped_gemm_problem_v1": "6e8419ddd13b1041fda2c2dedf280e74c0afbc04a156123032804b6d9bc22d1a",
+    "ck_tile_hcu_grouped_gemm_selection_v1": "23160e32744cf5263455d184e626f02885927500ffcd6397523867ff6dd02fc4",
+    "ck_tile_hcu_grouped_gemm_launch_v1": "de34a146fcddf54f5879240a941d01d57f07c7fadd67cdf808856cda2b700bd8",
+    "ck_tile_hcu_grouped_gemm_candidate_info_v1": "85645f90ca43f51852065bd829f3275ab66a152136d22d44e9599f8521b0c029"
+  },
+  "public_abi_version": 1,
+  "GemmTransKernelArg_defining_file_unchanged": {
+    "path": "include/ck_tile/ops/gemm/kernel/grouped_gemm_kernel.hpp",
+    "sha256": "87056006c8b5cdd473df779b65ea1b4f4344f368d3b7be1986ff8c31d5b87936"
+  },
+  "no_hot_allocation_copy_or_host_sync_in_new_providers": true,
+  "provider_source_sha256": {
+    "example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_bf16_nn_decode_mainline_device_args.cpp": "16f6be7eb86b81dff195724a29f79cb8ccf39909e16a67d7134694767df39b9e",
+    "example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_bf16_nn_decode_shared_device_args.cpp": "6935af0593567ebdb7aeb5957850e3698533f4ed15563998c2ded0ee69e15490",
+    "example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_bf16_nn_decode_cooperative_device_args.cpp": "fed844e97ea005d66b14fcc25e77dcd199f1fb431e7497220295194b4a164197"
+  },
+  "original_shapes_unchanged": [
+    {
+      "path": "/workspace/shapes_1178.csv",
+      "rows": 1193,
+      "sha256": "5c3ae4d1d682b919ed90adb5cfed1cec755e3b519f9003afde8c46d282e77863"
+    },
+    {
+      "path": "/workspace/Grouped_Geem/blaslt_tuning_tools/shapes_1178.csv",
+      "rows": 1193,
+      "sha256": "5c3ae4d1d682b919ed90adb5cfed1cec755e3b519f9003afde8c46d282e77863"
+    }
+  ],
+  "readfirstlane_diff_md5": "4c7f49a5c7592767d53195a713db6b8a",
+  "selector_source_sha256": "55e04d5bc9a134012da3d8328989fc9b009cc8408e72e55b3ebb97121e23402f",
+  "qualified_geometry": "Only gfx936 BF16 NN/common nonempty nonragged; mainM1..64,N1024..4096,N%128=0,K2048..8192,K%128=0,G1..1024. ShortM1..64,N128..4096,N%128=0,K64..<2048,K%64=0,G<=32.",
+  "storage_scope": "Packed/aligned dense test allocations; no claim for every possible arbitrary pointer/stride. N tiles exact128; no column tail predicate. Neighbor/disable/outside CPU regressions and scheduled GPU controls remain required.",
+  "gpu_h3_precision_verified": false,
+  "gpu_h3_performance_verified": false,
+  "note": "Exact public-struct source and descriptor definition equality proves unchanged layout definition. Static provider scan is limited to these source files; launch helper is unmodified. Scope/API checks supplement, never replace, the pending full-output/guard and default-selector GPU validation."
+}
