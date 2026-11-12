@@ -1,0 +1,21 @@
+{
+  "at": "2026-11-12T07:25:04.788075+00:00",
+  "coverage": "After all39 registered H2 pairs complete, capture3 fixed main IDs using all8-row geometric-score chosen variant plus fixed shortID76; add observed gain/flat/loss missing-category medians up to6 pairs. Preserve negatives and highCV. Diagnostic, not adoption.",
+  "max_pairs": 6,
+  "dispatch": 18,
+  "dispatch_evidence": "Official benchmark CK profile app with warmup10/samples1 has filtered dispatches8..18, verified in first diagnostic batch; exact18 must be rechecked in each capture",
+  "sections": "speed_of_light,memory_workload,occupancy,memory_chart,instruction_statistics,compute_workload,scheduler_statistics,wave_state",
+  "sqtt": true,
+  "SE": 0,
+  "active_CU_index": 0,
+  "minimum_raw_token_bytes": 4096,
+  "formal_timing": false,
+  "fixed_main_ids": [
+    621,
+    805,
+    1072
+  ],
+  "fixed_short_id": 76,
+  "main_variant_rule": "After all39 pairs, choose main variant with minimum geometric candidate/base across all8 main representatives, retaining highCV and negatives; tie lexical variant. Capture that variant for three fixed main IDs.",
+  "category_rule": "Add median-delta non-control pair for any observed gain(<-2pct),flat(abs<=2pct),loss(>2pct) class absent among fixed4, max6 pairs. Pure diagnostic selection, not adoption."
+}

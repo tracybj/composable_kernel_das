@@ -1,0 +1,109 @@
+{
+  "at": "2026-11-12T07:04:38.782506+00:00",
+  "hypothesis": "H2 cooperative shared-A Direct-to-LDS plus per-N-wave B panels; complete-M CTA ownership; operand double buffer and one barrier per K block",
+  "main_structure_number": 2,
+  "short_structure_number": 2,
+  "source_evidence": {
+    "discovery_sha256": "c8dd411fdcf85b998de6fd8202cc93b9496476d2b11cbd31ef68c3fe143003b3",
+    "counters_sha256": "87fbec7564b2d05f501be7bfaebbf5b36e25f4adb925dde8af1b7d4ab4a5fab3"
+  },
+  "facts": [
+    "All24 H1 main and18 H1 short pairs slower; no expansion",
+    "ID621 per-wave VMEM270->644, wait/wavecycle .139->.770, HBM158.292->142.927MB",
+    "ID805 per-wave VMEM526->1284, wait/wavecycle .170->.819, HBM565.312->563.505MB",
+    "ID1072 HBM near1 input copy both arms; wait .198->.867, no proof of large duplicate B traffic"
+  ],
+  "unverified": [
+    "A dwordx2 irregular VL1 pressure versus B/global pipeline is not separately causal yet",
+    "A-shared design may lose from CTA barriers and additional LDS reads",
+    "Deeper/globalK32 may hide waits but increase LDS/latency"
+  ],
+  "geometry": {
+    "M": "1..64; oneCTAallM; row fragments1/2/4",
+    "N": "128, fourwaves with32columns each",
+    "K": "16 or32; exact128-compatible main domain",
+    "A": "cooperative16B Direct-to-LDS; masked M tails, dedicated padded A region per stage, SLC matching known irregular-load mitigation",
+    "B": "coalesced16B Direct-to-LDS into wave-private panels; reused for every M fragment",
+    "operand": "two banks; next ds_read before current MMAC; CTA barrier establishes global visibility and all previous readers retired before slot overwrite",
+    "epilogue": "FP32->BF16, wave-private LDS transpose,16B stores, no crosswave reduction"
+  },
+  "variants": [
+    {
+      "id": 6009,
+      "name": "shared_k16_d4",
+      "Kblock": 16,
+      "Depth": 4,
+      "LDS_le32": 20480,
+      "LDS_gt32": 24576
+    },
+    {
+      "id": 6010,
+      "name": "shared_k16_d8",
+      "Kblock": 16,
+      "Depth": 8,
+      "LDS_le32": 40960,
+      "LDS_gt32": 49152
+    },
+    {
+      "id": 6011,
+      "name": "shared_k32_d4",
+      "Kblock": 32,
+      "Depth": 4,
+      "LDS_M16": 36864,
+      "LDS_M32": 40960,
+      "LDS_M64": 49152
+    },
+    {
+      "id": 6012,
+      "name": "short_shared_k16_d4",
+      "Kblock": 16,
+      "Depth": 4,
+      "tileN": 128
+    }
+  ],
+  "main_domain": "same H1 main; flag variants3..5 ->6009..6011; original6004..6008 preserved",
+  "short_domain": "same H1 short but K>=64 and K%64==0; variant2->6012",
+  "discovery_main_ids": [
+    620,
+    621,
+    633,
+    788,
+    805,
+    948,
+    1009,
+    1072
+  ],
+  "discovery_short_ids": [
+    26,
+    31,
+    32,
+    76,
+    82,
+    122,
+    128,
+    257,
+    263
+  ],
+  "controls": [
+    358,
+    622,
+    1184,
+    1185,
+    147,
+    35
+  ],
+  "qualification_M": [
+    1,
+    15,
+    16,
+    17,
+    31,
+    32,
+    33,
+    63,
+    64
+  ],
+  "protocol": "all arms full3+realguards then3 AB/BA alternating rounds; existing acceptance/heldout unchanged",
+  "decision": "Do not expand unless beats current best; choose property domain mechanistically, include existing winners, final7block confirmation required",
+  "performance_claim": false
+}
