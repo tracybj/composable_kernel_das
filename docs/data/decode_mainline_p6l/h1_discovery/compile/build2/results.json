@@ -1,0 +1,38 @@
+[
+  {
+    "at": "2026-11-12T04:44:36.592831+00:00",
+    "command": [
+      "cmake",
+      "-S",
+      "/workspace/composable_kernel",
+      "-B",
+      "/workspace/composable_kernel/build"
+    ],
+    "gpu": false,
+    "reason": "Reviewed query shadowing error; incremental repair",
+    "rc": 0,
+    "seconds": 2.2145038209855556,
+    "log": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/compile/build2/0_build.log"
+  },
+  {
+    "at": "2026-11-12T04:44:38.807857+00:00",
+    "command": [
+      "cmake",
+      "--build",
+      "/workspace/composable_kernel/build",
+      "--target",
+      "tile_example_grouped_gemm_device_args_benchmark",
+      "tile_example_grouped_gemm_device_args_query_test",
+      "tile_example_grouped_gemm_device_args_smoke",
+      "tile_example_grouped_gemm_selector_test",
+      "tile_example_grouped_gemm_decode_depth8_selector_test",
+      "tile_example_grouped_gemm_decode_mainline_selector_test",
+      "-j4"
+    ],
+    "gpu": false,
+    "reason": "Reviewed query shadowing error; incremental repair",
+    "rc": 0,
+    "seconds": 41.367856914002914,
+    "log": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/compile/build2/1_build.log"
+  }
+]
