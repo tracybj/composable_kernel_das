@@ -39,7 +39,7 @@ namespace int8_routes {
     // 24: Packed-Cooperative zero-LDS bypass for ultra-narrow decode (M <= 8)
     constexpr auto PackedCooperativeM1N256        = CK_TILE_INT8_CACHED_PACKED_M16_N64_K256_V1;
 
-    // 25: Grid-level Split-K with atomic reduction for high-K decode
+    // 25: Wave partial sums with in-CTA reduction for long-K decode
     constexpr auto KParallelDecode                = CK_TILE_INT8_CACHED_RAW_K_PARALLEL_M1_M2_V1;
 
     // 26-30: Paired-Store Epilogue variants (128-bit vector double-write for prefill throughput)
@@ -48,6 +48,10 @@ namespace int8_routes {
     constexpr auto PairedM256N384MaskedM4         = CK_TILE_INT8_CACHED_PAIRED_M256_N384_MASKED_M4_V1;
     constexpr auto PairedM256N384MaskedM8         = CK_TILE_INT8_CACHED_PAIRED_M256_N384_MASKED_M8_V1;
     constexpr auto PairedM128N256                 = CK_TILE_INT8_CACHED_PAIRED_M128_N256_V1;
+
+    // 31-32: Scaled raw-weight cooperative decode instances.
+    constexpr auto RawAlignedM16N32K512          = CK_TILE_INT8_CACHED_RAW_ALIGNED_M16_N32_K512_V1;
+    constexpr auto RawM32N64K256W4               = CK_TILE_INT8_CACHED_RAW_M32_N64_K256_W4_V1;
 } // namespace int8_routes
 
 // Architectural and empirical scheduling constants (eliminating magic numbers)
@@ -99,6 +103,8 @@ inline const char* get_int8_route_name(unsigned route)
     case int8_routes::PairedM256N384MaskedM4:      return "PairedWaspMaskedM4 (Route 28)";
     case int8_routes::PairedM256N384MaskedM8:      return "PairedWaspMaskedM8 (Route 29)";
     case int8_routes::PairedM128N256:              return "PairedWaspPackedM128N256 (Route 30)";
+    case int8_routes::RawAlignedM16N32K512:       return "CooperativeRawAlignedM16N32K512 (Route 31)";
+    case int8_routes::RawM32N64K256W4:             return "CooperativeRawM32N64K256W4 (Route 32)";
     default:                                       return "UnknownRoute";
     }
 }

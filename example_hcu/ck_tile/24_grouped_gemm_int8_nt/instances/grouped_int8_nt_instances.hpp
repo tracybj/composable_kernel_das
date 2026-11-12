@@ -16,6 +16,10 @@ struct TypeTag
 // -----------------------------------------------------------------------------
 // 1. Cached & Scaled Route Problem Instances
 // -----------------------------------------------------------------------------
+using RawAlignedM16N32K512 =
+    GroupedInt8NtTileProblem<16, 32, 512, 1, 2, false, true, true, true, 1, true>;
+using RawM32N64K256W4 =
+    GroupedInt8NtTileProblem<32, 64, 256, 2, 2, false, false, true, true, 1, true>;
 using PackedM16N64K256 = GroupedInt8NtPackedSmallProblem<
     GroupedInt8NtTileProblem<16, 64, 256, 1, 2, false, false, true, true, 1, true>,
     true,

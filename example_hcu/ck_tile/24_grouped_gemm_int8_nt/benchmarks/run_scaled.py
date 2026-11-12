@@ -401,7 +401,7 @@ def main():
                             route=pi.route,
                             legacy_instance=pi.legacy_instance,
                             pipeline=(
-                                'cooperative' if pi.route in [0, 24, 25] else 'WASP'
+                                'cooperative' if pi.route in [0, 24, 25, 31, 32] else 'WASP'
                             ),
                         )
                         benches[kind] = lib.cached_i8_bench_create(plan)

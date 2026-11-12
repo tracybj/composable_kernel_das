@@ -129,6 +129,10 @@ int dispatch(unsigned route,
         return wasp<BF, PackedM32N64>(args, scales, g, m, n, stream);
     case int8_routes::PackedM256N384:
         return wasp<BF, PackedM256N384>(args, scales, g, m, n, stream);
+    case int8_routes::RawAlignedM16N32K512:
+        return cooperative<BF, RawAlignedM16N32K512>(args, scales, g, m, n, stream);
+    case int8_routes::RawM32N64K256W4:
+        return cooperative<BF, RawM32N64K256W4>(args, scales, g, m, n, stream);
     case int8_routes::KParallelDecode:
         return m == 1 ? k_parallel<BF, 1>(args, g, n, stream)
                       : k_parallel<BF, 2>(args, g, n, stream);

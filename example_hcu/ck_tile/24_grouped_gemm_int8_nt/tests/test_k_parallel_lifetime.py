@@ -10,8 +10,7 @@ assert os.environ['HIP_VISIBLE_DEVICES'] == '7'
 torch.set_num_threads(4)
 torch.manual_seed(20261106)
 records = []
-for m, n, k in [(1, 4096, 7168), (2, 4352, 7296)]:
-    g = 12
+for g, m, n, k in [(12, 1, 4096, 7168), (12, 2, 4352, 7296), (8, 1, 4096, 7168)]:
     astride = k + 16
     bstride = k + 32
     cstride = n + 8

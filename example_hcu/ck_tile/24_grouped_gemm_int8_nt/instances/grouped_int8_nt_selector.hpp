@@ -93,15 +93,26 @@ inline unsigned int8_cached_scaled_small_route(
     bool packed_available,
     int compute_units = int8_tuning_config::GFX936_DEFAULT_NUM_CU)
 {
+    if(compute_units != int8_tuning_config::GFX936_DEFAULT_NUM_CU)
+        return int8_routes::LegacyRaw;
+
     // Raw NT K-parallel reduction; requires no prepared weight layout.
-    if(compute_units == int8_tuning_config::GFX936_DEFAULT_NUM_CU && (m == 1 || m == 2) &&
-       groups >= 12 && n >= 4096 && n <= 6144 && n % 256 == 0 && k >= 7168 && k <= 8192 &&
-       k % 128 == 0)
+    if((m == 1 || m == 2) && n >= 4096 && n <= 6144 && n % 256 == 0 && k >= 7168 &&
+       k <= 8192 && k % 128 == 0 &&
+       (groups >= 12 || (groups == 8 && n == 4096 && k == 7168)))
         return int8_routes::KParallelDecode;
 
+    // The caller has checked uniform, nonempty groups. All three tile
+    // dimensions are exact multiples for the aligned M16 instance.
+    if(m == 16 && n == 4096 && (k == 6144 || k == 7168) && groups == 8)
+        return int8_routes::RawAlignedM16N32K512;
+    // BN64 reduces the operand LDS allocation from 42.5 to 25.5 KiB
+    // in this measured large-group domain.
+    if(m == 32 && n == 4096 && k == 8192 && (groups == 64 || groups == 128))
+        return int8_routes::RawM32N64K256W4;
+
     // Ultra-narrow M <= 8 decode专线: zero-LDS direct global memory bypass
-    return packed_available && compute_units == int8_tuning_config::GFX936_DEFAULT_NUM_CU &&
-                   m > 0 && m <= 8 && n == 4096 && (k == 6144 || k == 7168) && groups == 8
+    return packed_available && m > 0 && m <= 8 && n == 4096 && (k == 6144 || k == 7168) && groups == 8
                ? int8_routes::PackedCooperativeM1N256
                : int8_routes::LegacyRaw;
 }

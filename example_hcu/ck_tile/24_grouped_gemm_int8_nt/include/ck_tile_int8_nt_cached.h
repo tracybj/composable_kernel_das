@@ -48,7 +48,9 @@ enum ck_tile_int8_nt_cached_route_v1
     CK_TILE_INT8_CACHED_PAIRED_M256_N384_V1                 = 27,
     CK_TILE_INT8_CACHED_PAIRED_M256_N384_MASKED_M4_V1       = 28,
     CK_TILE_INT8_CACHED_PAIRED_M256_N384_MASKED_M8_V1       = 29,
-    CK_TILE_INT8_CACHED_PAIRED_M128_N256_V1                 = 30
+    CK_TILE_INT8_CACHED_PAIRED_M128_N256_V1                 = 30,
+    CK_TILE_INT8_CACHED_RAW_ALIGNED_M16_N32_K512_V1        = 31,
+    CK_TILE_INT8_CACHED_RAW_M32_N64_K256_W4_V1             = 32
 };
 typedef struct ck_tile_int8_nt_cached_weights_impl* ck_tile_int8_nt_cached_weights_handle_v1;
 typedef struct ck_tile_int8_nt_cached_plan_impl* ck_tile_int8_nt_cached_plan_handle_v1;
