@@ -447,15 +447,14 @@ struct GroupedInt8NtPairedStoreEpilogue
             exchange<32>(lane, p0, p2);
             exchange<32>(lane, p1, p3);
 
-            using Output = ext_vector_t<uint16_t, 8>;
-            const Output out{uint16_t(p0),
-                             uint16_t(p1),
-                             uint16_t(p2),
-                             uint16_t(p3),
-                             uint16_t(p0 >> 16),
-                             uint16_t(p1 >> 16),
-                             uint16_t(p2 >> 16),
-                             uint16_t(p3 >> 16)};
+            // Reorder packed halves directly into four contiguous output words.
+            // perm selects low bytes from its second operand, high bytes from first.
+            using Output = ext_vector_t<uint32_t, 4>;
+            const Output out{
+                __builtin_amdgcn_perm(p1, p0, 0x05040100U),
+                __builtin_amdgcn_perm(p3, p2, 0x05040100U),
+                __builtin_amdgcn_perm(p1, p0, 0x07060302U),
+                __builtin_amdgcn_perm(p3, p2, 0x07060302U)};
             const int row = mb + i * 16 + lane % 16;
             const int col = stripe + (lane / 16) * 8;
             auto* dst     = static_cast<uint16_t*>(arg.e_ptr) +

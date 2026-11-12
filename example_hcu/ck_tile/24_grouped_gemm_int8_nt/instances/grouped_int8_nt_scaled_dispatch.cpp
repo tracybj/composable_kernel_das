@@ -141,7 +141,9 @@ int dispatch(unsigned route,
     case int8_routes::PairedM256N256:
         return paired_wasp<BF, PackedM256N256>(args, scales, g, m, n, stream);
     case int8_routes::PairedM256N384:
-        return paired_wasp<BF, PackedM256N384>(args, scales, g, m, n, stream);
+        return paired_wasp<BF, std::conditional_t<BF,
+            GroupedInt8NtWaspPublicWideNProblem<false, 12, 1, 2, true, true, 0, false, true, 0, 12>,
+            PackedM256N384>>(args, scales, g, m, n, stream);
     case int8_routes::PairedM256N384MaskedM4:
         return paired_wasp<BF, ScaledPackedM256N384MaskedM4>(args, scales, g, m, n, stream);
     case int8_routes::PairedM256N384MaskedM8:

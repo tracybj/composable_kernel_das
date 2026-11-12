@@ -138,11 +138,23 @@ struct GroupedInt8NtWaspKernel
         const index_t mt = (a.M + P::BM - 1) / P::BM, nt = (a.N + P::BN - 1) / P::BN;
         if(blockIdx.x >= mt * nt)
             return;
-        const index_t cluster = blockIdx.x / (P::MGroup * nt),
-                      inner   = blockIdx.x % (P::MGroup * nt),
-                      mg      = min(index_t(P::MGroup), mt - cluster * P::MGroup);
-        const index_t mb      = (cluster * P::MGroup + inner % mg) * P::BM,
-                      nb      = (inner / mg) * P::BN;
+        const index_t cluster = blockIdx.x / (P::MGroup * nt);
+        const index_t inner   = blockIdx.x % (P::MGroup * nt);
+        index_t local_m;
+        index_t local_n;
+        if((mt % P::MGroup) == 0 || cluster < mt / P::MGroup)
+        {
+            local_m = inner % P::MGroup;
+            local_n = inner / P::MGroup;
+        }
+        else
+        {
+            const index_t rows = mt % P::MGroup;
+            local_m            = inner % rows;
+            local_n            = inner / rows;
+        }
+        const index_t mb = (cluster * P::MGroup + local_m) * P::BM;
+        const index_t nb = local_n * P::BN;
         if(mb >= a.M || nb >= a.N)
             return;
         __shared__ __align__(16) int8_t smem[P::Pipeline::kWaspLdsBytes];
@@ -168,16 +180,10 @@ struct GroupedInt8NtWaspKernel
             static_cast<const int8_t*>(a.as_ptr[0]) + static_cast<long long>(mb) * a.stride_As[0];
         const auto* bp = static_cast<const int8_t*>(a.bs_ptr[0]) +
                          static_cast<long long>(nb) * (P::PackedB ? 64 : a.stride_Bs[0]);
-        typename P::Pipeline{}.run_raw_into(ap,
-                                            a.stride_As[0],
-                                            min(index_t(P::BM), a.M - mb),
-                                            bp,
-                                            a.stride_Bs[0],
-                                            a.N,
-                                            nb,
-                                            a.K / 128,
-                                            acc,
-                                            smem);
+        constexpr bool has_m_tail = P::Transpose && P::Pipeline::MasksInactiveN;
+        const index_t m_valid     = has_m_tail ? min(index_t(P::BM), a.M - mb) : P::BM;
+        typename P::Pipeline{}.run_raw_into(
+            ap, a.stride_As[0], m_valid, bp, a.stride_Bs[0], a.N, nb, a.K / 128, acc, smem);
         if constexpr(P::Pipeline::MasksInactiveN)
         {
             const index_t wave = get_warp_id();
@@ -209,11 +215,25 @@ struct GroupedInt8NtWaspKernel
         const index_t mt = (a.M + P::BM - 1) / P::BM, nt = (a.N + P::BN - 1) / P::BN;
         if(blockIdx.x >= mt * nt)
             return;
-        const index_t cluster = blockIdx.x / (P::MGroup * nt),
-                      inner   = blockIdx.x % (P::MGroup * nt),
-                      mg      = min(index_t(P::MGroup), mt - cluster * P::MGroup);
-        const index_t mb      = (cluster * P::MGroup + inner % mg) * P::BM,
-                      nb      = (inner / mg) * P::BN;
+        const index_t cluster = blockIdx.x / (P::MGroup * nt);
+        const index_t inner   = blockIdx.x % (P::MGroup * nt);
+        index_t local_m;
+        index_t local_n;
+        if((mt % P::MGroup) == 0 || cluster < mt / P::MGroup)
+        {
+            // Full clusters use compile-time divisors. Only the last partial
+            // cluster requires division by its runtime row count.
+            local_m = inner % P::MGroup;
+            local_n = inner / P::MGroup;
+        }
+        else
+        {
+            const index_t rows = mt % P::MGroup;
+            local_m            = inner % rows;
+            local_n            = inner / rows;
+        }
+        const index_t mb = (cluster * P::MGroup + local_m) * P::BM;
+        const index_t nb = local_n * P::BN;
         if(mb >= a.M || nb >= a.N)
             return;
         __shared__ __align__(16) int8_t smem[P::Pipeline::kWaspLdsBytes];
@@ -230,16 +250,10 @@ struct GroupedInt8NtWaspKernel
             static_cast<const int8_t*>(a.as_ptr[0]) + static_cast<long long>(mb) * a.stride_As[0];
         const auto* bp = static_cast<const int8_t*>(a.bs_ptr[0]) +
                          static_cast<long long>(nb) * (P::PackedB ? 64 : a.stride_Bs[0]);
-        typename P::Pipeline{}.run_raw_into(ap,
-                                            a.stride_As[0],
-                                            min(index_t(P::BM), a.M - mb),
-                                            bp,
-                                            a.stride_Bs[0],
-                                            a.N,
-                                            nb,
-                                            a.K / 128,
-                                            acc,
-                                            smem);
+        constexpr bool has_m_tail = P::Transpose && P::Pipeline::MasksInactiveN;
+        const index_t m_valid     = has_m_tail ? min(index_t(P::BM), a.M - mb) : P::BM;
+        typename P::Pipeline{}.run_raw_into(
+            ap, a.stride_As[0], m_valid, bp, a.stride_Bs[0], a.N, nb, a.K / 128, acc, smem);
         if constexpr(P::Pipeline::MasksInactiveN)
         {
             const index_t wave = get_warp_id();
