@@ -1,0 +1,159 @@
+{
+  "ok": true,
+  "cpu_only": true,
+  "gpu": false,
+  "case_count": 51317,
+  "comparisons": 44152,
+  "seconds": 3.660562602999562,
+  "command": [
+    "g++",
+    "-O3",
+    "-std=c++17",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-Wno-misleading-indentation",
+    "-I/workspace/composable_kernel/include",
+    "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/cpu_host_policy_factors/policy_equivalence.cpp",
+    "-o",
+    "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/cpu_host_policy_factors/policy_equivalence"
+  ],
+  "ldd": "\tlinux-vdso.so.1 (0x00007ffeed340000)\n\tlibstdc++.so.6 => /lib/x86_64-linux-gnu/libstdc++.so.6 (0x00007f1f136eb000)\n\tlibgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x00007f1f136cb000)\n\tlibc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f1f134a2000)\n\tlibm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007f1f133b9000)\n\t/lib64/ld-linux-x86-64.so.2 (0x00007f1f13933000)\n",
+  "old_source_sha256": "6b9d80190c189a6a32f0380685d15daf438ba8e69e5ee675bdc4a4caaade4136",
+  "new_source_sha256": "4cbd7ad795ed7f1336ae83c082ad02f331b688ed4ea3d7b2779b7de54e7ec4b7",
+  "timings": [
+    {
+      "case": 51313,
+      "old_ns": 1970.88,
+      "new_fast_ns": 471.258,
+      "blocks": {
+        "0": [
+          1967.88,
+          1969.68,
+          1968.92,
+          1955.53,
+          2023.75,
+          2193.88,
+          1971.29,
+          1968.33,
+          1970.88,
+          2016.23,
+          2013.76
+        ],
+        "1": [
+          487.424,
+          469.257,
+          472.821,
+          472.502,
+          531.237,
+          471.258,
+          468.159,
+          474.672,
+          469.632,
+          468.731,
+          469.677
+        ]
+      }
+    },
+    {
+      "case": 51314,
+      "old_ns": 2241.18,
+      "new_fast_ns": 501.985,
+      "blocks": {
+        "0": [
+          2206.78,
+          2261.32,
+          2241.18,
+          2187.47,
+          2228.19,
+          2257.72,
+          2246.94,
+          2197.25,
+          2248.5,
+          2284.47,
+          2163.55
+        ],
+        "1": [
+          504.403,
+          499.314,
+          502.925,
+          499.761,
+          500.709,
+          503.541,
+          501.407,
+          504.626,
+          501.985,
+          500.618,
+          557.884
+        ]
+      }
+    },
+    {
+      "case": 51315,
+      "old_ns": 2019.04,
+      "new_fast_ns": 482.195,
+      "blocks": {
+        "0": [
+          2005.89,
+          2022.19,
+          2019.62,
+          2116.75,
+          1989.41,
+          2019.04,
+          2043.74,
+          2015.38,
+          1993.6,
+          1994.23,
+          2041.1
+        ],
+        "1": [
+          481.266,
+          482.195,
+          482.273,
+          481.201,
+          483.441,
+          481.664,
+          481.928,
+          483.033,
+          482.298,
+          482.322,
+          481.371
+        ]
+      }
+    },
+    {
+      "case": 51316,
+      "old_ns": 2007.01,
+      "new_fast_ns": 474.425,
+      "blocks": {
+        "0": [
+          2007.01,
+          1982.58,
+          2040.97,
+          1987.8,
+          2004.85,
+          2001.28,
+          2016.92,
+          2077.45,
+          2042.37,
+          2081.09,
+          1981.51
+        ],
+        "1": [
+          475.256,
+          474.009,
+          474.288,
+          477.033,
+          472.811,
+          474.425,
+          474.261,
+          535.263,
+          492.1,
+          500.063,
+          472.427
+        ]
+      }
+    }
+  ],
+  "note": "Exact extracted policy readers and final pure selection only; excludes ABI/header validation, arch query, driver and GPU. CPU timing is not proof of formal GPU benefit."
+}

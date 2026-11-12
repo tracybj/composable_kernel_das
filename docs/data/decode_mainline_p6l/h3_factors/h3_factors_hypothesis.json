@@ -1,0 +1,65 @@
+{
+  "at": "2026-11-12T11:14:33.920555+00:00",
+  "kind": "Bounded H3 depth and host factors, not a fourth ownership architecture",
+  "main_structures": 3,
+  "short_structures": 2,
+  "evidence_results_sha256": "cc814fce041bbdf74dd2abfe793ae7a471dead0cd66c32ffafee7b4d716e6107",
+  "evidence_profile_sha256": "810affe568f7cbc901b1ee35efc6de8b79b15fbc8ab06ef3e016517d40d2d830",
+  "facts": [
+    "H3K32D4 main8 GM.942367,6gains2loss1highCV; shortS2 all combinations GM>1",
+    "H3bankconflict/active .277/.264/.254 in621/805/1072 near baseline.256/.256/.253, not evidence for another arbitrary B swizzle",
+    "LongK1072 H3wait.056 vs deeper H2 .015; HBM both one inputcopy, no large B-dup proof",
+    "Same-GPU host direct controls:621+0.104%,1072-.379%,76-3.716%(highCV),257-1.623%; removing four provider getenv alone not broad effect",
+    "Exact CPU policy reader candidate~3.5us/baseline~2.2us; provider fourflags~.48us. Critical-path attribution unproven, priority parser is a testable remaining fixed-cost factor"
+  ],
+  "factors": {
+    "D5": {
+      "K": 32,
+      "old_depth": 4,
+      "new_depth": 5,
+      "LDS_KiB_rows16_32_64_old": [
+        36,
+        40,
+        48
+      ],
+      "new": [
+        45,
+        50,
+        60
+      ],
+      "reason": "All exceed32KiB before/after on64KiB CU, so no additional LDS residency loss; pending global panels3->4 with same3 operand banks. Require actual ISA/spill audit beforeGPU. Only one new depth, no blind tile search."
+    },
+    "FAST_POLICY": {
+      "default": "off",
+      "disable_priority": true,
+      "method": "Move existing main/short switch parsing earlier. Only explicit new decode variants and a matching new-ID pure selection may return before unrelated legacy policy reads. All invalid/outside/disabled inputs retain full original path; no env cache, API/benchmark timing change or extra allocation/sync."
+    }
+  },
+  "new_ID": {
+    "6023": "cooperative K32D5"
+  },
+  "main_variants": {
+    "12": "full-domain K32D5",
+    "13": "K32D4 scoped to M>=17 orK>=6144",
+    "14": "K32D5 same scope",
+    "15": "direct H2XOR same scope",
+    "16": "direct H2BOTH same scope"
+  },
+  "scope_reason": "M17 is the row-fragment regime boundary. Thin M at moderateK retains insufficient amortization/memory concurrency in observed losses; longK amortizes setup. Scope is a hypothesis and not adopted; every original member incl winners and unseen tests must pass independently.",
+  "planned_discovery": {
+    "main_configs": 8,
+    "main_reps": 8,
+    "short_configs": 4,
+    "short_reps": 9,
+    "standard_pairs": 100,
+    "fallback_controls": 6,
+    "host_same_gpu_controls": 4,
+    "depth_controls": 4,
+    "total_pairs": 114,
+    "accuracy_configs_M9": 108,
+    "disable_accuracy": 2,
+    "query_smoke": 2,
+    "qualification_total": 112
+  },
+  "protocol": "Unchanged full3 and realguards first, then3 pairedAB/BA discovery. No7block claim. No heldout draw before final freeze. No1193/881 fullGPU. OldT0/cutoffs unchanged."
+}

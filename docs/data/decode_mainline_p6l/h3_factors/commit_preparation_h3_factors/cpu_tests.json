@@ -1,0 +1,50 @@
+[
+  {
+    "command": [
+      "g++",
+      "-O2",
+      "-std=c++17",
+      "-I/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/commit_preparation_h3_factors/own_tree/include",
+      "-I/workspace/composable_kernel/include",
+      "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/commit_preparation_h3_factors/own_tree/example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_decode_mainline_selector_test.cpp",
+      "-o",
+      "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/commit_preparation_h3_factors/grouped_gemm_decode_mainline_selector_test"
+    ],
+    "rc": 0,
+    "stdout": "DECODE_MAINLINE_SELECTOR_PASS cases=1750\n",
+    "stderr": "",
+    "gpu": false
+  },
+  {
+    "command": [
+      "g++",
+      "-O2",
+      "-std=c++17",
+      "-I/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/commit_preparation_h3_factors/own_tree/include",
+      "-I/workspace/composable_kernel/include",
+      "/workspace/composable_kernel/example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_decode_depth8_selector_test.cpp",
+      "-o",
+      "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/commit_preparation_h3_factors/grouped_gemm_decode_depth8_selector_test"
+    ],
+    "rc": 0,
+    "stdout": "DEPTH8_SELECTOR_PASS cases=1063\n",
+    "stderr": "",
+    "gpu": false
+  },
+  {
+    "command": [
+      "g++",
+      "-O2",
+      "-std=c++17",
+      "-I/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/commit_preparation_h3_factors/own_tree/include",
+      "-I/workspace/composable_kernel/include",
+      "/workspace/composable_kernel/example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_selector_test.cpp",
+      "-o",
+      "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/commit_preparation_h3_factors/grouped_gemm_selector_test"
+    ],
+    "rc": 0,
+    "stdout": "SELECTOR_TABLE_PASS cases=80 registry=57\nSELECTOR_V7_BOUNDS_PASS cases=11\nSELECTOR_V7_M01_8_PASS cases=8\nSELECTOR_V7_SMALL_M_PASS cases=50\nSELECTOR_V7_CACHE_PASS cases=20\nSELECTOR_V7_SMALL_EXPERIMENT_PASS cases=120\n",
+    "stderr": "",
+    "gpu": false
+  }
+]

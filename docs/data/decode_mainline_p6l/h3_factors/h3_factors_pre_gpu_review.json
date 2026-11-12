@@ -1,0 +1,45 @@
+{
+  "at": "2026-11-12T11:46:08.824130+00:00",
+  "kind": "CPU/source review before formal factor GPU; no new benchmark claim",
+  "source_sha256": "4cbd7ad795ed7f1336ae83c082ad02f331b688ed4ea3d7b2779b7de54e7ec4b7",
+  "reviewed": [
+    {
+      "requirement": "FAST bypass must preserve metadata/arch/type/dimension validation",
+      "evidence": "Actual convert_problem source validates all public metadata and converts dimensions before the new branch; bypass returns only when pure selector chooses an eligible new decode ID",
+      "status": "source checked; actual GPU query pending"
+    },
+    {
+      "requirement": "Default-off, DISABLE wins, no caching of getenv",
+      "evidence": "Exact strict-value parser in source and 51317 extracted-reader scenarios; CPU fast0/fast1/disable1/malformed comparisons preserve final ID/reason/status",
+      "status": "CPU/source passed; full GPU qualification pending"
+    },
+    {
+      "requirement": "Outside proposed scope preserves original best configuration",
+      "evidence": "1193 original CPU selections unchanged; variants13..16 define166 originals including88 already>=.99, 1027 others exactly fall back; two registered GPU scope controls633/788 pending",
+      "status": "CPU passed; no adoption"
+    },
+    {
+      "requirement": "D5 does not overwrite live LDS/operand slots or prefetch past K",
+      "evidence": "1514 CPU slot schedules,6912 addresses,12-kernel independent ISA CFG/dataflow proof; actual formal build and full-output qualification112 pending",
+      "status": "CPU/static passed; no GPU precision claim"
+    },
+    {
+      "requirement": "Source commit excludes initial user edits",
+      "evidence": "17-file isolated pure tree prepared;1750 new selector,1063 depth8,old selector suites and CAPI/query host syntax pass,registry57; no real index/source changes",
+      "status": "prepared only; commit gated on terminal116/discovery+112qualification"
+    },
+    {
+      "requirement": "GPU timing and profiler remain distinct",
+      "evidence": "Registered116 pairs retain original full3/guards+3ABBA formal protocol; SQTT wrappers use samples1/validate0 only after per-arm accuracy and mark formal_timing false",
+      "status": "measurement logic reviewed; no new GPU results"
+    },
+    {
+      "requirement": "Sparse SQTT does not select a favorable timing or change geometry",
+      "evidence": "New frozen rule CU indices0/1/2 only on sparse tokens, recaptures both arms on same CU, retains every attempt and fixed4096byte gate; dispatch/kernel errors stop rather than retry",
+      "status": "predeclared; capture pending"
+    }
+  ],
+  "performance_goal_complete": false,
+  "accepted_stable50": 0,
+  "accepted_cross30": 0
+}

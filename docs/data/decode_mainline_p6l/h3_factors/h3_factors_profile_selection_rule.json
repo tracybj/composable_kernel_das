@@ -1,0 +1,38 @@
+{
+  "at": "2026-11-12T11:31:50.093564+00:00",
+  "coverage": "Finish all116 first; fixed621/805/1072 best cooperativeGM8, short76 bestGM9; add missing gain/flat/loss median noncontrol; all4 host-same-GPU and4 depth controls. Sparse only may recapture both arms on next CU, retain all attempts; no geometry/kernel/formal-data changes.",
+  "max_pairs": 14,
+  "dispatch": 18,
+  "dispatch_evidence": "Official benchmark CK profile app with warmup10/samples1 has filtered dispatches8..18, verified in first diagnostic batch; exact18 must be rechecked in each capture",
+  "sections": "speed_of_light,memory_workload,occupancy,memory_chart,instruction_statistics,compute_workload,scheduler_statistics,wave_state",
+  "sqtt": true,
+  "SE": 0,
+  "minimum_raw_token_bytes": 4096,
+  "formal_timing": false,
+  "fixed_main_ids": [
+    621,
+    805,
+    1072
+  ],
+  "fixed_short_id": 76,
+  "main_variant_rule": "min GM over8 cooperative D4/D5 full/fast; ties lexical",
+  "category_rule": "Add median-delta non-control pair for any observed gain(<-2pct),flat(abs<=2pct),loss(>2pct) class absent among fixed4, max6 pairs. Pure diagnostic selection, not adoption.",
+  "short_variant_rule": "min GM over9 four short full/fast; ties lexical",
+  "route_ids": [
+    621,
+    1072,
+    76,
+    257
+  ],
+  "target_cu_order": [
+    0,
+    1,
+    2
+  ],
+  "depth_ids": [
+    621,
+    805,
+    1009,
+    1072
+  ]
+}
