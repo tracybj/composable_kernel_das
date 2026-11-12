@@ -1,0 +1,19 @@
+{
+  "at": "2026-11-12T06:50:41.692436+00:00",
+  "fixed_pairs": [
+    "id621_main_d8_op2",
+    "id805_main_d8_op2",
+    "id1072_main_d8_op2",
+    "id76_short_n64"
+  ],
+  "coverage": "After all48 registered pairs complete, add the median-delta non-control pair from any observed gain(<-2pct),flat(abs<=2pct),loss(>2pct) category absent among fixed pairs. Tie-break ID then variant. Keep all results; this is diagnostic sampling, not adoption.",
+  "max_pairs": 6,
+  "dispatch": 18,
+  "dispatch_evidence": "Official benchmark CK profile app with warmup10/samples1 has filtered dispatches8..18, verified in first diagnostic batch; exact18 must be rechecked in each capture",
+  "sections": "speed_of_light,memory_workload,occupancy,memory_chart,instruction_statistics,compute_workload,scheduler_statistics,wave_state",
+  "sqtt": true,
+  "SE": 0,
+  "active_CU_index": 0,
+  "minimum_raw_token_bytes": 4096,
+  "formal_timing": false
+}
