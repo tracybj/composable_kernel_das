@@ -129,6 +129,10 @@ struct GroupedGemmSelectorPolicy
     // Experimental archived A-register/B-private-LDS Depth8, narrow measured scope.
     bool enable_bf16_nn_decode_depth8 = false;
     bool enable_bf16_nn_decode_wave = false; // Independent, opt-in decode architecture.
+    bool enable_bf16_nn_decode_mainline = false;
+    std::int32_t bf16_nn_decode_mainline_variant = 0;
+    bool enable_bf16_nn_decode_short = false;
+    std::int32_t bf16_nn_decode_short_variant = 0;
 };
 
 // Group-count bounds of the v7 instances. The kernels read the group table
@@ -197,6 +201,15 @@ enum class GroupedGemmInstanceId
     v7_bf16_nn_small_m_noslc = 5017,
     bf16_nn_decode_depth8 = 6003,
     bf16_nn_decode_wave = 6000,
+    bf16_nn_decode_mainline_d4 = 6004,
+    bf16_nn_decode_mainline_d8 = 6005,
+    bf16_nn_decode_mainline_serial = 6006,
+    bf16_nn_decode_short_n64 = 6007,
+    bf16_nn_decode_short_n32 = 6008,
+    bf16_nn_decode_shared_k16_d4 = 6009,
+    bf16_nn_decode_shared_k16_d8 = 6010,
+    bf16_nn_decode_shared_k32_d4 = 6011,
+    bf16_nn_decode_short_shared = 6012,
 
 };
 
@@ -217,7 +230,7 @@ struct GroupedGemmCandidateIdentity
     GroupedGemmCandidateFamily family;
 };
 
-inline constexpr std::array<GroupedGemmCandidateIdentity, 38>
+inline constexpr std::array<GroupedGemmCandidateIdentity, 47>
     grouped_gemm_candidate_registry{{
         {GroupedGemmInstanceId::bw_family_selected,
          "bw_family.selected",
@@ -323,6 +336,25 @@ inline constexpr std::array<GroupedGemmCandidateIdentity, 38>
          "decode.nn.a_reg.b_private_lds.16x128x16.s8", GroupedGemmCandidateFamily::decode},
         {GroupedGemmInstanceId::bf16_nn_decode_wave,
          "decode.nn.wave_private.16x128x16.s2", GroupedGemmCandidateFamily::decode},
+        {GroupedGemmInstanceId::bf16_nn_decode_mainline_d4,
+         "decode.nn.full_m.a_reg.b_private_lds.n128.k16.d4.op2", GroupedGemmCandidateFamily::decode},
+        {GroupedGemmInstanceId::bf16_nn_decode_mainline_d8,
+         "decode.nn.full_m.a_reg.b_private_lds.n128.k16.d8.op2", GroupedGemmCandidateFamily::decode},
+        {GroupedGemmInstanceId::bf16_nn_decode_mainline_serial,
+         "decode.nn.full_m.a_reg.b_private_lds.n128.k16.d4.serial", GroupedGemmCandidateFamily::decode},
+        {GroupedGemmInstanceId::bf16_nn_decode_short_n64,
+         "decode.nn.full_m.a_reg.b_private_lds.n64.k16.d2.serial", GroupedGemmCandidateFamily::decode},
+        {GroupedGemmInstanceId::bf16_nn_decode_short_n32,
+         "decode.nn.full_m.a_reg.b_private_lds.n32.k16.d2.serial", GroupedGemmCandidateFamily::decode},
+        {GroupedGemmInstanceId::bf16_nn_decode_shared_k16_d4,
+         "decode.nn.full_m.shared_a.private_b.n128.k16.d4.op2", GroupedGemmCandidateFamily::decode},
+        {GroupedGemmInstanceId::bf16_nn_decode_shared_k16_d8,
+         "decode.nn.full_m.shared_a.private_b.n128.k16.d8.op2", GroupedGemmCandidateFamily::decode},
+        {GroupedGemmInstanceId::bf16_nn_decode_shared_k32_d4,
+         "decode.nn.full_m.shared_a.private_b.n128.k32.d4.op2", GroupedGemmCandidateFamily::decode},
+        {GroupedGemmInstanceId::bf16_nn_decode_short_shared,
+         "decode.nn.short.shared_a.private_b.n128.k16.d4.op2", GroupedGemmCandidateFamily::decode},
+
     }};
 
 constexpr const GroupedGemmCandidateIdentity*
@@ -377,6 +409,8 @@ enum class GroupedGemmSelectionReason
     v7_bf16_nn_small_m_noslc,
     bf16_nn_decode_wave,
     bf16_nn_decode_depth8 = 6003,
+    bf16_nn_decode_mainline = 6004,
+    bf16_nn_decode_short = 6007,
 };
 
 struct GroupedGemmSelection
@@ -476,6 +510,50 @@ constexpr GroupedGemmSelection select_grouped_gemm_candidate(
     const bool is_bf16_tn  = is_bf16 && is_tn;
     const bool has_variable_k =
         problem.k.kind == GroupedGemmDimensionKind::device_lengths_with_capacity;
+    // Independent experimental decode routes. Packed/aligned dense NN device
+    // descriptors retain the existing caller-owned storage contract. Neither
+    // route reads device lengths or adds workspace, synchronization, or an ABI.
+    const bool decode_common = problem.arch == GroupedGemmArch::gfx936 && is_bf16 && is_nn &&
+        problem.m.kind == GroupedGemmDimensionKind::common && !has_variable_k &&
+        !problem.group_lengths_are_ragged && !problem.may_have_empty_groups &&
+        problem.group_count <= 1024 && m >= 1 && m <= 64 && n <= 4096 && n % 128 == 0;
+    if(policy.enable_bf16_nn_decode_mainline && decode_common && n >= 1024 &&
+       k >= 2048 && k <= 8192 && k % 128 == 0 &&
+       n <= std::int64_t{2147483647} / (2 * k) &&
+       grouped_gemm_v7_experiment_tile_bound(problem, 64, 128) <= kGroupedGemmV7MaxTiles)
+    {
+        switch(policy.bf16_nn_decode_mainline_variant)
+        {
+        case 0: return {GroupedGemmInstanceId::bf16_nn_decode_mainline_d4,
+                        GroupedGemmSelectionReason::bf16_nn_decode_mainline};
+        case 1: return {GroupedGemmInstanceId::bf16_nn_decode_mainline_d8,
+                        GroupedGemmSelectionReason::bf16_nn_decode_mainline};
+        case 2: return {GroupedGemmInstanceId::bf16_nn_decode_mainline_serial,
+                        GroupedGemmSelectionReason::bf16_nn_decode_mainline};
+        case 3: return {GroupedGemmInstanceId::bf16_nn_decode_shared_k16_d4,
+                        GroupedGemmSelectionReason::bf16_nn_decode_mainline};
+        case 4: return {GroupedGemmInstanceId::bf16_nn_decode_shared_k16_d8,
+                        GroupedGemmSelectionReason::bf16_nn_decode_mainline};
+        case 5: return {GroupedGemmInstanceId::bf16_nn_decode_shared_k32_d4,
+                        GroupedGemmSelectionReason::bf16_nn_decode_mainline};
+        default: break;
+        }
+    }
+    if(policy.enable_bf16_nn_decode_short && decode_common && n >= 128 &&
+       problem.group_count <= 32 && k >= 64 && k < 2048 && k % 32 == 0 &&
+       n <= std::int64_t{2147483647} / (2 * k) &&
+       grouped_gemm_v7_experiment_tile_bound(problem, 64, 32) <= kGroupedGemmV7MaxTiles)
+    {
+        if(policy.bf16_nn_decode_short_variant == 0)
+            return {GroupedGemmInstanceId::bf16_nn_decode_short_n64,
+                    GroupedGemmSelectionReason::bf16_nn_decode_short};
+        if(policy.bf16_nn_decode_short_variant == 1)
+            return {GroupedGemmInstanceId::bf16_nn_decode_short_n32,
+                    GroupedGemmSelectionReason::bf16_nn_decode_short};
+        if(policy.bf16_nn_decode_short_variant == 2 && k % 64 == 0)
+            return {GroupedGemmInstanceId::bf16_nn_decode_short_shared,
+                    GroupedGemmSelectionReason::bf16_nn_decode_short};
+    }
     // Opt-in measured range. Device kargs retain the existing dense NN storage
     // contract: packed, aligned A/B/C; no host readback of their device pointers.
     if(policy.enable_bf16_nn_decode_depth8 && problem.arch == GroupedGemmArch::gfx936 &&

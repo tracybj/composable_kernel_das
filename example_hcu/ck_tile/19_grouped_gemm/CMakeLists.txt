@@ -581,6 +581,13 @@ add_test(NAME tile_example_grouped_gemm_decode_depth8_selector_test
 set_tests_properties(tile_example_grouped_gemm_decode_depth8_selector_test
     PROPERTIES LABELS "hcu;ck_tile;grouped_gemm;selector")
 
+add_executable(tile_example_grouped_gemm_decode_mainline_selector_test EXCLUDE_FROM_ALL
+    grouped_gemm_decode_mainline_selector_test.cpp)
+add_test(NAME tile_example_grouped_gemm_decode_mainline_selector_test
+    COMMAND $<TARGET_FILE:tile_example_grouped_gemm_decode_mainline_selector_test>)
+set_tests_properties(tile_example_grouped_gemm_decode_mainline_selector_test
+    PROPERTIES LABELS "hcu;ck_tile;grouped_gemm;selector")
+
 # Host-only quant contract/selector test. It covers the reported gfx938
 # group-count-sensitive cases without linking or launching a device provider.
 add_executable(tile_example_grouped_gemm_quant_selector_test EXCLUDE_FROM_ALL

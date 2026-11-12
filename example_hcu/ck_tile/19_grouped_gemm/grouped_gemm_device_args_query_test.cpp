@@ -121,7 +121,7 @@ int main()
     constexpr std::uint32_t all_layout = CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NT_V1 |
                                          CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NN_V1 |
                                          CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_TN_V1;
-    constexpr std::array<CandidateExpected, 38> expected{{
+    constexpr std::array<CandidateExpected, 47> expected{{
         {CK_TILE_HCU_GROUPED_GEMM_INSTANCE_BW_FAMILY_SELECTED_V1,
          CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_FAMILY_BW_V1,
          CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX936_V1,
@@ -314,6 +314,51 @@ int main()
          CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_MASK_BF16_V1,
          CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NN_V1},
         {CK_TILE_HCU_GROUPED_GEMM_INSTANCE_BF16_NN_DECODE_WAVE_V1,
+         CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_FAMILY_DECODE_V1,
+         CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX936_V1,
+         CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_MASK_BF16_V1,
+         CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NN_V1},
+        {CK_TILE_HCU_GROUPED_GEMM_INSTANCE_BF16_NN_DECODE_MAINLINE_D4_V1,
+         CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_FAMILY_DECODE_V1,
+         CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX936_V1,
+         CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_MASK_BF16_V1,
+         CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NN_V1},
+        {CK_TILE_HCU_GROUPED_GEMM_INSTANCE_BF16_NN_DECODE_MAINLINE_D8_V1,
+         CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_FAMILY_DECODE_V1,
+         CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX936_V1,
+         CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_MASK_BF16_V1,
+         CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NN_V1},
+        {CK_TILE_HCU_GROUPED_GEMM_INSTANCE_BF16_NN_DECODE_MAINLINE_SERIAL_V1,
+         CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_FAMILY_DECODE_V1,
+         CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX936_V1,
+         CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_MASK_BF16_V1,
+         CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NN_V1},
+        {CK_TILE_HCU_GROUPED_GEMM_INSTANCE_BF16_NN_DECODE_SHORT_N64_V1,
+         CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_FAMILY_DECODE_V1,
+         CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX936_V1,
+         CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_MASK_BF16_V1,
+         CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NN_V1},
+        {CK_TILE_HCU_GROUPED_GEMM_INSTANCE_BF16_NN_DECODE_SHORT_N32_V1,
+         CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_FAMILY_DECODE_V1,
+         CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX936_V1,
+         CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_MASK_BF16_V1,
+         CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NN_V1},
+        {CK_TILE_HCU_GROUPED_GEMM_INSTANCE_BF16_NN_DECODE_SHARED_K16_D4_V1,
+         CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_FAMILY_DECODE_V1,
+         CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX936_V1,
+         CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_MASK_BF16_V1,
+         CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NN_V1},
+        {CK_TILE_HCU_GROUPED_GEMM_INSTANCE_BF16_NN_DECODE_SHARED_K16_D8_V1,
+         CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_FAMILY_DECODE_V1,
+         CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX936_V1,
+         CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_MASK_BF16_V1,
+         CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NN_V1},
+        {CK_TILE_HCU_GROUPED_GEMM_INSTANCE_BF16_NN_DECODE_SHARED_K32_D4_V1,
+         CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_FAMILY_DECODE_V1,
+         CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX936_V1,
+         CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_MASK_BF16_V1,
+         CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NN_V1},
+        {CK_TILE_HCU_GROUPED_GEMM_INSTANCE_BF16_NN_DECODE_SHORT_SHARED_V1,
          CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_FAMILY_DECODE_V1,
          CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX936_V1,
          CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_MASK_BF16_V1,
@@ -625,6 +670,58 @@ int main()
         passed &= ::unsetenv(enable) == 0;
         passed &= ::unsetenv(disable) == 0;
         std::cout << "QUERY_DEPTH8_PASS cases=34\n";
+    }
+
+    if(target == ck_tile::hcu_target_enum::gfx936)
+    {
+        bool decode_pass = true;
+        int cases = 0;
+        for(bool short_path : {false, true})
+        {
+            const char* enable = short_path ? "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_SHORT" :
+                                               "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE";
+            const char* disable = short_path ? "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_SHORT" :
+                                                "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE";
+            const char* variant = short_path ? "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_SHORT_VARIANT" :
+                                                "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT";
+            decode_pass &= ::setenv(enable, "1", 1) == 0;
+            for(int v = 0; v < (short_path ? 3 : 6); ++v)
+            {
+                const std::string value = std::to_string(v);
+                decode_pass &= ::setenv(variant, value.c_str(), 1) == 0;
+                for(int m = 1; m <= 64; ++m)
+                {
+                    auto probe = make_fixed_m_problem(CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_BF16_V1,
+                        CK_TILE_HCU_GROUPED_GEMM_LAYOUT_NN_V1, 32, m, 1024, short_path ? 768 : 2048);
+                    const int expected_decode = short_path ? (v == 2 ? 6012 : 6007 + v) :
+                        (v >= 3 ? 6009 + v - 3 : 6004 + v);
+                    decode_pass &= expect_selection(probe, expected_decode, "decode_full_m_variants");
+                    ++cases;
+                }
+            }
+            auto probe = make_fixed_m_problem(CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_BF16_V1,
+                CK_TILE_HCU_GROUPED_GEMM_LAYOUT_NN_V1, 32, 16, 1024, short_path ? 768 : 2048);
+            decode_pass &= ::setenv(disable, "1", 1) == 0;
+            auto off = make_selection();
+            decode_pass &= ck_tile_hcu_grouped_gemm_select_device_args_v1(&probe, &off) == 0;
+            decode_pass &= off.instance_id < 6004 || off.instance_id > 6012;
+            decode_pass &= ::setenv(disable, "0", 1) == 0;
+            decode_pass &= ::setenv(variant, "invalid", 1) == 0;
+            auto invalid_decode_variant = make_selection();
+            decode_pass &= ck_tile_hcu_grouped_gemm_select_device_args_v1(&probe, &invalid_decode_variant) == 0;
+            decode_pass &= invalid_decode_variant.instance_id == off.instance_id;
+            decode_pass &= ::setenv(enable, "yes", 1) == 0;
+            decode_pass &= ::setenv(variant, "0", 1) == 0;
+            auto malformed = make_selection();
+            decode_pass &= ck_tile_hcu_grouped_gemm_select_device_args_v1(&probe, &malformed) == 0;
+            decode_pass &= malformed.instance_id == off.instance_id;
+            decode_pass &= ::unsetenv(enable) == 0;
+            decode_pass &= ::unsetenv(disable) == 0;
+            decode_pass &= ::unsetenv(variant) == 0;
+            cases += 3;
+        }
+        passed &= decode_pass;
+        std::cout << "QUERY_DECODE_MAINLINE_" << (decode_pass ? "PASS" : "FAIL") << " cases=" << cases << '\n';
     }
 
     std::cout << "DEVICE_ARGS_QUERY_" << (passed ? "PASS" : "FAIL")
