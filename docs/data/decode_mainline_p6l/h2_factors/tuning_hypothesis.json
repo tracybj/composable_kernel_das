@@ -1,0 +1,93 @@
+{
+  "at": "2026-11-12T08:22:46.788436+00:00",
+  "scope": "H2 scheduling/layout refinement, not a new ownership architecture",
+  "main_structure_number": 2,
+  "short_structure_number": 2,
+  "facts": [
+    "H2D8 main6/8 gains,2losses; GMcandidate/base0.972905; fivepoint>=5pct",
+    "H2D8 ID621/805 wait/wavecycle .096/.104 vsH1 .770/.819, VMEM/wave196/388 vsH1 644/1284",
+    "H2D8 LDSbankconflict/active .667(M64), .501(M2); K32 .700. Existing accepted source uses inverse row/chunk XOR to spread A banks",
+    "TCP pending stalls and address translation misses remain; HBM nearonecopy in longK, so no claim B bulk duplication"
+  ],
+  "evidence": {
+    "discovery": "0f6b40667bae23774c9585815f56b1fb5053fedfec0ee1dd7f8c60d972d85c67",
+    "profile": "fbc2cda1b9c35ace3996c24d204e5db97768294ecf3bc90f49c1c4c066c9971b"
+  },
+  "factors": [
+    "XOR_A: invertible row/chunk XOR in both co-op load and LDS read, no math/order/tile changes",
+    "EARLY_B: wait current own operand reads, refill wave-private B slot before ready(next), then globalwait with extra B pending, CTAbarrier, readnext and refill sharedA, compute current. Tail unchanged."
+  ],
+  "fixed_main": {
+    "variant": 4,
+    "instance": 6010,
+    "BlockK": 16,
+    "Depth": 8,
+    "Ntile": 128,
+    "fullM": true
+  },
+  "fixed_short": {
+    "variant": 2,
+    "instance": 6012,
+    "BlockK": 16,
+    "Depth": 4,
+    "Ntile": 128
+  },
+  "design": [
+    "old control flags0/0, XOR only, EARLY only, both; old9 shader symbols retained",
+    "Provider-local defaultoff strict1 flags, per-factor DISABLE wins, no selector eligibility change/ABI/hot allocation/sync",
+    "Exactpending for earlyB activeA:(H+1)*(D-2)+H, inactiveA:H*(D-2)+H. Own B readers lgkm0 before overwrite; sharedA still after CTAbarrier. Full necessary prefetch count and old final drain."
+  ],
+  "discovery_main_ids": [
+    620,
+    621,
+    633,
+    788,
+    805,
+    948,
+    1009,
+    1072
+  ],
+  "discovery_short_ids": [
+    26,
+    31,
+    32,
+    76,
+    82,
+    122,
+    128,
+    257,
+    263
+  ],
+  "qualification_M": [
+    1,
+    15,
+    16,
+    17,
+    31,
+    32,
+    33,
+    63,
+    64
+  ],
+  "variants_per_family": 4,
+  "qualification_jobs": 77,
+  "paired_discovery": 74,
+  "protocol": "full3 eacharm+realguards, then3 AB/BA rounds; same frozenbinary/epoch/defaultselector; no7block claim",
+  "bound": "No new tile/depth search. Complete registered factor controls before adoption. Keep all losses/highCV. Original cutoff unchanged.",
+  "qualification_accuracy_cases": 75,
+  "qualification_profile_identity_jobs": 3,
+  "qualification_physical_jobs": 80,
+  "identity_probes": "Explicit DISABLE_XOR / DISABLE_EARLY / DISABLE_BOTH after full3, exactdispatch18 with actualkernelclass/boolean-template verification. No formal timing from profile.",
+  "identity_probe_G": 32,
+  "identity_probe_ctas": 288,
+  "sparse_capture_repair": {
+    "at": "2026-11-12T08:37:46.871390+00:00",
+    "old_G": 3,
+    "old_ctas": 27,
+    "old_SQTT_bytes": 384,
+    "actual_kernel_matched": true,
+    "all_completed_precision_passed": true,
+    "reason": "Too few CTAs left selected SE/CU without useful instruction trace. Increase only identity-probe parallelism; retain minimum4096 bytes and exactdispatch18. No kernel/precision/performance change.",
+    "prior_plan_archive": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/controller_history/tuning_sparse_identity_attempt1"
+  }
+}

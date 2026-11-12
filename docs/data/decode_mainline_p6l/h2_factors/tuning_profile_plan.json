@@ -1,0 +1,70 @@
+{
+  "rule_sha256": "c78268c44c99cf55524e9529e6e44eced4538417e2e1715aeb4c7fe2680ceda4",
+  "discovery_sha256": "ae7b481ae6ef70f335d374b9d752e10888947836c0096f2f93c7523f7ea47b49",
+  "plan_sha256": "e43588d392eecf0b7899135f9690a541f2b540b7e41c1c4195a06fddd73e4e1b",
+  "epoch": 0,
+  "chosen_main_variant": "main_both",
+  "chosen_short_variant": "short_xor",
+  "chosen": [
+    {
+      "pair": "id621_main_both",
+      "ID": 621,
+      "variant": "main_both",
+      "category": "gain",
+      "delta_pct": -9.203183042552066,
+      "high_cv": true,
+      "precision_keys": [
+        "e0_h2t_id621_main_both_e7de82e4bfc6_base_accuracy_875dcf23fb",
+        "e0_h2t_id621_main_both_e7de82e4bfc6_candidate_accuracy_ac4ceeb687"
+      ]
+    },
+    {
+      "pair": "id805_main_both",
+      "ID": 805,
+      "variant": "main_both",
+      "category": "gain",
+      "delta_pct": -9.258160232763801,
+      "high_cv": false,
+      "precision_keys": [
+        "e0_h2t_id805_main_both_c2621d21c0e1_base_accuracy_136b18cda4",
+        "e0_h2t_id805_main_both_c2621d21c0e1_candidate_accuracy_43aa744695"
+      ]
+    },
+    {
+      "pair": "id1072_main_both",
+      "ID": 1072,
+      "variant": "main_both",
+      "category": "gain",
+      "delta_pct": -9.75691115227334,
+      "high_cv": false,
+      "precision_keys": [
+        "e0_h2t_id1072_main_both_70dd2d3b8a04_base_accuracy_4a15bb0aee",
+        "e0_h2t_id1072_main_both_70dd2d3b8a04_candidate_accuracy_06d084a505"
+      ]
+    },
+    {
+      "pair": "id76_short_xor",
+      "ID": 76,
+      "variant": "short_xor",
+      "category": "loss",
+      "delta_pct": 8.69565217391306,
+      "high_cv": true,
+      "precision_keys": [
+        "e0_h2t_id76_short_xor_61b779d30df5_base_accuracy_602de0328a",
+        "e0_h2t_id76_short_xor_61b779d30df5_candidate_accuracy_a487ac95a3"
+      ]
+    },
+    {
+      "pair": "id257_short_xor",
+      "ID": 257,
+      "variant": "short_xor",
+      "category": "flat",
+      "delta_pct": 0.8130059984352123,
+      "high_cv": true,
+      "precision_keys": [
+        "e0_h2t_id257_short_xor_f668a7102d31_base_accuracy_5e4218d899",
+        "e0_h2t_id257_short_xor_f668a7102d31_candidate_accuracy_e49cfdb5d1"
+      ]
+    }
+  ]
+}
