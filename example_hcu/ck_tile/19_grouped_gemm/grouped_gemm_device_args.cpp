@@ -102,6 +102,8 @@ extern "C" int ck_tile_hcu_grouped_gemm_bf16_nn_decode_mainline_device_args(
     void*, int, hipStream_t, std::uint64_t, int, int, int, int, int);
 extern "C" int ck_tile_hcu_grouped_gemm_bf16_nn_decode_shared_device_args(
     void*, int, hipStream_t, std::uint64_t, int, int, int, int, int);
+extern "C" int ck_tile_hcu_grouped_gemm_bf16_nn_decode_cooperative_device_args(
+    void*, int, hipStream_t, std::uint64_t, int, int, int, int, int);
 #endif
 
 namespace {
@@ -379,18 +381,25 @@ int convert_problem(const ck_tile_hcu_grouped_gemm_problem_v1* source,
     const auto decode_variant = [](const char* name, int maximum) {
         const char* v = std::getenv(name);
         if(v == nullptr) return 0;
-        return v[0] >= '0' && v[0] <= '0' + maximum && v[1] == '\0' ? v[0] - '0' : -1;
+        if(v[0] < '0' || v[0] > '9') return -1;
+        int value = v[0] - '0';
+        if(v[1] != '\0')
+        {
+            if(value == 0 || v[1] < '0' || v[1] > '9' || v[2] != '\0') return -1;
+            value = value * 10 + v[1] - '0';
+        }
+        return value <= maximum ? value : -1;
     };
     policy.enable_bf16_nn_decode_mainline = decode_switch(
         "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE",
         "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE");
     policy.bf16_nn_decode_mainline_variant = decode_variant(
-        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT", 5);
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT", 11);
     policy.enable_bf16_nn_decode_short = decode_switch(
         "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_SHORT",
         "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_SHORT");
     policy.bf16_nn_decode_short_variant = decode_variant(
-        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_SHORT_VARIANT", 2);
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_SHORT_VARIANT", 5);
     const char* decode_enable = std::getenv("CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_WAVE");
     const char* decode_disable = std::getenv("CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_WAVE");
     policy.enable_bf16_nn_decode_wave = decode_enable != nullptr &&
@@ -621,6 +630,12 @@ int dispatch_registry_candidate(const ck_tile::GroupedGemmProblem& problem,
                 v7_uniform_launch::tiles_per_group(problem));
 #endif
         break;
+    case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_direct_main_xor:
+    case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_direct_main_early:
+    case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_direct_main_both:
+    case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_direct_short_xor:
+    case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_direct_short_early:
+    case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_direct_short_both:
     case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_shared_k16_d4:
     case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_shared_k16_d8:
     case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_shared_k32_d4:
@@ -628,9 +643,25 @@ int dispatch_registry_candidate(const ck_tile::GroupedGemmProblem& problem,
 #if defined(CK_TILE_GROUPED_GEMM_DEVICE_ARGS_HAS_DECODE_BF16)
         if(dtype == ck_tile::GroupedGemmDataType::bf16 && layout == ck_tile::GroupedGemmLayout::nn)
         {
-            const int variant = static_cast<int>(instance_id) - 6009;
+            const int raw_id = static_cast<int>(instance_id);
+            const int variant = raw_id >= 6013 ? 4 + raw_id - 6013 : raw_id - 6009;
             const int tpg = static_cast<int>(problem.n.extent / 128);
             return ck_tile_hcu_grouped_gemm_bf16_nn_decode_shared_device_args(
+                device_args, groups, stream, static_cast<std::uint64_t>(tpg) * groups, tpg,
+                static_cast<int>(problem.m.extent), static_cast<int>(problem.n.extent),
+                static_cast<int>(problem.k.extent), variant);
+        }
+#endif
+        break;
+    case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_coop_k16_d4:
+    case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_coop_k16_d8:
+    case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_coop_k32_d4:
+#if defined(CK_TILE_GROUPED_GEMM_DEVICE_ARGS_HAS_DECODE_BF16)
+        if(dtype == ck_tile::GroupedGemmDataType::bf16 && layout == ck_tile::GroupedGemmLayout::nn)
+        {
+            const int variant = static_cast<int>(instance_id) - 6020;
+            const int tpg = static_cast<int>(problem.n.extent / 128);
+            return ck_tile_hcu_grouped_gemm_bf16_nn_decode_cooperative_device_args(
                 device_args, groups, stream, static_cast<std::uint64_t>(tpg) * groups, tpg,
                 static_cast<int>(problem.m.extent), static_cast<int>(problem.n.extent),
                 static_cast<int>(problem.k.extent), variant);
@@ -936,10 +967,19 @@ void candidate_masks(ck_tile::GroupedGemmInstanceId id,
         data_type_mask     = DTypeFp16;
         layout_mask        = LayoutNn;
         break;
+    case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_direct_main_xor:
+    case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_direct_main_early:
+    case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_direct_main_both:
+    case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_direct_short_xor:
+    case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_direct_short_early:
+    case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_direct_short_both:
     case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_shared_k16_d4:
     case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_shared_k16_d8:
     case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_shared_k32_d4:
     case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_short_shared:
+    case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_coop_k16_d4:
+    case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_coop_k16_d8:
+    case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_coop_k32_d4:
     case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_mainline_d4:
     case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_mainline_d8:
     case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_mainline_serial:

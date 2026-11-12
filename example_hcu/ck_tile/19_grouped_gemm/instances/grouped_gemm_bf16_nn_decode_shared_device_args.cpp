@@ -132,20 +132,26 @@ extern "C" int ck_tile_hcu_grouped_gemm_bf16_nn_decode_shared_device_args(
     int m, int n, int k, int variant)
 {
     if(args == nullptr || groups < 1 || groups > 1024 || m < 1 || m > 64 ||
-       variant < 0 || variant > 3 || n % 128 != 0 || n > 4096) return -1;
-    const bool short_path = variant == 3;
+       variant < 0 || variant > 9 || n % 128 != 0 || n > 4096) return -1;
+    // New direct identities encode their tuning bits and bypass these legacy
+    // provider-local getenv calls. Family DISABLE is enforced by the selector.
+    // Old identities 6009..6012 retain the original per-factor flag semantics.
+    const bool direct = variant >= 4;
+    const int mode = variant - 4;
+    const int geometry = direct ? (mode >= 3 ? 3 : 1) : variant;
+    const bool short_path = geometry == 3;
     if(n < (short_path ? 128 : 1024) ||
        (!short_path && (k < 2048 || k > 8192 || k % 128 != 0)) ||
        (short_path && (groups > 32 || k < 64 || k >= 2048 || k % 64 != 0)) ||
        tiles_per_group != n / 128 ||
        tiles != static_cast<uint64_t>(groups) * tiles_per_group) return -1;
-    const bool early = ck_tile::decode_shared_flag(
+    const bool early = direct ? (mode % 3 >= 1) : ck_tile::decode_shared_flag(
         "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_SHARED_EARLY_B",
         "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_SHARED_EARLY_B");
-    const bool xor_a = ck_tile::decode_shared_flag(
+    const bool xor_a = direct ? (mode % 3 != 1) : ck_tile::decode_shared_flag(
         "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_SHARED_XOR_A",
         "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_SHARED_XOR_A");
-    if(m <= 16) return ck_tile::dispatch_decode_shared_flags<1>(args, groups, stream, tiles, tiles_per_group, variant, early, xor_a);
-    if(m <= 32) return ck_tile::dispatch_decode_shared_flags<2>(args, groups, stream, tiles, tiles_per_group, variant, early, xor_a);
-    return ck_tile::dispatch_decode_shared_flags<4>(args, groups, stream, tiles, tiles_per_group, variant, early, xor_a);
+    if(m <= 16) return ck_tile::dispatch_decode_shared_flags<1>(args, groups, stream, tiles, tiles_per_group, geometry, early, xor_a);
+    if(m <= 32) return ck_tile::dispatch_decode_shared_flags<2>(args, groups, stream, tiles, tiles_per_group, geometry, early, xor_a);
+    return ck_tile::dispatch_decode_shared_flags<4>(args, groups, stream, tiles, tiles_per_group, geometry, early, xor_a);
 }

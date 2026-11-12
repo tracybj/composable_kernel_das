@@ -177,6 +177,15 @@ int launch_registry_candidate(ck_tile::GroupedGemmInstanceId instance_id,
     case ck_tile::GroupedGemmInstanceId::v7_bf16_nn_tail256:
     case ck_tile::GroupedGemmInstanceId::v7_bf16_nn_small_m_noslc:
     case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_depth8:
+    case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_direct_main_xor:
+    case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_direct_main_early:
+    case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_direct_main_both:
+    case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_direct_short_xor:
+    case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_direct_short_early:
+    case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_direct_short_both:
+    case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_coop_k16_d4:
+    case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_coop_k16_d8:
+    case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_coop_k32_d4:
     case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_shared_k16_d4:
     case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_shared_k16_d8:
     case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_shared_k32_d4:

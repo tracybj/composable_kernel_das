@@ -210,6 +210,15 @@ enum class GroupedGemmInstanceId
     bf16_nn_decode_shared_k16_d8 = 6010,
     bf16_nn_decode_shared_k32_d4 = 6011,
     bf16_nn_decode_short_shared = 6012,
+    bf16_nn_decode_direct_main_xor = 6013,
+    bf16_nn_decode_direct_main_early = 6014,
+    bf16_nn_decode_direct_main_both = 6015,
+    bf16_nn_decode_direct_short_xor = 6016,
+    bf16_nn_decode_direct_short_early = 6017,
+    bf16_nn_decode_direct_short_both = 6018,
+    bf16_nn_decode_coop_k16_d4 = 6020,
+    bf16_nn_decode_coop_k16_d8 = 6021,
+    bf16_nn_decode_coop_k32_d4 = 6022,
 
 };
 
@@ -230,7 +239,7 @@ struct GroupedGemmCandidateIdentity
     GroupedGemmCandidateFamily family;
 };
 
-inline constexpr std::array<GroupedGemmCandidateIdentity, 47>
+inline constexpr std::array<GroupedGemmCandidateIdentity, 56>
     grouped_gemm_candidate_registry{{
         {GroupedGemmInstanceId::bw_family_selected,
          "bw_family.selected",
@@ -354,6 +363,24 @@ inline constexpr std::array<GroupedGemmCandidateIdentity, 47>
          "decode.nn.full_m.shared_a.private_b.n128.k32.d4.op2", GroupedGemmCandidateFamily::decode},
         {GroupedGemmInstanceId::bf16_nn_decode_short_shared,
          "decode.nn.short.shared_a.private_b.n128.k16.d4.op2", GroupedGemmCandidateFamily::decode},
+        {GroupedGemmInstanceId::bf16_nn_decode_direct_main_xor,
+         "decode.nn.full_m.shared_a.private_b.n128.k16.d8.xor_a.direct", GroupedGemmCandidateFamily::decode},
+        {GroupedGemmInstanceId::bf16_nn_decode_direct_main_early,
+         "decode.nn.full_m.shared_a.private_b.n128.k16.d8.early_b.direct", GroupedGemmCandidateFamily::decode},
+        {GroupedGemmInstanceId::bf16_nn_decode_direct_main_both,
+         "decode.nn.full_m.shared_a.private_b.n128.k16.d8.xor_a.early_b.direct", GroupedGemmCandidateFamily::decode},
+        {GroupedGemmInstanceId::bf16_nn_decode_direct_short_xor,
+         "decode.nn.short.shared_a.private_b.n128.k16.d4.xor_a.direct", GroupedGemmCandidateFamily::decode},
+        {GroupedGemmInstanceId::bf16_nn_decode_direct_short_early,
+         "decode.nn.short.shared_a.private_b.n128.k16.d4.early_b.direct", GroupedGemmCandidateFamily::decode},
+        {GroupedGemmInstanceId::bf16_nn_decode_direct_short_both,
+         "decode.nn.short.shared_a.private_b.n128.k16.d4.xor_a.early_b.direct", GroupedGemmCandidateFamily::decode},
+        {GroupedGemmInstanceId::bf16_nn_decode_coop_k16_d4,
+         "decode.nn.full_m.cooperative_ab.n128.k16.d4.op3", GroupedGemmCandidateFamily::decode},
+        {GroupedGemmInstanceId::bf16_nn_decode_coop_k16_d8,
+         "decode.nn.full_m.cooperative_ab.n128.k16.d8.op3", GroupedGemmCandidateFamily::decode},
+        {GroupedGemmInstanceId::bf16_nn_decode_coop_k32_d4,
+         "decode.nn.full_m.cooperative_ab.n128.k32.d4.op3", GroupedGemmCandidateFamily::decode},
 
     }};
 
@@ -536,6 +563,18 @@ constexpr GroupedGemmSelection select_grouped_gemm_candidate(
                         GroupedGemmSelectionReason::bf16_nn_decode_mainline};
         case 5: return {GroupedGemmInstanceId::bf16_nn_decode_shared_k32_d4,
                         GroupedGemmSelectionReason::bf16_nn_decode_mainline};
+        case 6: return {GroupedGemmInstanceId::bf16_nn_decode_direct_main_xor,
+                        GroupedGemmSelectionReason::bf16_nn_decode_mainline};
+        case 7: return {GroupedGemmInstanceId::bf16_nn_decode_direct_main_early,
+                        GroupedGemmSelectionReason::bf16_nn_decode_mainline};
+        case 8: return {GroupedGemmInstanceId::bf16_nn_decode_direct_main_both,
+                        GroupedGemmSelectionReason::bf16_nn_decode_mainline};
+        case 9: return {GroupedGemmInstanceId::bf16_nn_decode_coop_k16_d4,
+                        GroupedGemmSelectionReason::bf16_nn_decode_mainline};
+        case 10: return {GroupedGemmInstanceId::bf16_nn_decode_coop_k16_d8,
+                        GroupedGemmSelectionReason::bf16_nn_decode_mainline};
+        case 11: return {GroupedGemmInstanceId::bf16_nn_decode_coop_k32_d4,
+                        GroupedGemmSelectionReason::bf16_nn_decode_mainline};
         default: break;
         }
     }
@@ -552,6 +591,15 @@ constexpr GroupedGemmSelection select_grouped_gemm_candidate(
                     GroupedGemmSelectionReason::bf16_nn_decode_short};
         if(policy.bf16_nn_decode_short_variant == 2 && k % 64 == 0)
             return {GroupedGemmInstanceId::bf16_nn_decode_short_shared,
+                    GroupedGemmSelectionReason::bf16_nn_decode_short};
+        if(policy.bf16_nn_decode_short_variant == 3 && k % 64 == 0)
+            return {GroupedGemmInstanceId::bf16_nn_decode_direct_short_xor,
+                    GroupedGemmSelectionReason::bf16_nn_decode_short};
+        if(policy.bf16_nn_decode_short_variant == 4 && k % 64 == 0)
+            return {GroupedGemmInstanceId::bf16_nn_decode_direct_short_early,
+                    GroupedGemmSelectionReason::bf16_nn_decode_short};
+        if(policy.bf16_nn_decode_short_variant == 5 && k % 64 == 0)
+            return {GroupedGemmInstanceId::bf16_nn_decode_direct_short_both,
                     GroupedGemmSelectionReason::bf16_nn_decode_short};
     }
     // Opt-in measured range. Device kargs retain the existing dense NN storage
