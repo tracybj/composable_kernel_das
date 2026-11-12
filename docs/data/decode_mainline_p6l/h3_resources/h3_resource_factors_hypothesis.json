@@ -1,0 +1,127 @@
+{
+  "schema": 1,
+  "at": "2026-11-12T14:19:07.740251+00:00",
+  "status": "Registered bounded H3 resource experiment before actual provider integration, compilation, or GPU. Isolated CPU drafts already exist; prerequisites below must finish first.",
+  "original_deadlines_unchanged": true,
+  "main_ownership_architectures": 3,
+  "short_ownership_architectures": 2,
+  "unchanged": "Complete-M CTA ownership, K32/N128, coalesced cooperative A/B, existing intrapanel LDS layout, three operand banks, full-K FP32 accumulators/BF16 store, public ABI and original paths.",
+  "evidence": {
+    "observed_profile_ID788": "Same input-scale HBM traffic, old mean resident waves/CU7.7954 versus H3D5 3.8315. This observation is not by itself proof of a theoretical ceiling or complete cause.",
+    "confirmation_attempt1": "Current D5 has both clear regressions and gains at identical N/K with differing G. Retain the full frozen347; do not select only winners.",
+    "resource_notes": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/post_confirmation_mechanism_questions.json"
+  },
+  "prerequisites": [
+    "Current controller333614 and tool71690 explicitly terminal with all347 results and complete report",
+    "Predeclared four paired SQTT captures312/327/328/335 under GPU4 gates, batch7 integrity/identity/counter audit and delivery",
+    "Check that residency/resource hypothesis remains supported; record an evidence-based abort if contradicted rather than blindly compiling"
+  ],
+  "factors": [
+    {
+      "name": "compact_A2_B3_four_waves",
+      "proposed_instance_id": 6024,
+      "supported_padded_M": [
+        16,
+        32,
+        64
+      ],
+      "LDS_KiB": [
+        26,
+        28,
+        32
+      ],
+      "benefit": "May permit two four-wave CTAs rather than one",
+      "cost": "Shallower B global lookahead; do not assume occupancy improvement outweighs VMEM latency",
+      "cpu_schedules": 1527,
+      "cpu_address_checks": 69632
+    },
+    {
+      "name": "eight_waves_common_D4",
+      "proposed_instance_id": 6025,
+      "supported_M": "17..64",
+      "supported_padded_M": [
+        32,
+        64
+      ],
+      "LDS_KiB": [
+        40,
+        48
+      ],
+      "benefit": "May permit eight resident waves within one CTA without shortening the existing D4 ring",
+      "cost": "Doubles B LDS read instructions across M wave groups and increases barrier participants; registers and actual scheduling must be measured",
+      "cpu_schedules": 1010,
+      "cpu_address_checks": 32768,
+      "partition_equivalence_checks": 18432
+    }
+  ],
+  "planned_selector_variants": {
+    "17": "6024 over the full initial main domain",
+    "18": "6024 in the existing M>=17 or K>=6144 property domain",
+    "19": "6025 only for M>=17, fallback otherwise",
+    "20": "Full initial main domain;6024 for M<=16 and6025 for M>=17"
+  },
+  "original_domain_counts": {
+    "compact_full": {
+      "originals": 346,
+      "original_weak": 171
+    },
+    "compact_prior_scope": {
+      "originals": 166,
+      "original_weak": 78
+    },
+    "wide_M17_64": {
+      "originals": 96,
+      "original_weak": 53
+    },
+    "hybrid_by_M": {
+      "originals": 346,
+      "original_weak": 171
+    }
+  },
+  "discovery_representative_ids": [
+    620,
+    621,
+    633,
+    788,
+    805,
+    948,
+    1009,
+    1072,
+    312,
+    327,
+    328,
+    335,
+    530,
+    543,
+    677,
+    712,
+    933,
+    1165,
+    1170
+  ],
+  "representative_reason": "Keep the prior8; add known G-dependent gain/loss, N1536/3072/3584, and K8192 existing winners. These are discovery cases, never acceptance by ID.",
+  "discovery": "Both actual resource implementations on all19 representatives (wide low-M routes must fall back); direct same-code route and depth/resource controls; old domain/prefill/N-tail/6003 fallback controls. Freeze exact commands and counts before any new GPU.",
+  "qualification": "All M fragment boundaries, packed aligned dense NN storage, K2176/N1152/G3 tail geometry, repeat3 full-output+real guards; malformed/disabled/domain-outside selection tests; no threshold relaxation.",
+  "profiling": "After discovery, pair current CK and actual resource candidates on fixed representative and observed gain/flat/loss cases. Compile and inspect actual registers/spills/VMEM order before GPU.",
+  "decision": "Use formal paired data, never profiler timing, to decide a whole attribute policy. Retain all regressions and highCV. Do not turn performance winners into an ID list. Final property domain includes all original winners and24 new unseen; use the next original seed for any genuinely changed candidate.",
+  "measurement_fidelity": "One final binary, same epoch, raw full-output evidence, fixed seven paired blocks, strict whole-family gate and original50/30 targets unchanged. Unchanged failed short candidate must not be silently resampled.",
+  "future_controller_requirements": [
+    "Do not modify currently pinned scripts or source while final71690/profile61274 are active",
+    "Update exclusion inventory for every newly used CPU design/qualification geometry before final freeze",
+    "Freeze source and scripts before new GPU; preserve earlier manifests and all failed attempt1 data",
+    "No fourth ownership architecture or unbounded tile search"
+  ],
+  "proof_sha256": {
+    "asymmetric_ring_cpu_model.py": "2aecf7571e9a5c08d4b79409fa6887456aa5d7f882527c1fa5de18288f886809",
+    "asymmetric_ring_cpu_model_result.json": "5dc038fc3a60ca6ac09fd4cd63d18b9960b5eec92e908a0f52cc4a3850ca4ed6",
+    "drafts/asymmetric_resource_factor/gemm_pipeline_decode_nn_cooperative_compact.hpp": "95816cc92a39dee9a7a2fb0f876678eeb6497ef4df87a90e274c9b5d07942a2a",
+    "drafts/asymmetric_resource_factor/prepare_wide_draft.py": "68807695e8baab2702be9cbde5223e16309ab2f025413754499ee6bb5188a80f",
+    "drafts/asymmetric_resource_factor/gemm_pipeline_decode_nn_cooperative_wide.hpp": "407e45657521eb61a8714baf622c9a14f291abf686f432281cbb3ea1a3e8c910",
+    "drafts/asymmetric_resource_factor/wide_cpu_model_result.json": "90c32984aead46dc75a0bccd42a540ae86a341442acef77c0114047b9bd4be3b",
+    "drafts/asymmetric_resource_factor/wide_partition_equivalence.py": "678472c27f7bbe464474d62da48ceba952e5b77487e4a6702612f7158f5bd4cd",
+    "drafts/asymmetric_resource_factor/wide_partition_equivalence_result.json": "a8e1524f48ca2407bd346f3f627c2f0c595b9f80296ad41e4b4b3b01ae7c28d0"
+  },
+  "gpu_executed": false,
+  "provider_modified": false,
+  "sha256": "8a39da30673cfd60d4051bcf71f3d95fc55658bfe4fd211a52a95973bad219f3"
+}

@@ -1,0 +1,32 @@
+{
+  "at": "2026-11-12T14:58:57.516623+00:00",
+  "hypothesis_sha256": "8a39da30673cfd60d4051bcf71f3d95fc55658bfe4fd211a52a95973bad219f3",
+  "reason": "Observed final jobs predict completion near17:06UTC; a fresh full-domain resource confirmation is roughly4.8h. Overlap only isolated CPU preparation/build to preserve the original finite research window rather than narrowing the final domain or changing performance criteria.",
+  "supersedes": "Only the timing of CPU compilation in a separate source/build tree; current source/binary, original347 queue, paired diagnostic prerequisites and all GPU gates remain unchanged.",
+  "allowed_now": [
+    "detached local source worktree with exact current user overlay",
+    "isolated configure/CPU selector tests/host syntax/standalone offload compilation/full official targets"
+  ],
+  "forbidden_now": [
+    "editing original measured source or any pinned runner",
+    "replacing original benchmark/dependencies",
+    "any new GPU submission",
+    "changing candidates, thresholds, frozen BLAS or heldout seeds"
+  ],
+  "CPU_controls": {
+    "nice": 10,
+    "affinity": "last4 allowed CPUs",
+    "minimum_available_GiB_before_compile": 96,
+    "explicit_offload_arches": [
+      "gfx936",
+      "gfx938"
+    ],
+    "no_GPU_execution": true
+  },
+  "data_fidelity": "Record concurrent CPU build interval and exact source/artifact hashes. Old measured results and all regressions remain. No profiler timing substituted for formal timing.",
+  "promotion_and_new_GPU_require": "Original final71690 complete347 and terminal report; diagnostic61274 complete fixed four-pair SQTT and batch7; evidence review still supports the resource hypothesis; actual source/artifact equivalence and required checks pass.",
+  "original_deadlines_unchanged": true,
+  "adoption_rules_unchanged": true,
+  "main_ownership_architectures": 3,
+  "short_ownership_architectures": 2
+}

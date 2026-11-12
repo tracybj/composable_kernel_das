@@ -1,0 +1,77 @@
+{
+  "at": "2026-11-12T16:27:47.850219+00:00",
+  "complete": true,
+  "source_sha256": {
+    "example_hcu/ck_tile/19_grouped_gemm/CMakeLists.txt": "c29de72564ed813ee458515ade18a4f390d8daa174bd737b879a54a19629d703",
+    "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_decode_device_args_provider_sources.txt": "c4545e45777ba08489dfd69437a06fc838d8cbbd73346a08c59b0d6e002dc4b8",
+    "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_decode_mainline_selector_test.cpp": "d9183587bea803c1bdd29133fcf115c6077ed66218a9f476ad08edc588f38eb0",
+    "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args.cpp": "9792c3f009ba3266db04b3ff059096e85e379895399ce4805a542c7ee029136a",
+    "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args_query_test.cpp": "c810a4f2fcb14e499a02f3f89cb0f5c13a424d178096f374840c4d4e51afdb55",
+    "example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_bf16_nn_decode_cooperative_device_args.cpp": "ed7b42baa1498052a1b574a49448a977da3037fee5ab7d766e69a503a263e0a2",
+    "example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_bf16_nn_decode_mainline_device_args.cpp": "16f6be7eb86b81dff195724a29f79cb8ccf39909e16a67d7134694767df39b9e",
+    "example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_bf16_nn_decode_shared_device_args.cpp": "6935af0593567ebdb7aeb5957850e3698533f4ed15563998c2ded0ee69e15490",
+    "example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_device_args_provider.hpp": "698420b172de4ffa7c596d3513511f32252a7e1de8f8764e28cd462b30dca09f",
+    "include/ck_tile/ops/gemm/grouped_gemm_device_args.h": "1d97a81653047e7ad29b06dad2f0f26ca3f1ff6c4dd96d4abc242a9df63c7b75",
+    "include/ck_tile/ops/gemm/grouped_gemm_selector.hpp": "b804a8bb3d555cd53be2922398dbba937f6c3651437cf8ba9b59d8f14fcd4a4e",
+    "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_bvector.hpp": "159fc8d6e229a5ca758e5706242303afc44c007fbeec8fd2a7e9379bd0d8290e",
+    "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_cooperative.hpp": "4cdac01fe6e0004b8eebe99d11b028340015145543a45487b247577ab7b5d89b",
+    "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_cooperative_compact.hpp": "86c5e3c76b0f37d5dbe92209b9bf4cb93b6c26a308411634c5131604c95574e0",
+    "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_cooperative_wide.hpp": "96c390989bcde538a6d06a282ccf2cbd89aadc7e7a532a23d80e64435c39c0c7",
+    "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_depth8.hpp": "4be4ebab974c948ccde7c9f5cb7b898dca303b5fbbc2afbe94f7e2c9d67cb600",
+    "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_mainline.hpp": "22738f8f406c63e16ec096641ed8f56e618c8950a260cadc775997cb810de84b",
+    "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_shared.hpp": "0d51952b65c39a1f7d807155f76bfd524bad97b67c95f05df201d2a645536e9b",
+    "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_shared_tuned.hpp": "d4340cd9b480d620a5edaeecb60481d61777057803276a61b24633edfac1edec",
+    "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_wave.hpp": "38599490edcef2fc0efdbbccf520e3954b887bcaaeb81ccc93d4a2a1fc49dcb4",
+    "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_uniform.hpp": "eacd5ccc4bf73676c64c3edd5035f5c39e000ef4741385b1054c025c27907e65"
+  },
+  "old_benchmark_sha256": "f8facea69107f345acfc98ce3e6e6deb1cca41ac803e2731bc0ab925e6736bfb",
+  "new_benchmark_sha256": "eb02cd5d383669c7f12916f2dc11910c27f827b8837e59bfd8974426e4761fd6",
+  "isolated_source": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/isolated_resource_build/source",
+  "isolated_build": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/isolated_resource_build/build",
+  "revision_sha256": "b7bec85029622c994b0a18e601f3c78512a85b9447d667b18bf1b859bfa494cd",
+  "patch_sha256": "3a3402764d1e5a78024b31f464257a36de70d9547e6030e4329a79d608aba9a5",
+  "shader_audit_sha256": "f53877a09c402bcd368ee71cef90b93f2f80020bfc0159e0dbab41ccc414335f",
+  "binary_artifacts": [
+    {
+      "name": "tile_example_grouped_gemm_device_args_benchmark",
+      "old_sha256": "f8facea69107f345acfc98ce3e6e6deb1cca41ac803e2731bc0ab925e6736bfb",
+      "new_sha256": "eb02cd5d383669c7f12916f2dc11910c27f827b8837e59bfd8974426e4761fd6",
+      "ldd": "\tlinux-vdso.so.1 (0x00007ffd1f37a000)\n\tlibgalaxyhip.so.5 => /opt/dtk/hip/lib/libgalaxyhip.so.5 (0x00007f085a468000)\n\tlibstdc++.so.6 => /lib/x86_64-linux-gnu/libstdc++.so.6 (0x00007f085a22d000)\n\tlibm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007f085a146000)\n\tlibgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x00007f085a124000)\n\tlibc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f0859efb000)\n\t/lib64/ld-linux-x86-64.so.2 (0x00007f085e4e5000)\n\tlibpthread.so.0 => /lib/x86_64-linux-gnu/libpthread.so.0 (0x00007f0859ef6000)\n\tlibrt.so.1 => /lib/x86_64-linux-gnu/librt.so.1 (0x00007f0859ef1000)\n\tlibnuma.so.1 => /lib/x86_64-linux-gnu/libnuma.so.1 (0x00007f0859ee4000)\n\tlibdl.so.2 => /lib/x86_64-linux-gnu/libdl.so.2 (0x00007f0859edf000)\n"
+    },
+    {
+      "name": "tile_example_grouped_gemm_device_args_query_test",
+      "old_sha256": "01b05691beb450750796d3c1b5d831505e1422d7546ea4a65fd37f5f101b9e2d",
+      "new_sha256": "430d6b2583783b273768729004cdf857ee74d343b1ad42eeb912739477cfcd62",
+      "ldd": "\tlinux-vdso.so.1 (0x00007ffcbef2b000)\n\tlibgalaxyhip.so.5 => /opt/dtk/hip/lib/libgalaxyhip.so.5 (0x00007fd25a48c000)\n\tlibstdc++.so.6 => /lib/x86_64-linux-gnu/libstdc++.so.6 (0x00007fd25a251000)\n\tlibm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007fd25a16a000)\n\tlibgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x00007fd25a148000)\n\tlibc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007fd259f1f000)\n\t/lib64/ld-linux-x86-64.so.2 (0x00007fd25e4f0000)\n\tlibpthread.so.0 => /lib/x86_64-linux-gnu/libpthread.so.0 (0x00007fd259f1a000)\n\tlibrt.so.1 => /lib/x86_64-linux-gnu/librt.so.1 (0x00007fd259f15000)\n\tlibnuma.so.1 => /lib/x86_64-linux-gnu/libnuma.so.1 (0x00007fd259f08000)\n\tlibdl.so.2 => /lib/x86_64-linux-gnu/libdl.so.2 (0x00007fd259f03000)\n"
+    },
+    {
+      "name": "tile_example_grouped_gemm_device_args_smoke",
+      "old_sha256": "ace63d6f63e883371fff5a593cba34c7c55e326072df261af5ab2f637d5ac336",
+      "new_sha256": "f583e0b013719418672d38e1af2fc47fb5e121d1c447057a5dbe33f789d5fdf9",
+      "ldd": "\tlinux-vdso.so.1 (0x00007ffea8565000)\n\tlibgalaxyhip.so.5 => /opt/dtk/hip/lib/libgalaxyhip.so.5 (0x00007fb48068a000)\n\tlibstdc++.so.6 => /lib/x86_64-linux-gnu/libstdc++.so.6 (0x00007fb48044f000)\n\tlibm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007fb480368000)\n\tlibgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x00007fb480346000)\n\tlibc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007fb48011d000)\n\t/lib64/ld-linux-x86-64.so.2 (0x00007fb4846f4000)\n\tlibpthread.so.0 => /lib/x86_64-linux-gnu/libpthread.so.0 (0x00007fb480118000)\n\tlibrt.so.1 => /lib/x86_64-linux-gnu/librt.so.1 (0x00007fb480113000)\n\tlibnuma.so.1 => /lib/x86_64-linux-gnu/libnuma.so.1 (0x00007fb480106000)\n\tlibdl.so.2 => /lib/x86_64-linux-gnu/libdl.so.2 (0x00007fb480101000)\n"
+    },
+    {
+      "name": "tile_example_grouped_gemm_selector_test",
+      "old_sha256": "655de1b63adc7e7140ddcb2a1ec7379bce0950db00302f4c8ea40fef9ecead77",
+      "new_sha256": "d88b384c3646fd339a2ff95927814ac85e007cb2499b382eb14e83da31da4592",
+      "ldd": "\tlinux-vdso.so.1 (0x00007ffe51eac000)\n\tlibgalaxyhip.so.5 => /opt/dtk/hip/lib/libgalaxyhip.so.5 (0x00007f73edd13000)\n\tlibstdc++.so.6 => /lib/x86_64-linux-gnu/libstdc++.so.6 (0x00007f73edad8000)\n\tlibm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007f73ed9f1000)\n\tlibgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x00007f73ed9cf000)\n\tlibc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f73ed7a6000)\n\tlibpthread.so.0 => /lib/x86_64-linux-gnu/libpthread.so.0 (0x00007f73ed7a1000)\n\tlibrt.so.1 => /lib/x86_64-linux-gnu/librt.so.1 (0x00007f73ed79c000)\n\tlibnuma.so.1 => /lib/x86_64-linux-gnu/libnuma.so.1 (0x00007f73ed78f000)\n\tlibdl.so.2 => /lib/x86_64-linux-gnu/libdl.so.2 (0x00007f73ed78a000)\n\t/lib64/ld-linux-x86-64.so.2 (0x00007f73ee905000)\n"
+    },
+    {
+      "name": "tile_example_grouped_gemm_decode_depth8_selector_test",
+      "old_sha256": "d92dc7b537de981981ce2e950c447e9d06e04421271b5349f66c6f1dd40a5ee7",
+      "new_sha256": "5a3f992c1a11881b166018d52f3bf7c9b900a4503e820f11a9fef3a5f01f7453",
+      "ldd": "\tlinux-vdso.so.1 (0x00007ffe74f02000)\n\tlibgalaxyhip.so.5 => /opt/dtk/hip/lib/libgalaxyhip.so.5 (0x00007f298f80a000)\n\tlibstdc++.so.6 => /lib/x86_64-linux-gnu/libstdc++.so.6 (0x00007f298f5cf000)\n\tlibm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007f298f4e8000)\n\tlibgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x00007f298f4c6000)\n\tlibc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f298f29d000)\n\tlibpthread.so.0 => /lib/x86_64-linux-gnu/libpthread.so.0 (0x00007f298f298000)\n\tlibrt.so.1 => /lib/x86_64-linux-gnu/librt.so.1 (0x00007f298f293000)\n\tlibnuma.so.1 => /lib/x86_64-linux-gnu/libnuma.so.1 (0x00007f298f286000)\n\tlibdl.so.2 => /lib/x86_64-linux-gnu/libdl.so.2 (0x00007f298f281000)\n\t/lib64/ld-linux-x86-64.so.2 (0x00007f29903e9000)\n"
+    },
+    {
+      "name": "tile_example_grouped_gemm_decode_mainline_selector_test",
+      "old_sha256": "2f97ddc12ad975fe138704a1f7d8226d3a6f3948c0178548b633f55033d3fe33",
+      "new_sha256": "0d17f5edcd4548ca91df8caa4c8809501140fc1472be3ce66b294fcb138b0eec",
+      "ldd": "\tlinux-vdso.so.1 (0x00007ffcd33d1000)\n\tlibgalaxyhip.so.5 => /opt/dtk/hip/lib/libgalaxyhip.so.5 (0x00007f6ee019b000)\n\tlibstdc++.so.6 => /lib/x86_64-linux-gnu/libstdc++.so.6 (0x00007f6edff60000)\n\tlibm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007f6edfe79000)\n\tlibgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x00007f6edfe57000)\n\tlibc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f6edfc2e000)\n\tlibpthread.so.0 => /lib/x86_64-linux-gnu/libpthread.so.0 (0x00007f6edfc29000)\n\tlibrt.so.1 => /lib/x86_64-linux-gnu/librt.so.1 (0x00007f6edfc24000)\n\tlibnuma.so.1 => /lib/x86_64-linux-gnu/libnuma.so.1 (0x00007f6edfc17000)\n\tlibdl.so.2 => /lib/x86_64-linux-gnu/libdl.so.2 (0x00007f6edfc12000)\n\t/lib64/ld-linux-x86-64.so.2 (0x00007f6ee0d7c000)\n"
+    }
+  ],
+  "GPU": false,
+  "adopted": false,
+  "completed_at": "2026-11-12T16:27:49.029115+00:00",
+  "original_user_overlay_preserved": true,
+  "note": "CPU-only artifact/source promotion. Formal path, exact isolated source and external dependencies; not GPU accuracy or adoption evidence."
+}

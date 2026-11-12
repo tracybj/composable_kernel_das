@@ -1,0 +1,245 @@
+{
+  "at": "2026-11-12T16:27:47.596459+00:00",
+  "proceed": true,
+  "diagnostic_only": true,
+  "batch7_analysis_sha256": "c03a098e1d9cfcad2d7bc39dce481f4409f4d7cea1aa6fb28ad60d6e32fca5fb",
+  "batch7_delivery": {
+    "at": "2026-11-12T16:26:34.887225+00:00",
+    "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/delivery/P6l_batch7_h3_regression_SQTT.tar.gz",
+    "bytes": 3973344,
+    "sha256": "629f381331866b13608513a1351c9b9d02c20a81a60f624e65cabbd3fb768981",
+    "captures": 8,
+    "gui_verified": false,
+    "local_integrity_checked": true
+  },
+  "observations": [
+    {
+      "ID": 312,
+      "arm": "base_regression_diagnosis",
+      "geometry": {
+        "grid_work_items": [
+          524288,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 1024,
+        "lds_bytes": 65536,
+        "scratch_bytes": 0,
+        "vgpr": 212,
+        "sgpr": 48
+      },
+      "mean_resident_waves_per_CU": 7.729112910606543,
+      "waves_per_cta": 8.0,
+      "hbm_read_over_one_copy_inputs": 1.0085312599359557,
+      "lds_bank_conflict_over_lds_active": 0.2608695652173913,
+      "wait_any_over_wave_cycles": 0.20714852278551915
+    },
+    {
+      "ID": 312,
+      "arm": "candidate_regression_diagnosis",
+      "geometry": {
+        "grid_work_items": [
+          524288,
+          1,
+          1
+        ],
+        "block_threads": [
+          256,
+          1,
+          1
+        ],
+        "ctas": 2048,
+        "lds_bytes": 51200,
+        "scratch_bytes": 0,
+        "vgpr": 120,
+        "sgpr": 80
+      },
+      "mean_resident_waves_per_CU": 3.8613568815687334,
+      "waves_per_cta": 4.0,
+      "hbm_read_over_one_copy_inputs": 1.0112396358519562,
+      "lds_bank_conflict_over_lds_active": 0.3482587064676617,
+      "wait_any_over_wave_cycles": 0.08392290755653808
+    },
+    {
+      "ID": 327,
+      "arm": "base_regression_diagnosis",
+      "geometry": {
+        "grid_work_items": [
+          131072,
+          1,
+          1
+        ],
+        "block_threads": [
+          256,
+          1,
+          1
+        ],
+        "ctas": 512,
+        "lds_bytes": 32768,
+        "scratch_bytes": 0,
+        "vgpr": 80,
+        "sgpr": 48
+      },
+      "mean_resident_waves_per_CU": 6.717332473704271,
+      "waves_per_cta": 4.0,
+      "hbm_read_over_one_copy_inputs": 1.014129638671875,
+      "lds_bank_conflict_over_lds_active": 0.2556390977443609,
+      "wait_any_over_wave_cycles": 0.15543683978399928
+    },
+    {
+      "ID": 327,
+      "arm": "candidate_regression_diagnosis",
+      "geometry": {
+        "grid_work_items": [
+          131072,
+          1,
+          1
+        ],
+        "block_threads": [
+          256,
+          1,
+          1
+        ],
+        "ctas": 512,
+        "lds_bytes": 51200,
+        "scratch_bytes": 0,
+        "vgpr": 120,
+        "sgpr": 80
+      },
+      "mean_resident_waves_per_CU": 3.6206414189700196,
+      "waves_per_cta": 4.0,
+      "hbm_read_over_one_copy_inputs": 1.0098770496457121,
+      "lds_bank_conflict_over_lds_active": 0.3482587064676617,
+      "wait_any_over_wave_cycles": 0.101515547679305
+    },
+    {
+      "ID": 328,
+      "arm": "base_regression_diagnosis",
+      "geometry": {
+        "grid_work_items": [
+          131072,
+          1,
+          1
+        ],
+        "block_threads": [
+          256,
+          1,
+          1
+        ],
+        "ctas": 512,
+        "lds_bytes": 32768,
+        "scratch_bytes": 0,
+        "vgpr": 80,
+        "sgpr": 48
+      },
+      "mean_resident_waves_per_CU": 6.7325333378914625,
+      "waves_per_cta": 4.0,
+      "hbm_read_over_one_copy_inputs": 1.0207345815805289,
+      "lds_bank_conflict_over_lds_active": 0.2556390977443609,
+      "wait_any_over_wave_cycles": 0.1522934951210786
+    },
+    {
+      "ID": 328,
+      "arm": "candidate_regression_diagnosis",
+      "geometry": {
+        "grid_work_items": [
+          131072,
+          1,
+          1
+        ],
+        "block_threads": [
+          256,
+          1,
+          1
+        ],
+        "ctas": 512,
+        "lds_bytes": 61440,
+        "scratch_bytes": 0,
+        "vgpr": 172,
+        "sgpr": 80
+      },
+      "mean_resident_waves_per_CU": 3.621727861235356,
+      "waves_per_cta": 4.0,
+      "hbm_read_over_one_copy_inputs": 1.0139866755558895,
+      "lds_bank_conflict_over_lds_active": 0.2773722627737226,
+      "wait_any_over_wave_cycles": 0.17573323622340728
+    },
+    {
+      "ID": 335,
+      "arm": "base_regression_diagnosis",
+      "geometry": {
+        "grid_work_items": [
+          65536,
+          1,
+          1
+        ],
+        "block_threads": [
+          256,
+          1,
+          1
+        ],
+        "ctas": 256,
+        "lds_bytes": 32768,
+        "scratch_bytes": 0,
+        "vgpr": 80,
+        "sgpr": 48
+      },
+      "mean_resident_waves_per_CU": 5.953572080839495,
+      "waves_per_cta": 4.0,
+      "hbm_read_over_one_copy_inputs": 1.023607928936298,
+      "lds_bank_conflict_over_lds_active": 0.2556390977443609,
+      "wait_any_over_wave_cycles": 0.1462152965286581
+    },
+    {
+      "ID": 335,
+      "arm": "candidate_regression_diagnosis",
+      "geometry": {
+        "grid_work_items": [
+          65536,
+          1,
+          1
+        ],
+        "block_threads": [
+          256,
+          1,
+          1
+        ],
+        "ctas": 256,
+        "lds_bytes": 61440,
+        "scratch_bytes": 0,
+        "vgpr": 172,
+        "sgpr": 80
+      },
+      "mean_resident_waves_per_CU": 3.1883202259205974,
+      "waves_per_cta": 4.0,
+      "hbm_read_over_one_copy_inputs": 1.0125140850360577,
+      "lds_bank_conflict_over_lds_active": 0.2773722627737226,
+      "wait_any_over_wave_cycles": 0.18356929416474047
+    }
+  ],
+  "evidence": "All4 candidate profiles have lower mean resident waves/CU, near one-copy whole-dispatch HBM traffic, exact same candidate machine code within each M/G pair. This supports bounded resource testing; it does not prove occupancy is the sole cause, since327 still has a formal gain.",
+  "candidate_factors": [
+    {
+      "name": "A2B3 four waves",
+      "mechanism": "M32 reduces actual old50KiB LDS to source28KiB and actual VGPR119 to86; M64 60KiB->32KiB and172->133. Actual resident improvement must be measured;133 VGPR may still prevent two resident waves per SIMD."
+    },
+    {
+      "name": "Eight waves D4",
+      "mechanism": "M32/M64 source40/48KiB and actual83/128VGPR; may expose8 waves in one CTA. Doubled B LDS reads and barrier participants may offset benefits."
+    }
+  ],
+  "caveats": [
+    "Profiler duration is not adoption timing",
+    "Whole-dispatch HBM cannot isolate B traffic by itself",
+    "Mean resident waves is not a theoretical hardware occupancy limit",
+    "Resource registration and original50/30/no-regression/full-domain+unseen gates unchanged"
+  ],
+  "ownership_architectures_unchanged": 3,
+  "new_GPU_resource_started": false,
+  "adopted": false
+}

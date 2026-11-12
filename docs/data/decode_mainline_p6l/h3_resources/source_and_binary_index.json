@@ -1,0 +1,30 @@
+{
+  "measured_source_sha256": {
+    "include/ck_tile/ops/gemm/grouped_gemm_selector.hpp": "b804a8bb3d555cd53be2922398dbba937f6c3651437cf8ba9b59d8f14fcd4a4e",
+    "include/ck_tile/ops/gemm/grouped_gemm_device_args.h": "1d97a81653047e7ad29b06dad2f0f26ca3f1ff6c4dd96d4abc242a9df63c7b75",
+    "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_uniform.hpp": "eacd5ccc4bf73676c64c3edd5035f5c39e000ef4741385b1054c025c27907e65",
+    "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_wave.hpp": "38599490edcef2fc0efdbbccf520e3954b887bcaaeb81ccc93d4a2a1fc49dcb4",
+    "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_bvector.hpp": "159fc8d6e229a5ca758e5706242303afc44c007fbeec8fd2a7e9379bd0d8290e",
+    "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_depth8.hpp": "4be4ebab974c948ccde7c9f5cb7b898dca303b5fbbc2afbe94f7e2c9d67cb600",
+    "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args.cpp": "9792c3f009ba3266db04b3ff059096e85e379895399ce4805a542c7ee029136a",
+    "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_mainline.hpp": "22738f8f406c63e16ec096641ed8f56e618c8950a260cadc775997cb810de84b",
+    "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args_query_test.cpp": "c810a4f2fcb14e499a02f3f89cb0f5c13a424d178096f374840c4d4e51afdb55",
+    "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_decode_mainline_selector_test.cpp": "d9183587bea803c1bdd29133fcf115c6077ed66218a9f476ad08edc588f38eb0",
+    "example_hcu/ck_tile/19_grouped_gemm/CMakeLists.txt": "c29de72564ed813ee458515ade18a4f390d8daa174bd737b879a54a19629d703",
+    "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_decode_device_args_provider_sources.txt": "c4545e45777ba08489dfd69437a06fc838d8cbbd73346a08c59b0d6e002dc4b8",
+    "example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_bf16_nn_decode_mainline_device_args.cpp": "16f6be7eb86b81dff195724a29f79cb8ccf39909e16a67d7134694767df39b9e",
+    "example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_device_args_provider.hpp": "698420b172de4ffa7c596d3513511f32252a7e1de8f8764e28cd462b30dca09f",
+    "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_shared.hpp": "0d51952b65c39a1f7d807155f76bfd524bad97b67c95f05df201d2a645536e9b",
+    "example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_bf16_nn_decode_shared_device_args.cpp": "6935af0593567ebdb7aeb5957850e3698533f4ed15563998c2ded0ee69e15490",
+    "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_shared_tuned.hpp": "d4340cd9b480d620a5edaeecb60481d61777057803276a61b24633edfac1edec",
+    "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_cooperative.hpp": "4cdac01fe6e0004b8eebe99d11b028340015145543a45487b247577ab7b5d89b",
+    "example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_bf16_nn_decode_cooperative_device_args.cpp": "ed7b42baa1498052a1b574a49448a977da3037fee5ab7d766e69a503a263e0a2",
+    "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_cooperative_compact.hpp": "86c5e3c76b0f37d5dbe92209b9bf4cb93b6c26a308411634c5131604c95574e0",
+    "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_cooperative_wide.hpp": "96c390989bcde538a6d06a282ccf2cbd89aadc7e7a532a23d80e64435c39c0c7"
+  },
+  "measured_binary_sha256": "eb02cd5d383669c7f12916f2dc11910c27f827b8837e59bfd8974426e4761fd6",
+  "exact_worktree_source_snapshot": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/compile/build9/previous/source",
+  "exact_measured_binary": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/compile/build9/previous/tile_example_grouped_gemm_device_args_benchmark",
+  "initial_user_overlay_kept_outside_Git": true,
+  "own_source_commit": "b78c07bf2dda251121987d7c74b1b1efbda338de"
+}
