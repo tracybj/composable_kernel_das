@@ -412,6 +412,9 @@ int dispatch_registry_candidate(const ck_tile::GroupedGemmProblem& problem,
     }
 #endif
 #if !defined(CK_TILE_GROUPED_GEMM_INT8_NT_ONLY)
+    // The INT8 family was handled before entering the 16-bit registry.
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wswitch-enum"
     switch(instance_id)
     {
     case ck_tile::GroupedGemmInstanceId::none: break;
@@ -521,7 +524,9 @@ int dispatch_registry_candidate(const ck_tile::GroupedGemmProblem& problem,
                 launch.num_cu,
                 stream);
         break;
+    default: break;
     }
+#pragma clang diagnostic pop
 #endif
     return CK_TILE_HCU_GROUPED_GEMM_DEVICE_ARGS_UNSUPPORTED_V1;
 }

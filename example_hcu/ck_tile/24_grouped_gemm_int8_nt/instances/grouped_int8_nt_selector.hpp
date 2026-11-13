@@ -6,6 +6,57 @@
 
 namespace ck_tile {
 
+// Rules derived from paired BF16/FP16 tuning on 80-CU gfx936. Call only for
+// equal, nonempty groups with dense A/B/C and scalar-A/per-channel-B scales.
+// LegacyRaw means no tuned override; retain the established selector result.
+inline unsigned int8_cached_tuned_scaled_route(
+    int m, int n, int k, int groups, bool packed, int compute_units)
+{
+    using namespace int8_routes;
+    if(compute_units != int8_tuning_config::GFX936_DEFAULT_NUM_CU ||
+       m <= 0 || n <= 0 || k <= 0 || groups <= 0)
+        return LegacyRaw;
+
+    if(m == 1 && n >= 2048 && n <= 4608 && n % 256 == 0 &&
+       k >= 4096 && k <= 6144 && k % 128 == 0)
+        return KParallelDecode;
+
+    if(m <= 8 && packed && n % 64 == 0 && k % 256 == 0)
+    {
+        // Short K favors direct VGPR loads, especially with fewer groups.
+        // At N4096 the same route also wins on measured mid-K, small-G shapes.
+        if((k == 512 && (groups <= 16 || n <= 256 || m <= 2)) ||
+           (k == 768 && groups >= 24) ||
+           (n == 4096 && k >= 1024 && k <= 2048 && groups <= 16))
+            return PackedCooperativeM1N256;
+    }
+
+    if(m == 16 && n % 32 == 0 && k % 512 == 0 &&
+       ((k >= 1024 && k <= 1536) || (k == 2048 && groups >= 24) ||
+        (k == 4096 && groups <= 16)))
+        return RawAlignedM16N32K512;
+
+    if(m == 32)
+    {
+        if(packed && k <= 2048)
+            return PackedM32N64;
+        if(!packed && groups >= 128 && n % 4 == 0 && k >= 1024 && k <= 2048 &&
+           k % 16 == 0)
+            return RawM32N64K256W4;
+    }
+
+    if(packed && (m == 2048 || m == 4096) && n == 2048 && k == 512 &&
+       groups >= 8 && groups <= 64)
+        return PairedM128N256;
+
+    // For four groups in the measured large-M range, the four-M-tile
+    // schedule and cross-half A prefetch improve the paired-store path.
+    if(packed && m >= 14336 && m <= 16384 && m % 2048 == 0 && n == 1536 &&
+       k == 2048 && groups == 4)
+        return PairedM256N384MaskedM4;
+    return LegacyRaw;
+}
+
 // Calibrated on all 344 original M >= 256 requirements in iteration 96.
 // Dimensions only; no case IDs, lookups or target workbook access at runtime.
 inline unsigned int8_cached_base_route(int m, int n, int k, int groups, bool packed_available)
@@ -186,6 +237,52 @@ inline unsigned int8_cached_scaled_route(
             return int8_routes::PackedM256N384;
     }
     return route;
+}
+
+struct Int8CachedPlanRouteDomain
+{
+    // The general cached WASP domain and the small-M domain are independent.
+    bool native_wasp;
+    bool uniform_nonempty;
+    bool raw_transposed;
+    bool dense_scalar_a;
+    bool dense_channel_scales;
+};
+
+inline unsigned int8_cached_select_plan_route(int m,
+                                             int n,
+                                             int k,
+                                             int groups,
+                                             bool packed,
+                                             int compute_units,
+                                             bool scaled,
+                                             const Int8CachedPlanRouteDomain& domain)
+{
+    using namespace int8_routes;
+    if(scaled && domain.uniform_nonempty)
+    {
+        if(domain.dense_channel_scales)
+        {
+            const auto route =
+                int8_cached_tuned_scaled_route(m, n, k, groups, packed, compute_units);
+            if(route != LegacyRaw)
+                return route;
+        }
+        const auto route = int8_cached_scaled_small_route(m, n, k, groups, packed, compute_units);
+        if(route != LegacyRaw)
+            return route;
+    }
+
+    if(!domain.native_wasp)
+        return LegacyRaw;
+    const auto route = scaled ? int8_cached_scaled_route(m, n, k, groups, packed, compute_units)
+                              : int8_cached_route(m, n, k, groups, packed, compute_units);
+    if(!domain.raw_transposed &&
+       (route == LinearTransposedRaw || route == LinearTransposedRecord1024))
+        return LegacyRaw;
+    return scaled ? int8_cached_paired_store_route(
+                        route, m, n, k, groups, compute_units, domain.dense_scalar_a)
+                  : route;
 }
 
 } // namespace ck_tile

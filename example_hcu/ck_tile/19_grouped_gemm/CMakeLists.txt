@@ -313,6 +313,8 @@ file(STRINGS ${HCU_GROUPED_GEMM_DEVICE_ARGS_PROVIDER_MANIFEST}
     REGEX "^[^#].+")
 set_source_files_properties(${HCU_GROUPED_GEMM_DEVICE_ARGS_PROVIDER_SOURCES}
     PROPERTIES LANGUAGE CXX)
+set_source_files_properties(../24_grouped_gemm_int8_nt/instances.cpp PROPERTIES
+    COMPILE_OPTIONS "-Wno-switch-enum;-Wno-undefined-reinterpret-cast;-Wno-sign-compare;-Wno-unused-parameter;-mllvm;-support-768-vgprs=true")
 add_library(ck_tile_hcu_grouped_gemm_device_args_providers STATIC EXCLUDE_FROM_ALL
     ${HCU_GROUPED_GEMM_DEVICE_ARGS_PROVIDER_SOURCES})
 target_include_directories(ck_tile_hcu_grouped_gemm_device_args_providers

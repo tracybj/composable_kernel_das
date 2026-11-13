@@ -147,6 +147,9 @@ int launch_registry_candidate(ck_tile::GroupedGemmInstanceId instance_id,
     // - dtype 由 PrecType、layout 由 NT/NN/TN 分支固定。
     // selector 未选中的 ID 或 layout 组合返回 unsupported；这里不会在运行时
     // 实例化新的 C++ template。
+    // This registry is intentionally limited to 16-bit input candidates.
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wswitch-enum"
     switch(instance_id)
     {
     case ck_tile::GroupedGemmInstanceId::none:
@@ -274,7 +277,10 @@ int launch_registry_candidate(ck_tile::GroupedGemmInstanceId instance_id,
                     layout, device_args, group_count, num_cu, stream);
         }
         break;
+    // INT8 IDs are handled by the INT8 provider in the public dispatcher.
+    default: break;
     }
+#pragma clang diagnostic pop
     return CK_TILE_HCU_GROUPED_GEMM_DEVICE_ARGS_UNSUPPORTED_V1;
 }
 

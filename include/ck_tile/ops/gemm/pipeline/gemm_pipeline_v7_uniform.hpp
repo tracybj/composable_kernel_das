@@ -244,15 +244,19 @@ CK_TILE_DEVICE buffer_rsrc_t make_buffer_rsrc(const void* ptr,
 
 // Global -> LDS 16 B per lane. `idxen` is the pair {index lo, offset hi} form;
 // `offen` keeps the whole address in the vaddr and the k-advance in the soffset.
+// K advances uniformly within a wave. Materialize soffset in an SGPR inside
+// the asm because older DTK can pass a VGPR for a divergent "s" input.
 CK_TILE_DEVICE void buffer_load_dwordx4_offen_lds(buffer_rsrc_t rsrc,
                                                   uint32_t vaddr,
                                                   uint32_t soffset,
                                                   uint32_t m0)
 {
-    asm volatile("s_mov_b32 m0, %[m0]\n\t"
+    uint32_t scalar_offset;
+    asm volatile("v_readfirstlane_b32 %[so], %[offset]\n\t"
+                 "s_mov_b32 m0, %[m0]\n\t"
                  "buffer_load_dwordx4 %[v], %[rsrc], %[so] offen lds\n"
-                 :
-                 : [v] "v"(vaddr), [rsrc] "s"(rsrc), [so] "s"(soffset), [m0] "s"(m0)
+                 : [so] "=&s"(scalar_offset)
+                 : [v] "v"(vaddr), [rsrc] "s"(rsrc), [offset] "v"(soffset), [m0] "s"(m0)
                  : "memory");
 }
 
@@ -264,10 +268,12 @@ CK_TILE_DEVICE void buffer_load_dwordx4_idxen_lds_t(buffer_rsrc_t rsrc,
                                                     uint32_t soffset,
                                                     uint32_t m0)
 {
-    asm volatile("s_mov_b32 m0, %[m0]\n\t"
+    uint32_t scalar_offset;
+    asm volatile("v_readfirstlane_b32 %[so], %[offset]\n\t"
+                 "s_mov_b32 m0, %[m0]\n\t"
                  "buffer_load_dwordx4 %[pair], %[rsrc], %[so] idxen offen slc lds\n"
-                 :
-                 : [pair] "v"(pair), [rsrc] "s"(rsrc), [so] "s"(soffset), [m0] "s"(m0)
+                 : [so] "=&s"(scalar_offset)
+                 : [pair] "v"(pair), [rsrc] "s"(rsrc), [offset] "v"(soffset), [m0] "s"(m0)
                  : "memory");
 }
 
@@ -276,10 +282,12 @@ CK_TILE_DEVICE void buffer_load_dwordx4_idxen_lds(buffer_rsrc_t rsrc,
                                                   uint32_t soffset,
                                                   uint32_t m0)
 {
-    asm volatile("s_mov_b32 m0, %[m0]\n\t"
+    uint32_t scalar_offset;
+    asm volatile("v_readfirstlane_b32 %[so], %[offset]\n\t"
+                 "s_mov_b32 m0, %[m0]\n\t"
                  "buffer_load_dwordx4 %[pair], %[rsrc], %[so] idxen offen lds\n"
-                 :
-                 : [pair] "v"(pair), [rsrc] "s"(rsrc), [so] "s"(soffset), [m0] "s"(m0)
+                 : [so] "=&s"(scalar_offset)
+                 : [pair] "v"(pair), [rsrc] "s"(rsrc), [offset] "v"(soffset), [m0] "s"(m0)
                  : "memory");
 }
 

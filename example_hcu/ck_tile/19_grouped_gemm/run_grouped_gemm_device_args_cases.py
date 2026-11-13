@@ -48,6 +48,8 @@ CSV 字段
 长度为 0 的组。其余可选字段包括 ``backend,blas_streams,warmup,samples,``
 ``correctness_repeats``。layout 同时传给 CK 与 BLAS：NT/NN 的动态轴是 M，TN 的动态轴
 是 K；脚本不把 layout 解释成某个 consumer 的产品阶段。
+带 scale 的 INT8 NT 使用 dtype=int8_bf16 或 int8_fp16，backend=ck，
+gemm_repeat 可指定每个计时样本的运行次数。
 
 工作流程与产物
 ==============
@@ -129,6 +131,8 @@ def positive(row: dict[str, str], name: str, default: int) -> int:
 def build_command(args: argparse.Namespace, row: dict[str, str]) -> list[str]:
     # CSV 内使用分号避免和列分隔符冲突；传给 benchmark 时恢复为逗号列表。
     lengths = [item for item in row["group_lengths"].split(";") if item != ""]
+    scaled_int8 = row["dtype"] in ("int8_bf16", "int8_fp16")
+    int8 = row["dtype"] == "int8" or scaled_int8
     command = [
         str(args.binary),
         f"--m={positive(row, 'm', 0)}",
@@ -140,10 +144,10 @@ def build_command(args: argparse.Namespace, row: dict[str, str]) -> list[str]:
         f"--warmup={positive(row, 'warmup', args.warmup)}",
         f"--samples={positive(row, 'samples', args.samples)}",
         f"--correctness-repeats={positive(row, 'correctness_repeats', args.correctness_repeats)}",
-        f"--include-args-build={args.include_args_build if args.include_args_build is not None else (0 if row['dtype']=='int8' else 1)}",
+        f"--include-args-build={args.include_args_build if args.include_args_build is not None else int(not int8)}",
         f"--validate={args.validate}",
         f"--num-cu={args.num_cu}",
-        f"--blas-streams={positive(row, 'blas_streams', args.blas_streams if args.blas_streams is not None else (1 if row['dtype']=='int8' else 4))}",
+        f"--blas-streams={positive(row, 'blas_streams', args.blas_streams if args.blas_streams is not None else (1 if int8 else 4))}",
     ]
     if lengths:
         command.extend(
@@ -159,6 +163,8 @@ def build_command(args: argparse.Namespace, row: dict[str, str]) -> list[str]:
         command.append(f"--blas-lib={args.blas_lib}")
     elif args.blas_root:
         command.append(f"--blas-root={args.blas_root}")
+    if scaled_int8:
+        command.append(f"--gemm-repeat={positive(row, 'gemm_repeat', 50)}")
     if row['dtype']=='int8':
         command.append(f"--repeat={positive(row,'repeat',50)}")
         if row.get('time','')!='':

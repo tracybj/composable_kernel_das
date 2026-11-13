@@ -219,6 +219,10 @@
 #include "ck_tile/ops/gemm/grouped_gemm_device_args.h"
 #include "grouped_gemm.hpp"
 
+#if defined(CK_TILE_GROUPED_GEMM_HAS_SCALED_INT8)
+#include "ck_tile/ops/gemm/grouped_gemm_int8_nt_cached.h"
+#endif
+
 #if defined(CK_TILE_GROUPED_GEMM_HAS_INT8_BENCHMARK)
 int grouped_gemm_int8_nt_benchmark_main(int,char**);
 #endif
@@ -234,6 +238,7 @@ struct Options
     int warmup              = 10;
     int samples             = 30;
     int correctness_repeats = 3;
+    int gemm_repeat         = 50;
     std::uint32_t num_cu    = 0;
     std::string dtype       = "fp16";
     std::string layout      = "NT";
@@ -257,6 +262,10 @@ struct Options
        << "  --m=<int> --n=<int> --k=<int> --groups=<int>\n"
        << "  --group-lengths=2102,2120,... --variable-capacity=65536\n"
        << "  --dtype=fp16|bf16 --layout=NT|NN|TN\n"
+#if defined(CK_TILE_GROUPED_GEMM_HAS_SCALED_INT8)
+       << "  --dtype=int8_bf16|int8_fp16 --layout=NT --backend=ck "
+          "--include-args-build=0 --gemm-repeat=50\n"
+#endif
        << "  --backend=ck|blas|both\n"
        << "  --blas-root=/path/to/hipblaslt-install\n"
        << "  --blas-lib=/path/to/libhipblaslt.so|libhipblas.so\n"
@@ -343,6 +352,8 @@ Options parse_options(int argc, char* argv[])
             options.warmup = parse_positive_or_zero(name, value);
         else if(name == "samples" || name == "repeat")
             options.samples = parse_positive_or_zero(name, value);
+        else if(name == "gemm-repeat")
+            options.gemm_repeat = parse_positive_or_zero(name, value);
         else if(name == "time")
             options.time = parse_positive_or_zero(name, value) != 0;
         else if(name == "correctness-repeats")
@@ -411,8 +422,12 @@ Options parse_options(int argc, char* argv[])
         throw std::runtime_error("M/N/K/group count 必须为正数");
     if((options.time && options.samples <= 0) || options.correctness_repeats <= 0)
         throw std::runtime_error("计时开启时 samples、所有模式下 correctness-repeats 必须为正数");
-    if(options.dtype != "fp16" && options.dtype != "bf16")
-        throw std::runtime_error("dtype 只支持 fp16 或 bf16");
+    if(options.dtype != "fp16" && options.dtype != "bf16"
+#if defined(CK_TILE_GROUPED_GEMM_HAS_SCALED_INT8)
+       && options.dtype != "int8_bf16" && options.dtype != "int8_fp16"
+#endif
+    )
+        throw std::runtime_error("Unsupported dtype. See --help for built benchmark modes.");
     if(options.layout != "NT" && options.layout != "NN" && options.layout != "TN")
         throw std::runtime_error("layout 只支持 NT、NN 或 TN");
     if(options.backend != "ck" && options.backend != "blas" && options.backend != "both")
@@ -1339,6 +1354,178 @@ void print_timing(const char* backend,
               << " tflops=" << tflops << std::endl;
 }
 
+#if defined(CK_TILE_GROUPED_GEMM_HAS_SCALED_INT8)
+// Row-constant inputs give an independent exact integer dot for every element.
+__host__ __device__ int8_t scaled_int8_a(std::size_t row) { return int8_t(row % 7 + 1); }
+__host__ __device__ int8_t scaled_int8_b(std::size_t col) { return int8_t(int(col % 9) - 4); }
+__host__ __device__ float scaled_int8_sa(int group) { return 0.031f + (group % 7) * 0.003f; }
+__host__ __device__ float scaled_int8_sb(std::size_t col) { return 0.013f + (col % 7) * 0.002f; }
+
+__global__ void initialize_scaled_int8(int8_t* a, int8_t* b, float* sa, float* sb,
+                                       std::size_t a_rows, std::size_t b_rows, int k, int groups)
+{
+    const auto start = std::size_t(blockIdx.x) * blockDim.x + threadIdx.x;
+    const auto step  = std::size_t(gridDim.x) * blockDim.x;
+    for(auto i = start; i < a_rows * k; i += step)
+        a[i] = scaled_int8_a(i / k);
+    for(auto i = start; i < b_rows * k; i += step)
+        b[i] = scaled_int8_b(i / k);
+    for(auto i = start; i < b_rows; i += step)
+        sb[i] = scaled_int8_sb(i);
+    for(auto i = start; i < std::size_t(groups); i += step)
+        sa[i] = scaled_int8_sa(static_cast<int>(i));
+}
+
+template <typename T>
+__global__ void check_scaled_int8(const T* output, const float* sa, const float* sb,
+                                  unsigned* mismatch, int m, int n, int k, int groups)
+{
+    const auto stride = std::size_t(m) * n + 32;
+    for(auto i = std::size_t(blockIdx.x) * blockDim.x + threadIdx.x;
+        i < stride * groups; i += std::size_t(gridDim.x) * blockDim.x)
+    {
+        const auto group = i / stride;
+        const auto local = i % stride;
+        T expected = ck_tile::type_convert<T>(0.0f);
+        if(local >= 16 && local < stride - 16)
+        {
+            const auto row = group * m + (local - 16) / n;
+            const auto col = group * n + (local - 16) % n;
+            const auto dot = int(scaled_int8_a(row)) * int(scaled_int8_b(col)) * k;
+            expected = ck_tile::type_convert<T>(float(dot) * (sa[group] * sb[col]));
+        }
+        if(ck_tile::type_convert<float>(output[i]) != ck_tile::type_convert<float>(expected))
+            atomicExch(mismatch, 1u);
+    }
+}
+
+void check_cached_int8(int status)
+{
+    if(status != CK_TILE_INT8_CACHED_SUCCESS_V1)
+        throw std::runtime_error(ck_tile_int8_nt_cached_last_error_v1());
+}
+
+template <typename T>
+int run_scaled_int8(const Options& options)
+{
+    const auto [m, n, k, g] = std::array{options.m, options.n, options.k, options.group_count};
+    if(options.layout != "NT" || options.backend != "ck" || options.include_args_build ||
+       options.num_cu != 0 || !options.group_lengths.empty() || options.gemm_repeat < 1 ||
+       k < 256 || k > 131056 || k % 16 != 0 || n % 4 != 0 || g > 65535 ||
+       m > 1048560 || n > 1048576 || int64_t(m) * n > INT32_MAX ||
+       int64_t(m) * k > INT32_MAX || int64_t(n) * k > INT32_MAX)
+        throw std::runtime_error("Scaled INT8 benchmark requires a supported uniform NT shape, "
+                                 "backend=ck, include-args-build=0 and num-cu=0");
+
+    const auto a_rows = std::size_t(g) * m, b_rows = std::size_t(g) * n;
+    const auto c_stride = std::size_t(m) * n + 32;
+    ck_tile::DeviceMem a(a_rows * k), b(b_rows * k), c(c_stride * g * sizeof(T));
+    ck_tile::DeviceMem sa(g * sizeof(float)), sb(b_rows * sizeof(float)), error(sizeof(unsigned));
+    struct Handles
+    {
+        hipStream_t stream = nullptr;
+        ck_tile_int8_nt_cached_weights_handle_v1 weights = nullptr;
+        ck_tile_int8_nt_cached_plan_handle_v1 plan = nullptr;
+        ~Handles()
+        {
+            if(plan)
+                (void)ck_tile_int8_nt_cached_plan_destroy_v1(plan);
+            if(weights)
+                (void)ck_tile_int8_nt_cached_weights_destroy_v1(weights);
+            if(stream)
+                (void)hipStreamDestroy(stream);
+        }
+    } handles;
+    hip_check(hipStreamCreateWithFlags(&handles.stream, hipStreamNonBlocking), "create stream");
+    const auto stream = handles.stream;
+    auto* ap = static_cast<int8_t*>(a.GetDeviceBuffer());
+    auto* bp = static_cast<int8_t*>(b.GetDeviceBuffer());
+    auto* cp = static_cast<T*>(c.GetDeviceBuffer());
+    auto* sap = static_cast<float*>(sa.GetDeviceBuffer());
+    auto* sbp = static_cast<float*>(sb.GetDeviceBuffer());
+    auto* mismatch = static_cast<unsigned*>(error.GetDeviceBuffer());
+    initialize_scaled_int8<<<1024, 256, 0, stream>>>(ap, bp, sap, sbp, a_rows, b_rows, k, g);
+    hip_check(hipGetLastError(), "initialize scaled INT8 inputs");
+
+    std::vector<ck_tile_int8_nt_cached_weight_desc_v1> weights(g);
+    std::vector<ck_tile_int8_nt_cached_group_desc_v2> groups(g);
+    constexpr auto output_type = std::is_same_v<T, ck_tile::bf16_t>
+                                     ? CK_TILE_INT8_OUTPUT_BF16_V2 : CK_TILE_INT8_OUTPUT_FP16_V2;
+    for(int i = 0; i < g; ++i)
+    {
+        weights[i] = {sizeof(weights[i]), 1, bp + std::size_t(i) * n * k, n, k, k, 0, {}};
+        groups[i] = {sizeof(groups[i]), 2, ap + std::size_t(i) * m * k, cp + i * c_stride + 16,
+                     m, k, n, output_type, sap + i, sbp + std::size_t(i) * n,
+                     CK_TILE_INT8_SCALE_SCALAR_V2, CK_TILE_INT8_SCALE_OUTER_VECTOR_V2, {}};
+    }
+    check_cached_int8(ck_tile_int8_nt_cached_weights_create_v1(weights.data(), g, stream,
+                                                             &handles.weights));
+    check_cached_int8(ck_tile_int8_nt_cached_plan_create_v2(handles.weights, groups.data(), g,
+                                                         &handles.plan));
+    ck_tile_int8_nt_cached_plan_info_v1 info{};
+    info.struct_size = sizeof(info);
+    info.abi_version = 1;
+    check_cached_int8(ck_tile_int8_nt_cached_plan_query_v1(handles.plan, &info));
+    std::cout << "SELECT instance_id=" << (info.route ? info.route : info.legacy_instance)
+              << " instance_name=";
+    if(info.route)
+        std::cout << "cached_int8_route_" << info.route;
+    else
+        std::cout << ck_tile_hcu_grouped_gemm_instance_name_v1(info.legacy_instance);
+    std::cout << " route=" << info.route << " legacy_instance=" << info.legacy_instance << '\n';
+    const auto launch = [&] { check_cached_int8(ck_tile_int8_nt_cached_run_v1(handles.plan, stream)); };
+    if(options.validate)
+    {
+        for(int sample = 0; sample < options.correctness_repeats; ++sample)
+        {
+            // Leave the guards zero and poison the output so missed stores also fail.
+            for(int i = 0; i < g; ++i)
+            {
+                hip_check(hipMemsetAsync(cp + i * c_stride, 0, 16 * sizeof(T), stream), "zero guard");
+                hip_check(hipMemsetAsync(cp + i * c_stride + 16, 0xff,
+                                         (c_stride - 32) * sizeof(T), stream), "poison output");
+                hip_check(hipMemsetAsync(cp + (i + 1) * c_stride - 16, 0, 16 * sizeof(T), stream),
+                          "zero guard");
+            }
+            hip_check(hipMemsetAsync(mismatch, 0, sizeof(unsigned), stream), "reset validation");
+            launch();
+            check_scaled_int8<<<1024, 256, 0, stream>>>(cp, sap, sbp, mismatch, m, n, k, g);
+            hip_check(hipGetLastError(), "validate scaled INT8 output");
+            unsigned invalid = 0;
+            hip_check(hipMemcpyAsync(&invalid, mismatch, sizeof(invalid), hipMemcpyDeviceToHost,
+                                     stream), "read validation result");
+            hip_check(hipStreamSynchronize(stream), "synchronize validation");
+            if(invalid)
+                throw std::runtime_error("Scaled INT8 full output or guard mismatch");
+        }
+    }
+    if(options.time)
+    {
+        EventTimer timer;
+        std::vector<float> samples;
+        for(int sample = 0; sample < options.samples; ++sample)
+        {
+            for(int warm = 0; warm < options.warmup; ++warm)
+                launch();
+            samples.push_back(timer.measure(stream, [&] {
+                for(int repeat = 0; repeat < options.gemm_repeat; ++repeat)
+                    launch();
+            }) / options.gemm_repeat);
+        }
+        const auto timing = summarize(samples);
+        if(timing.min <= 0 || !std::isfinite(timing.mean))
+            throw std::runtime_error("Invalid scaled INT8 timing");
+        std::cout << std::setprecision(10) << "PERF backend=ck_device_args median_ms=" << timing.median
+                  << " mean_ms=" << timing.mean << " min_ms=" << timing.min
+                  << " max_ms=" << timing.max << " cv=" << timing.cv
+                  << " tops=" << 2.0 * m * n * k * g / timing.median / 1e9
+                  << " throughput_unit=TOPS\n";
+    }
+    std::cout << "SUMMARY result=PASS full_output=" << (options.validate ? "PASS" : "SKIP") << '\n';
+    return 0;
+}
+#endif
+
 template <typename T>
 int run(const Options& options)
 {
@@ -1675,6 +1862,12 @@ int main(int argc, char* argv[])
                 return grouped_gemm_int8_nt_benchmark_main(argc,argv);
 #endif
         const Options options = parse_options(argc, argv);
+#if defined(CK_TILE_GROUPED_GEMM_HAS_SCALED_INT8)
+        if(options.dtype == "int8_bf16")
+            return run_scaled_int8<ck_tile::bf16_t>(options);
+        if(options.dtype == "int8_fp16")
+            return run_scaled_int8<ck_tile::half_t>(options);
+#endif
         if(options.dtype == "fp16")
             return run<ck_tile::half_t>(options);
         return run<ck_tile::bf16_t>(options);

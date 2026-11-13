@@ -43,7 +43,20 @@ Weights retain the existing create/destroy and INT8-only packing contract.
 Plans retain the existing run/query/destroy entry points. Scale tensors are
 borrowed and are neither packed nor cached by value. They must remain valid until all runs
 complete. Update their contents only with correct compute-stream ordering.
-Plan creation uploads descriptors. Run allocates no device memory.
+Preparation owns its packed-weight buffer and records a readiness event.
+Plan creation owns and uploads its descriptor and scale-pointer arrays once.
+Caller-owned A, B, output and scale storage stays live until work completes,
+and the prepared weights handle outlives its plans. Reuse a plan for the same
+addresses and metadata. No additional caller workspace is required. Run uses
+the supplied stream and performs no device allocation, GPU descriptor readback
+or synchronization. The first submission on a stream waits on the preparation
+event. Preparation and plan destruction have their own lifetime rules.
+
+The [cached extension header](../../../../include/ck_tile/ops/gemm/grouped_gemm_int8_nt_cached.h)
+is separate from the device-args v1 ABI. The latter still accepts caller-owned
+`GemmTransKernelArg` arrays and the expected instance ID. Scale pointers and
+the prepared-weight handle are expressed in the cached extension. Use
+`weights_create_v1 → plan_create_v2 → plan_query_v1 → run_v1` for scaled INT8.
 
 Example initialization:
 

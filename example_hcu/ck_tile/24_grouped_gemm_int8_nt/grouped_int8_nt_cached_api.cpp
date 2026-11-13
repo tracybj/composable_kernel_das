@@ -302,7 +302,9 @@ make_plan(ck_tile_int8_nt_cached_weights_handle_v1 w,
     current_device_is(w->device);
     int max_m       = 0;
     int64_t total_m = 0;
-    bool uniform = true, empty = false, native = true, raw_original = true, raw_transposed = true;
+    bool uniform = true, empty = false, native = true, raw_transposed = true;
+    bool dense_scalar_a = scales != nullptr;
+    bool dense_channel_scales = scales != nullptr;
     for(int i = 0; i < g; ++i)
     {
         const auto& a = groups[i];
@@ -322,8 +324,16 @@ make_plan(ck_tile_int8_nt_cached_weights_handle_v1 w,
         total_m += a.m;
         native &= a.m > 0 && (a.m % 256 == 0 || a.m == 128 || a.m == 64 || a.m == 32) &&
                   int64_t(256) * a.a_row_stride <= std::numeric_limits<int32_t>::max();
-        raw_original &= w->raw[i].row_stride < 16384;
         raw_transposed &= a.a_row_stride < 16384;
+        if(scales)
+        {
+            const auto& scale = scales[i];
+            const bool scalar_a = a.c_row_stride == w->n && scale.a_stride == 0;
+            dense_scalar_a &= scalar_a;
+            dense_channel_scales &= scalar_a && a.a_row_stride == w->k &&
+                                    w->raw[i].row_stride == w->k && scale.a && scale.b &&
+                                    scale.b_stride == 1;
+        }
     }
     ck_tile::GroupedGemmProblem old{};
     old.arch        = ck_tile::GroupedGemmArch::gfx936;
@@ -351,34 +361,15 @@ make_plan(ck_tile_int8_nt_cached_weights_handle_v1 w,
     const bool native_domain =
         uniform && !empty && native && w->n % 256 == 0 && w->k % 128 == 0 && w->k < 16384;
     p->output_type = output_type;
-    p->route       = native_domain
-                         ? (output_type ? ck_tile::int8_cached_scaled_route(
-                                        groups[0].m, w->n, w->k, g, w->packable, w->compute_units)
-                                        : ck_tile::int8_cached_route(
-                                        groups[0].m, w->n, w->k, g, w->packable, w->compute_units))
-                         : ck_tile::int8_routes::LegacyRaw;
-    if(output_type && uniform && !empty)
-    {
-        const unsigned small = ck_tile::int8_cached_scaled_small_route(
-            max_m, w->n, w->k, g, w->packable, w->compute_units);
-        if(small)
-            p->route = small;
-    }
-    if(output_type && scales && native_domain)
-    {
-        bool dense_scalar = true;
-        for(int i = 0; i < g; ++i)
-            dense_scalar &= groups[i].c_row_stride == w->n && scales[i].a_stride == 0;
-        p->route = ck_tile::int8_cached_paired_store_route(
-            p->route, max_m, w->n, w->k, g, w->compute_units, dense_scalar);
-    }
-    if(((p->route == ck_tile::int8_routes::LinearRaw ||
-         p->route == ck_tile::int8_routes::LinearRawRecord1024) &&
-        !raw_original) ||
-       ((p->route == ck_tile::int8_routes::LinearTransposedRaw ||
-         p->route == ck_tile::int8_routes::LinearTransposedRecord1024) &&
-        !raw_transposed))
-        p->route = ck_tile::int8_routes::LegacyRaw;
+    p->route       = ck_tile::int8_cached_select_plan_route(
+        max_m,
+        w->n,
+        w->k,
+        g,
+        w->packable,
+        w->compute_units,
+        output_type != 0,
+        {native_domain, uniform && !empty, raw_transposed, dense_scalar_a, dense_channel_scales});
 #ifdef CK_INT8_CACHED_TUNING
     if(tuning)
     {
@@ -442,22 +433,10 @@ make_plan(ck_tile_int8_nt_cached_weights_handle_v1 w,
     std::vector<KArg> args;
     args.reserve(g);
     const uint64_t per_group = uint64_t(w->n) * w->k;
+    const bool packed = ck_tile::int8_routes::uses_packed_weights(p->route);
     for(int i = 0; i < g; ++i)
     {
-        const auto& a     = groups[i];
-        const bool packed = p->route == CK_TILE_INT8_CACHED_PACKED_WEIGHT_V1 ||
-                            p->route == CK_TILE_INT8_CACHED_PACKED_M128_N256_A2_V1 ||
-                            p->route == CK_TILE_INT8_CACHED_PACKED_M128_N128_A4_V1 ||
-                            p->route == CK_TILE_INT8_CACHED_PACKED_M64_N256_A2_V1 ||
-                            p->route == CK_TILE_INT8_CACHED_PACKED_M64_N64_A2_V1 ||
-                            p->route == CK_TILE_INT8_CACHED_PACKED_M32_N256_A2_V1 ||
-                            p->route == CK_TILE_INT8_CACHED_PACKED_M32_N64_A1_V1 ||
-                            p->route == CK_TILE_INT8_CACHED_PACKED_M256_N384_A2_V1 ||
-                            p->route == CK_TILE_INT8_CACHED_PACKED_M256_N384_MASKED_M4_V1 ||
-                            p->route == CK_TILE_INT8_CACHED_PACKED_M256_N384_MASKED_M8_V1 ||
-                            p->route == CK_TILE_INT8_CACHED_PACKED_M16_N64_K256_V1 ||
-                            (p->route >= CK_TILE_INT8_CACHED_PAIRED_M256_N256_V1 &&
-                             p->route <= CK_TILE_INT8_CACHED_PAIRED_M128_N256_V1);
+        const auto& a = groups[i];
         const void* b = packed ? w->packed + uint64_t(i) * per_group : w->raw[i].data;
         ck_tile::UniversalGemmKernelArgs<1, 1, 0> arg{{a.a},
                                                       {b},

@@ -4,6 +4,26 @@
 #include <iostream>
 int main()
 {
+    using ck_tile::int8_cached_tuned_scaled_route;
+    using namespace ck_tile::int8_routes;
+    assert(int8_cached_tuned_scaled_route(1, 4608, 5120, 96, true, 80) == KParallelDecode);
+    assert(int8_cached_tuned_scaled_route(2, 4608, 5120, 96, true, 80) == LegacyRaw);
+    assert(int8_cached_tuned_scaled_route(4, 2048, 512, 16, true, 80) ==
+           PackedCooperativeM1N256);
+    assert(int8_cached_tuned_scaled_route(4, 2048, 512, 64, false, 80) == LegacyRaw);
+    assert(int8_cached_tuned_scaled_route(4, 2048, 512, 64, true, 80) == LegacyRaw);
+    assert(int8_cached_tuned_scaled_route(4, 4096, 1152, 8, true, 80) == LegacyRaw);
+    assert(int8_cached_tuned_scaled_route(16, 8192, 2048, 128, true, 80) ==
+           RawAlignedM16N32K512);
+    assert(int8_cached_tuned_scaled_route(16, 8192, 2032, 128, false, 80) == LegacyRaw);
+    assert(int8_cached_tuned_scaled_route(32, 8192, 2048, 128, true, 80) == PackedM32N64);
+    assert(int8_cached_tuned_scaled_route(32, 3072, 1232, 392, false, 80) == RawM32N64K256W4);
+    assert(int8_cached_tuned_scaled_route(32, 3072, 1233, 392, false, 80) == LegacyRaw);
+    assert(int8_cached_tuned_scaled_route(32, 8192, 2048, 128, true, 96) == LegacyRaw);
+    assert(int8_cached_tuned_scaled_route(4096, 2048, 512, 64, true, 80) == PairedM128N256);
+    assert(int8_cached_tuned_scaled_route(2048, 1024, 2048, 8, true, 80) == LegacyRaw);
+    assert(int8_cached_tuned_scaled_route(2048, 1024, 2048, 16, true, 80) == LegacyRaw);
+
     using ck_tile::int8_cached_route;
     assert(int8_cached_route(2048, 1536, 2048, 4, true, 80) == 12);
     assert(int8_cached_route(2048, 1536, 2048, 4, true, 96) == 5);
@@ -111,5 +131,34 @@ int main()
     assert(int8_cached_scaled_small_route(1, 4096, 6144, 8, false, 80) == 0);
     assert(int8_cached_scaled_small_route(1, 4096, 6144, 8, true, 96) == 0);
     assert(int8_cached_scaled_small_route(1, 4096, 8192, 8, true, 80) == 0);
+
+    using ck_tile::int8_cached_select_plan_route;
+    constexpr ck_tile::Int8CachedPlanRouteDomain dense{true, true, true, true, true};
+    constexpr ck_tile::Int8CachedPlanRouteDomain padded_c{true, true, true, false, false};
+    constexpr ck_tile::Int8CachedPlanRouteDomain padded_a{true, true, false, false, false};
+    constexpr ck_tile::Int8CachedPlanRouteDomain ragged{false, false, true, true, true};
+    assert(int8_cached_select_plan_route(32, 8192, 2048, 128, true, 80, true, dense) ==
+           PackedM32N64);
+    assert(int8_cached_select_plan_route(32, 8192, 2048, 128, true, 80, true, ragged) ==
+           LegacyRaw);
+    assert(int8_cached_select_plan_route(2048, 4096, 1536, 4, true, 80, true, dense) ==
+           PairedM256N384MaskedM4);
+    assert(int8_cached_select_plan_route(2048, 4096, 1536, 4, true, 80, true, padded_c) ==
+           PackedM256N384MaskedM4);
+    for(int m : {14336, 16384})
+        assert(int8_cached_select_plan_route(m, 1536, 2048, 4, true, 80, true, dense) ==
+               PairedM256N384MaskedM4);
+    assert(int8_cached_select_plan_route(8192, 1536, 2048, 4, true, 80, true, dense) ==
+           PairedM128N256);
+    assert(int8_cached_select_plan_route(16384, 1536, 2048, 8, true, 80, true, dense) ==
+           PairedM256N384);
+    assert(int8_cached_select_plan_route(16384, 1536, 2048, 4, true, 80, true, padded_c) ==
+           PackedM256N384);
+    assert(int8_cached_select_plan_route(256, 256, 512, 64, true, 80, false, dense) ==
+           LinearTransposedRaw);
+    assert(int8_cached_select_plan_route(256, 256, 512, 64, true, 80, false, padded_a) ==
+           LegacyRaw);
+    assert(uses_packed_weights(PairedM256N384MaskedM4) && uses_packed_weights(PackedCooperativeM1N256));
+    assert(!uses_packed_weights(LinearTransposedRaw) && !uses_packed_weights(KParallelDecode));
     std::cout << "SCALED_TAIL_POLICY_PASS\n";
 }

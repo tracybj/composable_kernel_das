@@ -336,6 +336,18 @@ def main():
                         )
                     ):
                         want = (30, 0)
+                    if output and not padded and mode == 'channel':
+                        # Check the concrete route for these dense tuning fixtures.
+                        tuned = {
+                            (1, 3072, 4096, 4): 25,
+                            (1, 4096, 6144, 8): 25,
+                            (32, 2048, 768, 4): 11,
+                            (32, 1024, 2048, 8): 11,
+                            (32, 1024, 2048, 64): 11,
+                        }.get((maxm, n, k, g))
+                        if tuned is not None:
+                            assert pi.route == tuned, (name, output, pi.route, tuned)
+                            want = (tuned, 0)
                     geometry = {26: 5, 27: 12, 28: 22, 29: 23, 30: 6 if want != (30, 0) else 30}.get(pi.route, pi.route)
                     assert (
                         geometry,

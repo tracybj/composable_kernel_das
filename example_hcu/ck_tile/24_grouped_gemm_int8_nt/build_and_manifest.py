@@ -34,6 +34,7 @@ def sources(tuning=False):
     context = [
         'include/ck_tile/ops/gemm/grouped_gemm_selector.hpp',
         'include/ck_tile/ops/gemm/grouped_gemm_device_args.h',
+        'include/ck_tile/ops/gemm/grouped_gemm_int8_nt_cached.h',
         'example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args.cpp',
     ]
     return dict(

@@ -43,6 +43,19 @@ time and packed bytes are separate from the steady-state kernel timings. This
 runner uses the original dimensions and therefore creates no activation padding.
 
 Treat the result as an offline ranking for the recorded build, device and
-input contract. Use a separate run to verify close winners and derive selector
-rules from the measured shape families. The normal build and plan API keep the
-existing selector.
+input contract. Use a separate run to verify close winners. The default scaled
+selector on 80-CU gfx936 uses shape families derived from the tuning run.
+The initial promotion threshold was at least 5% over the previous default for
+both BF16 and FP16. The large-M, four-group N1536/K2048 family was subsequently
+promoted after paired timing of route 28 at M14336 and M16384. Rules use M/N/K/G,
+prepared-weight availability and the
+descriptor contract. For equal, nonempty groups with dense A/B/C, a scalar A
+scale and per-channel B scales, the tuned rules take priority. Other supported
+inputs follow the existing small-M, WASP and legacy selection rules.
+
+The 1191-shape default run uses 24 route/instance combinations. The offline
+tuning run measured 52 combinations that passed numerical checks, including
+28 with no default hits under the tuned policy. For example, legacy instance
+7501 still covers short-K or low-group M32 through the legacy selector.
+Routes 5, 6, 12, 22 and 23 cover descriptor and shape domains outside the
+paired-store rules. Public cached route values 1 and 2 remain reserved.
