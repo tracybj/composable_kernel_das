@@ -1,0 +1,22 @@
+{
+  "ok": true,
+  "CPU_only": true,
+  "GPU": false,
+  "matched_sampling_settings": true,
+  "shapes": 16,
+  "native_repeat": 1,
+  "warmup": 10,
+  "samples": 30,
+  "different_CPU_enqueue_paths_disclosed": "R_live is diagnostic single-call HIP-event timing. Native GroupGemm::run and CK direct launch have different CPU enqueue paths; neither is identical to historical GPU0/repeat20 Native. R_frozen retains original reference. No gain is attributable to a new kernel.",
+  "R_live_not_frozen_BLAS": true,
+  "first_CK_Native_pairs": 4,
+  "first_package_sha256": "2f9967942eac2b663397fb76080e4a82e457f9af3f7a26187b4fc28c66ad6788",
+  "Native_dispatch_by_ID": {
+    "76": 30,
+    "621": 72,
+    "805": 219,
+    "1072": 360
+  },
+  "CK_dispatch": 18,
+  "GUI_verified": false
+}

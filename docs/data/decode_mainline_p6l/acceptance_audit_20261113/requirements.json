@@ -1,0 +1,352 @@
+[
+  {
+    "id": "G01",
+    "requirement": "至少50条当前弱项稳定改善≥5%",
+    "state": "NOT_ACHIEVED",
+    "evidence": "continuation_closeout/summary.json；旧final_attempts/attempt_1/report.json",
+    "limitation": "接受数0；发现阶段局部赢家不替代七block整域采用。"
+  },
+  {
+    "id": "G02",
+    "requirement": "至少30条满足逐block规则的可归因R≥0.99跨桶",
+    "state": "NOT_ACHIEVED",
+    "evidence": "同G01",
+    "limitation": "接受数0；历史28/14个体诊断仍从接受总数排除。"
+  },
+  {
+    "id": "G03",
+    "requirement": "拟采用整域无确定>2%回退",
+    "state": "NOT_ACHIEVED",
+    "evidence": "accum_candidate_selection.json、旧report.json",
+    "limitation": "旧确认及全部新候选存在确定回退。"
+  },
+  {
+    "id": "S01",
+    "requirement": "原始主线346/171、短线164/65完整清单",
+    "state": "PROVED",
+    "evidence": "scope_reconstruction.json；原research_plan.json",
+    "limitation": "本次新清单为只读重建，未假称它本身在首个GPU前冻结。"
+  },
+  {
+    "id": "S02",
+    "requirement": "16代表的CK/Native同GPU4诊断",
+    "state": "PROVED_SCOPED",
+    "evidence": "native_diagnostic_and_first_delivery_audit.json",
+    "limitation": "单launch设置一致，CPU提交路径不同；不是GPU0/repeat20历史BLAS的重测。"
+  },
+  {
+    "id": "S03",
+    "requirement": "区分CTA不足/驻留/HBM/B搬运/LDS/等待重叠",
+    "state": "PARTIAL",
+    "evidence": "continuation_closeout/readonly_reports/mechanism_matrix.md；各profile_analysis",
+    "limitation": "资源和受控因素已有证据；完整动态根因和统一有效结构未证明。"
+  },
+  {
+    "id": "S04",
+    "requirement": "独立流水而非V7别名",
+    "state": "PROVED_SCOPED",
+    "evidence": "gemm_pipeline_decode_nn_mainline.hpp、shared.hpp、cooperative.hpp及实际独立kernel ISA",
+    "limitation": "可复用底层工具；当前实现均未通过性能采用。"
+  },
+  {
+    "id": "S05",
+    "requirement": "完整M所有权、B复用、两层预取研究",
+    "state": "PROVED_RESEARCH",
+    "evidence": "H1/H2/H3和9续研阶段源码、模型、实际CFG/资源/三轮数据",
+    "limitation": "完成研究不等于结构有效或已实现性能目标。"
+  },
+  {
+    "id": "S06",
+    "requirement": "主线最多3结构、短线最多2结构，因素需依据",
+    "state": "PROVED_SCOPED",
+    "evidence": "research_variants.json；mechanism_matrix.md",
+    "limitation": "tile/调度/缓存/C累加银行是因素，不能按实例数称为新结构。"
+  },
+  {
+    "id": "S07",
+    "requirement": "短K低G至少一个有依据原型及精度三轮结果",
+    "state": "PROVED_NEGATIVE_RESEARCH",
+    "evidence": "historical_confirmation_and_short_branch_audit.json",
+    "limitation": "两种结构的短线均已做；short七block整域确认未测。"
+  },
+  {
+    "id": "S08",
+    "requirement": "不以CTA内K分工冒充CTA数增加，不隐藏workspace/归约成本",
+    "state": "PROVED_SCOPED",
+    "evidence": "独立源码与短线否定证据；public_abi_and_instance_identity_audit.json",
+    "limitation": "没有采用跨CTA K并行或新增隐式workspace。"
+  },
+  {
+    "id": "P01",
+    "requirement": "首个GPU前固定清单、收益/回退/质量规则",
+    "state": "PROVED_SCOPED",
+    "evidence": "原research_plan.json、immutable manifests及source_versions",
+    "limitation": "后续规则修订分别冻结；没有后验按赢家ID采用。"
+  },
+  {
+    "id": "P02",
+    "requirement": "正式benchmark和默认selector，核对实际实例",
+    "state": "PROVED_EXECUTED_SCOPE",
+    "evidence": "executed_protocol_audit.json；3187原始记录审计",
+    "limitation": "2088计时和992精度均走正式入口；其余为query/smoke/profile。"
+  },
+  {
+    "id": "P03",
+    "requirement": "逐条清理实验环境并记录完整配置",
+    "state": "PROVED_EXECUTED_SCOPE",
+    "evidence": "runtime/plan source_versions；qualification audits；job environment",
+    "limitation": "未将任意stride或未知地址宣传为已验证。"
+  },
+  {
+    "id": "P04",
+    "requirement": "新增开关默认关闭，DISABLE优先，旧路径保留",
+    "state": "PROVED_TESTED_SCOPE",
+    "evidence": "322845 CPU策略对照、1193 CPU baseline、资格禁用/回退",
+    "limitation": "不是1193全量GPU复测。"
+  },
+  {
+    "id": "P05",
+    "requirement": "v1 ABI和GemmTransKernelArg不变，6000..6003不重编号",
+    "state": "PROVED",
+    "evidence": "public_abi_and_instance_identity_audit.json",
+    "limitation": ""
+  },
+  {
+    "id": "P06",
+    "requirement": "M/N/K/G边界、尾部、禁用、N尾块/prefill/6003控制",
+    "state": "PROVED_TESTED_SCOPE",
+    "evidence": "各qualification_plan/audit和逐shape控制行",
+    "limitation": "只证明已登记packed/aligned契约。"
+  },
+  {
+    "id": "P07",
+    "requirement": "先both+validate全输出，每个候选≥3次、真实CK/BLAS guard",
+    "state": "PROVED_EXECUTED_SCOPE",
+    "evidence": "executed_protocol_audit.json及raw audit：992 accuracy/2976比较",
+    "limitation": "没有用257点抽样代替全输出。"
+  },
+  {
+    "id": "P08",
+    "requirement": "精度不放宽、非有限值和guard检查、失败停队",
+    "state": "PROVED_EXECUTED_SCOPE",
+    "evidence": "正式验证代码及parse_output source_versions、资格日志",
+    "limitation": "本续研无精度失败；profiler中止按独立失败保留。"
+  },
+  {
+    "id": "P09",
+    "requirement": "三轮AB/BA、warmup10/samples30/单launch/args0/redzone0",
+    "state": "PROVED_EXECUTED_SCOPE",
+    "evidence": "executed_protocol_audit.json及各analysis逐记录序列检查",
+    "limitation": ""
+  },
+  {
+    "id": "P10",
+    "requirement": "三轮median的median，保留min/max/CV/高CV/全部负结果",
+    "state": "PROVED_EXECUTED_SCOPE",
+    "evidence": "各阶段analysis raw-pair verifier和paired_results_with_tflops.csv",
+    "limitation": ""
+  },
+  {
+    "id": "P11",
+    "requirement": "最终采用域同一个冻结二进制/配置/epoch的全部A/B",
+    "state": "NOT_ACHIEVED",
+    "evidence": "各scope gate及final_attempt1/report.json",
+    "limitation": "阶段内配对合规；没有新的合格采用域，不能跨构建拼赢家。"
+  },
+  {
+    "id": "P12",
+    "requirement": "最终域全部原shape、≥24未见、必要边界及独立清单/SHA",
+    "state": "NOT_COMPLETED",
+    "evidence": "旧plan main190，实测166；新96/53规则未通过发现",
+    "limitation": "原24盲测未测；没有新seed或新完整独立确认。"
+  },
+  {
+    "id": "P13",
+    "requirement": "固定7配对block，六次>2%且GM≤.95及CV规则",
+    "state": "PROVED_RULE_AND_PARTIAL_EXECUTION",
+    "evidence": "旧166原shape完整7block；heldout_protocol.json",
+    "limitation": "全域采用未通过；不能把三轮发现计入50/30。"
+  },
+  {
+    "id": "P14",
+    "requirement": "可归因跨桶每block基线<.99且候选≥.99",
+    "state": "PROVED_RULE_NOT_ACHIEVED",
+    "evidence": "acceptance.py source_versions、旧report",
+    "limitation": "接受数0。"
+  },
+  {
+    "id": "D01",
+    "requirement": "冻结BLAS和R_live分开，保留来源/卡号/repeat20",
+    "state": "PROVED",
+    "evidence": "native_diagnostic_and_first_delivery_audit.json；P6k逐行来源",
+    "limitation": ""
+  },
+  {
+    "id": "D02",
+    "requirement": "新鲜实测分桶与1193历史投影分离、不只回填赢家",
+    "state": "PROVED",
+    "evidence": "fresh_buckets_by_stage_variant_NOT_ADOPTED.csv；零替换projection",
+    "limitation": "1193投影不是新鲜1193复测。"
+  },
+  {
+    "id": "D03",
+    "requirement": "逐shape CSV/JSON包含TFLOPS、方案配置、实例、轮次、CV、R和版本键",
+    "state": "PROVED_EXECUTED_SCOPE",
+    "evidence": "各continuation_* paired_results_with_tflops.csv、jobs.json.gz、raw tar",
+    "limitation": ""
+  },
+  {
+    "id": "D04",
+    "requirement": "原P6k结果/summary、两份shape文件和原Excel只读不改",
+    "state": "PROVED",
+    "evidence": "frozen_input_and_excel_audit.json",
+    "limitation": "Excel与11月11日原生成收据SHA一致。"
+  },
+  {
+    "id": "D05",
+    "requirement": "新Excel仅另命名且含筛选/冻结表头/TFLOPS",
+    "state": "NOT_REQUESTED_IN_THIS_ROUND",
+    "evidence": "原xlsx及其validation.json保留",
+    "limitation": "本轮无采用更新，未生成替代Excel。"
+  },
+  {
+    "id": "X01",
+    "requirement": "至少4组CK/Native重点perf",
+    "state": "PROVED",
+    "evidence": "首包8 capture/4 pair，Native dispatch30/72/219/360",
+    "limitation": "Native dispatch不能误按CK的18选择。"
+  },
+  {
+    "id": "X02",
+    "requirement": "候选至少4组当前CK/候选，覆盖收益/平坦/回退",
+    "state": "PROVED_SCOPED",
+    "evidence": "第15/16批各4对，预登记rule及manifest",
+    "limitation": "第14批仍为2/8对部分交付，不冒充完成。"
+  },
+  {
+    "id": "X03",
+    "requirement": "SQTT真实trace、实际kernel/dispatch/代码核对",
+    "state": "PROVED_LOCAL_SCOPE",
+    "evidence": "trace inventories、captured ISA、80有效续研capture",
+    "limitation": "没有本机GUI运行；不同wave累计时钟不作墙钟。"
+  },
+  {
+    "id": "X04",
+    "requirement": "保存原名/依赖，manifest含几何/SHA/命令/开关/定位",
+    "state": "PROVED_LOCAL_SCOPE",
+    "evidence": "各package XCOMPUTE_README及profile_manifest",
+    "limitation": "GUI兼容性按未验证标注。"
+  },
+  {
+    "id": "X05",
+    "requirement": "异步反馈，不逐阶段等待用户",
+    "state": "PROVED",
+    "evidence": "profile_batch13_user_feedback.json及后续作业时间",
+    "limitation": "用户暂未查看；动态重叠未知点继续保留。"
+  },
+  {
+    "id": "E01",
+    "requirement": "仅物理GPU4、显式HIP/CUDA4、core0、统一锁",
+    "state": "PROVED_RECORDED_SCOPE",
+    "evidence": "runtime版本、各job env、3187原始审计",
+    "limitation": ""
+  },
+  {
+    "id": "E02",
+    "requirement": "每次fresh健康门禁及pre/post可读dmesg",
+    "state": "PROVED_RECORDED_SCOPE",
+    "evidence": "gates/kernel_checks journals与raw audits",
+    "limitation": "没有新环境恢复；不因普通失败认定MKFD。"
+  },
+  {
+    "id": "E03",
+    "requirement": "恢复独立进程、最多3观察/≥60秒/两次健康/固定5000 probe",
+    "state": "PROVED_OLD_RECOVERY_SCOPE",
+    "evidence": "旧recovery日志与audit；445.379秒单次恢复",
+    "limitation": "本续研无环境恢复；不声称实测过新硬件MKFD。"
+  },
+  {
+    "id": "E04",
+    "requirement": "epoch内完整配对，不跨epoch混A/B",
+    "state": "PROVED_EXECUTED_SCOPE",
+    "evidence": "各pair二进制/epoch元组原始检查",
+    "limitation": "旧epoch0/1和续研epoch0分别保存。"
+  },
+  {
+    "id": "E05",
+    "requirement": "禁止reset/驱动重启/hymgr/换卡，不终止他人进程",
+    "state": "PROVED_RECORDED_SCOPE",
+    "evidence": "已执行GPU命令和恢复脚本；仅自身已结束PID只读快照",
+    "limitation": ""
+  },
+  {
+    "id": "E06",
+    "requirement": "统一固定期限，等待编译恢复计时，无自行延期",
+    "state": "PROVED_TO_AUDIT_TIME",
+    "evidence": "session.json及所有作业/构建时间；12:10:44新实验截止",
+    "limitation": "硬截止14:10:44仍约束本轮CPU收尾；继续按钮不延长。"
+  },
+  {
+    "id": "E07",
+    "requirement": "不跑1193/881全量GPU，不恢复P6g/P6i",
+    "state": "PROVED_RECORDED_SCOPE",
+    "evidence": "冻结有限清单、jobs IDs、session pause fields",
+    "limitation": "1193 selector CPU核对不等于全量GPU。"
+  },
+  {
+    "id": "W01",
+    "requirement": "保留readfirstlane、用户9 tracked+10 untracked",
+    "state": "PROVED",
+    "evidence": "user_preservation_audit.json",
+    "limitation": "两个注册表size保持用户+2贡献，其余改动块逐字保留。"
+  },
+  {
+    "id": "W02",
+    "requirement": "实际构建输入/二进制依赖/source_versions可追溯",
+    "state": "PROVED_EXECUTED_SCOPE",
+    "evidence": "9正式二进制、224输入副本SHA、raw source_versions",
+    "limitation": "构建含用户overlay，不等同clean HEAD的GPU成绩。"
+  },
+  {
+    "id": "W03",
+    "requirement": "自有代码小证据本地提交、实验标识、不push合并",
+    "state": "PROVED_LOCAL_RECORDS",
+    "evidence": "own-only private-index提交收据；Git blob校验",
+    "limitation": ""
+  },
+  {
+    "id": "A01",
+    "requirement": "诊断矩阵/设计决策/资源ISA/profile/全部淘汰理由",
+    "state": "PROVED_RESEARCH_SCOPE",
+    "evidence": "mechanism_matrix、两次窗口报告、逐阶段archive",
+    "limitation": "有效新流水与动态完整根因仍未实现。"
+  },
+  {
+    "id": "A02",
+    "requirement": "旧“最后原型仅编译”的缺口得到后续GPU验证",
+    "state": "PROVED_SUPERSEDED_STATE",
+    "evidence": "phase_discovery_analysis：ee64d307…，405作业/46三轮",
+    "limitation": "旧README为旧截止时点，不改写历史。"
+  },
+  {
+    "id": "A03",
+    "requirement": "一键报告且不修改原始测量",
+    "state": "PROVED",
+    "evidence": "summarize_continuation.py/build_closeout.py及Git数值验证收据",
+    "limitation": ""
+  },
+  {
+    "id": "A04",
+    "requirement": "通用一键断点实验入口完整复跑验收",
+    "state": "NOT_FULLY_VERIFIED",
+    "evidence": "阶段控制器与runtime job键可追溯",
+    "limitation": "本轮关闭且过提交截止；没有用新实验验证跨freeze/完整确认的统一续跑行为。"
+  },
+  {
+    "id": "A05",
+    "requirement": "完成前逐项检查，不将研究完成当Goal完成",
+    "state": "PROVED_INCOMPLETE_GOAL",
+    "evidence": "本审计及0/50、0/30，Goal active",
+    "limitation": "性能数值、整域采用、24未见完整确认仍缺失。"
+  }
+]
