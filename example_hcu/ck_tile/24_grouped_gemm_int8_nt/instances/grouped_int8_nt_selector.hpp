@@ -54,6 +54,11 @@ inline unsigned int8_cached_tuned_scaled_route(
     if(packed && m >= 14336 && m <= 16384 && m % 2048 == 0 && n == 1536 &&
        k == 2048 && groups == 4)
         return PairedM256N384MaskedM4;
+
+    // For M=8192, N=3072, K=4096 with G=4 or G=6, 2D MGroup=4 clustering
+    // and cross-half A prefetch improve L2 hit rate and throughput over standard BN384.
+    if(packed && m == 8192 && n == 3072 && k == 4096 && (groups == 4 || groups == 6))
+        return PairedM256N384MaskedM4;
     return LegacyRaw;
 }
 

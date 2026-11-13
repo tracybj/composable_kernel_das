@@ -23,6 +23,11 @@ int main()
     assert(int8_cached_tuned_scaled_route(4096, 2048, 512, 64, true, 80) == PairedM128N256);
     assert(int8_cached_tuned_scaled_route(2048, 1024, 2048, 8, true, 80) == LegacyRaw);
     assert(int8_cached_tuned_scaled_route(2048, 1024, 2048, 16, true, 80) == LegacyRaw);
+    assert(int8_cached_tuned_scaled_route(8192, 3072, 4096, 4, true, 80) ==
+           PairedM256N384MaskedM4);
+    assert(int8_cached_tuned_scaled_route(8192, 3072, 4096, 6, true, 80) ==
+           PairedM256N384MaskedM4);
+    assert(int8_cached_tuned_scaled_route(8192, 3072, 4096, 8, true, 80) == LegacyRaw);
 
     using ck_tile::int8_cached_route;
     assert(int8_cached_route(2048, 1536, 2048, 4, true, 80) == 12);
