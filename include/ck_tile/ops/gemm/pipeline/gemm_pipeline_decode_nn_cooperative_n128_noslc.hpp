@@ -133,7 +133,7 @@ CK_TILE_DEVICE void read(Operands<Rows, BlockK, Depth, BReuse,NTile,UniformWaves
 
 template<int Rows, int BlockK, int Depth, bool BReuse=false,int NTile=256,bool UniformWaves=false>
 CK_TILE_DEVICE void calculate(const Operands<Rows, BlockK, Depth, BReuse,NTile,UniformWaves>& operand,
-    F32x4 (&c)[Geometry<Rows, BlockK, Depth, BReuse,NTile,UniformWaves>::MFragments]
+    F32x4 (&c)[2][Geometry<Rows, BlockK, Depth, BReuse,NTile,UniformWaves>::MFragments]
                [Geometry<Rows, BlockK, Depth, BReuse,NTile,UniformWaves>::NFragments])
 {
     using G = Geometry<Rows, BlockK, Depth, BReuse,NTile,UniformWaves>;
@@ -146,8 +146,8 @@ CK_TILE_DEVICE void calculate(const Operands<Rows, BlockK, Depth, BReuse,NTile,U
                 const auto b = operand.b[h][r];
                 const Bf16x4 b0{b[0], b[1], b[2], b[3]};
                 const Bf16x4 b1{b[4], b[5], b[6], b[7]};
-                mmac(c[m][2 * r], operand.a[h][m], b0);
-                mmac(c[m][2 * r + 1], operand.a[h][m], b1);
+                mmac(c[h][m][2 * r], operand.a[h][m], b0);
+                mmac(c[h][m][2 * r + 1], operand.a[h][m], b1);
             });
         });
     });
@@ -180,10 +180,14 @@ CK_TILE_DEVICE void run_impl(const Params& p)
     const uint32_t b_row = (uint32_t)threadIdx.x / (G::TileN/8u);
     const uint32_t b_octet = (lane & (G::TileN/8u-1u)) ^ ((b_row & 1u) * 4u);
     const uint32_t b_offset = (b_row * (uint32_t)p.ldb + (uint32_t)p.n0 + b_octet * 8u) * 2u;
-    F32x4 c[G::MFragments][G::NFragments];
-    static_for<0, G::MFragments * G::NFragments, 1>{}([&](auto ci) {
+    // Independent accumulators for the two K16 halves of each K32 stage.
+    // Every wave retains its complete M/N output ownership; the two local
+    // FP32 banks are combined once before the unchanged BF16 epilogue.
+    F32x4 c[2][G::MFragments][G::NFragments];
+    static_for<0, 2 * G::MFragments * G::NFragments, 1>{}([&](auto ci) {
         constexpr int i = decltype(ci)::value;
-        c[i / G::NFragments][i % G::NFragments] = F32x4{0, 0, 0, 0};
+        c[i / (G::MFragments * G::NFragments)]
+         [(i / G::NFragments) % G::MFragments][i % G::NFragments] = F32x4{0, 0, 0, 0};
     });
     static_for<0, Depth, 1>{}([&](auto si) {
         constexpr int j = decltype(si)::value;
@@ -240,7 +244,12 @@ CK_TILE_DEVICE void run_impl(const Params& p)
             if constexpr(!ComputeFirst) calculate(operand[j % 3], c);
         }
     });
-    store<Rows,BlockK,Depth,BReuse,NTile,UniformWaves>(p,c,lane,wave);
+    static_for<0, G::MFragments * G::NFragments, 1>{}([&](auto ci) {
+        constexpr int i = decltype(ci)::value;
+        c[0][i / G::NFragments][i % G::NFragments] +=
+            c[1][i / G::NFragments][i % G::NFragments];
+    });
+    store<Rows,BlockK,Depth,BReuse,NTile,UniformWaves>(p,c[0],lane,wave);
 }
 
 template<int Rows,int Depth=2,bool BReuse=false,int NTile=256,bool UniformWaves=false> CK_TILE_DEVICE void run(const Params& p) {run_impl<Rows,32,Depth,true,BReuse,NTile,UniformWaves>(p);}
