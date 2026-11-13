@@ -10,6 +10,7 @@
 #include "ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_resource_phase.hpp"
 #include "ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_cooperative_k64.hpp"
 #include "ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_cooperative_k64_wide.hpp"
+#include "ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_cooperative_n256.hpp"
 
 namespace ck_tile {
 template<int Rows, int BlockK, int Depth>
@@ -250,6 +251,40 @@ CK_TILE_HOST int launch_decode_cooperative_k64_wide(
     return 0;
 }
 
+template<int Rows,int Depth>
+struct DecodeNnCooperativeN256Kernel
+{
+    CK_TILE_DEVICE void operator()(const void CK_TILE_CONSTANT_ADDRESS_SPACE* args,
+                                   int groups, int tiles_per_group) const
+    {
+        const int block = get_block_1d_id();
+        const int group = block / tiles_per_group;
+        if(group >= groups) return;
+        const auto* descriptors = reinterpret_cast<const GemmTransKernelArgImpl<0>*>(
+            cast_pointer_to_generic_address_space(args));
+        const auto& a = descriptors[group].group_karg;
+        decode_nn_mainline::Params p{
+            reinterpret_cast<const uint16_t*>(a.as_ptr[0]),
+            reinterpret_cast<const uint16_t*>(a.bs_ptr[0]),
+            reinterpret_cast<uint16_t*>(a.e_ptr),
+            a.M, a.N, a.K, a.stride_As[0], a.stride_Bs[0], a.stride_E,
+            (block - group * tiles_per_group) * 256};
+        decode_nn_cooperative_n256::run<Rows,Depth>(p);
+    }
+};
+
+template<int Rows,int Depth>
+CK_TILE_HOST int launch_decode_cooperative_n256(
+    void* args, int groups, hipStream_t stream, uint64_t tiles, int tiles_per_group)
+{
+    using G = decode_nn_cooperative_n256::Geometry<Rows,32,Depth>;
+    const auto kernel = make_kernel<512, 1>(DecodeNnCooperativeN256Kernel<Rows,Depth>{},
+        dim3(static_cast<unsigned>(tiles)), dim3(512), G::LdsBytes,
+        cast_pointer_to_constant_address_space(args), groups, tiles_per_group);
+    launch_kernel(stream_config{stream}, kernel);
+    return 0;
+}
+
 template<int Rows>
 CK_TILE_HOST int dispatch_decode_cooperative(void* args, int groups, hipStream_t stream,
                                              uint64_t tiles, int tiles_per_group, int variant)
@@ -275,6 +310,8 @@ CK_TILE_HOST int dispatch_decode_cooperative(void* args, int groups, hipStream_t
         if constexpr(Rows >= 2)
             return launch_decode_cooperative_k64_wide<Rows>(args, groups, stream, tiles, tiles_per_group);
         return -1;
+    case 10: return launch_decode_cooperative_n256<Rows,2>(args, groups, stream, tiles, tiles_per_group);
+    case 11: return launch_decode_cooperative_n256<Rows,3>(args, groups, stream, tiles, tiles_per_group);
     default: return -1;
     }
 }
@@ -285,8 +322,8 @@ extern "C" int ck_tile_hcu_grouped_gemm_bf16_nn_decode_cooperative_device_args(
     int m, int n, int k, int variant)
 {
     if(args == nullptr || groups < 1 || groups > 1024 || m < 1 || m > 64 ||
-       variant < 0 || variant > 9 || ((variant == 5 || variant == 7) && m <= 16) || n < 1024 || n > 4096 || n % 128 != 0 ||
-       k < 2048 || k > 8192 || k % 128 != 0 || tiles_per_group != n / 128 ||
+       variant < 0 || variant > 11 || ((variant == 5 || variant == 7) && m <= 16) || n < 1024 || n > 4096 || n % (variant >= 10 ? 256 : 128) != 0 ||
+       k < 2048 || k > 8192 || k % 128 != 0 || tiles_per_group != n / (variant >= 10 ? 256 : 128) ||
        tiles != static_cast<uint64_t>(groups) * tiles_per_group) return -1;
     if(m <= 16) return ck_tile::dispatch_decode_cooperative<1>(args, groups, stream, tiles, tiles_per_group, variant);
     if(m <= 32) return ck_tile::dispatch_decode_cooperative<2>(args, groups, stream, tiles, tiles_per_group, variant);

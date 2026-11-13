@@ -226,6 +226,8 @@ enum class GroupedGemmInstanceId
     bf16_nn_decode_coop_k32_d4_w8_phase = 6027,
     bf16_nn_decode_coop_k64_d2 = 6028,
     bf16_nn_decode_coop_k64_d2_w8 = 6029,
+    bf16_nn_decode_coop_n256_k32_d2_w8 = 6030,
+    bf16_nn_decode_coop_n256_k32_d3_w8 = 6031,
 
 };
 
@@ -246,7 +248,7 @@ struct GroupedGemmCandidateIdentity
     GroupedGemmCandidateFamily family;
 };
 
-inline constexpr std::array<GroupedGemmCandidateIdentity, 63>
+inline constexpr std::array<GroupedGemmCandidateIdentity, 65>
     grouped_gemm_candidate_registry{{
         {GroupedGemmInstanceId::bw_family_selected,
          "bw_family.selected",
@@ -402,6 +404,10 @@ inline constexpr std::array<GroupedGemmCandidateIdentity, 63>
          "decode.nn.full_m.cooperative_ab.n128.k64.d2.w4.op3.phase_first", GroupedGemmCandidateFamily::decode},
         {GroupedGemmInstanceId::bf16_nn_decode_coop_k64_d2_w8,
          "decode.nn.full_m.cooperative_ab.n128.k64.d2.w8.op3.phase_first", GroupedGemmCandidateFamily::decode},
+        {GroupedGemmInstanceId::bf16_nn_decode_coop_n256_k32_d2_w8,
+         "decode.nn.full_m.cooperative_ab.n256.k32.d2.w8.op3.phase_first", GroupedGemmCandidateFamily::decode},
+        {GroupedGemmInstanceId::bf16_nn_decode_coop_n256_k32_d3_w8,
+         "decode.nn.full_m.cooperative_ab.n256.k32.d3.w8.op3.phase_first", GroupedGemmCandidateFamily::decode},
 
     }};
 
@@ -673,6 +679,26 @@ constexpr GroupedGemmSelection select_grouped_gemm_candidate(
         case 28:
             if(problem.group_count <= 32 && (m >= 17 || k >= 6144))
                 return {GroupedGemmInstanceId::bf16_nn_decode_coop_k64_d2,
+                        GroupedGemmSelectionReason::bf16_nn_decode_mainline};
+            break;
+        case 29:
+            if(n % 256 == 0)
+                return {GroupedGemmInstanceId::bf16_nn_decode_coop_n256_k32_d2_w8,
+                        GroupedGemmSelectionReason::bf16_nn_decode_mainline};
+            break;
+        case 30:
+            if(n % 256 == 0 && problem.group_count <= 32 && (m >= 17 || k >= 6144))
+                return {GroupedGemmInstanceId::bf16_nn_decode_coop_n256_k32_d2_w8,
+                        GroupedGemmSelectionReason::bf16_nn_decode_mainline};
+            break;
+        case 31:
+            if(n % 256 == 0)
+                return {GroupedGemmInstanceId::bf16_nn_decode_coop_n256_k32_d3_w8,
+                        GroupedGemmSelectionReason::bf16_nn_decode_mainline};
+            break;
+        case 32:
+            if(n % 256 == 0 && problem.group_count <= 32 && (m >= 17 || k >= 6144))
+                return {GroupedGemmInstanceId::bf16_nn_decode_coop_n256_k32_d3_w8,
                         GroupedGemmSelectionReason::bf16_nn_decode_mainline};
             break;
         default: break;
