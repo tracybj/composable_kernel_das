@@ -356,9 +356,34 @@ int convert_problem(const ck_tile_hcu_grouped_gemm_problem_v1* source,
         (policy.enable_bf16_nn_decode_short &&
          policy.bf16_nn_decode_short_variant >= 3 &&
          policy.bf16_nn_decode_short_variant <= 5);
-    if(priority_decode_requested && decode_switch(
-           "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY",
-           "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY"))
+    // A failed priority lookup is followed by the full legacy policy reader.
+    // Avoid that extra selector call when the new decode contract cannot match.
+    // This guard only removes impossible requests; the pure selector remains
+    // authoritative for every supported shape, variant and disable policy.
+    const bool priority_decode_common =
+        problem.arch == ck_tile::GroupedGemmArch::gfx936 &&
+        problem.data_type == ck_tile::GroupedGemmDataType::bf16 &&
+        problem.layout == ck_tile::GroupedGemmLayout::nn &&
+        problem.m.kind == ck_tile::GroupedGemmDimensionKind::common &&
+        problem.n.kind == ck_tile::GroupedGemmDimensionKind::common &&
+        problem.k.kind == ck_tile::GroupedGemmDimensionKind::common &&
+        !problem.may_have_empty_groups && !problem.group_lengths_are_ragged &&
+        problem.group_count >= 1 && problem.group_count <= 1024 &&
+        problem.m.extent >= 1 && problem.m.extent <= 256;
+    const bool priority_mainline_geometry = priority_decode_common &&
+        policy.enable_bf16_nn_decode_mainline && problem.m.extent <= 64 &&
+        problem.n.extent >= 1024 && problem.n.extent <= 4096 &&
+        problem.n.extent % 128 == 0 && problem.k.extent >= 2048 &&
+        problem.k.extent <= 8192 && problem.k.extent % 128 == 0 &&
+        (policy.bf16_nn_decode_mainline_variant != 42 || problem.m.extent >= 17);
+    const bool priority_short_geometry = priority_decode_common &&
+        policy.enable_bf16_nn_decode_short && problem.group_count <= 32 &&
+        problem.n.extent >= 128 && problem.n.extent <= 4096 &&
+        problem.n.extent % 128 == 0 && problem.k.extent >= 64 &&
+        problem.k.extent < 2048 && problem.k.extent % 32 == 0;
+    if(priority_decode_requested && (priority_mainline_geometry || priority_short_geometry) &&
+       decode_switch("CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY",
+                     "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY"))
     {
         const auto priority_decode_candidate =
             ck_tile::select_grouped_gemm_candidate(problem, policy);
