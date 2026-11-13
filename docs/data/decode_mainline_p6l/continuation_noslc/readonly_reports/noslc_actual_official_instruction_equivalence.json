@@ -1,0 +1,287 @@
+{
+  "at": "2026-11-13T11:16:37.208116+00:00",
+  "CPU_only": true,
+  "GPU": false,
+  "ok": true,
+  "actual_official_gfx936_kernels": 3,
+  "only_changed_encoding_bit": "0x20000",
+  "rows": [
+    {
+      "M_padded": 16,
+      "instructions": 672,
+      "only_A_SLC_bit_changes": [
+        {
+          "relative_PC": "0x194",
+          "before": "buffer_load_dwordx4 v[33:34], s[16:19], s0 idxen offen slc lds",
+          "after": "buffer_load_dwordx4 v[33:34], s[16:19], s0 idxen offen lds",
+          "machine_xor": "0x20000"
+        },
+        {
+          "relative_PC": "0x23c",
+          "before": "buffer_load_dwordx4 v[33:34], s[16:19], s3 idxen offen slc lds",
+          "after": "buffer_load_dwordx4 v[33:34], s[16:19], s3 idxen offen lds",
+          "machine_xor": "0x20000"
+        },
+        {
+          "relative_PC": "0x374",
+          "before": "buffer_load_dwordx4 v[33:34], s[16:19], s2 idxen offen slc lds",
+          "after": "buffer_load_dwordx4 v[33:34], s[16:19], s2 idxen offen lds",
+          "machine_xor": "0x20000"
+        },
+        {
+          "relative_PC": "0x4ac",
+          "before": "buffer_load_dwordx4 v[33:34], s[16:19], s43 idxen offen slc lds",
+          "after": "buffer_load_dwordx4 v[33:34], s[16:19], s43 idxen offen lds",
+          "machine_xor": "0x20000"
+        },
+        {
+          "relative_PC": "0x534",
+          "before": "buffer_load_dwordx4 v[33:34], s[16:19], s43 idxen offen slc lds",
+          "after": "buffer_load_dwordx4 v[33:34], s[16:19], s43 idxen offen lds",
+          "machine_xor": "0x20000"
+        },
+        {
+          "relative_PC": "0x5bc",
+          "before": "buffer_load_dwordx4 v[33:34], s[16:19], s43 idxen offen slc lds",
+          "after": "buffer_load_dwordx4 v[33:34], s[16:19], s43 idxen offen lds",
+          "machine_xor": "0x20000"
+        },
+        {
+          "relative_PC": "0x644",
+          "before": "buffer_load_dwordx4 v[33:34], s[16:19], s43 idxen offen slc lds",
+          "after": "buffer_load_dwordx4 v[33:34], s[16:19], s43 idxen offen lds",
+          "machine_xor": "0x20000"
+        },
+        {
+          "relative_PC": "0x6c8",
+          "before": "buffer_load_dwordx4 v[33:34], s[16:19], s44 idxen offen slc lds",
+          "after": "buffer_load_dwordx4 v[33:34], s[16:19], s44 idxen offen lds",
+          "machine_xor": "0x20000"
+        },
+        {
+          "relative_PC": "0x748",
+          "before": "buffer_load_dwordx4 v[33:34], s[16:19], s41 idxen offen slc lds",
+          "after": "buffer_load_dwordx4 v[33:34], s[16:19], s41 idxen offen lds",
+          "machine_xor": "0x20000"
+        },
+        {
+          "relative_PC": "0x844",
+          "before": "buffer_load_dwordx4 v[33:34], s[16:19], s2 idxen offen slc lds",
+          "after": "buffer_load_dwordx4 v[33:34], s[16:19], s2 idxen offen lds",
+          "machine_xor": "0x20000"
+        },
+        {
+          "relative_PC": "0x908",
+          "before": "buffer_load_dwordx4 v[33:34], s[16:19], s2 idxen offen slc lds",
+          "after": "buffer_load_dwordx4 v[33:34], s[16:19], s2 idxen offen lds",
+          "machine_xor": "0x20000"
+        },
+        {
+          "relative_PC": "0x9d4",
+          "before": "buffer_load_dwordx4 v[33:34], s[16:19], s2 idxen offen slc lds",
+          "after": "buffer_load_dwordx4 v[33:34], s[16:19], s2 idxen offen lds",
+          "machine_xor": "0x20000"
+        },
+        {
+          "relative_PC": "0xa98",
+          "before": "buffer_load_dwordx4 v[33:34], s[16:19], s2 idxen offen slc lds",
+          "after": "buffer_load_dwordx4 v[33:34], s[16:19], s2 idxen offen lds",
+          "machine_xor": "0x20000"
+        },
+        {
+          "relative_PC": "0xb64",
+          "before": "buffer_load_dwordx4 v[33:34], s[16:19], s0 idxen offen slc lds",
+          "after": "buffer_load_dwordx4 v[33:34], s[16:19], s0 idxen offen lds",
+          "machine_xor": "0x20000"
+        }
+      ],
+      "old_assembly_SHA256": "89e501ee2a4c0a4e4b84836e3f5f8af8235dde71df792e04fb20337be3a3f28b",
+      "new_assembly_SHA256": "73b1305e94bf9210caff7253146366d1a3147f7be8ac5784d95ca91761bcbf15"
+    },
+    {
+      "M_padded": 32,
+      "instructions": 836,
+      "only_A_SLC_bit_changes": [
+        {
+          "relative_PC": "0x194",
+          "before": "buffer_load_dwordx4 v[41:42], s[16:19], s0 idxen offen slc lds",
+          "after": "buffer_load_dwordx4 v[41:42], s[16:19], s0 idxen offen lds",
+          "machine_xor": "0x20000"
+        },
+        {
+          "relative_PC": "0x240",
+          "before": "buffer_load_dwordx4 v[41:42], s[16:19], s3 idxen offen slc lds",
+          "after": "buffer_load_dwordx4 v[41:42], s[16:19], s3 idxen offen lds",
+          "machine_xor": "0x20000"
+        },
+        {
+          "relative_PC": "0x3bc",
+          "before": "buffer_load_dwordx4 v[41:42], s[16:19], s2 idxen offen slc lds",
+          "after": "buffer_load_dwordx4 v[41:42], s[16:19], s2 idxen offen lds",
+          "machine_xor": "0x20000"
+        },
+        {
+          "relative_PC": "0x540",
+          "before": "buffer_load_dwordx4 v[41:42], s[16:19], s42 idxen offen slc lds",
+          "after": "buffer_load_dwordx4 v[41:42], s[16:19], s42 idxen offen lds",
+          "machine_xor": "0x20000"
+        },
+        {
+          "relative_PC": "0x5f8",
+          "before": "buffer_load_dwordx4 v[41:42], s[16:19], s42 idxen offen slc lds",
+          "after": "buffer_load_dwordx4 v[41:42], s[16:19], s42 idxen offen lds",
+          "machine_xor": "0x20000"
+        },
+        {
+          "relative_PC": "0x6b0",
+          "before": "buffer_load_dwordx4 v[41:42], s[16:19], s42 idxen offen slc lds",
+          "after": "buffer_load_dwordx4 v[41:42], s[16:19], s42 idxen offen lds",
+          "machine_xor": "0x20000"
+        },
+        {
+          "relative_PC": "0x768",
+          "before": "buffer_load_dwordx4 v[41:42], s[16:19], s42 idxen offen slc lds",
+          "after": "buffer_load_dwordx4 v[41:42], s[16:19], s42 idxen offen lds",
+          "machine_xor": "0x20000"
+        },
+        {
+          "relative_PC": "0x81c",
+          "before": "buffer_load_dwordx4 v[41:42], s[16:19], s43 idxen offen slc lds",
+          "after": "buffer_load_dwordx4 v[41:42], s[16:19], s43 idxen offen lds",
+          "machine_xor": "0x20000"
+        },
+        {
+          "relative_PC": "0x8cc",
+          "before": "buffer_load_dwordx4 v[41:42], s[16:19], s40 idxen offen slc lds",
+          "after": "buffer_load_dwordx4 v[41:42], s[16:19], s40 idxen offen lds",
+          "machine_xor": "0x20000"
+        },
+        {
+          "relative_PC": "0xa08",
+          "before": "buffer_load_dwordx4 v[41:42], s[16:19], s2 idxen offen slc lds",
+          "after": "buffer_load_dwordx4 v[41:42], s[16:19], s2 idxen offen lds",
+          "machine_xor": "0x20000"
+        },
+        {
+          "relative_PC": "0xafc",
+          "before": "buffer_load_dwordx4 v[41:42], s[16:19], s2 idxen offen slc lds",
+          "after": "buffer_load_dwordx4 v[41:42], s[16:19], s2 idxen offen lds",
+          "machine_xor": "0x20000"
+        },
+        {
+          "relative_PC": "0xbf8",
+          "before": "buffer_load_dwordx4 v[41:42], s[16:19], s2 idxen offen slc lds",
+          "after": "buffer_load_dwordx4 v[41:42], s[16:19], s2 idxen offen lds",
+          "machine_xor": "0x20000"
+        },
+        {
+          "relative_PC": "0xcec",
+          "before": "buffer_load_dwordx4 v[41:42], s[16:19], s2 idxen offen slc lds",
+          "after": "buffer_load_dwordx4 v[41:42], s[16:19], s2 idxen offen lds",
+          "machine_xor": "0x20000"
+        },
+        {
+          "relative_PC": "0xde8",
+          "before": "buffer_load_dwordx4 v[41:42], s[16:19], s0 idxen offen slc lds",
+          "after": "buffer_load_dwordx4 v[41:42], s[16:19], s0 idxen offen lds",
+          "machine_xor": "0x20000"
+        }
+      ],
+      "old_assembly_SHA256": "b9241efdd9ce167506d8a0cfa15d7fb5511f4225f74f3b2fc20a4ca68bb99835",
+      "new_assembly_SHA256": "7829b39bdf81eefb24a2446e2c9896b24f9372387058d97a6b7566e4beba0226"
+    },
+    {
+      "M_padded": 64,
+      "instructions": 1165,
+      "only_A_SLC_bit_changes": [
+        {
+          "relative_PC": "0x194",
+          "before": "buffer_load_dwordx4 v[57:58], s[16:19], s0 idxen offen slc lds",
+          "after": "buffer_load_dwordx4 v[57:58], s[16:19], s0 idxen offen lds",
+          "machine_xor": "0x20000"
+        },
+        {
+          "relative_PC": "0x240",
+          "before": "buffer_load_dwordx4 v[57:58], s[16:19], s3 idxen offen slc lds",
+          "after": "buffer_load_dwordx4 v[57:58], s[16:19], s3 idxen offen lds",
+          "machine_xor": "0x20000"
+        },
+        {
+          "relative_PC": "0x440",
+          "before": "buffer_load_dwordx4 v[57:58], s[16:19], s2 idxen offen slc lds",
+          "after": "buffer_load_dwordx4 v[57:58], s[16:19], s2 idxen offen lds",
+          "machine_xor": "0x20000"
+        },
+        {
+          "relative_PC": "0x664",
+          "before": "buffer_load_dwordx4 v[57:58], s[16:19], s43 idxen offen slc lds",
+          "after": "buffer_load_dwordx4 v[57:58], s[16:19], s43 idxen offen lds",
+          "machine_xor": "0x20000"
+        },
+        {
+          "relative_PC": "0x77c",
+          "before": "buffer_load_dwordx4 v[57:58], s[16:19], s43 idxen offen slc lds",
+          "after": "buffer_load_dwordx4 v[57:58], s[16:19], s43 idxen offen lds",
+          "machine_xor": "0x20000"
+        },
+        {
+          "relative_PC": "0x894",
+          "before": "buffer_load_dwordx4 v[57:58], s[16:19], s43 idxen offen slc lds",
+          "after": "buffer_load_dwordx4 v[57:58], s[16:19], s43 idxen offen lds",
+          "machine_xor": "0x20000"
+        },
+        {
+          "relative_PC": "0x9ac",
+          "before": "buffer_load_dwordx4 v[57:58], s[16:19], s43 idxen offen slc lds",
+          "after": "buffer_load_dwordx4 v[57:58], s[16:19], s43 idxen offen lds",
+          "machine_xor": "0x20000"
+        },
+        {
+          "relative_PC": "0xac0",
+          "before": "buffer_load_dwordx4 v[57:58], s[16:19], s44 idxen offen slc lds",
+          "after": "buffer_load_dwordx4 v[57:58], s[16:19], s44 idxen offen lds",
+          "machine_xor": "0x20000"
+        },
+        {
+          "relative_PC": "0xbd0",
+          "before": "buffer_load_dwordx4 v[57:58], s[16:19], s41 idxen offen slc lds",
+          "after": "buffer_load_dwordx4 v[57:58], s[16:19], s41 idxen offen lds",
+          "machine_xor": "0x20000"
+        },
+        {
+          "relative_PC": "0xd8c",
+          "before": "buffer_load_dwordx4 v[57:58], s[16:19], s2 idxen offen slc lds",
+          "after": "buffer_load_dwordx4 v[57:58], s[16:19], s2 idxen offen lds",
+          "machine_xor": "0x20000"
+        },
+        {
+          "relative_PC": "0xee0",
+          "before": "buffer_load_dwordx4 v[57:58], s[16:19], s2 idxen offen slc lds",
+          "after": "buffer_load_dwordx4 v[57:58], s[16:19], s2 idxen offen lds",
+          "machine_xor": "0x20000"
+        },
+        {
+          "relative_PC": "0x103c",
+          "before": "buffer_load_dwordx4 v[57:58], s[16:19], s2 idxen offen slc lds",
+          "after": "buffer_load_dwordx4 v[57:58], s[16:19], s2 idxen offen lds",
+          "machine_xor": "0x20000"
+        },
+        {
+          "relative_PC": "0x1190",
+          "before": "buffer_load_dwordx4 v[57:58], s[16:19], s2 idxen offen slc lds",
+          "after": "buffer_load_dwordx4 v[57:58], s[16:19], s2 idxen offen lds",
+          "machine_xor": "0x20000"
+        },
+        {
+          "relative_PC": "0x12ec",
+          "before": "buffer_load_dwordx4 v[57:58], s[16:19], s0 idxen offen slc lds",
+          "after": "buffer_load_dwordx4 v[57:58], s[16:19], s0 idxen offen lds",
+          "machine_xor": "0x20000"
+        }
+      ],
+      "old_assembly_SHA256": "dda07a03edb9afa89553f50b06aff90e3bfeb57f36f3a77f24a765341a6d314f",
+      "new_assembly_SHA256": "ad5a26ad0614afcd28e82325bfb9c9dfe274a38ad3aaaa5b79bea45096900382"
+    }
+  ],
+  "not_performance_evidence": true
+}

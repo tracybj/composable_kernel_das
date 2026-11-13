@@ -1,0 +1,202 @@
+{
+  "ok": true,
+  "CPU_only": true,
+  "GPU": false,
+  "old_object_sha256": "b4228f98631f3acaddd243b6bd6c05d2bf1d4daf0c3b4c3c63d5aaf69935048a",
+  "new_object_sha256": "34390c84e52379a76c0c115c8096d8128fb258c2b91f87f6bb22f96bf52c94c7",
+  "dual_target_metadata_and_size_identical": 6,
+  "gfx936_instruction_comparisons": [
+    {
+      "padded_M": 16,
+      "instructions": 672,
+      "only_A_cache_modifier_changes": 14,
+      "changes": [
+        {
+          "before": "buffer_load_dwordx4 v[33:34], s[16:19], s0 idxen offen slc lds// 000000002294: E05F3000 00040021",
+          "after": "buffer_load_dwordx4 v[33:34], s[16:19], s0 idxen offen lds // 000000002294: E05D3000 00040021"
+        },
+        {
+          "before": "buffer_load_dwordx4 v[33:34], s[16:19], s3 idxen offen slc lds// 00000000233C: E05F3000 03040021",
+          "after": "buffer_load_dwordx4 v[33:34], s[16:19], s3 idxen offen lds // 00000000233C: E05D3000 03040021"
+        },
+        {
+          "before": "buffer_load_dwordx4 v[33:34], s[16:19], s2 idxen offen slc lds// 000000002474: E05F3000 02040021",
+          "after": "buffer_load_dwordx4 v[33:34], s[16:19], s2 idxen offen lds // 000000002474: E05D3000 02040021"
+        },
+        {
+          "before": "buffer_load_dwordx4 v[33:34], s[16:19], s43 idxen offen slc lds// 0000000025AC: E05F3000 2B040021",
+          "after": "buffer_load_dwordx4 v[33:34], s[16:19], s43 idxen offen lds// 0000000025AC: E05D3000 2B040021"
+        },
+        {
+          "before": "buffer_load_dwordx4 v[33:34], s[16:19], s43 idxen offen slc lds// 000000002634: E05F3000 2B040021",
+          "after": "buffer_load_dwordx4 v[33:34], s[16:19], s43 idxen offen lds// 000000002634: E05D3000 2B040021"
+        },
+        {
+          "before": "buffer_load_dwordx4 v[33:34], s[16:19], s43 idxen offen slc lds// 0000000026BC: E05F3000 2B040021",
+          "after": "buffer_load_dwordx4 v[33:34], s[16:19], s43 idxen offen lds// 0000000026BC: E05D3000 2B040021"
+        },
+        {
+          "before": "buffer_load_dwordx4 v[33:34], s[16:19], s43 idxen offen slc lds// 000000002744: E05F3000 2B040021",
+          "after": "buffer_load_dwordx4 v[33:34], s[16:19], s43 idxen offen lds// 000000002744: E05D3000 2B040021"
+        },
+        {
+          "before": "buffer_load_dwordx4 v[33:34], s[16:19], s44 idxen offen slc lds// 0000000027C8: E05F3000 2C040021",
+          "after": "buffer_load_dwordx4 v[33:34], s[16:19], s44 idxen offen lds// 0000000027C8: E05D3000 2C040021"
+        },
+        {
+          "before": "buffer_load_dwordx4 v[33:34], s[16:19], s41 idxen offen slc lds// 000000002848: E05F3000 29040021",
+          "after": "buffer_load_dwordx4 v[33:34], s[16:19], s41 idxen offen lds// 000000002848: E05D3000 29040021"
+        },
+        {
+          "before": "buffer_load_dwordx4 v[33:34], s[16:19], s2 idxen offen slc lds// 000000002944: E05F3000 02040021",
+          "after": "buffer_load_dwordx4 v[33:34], s[16:19], s2 idxen offen lds // 000000002944: E05D3000 02040021"
+        },
+        {
+          "before": "buffer_load_dwordx4 v[33:34], s[16:19], s2 idxen offen slc lds// 000000002A08: E05F3000 02040021",
+          "after": "buffer_load_dwordx4 v[33:34], s[16:19], s2 idxen offen lds // 000000002A08: E05D3000 02040021"
+        },
+        {
+          "before": "buffer_load_dwordx4 v[33:34], s[16:19], s2 idxen offen slc lds// 000000002AD4: E05F3000 02040021",
+          "after": "buffer_load_dwordx4 v[33:34], s[16:19], s2 idxen offen lds // 000000002AD4: E05D3000 02040021"
+        },
+        {
+          "before": "buffer_load_dwordx4 v[33:34], s[16:19], s2 idxen offen slc lds// 000000002B98: E05F3000 02040021",
+          "after": "buffer_load_dwordx4 v[33:34], s[16:19], s2 idxen offen lds // 000000002B98: E05D3000 02040021"
+        },
+        {
+          "before": "buffer_load_dwordx4 v[33:34], s[16:19], s0 idxen offen slc lds// 000000002C64: E05F3000 00040021",
+          "after": "buffer_load_dwordx4 v[33:34], s[16:19], s0 idxen offen lds // 000000002C64: E05D3000 00040021"
+        }
+      ]
+    },
+    {
+      "padded_M": 32,
+      "instructions": 836,
+      "only_A_cache_modifier_changes": 14,
+      "changes": [
+        {
+          "before": "buffer_load_dwordx4 v[41:42], s[16:19], s0 idxen offen slc lds// 000000003194: E05F3000 00040029",
+          "after": "buffer_load_dwordx4 v[41:42], s[16:19], s0 idxen offen lds // 000000003194: E05D3000 00040029"
+        },
+        {
+          "before": "buffer_load_dwordx4 v[41:42], s[16:19], s3 idxen offen slc lds// 000000003240: E05F3000 03040029",
+          "after": "buffer_load_dwordx4 v[41:42], s[16:19], s3 idxen offen lds // 000000003240: E05D3000 03040029"
+        },
+        {
+          "before": "buffer_load_dwordx4 v[41:42], s[16:19], s2 idxen offen slc lds// 0000000033BC: E05F3000 02040029",
+          "after": "buffer_load_dwordx4 v[41:42], s[16:19], s2 idxen offen lds // 0000000033BC: E05D3000 02040029"
+        },
+        {
+          "before": "buffer_load_dwordx4 v[41:42], s[16:19], s42 idxen offen slc lds// 000000003540: E05F3000 2A040029",
+          "after": "buffer_load_dwordx4 v[41:42], s[16:19], s42 idxen offen lds// 000000003540: E05D3000 2A040029"
+        },
+        {
+          "before": "buffer_load_dwordx4 v[41:42], s[16:19], s42 idxen offen slc lds// 0000000035F8: E05F3000 2A040029",
+          "after": "buffer_load_dwordx4 v[41:42], s[16:19], s42 idxen offen lds// 0000000035F8: E05D3000 2A040029"
+        },
+        {
+          "before": "buffer_load_dwordx4 v[41:42], s[16:19], s42 idxen offen slc lds// 0000000036B0: E05F3000 2A040029",
+          "after": "buffer_load_dwordx4 v[41:42], s[16:19], s42 idxen offen lds// 0000000036B0: E05D3000 2A040029"
+        },
+        {
+          "before": "buffer_load_dwordx4 v[41:42], s[16:19], s42 idxen offen slc lds// 000000003768: E05F3000 2A040029",
+          "after": "buffer_load_dwordx4 v[41:42], s[16:19], s42 idxen offen lds// 000000003768: E05D3000 2A040029"
+        },
+        {
+          "before": "buffer_load_dwordx4 v[41:42], s[16:19], s43 idxen offen slc lds// 00000000381C: E05F3000 2B040029",
+          "after": "buffer_load_dwordx4 v[41:42], s[16:19], s43 idxen offen lds// 00000000381C: E05D3000 2B040029"
+        },
+        {
+          "before": "buffer_load_dwordx4 v[41:42], s[16:19], s40 idxen offen slc lds// 0000000038CC: E05F3000 28040029",
+          "after": "buffer_load_dwordx4 v[41:42], s[16:19], s40 idxen offen lds// 0000000038CC: E05D3000 28040029"
+        },
+        {
+          "before": "buffer_load_dwordx4 v[41:42], s[16:19], s2 idxen offen slc lds// 000000003A08: E05F3000 02040029",
+          "after": "buffer_load_dwordx4 v[41:42], s[16:19], s2 idxen offen lds // 000000003A08: E05D3000 02040029"
+        },
+        {
+          "before": "buffer_load_dwordx4 v[41:42], s[16:19], s2 idxen offen slc lds// 000000003AFC: E05F3000 02040029",
+          "after": "buffer_load_dwordx4 v[41:42], s[16:19], s2 idxen offen lds // 000000003AFC: E05D3000 02040029"
+        },
+        {
+          "before": "buffer_load_dwordx4 v[41:42], s[16:19], s2 idxen offen slc lds// 000000003BF8: E05F3000 02040029",
+          "after": "buffer_load_dwordx4 v[41:42], s[16:19], s2 idxen offen lds // 000000003BF8: E05D3000 02040029"
+        },
+        {
+          "before": "buffer_load_dwordx4 v[41:42], s[16:19], s2 idxen offen slc lds// 000000003CEC: E05F3000 02040029",
+          "after": "buffer_load_dwordx4 v[41:42], s[16:19], s2 idxen offen lds // 000000003CEC: E05D3000 02040029"
+        },
+        {
+          "before": "buffer_load_dwordx4 v[41:42], s[16:19], s0 idxen offen slc lds// 000000003DE8: E05F3000 00040029",
+          "after": "buffer_load_dwordx4 v[41:42], s[16:19], s0 idxen offen lds // 000000003DE8: E05D3000 00040029"
+        }
+      ]
+    },
+    {
+      "padded_M": 64,
+      "instructions": 1165,
+      "only_A_cache_modifier_changes": 14,
+      "changes": [
+        {
+          "before": "buffer_load_dwordx4 v[57:58], s[16:19], s0 idxen offen slc lds// 000000004494: E05F3000 00040039",
+          "after": "buffer_load_dwordx4 v[57:58], s[16:19], s0 idxen offen lds // 000000004494: E05D3000 00040039"
+        },
+        {
+          "before": "buffer_load_dwordx4 v[57:58], s[16:19], s3 idxen offen slc lds// 000000004540: E05F3000 03040039",
+          "after": "buffer_load_dwordx4 v[57:58], s[16:19], s3 idxen offen lds // 000000004540: E05D3000 03040039"
+        },
+        {
+          "before": "buffer_load_dwordx4 v[57:58], s[16:19], s2 idxen offen slc lds// 000000004740: E05F3000 02040039",
+          "after": "buffer_load_dwordx4 v[57:58], s[16:19], s2 idxen offen lds // 000000004740: E05D3000 02040039"
+        },
+        {
+          "before": "buffer_load_dwordx4 v[57:58], s[16:19], s43 idxen offen slc lds// 000000004964: E05F3000 2B040039",
+          "after": "buffer_load_dwordx4 v[57:58], s[16:19], s43 idxen offen lds// 000000004964: E05D3000 2B040039"
+        },
+        {
+          "before": "buffer_load_dwordx4 v[57:58], s[16:19], s43 idxen offen slc lds// 000000004A7C: E05F3000 2B040039",
+          "after": "buffer_load_dwordx4 v[57:58], s[16:19], s43 idxen offen lds// 000000004A7C: E05D3000 2B040039"
+        },
+        {
+          "before": "buffer_load_dwordx4 v[57:58], s[16:19], s43 idxen offen slc lds// 000000004B94: E05F3000 2B040039",
+          "after": "buffer_load_dwordx4 v[57:58], s[16:19], s43 idxen offen lds// 000000004B94: E05D3000 2B040039"
+        },
+        {
+          "before": "buffer_load_dwordx4 v[57:58], s[16:19], s43 idxen offen slc lds// 000000004CAC: E05F3000 2B040039",
+          "after": "buffer_load_dwordx4 v[57:58], s[16:19], s43 idxen offen lds// 000000004CAC: E05D3000 2B040039"
+        },
+        {
+          "before": "buffer_load_dwordx4 v[57:58], s[16:19], s44 idxen offen slc lds// 000000004DC0: E05F3000 2C040039",
+          "after": "buffer_load_dwordx4 v[57:58], s[16:19], s44 idxen offen lds// 000000004DC0: E05D3000 2C040039"
+        },
+        {
+          "before": "buffer_load_dwordx4 v[57:58], s[16:19], s41 idxen offen slc lds// 000000004ED0: E05F3000 29040039",
+          "after": "buffer_load_dwordx4 v[57:58], s[16:19], s41 idxen offen lds// 000000004ED0: E05D3000 29040039"
+        },
+        {
+          "before": "buffer_load_dwordx4 v[57:58], s[16:19], s2 idxen offen slc lds// 00000000508C: E05F3000 02040039",
+          "after": "buffer_load_dwordx4 v[57:58], s[16:19], s2 idxen offen lds // 00000000508C: E05D3000 02040039"
+        },
+        {
+          "before": "buffer_load_dwordx4 v[57:58], s[16:19], s2 idxen offen slc lds// 0000000051E0: E05F3000 02040039",
+          "after": "buffer_load_dwordx4 v[57:58], s[16:19], s2 idxen offen lds // 0000000051E0: E05D3000 02040039"
+        },
+        {
+          "before": "buffer_load_dwordx4 v[57:58], s[16:19], s2 idxen offen slc lds// 00000000533C: E05F3000 02040039",
+          "after": "buffer_load_dwordx4 v[57:58], s[16:19], s2 idxen offen lds // 00000000533C: E05D3000 02040039"
+        },
+        {
+          "before": "buffer_load_dwordx4 v[57:58], s[16:19], s2 idxen offen slc lds// 000000005490: E05F3000 02040039",
+          "after": "buffer_load_dwordx4 v[57:58], s[16:19], s2 idxen offen lds // 000000005490: E05D3000 02040039"
+        },
+        {
+          "before": "buffer_load_dwordx4 v[57:58], s[16:19], s0 idxen offen slc lds// 0000000055EC: E05F3000 00040039",
+          "after": "buffer_load_dwordx4 v[57:58], s[16:19], s0 idxen offen lds // 0000000055EC: E05D3000 00040039"
+        }
+      ]
+    }
+  ],
+  "mathematical_address_schedule_unchanged": true,
+  "performance_unverified": true,
+  "no_claim_about_undocumented_cache_hierarchy": true
+}

@@ -1,0 +1,37 @@
+{
+  "at": "2026-11-13T11:02:27.038793+00:00",
+  "status": "Cache-revision profile rule beforefirstGPU",
+  "fixed_before_any_capture": true,
+  "dispatch": 18,
+  "SE": 0,
+  "target_cu_order": [
+    0,
+    1,
+    2
+  ],
+  "minimum_raw_token_bytes": 4096,
+  "sections": "speed_of_light,memory_workload,occupancy,memory_chart,instruction_statistics,compute_workload,scheduler_statistics,wave_state",
+  "sqtt": true,
+  "formal_timing": false,
+  "maximum_pairs": 7,
+  "fixed_ids": [
+    620,
+    621,
+    805,
+    335
+  ],
+  "requires_complete_discovery": 23,
+  "global_depth_choice": "Singlepolicy42;16representatives; no variantchoice",
+  "category_completion": "Add medianordered delta/ID/variant for each missing observed gain(<-2%)/flat/loss(>2%);retainhighCV",
+  "control": "AllbasecurrentP6kbestwithinnewbinary; no directold6035timinginsidefreshbinary",
+  "sparse_rule": "Only valid identity/dispatch but sparse tokens may advance to next predeclared CU; recapture both arms;retainall attempts;errorsorMKFD stop",
+  "questions": [
+    "Does perCTA totalLDS/SALU declineasexpected whileMMAC/outputremainunchanged?",
+    "Do increasedperwaveMreuse/ILP offset register andresident-wave changes? No assumedcausalityfromoccupancy alone.",
+    "Comparefull steadyK, prologue/drain/epilogue andallgain/flat/loss; do notsumoverlappingwavecycles."
+  ],
+  "extra_geometry_control_id": null,
+  "fixed_id_reason": "LargeCTA samplestraceable inpriorcaptures, chosenbeforecacheGPUoutcome. AlllowCTA remaininprecision/timing/domain.",
+  "extra_geometry_control_ids": [],
+  "extra_geometry_reason": "NoGPUlocationretrybeyondoriginal0/1/2; retainpartialonfailure."
+}

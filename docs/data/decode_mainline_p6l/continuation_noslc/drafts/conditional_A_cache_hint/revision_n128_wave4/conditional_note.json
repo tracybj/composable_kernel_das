@@ -1,0 +1,13 @@
+{
+  "at": "2026-11-13T10:35:39.311961+00:00",
+  "state": "Conditional text only: no compiler/integration/GPU",
+  "source25_unchanged": true,
+  "GPU": false,
+  "source_header_sha256": "369f77c1bb3f2a20272c841746147232bc12c35afb8be0921bc962638f908499",
+  "draft_header_sha256": "dc363edef3cce03c95bac73a4b843b457df988ac50469b3434b9fcf53dbcb48c",
+  "reason": "Wave4 earlytimingretains620/805regression despitepredictedconsumer/SALUreduction. PriorNative14steadyDTLhints lack explicitSLC; currentAhelperexplicitSLC. Batch13N128805wholeHBMincreased; awaitfullprofile14beforeproceeding.",
+  "hypothesis": "Onebit A-load cachepolicy only; no assumption aboutundocumentedSLCcachehierarchysemantics. Require actualISAidenticalexceptA-loadmodifier andrealmatchedresource/timing evidence.",
+  "candidate_revision": "Optimize the implementation of experimental6035, retainingN128K32D2W4/op3geometry, selectorattributes, IDmeaning, ABIanddefault-off. Preserveall1760non6035oldshaderbytes; onlysix6035shadersmaychange, andonlycachemodifierifactualISAproofpasses. Old6035source/binary/results remainimmutableandseparate; finalnewA/BusesP6kbestwithinnewbinary.",
+  "scope": "Same96originals/53weak, allG andpriorwinners; no post-hocIDselection. Same27representative/control pairs, no drawuntilviablewholefamily.",
+  "constraints": "No compilewhilecurrentGPU; fullcurrent27/profile14/owncommit/archive/selectionterminalfirst. Incremental6targetofficialbuildonlyafteronebitCPUproof anddecision. Allnew96+24fresh7blocks required, seed6411927notdrawn;12:10/14:10UTCunchanged."
+}
