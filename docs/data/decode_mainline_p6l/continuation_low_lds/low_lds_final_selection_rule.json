@@ -1,0 +1,27 @@
+{
+  "at": "2026-11-13T08:09:01.946994+00:00",
+  "fixed_before_first_low_LDS_GPU": true,
+  "policies": [
+    {
+      "name": "pure",
+      "final_variant": 38,
+      "candidate_ids": [
+        6034
+      ]
+    },
+    {
+      "name": "auto",
+      "final_variant": 40,
+      "candidate_ids": [
+        6032,
+        6034
+      ]
+    }
+  ],
+  "scope_original_count": 108,
+  "scope_original_weak": 73,
+  "discovery_selection": "Within the predeclaredscope, include all original representatives includingpriorwinners. Reject knownloss ifnot highCV andall3pairedratios>1.02; otherwise select lowestGMcandidate/base, tiepreferpure. This selects one wholepolicy, never best-by-ID. Uncertainlosses staylabelled andwhole-domain7blocks mayreject.",
+  "confirmation": "No performanceadoption from3rounds. All108originals+24fresh, fixed7blocks, stable50/attributable30 andwhole-domain regression rules unchanged.",
+  "next_unused_seed": 6411927,
+  "seed_not_drawn": true
+}

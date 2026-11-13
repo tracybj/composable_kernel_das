@@ -1,0 +1,23 @@
+{
+  "at": "2026-11-13T07:48:01.821709+00:00",
+  "proceed": true,
+  "not_a_fourth_ownership_architecture": true,
+  "parent": "H3 full-M cooperative A/B, K32, two global slots, three operand banks, compute-first",
+  "parent_results_sha256": "7bc9cb53e6743634b39775bc51b7f7a8670e9947cbc73af9982db4bf98a66f5f",
+  "parent_profiles_sha256": "cf8d1fc80a0238813ef3a1a7fe43b063952d0e0aa2c58f6b5290b40354465b60",
+  "evidence": "B-reuse D2GM1.015139/D3GM1.034028. ID805 same-depth VGPR168→128 andLDSinstructions1316→1060, residency6.697→6.688; HBMnearonecopy. LowCTA/regression remains. Do not continue register-only reduction.",
+  "change": "N128K32D2, W4 forM<=16/W8 for17..64. MGroups1/2/2 andMFragments1/1/2, WaveN32. One B VMEM per8-wave producer or two per4-wave producer, no scalarushortpacking. LDS18/20/24KiB. Same completeM CTAownership, same outputprecision, noKreduction.",
+  "tradeoff": "NarrowingN doublesCTAs and Aproducerduplication; aggregateLDSconsumertraffic mayincrease forM32/M64. Test thatunusedLDSbandwidth canbuy memoryrequestparallelism; no predictedresidency/performancegain.",
+  "new_instance": 6034,
+  "variants": {
+    "pure_full": 37,
+    "pure_scope": 38,
+    "auto_full": 39,
+    "auto_scope": 40
+  },
+  "auto_rule": "Use N1286034 ifN%256!=0 or G*(N/256)<160; otherwise existingN256D2B-reuse6032. 160is twoCTA waves for measured80CU target. Fixed before newGPU, notsearched.",
+  "scope": "Retain G<=32&&(M>=17||K>=6144), M<=64,N1024..4096%128,K2048..8192%128. Originaldomain108/73weak mustCPUrecount.",
+  "contract": "gfx936BF16NN common/nonempty/nonragged knownaligned packed; noarbitrarystrideclaim. Epilogue requiresN%selectedTileN==0:128for6034/256for6032; N1232 staysfallback.",
+  "experimental_budget": "One bounded new geometry andtwo policies, no broadtile/depth sweep. Preserve all1754 oldshaderbytes, wholefamily+24fresh+7blocks stillrequired; targets50/30unchanged.",
+  "first_GPU_not_started": true
+}

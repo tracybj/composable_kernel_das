@@ -1,0 +1,40 @@
+{
+  "at": "2026-11-13T08:10:06.201302+00:00",
+  "status": "Low-LDS geometry/policy profile rule before firstGPU",
+  "fixed_before_any_capture": true,
+  "dispatch": 18,
+  "SE": 0,
+  "target_cu_order": [
+    0,
+    1,
+    2
+  ],
+  "minimum_raw_token_bytes": 4096,
+  "sections": "speed_of_light,memory_workload,occupancy,memory_chart,instruction_statistics,compute_workload,scheduler_statistics,wave_state",
+  "sqtt": true,
+  "formal_timing": false,
+  "maximum_pairs": 9,
+  "fixed_ids": [
+    621,
+    805,
+    1017,
+    686
+  ],
+  "requires_complete_discovery": 59,
+  "global_depth_choice": "LowestGM over identical23representatives forpure/auto; diagnostic only",
+  "category_completion": "Add medianordered delta/ID/variant for each missing observed gain(<-2%)/flat/loss(>2%);retainhighCV",
+  "control": "ExistingN256D2B-reuse6032 vsnewN128D2 6034, coupledgeometryfactor, notcurrentbest",
+  "sparse_rule": "Only valid identity/dispatch but sparse tokens may advance to next predeclared CU; recapture both arms;retainall attempts;errorsorMKFD stop",
+  "questions": [
+    "Does lowLDSfootprint actuallyincrease residentwaves/CTA concurrency? No assumedtheoreticalresident count.",
+    "Check globalone-copytraffic vs extraA/LDS work andfutureoperand/MMAC overlap; do notsumwaveclocks.",
+    "Keep purepolicy, autoattribute policy and originalbestCK identities separate."
+  ],
+  "extra_geometry_control_id": 805,
+  "fixed_id_reason": "Before anynewGPU: cover newM16/W4 andM32/W8 lowCTA paths evenwhen auto choosesoldN256 atlargeCTA. Existing621/805retainM64 anddirectgeometrycontrol. No newperformance data used.",
+  "extra_geometry_control_ids": [
+    805,
+    1009
+  ],
+  "extra_geometry_reason": "Before firstnewGPU: ID1009M1largeCTA compares W4lowLDS againstW8N256 when multiCTA residency opportunity exists;1017covers lowCTA M1 separately."
+}
