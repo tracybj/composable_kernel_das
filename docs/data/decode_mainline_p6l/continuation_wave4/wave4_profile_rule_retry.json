@@ -1,0 +1,84 @@
+{
+  "at": "2026-11-13T10:39:15.806708+00:00",
+  "status": "UniformfourwaveM-ownership profile rule before firstnewGPU",
+  "fixed_before_any_capture": true,
+  "dispatch": 18,
+  "SE": 0,
+  "target_cu_order": [
+    3,
+    7,
+    15
+  ],
+  "minimum_raw_token_bytes": 4096,
+  "sections": "speed_of_light,memory_workload,occupancy,memory_chart,instruction_statistics,compute_workload,scheduler_statistics,wave_state",
+  "sqtt": true,
+  "formal_timing": false,
+  "maximum_pairs": 9,
+  "fixed_ids": [
+    620,
+    805,
+    686,
+    687
+  ],
+  "requires_complete_discovery": 27,
+  "global_depth_choice": "Singlepolicy42, all16registeredin-scope representatives; no choicebetweencandidates",
+  "category_completion": "Add medianordered delta/ID/variant for each missing observed gain(<-2%)/flat/loss(>2%);retainhighCV",
+  "control": "OldN128D2W8 instance6034 versusnewN128D2W4 instance6035; sameN/K/depth/grid/LDS/globalbytes; coupledMownership/Breuse/registerfactor",
+  "sparse_rule": "Only valid identity/dispatch but sparse tokens may advance to next predeclared CU; recapture both arms;retainall attempts;errorsorMKFD stop",
+  "questions": [
+    "Does perCTA totalLDS/SALU declineasexpected whileMMAC/outputremainunchanged?",
+    "Do increasedperwaveMreuse/ILP offset register andresident-wave changes? No assumedcausalityfromoccupancy alone.",
+    "Comparefull steadyK, prologue/drain/epilogue andallgain/flat/loss; do notsumoverlappingwavecycles."
+  ],
+  "extra_geometry_control_id": 805,
+  "fixed_id_reason": "CoverM32/M64 lowG andmoderateG withoutselectingbynewoutcome",
+  "extra_geometry_control_ids": [
+    620,
+    805
+  ],
+  "extra_geometry_reason": "Samegeometry directpartition controls; currentbestCK keptseparate",
+  "original_rule": {
+    "at": "2026-11-13T09:36:53.019806+00:00",
+    "status": "UniformfourwaveM-ownership profile rule before firstnewGPU",
+    "fixed_before_any_capture": true,
+    "dispatch": 18,
+    "SE": 0,
+    "target_cu_order": [
+      0,
+      1,
+      2
+    ],
+    "minimum_raw_token_bytes": 4096,
+    "sections": "speed_of_light,memory_workload,occupancy,memory_chart,instruction_statistics,compute_workload,scheduler_statistics,wave_state",
+    "sqtt": true,
+    "formal_timing": false,
+    "maximum_pairs": 9,
+    "fixed_ids": [
+      620,
+      805,
+      686,
+      687
+    ],
+    "requires_complete_discovery": 27,
+    "global_depth_choice": "Singlepolicy42, all16registeredin-scope representatives; no choicebetweencandidates",
+    "category_completion": "Add medianordered delta/ID/variant for each missing observed gain(<-2%)/flat/loss(>2%);retainhighCV",
+    "control": "OldN128D2W8 instance6034 versusnewN128D2W4 instance6035; sameN/K/depth/grid/LDS/globalbytes; coupledMownership/Breuse/registerfactor",
+    "sparse_rule": "Only valid identity/dispatch but sparse tokens may advance to next predeclared CU; recapture both arms;retainall attempts;errorsorMKFD stop",
+    "questions": [
+      "Does perCTA totalLDS/SALU declineasexpected whileMMAC/outputremainunchanged?",
+      "Do increasedperwaveMreuse/ILP offset register andresident-wave changes? No assumedcausalityfromoccupancy alone.",
+      "Comparefull steadyK, prologue/drain/epilogue andallgain/flat/loss; do notsumoverlappingwavecycles."
+    ],
+    "extra_geometry_control_id": 805,
+    "fixed_id_reason": "CoverM32/M64 lowG andmoderateG withoutselectingbynewoutcome",
+    "extra_geometry_control_ids": [
+      620,
+      805
+    ],
+    "extra_geometry_reason": "Samegeometry directpartition controls; currentbestCK keptseparate"
+  },
+  "original_rule_sha256": "d43278e919ec4c1a96a0e1bc28bf6995ba1bfc05550804fde913a291116e22c2",
+  "repair_reason": "PrespecifiedCU0/1/2allvalididentitybuttraceonly544..832bytesforID686base. Oneexplicitboundedtrace-locationrepair; noMKFD, noaccuracy/timingrerun, nochange4096tokenminimum, allattemptsretained. FreezeCU3/7/15beforeadditionalcapture; ifsparseagainstop.",
+  "maximum_additional_CU_choices": 3,
+  "performance_selection_changed": false
+}

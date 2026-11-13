@@ -1,0 +1,2010 @@
+{
+  "schema": 1,
+  "hypothesis_sha256": "934c38dcb640f611dc0800c40b47151d1970155afcaa65b8b4e0da1acf8cdcb7",
+  "scope_design_sha256": "686116ed9c2dc3fd0320985cece3cf91ac68e4b7d3f2f2557cb37173245e688f",
+  "variants": {
+    "wave4": {
+      "variant": 41,
+      "instance": 6035
+    },
+    "scope_wave4": {
+      "variant": 42,
+      "instance": 6035
+    }
+  },
+  "qualification_cases": [
+    {
+      "ID": -71000,
+      "M": 1,
+      "N": 1280,
+      "K": 2176,
+      "G": 3,
+      "phase": "decode",
+      "expected": 6035,
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "41",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "accuracy_repeats": 3,
+      "variant": "wave4"
+    },
+    {
+      "ID": -71001,
+      "M": 15,
+      "N": 1280,
+      "K": 2176,
+      "G": 3,
+      "phase": "decode",
+      "expected": 6035,
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "41",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "accuracy_repeats": 3,
+      "variant": "wave4"
+    },
+    {
+      "ID": -71002,
+      "M": 16,
+      "N": 1280,
+      "K": 2176,
+      "G": 3,
+      "phase": "decode",
+      "expected": 6035,
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "41",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "accuracy_repeats": 3,
+      "variant": "wave4"
+    },
+    {
+      "ID": -71003,
+      "M": 17,
+      "N": 1280,
+      "K": 2176,
+      "G": 3,
+      "phase": "decode",
+      "expected": 6035,
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "41",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "accuracy_repeats": 3,
+      "variant": "wave4"
+    },
+    {
+      "ID": -71004,
+      "M": 31,
+      "N": 1280,
+      "K": 2176,
+      "G": 3,
+      "phase": "decode",
+      "expected": 6035,
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "41",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "accuracy_repeats": 3,
+      "variant": "wave4"
+    },
+    {
+      "ID": -71005,
+      "M": 32,
+      "N": 1280,
+      "K": 2176,
+      "G": 3,
+      "phase": "decode",
+      "expected": 6035,
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "41",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "accuracy_repeats": 3,
+      "variant": "wave4"
+    },
+    {
+      "ID": -71006,
+      "M": 33,
+      "N": 1280,
+      "K": 2176,
+      "G": 3,
+      "phase": "decode",
+      "expected": 6035,
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "41",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "accuracy_repeats": 3,
+      "variant": "wave4"
+    },
+    {
+      "ID": -71007,
+      "M": 63,
+      "N": 1280,
+      "K": 2176,
+      "G": 3,
+      "phase": "decode",
+      "expected": 6035,
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "41",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "accuracy_repeats": 3,
+      "variant": "wave4"
+    },
+    {
+      "ID": -71008,
+      "M": 64,
+      "N": 1280,
+      "K": 2176,
+      "G": 3,
+      "phase": "decode",
+      "expected": 6035,
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "41",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "accuracy_repeats": 3,
+      "variant": "wave4"
+    },
+    {
+      "ID": -71009,
+      "M": 1,
+      "N": 1280,
+      "K": 2176,
+      "G": 3,
+      "phase": "decode",
+      "expected": 5000,
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "accuracy_repeats": 3,
+      "variant": "scope_wave4"
+    },
+    {
+      "ID": -71010,
+      "M": 15,
+      "N": 1280,
+      "K": 2176,
+      "G": 3,
+      "phase": "decode",
+      "expected": 5000,
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "accuracy_repeats": 3,
+      "variant": "scope_wave4"
+    },
+    {
+      "ID": -71011,
+      "M": 16,
+      "N": 1280,
+      "K": 2176,
+      "G": 3,
+      "phase": "decode",
+      "expected": 5000,
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "accuracy_repeats": 3,
+      "variant": "scope_wave4"
+    },
+    {
+      "ID": -71012,
+      "M": 17,
+      "N": 1280,
+      "K": 2176,
+      "G": 3,
+      "phase": "decode",
+      "expected": 6035,
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "accuracy_repeats": 3,
+      "variant": "scope_wave4"
+    },
+    {
+      "ID": -71013,
+      "M": 31,
+      "N": 1280,
+      "K": 2176,
+      "G": 3,
+      "phase": "decode",
+      "expected": 6035,
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "accuracy_repeats": 3,
+      "variant": "scope_wave4"
+    },
+    {
+      "ID": -71014,
+      "M": 32,
+      "N": 1280,
+      "K": 2176,
+      "G": 3,
+      "phase": "decode",
+      "expected": 6035,
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "accuracy_repeats": 3,
+      "variant": "scope_wave4"
+    },
+    {
+      "ID": -71015,
+      "M": 33,
+      "N": 1280,
+      "K": 2176,
+      "G": 3,
+      "phase": "decode",
+      "expected": 6035,
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "accuracy_repeats": 3,
+      "variant": "scope_wave4"
+    },
+    {
+      "ID": -71016,
+      "M": 63,
+      "N": 1280,
+      "K": 2176,
+      "G": 3,
+      "phase": "decode",
+      "expected": 6035,
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "accuracy_repeats": 3,
+      "variant": "scope_wave4"
+    },
+    {
+      "ID": -71017,
+      "M": 64,
+      "N": 1280,
+      "K": 2176,
+      "G": 3,
+      "phase": "decode",
+      "expected": 6035,
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "accuracy_repeats": 3,
+      "variant": "scope_wave4"
+    },
+    {
+      "ID": -71018,
+      "M": 64,
+      "N": 1280,
+      "K": 2176,
+      "G": 3,
+      "phase": "decode",
+      "expected": 6035,
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "41",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "1"
+      },
+      "accuracy_repeats": 3,
+      "variant": "wave4_fast_disabled"
+    },
+    {
+      "ID": -71019,
+      "M": 64,
+      "N": 1280,
+      "K": 2176,
+      "G": 3,
+      "phase": "decode",
+      "expected": 6035,
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "1"
+      },
+      "accuracy_repeats": 3,
+      "variant": "scope_wave4_fast_disabled"
+    },
+    {
+      "ID": -71020,
+      "M": 32,
+      "N": 1024,
+      "K": 2048,
+      "G": 32,
+      "phase": "decode",
+      "expected": 5003,
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "41",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "accuracy_repeats": 3,
+      "frozen_BLAS_ms": 0.1221439465880394,
+      "p6k_CK_ms": 0.1547205,
+      "p6k_R": 0.7894490166981065,
+      "scheme": "smallM_64x128x16",
+      "variant": "wave4_family_disabled"
+    },
+    {
+      "ID": -71021,
+      "M": 64,
+      "N": 2048,
+      "K": 4096,
+      "G": 32,
+      "phase": "decode",
+      "expected": 5000,
+      "env": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "accuracy_repeats": 3,
+      "frozen_BLAS_ms": 0.4316718578338623,
+      "p6k_CK_ms": 0.51304197,
+      "p6k_R": 0.8413967727316,
+      "scheme": "v7_256x256x16_M01_1",
+      "variant": "scope_wave4_family_disabled"
+    },
+    {
+      "ID": -71022,
+      "M": 65,
+      "N": 1280,
+      "K": 2176,
+      "G": 3,
+      "phase": "decode",
+      "expected": 5000,
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "41",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "accuracy_repeats": 3,
+      "variant": "wave4_unsupported_fallback"
+    },
+    {
+      "ID": -71023,
+      "M": 32,
+      "N": 1280,
+      "K": 2112,
+      "G": 3,
+      "phase": "decode",
+      "expected": 5000,
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "41",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "accuracy_repeats": 3,
+      "variant": "wave4_unsupported_fallback"
+    },
+    {
+      "ID": -71024,
+      "M": 65,
+      "N": 1280,
+      "K": 2176,
+      "G": 3,
+      "phase": "decode",
+      "expected": 5000,
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "accuracy_repeats": 3,
+      "variant": "scope_wave4_unsupported_fallback"
+    },
+    {
+      "ID": -71025,
+      "M": 32,
+      "N": 1280,
+      "K": 2112,
+      "G": 3,
+      "phase": "decode",
+      "expected": 5000,
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "accuracy_repeats": 3,
+      "variant": "scope_wave4_unsupported_fallback"
+    },
+    {
+      "ID": -71026,
+      "M": 32,
+      "N": 1152,
+      "K": 2176,
+      "G": 3,
+      "phase": "decode",
+      "expected": 6035,
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "41",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "accuracy_repeats": 3,
+      "variant": "wave4_N128_contract"
+    },
+    {
+      "ID": -71027,
+      "M": 32,
+      "N": 1152,
+      "K": 2176,
+      "G": 3,
+      "phase": "decode",
+      "expected": 6035,
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "accuracy_repeats": 3,
+      "variant": "scope_wave4_N128_contract"
+    },
+    {
+      "ID": -71028,
+      "M": 32,
+      "N": 1280,
+      "K": 2176,
+      "G": 33,
+      "phase": "decode",
+      "expected": 6035,
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "accuracy_repeats": 3,
+      "variant": "scope_wave4_all_G_contract"
+    },
+    {
+      "ID": -71029,
+      "M": 64,
+      "N": 1280,
+      "K": 2176,
+      "G": 128,
+      "phase": "decode",
+      "expected": 6035,
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "accuracy_repeats": 3,
+      "variant": "scope_wave4_all_G_contract"
+    },
+    {
+      "ID": -71030,
+      "M": 16,
+      "N": 1280,
+      "K": 6144,
+      "G": 3,
+      "phase": "decode",
+      "expected": 5000,
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "accuracy_repeats": 3,
+      "variant": "scope_wave4_M16_longK_fallback"
+    },
+    {
+      "ID": -71031,
+      "M": 17,
+      "N": 1024,
+      "K": 2048,
+      "G": 1,
+      "phase": "decode",
+      "expected": 6035,
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "accuracy_repeats": 3,
+      "variant": "scope_wave4_min_group"
+    },
+    {
+      "ID": -71032,
+      "M": 1,
+      "N": 1232,
+      "K": 1536,
+      "G": 392,
+      "phase": "decode",
+      "expected": 5016,
+      "env": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_N_TAIL": "2",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "41",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "accuracy_repeats": 3,
+      "frozen_BLAS_ms": 1.7977596521377563,
+      "p6k_CK_ms": 1.1342405,
+      "p6k_R": 1.5849898254715435,
+      "scheme": "P6f_tail256_candidate",
+      "variant": "wave4_N1232_fallback"
+    }
+  ],
+  "discovery_pairs": [
+    {
+      "key": "id620_scope_wave4",
+      "ID": 620,
+      "base": {
+        "ID": 620,
+        "M": 32,
+        "N": 1024,
+        "K": 2048,
+        "G": 32,
+        "phase": "decode",
+        "expected": 5003,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 0.1221439465880394,
+        "p6k_CK_ms": 0.1547205,
+        "p6k_R": 0.7894490166981065,
+        "scheme": "smallM_64x128x16"
+      },
+      "candidate": {
+        "ID": 620,
+        "M": 32,
+        "N": 1024,
+        "K": 2048,
+        "G": 32,
+        "phase": "decode",
+        "expected": 6035,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+          "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 0.1221439465880394,
+        "p6k_CK_ms": 0.1547205,
+        "p6k_R": 0.7894490166981065,
+        "scheme": "smallM_64x128x16",
+        "variant": "scope_wave4"
+      },
+      "variant": "scope_wave4",
+      "control": false
+    },
+    {
+      "key": "id621_scope_wave4",
+      "ID": 621,
+      "base": {
+        "ID": 621,
+        "M": 64,
+        "N": 1024,
+        "K": 2048,
+        "G": 32,
+        "phase": "decode",
+        "expected": 5003,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 0.12682394683361053,
+        "p6k_CK_ms": 0.17080301,
+        "p6k_R": 0.7425158774052666,
+        "scheme": "smallM_64x128x16"
+      },
+      "candidate": {
+        "ID": 621,
+        "M": 64,
+        "N": 1024,
+        "K": 2048,
+        "G": 32,
+        "phase": "decode",
+        "expected": 6035,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+          "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 0.12682394683361053,
+        "p6k_CK_ms": 0.17080301,
+        "p6k_R": 0.7425158774052666,
+        "scheme": "smallM_64x128x16",
+        "variant": "scope_wave4"
+      },
+      "variant": "scope_wave4",
+      "control": false
+    },
+    {
+      "key": "id805_scope_wave4",
+      "ID": 805,
+      "base": {
+        "ID": 805,
+        "M": 64,
+        "N": 2048,
+        "K": 4096,
+        "G": 32,
+        "phase": "decode",
+        "expected": 5000,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 0.4316718578338623,
+        "p6k_CK_ms": 0.51304197,
+        "p6k_R": 0.8413967727316,
+        "scheme": "v7_256x256x16_M01_1"
+      },
+      "candidate": {
+        "ID": 805,
+        "M": 64,
+        "N": 2048,
+        "K": 4096,
+        "G": 32,
+        "phase": "decode",
+        "expected": 6035,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+          "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 0.4316718578338623,
+        "p6k_CK_ms": 0.51304197,
+        "p6k_R": 0.8413967727316,
+        "scheme": "v7_256x256x16_M01_1",
+        "variant": "scope_wave4"
+      },
+      "variant": "scope_wave4",
+      "control": false
+    },
+    {
+      "key": "id948_scope_wave4",
+      "ID": 948,
+      "base": {
+        "ID": 948,
+        "M": 64,
+        "N": 4096,
+        "K": 4096,
+        "G": 16,
+        "phase": "decode",
+        "expected": 5000,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 0.4345358908176422,
+        "p6k_CK_ms": 0.48504001,
+        "p6k_R": 0.8958763851617977,
+        "scheme": "v7_256x256x16_M01_1"
+      },
+      "candidate": {
+        "ID": 948,
+        "M": 64,
+        "N": 4096,
+        "K": 4096,
+        "G": 16,
+        "phase": "decode",
+        "expected": 6035,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+          "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 0.4345358908176422,
+        "p6k_CK_ms": 0.48504001,
+        "p6k_R": 0.8958763851617977,
+        "scheme": "v7_256x256x16_M01_1",
+        "variant": "scope_wave4"
+      },
+      "variant": "scope_wave4",
+      "control": false
+    },
+    {
+      "key": "id312_scope_wave4",
+      "ID": 312,
+      "base": {
+        "ID": 312,
+        "M": 32,
+        "N": 4096,
+        "K": 2048,
+        "G": 64,
+        "phase": "decode",
+        "expected": 5000,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 0.9032077789306641,
+        "p6k_CK_ms": 0.84888148,
+        "p6k_R": 1.063997507556254,
+        "scheme": "v7_256x256x16_M01_1"
+      },
+      "candidate": {
+        "ID": 312,
+        "M": 32,
+        "N": 4096,
+        "K": 2048,
+        "G": 64,
+        "phase": "decode",
+        "expected": 6035,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+          "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 0.9032077789306641,
+        "p6k_CK_ms": 0.84888148,
+        "p6k_R": 1.063997507556254,
+        "scheme": "v7_256x256x16_M01_1",
+        "variant": "scope_wave4"
+      },
+      "variant": "scope_wave4",
+      "control": false
+    },
+    {
+      "key": "id327_scope_wave4",
+      "ID": 327,
+      "base": {
+        "ID": 327,
+        "M": 32,
+        "N": 4096,
+        "K": 2048,
+        "G": 16,
+        "phase": "decode",
+        "expected": 5003,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 0.2370239496231079,
+        "p6k_CK_ms": 0.236402,
+        "p6k_R": 1.0026308983134995,
+        "scheme": "smallM_64x128x16"
+      },
+      "candidate": {
+        "ID": 327,
+        "M": 32,
+        "N": 4096,
+        "K": 2048,
+        "G": 16,
+        "phase": "decode",
+        "expected": 6035,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+          "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 0.2370239496231079,
+        "p6k_CK_ms": 0.236402,
+        "p6k_R": 1.0026308983134995,
+        "scheme": "smallM_64x128x16",
+        "variant": "scope_wave4"
+      },
+      "variant": "scope_wave4",
+      "control": false
+    },
+    {
+      "key": "id328_scope_wave4",
+      "ID": 328,
+      "base": {
+        "ID": 328,
+        "M": 64,
+        "N": 4096,
+        "K": 2048,
+        "G": 16,
+        "phase": "decode",
+        "expected": 5003,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 0.24018390476703644,
+        "p6k_CK_ms": 0.248,
+        "p6k_R": 0.9684834869638567,
+        "scheme": "smallM_64x128x16"
+      },
+      "candidate": {
+        "ID": 328,
+        "M": 64,
+        "N": 4096,
+        "K": 2048,
+        "G": 16,
+        "phase": "decode",
+        "expected": 6035,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+          "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 0.24018390476703644,
+        "p6k_CK_ms": 0.248,
+        "p6k_R": 0.9684834869638567,
+        "scheme": "smallM_64x128x16",
+        "variant": "scope_wave4"
+      },
+      "variant": "scope_wave4",
+      "control": false
+    },
+    {
+      "key": "id335_scope_wave4",
+      "ID": 335,
+      "base": {
+        "ID": 335,
+        "M": 64,
+        "N": 4096,
+        "K": 2048,
+        "G": 8,
+        "phase": "decode",
+        "expected": 5003,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 0.11873594671487808,
+        "p6k_CK_ms": 0.12112,
+        "p6k_R": 0.9803166010145151,
+        "scheme": "smallM_64x128x16"
+      },
+      "candidate": {
+        "ID": 335,
+        "M": 64,
+        "N": 4096,
+        "K": 2048,
+        "G": 8,
+        "phase": "decode",
+        "expected": 6035,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+          "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 0.11873594671487808,
+        "p6k_CK_ms": 0.12112,
+        "p6k_R": 0.9803166010145151,
+        "scheme": "smallM_64x128x16",
+        "variant": "scope_wave4"
+      },
+      "variant": "scope_wave4",
+      "control": false
+    },
+    {
+      "key": "id530_scope_wave4",
+      "ID": 530,
+      "base": {
+        "ID": 530,
+        "M": 32,
+        "N": 3584,
+        "K": 3072,
+        "G": 224,
+        "phase": "decode",
+        "expected": 5000,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 4.324078559875488,
+        "p6k_CK_ms": 3.9980779,
+        "p6k_R": 1.0815393466634275,
+        "scheme": "v7_256x256x16_M01_1"
+      },
+      "candidate": {
+        "ID": 530,
+        "M": 32,
+        "N": 3584,
+        "K": 3072,
+        "G": 224,
+        "phase": "decode",
+        "expected": 6035,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+          "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 4.324078559875488,
+        "p6k_CK_ms": 3.9980779,
+        "p6k_R": 1.0815393466634275,
+        "scheme": "v7_256x256x16_M01_1",
+        "variant": "scope_wave4"
+      },
+      "variant": "scope_wave4",
+      "control": false
+    },
+    {
+      "key": "id543_scope_wave4",
+      "ID": 543,
+      "base": {
+        "ID": 543,
+        "M": 64,
+        "N": 3584,
+        "K": 3072,
+        "G": 56,
+        "phase": "decode",
+        "expected": 5000,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 1.019791603088379,
+        "p6k_CK_ms": 0.99080503,
+        "p6k_R": 1.0292555772434653,
+        "scheme": "v7_256x256x16_M01_1"
+      },
+      "candidate": {
+        "ID": 543,
+        "M": 64,
+        "N": 3584,
+        "K": 3072,
+        "G": 56,
+        "phase": "decode",
+        "expected": 6035,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+          "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 1.019791603088379,
+        "p6k_CK_ms": 0.99080503,
+        "p6k_R": 1.0292555772434653,
+        "scheme": "v7_256x256x16_M01_1",
+        "variant": "scope_wave4"
+      },
+      "variant": "scope_wave4",
+      "control": false
+    },
+    {
+      "key": "id677_scope_wave4",
+      "ID": 677,
+      "base": {
+        "ID": 677,
+        "M": 32,
+        "N": 1536,
+        "K": 2048,
+        "G": 8,
+        "phase": "decode",
+        "expected": 5003,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 0.052671950310468674,
+        "p6k_CK_ms": 0.0558405,
+        "p6k_R": 0.9432571397188183,
+        "scheme": "smallM_64x128x16"
+      },
+      "candidate": {
+        "ID": 677,
+        "M": 32,
+        "N": 1536,
+        "K": 2048,
+        "G": 8,
+        "phase": "decode",
+        "expected": 6035,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+          "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 0.052671950310468674,
+        "p6k_CK_ms": 0.0558405,
+        "p6k_R": 0.9432571397188183,
+        "scheme": "smallM_64x128x16",
+        "variant": "scope_wave4"
+      },
+      "variant": "scope_wave4",
+      "control": false
+    },
+    {
+      "key": "id712_scope_wave4",
+      "ID": 712,
+      "base": {
+        "ID": 712,
+        "M": 64,
+        "N": 3072,
+        "K": 3072,
+        "G": 64,
+        "phase": "decode",
+        "expected": 5000,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 1.0140396356582642,
+        "p6k_CK_ms": 0.98816347,
+        "p6k_R": 1.0261861184347,
+        "scheme": "v7_256x256x16_M01_1"
+      },
+      "candidate": {
+        "ID": 712,
+        "M": 64,
+        "N": 3072,
+        "K": 3072,
+        "G": 64,
+        "phase": "decode",
+        "expected": 6035,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+          "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 1.0140396356582642,
+        "p6k_CK_ms": 0.98816347,
+        "p6k_R": 1.0261861184347,
+        "scheme": "v7_256x256x16_M01_1",
+        "variant": "scope_wave4"
+      },
+      "variant": "scope_wave4",
+      "control": false
+    },
+    {
+      "key": "id933_scope_wave4",
+      "ID": 933,
+      "base": {
+        "ID": 933,
+        "M": 64,
+        "N": 4096,
+        "K": 4096,
+        "G": 64,
+        "phase": "decode",
+        "expected": 5000,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 1.7104156017303467,
+        "p6k_CK_ms": 1.623682,
+        "p6k_R": 1.0534178501272704,
+        "scheme": "v7_256x256x16_M01_1"
+      },
+      "candidate": {
+        "ID": 933,
+        "M": 64,
+        "N": 4096,
+        "K": 4096,
+        "G": 64,
+        "phase": "decode",
+        "expected": 6035,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+          "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 1.7104156017303467,
+        "p6k_CK_ms": 1.623682,
+        "p6k_R": 1.0534178501272704,
+        "scheme": "v7_256x256x16_M01_1",
+        "variant": "scope_wave4"
+      },
+      "variant": "scope_wave4",
+      "control": false
+    },
+    {
+      "key": "id1170_scope_wave4",
+      "ID": 1170,
+      "base": {
+        "ID": 1170,
+        "M": 32,
+        "N": 4096,
+        "K": 8192,
+        "G": 128,
+        "phase": "decode",
+        "expected": 5006,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "0",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "1"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 6.84769344329834,
+        "p6k_CK_ms": 6.1138382,
+        "p6k_R": 1.120031839131487,
+        "scheme": "v7_256x256x16_NoSLC_M01_8"
+      },
+      "candidate": {
+        "ID": 1170,
+        "M": 32,
+        "N": 4096,
+        "K": 8192,
+        "G": 128,
+        "phase": "decode",
+        "expected": 6035,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "0",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+          "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 6.84769344329834,
+        "p6k_CK_ms": 6.1138382,
+        "p6k_R": 1.120031839131487,
+        "scheme": "v7_256x256x16_NoSLC_M01_8",
+        "variant": "scope_wave4"
+      },
+      "variant": "scope_wave4",
+      "control": false
+    },
+    {
+      "key": "id686_scope_wave4",
+      "ID": 686,
+      "base": {
+        "ID": 686,
+        "M": 32,
+        "N": 1536,
+        "K": 2048,
+        "G": 4,
+        "phase": "decode",
+        "expected": 5008,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "2"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 0.028624001890420914,
+        "p6k_CK_ms": 0.034559999,
+        "p6k_R": 0.8282408194057215,
+        "scheme": "smallM_64x128x32"
+      },
+      "candidate": {
+        "ID": 686,
+        "M": 32,
+        "N": 1536,
+        "K": 2048,
+        "G": 4,
+        "phase": "decode",
+        "expected": 6035,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "2",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+          "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 0.028624001890420914,
+        "p6k_CK_ms": 0.034559999,
+        "p6k_R": 0.8282408194057215,
+        "scheme": "smallM_64x128x32",
+        "variant": "scope_wave4"
+      },
+      "variant": "scope_wave4",
+      "control": false
+    },
+    {
+      "key": "id687_scope_wave4",
+      "ID": 687,
+      "base": {
+        "ID": 687,
+        "M": 64,
+        "N": 1536,
+        "K": 2048,
+        "G": 4,
+        "phase": "decode",
+        "expected": 5008,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "2"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 0.02805599942803383,
+        "p6k_CK_ms": 0.034880999,
+        "p6k_R": 0.8043347447713245,
+        "scheme": "smallM_64x128x32"
+      },
+      "candidate": {
+        "ID": 687,
+        "M": 64,
+        "N": 1536,
+        "K": 2048,
+        "G": 4,
+        "phase": "decode",
+        "expected": 6035,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "2",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+          "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 0.02805599942803383,
+        "p6k_CK_ms": 0.034880999,
+        "p6k_R": 0.8043347447713245,
+        "scheme": "smallM_64x128x32",
+        "variant": "scope_wave4"
+      },
+      "variant": "scope_wave4",
+      "control": false
+    },
+    {
+      "key": "fallback_id358_scope_wave4",
+      "ID": 358,
+      "base": {
+        "ID": 358,
+        "M": 8,
+        "N": 6144,
+        "K": 2048,
+        "G": 32,
+        "phase": "decode",
+        "expected": 5003,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 0.670039713382721,
+        "p6k_CK_ms": 0.6386435,
+        "p6k_R": 1.0491607812225772,
+        "scheme": "smallM_64x128x16"
+      },
+      "candidate": {
+        "ID": 358,
+        "M": 8,
+        "N": 6144,
+        "K": 2048,
+        "G": 32,
+        "phase": "decode",
+        "expected": 5003,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+          "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 0.670039713382721,
+        "p6k_CK_ms": 0.6386435,
+        "p6k_R": 1.0491607812225772,
+        "scheme": "smallM_64x128x16",
+        "variant": "scope_wave4"
+      },
+      "variant": "scope_wave4",
+      "control": true,
+      "fallback": true
+    },
+    {
+      "key": "fallback_id622_scope_wave4",
+      "ID": 622,
+      "base": {
+        "ID": 622,
+        "M": 128,
+        "N": 1024,
+        "K": 2048,
+        "G": 32,
+        "phase": "decode",
+        "expected": 5000,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 0.14444799721240997,
+        "p6k_CK_ms": 0.1912035,
+        "p6k_R": 0.755467327807336,
+        "scheme": "v7_256x256x16_M01_1"
+      },
+      "candidate": {
+        "ID": 622,
+        "M": 128,
+        "N": 1024,
+        "K": 2048,
+        "G": 32,
+        "phase": "decode",
+        "expected": 5000,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+          "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 0.14444799721240997,
+        "p6k_CK_ms": 0.1912035,
+        "p6k_R": 0.755467327807336,
+        "scheme": "v7_256x256x16_M01_1",
+        "variant": "scope_wave4"
+      },
+      "variant": "scope_wave4",
+      "control": true,
+      "fallback": true
+    },
+    {
+      "key": "fallback_id1184_scope_wave4",
+      "ID": 1184,
+      "base": {
+        "ID": 1184,
+        "M": 32,
+        "N": 256,
+        "K": 512,
+        "G": 64,
+        "phase": "decode",
+        "expected": 6003,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_DEPTH8": "1"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 0.033504001796245575,
+        "p6k_CK_ms": 0.033119999,
+        "p6k_R": 1.0115942876763244,
+        "scheme": "decode_a_reg_b_private_lds_depth8"
+      },
+      "candidate": {
+        "ID": 1184,
+        "M": 32,
+        "N": 256,
+        "K": 512,
+        "G": 64,
+        "phase": "decode",
+        "expected": 6003,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_DEPTH8": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+          "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 0.033504001796245575,
+        "p6k_CK_ms": 0.033119999,
+        "p6k_R": 1.0115942876763244,
+        "scheme": "decode_a_reg_b_private_lds_depth8",
+        "variant": "scope_wave4"
+      },
+      "variant": "scope_wave4",
+      "control": true,
+      "fallback": true
+    },
+    {
+      "key": "fallback_id1185_scope_wave4",
+      "ID": 1185,
+      "base": {
+        "ID": 1185,
+        "M": 64,
+        "N": 256,
+        "K": 512,
+        "G": 64,
+        "phase": "decode",
+        "expected": 5003,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 0.03164000064134598,
+        "p6k_CK_ms": 0.03616,
+        "p6k_R": 0.875000017736338,
+        "scheme": "smallM_64x128x16"
+      },
+      "candidate": {
+        "ID": 1185,
+        "M": 64,
+        "N": 256,
+        "K": 512,
+        "G": 64,
+        "phase": "decode",
+        "expected": 5003,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+          "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 0.03164000064134598,
+        "p6k_CK_ms": 0.03616,
+        "p6k_R": 0.875000017736338,
+        "scheme": "smallM_64x128x16",
+        "variant": "scope_wave4"
+      },
+      "variant": "scope_wave4",
+      "control": true,
+      "fallback": true
+    },
+    {
+      "key": "fallback_id147_scope_wave4",
+      "ID": 147,
+      "base": {
+        "ID": 147,
+        "M": 1,
+        "N": 1232,
+        "K": 1536,
+        "G": 392,
+        "phase": "decode",
+        "expected": 5016,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_N_TAIL": "2"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 1.7977596521377563,
+        "p6k_CK_ms": 1.1342405,
+        "p6k_R": 1.5849898254715435,
+        "scheme": "P6f_tail256_candidate"
+      },
+      "candidate": {
+        "ID": 147,
+        "M": 1,
+        "N": 1232,
+        "K": 1536,
+        "G": 392,
+        "phase": "decode",
+        "expected": 5016,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_N_TAIL": "2",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+          "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 1.7977596521377563,
+        "p6k_CK_ms": 1.1342405,
+        "p6k_R": 1.5849898254715435,
+        "scheme": "P6f_tail256_candidate",
+        "variant": "scope_wave4"
+      },
+      "variant": "scope_wave4",
+      "control": true,
+      "fallback": true
+    },
+    {
+      "key": "fallback_id35_scope_wave4",
+      "ID": 35,
+      "base": {
+        "ID": 35,
+        "M": 2048,
+        "N": 2048,
+        "K": 512,
+        "G": 64,
+        "phase": "prefill",
+        "expected": 5000,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 1.4458476305007935,
+        "p6k_CK_ms": 1.2848805,
+        "p6k_R": 1.1252778997741761,
+        "scheme": "v7_256x256x16_M01_1"
+      },
+      "candidate": {
+        "ID": 35,
+        "M": 2048,
+        "N": 2048,
+        "K": 512,
+        "G": 64,
+        "phase": "prefill",
+        "expected": 5000,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+          "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 1.4458476305007935,
+        "p6k_CK_ms": 1.2848805,
+        "p6k_R": 1.1252778997741761,
+        "scheme": "v7_256x256x16_M01_1",
+        "variant": "scope_wave4"
+      },
+      "variant": "scope_wave4",
+      "control": true,
+      "fallback": true
+    },
+    {
+      "key": "fallback_id788_scope_wave4",
+      "ID": 788,
+      "base": {
+        "ID": 788,
+        "M": 8,
+        "N": 2048,
+        "K": 4096,
+        "G": 128,
+        "phase": "decode",
+        "expected": 5000,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 1.6562156677246094,
+        "p6k_CK_ms": 1.72456,
+        "p6k_R": 0.9603699887070379,
+        "scheme": "v7_256x256x16_M01_1"
+      },
+      "candidate": {
+        "ID": 788,
+        "M": 8,
+        "N": 2048,
+        "K": 4096,
+        "G": 128,
+        "phase": "decode",
+        "expected": 5000,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+          "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 1.6562156677246094,
+        "p6k_CK_ms": 1.72456,
+        "p6k_R": 0.9603699887070379,
+        "scheme": "v7_256x256x16_M01_1",
+        "variant": "scope_wave4"
+      },
+      "variant": "scope_wave4",
+      "control": true,
+      "fallback": true
+    },
+    {
+      "key": "geometry_id620_wave4",
+      "ID": 620,
+      "base": {
+        "ID": 620,
+        "M": 32,
+        "N": 1024,
+        "K": 2048,
+        "G": 32,
+        "phase": "decode",
+        "expected": 6034,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+          "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "37",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 0.1221439465880394,
+        "p6k_CK_ms": 0.1547205,
+        "p6k_R": 0.7894490166981065,
+        "scheme": "smallM_64x128x16",
+        "variant": "pure"
+      },
+      "candidate": {
+        "ID": 620,
+        "M": 32,
+        "N": 1024,
+        "K": 2048,
+        "G": 32,
+        "phase": "decode",
+        "expected": 6035,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+          "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 0.1221439465880394,
+        "p6k_CK_ms": 0.1547205,
+        "p6k_R": 0.7894490166981065,
+        "scheme": "smallM_64x128x16",
+        "variant": "scope_wave4"
+      },
+      "variant": "scope_wave4",
+      "control": true,
+      "geometry_compare": true
+    },
+    {
+      "key": "geometry_id805_wave4",
+      "ID": 805,
+      "base": {
+        "ID": 805,
+        "M": 64,
+        "N": 2048,
+        "K": 4096,
+        "G": 32,
+        "phase": "decode",
+        "expected": 6034,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+          "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "37",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 0.4316718578338623,
+        "p6k_CK_ms": 0.51304197,
+        "p6k_R": 0.8413967727316,
+        "scheme": "v7_256x256x16_M01_1",
+        "variant": "pure"
+      },
+      "candidate": {
+        "ID": 805,
+        "M": 64,
+        "N": 2048,
+        "K": 4096,
+        "G": 32,
+        "phase": "decode",
+        "expected": 6035,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+          "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 0.4316718578338623,
+        "p6k_CK_ms": 0.51304197,
+        "p6k_R": 0.8413967727316,
+        "scheme": "v7_256x256x16_M01_1",
+        "variant": "scope_wave4"
+      },
+      "variant": "scope_wave4",
+      "control": true,
+      "geometry_compare": true
+    },
+    {
+      "key": "geometry_id686_wave4",
+      "ID": 686,
+      "base": {
+        "ID": 686,
+        "M": 32,
+        "N": 1536,
+        "K": 2048,
+        "G": 4,
+        "phase": "decode",
+        "expected": 6034,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "2",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+          "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "37",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 0.028624001890420914,
+        "p6k_CK_ms": 0.034559999,
+        "p6k_R": 0.8282408194057215,
+        "scheme": "smallM_64x128x32",
+        "variant": "pure"
+      },
+      "candidate": {
+        "ID": 686,
+        "M": 32,
+        "N": 1536,
+        "K": 2048,
+        "G": 4,
+        "phase": "decode",
+        "expected": 6035,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "2",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+          "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 0.028624001890420914,
+        "p6k_CK_ms": 0.034559999,
+        "p6k_R": 0.8282408194057215,
+        "scheme": "smallM_64x128x32",
+        "variant": "scope_wave4"
+      },
+      "variant": "scope_wave4",
+      "control": true,
+      "geometry_compare": true
+    },
+    {
+      "key": "geometry_id687_wave4",
+      "ID": 687,
+      "base": {
+        "ID": 687,
+        "M": 64,
+        "N": 1536,
+        "K": 2048,
+        "G": 4,
+        "phase": "decode",
+        "expected": 6034,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "2",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+          "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "37",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 0.02805599942803383,
+        "p6k_CK_ms": 0.034880999,
+        "p6k_R": 0.8043347447713245,
+        "scheme": "smallM_64x128x32",
+        "variant": "pure"
+      },
+      "candidate": {
+        "ID": 687,
+        "M": 64,
+        "N": 1536,
+        "K": 2048,
+        "G": 4,
+        "phase": "decode",
+        "expected": 6035,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "2",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+          "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 0.02805599942803383,
+        "p6k_CK_ms": 0.034880999,
+        "p6k_R": 0.8043347447713245,
+        "scheme": "smallM_64x128x32",
+        "variant": "scope_wave4"
+      },
+      "variant": "scope_wave4",
+      "control": true,
+      "geometry_compare": true
+    }
+  ],
+  "protocol": {
+    "warmup": 10,
+    "samples": 30,
+    "launches_per_sample": 1,
+    "include_args_build": 0,
+    "rounds": 3,
+    "order": "CK/Native, Native/CK, CK/Native",
+    "accuracy_repeats": 3
+  },
+  "selection": "All16 M17..64 members of prior23representatives;7fallback,4directW8/W4. Singlewholepropertypolicy42; all96originals/53weak includingpriorwinners/allG required. NotIDdispatch.",
+  "CPU_only_creation": true,
+  "no_new_heldout_draw": true,
+  "no_full_GPU_run": true,
+  "sha256": "58dc418e8cc53383d87aa1abdf9a9db074dace23a3cbb4786626a8b51065e5eb"
+}

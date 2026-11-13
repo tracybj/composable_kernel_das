@@ -1,0 +1,48 @@
+{
+  "at": "2026-11-13T09:26:41.953238+00:00",
+  "ok": true,
+  "cpu_only": true,
+  "GPU": false,
+  "cases": 147456,
+  "public_masks": 64,
+  "variants": [
+    41,
+    42
+  ],
+  "N_values": [
+    1024,
+    1152,
+    1280,
+    4096
+  ],
+  "G_values": [
+    8,
+    32,
+    64,
+    128
+  ],
+  "family_disable_values": [
+    0,
+    1
+  ],
+  "geometries": 192,
+  "fast_modes": [
+    [
+      "0",
+      "0"
+    ],
+    [
+      "1",
+      "0"
+    ],
+    [
+      "1",
+      "1"
+    ]
+  ],
+  "actual_extracted_source_sha256": "dbbd79e8cb806d109ea7914d9c1d740f93b033448ec42e288e9c9fe0882e9493",
+  "executable_sha256": "160b7d61e988e877c8e3fe6f8bbf691e47a540d838166eaf2a5fd4d73b2e4e89",
+  "inputs_sha256": "5c6228af6780f081fc283c75619e1ff28420f5a6473e686a2be5dff8edf64506",
+  "scope": "Pure exact policy reader/selector; no ABI conversion, arch query, driver or GPU timing",
+  "script_sha256": "3c5a31e528af9e96cbc67625c1bc0e0129464c669d6e80a6a9459e3681e49f73"
+}

@@ -1,0 +1,135 @@
+{
+  "epoch": 0,
+  "binary_sha256": "5aba313b48c54cf64182a7855a91ad25498edd220c0198fe5d9d4b25da5e1151",
+  "rule_sha256": "d43278e919ec4c1a96a0e1bc28bf6995ba1bfc05550804fde913a291116e22c2",
+  "discovery_sha256": "17423b1f2773716b3d3ae6c21fb1ca85bf80912665d2417826e1a37a5284b91e",
+  "wide_M_choice": "scope_wave4",
+  "low_M_choice": "scope_wave4",
+  "selection_is_not_final_adoption": true,
+  "pairs": [
+    {
+      "key": "id620_scope_wave4",
+      "ID": 620,
+      "base": {
+        "ID": 620,
+        "M": 32,
+        "N": 1024,
+        "K": 2048,
+        "G": 32,
+        "phase": "decode",
+        "expected": 5003,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 0.1221439465880394,
+        "p6k_CK_ms": 0.1547205,
+        "p6k_R": 0.7894490166981065,
+        "scheme": "smallM_64x128x16"
+      },
+      "candidate": {
+        "ID": 620,
+        "M": 32,
+        "N": 1024,
+        "K": 2048,
+        "G": 32,
+        "phase": "decode",
+        "expected": 6035,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+          "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 0.1221439465880394,
+        "p6k_CK_ms": 0.1547205,
+        "p6k_R": 0.7894490166981065,
+        "scheme": "smallM_64x128x16",
+        "variant": "scope_wave4"
+      },
+      "variant": "scope_wave4",
+      "control": false,
+      "formal_base_ms": 0.1564,
+      "formal_candidate_ms": 0.256244,
+      "formal_delta_pct": 63.838874680306915,
+      "prior_accuracy_keys": [
+        "e0_wave4_id620_scope_wave4_29cc55b998aa_base_accuracy_874e6441dc",
+        "e0_wave4_id620_scope_wave4_29cc55b998aa_candidate_accuracy_b08874bf2f"
+      ],
+      "high_cv": false
+    },
+    {
+      "key": "id805_scope_wave4",
+      "ID": 805,
+      "base": {
+        "ID": 805,
+        "M": 64,
+        "N": 2048,
+        "K": 4096,
+        "G": 32,
+        "phase": "decode",
+        "expected": 5000,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 0.4316718578338623,
+        "p6k_CK_ms": 0.51304197,
+        "p6k_R": 0.8413967727316,
+        "scheme": "v7_256x256x16_M01_1"
+      },
+      "candidate": {
+        "ID": 805,
+        "M": 64,
+        "N": 2048,
+        "K": 4096,
+        "G": 32,
+        "phase": "decode",
+        "expected": 6035,
+        "env": {
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+          "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+          "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+          "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+        },
+        "accuracy_repeats": 3,
+        "frozen_BLAS_ms": 0.4316718578338623,
+        "p6k_CK_ms": 0.51304197,
+        "p6k_R": 0.8413967727316,
+        "scheme": "v7_256x256x16_M01_1",
+        "variant": "scope_wave4"
+      },
+      "variant": "scope_wave4",
+      "control": false,
+      "formal_base_ms": 0.51368296,
+      "formal_candidate_ms": 0.6218425,
+      "formal_delta_pct": 21.055699414284625,
+      "prior_accuracy_keys": [
+        "e0_wave4_id805_scope_wave4_05ea43b6043f_base_accuracy_d3739a49a0",
+        "e0_wave4_id805_scope_wave4_05ea43b6043f_candidate_accuracy_ebb8afe8a7"
+      ],
+      "high_cv": false
+    }
+  ],
+  "partial": true,
+  "original_expected_pairs": 8,
+  "missing_pairs": [
+    "id686_scope_wave4",
+    "id687_scope_wave4",
+    "id621_scope_wave4",
+    "id328_scope_wave4",
+    "geometry_id805_wave4",
+    "geometry_id620_wave4"
+  ],
+  "original_plan_sha256": "e2eb6f8cb84668dc5bbb6550a6ebec129e574c8381ca30a2b94f7588980855f3",
+  "sha256": "0a6aecbced9c9087118040444e43994f7d8344e451b627014286b77b5c8e84b3"
+}

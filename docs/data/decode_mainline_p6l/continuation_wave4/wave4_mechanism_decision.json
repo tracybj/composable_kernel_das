@@ -1,0 +1,24 @@
+{
+  "at": "2026-11-13T09:25:42.459153+00:00",
+  "proceed": true,
+  "phase": "CPU feasibility before any integration",
+  "not_fourth_ownership_hypothesis": true,
+  "parent": "H3 full-M cooperative A/B, K32D2, three operand banks, compute-first",
+  "evidence": {
+    "discovery_sha256": "f419d6e677fc3809534e7a091ecb0534547c0480a4974fd3558925449669dcfa",
+    "profiles_sha256": "92464ab915ed578836d3c874d06b1209a3d4e43e83122439c4861e748384a638",
+    "batch13_sha256": "3be1c929cf353c347985a7b84ec9bff71b158b045e0f3a0cfb98df2a339ec0b7",
+    "prior_source_commit": "6eb8fd5135e4e5fc3b4ea943867ed39da9cae537"
+  },
+  "verified": "CurrentN128W8 savesLDS/registers but ID805 directN256\u2192N128 doublesCTA/residentwaves whileLDS3219456/2170880 andSALU3237888/2202624 increase, formal+26.04%. ID686 MMACcount halves vsV7 yet formal~47%loss, LDSinstructiontotal rises80640\u2192101760, same48CTA. Resourcecapacity alone insufficient.",
+  "hypothesis": "Keep N128 K32D2 globalfootprint/grid, assign fullM tofourwaves, halve duplicatedB LDSconsumertraffic andincreaseperwaveMMACwork. Registerrisks explicit. Does not claim observed slowdowns arefullyexplained by onecounter.",
+  "CPU_model": {
+    "address_values": 172032,
+    "ownership_elements": 45056,
+    "schedules": 193,
+    "readiness_checks": 30880
+  },
+  "constraints": "NewID6035/variants41full42M17scope; all existing IDs/machinecode preserved. Singlepropertypolicy42 covers96originals/53weak includingallG andpriorwinners;27preregisteredpairs. CPU6dualshader/CFG3/old30probes/selector/publicdisable/ABI beforeintegration. Rejectspill/scratch; no resource-onlyperformanceclaim.",
+  "adoption": "Onlynewbinarysameepoch whole96+24fresh/sevenblocks, unchanged50/30/no>2%regression. No winnerIDdispatch; no latestlowLDSadoption/heldoutdraw.",
+  "cutoffs": "Newcode/build/GPU stop12:10UTC, hard14:10UTC; includesallwork; no extension"
+}

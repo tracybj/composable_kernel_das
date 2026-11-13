@@ -1,0 +1,64 @@
+{
+  "at": "2026-11-13T09:17:18.542616+00:00",
+  "conditional_only": true,
+  "no_source_applied": true,
+  "no_GPU": true,
+  "domain": {
+    "M": [
+      17,
+      64
+    ],
+    "N": [
+      1024,
+      4096
+    ],
+    "N_multiple": 128,
+    "K": [
+      2048,
+      8192
+    ],
+    "K_multiple": 128,
+    "G": [
+      1,
+      1024
+    ],
+    "originals": 96,
+    "weak_originals": 53
+  },
+  "domain_reason": "Entire M partition that changes ownership; all legalG and priorwinners, no time/ID dispatch or measured-winner exclusions.",
+  "representative_rule": "All and only M17..64 original actual representatives in the preceding preregistered23, independentof their old outcomes.",
+  "representatives": [
+    620,
+    621,
+    805,
+    948,
+    312,
+    327,
+    328,
+    335,
+    530,
+    543,
+    677,
+    712,
+    933,
+    1170,
+    686,
+    687
+  ],
+  "fallback_controls": "Reuse exactly seven prior fallback/control geometries; defaultselector must retain original instances.",
+  "direct_mapping_controls": [
+    620,
+    805,
+    686,
+    687
+  ],
+  "direct_mapping_reason": "M32/M64, mid/high vs lowCTA; compare existing6034 W8 against new6035 W4 in one finalbinary, sameN/K/depth/CTAgrid/LDS/globalbytes.",
+  "planned_pairs": 27,
+  "full_variant": 41,
+  "scoped_variant": 42,
+  "new_instance": 6035,
+  "selection": "Single whole-property policy. No best-by-ID. Known three-round regression or non-improving representativeGM rejects independent confirmation; allhighCV retain uncertainty.",
+  "independent_confirmation": "Ifviable, actualCPUselector mustcoverall96originals plus>=24fresh, sevenfixedblocks, unchanged50/30andno>2%domainregression. Nextseed6411927 onlyatactualfreeze.",
+  "deadline": "12:10UTC stop new experiment/compile/GPU;14:10UTC hardend; no extension.",
+  "GPU_or_build_requires": "Full prior59 andprofile13 terminal, actual profilermechanismdecision andCPUdualarch/resource/oldshader/selector/ABI checks; new versionedsource andbinary freeze."
+}
