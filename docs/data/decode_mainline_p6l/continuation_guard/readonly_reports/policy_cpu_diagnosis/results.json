@@ -1,0 +1,1708 @@
+[
+  {
+    "pair": "id620_noslc",
+    "ID": 620,
+    "control": false,
+    "shape": {
+      "M": 32,
+      "N": 1024,
+      "K": 2048,
+      "G": 32
+    },
+    "base": {
+      "command": [
+        "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/readonly_reports/policy_cpu_diagnosis/policy_cpu",
+        "32",
+        "1024",
+        "2048",
+        "32",
+        "5003",
+        "20000"
+      ],
+      "returncode": 0,
+      "environment_flags": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128"
+      },
+      "total_environment_entries": 71,
+      "block_ns_per_call": [
+        1932.08,
+        2000.97,
+        1933.01,
+        1809.24,
+        1873.78,
+        1811.19,
+        1810.59
+      ],
+      "median_ns": 1873.78,
+      "selected": 5003,
+      "elapsed_seconds": 0.26858982199337333
+    },
+    "candidate": {
+      "command": [
+        "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/readonly_reports/policy_cpu_diagnosis/policy_cpu",
+        "32",
+        "1024",
+        "2048",
+        "32",
+        "6035",
+        "20000"
+      ],
+      "returncode": 0,
+      "environment_flags": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "total_environment_entries": 76,
+      "block_ns_per_call": [
+        789.936,
+        775.034,
+        757.477,
+        748.377,
+        747.146,
+        744.383,
+        755.667
+      ],
+      "median_ns": 755.667,
+      "selected": 6035,
+      "elapsed_seconds": 0.11103182499937247
+    }
+  },
+  {
+    "pair": "id621_noslc",
+    "ID": 621,
+    "control": false,
+    "shape": {
+      "M": 64,
+      "N": 1024,
+      "K": 2048,
+      "G": 32
+    },
+    "base": {
+      "command": [
+        "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/readonly_reports/policy_cpu_diagnosis/policy_cpu",
+        "64",
+        "1024",
+        "2048",
+        "32",
+        "5003",
+        "20000"
+      ],
+      "returncode": 0,
+      "environment_flags": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128"
+      },
+      "total_environment_entries": 71,
+      "block_ns_per_call": [
+        1755.05,
+        1932.03,
+        1954.82,
+        1807.26,
+        1998.23,
+        2026.97,
+        1804.37
+      ],
+      "median_ns": 1932.03,
+      "selected": 5003,
+      "elapsed_seconds": 0.27047199200023897
+    },
+    "candidate": {
+      "command": [
+        "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/readonly_reports/policy_cpu_diagnosis/policy_cpu",
+        "64",
+        "1024",
+        "2048",
+        "32",
+        "6035",
+        "20000"
+      ],
+      "returncode": 0,
+      "environment_flags": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "total_environment_entries": 76,
+      "block_ns_per_call": [
+        827.526,
+        750.971,
+        747.973,
+        747.01,
+        749.458,
+        749.501,
+        763.059
+      ],
+      "median_ns": 749.501,
+      "selected": 6035,
+      "elapsed_seconds": 0.11038744100369513
+    }
+  },
+  {
+    "pair": "id805_noslc",
+    "ID": 805,
+    "control": false,
+    "shape": {
+      "M": 64,
+      "N": 2048,
+      "K": 4096,
+      "G": 32
+    },
+    "base": {
+      "command": [
+        "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/readonly_reports/policy_cpu_diagnosis/policy_cpu",
+        "64",
+        "2048",
+        "4096",
+        "32",
+        "5000",
+        "20000"
+      ],
+      "returncode": 0,
+      "environment_flags": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+      },
+      "total_environment_entries": 71,
+      "block_ns_per_call": [
+        1860.96,
+        1965.16,
+        1985.98,
+        1975.4,
+        1859.38,
+        1860.14,
+        1957.86
+      ],
+      "median_ns": 1957.86,
+      "selected": 5000,
+      "elapsed_seconds": 0.2744050490000518
+    },
+    "candidate": {
+      "command": [
+        "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/readonly_reports/policy_cpu_diagnosis/policy_cpu",
+        "64",
+        "2048",
+        "4096",
+        "32",
+        "6035",
+        "20000"
+      ],
+      "returncode": 0,
+      "environment_flags": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "total_environment_entries": 76,
+      "block_ns_per_call": [
+        781.032,
+        756.769,
+        752.757,
+        755.247,
+        759.119,
+        753.446,
+        754.919
+      ],
+      "median_ns": 755.247,
+      "selected": 6035,
+      "elapsed_seconds": 0.10966699899290688
+    }
+  },
+  {
+    "pair": "id948_noslc",
+    "ID": 948,
+    "control": false,
+    "shape": {
+      "M": 64,
+      "N": 4096,
+      "K": 4096,
+      "G": 16
+    },
+    "base": {
+      "command": [
+        "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/readonly_reports/policy_cpu_diagnosis/policy_cpu",
+        "64",
+        "4096",
+        "4096",
+        "16",
+        "5000",
+        "20000"
+      ],
+      "returncode": 0,
+      "environment_flags": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+      },
+      "total_environment_entries": 71,
+      "block_ns_per_call": [
+        2052.06,
+        2036.55,
+        2074.12,
+        2045.15,
+        2044.81,
+        2150.66,
+        2133.7
+      ],
+      "median_ns": 2052.06,
+      "selected": 5000,
+      "elapsed_seconds": 0.29592147198854946
+    },
+    "candidate": {
+      "command": [
+        "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/readonly_reports/policy_cpu_diagnosis/policy_cpu",
+        "64",
+        "4096",
+        "4096",
+        "16",
+        "6035",
+        "20000"
+      ],
+      "returncode": 0,
+      "environment_flags": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "total_environment_entries": 76,
+      "block_ns_per_call": [
+        757.925,
+        756.104,
+        755.58,
+        758.392,
+        759.407,
+        768.003,
+        759.517
+      ],
+      "median_ns": 758.392,
+      "selected": 6035,
+      "elapsed_seconds": 0.10943107800267171
+    }
+  },
+  {
+    "pair": "id312_noslc",
+    "ID": 312,
+    "control": false,
+    "shape": {
+      "M": 32,
+      "N": 4096,
+      "K": 2048,
+      "G": 64
+    },
+    "base": {
+      "command": [
+        "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/readonly_reports/policy_cpu_diagnosis/policy_cpu",
+        "32",
+        "4096",
+        "2048",
+        "64",
+        "5000",
+        "20000"
+      ],
+      "returncode": 0,
+      "environment_flags": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+      },
+      "total_environment_entries": 71,
+      "block_ns_per_call": [
+        1853.2,
+        2277.52,
+        1976.4,
+        1931.74,
+        2118.44,
+        2392.9,
+        2056.95
+      ],
+      "median_ns": 2056.95,
+      "selected": 5000,
+      "elapsed_seconds": 0.296743086000788
+    },
+    "candidate": {
+      "command": [
+        "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/readonly_reports/policy_cpu_diagnosis/policy_cpu",
+        "32",
+        "4096",
+        "2048",
+        "64",
+        "6035",
+        "20000"
+      ],
+      "returncode": 0,
+      "environment_flags": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "total_environment_entries": 76,
+      "block_ns_per_call": [
+        797.09,
+        754.004,
+        756.211,
+        754.066,
+        751.182,
+        756.461,
+        751.614
+      ],
+      "median_ns": 754.066,
+      "selected": 6035,
+      "elapsed_seconds": 0.11075479400460608
+    }
+  },
+  {
+    "pair": "id327_noslc",
+    "ID": 327,
+    "control": false,
+    "shape": {
+      "M": 32,
+      "N": 4096,
+      "K": 2048,
+      "G": 16
+    },
+    "base": {
+      "command": [
+        "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/readonly_reports/policy_cpu_diagnosis/policy_cpu",
+        "32",
+        "4096",
+        "2048",
+        "16",
+        "5003",
+        "20000"
+      ],
+      "returncode": 0,
+      "environment_flags": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128"
+      },
+      "total_environment_entries": 71,
+      "block_ns_per_call": [
+        1941.33,
+        1811.31,
+        1853.12,
+        1960.08,
+        1742.75,
+        1823.27,
+        1832.76
+      ],
+      "median_ns": 1832.76,
+      "selected": 5003,
+      "elapsed_seconds": 0.26453836499422323
+    },
+    "candidate": {
+      "command": [
+        "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/readonly_reports/policy_cpu_diagnosis/policy_cpu",
+        "32",
+        "4096",
+        "2048",
+        "16",
+        "6035",
+        "20000"
+      ],
+      "returncode": 0,
+      "environment_flags": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "total_environment_entries": 76,
+      "block_ns_per_call": [
+        747.536,
+        751.302,
+        761.945,
+        772.413,
+        751.042,
+        753.094,
+        756.745
+      ],
+      "median_ns": 753.094,
+      "selected": 6035,
+      "elapsed_seconds": 0.10979602999577764
+    }
+  },
+  {
+    "pair": "id328_noslc",
+    "ID": 328,
+    "control": false,
+    "shape": {
+      "M": 64,
+      "N": 4096,
+      "K": 2048,
+      "G": 16
+    },
+    "base": {
+      "command": [
+        "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/readonly_reports/policy_cpu_diagnosis/policy_cpu",
+        "64",
+        "4096",
+        "2048",
+        "16",
+        "5003",
+        "20000"
+      ],
+      "returncode": 0,
+      "environment_flags": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128"
+      },
+      "total_environment_entries": 71,
+      "block_ns_per_call": [
+        1745.41,
+        1872.87,
+        1865.2,
+        1921.8,
+        1930.49,
+        2115.51,
+        2060.54
+      ],
+      "median_ns": 1921.8,
+      "selected": 5003,
+      "elapsed_seconds": 0.27480241999728605
+    },
+    "candidate": {
+      "command": [
+        "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/readonly_reports/policy_cpu_diagnosis/policy_cpu",
+        "64",
+        "4096",
+        "2048",
+        "16",
+        "6035",
+        "20000"
+      ],
+      "returncode": 0,
+      "environment_flags": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "total_environment_entries": 76,
+      "block_ns_per_call": [
+        746.953,
+        749.344,
+        745.62,
+        746.549,
+        766.153,
+        746.228,
+        747.768
+      ],
+      "median_ns": 746.953,
+      "selected": 6035,
+      "elapsed_seconds": 0.1084559739974793
+    }
+  },
+  {
+    "pair": "id335_noslc",
+    "ID": 335,
+    "control": false,
+    "shape": {
+      "M": 64,
+      "N": 4096,
+      "K": 2048,
+      "G": 8
+    },
+    "base": {
+      "command": [
+        "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/readonly_reports/policy_cpu_diagnosis/policy_cpu",
+        "64",
+        "4096",
+        "2048",
+        "8",
+        "5003",
+        "20000"
+      ],
+      "returncode": 0,
+      "environment_flags": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128"
+      },
+      "total_environment_entries": 71,
+      "block_ns_per_call": [
+        1741.44,
+        1845.75,
+        1827.19,
+        1866.83,
+        1750.7,
+        1741.26,
+        1737.9
+      ],
+      "median_ns": 1750.7,
+      "selected": 5003,
+      "elapsed_seconds": 0.25550260599993635
+    },
+    "candidate": {
+      "command": [
+        "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/readonly_reports/policy_cpu_diagnosis/policy_cpu",
+        "64",
+        "4096",
+        "2048",
+        "8",
+        "6035",
+        "20000"
+      ],
+      "returncode": 0,
+      "environment_flags": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "total_environment_entries": 76,
+      "block_ns_per_call": [
+        749.754,
+        748.695,
+        746.979,
+        747.06,
+        746.629,
+        757.692,
+        766.341
+      ],
+      "median_ns": 748.695,
+      "selected": 6035,
+      "elapsed_seconds": 0.11097714499919675
+    }
+  },
+  {
+    "pair": "id530_noslc",
+    "ID": 530,
+    "control": false,
+    "shape": {
+      "M": 32,
+      "N": 3584,
+      "K": 3072,
+      "G": 224
+    },
+    "base": {
+      "command": [
+        "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/readonly_reports/policy_cpu_diagnosis/policy_cpu",
+        "32",
+        "3584",
+        "3072",
+        "224",
+        "5000",
+        "20000"
+      ],
+      "returncode": 0,
+      "environment_flags": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+      },
+      "total_environment_entries": 71,
+      "block_ns_per_call": [
+        2025.11,
+        1854.31,
+        1852.18,
+        2066.94,
+        2001.93,
+        2085.72,
+        1917.22
+      ],
+      "median_ns": 2001.93,
+      "selected": 5000,
+      "elapsed_seconds": 0.28126418899046257
+    },
+    "candidate": {
+      "command": [
+        "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/readonly_reports/policy_cpu_diagnosis/policy_cpu",
+        "32",
+        "3584",
+        "3072",
+        "224",
+        "6035",
+        "20000"
+      ],
+      "returncode": 0,
+      "environment_flags": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "total_environment_entries": 76,
+      "block_ns_per_call": [
+        752.659,
+        759.032,
+        751.753,
+        753.616,
+        750.87,
+        751.735,
+        752.837
+      ],
+      "median_ns": 752.659,
+      "selected": 6035,
+      "elapsed_seconds": 0.10908450699935202
+    }
+  },
+  {
+    "pair": "id543_noslc",
+    "ID": 543,
+    "control": false,
+    "shape": {
+      "M": 64,
+      "N": 3584,
+      "K": 3072,
+      "G": 56
+    },
+    "base": {
+      "command": [
+        "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/readonly_reports/policy_cpu_diagnosis/policy_cpu",
+        "64",
+        "3584",
+        "3072",
+        "56",
+        "5000",
+        "20000"
+      ],
+      "returncode": 0,
+      "environment_flags": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+      },
+      "total_environment_entries": 71,
+      "block_ns_per_call": [
+        1845.77,
+        2175.0,
+        1975.15,
+        2058.13,
+        2203.51,
+        2175.43,
+        2048.9
+      ],
+      "median_ns": 2058.13,
+      "selected": 5000,
+      "elapsed_seconds": 0.2943404559919145
+    },
+    "candidate": {
+      "command": [
+        "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/readonly_reports/policy_cpu_diagnosis/policy_cpu",
+        "64",
+        "3584",
+        "3072",
+        "56",
+        "6035",
+        "20000"
+      ],
+      "returncode": 0,
+      "environment_flags": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "total_environment_entries": 76,
+      "block_ns_per_call": [
+        754.406,
+        757.115,
+        755.024,
+        754.137,
+        756.382,
+        772.965,
+        754.384
+      ],
+      "median_ns": 755.024,
+      "selected": 6035,
+      "elapsed_seconds": 0.10931960798916407
+    }
+  },
+  {
+    "pair": "id677_noslc",
+    "ID": 677,
+    "control": false,
+    "shape": {
+      "M": 32,
+      "N": 1536,
+      "K": 2048,
+      "G": 8
+    },
+    "base": {
+      "command": [
+        "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/readonly_reports/policy_cpu_diagnosis/policy_cpu",
+        "32",
+        "1536",
+        "2048",
+        "8",
+        "5003",
+        "20000"
+      ],
+      "returncode": 0,
+      "environment_flags": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128"
+      },
+      "total_environment_entries": 71,
+      "block_ns_per_call": [
+        1813.47,
+        1754.29,
+        1880.87,
+        1991.2,
+        1877.4,
+        1761.02,
+        1815.36
+      ],
+      "median_ns": 1815.36,
+      "selected": 5003,
+      "elapsed_seconds": 0.2623150060098851
+    },
+    "candidate": {
+      "command": [
+        "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/readonly_reports/policy_cpu_diagnosis/policy_cpu",
+        "32",
+        "1536",
+        "2048",
+        "8",
+        "6035",
+        "20000"
+      ],
+      "returncode": 0,
+      "environment_flags": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "total_environment_entries": 76,
+      "block_ns_per_call": [
+        752.529,
+        749.266,
+        747.776,
+        751.073,
+        789.574,
+        751.804,
+        751.052
+      ],
+      "median_ns": 751.073,
+      "selected": 6035,
+      "elapsed_seconds": 0.10916184799862094
+    }
+  },
+  {
+    "pair": "id712_noslc",
+    "ID": 712,
+    "control": false,
+    "shape": {
+      "M": 64,
+      "N": 3072,
+      "K": 3072,
+      "G": 64
+    },
+    "base": {
+      "command": [
+        "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/readonly_reports/policy_cpu_diagnosis/policy_cpu",
+        "64",
+        "3072",
+        "3072",
+        "64",
+        "5000",
+        "20000"
+      ],
+      "returncode": 0,
+      "environment_flags": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+      },
+      "total_environment_entries": 71,
+      "block_ns_per_call": [
+        1934.04,
+        2077.34,
+        1916.87,
+        1903.37,
+        1918.34,
+        1848.91,
+        1858.64
+      ],
+      "median_ns": 1916.87,
+      "selected": 5000,
+      "elapsed_seconds": 0.2736269250017358
+    },
+    "candidate": {
+      "command": [
+        "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/readonly_reports/policy_cpu_diagnosis/policy_cpu",
+        "64",
+        "3072",
+        "3072",
+        "64",
+        "6035",
+        "20000"
+      ],
+      "returncode": 0,
+      "environment_flags": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "total_environment_entries": 76,
+      "block_ns_per_call": [
+        753.557,
+        754.768,
+        751.839,
+        751.105,
+        752.475,
+        752.293,
+        752.99
+      ],
+      "median_ns": 752.475,
+      "selected": 6035,
+      "elapsed_seconds": 0.10895228499430232
+    }
+  },
+  {
+    "pair": "id933_noslc",
+    "ID": 933,
+    "control": false,
+    "shape": {
+      "M": 64,
+      "N": 4096,
+      "K": 4096,
+      "G": 64
+    },
+    "base": {
+      "command": [
+        "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/readonly_reports/policy_cpu_diagnosis/policy_cpu",
+        "64",
+        "4096",
+        "4096",
+        "64",
+        "5000",
+        "20000"
+      ],
+      "returncode": 0,
+      "environment_flags": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+      },
+      "total_environment_entries": 71,
+      "block_ns_per_call": [
+        1971.08,
+        2095.58,
+        2170.14,
+        2077.67,
+        1853.98,
+        2214.66,
+        1968.58
+      ],
+      "median_ns": 2077.67,
+      "selected": 5000,
+      "elapsed_seconds": 0.2917412440001499
+    },
+    "candidate": {
+      "command": [
+        "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/readonly_reports/policy_cpu_diagnosis/policy_cpu",
+        "64",
+        "4096",
+        "4096",
+        "64",
+        "6035",
+        "20000"
+      ],
+      "returncode": 0,
+      "environment_flags": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "total_environment_entries": 76,
+      "block_ns_per_call": [
+        759.439,
+        759.145,
+        753.74,
+        754.086,
+        755.756,
+        754.649,
+        756.652
+      ],
+      "median_ns": 755.756,
+      "selected": 6035,
+      "elapsed_seconds": 0.10928434701054357
+    }
+  },
+  {
+    "pair": "id1170_noslc",
+    "ID": 1170,
+    "control": false,
+    "shape": {
+      "M": 32,
+      "N": 4096,
+      "K": 8192,
+      "G": 128
+    },
+    "base": {
+      "command": [
+        "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/readonly_reports/policy_cpu_diagnosis/policy_cpu",
+        "32",
+        "4096",
+        "8192",
+        "128",
+        "5006",
+        "20000"
+      ],
+      "returncode": 0,
+      "environment_flags": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "0",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "1"
+      },
+      "total_environment_entries": 72,
+      "block_ns_per_call": [
+        2454.89,
+        2740.46,
+        2617.72,
+        2958.69,
+        2555.84,
+        2646.49,
+        2634.23
+      ],
+      "median_ns": 2634.23,
+      "selected": 5006,
+      "elapsed_seconds": 0.37714458799746353
+    },
+    "candidate": {
+      "command": [
+        "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/readonly_reports/policy_cpu_diagnosis/policy_cpu",
+        "32",
+        "4096",
+        "8192",
+        "128",
+        "6035",
+        "20000"
+      ],
+      "returncode": 0,
+      "environment_flags": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "0",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_A_NOSLC": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "total_environment_entries": 77,
+      "block_ns_per_call": [
+        790.485,
+        789.692,
+        786.722,
+        788.777,
+        789.709,
+        803.326,
+        792.065
+      ],
+      "median_ns": 789.709,
+      "selected": 6035,
+      "elapsed_seconds": 0.11429712999961339
+    }
+  },
+  {
+    "pair": "id686_noslc",
+    "ID": 686,
+    "control": false,
+    "shape": {
+      "M": 32,
+      "N": 1536,
+      "K": 2048,
+      "G": 4
+    },
+    "base": {
+      "command": [
+        "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/readonly_reports/policy_cpu_diagnosis/policy_cpu",
+        "32",
+        "1536",
+        "2048",
+        "4",
+        "5008",
+        "20000"
+      ],
+      "returncode": 0,
+      "environment_flags": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "2"
+      },
+      "total_environment_entries": 71,
+      "block_ns_per_call": [
+        1683.26,
+        1899.44,
+        1649.66,
+        1717.54,
+        1713.24,
+        1658.14,
+        1783.2
+      ],
+      "median_ns": 1713.24,
+      "selected": 5008,
+      "elapsed_seconds": 0.2465773770090891
+    },
+    "candidate": {
+      "command": [
+        "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/readonly_reports/policy_cpu_diagnosis/policy_cpu",
+        "32",
+        "1536",
+        "2048",
+        "4",
+        "6035",
+        "20000"
+      ],
+      "returncode": 0,
+      "environment_flags": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "2",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "total_environment_entries": 76,
+      "block_ns_per_call": [
+        737.387,
+        737.195,
+        735.655,
+        757.033,
+        739.21,
+        735.712,
+        749.855
+      ],
+      "median_ns": 737.387,
+      "selected": 6035,
+      "elapsed_seconds": 0.10758071999589447
+    }
+  },
+  {
+    "pair": "id687_noslc",
+    "ID": 687,
+    "control": false,
+    "shape": {
+      "M": 64,
+      "N": 1536,
+      "K": 2048,
+      "G": 4
+    },
+    "base": {
+      "command": [
+        "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/readonly_reports/policy_cpu_diagnosis/policy_cpu",
+        "64",
+        "1536",
+        "2048",
+        "4",
+        "5008",
+        "20000"
+      ],
+      "returncode": 0,
+      "environment_flags": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "2"
+      },
+      "total_environment_entries": 71,
+      "block_ns_per_call": [
+        1793.34,
+        1766.85,
+        1785.03,
+        1719.56,
+        1655.2,
+        1985.3,
+        1656.25
+      ],
+      "median_ns": 1766.85,
+      "selected": 5008,
+      "elapsed_seconds": 0.25148879901098553
+    },
+    "candidate": {
+      "command": [
+        "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/readonly_reports/policy_cpu_diagnosis/policy_cpu",
+        "64",
+        "1536",
+        "2048",
+        "4",
+        "6035",
+        "20000"
+      ],
+      "returncode": 0,
+      "environment_flags": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT": "2",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "total_environment_entries": 76,
+      "block_ns_per_call": [
+        733.836,
+        737.93,
+        740.484,
+        737.512,
+        740.977,
+        743.787,
+        790.669
+      ],
+      "median_ns": 740.484,
+      "selected": 6035,
+      "elapsed_seconds": 0.10845146399515215
+    }
+  },
+  {
+    "pair": "fallback_id358_noslc",
+    "ID": 358,
+    "control": true,
+    "shape": {
+      "M": 8,
+      "N": 6144,
+      "K": 2048,
+      "G": 32
+    },
+    "base": {
+      "command": [
+        "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/readonly_reports/policy_cpu_diagnosis/policy_cpu",
+        "8",
+        "6144",
+        "2048",
+        "32",
+        "5003",
+        "20000"
+      ],
+      "returncode": 0,
+      "environment_flags": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128"
+      },
+      "total_environment_entries": 71,
+      "block_ns_per_call": [
+        1812.33,
+        1867.36,
+        1897.22,
+        1746.83,
+        1865.17,
+        1928.62,
+        1870.7
+      ],
+      "median_ns": 1867.36,
+      "selected": 5003,
+      "elapsed_seconds": 0.26535917998990044
+    },
+    "candidate": {
+      "command": [
+        "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/readonly_reports/policy_cpu_diagnosis/policy_cpu",
+        "8",
+        "6144",
+        "2048",
+        "32",
+        "5003",
+        "20000"
+      ],
+      "returncode": 0,
+      "environment_flags": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "total_environment_entries": 76,
+      "block_ns_per_call": [
+        3145.0,
+        3085.15,
+        3127.76,
+        3108.94,
+        3170.78,
+        3109.69,
+        3184.21
+      ],
+      "median_ns": 3127.76,
+      "selected": 5003,
+      "elapsed_seconds": 0.44589451800857205
+    }
+  },
+  {
+    "pair": "fallback_id622_noslc",
+    "ID": 622,
+    "control": true,
+    "shape": {
+      "M": 128,
+      "N": 1024,
+      "K": 2048,
+      "G": 32
+    },
+    "base": {
+      "command": [
+        "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/readonly_reports/policy_cpu_diagnosis/policy_cpu",
+        "128",
+        "1024",
+        "2048",
+        "32",
+        "5000",
+        "20000"
+      ],
+      "returncode": 0,
+      "environment_flags": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+      },
+      "total_environment_entries": 71,
+      "block_ns_per_call": [
+        1932.73,
+        1885.74,
+        2084.25,
+        1999.04,
+        2014.31,
+        2172.88,
+        1932.73
+      ],
+      "median_ns": 1999.04,
+      "selected": 5000,
+      "elapsed_seconds": 0.2861964199983049
+    },
+    "candidate": {
+      "command": [
+        "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/readonly_reports/policy_cpu_diagnosis/policy_cpu",
+        "128",
+        "1024",
+        "2048",
+        "32",
+        "5000",
+        "20000"
+      ],
+      "returncode": 0,
+      "environment_flags": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "total_environment_entries": 76,
+      "block_ns_per_call": [
+        3175.79,
+        3110.54,
+        3093.72,
+        3142.2,
+        3093.52,
+        3102.5,
+        3154.92
+      ],
+      "median_ns": 3110.54,
+      "selected": 5000,
+      "elapsed_seconds": 0.4444307520025177
+    }
+  },
+  {
+    "pair": "fallback_id1184_noslc",
+    "ID": 1184,
+    "control": true,
+    "shape": {
+      "M": 32,
+      "N": 256,
+      "K": 512,
+      "G": 64
+    },
+    "base": {
+      "command": [
+        "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/readonly_reports/policy_cpu_diagnosis/policy_cpu",
+        "32",
+        "256",
+        "512",
+        "64",
+        "6003",
+        "20000"
+      ],
+      "returncode": 0,
+      "environment_flags": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_DEPTH8": "1"
+      },
+      "total_environment_entries": 72,
+      "block_ns_per_call": [
+        2170.21,
+        2198.81,
+        2258.44,
+        2228.62,
+        2393.37,
+        2259.38,
+        2223.47
+      ],
+      "median_ns": 2228.62,
+      "selected": 6003,
+      "elapsed_seconds": 0.32102486200165004
+    },
+    "candidate": {
+      "command": [
+        "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/readonly_reports/policy_cpu_diagnosis/policy_cpu",
+        "32",
+        "256",
+        "512",
+        "64",
+        "6003",
+        "20000"
+      ],
+      "returncode": 0,
+      "environment_flags": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_DEPTH8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "total_environment_entries": 77,
+      "block_ns_per_call": [
+        3391.96,
+        3348.41,
+        3330.74,
+        3335.91,
+        3336.67,
+        3370.23,
+        3339.41
+      ],
+      "median_ns": 3339.41,
+      "selected": 6003,
+      "elapsed_seconds": 0.4753771359974053
+    }
+  },
+  {
+    "pair": "fallback_id1185_noslc",
+    "ID": 1185,
+    "control": true,
+    "shape": {
+      "M": 64,
+      "N": 256,
+      "K": 512,
+      "G": 64
+    },
+    "base": {
+      "command": [
+        "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/readonly_reports/policy_cpu_diagnosis/policy_cpu",
+        "64",
+        "256",
+        "512",
+        "64",
+        "5003",
+        "20000"
+      ],
+      "returncode": 0,
+      "environment_flags": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128"
+      },
+      "total_environment_entries": 71,
+      "block_ns_per_call": [
+        1752.5,
+        1753.98,
+        1751.24,
+        1935.73,
+        1896.47,
+        1823.51,
+        1764.91
+      ],
+      "median_ns": 1764.91,
+      "selected": 5003,
+      "elapsed_seconds": 0.25819702800072264
+    },
+    "candidate": {
+      "command": [
+        "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/readonly_reports/policy_cpu_diagnosis/policy_cpu",
+        "64",
+        "256",
+        "512",
+        "64",
+        "5003",
+        "20000"
+      ],
+      "returncode": 0,
+      "environment_flags": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M": "128",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "total_environment_entries": 76,
+      "block_ns_per_call": [
+        3112.51,
+        3141.19,
+        3129.92,
+        3110.06,
+        3102.86,
+        3180.81,
+        3105.16
+      ],
+      "median_ns": 3112.51,
+      "selected": 5003,
+      "elapsed_seconds": 0.443666787003167
+    }
+  },
+  {
+    "pair": "fallback_id147_noslc",
+    "ID": 147,
+    "control": true,
+    "shape": {
+      "M": 1,
+      "N": 1232,
+      "K": 1536,
+      "G": 392
+    },
+    "base": {
+      "command": [
+        "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/readonly_reports/policy_cpu_diagnosis/policy_cpu",
+        "1",
+        "1232",
+        "1536",
+        "392",
+        "5016",
+        "20000"
+      ],
+      "returncode": 0,
+      "environment_flags": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_N_TAIL": "2"
+      },
+      "total_environment_entries": 71,
+      "block_ns_per_call": [
+        1789.03,
+        1858.74,
+        1840.42,
+        2042.73,
+        1985.85,
+        1967.59,
+        1824.42
+      ],
+      "median_ns": 1858.74,
+      "selected": 5016,
+      "elapsed_seconds": 0.270637412002543
+    },
+    "candidate": {
+      "command": [
+        "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/readonly_reports/policy_cpu_diagnosis/policy_cpu",
+        "1",
+        "1232",
+        "1536",
+        "392",
+        "5016",
+        "20000"
+      ],
+      "returncode": 0,
+      "environment_flags": {
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_N_TAIL": "2",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "total_environment_entries": 76,
+      "block_ns_per_call": [
+        3265.39,
+        3238.15,
+        3146.69,
+        3143.48,
+        3142.65,
+        3184.62,
+        3138.93
+      ],
+      "median_ns": 3146.69,
+      "selected": 5016,
+      "elapsed_seconds": 0.45130821100610774
+    }
+  },
+  {
+    "pair": "fallback_id35_noslc",
+    "ID": 35,
+    "control": true,
+    "shape": {
+      "M": 2048,
+      "N": 2048,
+      "K": 512,
+      "G": 64
+    },
+    "base": {
+      "command": [
+        "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/readonly_reports/policy_cpu_diagnosis/policy_cpu",
+        "2048",
+        "2048",
+        "512",
+        "64",
+        "5000",
+        "20000"
+      ],
+      "returncode": 0,
+      "environment_flags": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+      },
+      "total_environment_entries": 71,
+      "block_ns_per_call": [
+        2157.29,
+        1938.42,
+        2077.92,
+        1984.86,
+        1969.48,
+        2196.87,
+        2255.04
+      ],
+      "median_ns": 2077.92,
+      "selected": 5000,
+      "elapsed_seconds": 0.29693153699918184
+    },
+    "candidate": {
+      "command": [
+        "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/readonly_reports/policy_cpu_diagnosis/policy_cpu",
+        "2048",
+        "2048",
+        "512",
+        "64",
+        "5000",
+        "20000"
+      ],
+      "returncode": 0,
+      "environment_flags": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "total_environment_entries": 76,
+      "block_ns_per_call": [
+        3197.55,
+        3175.28,
+        3135.13,
+        3154.27,
+        3124.31,
+        3229.36,
+        3192.57
+      ],
+      "median_ns": 3175.28,
+      "selected": 5000,
+      "elapsed_seconds": 0.45019722598954104
+    }
+  },
+  {
+    "pair": "fallback_id788_noslc",
+    "ID": 788,
+    "control": true,
+    "shape": {
+      "M": 8,
+      "N": 2048,
+      "K": 4096,
+      "G": 128
+    },
+    "base": {
+      "command": [
+        "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/readonly_reports/policy_cpu_diagnosis/policy_cpu",
+        "8",
+        "2048",
+        "4096",
+        "128",
+        "5000",
+        "20000"
+      ],
+      "returncode": 0,
+      "environment_flags": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1"
+      },
+      "total_environment_entries": 71,
+      "block_ns_per_call": [
+        1953.39,
+        2086.94,
+        1982.42,
+        2249.91,
+        1928.72,
+        2074.88,
+        2135.12
+      ],
+      "median_ns": 2074.88,
+      "selected": 5000,
+      "elapsed_seconds": 0.292887129005976
+    },
+    "candidate": {
+      "command": [
+        "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/readonly_reports/policy_cpu_diagnosis/policy_cpu",
+        "8",
+        "2048",
+        "4096",
+        "128",
+        "5000",
+        "20000"
+      ],
+      "returncode": 0,
+      "environment_flags": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "42",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "total_environment_entries": 76,
+      "block_ns_per_call": [
+        3152.41,
+        3146.83,
+        3082.39,
+        3109.66,
+        3074.97,
+        3075.17,
+        3077.25
+      ],
+      "median_ns": 3082.39,
+      "selected": 5000,
+      "elapsed_seconds": 0.44036667299224064
+    }
+  }
+]

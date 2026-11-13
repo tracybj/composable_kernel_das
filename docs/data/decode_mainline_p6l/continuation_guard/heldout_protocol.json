@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "at": "2026-11-12T04:25:05.908720+00:00",
+  "frozen_before_first_candidate_GPU": true,
+  "seeds": [
+    6411926,
+    6411927,
+    6411928
+  ],
+  "minimum_per_adopted_family": 24,
+  "draws": {
+    "main": {
+      "M": [
+        1,
+        64
+      ],
+      "N_times128": [
+        8,
+        32
+      ],
+      "K_times128": [
+        16,
+        64
+      ],
+      "G": [
+        1,
+        64
+      ]
+    },
+    "short": {
+      "M": [
+        1,
+        256
+      ],
+      "N_times128": [
+        1,
+        32
+      ],
+      "K_times32": [
+        2,
+        63
+      ],
+      "G": [
+        1,
+        32
+      ]
+    }
+  },
+  "selection": "Only after final candidate binary, selector property rule and domain are frozen. Seeded draws are filtered by that CPU selector selecting the frozen candidate IDs; no performance-based filtering. Exclude the original1193 and every shape already used for design/discovery/qualification. Do not inspect or tune on heldout performance before final freeze.",
+  "failure_policy": "Keep all failed heldouts and negative results. If design or property rule changes after a failed confirmation, freeze it again and use the next preregistered seed; do not reinterpret reused shapes as unseen.",
+  "max_draws_per_seed": 100000,
+  "precision": "Whole output and real guards before timing, same frozen binary/epoch/config as confirmation",
+  "confirmation_blocks": 7,
+  "count_toward_50_or_30": false,
+  "limitations": "Finite tests establish evidence in tested attribute ranges, not every possible stride, pointer, or untested integer geometry."
+}

@@ -1,0 +1,26 @@
+{
+  "at": "2026-11-13T11:27:15.368623+00:00",
+  "ok": true,
+  "CPU_only": true,
+  "GPU": false,
+  "no_HIP_link": true,
+  "groups": [
+    {
+      "fixture": "cases.json",
+      "cases": 175389,
+      "all_status_instance_reason_equal": true,
+      "fixture_sha256": "dee8b17dd4e7d1463ab0dfcbf799086645be4ee4dae3451d81ae77e98cead397"
+    },
+    {
+      "fixture": "public_disable_cases.json",
+      "cases": 147456,
+      "all_status_instance_reason_equal": true,
+      "fixture_sha256": "5c6228af6780f081fc283c75619e1ff28420f5a6473e686a2be5dff8edf64506"
+    }
+  ],
+  "cases": 322845,
+  "seconds": 14.030683962002513,
+  "source_sha256": "1e2156f5ba213e8a44f10d34929f97132c6572d946ef9d2af275f8654d79c2a4",
+  "executable_sha256": "a367b7459aee686518d11dade8e4d86bd855913401297d20d1219ac04ec54cb8",
+  "not_GPU_correctness_or_performance": true
+}
