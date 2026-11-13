@@ -222,6 +222,8 @@ enum class GroupedGemmInstanceId
     bf16_nn_decode_coop_k32_d5 = 6023,
     bf16_nn_decode_coop_k32_a2_b3 = 6024,
     bf16_nn_decode_coop_k32_d4_w8 = 6025,
+    bf16_nn_decode_coop_k32_a2_b3_phase = 6026,
+    bf16_nn_decode_coop_k32_d4_w8_phase = 6027,
 
 };
 
@@ -242,7 +244,7 @@ struct GroupedGemmCandidateIdentity
     GroupedGemmCandidateFamily family;
 };
 
-inline constexpr std::array<GroupedGemmCandidateIdentity, 59>
+inline constexpr std::array<GroupedGemmCandidateIdentity, 61>
     grouped_gemm_candidate_registry{{
         {GroupedGemmInstanceId::bw_family_selected,
          "bw_family.selected",
@@ -390,6 +392,10 @@ inline constexpr std::array<GroupedGemmCandidateIdentity, 59>
          "decode.nn.full_m.cooperative_ab.n128.k32.a2.b3.w4.op3", GroupedGemmCandidateFamily::decode},
         {GroupedGemmInstanceId::bf16_nn_decode_coop_k32_d4_w8,
          "decode.nn.full_m.cooperative_ab.n128.k32.d4.w8.op3", GroupedGemmCandidateFamily::decode},
+        {GroupedGemmInstanceId::bf16_nn_decode_coop_k32_a2_b3_phase,
+         "decode.nn.full_m.cooperative_ab.n128.k32.a2.b3.w4.op3.phase_first", GroupedGemmCandidateFamily::decode},
+        {GroupedGemmInstanceId::bf16_nn_decode_coop_k32_d4_w8_phase,
+         "decode.nn.full_m.cooperative_ab.n128.k32.d4.w8.op3.phase_first", GroupedGemmCandidateFamily::decode},
 
     }};
 
@@ -625,6 +631,25 @@ constexpr GroupedGemmSelection select_grouped_gemm_candidate(
             return {m <= 16 ? GroupedGemmInstanceId::bf16_nn_decode_coop_k32_a2_b3 :
                               GroupedGemmInstanceId::bf16_nn_decode_coop_k32_d4_w8,
                     GroupedGemmSelectionReason::bf16_nn_decode_mainline};
+        case 21:
+            return {GroupedGemmInstanceId::bf16_nn_decode_coop_k32_a2_b3_phase,
+                    GroupedGemmSelectionReason::bf16_nn_decode_mainline};
+        case 22:
+            if(m >= 17)
+                return {GroupedGemmInstanceId::bf16_nn_decode_coop_k32_d4_w8_phase,
+                        GroupedGemmSelectionReason::bf16_nn_decode_mainline};
+            break;
+        case 23:
+            if(m >= 17 || k >= 6144)
+                return {m <= 16 ? GroupedGemmInstanceId::bf16_nn_decode_coop_k32_a2_b3_phase :
+                                  GroupedGemmInstanceId::bf16_nn_decode_coop_k32_d4_w8_phase,
+                        GroupedGemmSelectionReason::bf16_nn_decode_mainline};
+            break;
+        case 24:
+            if(m >= 17 || k >= 6144)
+                return {GroupedGemmInstanceId::bf16_nn_decode_coop_k32_a2_b3_phase,
+                        GroupedGemmSelectionReason::bf16_nn_decode_mainline};
+            break;
         default: break;
         }
     }

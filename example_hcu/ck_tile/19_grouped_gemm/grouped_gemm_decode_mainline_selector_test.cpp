@@ -23,6 +23,11 @@ int main()
         if(variant == 17 || variant == 18) return 6024;
         if(variant == 19) return 6025;
         if(variant == 20) return m <= 16 ? 6024 : 6025;
+        if((variant == 23 || variant == 24) && m < 17 && k < 6144) return 0;
+        if(variant == 22 && m < 17) return 0;
+        if(variant == 21 || variant == 24) return 6026;
+        if(variant == 22) return 6027;
+        if(variant == 23) return m <= 16 ? 6026 : 6027;
         return variant >= 9 ? 6020 + variant - 9 : variant >= 6 ? 6013 + variant - 6 :
                variant >= 3 ? 6009 + variant - 3 : 6004 + variant;
     };
@@ -48,7 +53,7 @@ int main()
         policy.enable_bf16_nn_decode_mainline = !short_path;
         policy.enable_bf16_nn_decode_short = short_path;
         p.k.extent = short_path ? 768 : 2048;
-        for(int variant = 0; variant < (short_path ? 6 : 21); ++variant)
+        for(int variant = 0; variant < (short_path ? 6 : 25); ++variant)
         {
             policy.bf16_nn_decode_mainline_variant = variant;
             policy.bf16_nn_decode_short_variant = variant;
@@ -105,7 +110,7 @@ int main()
     }
     policy.enable_bf16_nn_decode_mainline = true;
     policy.enable_bf16_nn_decode_short = false;
-    for(int variant : {12, 13, 14, 15, 16, 17, 18, 19, 20})
+    for(int variant : {12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24})
     {
         policy.bf16_nn_decode_mainline_variant = variant;
         for(int m : {1, 16, 17, 32, 33, 64})
@@ -118,7 +123,7 @@ int main()
     }
     // New resource routes must preserve legacy fallback on disabled requests
     // and geometry outside their contract, independent of their numeric ID.
-    for(int resource_variant : {17, 18, 19, 20})
+    for(int resource_variant : {17, 18, 19, 20, 21, 22, 23, 24})
     {
         policy.bf16_nn_decode_mainline_variant = resource_variant;
         p.m = GroupedGemmDimensionSummary::Common(32);
@@ -138,7 +143,7 @@ int main()
         { auto x = p; x.k = GroupedGemmDimensionSummary::DeviceLengthsWithCapacity(65536); pass &= check(x, 0); }
         { auto x = p; x.n = GroupedGemmDimensionSummary::DeviceLengthsWithCapacity(32768); pass &= check(x, 0); }
     }
-    policy.bf16_nn_decode_mainline_variant = 21;
+    policy.bf16_nn_decode_mainline_variant = 25;
     pass &= check(p, 0);
     std::cout << "DECODE_MAINLINE_SELECTOR_" << (pass ? "PASS" : "FAIL")
               << " cases=" << checks << '\n';
