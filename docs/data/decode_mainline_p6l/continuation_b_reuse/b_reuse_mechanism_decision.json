@@ -1,0 +1,167 @@
+{
+  "at": "2026-11-13T06:02:31.835289+00:00",
+  "proceed": true,
+  "not_a_fourth_ownership_architecture": true,
+  "architecture": "Existing H3 full-M cooperative A/B, same producer and two-layer schedule",
+  "stage11_results_sha256": "6ae3c457cb964cfbf14fcff024c825d77c928028b4cfa2317d2c872e036ef165",
+  "stage11_profiles_sha256": "f3a6455be4d1d3abf6cb10f806e6a130f52f0462d4f9bc5e1072a74c3b803321",
+  "completed_stage11_pairs": 55,
+  "stage11_SQTT_captures": 12,
+  "observed": [
+    {
+      "ID": 621,
+      "arm": "candidate_id621_d3_n256_diagnosis",
+      "geometry": {
+        "grid_work_items": [
+          65536,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 128,
+        "lds_bytes": 61440,
+        "scratch_bytes": 0,
+        "vgpr": 184,
+        "sgpr": 64
+      },
+      "mean_resident_waves_per_CU": 6.677488097532424,
+      "hbm_read_over_one_copy_inputs": 1.066964542164522,
+      "sq_insts_lds_per_wave": 676.0,
+      "sq_insts_mmop_per_wave": 1024.0
+    },
+    {
+      "ID": 805,
+      "arm": "candidate_id805_d3_n256_diagnosis",
+      "geometry": {
+        "grid_work_items": [
+          131072,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 256,
+        "lds_bytes": 61440,
+        "scratch_bytes": 0,
+        "vgpr": 184,
+        "sgpr": 64
+      },
+      "mean_resident_waves_per_CU": 6.971677102381574,
+      "hbm_read_over_one_copy_inputs": 1.03031181566643,
+      "sq_insts_lds_per_wave": 1316.0,
+      "sq_insts_mmop_per_wave": 2048.0
+    },
+    {
+      "ID": 1009,
+      "arm": "candidate_id1009_d3_n256_diagnosis",
+      "geometry": {
+        "grid_work_items": [
+          131072,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 256,
+        "lds_bytes": 52224,
+        "scratch_bytes": 0,
+        "vgpr": 68,
+        "sgpr": 64
+      },
+      "mean_resident_waves_per_CU": 7.183829738885909,
+      "hbm_read_over_one_copy_inputs": 1.00020173233972,
+      "sq_insts_lds_per_wave": 777.0,
+      "sq_insts_mmop_per_wave": 768.0
+    },
+    {
+      "ID": 312,
+      "arm": "candidate_id312_d3_n256_diagnosis",
+      "geometry": {
+        "grid_work_items": [
+          524288,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 1024,
+        "lds_bytes": 55296,
+        "scratch_bytes": 0,
+        "vgpr": 108,
+        "sgpr": 64
+      },
+      "mean_resident_waves_per_CU": 7.682568602939937,
+      "hbm_read_over_one_copy_inputs": 1.0077091778895653,
+      "sq_insts_lds_per_wave": 402.0,
+      "sq_insts_mmop_per_wave": 512.0
+    },
+    {
+      "ID": 633,
+      "arm": "candidate_id633_d3_n256_diagnosis",
+      "geometry": {
+        "grid_work_items": [
+          16384,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 32,
+        "lds_bytes": 52224,
+        "scratch_bytes": 0,
+        "vgpr": 68,
+        "sgpr": 64
+      },
+      "mean_resident_waves_per_CU": 2.49919426709717,
+      "hbm_read_over_one_copy_inputs": 1.0026788971303502,
+      "sq_insts_lds_per_wave": 265.0,
+      "sq_insts_mmop_per_wave": 256.0
+    }
+  ],
+  "interpretation": "D2/D3 both regress over representative set. HBM near one copy on805/1009/312, so repeated HBM alone doesnot explain loss; measuredresidency itself isnot a solecause proof. Consumer partition repeats B over MGroups2/4 and nominal operand payload canbe analytically reduced. Testthat boundedconsumerfactor at both alreadymeasured depths; retain all failures.",
+  "change": "For paddedM32/64 halve MGroups and doubleMFragments; fixed8waves, N256,K32,D2orD3,3operandbanks, compute-first, A/Bglobal producer+layout+VMcounts unchanged. M16 emits equivalentwork andserves asinternalnegativecontrol.",
+  "nominal_cost": "M32 LDSread5→4KiB/wave/K32 andoperand20→16dword; M64 9→6KiB and36→24dword. FP32accumulator count/MMAC count/Ccoverage unchanged. Nopredictedtiming/residencygain.",
+  "deferred_A_cache_hint": "No A cachebit change inthisbuild: currentlymeasuredHBMnearminimum andnoisolatingevidence ofcachecause. Do not mechanicallysweep cachecombinations.",
+  "new_instances": [
+    6032,
+    6033
+  ],
+  "new_variants": [
+    33,
+    34,
+    35,
+    36
+  ],
+  "full_domain": "Same currentN256 contract:1<=M<=64,N1024..4096%256,K2048..8192%128,G1..1024,gfx936BF16NN packed knownaligned",
+  "scoped_domain": "Retain preregistered G<=32&&(M>=17||K>=6144) forCPU andboundarycontrols; noadoptionclaim",
+  "preregistration": "Repeat identical19 representatives for eachdepth, same7fallback controls, fixed4directpartition controls perdepth621/805/1009/312, same4directdepth controls621/805/1009/312,2sameGPUroute controls. No winnerIDs fordispatch. Wholepropertydomain+24fresh+7blocks stillrequired.",
+  "CPU_prerequisites": [
+    "conditional_M32_M64_B_reuse/cpu_model_result.json",
+    "newsource selector/policy/mask/old1193 CPU equivalence",
+    "dualISA zero spill andactual cyclic operand/register/VMcounterproof"
+  ],
+  "GPU_protocol_unchanged": true,
+  "goals_unchanged": [
+    50,
+    30
+  ],
+  "no_new_GPU_yet": true,
+  "source_not_modified_yet": true,
+  "old1730_plus12_shader_byte_preservation_required": true
+}
