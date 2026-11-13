@@ -11,6 +11,7 @@
 #include "ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_cooperative_k64.hpp"
 #include "ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_cooperative_k64_wide.hpp"
 #include "ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_cooperative_n256.hpp"
+#include "ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_cooperative_n128_noslc.hpp"
 
 namespace ck_tile {
 template<int Rows, int BlockK, int Depth>
@@ -371,7 +372,7 @@ struct DecodeNnLowLdsWave4N128Kernel
             reinterpret_cast<uint16_t*>(a.e_ptr),
             a.M, a.N, a.K, a.stride_As[0], a.stride_Bs[0], a.stride_E,
             (block - group * tiles_per_group) * 128};
-        decode_nn_cooperative_n256::run<Rows,2,true,128,true>(p);
+        decode_nn_cooperative_n128_noslc::run<Rows,2,true,128,true>(p);
     }
 };
 
