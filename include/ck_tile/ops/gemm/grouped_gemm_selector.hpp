@@ -230,6 +230,7 @@ enum class GroupedGemmInstanceId
     bf16_nn_decode_coop_n256_k32_d3_w8 = 6031,
     bf16_nn_decode_coop_n256_b_reuse_d2 = 6032,
     bf16_nn_decode_coop_n256_b_reuse_d3 = 6033,
+    bf16_nn_decode_low_lds_n128_d2 = 6034,
 
 };
 
@@ -250,7 +251,7 @@ struct GroupedGemmCandidateIdentity
     GroupedGemmCandidateFamily family;
 };
 
-inline constexpr std::array<GroupedGemmCandidateIdentity, 67>
+inline constexpr std::array<GroupedGemmCandidateIdentity, 68>
     grouped_gemm_candidate_registry{{
         {GroupedGemmInstanceId::bw_family_selected,
          "bw_family.selected",
@@ -414,6 +415,8 @@ inline constexpr std::array<GroupedGemmCandidateIdentity, 67>
          "decode.nn.full_m.cooperative_ab.n256.k32.d2.w8.op3.b_reuse", GroupedGemmCandidateFamily::decode},
         {GroupedGemmInstanceId::bf16_nn_decode_coop_n256_b_reuse_d3,
          "decode.nn.full_m.cooperative_ab.n256.k32.d3.w8.op3.b_reuse", GroupedGemmCandidateFamily::decode},
+        {GroupedGemmInstanceId::bf16_nn_decode_low_lds_n128_d2,
+         "decode.nn.full_m.cooperative_ab.n128.k32.d2.low_lds.op3", GroupedGemmCandidateFamily::decode},
 
     }};
 
@@ -726,6 +729,27 @@ constexpr GroupedGemmSelection select_grouped_gemm_candidate(
             if(n % 256 == 0 && problem.group_count <= 32 && (m >= 17 || k >= 6144))
                 return {GroupedGemmInstanceId::bf16_nn_decode_coop_n256_b_reuse_d3,
                         GroupedGemmSelectionReason::bf16_nn_decode_mainline};
+            break;
+        case 37:
+            return {GroupedGemmInstanceId::bf16_nn_decode_low_lds_n128_d2,
+                    GroupedGemmSelectionReason::bf16_nn_decode_mainline};
+        case 38:
+            if(problem.group_count <= 32 && (m >= 17 || k >= 6144))
+                return {GroupedGemmInstanceId::bf16_nn_decode_low_lds_n128_d2,
+                        GroupedGemmSelectionReason::bf16_nn_decode_mainline};
+            break;
+        case 39:
+        case 40:
+            if(policy.bf16_nn_decode_mainline_variant == 39 ||
+               (problem.group_count <= 32 && (m >= 17 || k >= 6144)))
+            {
+                // Two CTA waves for the measured 80-CU gfx936 target. This
+                // is an operator-property rule; no shape IDs are consulted.
+                const bool compact = n % 256 != 0 || (n / 256) * problem.group_count < 160;
+                return {compact ? GroupedGemmInstanceId::bf16_nn_decode_low_lds_n128_d2 :
+                                  GroupedGemmInstanceId::bf16_nn_decode_coop_n256_b_reuse_d2,
+                        GroupedGemmSelectionReason::bf16_nn_decode_mainline};
+            }
             break;
         default: break;
         }

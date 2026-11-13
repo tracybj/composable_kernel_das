@@ -342,7 +342,7 @@ int convert_problem(const ck_tile_hcu_grouped_gemm_problem_v1* source,
         "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE",
         "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE");
     policy.bf16_nn_decode_mainline_variant = decode_variant(
-        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT", 36);
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT", 40);
     policy.enable_bf16_nn_decode_short = decode_switch(
         "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_SHORT",
         "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_SHORT");
@@ -352,7 +352,7 @@ int convert_problem(const ck_tile_hcu_grouped_gemm_problem_v1* source,
     const bool priority_decode_requested =
         (policy.enable_bf16_nn_decode_mainline &&
          policy.bf16_nn_decode_mainline_variant >= 6 &&
-         policy.bf16_nn_decode_mainline_variant <= 36) ||
+         policy.bf16_nn_decode_mainline_variant <= 40) ||
         (policy.enable_bf16_nn_decode_short &&
          policy.bf16_nn_decode_short_variant >= 3 &&
          policy.bf16_nn_decode_short_variant <= 5);
@@ -364,7 +364,7 @@ int convert_problem(const ck_tile_hcu_grouped_gemm_problem_v1* source,
             ck_tile::select_grouped_gemm_candidate(problem, policy);
         const int priority_decode_id = static_cast<int>(priority_decode_candidate.instance_id);
         if((priority_decode_id >= 6013 && priority_decode_id <= 6018) ||
-           (priority_decode_id >= 6020 && priority_decode_id <= 6033))
+           (priority_decode_id >= 6020 && priority_decode_id <= 6034))
             return CK_TILE_HCU_GROUPED_GEMM_DEVICE_ARGS_SUCCESS_V1;
     }
 #endif
@@ -690,11 +690,12 @@ int dispatch_registry_candidate(const ck_tile::GroupedGemmProblem& problem,
     case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_coop_n256_k32_d3_w8:
     case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_coop_n256_b_reuse_d2:
     case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_coop_n256_b_reuse_d3:
+    case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_low_lds_n128_d2:
 #if defined(CK_TILE_GROUPED_GEMM_DEVICE_ARGS_HAS_DECODE_BF16)
         if(dtype == ck_tile::GroupedGemmDataType::bf16 && layout == ck_tile::GroupedGemmLayout::nn)
         {
             const int variant = static_cast<int>(instance_id) - 6020;
-            const int tile_n = variant >= 10 ? 256 : 128;
+            const int tile_n = variant >= 10 && variant != 14 ? 256 : 128;
             const int tpg = static_cast<int>(problem.n.extent / tile_n);
             return ck_tile_hcu_grouped_gemm_bf16_nn_decode_cooperative_device_args(
                 device_args, groups, stream, static_cast<std::uint64_t>(tpg) * groups, tpg,
@@ -1026,6 +1027,7 @@ void candidate_masks(ck_tile::GroupedGemmInstanceId id,
     case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_coop_n256_k32_d3_w8:
     case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_coop_n256_b_reuse_d2:
     case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_coop_n256_b_reuse_d3:
+    case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_low_lds_n128_d2:
     case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_mainline_d4:
     case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_mainline_d8:
     case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_mainline_serial:
