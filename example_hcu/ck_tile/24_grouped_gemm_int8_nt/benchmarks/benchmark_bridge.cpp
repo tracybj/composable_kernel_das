@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 // Test/benchmark adapter only;the production API is ck_tile_int8_nt_cached.h.
 #include "../include/ck_tile_int8_nt_cached.h"
+#include "../instances/grouped_int8_nt_routes.hpp"
+#include "ck_tile/ops/gemm/grouped_gemm_selector.hpp"
 #include <hip/hip_runtime.h>
 #include <memory>
 #include <stdexcept>
@@ -31,6 +33,37 @@ struct Benchmark
 };
 } // namespace
 extern "C" CK_TILE_INT8_CACHED_API const char* cached_i8_bench_error() { return error.c_str(); }
+extern "C" CK_TILE_INT8_CACHED_API const char*
+cached_i8_bench_pipeline(unsigned route, unsigned legacy_instance)
+{
+    using namespace ck_tile::int8_routes;
+    if(route == LegacyRaw)
+    {
+        using Instance = ck_tile::GroupedGemmInstanceId;
+        switch(static_cast<Instance>(legacy_instance))
+        {
+#define CK_INT8_LEGACY_TILE(id, ...) case Instance::id: return "cooperative";
+#define CK_INT8_LEGACY_WASP(id, ...) case Instance::id: return "WASP";
+#define CK_INT8_LEGACY_DIRECT(id) CK_INT8_LEGACY_TILE(id)
+#define CK_INT8_LEGACY_DIRECT_EPI(id, ...) CK_INT8_LEGACY_TILE(id)
+#include "../instances/grouped_int8_nt_legacy_instances.inc"
+#undef CK_INT8_LEGACY_DIRECT_EPI
+#undef CK_INT8_LEGACY_DIRECT
+#undef CK_INT8_LEGACY_WASP
+#undef CK_INT8_LEGACY_TILE
+        default: return nullptr;
+        }
+    }
+    switch(route_info(route).pipeline)
+    {
+    case Pipeline::Cooperative: return "cooperative";
+    case Pipeline::Wasp: return "WASP";
+    case Pipeline::KParallel: return "K-parallel";
+    case Pipeline::Unknown: return nullptr;
+    }
+    return nullptr;
+}
+
 extern "C" CK_TILE_INT8_CACHED_API void*
 cached_i8_bench_create(ck_tile_int8_nt_cached_plan_handle_v1 plan)
 {

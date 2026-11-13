@@ -6,67 +6,60 @@
 namespace ck_tile {
 
 namespace int8_routes {
-    // 0: Classic cooperative double-buffered pipeline (raw fallback)
-    constexpr auto LegacyRaw                      = CK_TILE_INT8_CACHED_LEGACY_RAW_V1;
+// Route 0 resolves its launch kind through the legacy instance table.
+constexpr auto LegacyRaw = CK_TILE_INT8_CACHED_LEGACY_RAW_V1;
 
-    // 3-4: WASP transposed raw variants
-    constexpr auto LinearTransposedRaw            = CK_TILE_INT8_CACHED_LINEAR_TRANSPOSED_RAW_V1;
-    constexpr auto LinearTransposedRecord1024     = CK_TILE_INT8_CACHED_LINEAR_TRANSPOSED_RAW_RECORD1024_V1;
+enum class Pipeline
+{
+    Unknown,
+    Cooperative,
+    Wasp,
+    KParallel,
+};
 
-    // 5-12: WASP packed weight variants with standard epilogue
-    constexpr auto PackedWeightM256N256           = CK_TILE_INT8_CACHED_PACKED_WEIGHT_V1;
-    constexpr auto PackedM128N256                 = CK_TILE_INT8_CACHED_PACKED_M128_N256_A2_V1;
-    constexpr auto PackedM128N128                 = CK_TILE_INT8_CACHED_PACKED_M128_N128_A4_V1;
-    constexpr auto PackedM64N256                  = CK_TILE_INT8_CACHED_PACKED_M64_N256_A2_V1;
-    constexpr auto PackedM64N64                   = CK_TILE_INT8_CACHED_PACKED_M64_N64_A2_V1;
-    constexpr auto PackedM32N256                  = CK_TILE_INT8_CACHED_PACKED_M32_N256_A2_V1;
-    constexpr auto PackedM32N64                   = CK_TILE_INT8_CACHED_PACKED_M32_N64_A1_V1;
-    constexpr auto PackedM256N384                 = CK_TILE_INT8_CACHED_PACKED_M256_N384_A2_V1;
+enum class WeightFormat
+{
+    Raw,
+    Packed,
+};
 
-    // 22-23: Tail shape masked wide-N variants (standard epilogue)
-    constexpr auto PackedM256N384MaskedM4         = CK_TILE_INT8_CACHED_PACKED_M256_N384_MASKED_M4_V1;
-    constexpr auto PackedM256N384MaskedM8         = CK_TILE_INT8_CACHED_PACKED_M256_N384_MASKED_M8_V1;
+struct RouteInfo
+{
+    Pipeline pipeline;
+    WeightFormat weights;
+};
 
-    // 24: Packed-Cooperative zero-LDS bypass for ultra-narrow decode (M <= 8)
-    constexpr auto PackedCooperativeM1N256        = CK_TILE_INT8_CACHED_PACKED_M16_N64_K256_V1;
+#define CK_INT8_ROUTE(id, abi, kind, weights, ...) constexpr auto id = CK_TILE_INT8_CACHED_##abi##_V1;
+#include "grouped_int8_nt_routes.inc"
+#undef CK_INT8_ROUTE
 
-    // 25: Wave partial sums with in-CTA reduction for long-K decode
-    constexpr auto KParallelDecode                = CK_TILE_INT8_CACHED_RAW_K_PARALLEL_M1_M2_V1;
-
-    // 26-30: Paired-Store Epilogue variants (128-bit vector double-write for prefill throughput)
-    constexpr auto PairedM256N256                 = CK_TILE_INT8_CACHED_PAIRED_M256_N256_V1;
-    constexpr auto PairedM256N384                 = CK_TILE_INT8_CACHED_PAIRED_M256_N384_V1;
-    constexpr auto PairedM256N384MaskedM4         = CK_TILE_INT8_CACHED_PAIRED_M256_N384_MASKED_M4_V1;
-    constexpr auto PairedM256N384MaskedM8         = CK_TILE_INT8_CACHED_PAIRED_M256_N384_MASKED_M8_V1;
-    constexpr auto PairedM128N256                 = CK_TILE_INT8_CACHED_PAIRED_M128_N256_V1;
-
-    // 31-32: Scaled raw-weight cooperative decode instances.
-    constexpr auto RawAlignedM16N32K512          = CK_TILE_INT8_CACHED_RAW_ALIGNED_M16_N32_K512_V1;
-    constexpr auto RawM32N64K256W4               = CK_TILE_INT8_CACHED_RAW_M32_N64_K256_W4_V1;
-
-    constexpr bool uses_packed_weights(unsigned route)
+constexpr RouteInfo route_info(unsigned route)
+{
+    switch(route)
     {
-        switch(route)
-        {
-        case PackedWeightM256N256:
-        case PackedM128N256:
-        case PackedM128N128:
-        case PackedM64N256:
-        case PackedM64N64:
-        case PackedM32N256:
-        case PackedM32N64:
-        case PackedM256N384:
-        case PackedM256N384MaskedM4:
-        case PackedM256N384MaskedM8:
-        case PackedCooperativeM1N256:
-        case PairedM256N256:
-        case PairedM256N384:
-        case PairedM256N384MaskedM4:
-        case PairedM256N384MaskedM8:
-        case PairedM128N256: return true;
-        default: return false;
-        }
+#define CK_INT8_PIPELINE_WASP Pipeline::Wasp
+#define CK_INT8_PIPELINE_SCALED_WASP Pipeline::Wasp
+#define CK_INT8_PIPELINE_PAIRED_WASP Pipeline::Wasp
+#define CK_INT8_PIPELINE_COOPERATIVE Pipeline::Cooperative
+#define CK_INT8_PIPELINE_K_PARALLEL Pipeline::KParallel
+#define CK_INT8_ROUTE(id, abi, kind, weights, ...) \
+    case id: return {CK_INT8_PIPELINE_##kind, WeightFormat::weights};
+#include "grouped_int8_nt_routes.inc"
+#undef CK_INT8_ROUTE
+#undef CK_INT8_PIPELINE_K_PARALLEL
+#undef CK_INT8_PIPELINE_COOPERATIVE
+#undef CK_INT8_PIPELINE_PAIRED_WASP
+#undef CK_INT8_PIPELINE_SCALED_WASP
+#undef CK_INT8_PIPELINE_WASP
+    default: return {Pipeline::Unknown, WeightFormat::Raw};
     }
+}
+
+constexpr bool uses_packed_weights(unsigned route)
+{
+    return route_info(route).weights == WeightFormat::Packed;
+}
+
 } // namespace int8_routes
 
 // Architectural and empirical scheduling constants (eliminating magic numbers)
@@ -93,10 +86,5 @@ namespace int8_output_types {
     constexpr unsigned Bf16  = CK_TILE_INT8_OUTPUT_BF16_V2;
     constexpr unsigned Fp16  = CK_TILE_INT8_OUTPUT_FP16_V2;
 } // namespace int8_output_types
-
-namespace int8_scale_modes {
-    constexpr unsigned Scalar      = CK_TILE_INT8_SCALE_SCALAR_V2;
-    constexpr unsigned OuterVector = CK_TILE_INT8_SCALE_OUTER_VECTOR_V2;
-} // namespace int8_scale_modes
 
 } // namespace ck_tile

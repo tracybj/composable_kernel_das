@@ -17,8 +17,7 @@ BLASLt workbook target on all 1191 shapes for both scaled outputs. See the
 | --- | --- |
 | [instances.cpp](instances.cpp) | Raw INT8 provider entry used by `19_grouped_gemm`. |
 | [instances/](instances/) | Dispatchers, selectors, routes, and tuning selectors for raw, cached, and scaled routes. |
-| [kernels/](kernels/) | INT8 NT kernels, epilogues, WASP/core kernels, K-parallel, and sub-tile problems. |
-| [pipeline/](pipeline/) | Shared cooperative and WASP main loops. |
+| [kernels/](kernels/) | INT8 NT kernels, cooperative and WASP main loops, epilogues, and problem definitions. |
 | [grouped_int8_nt_cached_api.cpp](grouped_int8_nt_cached_api.cpp) | Cached weights lifecycle & plan management API implementation. |
 | [include/](include/) | Public & internal headers for cached weights, scaling, and K-parallel args. |
 | [benchmarks/](benchmarks/) | Reproduction scripts, benchmark bridges, and frozen input data. |
@@ -46,7 +45,8 @@ The existing device-args provider manifest still includes `instances.cpp`.
 The cached extension target also builds `grouped_int8_nt_cached_api.cpp`,
 `instances/grouped_int8_nt_cached_dispatch.cpp` and
 `instances/grouped_int8_nt_scaled_dispatch.cpp`. Those files use the existing
-route IDs and a shared scaled-route list for dispatch and offline enumeration.
+route IDs and a shared route list for INT32 dispatch, scaled dispatch, weight
+binding, benchmark reporting and offline enumeration.
 The selector uses dimensions, device CU count and descriptor properties.
 The scale contract and ownership rules are described in
 [INT8_SCALE_OUTPUT.md](docs/INT8_SCALE_OUTPUT.md).
@@ -85,6 +85,12 @@ The scaled runner times one formal round, with 10 warmups and 50 repetitions per
 sample. The reported time is the median of three samples. Weight preparation is
 recorded separately. Throughput counts two operations per INT8 multiply-accumulate.
 Use a new output directory for each run.
+
+The combined CSV records the planned route and pipeline separately for BF16
+and FP16. `legacy_instance` identifies the selected instance when its route is
+0. For other routes, `legacy_fallback_instance` reports the compatibility ID
+from the plan. Pipeline fields describe the plan selection. An individual
+kernel may use a generic epilogue when its vector-store conditions fail.
 
 The [raw INT32 case list](benchmarks/data/cases_int8_nt_1178.csv) can also be
 used with the [CSV driver from example 19](../19_grouped_gemm/run_grouped_gemm_device_args_cases.py).

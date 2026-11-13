@@ -1,8 +1,9 @@
 # Offline tuning for scaled INT8 NT grouped GEMM
 
 The runner enumerates compiled instances for each uniform, nonempty shape and
-each BF16/FP16 output. The dispatcher and enumerator share the two instance
-registration files under `instances/`. Eligibility checks native tile geometry,
+each BF16/FP16 output. The dispatcher and enumerator share
+`grouped_int8_nt_routes.inc` and `grouped_int8_nt_legacy_instances.inc`.
+Eligibility checks native tile geometry,
 alignment, scale/writeback requirements and prepared-weight availability. An
 explicit candidate is checked again at plan creation, before binding weight
 format or uploading GPU arguments.

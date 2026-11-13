@@ -118,19 +118,23 @@ int dispatch(unsigned route,
     switch(route)
     {
     case int8_routes::LegacyRaw: return raw<BF>(legacy, args, scales, g, m, n, stream);
-#define CK_INT8_SCALED_COOPERATIVE(id, P) \
-    case int8_routes::id: return cooperative<BF, P>(args, scales, g, m, n, stream);
-#define CK_INT8_SCALED_WASP(id, P) \
-    case int8_routes::id: return wasp<BF, P>(args, scales, g, m, n, stream);
-#define CK_INT8_SCALED_PAIRED_WASP(id, P) \
-    case int8_routes::id: return paired_wasp<BF, P>(args, scales, g, m, n, stream);
-#define CK_INT8_SCALED_K_PARALLEL(id) \
+#define CK_INT8_SCALED_COOPERATIVE(id, ...) \
+    case int8_routes::id: return cooperative<BF, __VA_ARGS__>(args, scales, g, m, n, stream);
+#define CK_INT8_SCALED_WASP(id, ...) \
+    case int8_routes::id: return wasp<BF, __VA_ARGS__>(args, scales, g, m, n, stream);
+#define CK_INT8_SCALED_SCALED_WASP(id, ...) CK_INT8_SCALED_WASP(id, __VA_ARGS__)
+#define CK_INT8_SCALED_PAIRED_WASP(id, ...) \
+    case int8_routes::id: return paired_wasp<BF, __VA_ARGS__>(args, scales, g, m, n, stream);
+#define CK_INT8_SCALED_K_PARALLEL(id, ...) \
     case int8_routes::id: \
         return m == 1 ? k_parallel<BF, 1>(args, g, n, stream) \
                       : k_parallel<BF, 2>(args, g, n, stream);
-#include "grouped_int8_nt_scaled_routes.inc"
+#define CK_INT8_ROUTE(id, abi, kind, weights, ...) CK_INT8_SCALED_##kind(id, __VA_ARGS__)
+#include "grouped_int8_nt_routes.inc"
+#undef CK_INT8_ROUTE
 #undef CK_INT8_SCALED_K_PARALLEL
 #undef CK_INT8_SCALED_PAIRED_WASP
+#undef CK_INT8_SCALED_SCALED_WASP
 #undef CK_INT8_SCALED_WASP
 #undef CK_INT8_SCALED_COOPERATIVE
     default: return CK_TILE_INT8_CACHED_UNSUPPORTED_V1;
@@ -196,18 +200,22 @@ std::vector<Candidate> enumerate_for_output(const Domain& d)
 #undef CK_INT8_LEGACY_DIRECT
 #undef CK_INT8_LEGACY_WASP
 #undef CK_INT8_LEGACY_TILE
-#define CK_INT8_SCALED_COOPERATIVE(id, P) \
-    add_tile<P, std::is_same_v<P, PackedM16N64K256>>(out, d, int8_routes::id, 0);
-#define CK_INT8_SCALED_WASP(id, P) add_wasp<P>(out, d, int8_routes::id, 0);
-#define CK_INT8_SCALED_PAIRED_WASP(id, P) add_wasp<P, true>(out, d, int8_routes::id, 0);
-#define CK_INT8_SCALED_K_PARALLEL(id)                                                   \
-    if(d.m <= 2)                                                                     \
-        out.push_back({int8_routes::id, 0, d.m, 4, Int8NtKParallelProblem<8, 4>::KSpan, 512, 0});
-#include "grouped_int8_nt_scaled_routes.inc"
-#undef CK_INT8_SCALED_K_PARALLEL
-#undef CK_INT8_SCALED_PAIRED_WASP
-#undef CK_INT8_SCALED_WASP
-#undef CK_INT8_SCALED_COOPERATIVE
+#define CK_INT8_TUNING_COOPERATIVE(id, ...) \
+    add_tile<__VA_ARGS__, int8_routes::uses_packed_weights(int8_routes::id)>(out, d, int8_routes::id, 0);
+#define CK_INT8_TUNING_WASP(id, ...) add_wasp<__VA_ARGS__>(out, d, int8_routes::id, 0);
+#define CK_INT8_TUNING_SCALED_WASP(id, ...) CK_INT8_TUNING_WASP(id, __VA_ARGS__)
+#define CK_INT8_TUNING_PAIRED_WASP(id, ...) add_wasp<__VA_ARGS__, true>(out, d, int8_routes::id, 0);
+#define CK_INT8_TUNING_K_PARALLEL(id, ...) \
+    if(d.m <= 2) \
+        out.push_back({int8_routes::id, 0, d.m, __VA_ARGS__::Cols, __VA_ARGS__::KSpan, __VA_ARGS__::Threads, 0});
+#define CK_INT8_ROUTE(id, abi, kind, weights, ...) CK_INT8_TUNING_##kind(id, __VA_ARGS__)
+#include "grouped_int8_nt_routes.inc"
+#undef CK_INT8_ROUTE
+#undef CK_INT8_TUNING_K_PARALLEL
+#undef CK_INT8_TUNING_PAIRED_WASP
+#undef CK_INT8_TUNING_SCALED_WASP
+#undef CK_INT8_TUNING_WASP
+#undef CK_INT8_TUNING_COOPERATIVE
     return out;
 }
 } // namespace

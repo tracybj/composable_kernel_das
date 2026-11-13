@@ -328,6 +328,8 @@ make_plan(ck_tile_int8_nt_cached_weights_handle_v1 w,
         if(scales)
         {
             const auto& scale = scales[i];
+            // The default policy may select paired WASP even when its epilogue
+            // needs the generic writeback for a scalar B scale.
             const bool scalar_a = a.c_row_stride == w->n && scale.a_stride == 0;
             dense_scalar_a &= scalar_a;
             dense_channel_scales &= scalar_a && a.a_row_stride == w->k &&
@@ -381,8 +383,11 @@ make_plan(ck_tile_int8_nt_cached_weights_handle_v1 w,
         {
             domain.max_a_stride = std::max(domain.max_a_stride, groups[i].a_row_stride);
             domain.max_b_stride = std::max(domain.max_b_stride, w->raw[i].row_stride);
-            domain.paired &= groups[i].c_row_stride % 8 == 0 && scales[i].a_stride == 0 &&
-                             (!scales[i].b || scales[i].b_stride == 1);
+            // Tuning requires the vector-store epilogue. The default policy
+            // can also use the generic epilogue of a paired WASP route.
+            const auto& scale = scales[i];
+            domain.paired &= groups[i].c_row_stride % 8 == 0 && scale.a_stride == 0 &&
+                             (!scale.b || scale.b_stride == 1);
         }
         auto candidates = ck_tile::int8_nt_tuning::enumerate(domain, output_type);
         if(tuning->list)

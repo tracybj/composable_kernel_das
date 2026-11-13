@@ -35,26 +35,19 @@ extern "C" int ck_tile_int8_cached_launch_private(
     {
     case int8_routes::LegacyRaw:
         return ck_tile_grouped_int8_nt_launch(legacy, args, g, m, n, stream);
-    case int8_routes::LinearTransposedRaw:
-        return run<RawTransposeM256N256>(args, g, m, n, stream);
-    case int8_routes::LinearTransposedRecord1024:
-        return run<RawTransposeM256N256Record1024>(args, g, m, n, stream);
-    case int8_routes::PackedWeightM256N256:
-        return run<PackedM256N256>(args, g, m, n, stream);
-    case int8_routes::PackedM128N256:
-        return run<PackedM128N256>(args, g, m, n, stream);
-    case int8_routes::PackedM128N128:
-        return run<PackedM128N128>(args, g, m, n, stream);
-    case int8_routes::PackedM64N256:
-        return run<PackedM64N256>(args, g, m, n, stream);
-    case int8_routes::PackedM64N64:
-        return run<PackedM64N64>(args, g, m, n, stream);
-    case int8_routes::PackedM32N256:
-        return run<PackedM32N256>(args, g, m, n, stream);
-    case int8_routes::PackedM32N64:
-        return run<PackedM32N64>(args, g, m, n, stream);
-    case int8_routes::PackedM256N384:
-        return run<PackedM256N384>(args, g, m, n, stream);
+#define CK_INT8_CACHED_WASP(id, ...) case int8_routes::id: return run<__VA_ARGS__>(args, g, m, n, stream);
+#define CK_INT8_CACHED_SCALED_WASP(id, ...)
+#define CK_INT8_CACHED_COOPERATIVE(id, ...)
+#define CK_INT8_CACHED_PAIRED_WASP(id, ...)
+#define CK_INT8_CACHED_K_PARALLEL(id, ...)
+#define CK_INT8_ROUTE(id, abi, kind, weights, ...) CK_INT8_CACHED_##kind(id, __VA_ARGS__)
+#include "grouped_int8_nt_routes.inc"
+#undef CK_INT8_ROUTE
+#undef CK_INT8_CACHED_K_PARALLEL
+#undef CK_INT8_CACHED_PAIRED_WASP
+#undef CK_INT8_CACHED_COOPERATIVE
+#undef CK_INT8_CACHED_SCALED_WASP
+#undef CK_INT8_CACHED_WASP
     default:
         return CK_TILE_INT8_CACHED_UNSUPPORTED_V1;
     }

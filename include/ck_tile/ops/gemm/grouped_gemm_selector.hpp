@@ -418,9 +418,6 @@ constexpr GroupedGemmSelection select_grouped_gemm_candidate(
             id = m >= 4096 && problem.k.extent < 2048 ? GroupedGemmInstanceId::int8_nt_m128_padded_mgroup8
                : problem.k.extent < 2048 ? GroupedGemmInstanceId::int8_nt_m128_padded
                                         : GroupedGemmInstanceId::int8_nt_m256_n256_padded;
-        if(uniform && m == 16 && problem.k.extent >= 4096 &&
-           problem.k.extent % 64 == 0 && problem.n.extent % 256 == 0)
-            id = GroupedGemmInstanceId::int8_nt_m16_n256_aligned;
         // Small-M packed path: K128 for short reductions; K256 otherwise.
         // G controls the BN64/BN128 resource tradeoff. No test-case identifiers.
         if(uniform && m <= 16)

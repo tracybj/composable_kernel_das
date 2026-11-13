@@ -9,6 +9,9 @@ B = Path(os.environ['CK_INT8_CACHED_BUILD'])
 sys.path.insert(0, str(E / 'tests'))
 import validate_all_1178 as original
 
+OUTPUTS = ('BF16', 'FP16')
+PATH_FIELDS = ('pipeline', 'route', 'legacy_instance', 'legacy_fallback_instance')
+
 FIELDS = [
     'ID',
     'phase',
@@ -27,9 +30,7 @@ FIELDS = [
     'FP16_ms',
     'FP16_TOPS',
     'FP16_status',
-    'pipeline',
-    'route',
-    'legacy_instance',
+    *(f'{kind}_{field}' for kind in OUTPUTS for field in PATH_FIELDS),
     'prepare_submit_host_ms',
     'prepare_ready_host_ms',
     'prepare_event_interval_ms',
@@ -71,7 +72,7 @@ def export(out, cases, records, sha):
             row.update(byid.get(case['ID'], {}))
             w.writerow(row)
     tmp.replace(out / 'results.csv')
-    for kind in ['BF16', 'FP16']:
+    for kind in OUTPUTS:
         fields = [
             'ID',
             'phase',
@@ -87,9 +88,7 @@ def export(out, cases, records, sha):
             'CK_ms',
             'CK_TOPS',
             'numeric_status',
-            'pipeline',
-            'route',
-            'legacy_instance',
+            *PATH_FIELDS,
             'warmup',
             'repeat',
             'samples',
@@ -113,6 +112,7 @@ def export(out, cases, records, sha):
                     CK_ms=rec.get(kind + '_ms', ''),
                     CK_TOPS=rec.get(kind + '_TOPS', ''),
                     numeric_status=rec.get(kind + '_status', 'PENDING'),
+                    **{field: rec.get(f'{kind}_{field}', '') for field in PATH_FIELDS},
                     library_sha256=sha,
                     BLAS_target_ms=case['target_ms'],
                     BLAS_target_TOPS=case['target_TOPS'],
@@ -193,6 +193,9 @@ def main():
     from bindings import C, Weight, init, lib, ok, weight_info, plan_info
     from test_scaled_api import Group2
 
+    lib.cached_i8_bench_pipeline.argtypes = [C.c_uint, C.c_uint]
+    lib.cached_i8_bench_pipeline.restype = C.c_char_p
+
     torch.set_num_threads(4)
     torch.backends.cuda.matmul.allow_tf32 = False
     assert torch.cuda.is_available()
@@ -230,6 +233,7 @@ def main():
             assert rec['library_sha256'] == frozen['api_library']
             assert rec['BF16_status'] == rec['FP16_status'] == 'PASS'
             for kind in ['BF16', 'FP16']:
+                assert all(f'{kind}_{field}' in rec for field in PATH_FIELDS)
                 assert rec[kind + '_ms'] == statistics.median(rec[kind + '_samples_ms'])
         original.atomic(
             out / ('resume_' + str(time.time_ns()) + '.json'),
@@ -397,18 +401,19 @@ def main():
                         plans[kind] = plan
                         pi = plan_info(plan)
                         assert (pi.group_count, pi.max_m, pi.n, pi.k) == (g, m, n, k)
-                        rec.update(
-                            route=pi.route,
-                            legacy_instance=pi.legacy_instance,
-                            pipeline=(
-                                'cooperative' if pi.route in [0, 24, 25, 31, 32] else 'WASP'
-                            ),
-                        )
+                        pipeline = lib.cached_i8_bench_pipeline(pi.route, pi.legacy_instance)
+                        assert pipeline, (idx, kind, pi.route, pi.legacy_instance)
+                        rec.update({
+                            f'{kind}_route': pi.route,
+                            f'{kind}_pipeline': pipeline.decode('ascii'),
+                            f'{kind}_legacy_instance': pi.legacy_instance if pi.route == 0 else '',
+                            f'{kind}_legacy_fallback_instance': pi.legacy_instance if pi.route else '',
+                        })
                         benches[kind] = lib.cached_i8_bench_create(plan)
                         assert benches[kind], lib.cached_i8_bench_error().decode()
                     torch.cuda.synchronize()
                     for kind in (['BF16', 'FP16'] if idx % 2 else ['FP16', 'BF16']):
-                        active(case, 'timing', output_type=kind, route=rec['route'])
+                        active(case, 'timing', output_type=kind, route=rec[f'{kind}_route'])
                         ts = [
                             float(lib.cached_i8_bench_run(benches[kind], 10, 50, None))
                             for _ in range(3)
@@ -512,7 +517,8 @@ def main():
                                     'FP16_TOPS',
                                     'BF16_status',
                                     'FP16_status',
-                                    'route',
+                                    'BF16_route',
+                                    'FP16_route',
                                 ]
                             }
                         ),

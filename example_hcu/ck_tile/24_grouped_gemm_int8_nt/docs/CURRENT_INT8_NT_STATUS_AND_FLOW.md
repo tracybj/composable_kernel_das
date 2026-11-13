@@ -3,26 +3,26 @@
 ## Entry points and dispatch
 
 The raw `ck_tile_grouped_int8_nt_launch` provider is registered by
-`19_grouped_gemm`. The [cached API](../cached_weights/cached_api.cpp) owns
+`19_grouped_gemm`. The [cached API](../grouped_int8_nt_cached_api.cpp) owns
 weight preparation, plan creation, and stream ordering. When the descriptors
 support packing, weight preparation creates the native K64/N16 layout for
 reuse. Raw fallbacks continue to use the original NT weights.
 
-[Selection](../cached_weights/instances/selector.hpp) uses M/N/K/G,
+[Selection](../instances/grouped_int8_nt_selector.hpp) uses M/N/K/G,
 device CU count, group shape uniformity, and descriptor properties such as
 output stride and scale mode. Each selected instance launches a grouped
-kernel with the expert indexed by the grid. The [scaled dispatcher](../cached_weights/instances/scaled_dispatch.cpp)
+kernel with the expert indexed by the grid. The [scaled dispatcher](../instances/grouped_int8_nt_scaled_dispatch.cpp)
 binds BF16 or FP16 epilogues to the chosen integer GEMM instance.
 
 | Path | Main loop and output |
 | --- | --- |
-| [Cooperative](../pipeline/cooperative.hpp) | Compute waves cooperate in loading the tiles. The standard path stages A and B in LDS and prefetches the next K tile into registers. |
-| [Packed cooperative, route 24](../pipeline/packed_cooperative.hpp) | The small-M instance reads A and prepacked B into VGPRs. Its output mapping uses LDS. |
-| [K-parallel, route 25](../cached_weights/kernels/k_parallel.hpp) | A small-M, large-G specialization reads raw NT A and B into VGPRs, splits K among waves, and merges INT32 partials in LDS before conversion. |
-| [WASP](../pipeline/wasp.hpp) | Producer waves stage logical A in double-buffered LDS. Consumer waves fetch logical B into registers and run MMAC. Logical transpose swaps the operand roles internally and preserves the original output coordinates. |
+| [Cooperative](../kernels/grouped_int8_nt_pipeline.hpp) | Compute waves cooperate in loading the tiles. The standard path stages A and B in LDS and prefetches the next K tile into registers. |
+| [Packed cooperative, route 24](../kernels/grouped_int8_nt_packed_pipeline.hpp) | The small-M instance reads A and prepacked B into VGPRs. Its output mapping uses LDS. |
+| [K-parallel, route 25](../kernels/grouped_int8_nt_k_parallel.hpp) | A small-M, large-G specialization reads raw NT A and B into VGPRs, splits K among waves, and merges INT32 partials in LDS before conversion. |
+| [WASP](../kernels/grouped_int8_nt_wasp_pipeline.hpp) | Producer waves stage logical A in double-buffered LDS. Consumer waves fetch logical B into registers and run MMAC. Logical transpose swaps the operand roles internally and preserves the original output coordinates. |
 
 Routes 26–30 pair WASP instances with the
-[paired-store epilogue](../cached_weights/kernels/paired_store_epilogue.hpp)
+[paired-store epilogue](../kernels/grouped_int8_nt_scaled_epilogue.hpp)
 for supported dense output and scalar activation scale. It applies the scale
 to the INT32 accumulator, converts and packs 16-bit values, then uses wave
 exchange to assemble 16-byte stores. v158 batches scale loads and uses

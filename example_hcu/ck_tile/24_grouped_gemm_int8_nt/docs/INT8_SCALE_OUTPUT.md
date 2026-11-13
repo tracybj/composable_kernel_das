@@ -137,7 +137,7 @@ Use the existing DTK toolchain and physical GPU7:
 Follow the [build and validation steps](../README.md#build-and-reproduce).
 
 
-To enable native BLAS cross-checks, compile [blas_scale_reference.cpp](../cached_weights/tests/blas_scale_reference.cpp)
+To enable native BLAS cross-checks, compile [blas_scale_reference.cpp](../tests/blas_scale_reference.cpp)
 as a shared test bridge against the explicit installed BLASLt library, then
 pass `--blas-reference /path/to/blas_scale_reference.so`. Set
 `CK_INT8_BLAS_LIBRARY` to the expected library path to enforce its identity.
