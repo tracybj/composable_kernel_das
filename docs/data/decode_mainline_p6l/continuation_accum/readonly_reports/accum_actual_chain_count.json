@@ -1,0 +1,104 @@
+{
+  "at": "2026-11-13T11:43:27.968662+00:00",
+  "CPU_only": true,
+  "GPU": false,
+  "ok": true,
+  "actual_official_gfx936_code": true,
+  "old_build15_shader_bytes_proven_unchanged_in_build16": true,
+  "rows": [
+    {
+      "M_padded": 16,
+      "before": {
+        "unique_FP32_accumulator_vector_destinations": 2,
+        "destinations": [
+          "v[1:4]",
+          "v[5:8]"
+        ],
+        "main_loop_static_mmac": 24,
+        "assembly_sha256": "73b1305e94bf9210caff7253146366d1a3147f7be8ac5784d95ca91761bcbf15"
+      },
+      "after": {
+        "unique_FP32_accumulator_vector_destinations": 4,
+        "destinations": [
+          "v[13:16]",
+          "v[1:4]",
+          "v[5:8]",
+          "v[9:12]"
+        ],
+        "main_loop_static_mmac": 24,
+        "assembly_sha256": "d1f6aa67b7638afced7e2795cae1b2cb49c2192bdbc27c2fcc3233fc35fb3238"
+      }
+    },
+    {
+      "M_padded": 32,
+      "before": {
+        "unique_FP32_accumulator_vector_destinations": 4,
+        "destinations": [
+          "v[13:16]",
+          "v[1:4]",
+          "v[5:8]",
+          "v[9:12]"
+        ],
+        "main_loop_static_mmac": 48,
+        "assembly_sha256": "7829b39bdf81eefb24a2446e2c9896b24f9372387058d97a6b7566e4beba0226"
+      },
+      "after": {
+        "unique_FP32_accumulator_vector_destinations": 8,
+        "destinations": [
+          "v[13:16]",
+          "v[17:20]",
+          "v[1:4]",
+          "v[21:24]",
+          "v[25:28]",
+          "v[29:32]",
+          "v[5:8]",
+          "v[9:12]"
+        ],
+        "main_loop_static_mmac": 48,
+        "assembly_sha256": "8c52a32a7e9afbc99d60e84c8796997a18b061006b9afa5366be528e6a7dfae1"
+      }
+    },
+    {
+      "M_padded": 64,
+      "before": {
+        "unique_FP32_accumulator_vector_destinations": 8,
+        "destinations": [
+          "v[13:16]",
+          "v[17:20]",
+          "v[1:4]",
+          "v[21:24]",
+          "v[25:28]",
+          "v[29:32]",
+          "v[5:8]",
+          "v[9:12]"
+        ],
+        "main_loop_static_mmac": 96,
+        "assembly_sha256": "ad5a26ad0614afcd28e82325bfb9c9dfe274a38ad3aaaa5b79bea45096900382"
+      },
+      "after": {
+        "unique_FP32_accumulator_vector_destinations": 16,
+        "destinations": [
+          "v[13:16]",
+          "v[17:20]",
+          "v[1:4]",
+          "v[21:24]",
+          "v[25:28]",
+          "v[29:32]",
+          "v[33:36]",
+          "v[37:40]",
+          "v[41:44]",
+          "v[45:48]",
+          "v[49:52]",
+          "v[53:56]",
+          "v[57:60]",
+          "v[5:8]",
+          "v[61:64]",
+          "v[9:12]"
+        ],
+        "main_loop_static_mmac": 96,
+        "assembly_sha256": "a43f27feb710a5ebbf7a46e74596cd2e5d5f9d5c9ac1420cc49061f7288ec056"
+      }
+    }
+  ],
+  "not_actual_overlap_or_performance_evidence": true
+}

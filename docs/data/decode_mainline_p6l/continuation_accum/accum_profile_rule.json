@@ -1,0 +1,38 @@
+{
+  "at": "2026-11-13T11:40:04.274667+00:00",
+  "status": "Two-accumulator-bank rule frozen before first C2 GPU job",
+  "fixed_before_any_capture": true,
+  "dispatch": 18,
+  "SE": 0,
+  "target_cu_order": [
+    0,
+    1,
+    2
+  ],
+  "minimum_raw_token_bytes": 4096,
+  "sections": "speed_of_light,memory_workload,occupancy,memory_chart,instruction_statistics,compute_workload,scheduler_statistics,wave_state",
+  "sqtt": true,
+  "formal_timing": false,
+  "maximum_pairs": 7,
+  "fixed_ids": [
+    620,
+    621,
+    805,
+    335
+  ],
+  "requires_complete_discovery": 23,
+  "global_depth_choice": "Singlepolicy42;16representatives; no variantchoice",
+  "category_completion": "Add medianordered delta/ID/variant for each missing observed gain(<-2%)/flat/loss(>2%);retainhighCV",
+  "control": "AllbasecurrentP6kbestwithinnewbinary; no directold6035timinginsidefreshbinary",
+  "sparse_rule": "Only valid identity/dispatch but sparse tokens may advance to next predeclared CU; recapture both arms;retainall attempts;errorsorMKFD stop",
+  "questions": [
+    "Are the two K16 halves accumulated into independent FP32 C register banks, with one explicit final add before BF16 conversion?",
+    "Does the same MMAC/global/LDS workload achieve more actual MMAC overlap despite VGPR growth? Separate code evidence from SQTT timing.",
+    "Inspect full main loop, prologue/drain and added final FP32 fold; include gain/flat/loss and never sum overlapping wave clocks."
+  ],
+  "extra_geometry_control_id": null,
+  "fixed_id_reason": "Large CTA samples already traceable, fixed before any C2 GPU outcome; low CTA shapes remain in all timing/accuracy/domain.",
+  "extra_geometry_control_ids": [],
+  "extra_geometry_reason": "NoGPUlocationretrybeyondoriginal0/1/2; retainpartialonfailure.",
+  "implementation_revision": "6035 two FP32 accumulator banks, same tile/ownership/selector, no cache-bit-only claim"
+}

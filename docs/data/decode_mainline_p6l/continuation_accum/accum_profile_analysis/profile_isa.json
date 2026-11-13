@@ -1,0 +1,2315 @@
+[
+  {
+    "tag": "id620_base_id620_accum_accum_diagnosis",
+    "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_20GemmPipelineV7SmallMINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+    "code_object": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/accum_profile_analysis/isa/id620_base_id620_accum_accum_diagnosis.co",
+    "address": "0x2100",
+    "bytes": 13080,
+    "sha256": "84e9cc159dd62145e36bad5df25a96d939850f340ef9c5615dba227578a50b48",
+    "metadata": {
+      ".group_segment_fixed_size": 0,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 256,
+      ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_20GemmPipelineV7SmallMINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 47,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_20GemmPipelineV7SmallMINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_.kd",
+      ".unfolded_args": [
+        {
+          ".address_space": "constant",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".offset": 8,
+          ".size": 4,
+          ".value_kind": "by_value"
+        },
+        {
+          ".offset": 12,
+          ".size": 4,
+          ".value_kind": "by_value"
+        }
+      ],
+      ".uniform_work_group_size": 1,
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 80,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64
+    },
+    "assembly": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/accum_profile_analysis/isa/id620_base_id620_accum_accum_diagnosis.s",
+    "command": [
+      "/opt/dtk/aillvm/bin/llvm-objdump",
+      "-d",
+      "--mcpu=gfx936",
+      "--start-address=0x2100",
+      "--stop-address=0x5418",
+      "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/accum_profile_analysis/isa/id620_base_id620_accum_accum_diagnosis.co"
+    ],
+    "static_instructions": 2390,
+    "opcodes": {
+      "s_load_dwordx4": 2,
+      "s_mov_b64": 8,
+      "s_waitcnt": 163,
+      "s_cmp_lt_i32": 53,
+      "s_cselect_b64": 29,
+      "s_and_b64": 29,
+      "s_cbranch_vccnz": 27,
+      "s_andn2_b64": 26,
+      "s_cbranch_vccz": 7,
+      "s_cmp_ge_i32": 72,
+      "s_cbranch_scc0": 24,
+      "s_endpgm": 2,
+      "s_cmp_gt_i32": 3,
+      "v_mbcnt_lo_u32_b32": 1,
+      "v_mbcnt_hi_u32_b32": 1,
+      "v_mov_b64_e32": 33,
+      "s_movk_i32": 9,
+      "v_mad_u64_u32": 2,
+      "v_lshlrev_b32_e32": 20,
+      "s_mov_b32": 140,
+      "v_add_co_u32_e32": 6,
+      "v_mov_b32_e32": 73,
+      "v_add_u32_e32": 26,
+      "v_cmp_lt_i32_e64": 2,
+      "v_cmp_gt_i32_e64": 5,
+      "v_addc_co_u32_e32": 6,
+      "v_cmp_gt_i32_e32": 6,
+      "s_and_saveexec_b64": 8,
+      "s_cbranch_execz": 8,
+      "global_load_dwordx2": 1,
+      "v_ashrrev_i32_e32": 8,
+      "v_lshrrev_b32_e32": 39,
+      "v_mul_lo_u32": 6,
+      "s_or_b64": 7,
+      "ds_bpermute_b32": 8,
+      "v_cndmask_b32_e64": 9,
+      "v_cmp_ne_u32_e32": 2,
+      "s_cmp_eq_u64": 1,
+      "s_ff1_i32_b64": 1,
+      "s_lshl_b32": 81,
+      "v_sub_u32_e32": 1,
+      "s_add_i32": 146,
+      "s_branch": 7,
+      "v_readfirstlane_b32": 6,
+      "s_cbranch_scc1": 57,
+      "s_add_u32": 4,
+      "s_addc_u32": 4,
+      "s_cmp_eq_u32": 2,
+      "s_load_dwordx2": 3,
+      "s_addk_i32": 3,
+      "s_ashr_i32": 16,
+      "s_lshr_b32": 6,
+      "s_mul_i32": 59,
+      "s_cbranch_execnz": 2,
+      "s_xor_b32": 8,
+      "v_cvt_f32_u32_e32": 2,
+      "v_rcp_iflag_f32_e32": 2,
+      "s_sub_i32": 21,
+      "v_mul_f32_e32": 2,
+      "v_cvt_u32_f32_e32": 2,
+      "s_mul_hi_u32": 4,
+      "s_cmp_ge_u32": 4,
+      "s_cselect_b32": 53,
+      "s_mul_hi_i32": 1,
+      "s_load_dword": 5,
+      "s_cmp_lt_u32": 1,
+      "s_cmpk_lt_u32": 3,
+      "s_cmp_le_u32": 2,
+      "v_or_b32_e32": 27,
+      "v_bfe_u32": 34,
+      "v_xor_b32_e32": 11,
+      "v_lshl_or_b32": 1,
+      "v_and_b32_e32": 13,
+      "s_nop": 9,
+      "s_min_i32": 1,
+      "s_or_b32": 7,
+      "v_cndmask_b32_e32": 1,
+      "s_xor_b64": 3,
+      "v_cmp_lt_u32_e32": 2,
+      "s_andn2_saveexec_b64": 3,
+      "v_and_or_b32": 3,
+      "v_add3_u32": 37,
+      "s_and_b32": 1,
+      "buffer_load_dwordx4": 102,
+      "v_or3_b32": 5,
+      "s_barrier": 51,
+      "ds_read_b64": 96,
+      "ds_read_m32x16_b16": 96,
+      "s_cmpk_gt_i32": 2,
+      "v_cmp_ne_u32_e64": 1,
+      "v_mmac_f32_16x16x16_bf16": 368,
+      "s_setprio": 92,
+      "ds_write_b16": 32,
+      "ds_read_b128": 4,
+      "v_lshlrev_b64": 4,
+      "global_store_dwordx4": 4
+    },
+    "wait_operands": {
+      "lgkmcnt(0)": 66,
+      "vmcnt(0)": 2,
+      "vmcnt(6)": 1,
+      "vmcnt(4)": 47,
+      "vmcnt(2)": 1,
+      "lgkmcnt(4)": 46
+    },
+    "labels": [
+      "0000000000002100 <_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_20GemmPipelineV7SmallMINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_>:"
+    ],
+    "direct_lds_loads": 102,
+    "unknown_lines": 0,
+    "ID": 620,
+    "arm": "base_id620_accum_accum_diagnosis",
+    "epoch": 0,
+    "dispatch": 18,
+    "captured_kernel": "void ck_tile::kentry<256, 2, ck_tile::GroupedGemmV7UniformKernel<ck_tile::GroupedGemmKernel<ck_tile::GemmSpatiallyLocalTilePartitioner<ck_tile::TileGemmShape<ck_tile::sequence<64, 128, 64>, ck_tile::sequence<2, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, 1, 1>, ck_tile::GemmPipelineV7SmallM<ck_tile::UniversalGemmPipelineProblem<unsigned short, unsigned short, float, ck_tile::TileGemmShape<ck_tile::sequence<64, 128, 64>, ck_tile::sequence<2, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, ck_tile::TileGemmUniversalTraits<false, false, false, false, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, false, false, false, 1, false, false, true, true>, (ck_tile::GemmPipelineScheduler)1, true, (ck_tile::TailNumber)10, ck_tile::null_type, ck_tile::null_type, false, 2, 2>, 128>, ck_tile::GroupedGemmV7SmallMStoreEpilogue<unsigned short, ck_tile::V7SmallMAccTile<ck_tile::V7SmallMGeometry<128> >, ck_tile::V7SmallMGeometry<128> >, (ck_tile::GroupedGemmMFilter)0, 0> >, void const AS4*, int, int>(void const AS4*, int, int)",
+    "perf": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/profiles_accum/h3accum_id620_base_cu0_ffd60b56/1042569_tile_example_grouped_gemm_device_args_benchmark.perf",
+    "code_object_sha256": "082385e356895fd3fc6c79ba3761fd28f0261dca970cbe2b57388f56b2cf5327",
+    "main_loop_candidates": [
+      {
+        "start_pc": "0x2a70",
+        "end_pc": "0x3310",
+        "static_mmac": 96,
+        "line_start": 512,
+        "line_end": 893
+      },
+      {
+        "start_pc": "0x2a50",
+        "end_pc": "0x330c",
+        "static_mmac": 96,
+        "line_start": 508,
+        "line_end": 892
+      },
+      {
+        "start_pc": "0x3c94",
+        "end_pc": "0x4558",
+        "static_mmac": 96,
+        "line_start": 1348,
+        "line_end": 1734
+      },
+      {
+        "start_pc": "0x33b0",
+        "end_pc": "0x3a78",
+        "static_mmac": 72,
+        "line_start": 933,
+        "line_end": 1241
+      }
+    ],
+    "instruction_anchors": [
+      {
+        "line": 520,
+        "text": "buffer_load_dwordx4 v[57:58], s[4:7], s13 idxen offen slc lds// 000000002A94: E05F3000 0D010039"
+      },
+      {
+        "line": 523,
+        "text": "buffer_load_dwordx4 v[59:60], s[8:11], s12 idxen offen lds // 000000002AA4: E05D3000 0C02003B"
+      },
+      {
+        "line": 524,
+        "text": "s_waitcnt lgkmcnt(4)                                       // 000000002AAC: BF8CC47F"
+      },
+      {
+        "line": 525,
+        "text": "v_mmac_f32_16x16x16_bf16 v[21:24], v[67:68], v[45:46], v[21:24]  // 000000002AB0: FFD40015 04565B43"
+      },
+      {
+        "line": 527,
+        "text": "v_mmac_f32_16x16x16_bf16 v[37:40], v[67:68], v[47:48], v[37:40]  // 000000002ABC: FFD40025 04965F43"
+      },
+      {
+        "line": 528,
+        "text": "v_mmac_f32_16x16x16_bf16 v[25:28], v[67:68], v[41:42], v[25:28]  // 000000002AC4: FFD40019 04665343"
+      },
+      {
+        "line": 529,
+        "text": "v_mmac_f32_16x16x16_bf16 v[17:20], v[67:68], v[43:44], v[17:20]  // 000000002ACC: FFD40011 04465743"
+      },
+      {
+        "line": 530,
+        "text": "v_mmac_f32_16x16x16_bf16 v[13:16], v[65:66], v[45:46], v[13:16]  // 000000002AD4: FFD4000D 04365B41"
+      },
+      {
+        "line": 531,
+        "text": "v_mmac_f32_16x16x16_bf16 v[9:12], v[65:66], v[47:48], v[9:12]  // 000000002ADC: FFD40009 04265F41"
+      },
+      {
+        "line": 532,
+        "text": "v_mmac_f32_16x16x16_bf16 v[5:8], v[65:66], v[41:42], v[5:8]  // 000000002AE4: FFD40005 04165341"
+      },
+      {
+        "line": 533,
+        "text": "v_mmac_f32_16x16x16_bf16 v[1:4], v[65:66], v[43:44], v[1:4]  // 000000002AEC: FFD40001 04065741"
+      },
+      {
+        "line": 535,
+        "text": "s_waitcnt vmcnt(4)                                         // 000000002AF8: BF8C0F74"
+      },
+      {
+        "line": 536,
+        "text": "s_waitcnt lgkmcnt(0)                                       // 000000002AFC: BF8CC07F"
+      },
+      {
+        "line": 537,
+        "text": "s_barrier                                                  // 000000002B00: BF8A0000"
+      },
+      {
+        "line": 541,
+        "text": "ds_read_m32x16_b16 v[45:48], v78 offset:24576              // 000000002B10: D9F66000 2D00004E"
+      },
+      {
+        "line": 542,
+        "text": "ds_read_m32x16_b16 v[41:44], v79 offset:24576              // 000000002B18: D9F66000 2900004F"
+      },
+      {
+        "line": 543,
+        "text": "ds_read_b64 v[67:68], v77 offset:24576                     // 000000002B20: D8EC6000 4300004D"
+      },
+      {
+        "line": 544,
+        "text": "ds_read_b64 v[65:66], v77 offset:25088                     // 000000002B28: D8EC6200 4100004D"
+      }
+    ]
+  },
+  {
+    "tag": "id620_candidate_id620_accum_accum_diagnosis",
+    "symbol": "_ZN7ck_tile6kentryILi256ELi1ENS_29DecodeNnLowLdsWave4N128KernelILi2EEEJPU3AS4viiEEEvDpT2_",
+    "code_object": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/accum_profile_analysis/isa/id620_candidate_id620_accum_accum_diagnosis.co",
+    "address": "0x45100",
+    "bytes": 4912,
+    "sha256": "c01e5f064fdeed7e642fca8b6084a73d415a5c98cf97d09f40f3105231a7a97a",
+    "metadata": {
+      ".group_segment_fixed_size": 0,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 256,
+      ".name": "_ZN7ck_tile6kentryILi256ELi1ENS_29DecodeNnLowLdsWave4N128KernelILi2EEEJPU3AS4viiEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 48,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi256ELi1ENS_29DecodeNnLowLdsWave4N128KernelILi2EEEJPU3AS4viiEEEvDpT2_.kd",
+      ".unfolded_args": [
+        {
+          ".address_space": "constant",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".offset": 8,
+          ".size": 4,
+          ".value_kind": "by_value"
+        },
+        {
+          ".offset": 12,
+          ".size": 4,
+          ".value_kind": "by_value"
+        }
+      ],
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 99,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64
+    },
+    "assembly": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/accum_profile_analysis/isa/id620_candidate_id620_accum_accum_diagnosis.s",
+    "command": [
+      "/opt/dtk/aillvm/bin/llvm-objdump",
+      "-d",
+      "--mcpu=gfx936",
+      "--start-address=0x45100",
+      "--stop-address=0x46430",
+      "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/accum_profile_analysis/isa/id620_candidate_id620_accum_accum_diagnosis.co"
+    ],
+    "static_instructions": 867,
+    "opcodes": {
+      "s_load_dwordx2": 3,
+      "s_waitcnt": 52,
+      "s_ashr_i32": 8,
+      "s_add_i32": 56,
+      "s_xor_b32": 4,
+      "v_cvt_f32_u32_e32": 1,
+      "s_nop": 4,
+      "v_rcp_iflag_f32_e32": 1,
+      "v_mul_f32_e32": 1,
+      "v_cvt_u32_f32_e32": 1,
+      "s_sub_i32": 7,
+      "v_readfirstlane_b32": 2,
+      "s_mul_i32": 23,
+      "s_mul_hi_u32": 2,
+      "s_cmp_ge_u32": 2,
+      "s_cselect_b32": 3,
+      "s_cmp_ge_i32": 20,
+      "s_cbranch_scc1": 16,
+      "s_mul_hi_i32": 1,
+      "s_add_u32": 5,
+      "s_addc_u32": 5,
+      "s_load_dword": 2,
+      "s_load_dwordx4": 2,
+      "s_lshl_b32": 22,
+      "s_mov_b32": 58,
+      "s_cmp_le_u32": 1,
+      "s_cselect_b64": 3,
+      "s_cmpk_lt_u32": 1,
+      "s_and_b64": 14,
+      "s_cbranch_vccnz": 14,
+      "v_lshrrev_b32_e32": 21,
+      "s_or_b32": 3,
+      "s_mov_b64": 14,
+      "v_bfe_u32": 17,
+      "v_lshl_or_b32": 3,
+      "v_cmp_gt_u32_e32": 3,
+      "v_cndmask_b32_e32": 1,
+      "v_lshlrev_b32_e32": 6,
+      "v_xor_b32_e32": 12,
+      "v_and_b32_e32": 13,
+      "v_mad_u64_u32": 5,
+      "s_cmp_lt_i32": 2,
+      "s_cmp_gt_i32": 1,
+      "v_mov_b32_e32": 35,
+      "buffer_load_dwordx4": 42,
+      "v_mul_lo_u32": 1,
+      "v_add_u32_e32": 3,
+      "v_lshl_add_u32": 1,
+      "v_cndmask_b32_e64": 1,
+      "v_cmp_ne_u32_e64": 1,
+      "s_andn2_b64": 1,
+      "s_barrier": 22,
+      "s_and_b32": 2,
+      "v_or_b32_e32": 18,
+      "ds_read_b64": 56,
+      "v_and_or_b32": 1,
+      "ds_read_m32x16_b16": 28,
+      "s_addk_i32": 2,
+      "s_movk_i32": 3,
+      "s_lshr_b32": 1,
+      "s_cmpk_lt_i32": 1,
+      "v_mmac_f32_16x16x16_bf16": 112,
+      "s_cbranch_scc0": 7,
+      "s_branch": 7,
+      "v_mov_b64_e32": 16,
+      "s_cbranch_execz": 8,
+      "v_pk_add_f32": 8,
+      "v_or3_b32": 2,
+      "v_add3_u32": 16,
+      "ds_write_b16": 16,
+      "ds_read_b128": 2,
+      "s_andn2_b32": 1,
+      "s_and_saveexec_b64": 2,
+      "s_lshl_b64": 2,
+      "v_lshlrev_b64": 2,
+      "v_add_co_u32_e32": 4,
+      "v_addc_co_u32_e32": 4,
+      "global_store_dwordx4": 2,
+      "s_or_b64": 1,
+      "s_endpgm": 1
+    },
+    "wait_operands": {
+      "lgkmcnt(0)": 31,
+      "vmcnt(0)": 21
+    },
+    "labels": [
+      "0000000000045100 <_ZN7ck_tile6kentryILi256ELi1ENS_29DecodeNnLowLdsWave4N128KernelILi2EEEJPU3AS4viiEEEvDpT2_>:"
+    ],
+    "direct_lds_loads": 42,
+    "unknown_lines": 0,
+    "ID": 620,
+    "arm": "candidate_id620_accum_accum_diagnosis",
+    "epoch": 0,
+    "dispatch": 18,
+    "captured_kernel": "void ck_tile::kentry<256, 1, ck_tile::DecodeNnLowLdsWave4N128Kernel<2>, void AS4*, int, int>(void AS4*, int, int)",
+    "perf": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/profiles_accum/h3accum_id620_candidate_cu0_c3a00f11/1042603_tile_example_grouped_gemm_device_args_benchmark.perf",
+    "code_object_sha256": "1ce1556b2aab6a10136257389710b12a9c86fa63e5112ef0d94f42dd23260596",
+    "main_loop_candidates": [
+      {
+        "start_pc": "0x455f0",
+        "end_pc": "0x45a48",
+        "line_start": 255,
+        "line_end": 427
+      }
+    ],
+    "instruction_anchors": [
+      {
+        "line": 255,
+        "text": "v_mmac_f32_16x16x16_bf16 v[17:20], v[73:74], v[45:46], v[17:20]  // 0000000455F0: FFD40011 04465B49"
+      },
+      {
+        "line": 256,
+        "text": "v_mmac_f32_16x16x16_bf16 v[21:24], v[73:74], v[47:48], v[21:24]  // 0000000455F8: FFD40015 04565F49"
+      },
+      {
+        "line": 257,
+        "text": "v_mmac_f32_16x16x16_bf16 v[5:8], v[71:72], v[45:46], v[5:8]  // 000000045600: FFD40005 04165B47"
+      },
+      {
+        "line": 258,
+        "text": "v_mmac_f32_16x16x16_bf16 v[1:4], v[71:72], v[47:48], v[1:4]  // 000000045608: FFD40001 04065F47"
+      },
+      {
+        "line": 259,
+        "text": "v_mmac_f32_16x16x16_bf16 v[29:32], v[69:70], v[41:42], v[29:32]  // 000000045610: FFD4001D 04765345"
+      },
+      {
+        "line": 260,
+        "text": "v_mmac_f32_16x16x16_bf16 v[25:28], v[69:70], v[43:44], v[25:28]  // 000000045618: FFD40019 04665745"
+      },
+      {
+        "line": 261,
+        "text": "v_mmac_f32_16x16x16_bf16 v[13:16], v[67:68], v[41:42], v[13:16]  // 000000045620: FFD4000D 04365343"
+      },
+      {
+        "line": 262,
+        "text": "v_mmac_f32_16x16x16_bf16 v[9:12], v[67:68], v[43:44], v[9:12]  // 000000045628: FFD40009 04265743"
+      },
+      {
+        "line": 263,
+        "text": "s_waitcnt vmcnt(0)                                         // 000000045630: BF8C0F70"
+      },
+      {
+        "line": 264,
+        "text": "s_waitcnt lgkmcnt(0)                                       // 000000045634: BF8CC07F"
+      },
+      {
+        "line": 265,
+        "text": "s_barrier                                                  // 000000045638: BF8A0000"
+      },
+      {
+        "line": 266,
+        "text": "ds_read_b64 v[75:76], v93                                  // 00000004563C: D8EC0000 4B00005D"
+      },
+      {
+        "line": 267,
+        "text": "ds_read_b64 v[71:72], v94                                  // 000000045644: D8EC0000 4700005E"
+      },
+      {
+        "line": 268,
+        "text": "ds_read_m32x16_b16 v[49:52], v95                           // 00000004564C: D9F60000 3100005F"
+      },
+      {
+        "line": 269,
+        "text": "ds_read_b64 v[67:68], v98                                  // 000000045654: D8EC0000 43000062"
+      },
+      {
+        "line": 270,
+        "text": "ds_read_b64 v[55:56], v97                                  // 00000004565C: D8EC0000 37000061"
+      },
+      {
+        "line": 272,
+        "text": "ds_read_m32x16_b16 v[41:44], v96                           // 000000045668: D9F60000 29000060"
+      },
+      {
+        "line": 276,
+        "text": "buffer_load_dwordx4 v[57:58], s[16:19], s42 idxen offen lds// 000000045680: E05D3000 2A040039"
+      },
+      {
+        "line": 279,
+        "text": "buffer_load_dwordx4 v92, s[12:15], s42 offen lds           // 000000045690: E05D1000 2A03005C"
+      },
+      {
+        "line": 282,
+        "text": "buffer_load_dwordx4 v92, s[12:15], s42 offen lds           // 0000000456A0: E05D1000 2A03005C"
+      },
+      {
+        "line": 283,
+        "text": "v_mmac_f32_16x16x16_bf16 v[17:20], v[65:66], v[37:38], v[17:20]  // 0000000456A8: FFD40011 04464B41"
+      },
+      {
+        "line": 284,
+        "text": "v_mmac_f32_16x16x16_bf16 v[21:24], v[65:66], v[39:40], v[21:24]  // 0000000456B0: FFD40015 04564F41"
+      },
+      {
+        "line": 285,
+        "text": "v_mmac_f32_16x16x16_bf16 v[5:8], v[63:64], v[37:38], v[5:8]  // 0000000456B8: FFD40005 04164B3F"
+      },
+      {
+        "line": 286,
+        "text": "v_mmac_f32_16x16x16_bf16 v[1:4], v[63:64], v[39:40], v[1:4]  // 0000000456C0: FFD40001 04064F3F"
+      },
+      {
+        "line": 287,
+        "text": "v_mmac_f32_16x16x16_bf16 v[29:32], v[61:62], v[33:34], v[29:32]  // 0000000456C8: FFD4001D 0476433D"
+      },
+      {
+        "line": 288,
+        "text": "v_mmac_f32_16x16x16_bf16 v[25:28], v[61:62], v[35:36], v[25:28]  // 0000000456D0: FFD40019 0466473D"
+      },
+      {
+        "line": 289,
+        "text": "v_mmac_f32_16x16x16_bf16 v[13:16], v[59:60], v[33:34], v[13:16]  // 0000000456D8: FFD4000D 0436433B"
+      },
+      {
+        "line": 290,
+        "text": "v_mmac_f32_16x16x16_bf16 v[9:12], v[59:60], v[35:36], v[9:12]  // 0000000456E0: FFD40009 0426473B"
+      },
+      {
+        "line": 291,
+        "text": "s_waitcnt vmcnt(0)                                         // 0000000456E8: BF8C0F70"
+      },
+      {
+        "line": 292,
+        "text": "s_waitcnt lgkmcnt(0)                                       // 0000000456EC: BF8CC07F"
+      }
+    ],
+    "layout_backward_candidates": [
+      {
+        "start_pc": "0x455f0",
+        "end_pc": "0x45a48",
+        "static_mmac": 48,
+        "line_start": 255,
+        "line_end": 427
+      }
+    ]
+  },
+  {
+    "tag": "id621_base_id621_accum_accum_diagnosis",
+    "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_20GemmPipelineV7SmallMINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+    "code_object": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/accum_profile_analysis/isa/id621_base_id621_accum_accum_diagnosis.co",
+    "address": "0x2100",
+    "bytes": 13080,
+    "sha256": "84e9cc159dd62145e36bad5df25a96d939850f340ef9c5615dba227578a50b48",
+    "metadata": {
+      ".group_segment_fixed_size": 0,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 256,
+      ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_20GemmPipelineV7SmallMINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 47,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_20GemmPipelineV7SmallMINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_.kd",
+      ".unfolded_args": [
+        {
+          ".address_space": "constant",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".offset": 8,
+          ".size": 4,
+          ".value_kind": "by_value"
+        },
+        {
+          ".offset": 12,
+          ".size": 4,
+          ".value_kind": "by_value"
+        }
+      ],
+      ".uniform_work_group_size": 1,
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 80,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64
+    },
+    "assembly": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/accum_profile_analysis/isa/id621_base_id621_accum_accum_diagnosis.s",
+    "command": [
+      "/opt/dtk/aillvm/bin/llvm-objdump",
+      "-d",
+      "--mcpu=gfx936",
+      "--start-address=0x2100",
+      "--stop-address=0x5418",
+      "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/accum_profile_analysis/isa/id621_base_id621_accum_accum_diagnosis.co"
+    ],
+    "static_instructions": 2390,
+    "opcodes": {
+      "s_load_dwordx4": 2,
+      "s_mov_b64": 8,
+      "s_waitcnt": 163,
+      "s_cmp_lt_i32": 53,
+      "s_cselect_b64": 29,
+      "s_and_b64": 29,
+      "s_cbranch_vccnz": 27,
+      "s_andn2_b64": 26,
+      "s_cbranch_vccz": 7,
+      "s_cmp_ge_i32": 72,
+      "s_cbranch_scc0": 24,
+      "s_endpgm": 2,
+      "s_cmp_gt_i32": 3,
+      "v_mbcnt_lo_u32_b32": 1,
+      "v_mbcnt_hi_u32_b32": 1,
+      "v_mov_b64_e32": 33,
+      "s_movk_i32": 9,
+      "v_mad_u64_u32": 2,
+      "v_lshlrev_b32_e32": 20,
+      "s_mov_b32": 140,
+      "v_add_co_u32_e32": 6,
+      "v_mov_b32_e32": 73,
+      "v_add_u32_e32": 26,
+      "v_cmp_lt_i32_e64": 2,
+      "v_cmp_gt_i32_e64": 5,
+      "v_addc_co_u32_e32": 6,
+      "v_cmp_gt_i32_e32": 6,
+      "s_and_saveexec_b64": 8,
+      "s_cbranch_execz": 8,
+      "global_load_dwordx2": 1,
+      "v_ashrrev_i32_e32": 8,
+      "v_lshrrev_b32_e32": 39,
+      "v_mul_lo_u32": 6,
+      "s_or_b64": 7,
+      "ds_bpermute_b32": 8,
+      "v_cndmask_b32_e64": 9,
+      "v_cmp_ne_u32_e32": 2,
+      "s_cmp_eq_u64": 1,
+      "s_ff1_i32_b64": 1,
+      "s_lshl_b32": 81,
+      "v_sub_u32_e32": 1,
+      "s_add_i32": 146,
+      "s_branch": 7,
+      "v_readfirstlane_b32": 6,
+      "s_cbranch_scc1": 57,
+      "s_add_u32": 4,
+      "s_addc_u32": 4,
+      "s_cmp_eq_u32": 2,
+      "s_load_dwordx2": 3,
+      "s_addk_i32": 3,
+      "s_ashr_i32": 16,
+      "s_lshr_b32": 6,
+      "s_mul_i32": 59,
+      "s_cbranch_execnz": 2,
+      "s_xor_b32": 8,
+      "v_cvt_f32_u32_e32": 2,
+      "v_rcp_iflag_f32_e32": 2,
+      "s_sub_i32": 21,
+      "v_mul_f32_e32": 2,
+      "v_cvt_u32_f32_e32": 2,
+      "s_mul_hi_u32": 4,
+      "s_cmp_ge_u32": 4,
+      "s_cselect_b32": 53,
+      "s_mul_hi_i32": 1,
+      "s_load_dword": 5,
+      "s_cmp_lt_u32": 1,
+      "s_cmpk_lt_u32": 3,
+      "s_cmp_le_u32": 2,
+      "v_or_b32_e32": 27,
+      "v_bfe_u32": 34,
+      "v_xor_b32_e32": 11,
+      "v_lshl_or_b32": 1,
+      "v_and_b32_e32": 13,
+      "s_nop": 9,
+      "s_min_i32": 1,
+      "s_or_b32": 7,
+      "v_cndmask_b32_e32": 1,
+      "s_xor_b64": 3,
+      "v_cmp_lt_u32_e32": 2,
+      "s_andn2_saveexec_b64": 3,
+      "v_and_or_b32": 3,
+      "v_add3_u32": 37,
+      "s_and_b32": 1,
+      "buffer_load_dwordx4": 102,
+      "v_or3_b32": 5,
+      "s_barrier": 51,
+      "ds_read_b64": 96,
+      "ds_read_m32x16_b16": 96,
+      "s_cmpk_gt_i32": 2,
+      "v_cmp_ne_u32_e64": 1,
+      "v_mmac_f32_16x16x16_bf16": 368,
+      "s_setprio": 92,
+      "ds_write_b16": 32,
+      "ds_read_b128": 4,
+      "v_lshlrev_b64": 4,
+      "global_store_dwordx4": 4
+    },
+    "wait_operands": {
+      "lgkmcnt(0)": 66,
+      "vmcnt(0)": 2,
+      "vmcnt(6)": 1,
+      "vmcnt(4)": 47,
+      "vmcnt(2)": 1,
+      "lgkmcnt(4)": 46
+    },
+    "labels": [
+      "0000000000002100 <_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_20GemmPipelineV7SmallMINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_>:"
+    ],
+    "direct_lds_loads": 102,
+    "unknown_lines": 0,
+    "ID": 621,
+    "arm": "base_id621_accum_accum_diagnosis",
+    "epoch": 0,
+    "dispatch": 18,
+    "captured_kernel": "void ck_tile::kentry<256, 2, ck_tile::GroupedGemmV7UniformKernel<ck_tile::GroupedGemmKernel<ck_tile::GemmSpatiallyLocalTilePartitioner<ck_tile::TileGemmShape<ck_tile::sequence<64, 128, 64>, ck_tile::sequence<2, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, 1, 1>, ck_tile::GemmPipelineV7SmallM<ck_tile::UniversalGemmPipelineProblem<unsigned short, unsigned short, float, ck_tile::TileGemmShape<ck_tile::sequence<64, 128, 64>, ck_tile::sequence<2, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, ck_tile::TileGemmUniversalTraits<false, false, false, false, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, false, false, false, 1, false, false, true, true>, (ck_tile::GemmPipelineScheduler)1, true, (ck_tile::TailNumber)10, ck_tile::null_type, ck_tile::null_type, false, 2, 2>, 128>, ck_tile::GroupedGemmV7SmallMStoreEpilogue<unsigned short, ck_tile::V7SmallMAccTile<ck_tile::V7SmallMGeometry<128> >, ck_tile::V7SmallMGeometry<128> >, (ck_tile::GroupedGemmMFilter)0, 0> >, void const AS4*, int, int>(void const AS4*, int, int)",
+    "perf": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/profiles_accum/h3accum_id621_base_cu0_49a523ed/1042643_tile_example_grouped_gemm_device_args_benchmark.perf",
+    "code_object_sha256": "082385e356895fd3fc6c79ba3761fd28f0261dca970cbe2b57388f56b2cf5327",
+    "main_loop_candidates": [
+      {
+        "start_pc": "0x2a70",
+        "end_pc": "0x3310",
+        "static_mmac": 96,
+        "line_start": 512,
+        "line_end": 893
+      },
+      {
+        "start_pc": "0x2a50",
+        "end_pc": "0x330c",
+        "static_mmac": 96,
+        "line_start": 508,
+        "line_end": 892
+      },
+      {
+        "start_pc": "0x3c94",
+        "end_pc": "0x4558",
+        "static_mmac": 96,
+        "line_start": 1348,
+        "line_end": 1734
+      },
+      {
+        "start_pc": "0x33b0",
+        "end_pc": "0x3a78",
+        "static_mmac": 72,
+        "line_start": 933,
+        "line_end": 1241
+      }
+    ],
+    "instruction_anchors": [
+      {
+        "line": 520,
+        "text": "buffer_load_dwordx4 v[57:58], s[4:7], s13 idxen offen slc lds// 000000002A94: E05F3000 0D010039"
+      },
+      {
+        "line": 523,
+        "text": "buffer_load_dwordx4 v[59:60], s[8:11], s12 idxen offen lds // 000000002AA4: E05D3000 0C02003B"
+      },
+      {
+        "line": 524,
+        "text": "s_waitcnt lgkmcnt(4)                                       // 000000002AAC: BF8CC47F"
+      },
+      {
+        "line": 525,
+        "text": "v_mmac_f32_16x16x16_bf16 v[21:24], v[67:68], v[45:46], v[21:24]  // 000000002AB0: FFD40015 04565B43"
+      },
+      {
+        "line": 527,
+        "text": "v_mmac_f32_16x16x16_bf16 v[37:40], v[67:68], v[47:48], v[37:40]  // 000000002ABC: FFD40025 04965F43"
+      },
+      {
+        "line": 528,
+        "text": "v_mmac_f32_16x16x16_bf16 v[25:28], v[67:68], v[41:42], v[25:28]  // 000000002AC4: FFD40019 04665343"
+      },
+      {
+        "line": 529,
+        "text": "v_mmac_f32_16x16x16_bf16 v[17:20], v[67:68], v[43:44], v[17:20]  // 000000002ACC: FFD40011 04465743"
+      },
+      {
+        "line": 530,
+        "text": "v_mmac_f32_16x16x16_bf16 v[13:16], v[65:66], v[45:46], v[13:16]  // 000000002AD4: FFD4000D 04365B41"
+      },
+      {
+        "line": 531,
+        "text": "v_mmac_f32_16x16x16_bf16 v[9:12], v[65:66], v[47:48], v[9:12]  // 000000002ADC: FFD40009 04265F41"
+      },
+      {
+        "line": 532,
+        "text": "v_mmac_f32_16x16x16_bf16 v[5:8], v[65:66], v[41:42], v[5:8]  // 000000002AE4: FFD40005 04165341"
+      },
+      {
+        "line": 533,
+        "text": "v_mmac_f32_16x16x16_bf16 v[1:4], v[65:66], v[43:44], v[1:4]  // 000000002AEC: FFD40001 04065741"
+      },
+      {
+        "line": 535,
+        "text": "s_waitcnt vmcnt(4)                                         // 000000002AF8: BF8C0F74"
+      },
+      {
+        "line": 536,
+        "text": "s_waitcnt lgkmcnt(0)                                       // 000000002AFC: BF8CC07F"
+      },
+      {
+        "line": 537,
+        "text": "s_barrier                                                  // 000000002B00: BF8A0000"
+      },
+      {
+        "line": 541,
+        "text": "ds_read_m32x16_b16 v[45:48], v78 offset:24576              // 000000002B10: D9F66000 2D00004E"
+      },
+      {
+        "line": 542,
+        "text": "ds_read_m32x16_b16 v[41:44], v79 offset:24576              // 000000002B18: D9F66000 2900004F"
+      },
+      {
+        "line": 543,
+        "text": "ds_read_b64 v[67:68], v77 offset:24576                     // 000000002B20: D8EC6000 4300004D"
+      },
+      {
+        "line": 544,
+        "text": "ds_read_b64 v[65:66], v77 offset:25088                     // 000000002B28: D8EC6200 4100004D"
+      }
+    ]
+  },
+  {
+    "tag": "id621_candidate_id621_accum_accum_diagnosis",
+    "symbol": "_ZN7ck_tile6kentryILi256ELi1ENS_29DecodeNnLowLdsWave4N128KernelILi4EEEJPU3AS4viiEEEvDpT2_",
+    "code_object": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/accum_profile_analysis/isa/id621_candidate_id621_accum_accum_diagnosis.co",
+    "address": "0x6f800",
+    "bytes": 7296,
+    "sha256": "4ca7e376e8b9af780a40ad0d505b0737fc86960ae7355b16fc570a8b5d304bf3",
+    "metadata": {
+      ".group_segment_fixed_size": 0,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 256,
+      ".name": "_ZN7ck_tile6kentryILi256ELi1ENS_29DecodeNnLowLdsWave4N128KernelILi4EEEJPU3AS4viiEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 49,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi256ELi1ENS_29DecodeNnLowLdsWave4N128KernelILi4EEEJPU3AS4viiEEEvDpT2_.kd",
+      ".unfolded_args": [
+        {
+          ".address_space": "constant",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".offset": 8,
+          ".size": 4,
+          ".value_kind": "by_value"
+        },
+        {
+          ".offset": 12,
+          ".size": 4,
+          ".value_kind": "by_value"
+        }
+      ],
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 163,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64
+    },
+    "assembly": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/accum_profile_analysis/isa/id621_candidate_id621_accum_accum_diagnosis.s",
+    "command": [
+      "/opt/dtk/aillvm/bin/llvm-objdump",
+      "-d",
+      "--mcpu=gfx936",
+      "--start-address=0x6f800",
+      "--stop-address=0x71480",
+      "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/accum_profile_analysis/isa/id621_candidate_id621_accum_accum_diagnosis.co"
+    ],
+    "static_instructions": 1226,
+    "opcodes": {
+      "s_load_dwordx2": 3,
+      "s_waitcnt": 58,
+      "s_ashr_i32": 12,
+      "s_add_i32": 58,
+      "s_xor_b32": 4,
+      "v_cvt_f32_u32_e32": 1,
+      "s_nop": 6,
+      "v_rcp_iflag_f32_e32": 1,
+      "v_mul_f32_e32": 1,
+      "v_cvt_u32_f32_e32": 1,
+      "s_sub_i32": 7,
+      "v_readfirstlane_b32": 2,
+      "s_mul_i32": 23,
+      "s_mul_hi_u32": 2,
+      "s_cmp_ge_u32": 2,
+      "s_cselect_b32": 3,
+      "s_cmp_ge_i32": 20,
+      "s_cbranch_scc1": 16,
+      "s_mul_hi_i32": 1,
+      "s_add_u32": 9,
+      "s_addc_u32": 9,
+      "s_load_dword": 2,
+      "s_load_dwordx4": 2,
+      "s_lshl_b32": 23,
+      "s_mov_b32": 58,
+      "s_cmp_le_u32": 1,
+      "s_cselect_b64": 3,
+      "s_cmpk_lt_u32": 1,
+      "s_and_b64": 14,
+      "s_cbranch_vccnz": 14,
+      "v_lshrrev_b32_e32": 37,
+      "s_or_b32": 3,
+      "s_mov_b64": 14,
+      "v_bfe_u32": 33,
+      "v_or_b32_e32": 37,
+      "v_cmp_gt_u32_e32": 5,
+      "v_cndmask_b32_e32": 1,
+      "v_lshlrev_b32_e32": 7,
+      "v_xor_b32_e32": 12,
+      "v_and_b32_e32": 13,
+      "v_mad_u64_u32": 9,
+      "s_cmp_lt_i32": 2,
+      "s_cmp_gt_i32": 1,
+      "v_mov_b32_e32": 69,
+      "buffer_load_dwordx4": 42,
+      "v_mul_lo_u32": 1,
+      "v_add_u32_e32": 1,
+      "v_lshl_add_u32": 1,
+      "v_cndmask_b32_e64": 1,
+      "v_cmp_ne_u32_e64": 1,
+      "s_andn2_b64": 1,
+      "s_barrier": 22,
+      "s_and_b32": 2,
+      "ds_read_b64": 112,
+      "v_and_or_b32": 1,
+      "v_lshl_or_b32": 1,
+      "ds_read_m32x16_b16": 28,
+      "s_addk_i32": 2,
+      "s_movk_i32": 4,
+      "s_lshr_b32": 1,
+      "s_cmpk_lt_i32": 1,
+      "v_mmac_f32_16x16x16_bf16": 224,
+      "s_cbranch_scc0": 7,
+      "s_branch": 7,
+      "v_mov_b64_e32": 32,
+      "s_cbranch_execz": 10,
+      "v_pk_add_f32": 16,
+      "v_or3_b32": 3,
+      "v_add3_u32": 32,
+      "ds_write_b16": 32,
+      "ds_read_b128": 4,
+      "s_andn2_b32": 1,
+      "s_and_saveexec_b64": 4,
+      "s_lshl_b64": 4,
+      "v_lshlrev_b64": 4,
+      "v_add_co_u32_e32": 8,
+      "v_addc_co_u32_e32": 8,
+      "global_store_dwordx4": 4,
+      "s_or_b64": 3,
+      "s_endpgm": 1
+    },
+    "wait_operands": {
+      "lgkmcnt(0)": 37,
+      "vmcnt(0)": 21
+    },
+    "labels": [
+      "000000000006f800 <_ZN7ck_tile6kentryILi256ELi1ENS_29DecodeNnLowLdsWave4N128KernelILi4EEEJPU3AS4viiEEEvDpT2_>:"
+    ],
+    "direct_lds_loads": 42,
+    "unknown_lines": 0,
+    "ID": 621,
+    "arm": "candidate_id621_accum_accum_diagnosis",
+    "epoch": 0,
+    "dispatch": 18,
+    "captured_kernel": "void ck_tile::kentry<256, 1, ck_tile::DecodeNnLowLdsWave4N128Kernel<4>, void AS4*, int, int>(void AS4*, int, int)",
+    "perf": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/profiles_accum/h3accum_id621_candidate_cu0_4366e2bd/1042677_tile_example_grouped_gemm_device_args_benchmark.perf",
+    "code_object_sha256": "1ce1556b2aab6a10136257389710b12a9c86fa63e5112ef0d94f42dd23260596",
+    "main_loop_candidates": [
+      {
+        "start_pc": "0x6fdf4",
+        "end_pc": "0x7048c",
+        "line_start": 309,
+        "line_end": 553
+      }
+    ],
+    "instruction_anchors": [
+      {
+        "line": 309,
+        "text": "v_mmac_f32_16x16x16_bf16 v[49:52], v[121:122], v[77:78], v[49:52]  // 00000006FDF4: FFD40031 04C69B79"
+      },
+      {
+        "line": 310,
+        "text": "v_mmac_f32_16x16x16_bf16 v[53:56], v[121:122], v[79:80], v[53:56]  // 00000006FDFC: FFD40035 04D69F79"
+      },
+      {
+        "line": 311,
+        "text": "v_mmac_f32_16x16x16_bf16 v[37:40], v[119:120], v[77:78], v[37:40]  // 00000006FE04: FFD40025 04969B77"
+      },
+      {
+        "line": 312,
+        "text": "v_mmac_f32_16x16x16_bf16 v[33:36], v[119:120], v[79:80], v[33:36]  // 00000006FE0C: FFD40021 04869F77"
+      },
+      {
+        "line": 313,
+        "text": "v_mmac_f32_16x16x16_bf16 v[21:24], v[117:118], v[77:78], v[21:24]  // 00000006FE14: FFD40015 04569B75"
+      },
+      {
+        "line": 314,
+        "text": "v_mmac_f32_16x16x16_bf16 v[17:20], v[117:118], v[79:80], v[17:20]  // 00000006FE1C: FFD40011 04469F75"
+      },
+      {
+        "line": 315,
+        "text": "v_mmac_f32_16x16x16_bf16 v[5:8], v[115:116], v[77:78], v[5:8]  // 00000006FE24: FFD40005 04169B73"
+      },
+      {
+        "line": 316,
+        "text": "v_mmac_f32_16x16x16_bf16 v[1:4], v[115:116], v[79:80], v[1:4]  // 00000006FE2C: FFD40001 04069F73"
+      },
+      {
+        "line": 317,
+        "text": "v_mmac_f32_16x16x16_bf16 v[61:64], v[113:114], v[73:74], v[61:64]  // 00000006FE34: FFD4003D 04F69371"
+      },
+      {
+        "line": 318,
+        "text": "v_mmac_f32_16x16x16_bf16 v[57:60], v[113:114], v[75:76], v[57:60]  // 00000006FE3C: FFD40039 04E69771"
+      },
+      {
+        "line": 319,
+        "text": "v_mmac_f32_16x16x16_bf16 v[45:48], v[109:110], v[73:74], v[45:48]  // 00000006FE44: FFD4002D 04B6936D"
+      },
+      {
+        "line": 320,
+        "text": "v_mmac_f32_16x16x16_bf16 v[41:44], v[109:110], v[75:76], v[41:44]  // 00000006FE4C: FFD40029 04A6976D"
+      },
+      {
+        "line": 321,
+        "text": "v_mmac_f32_16x16x16_bf16 v[29:32], v[107:108], v[73:74], v[29:32]  // 00000006FE54: FFD4001D 0476936B"
+      },
+      {
+        "line": 322,
+        "text": "v_mmac_f32_16x16x16_bf16 v[25:28], v[107:108], v[75:76], v[25:28]  // 00000006FE5C: FFD40019 0466976B"
+      },
+      {
+        "line": 323,
+        "text": "v_mmac_f32_16x16x16_bf16 v[13:16], v[105:106], v[73:74], v[13:16]  // 00000006FE64: FFD4000D 04369369"
+      },
+      {
+        "line": 324,
+        "text": "v_mmac_f32_16x16x16_bf16 v[9:12], v[105:106], v[75:76], v[9:12]  // 00000006FE6C: FFD40009 04269769"
+      },
+      {
+        "line": 325,
+        "text": "s_waitcnt vmcnt(0)                                         // 00000006FE74: BF8C0F70"
+      },
+      {
+        "line": 326,
+        "text": "s_waitcnt lgkmcnt(0)                                       // 00000006FE78: BF8CC07F"
+      },
+      {
+        "line": 327,
+        "text": "s_barrier                                                  // 00000006FE7C: BF8A0000"
+      },
+      {
+        "line": 328,
+        "text": "ds_read_b64 v[127:128], v153                               // 00000006FE80: D8EC0000 7F000099"
+      },
+      {
+        "line": 329,
+        "text": "ds_read_b64 v[123:124], v154                               // 00000006FE88: D8EC0000 7B00009A"
+      },
+      {
+        "line": 330,
+        "text": "ds_read_b64 v[119:120], v155                               // 00000006FE90: D8EC0000 7700009B"
+      },
+      {
+        "line": 331,
+        "text": "ds_read_b64 v[115:116], v156                               // 00000006FE98: D8EC0000 7300009C"
+      },
+      {
+        "line": 332,
+        "text": "ds_read_m32x16_b16 v[81:84], v160                          // 00000006FEA0: D9F60000 510000A0"
+      },
+      {
+        "line": 333,
+        "text": "ds_read_b64 v[109:110], v162                               // 00000006FEA8: D8EC0000 6D0000A2"
+      },
+      {
+        "line": 334,
+        "text": "ds_read_b64 v[107:108], v161                               // 00000006FEB0: D8EC0000 6B0000A1"
+      },
+      {
+        "line": 335,
+        "text": "ds_read_b64 v[105:106], v159                               // 00000006FEB8: D8EC0000 6900009F"
+      },
+      {
+        "line": 336,
+        "text": "ds_read_b64 v[87:88], v158                                 // 00000006FEC0: D8EC0000 5700009E"
+      },
+      {
+        "line": 338,
+        "text": "ds_read_m32x16_b16 v[73:76], v157                          // 00000006FECC: D9F60000 4900009D"
+      },
+      {
+        "line": 342,
+        "text": "buffer_load_dwordx4 v[111:112], s[16:19], s43 idxen offen lds// 00000006FEE4: E05D3000 2B04006F"
+      }
+    ],
+    "layout_backward_candidates": [
+      {
+        "start_pc": "0x6fdf4",
+        "end_pc": "0x7048c",
+        "static_mmac": 96,
+        "line_start": 309,
+        "line_end": 553
+      }
+    ]
+  },
+  {
+    "tag": "id805_base_id805_accum_accum_diagnosis",
+    "symbol": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_21GemmPipelineV7UniformINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE0EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+    "code_object": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/accum_profile_analysis/isa/id805_base_id805_accum_accum_diagnosis.co",
+    "address": "0x2100",
+    "bytes": 28400,
+    "sha256": "0d3a3738eea5e7b3f4ee8df2a619128a75ef92f125eab6e657ab6ce81249fb31",
+    "metadata": {
+      ".group_segment_fixed_size": 0,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 512,
+      ".name": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_21GemmPipelineV7UniformINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE0EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 47,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_21GemmPipelineV7UniformINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE0EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_.kd",
+      ".unfolded_args": [
+        {
+          ".address_space": "constant",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".offset": 8,
+          ".size": 4,
+          ".value_kind": "by_value"
+        },
+        {
+          ".offset": 12,
+          ".size": 4,
+          ".value_kind": "by_value"
+        }
+      ],
+      ".uniform_work_group_size": 1,
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 212,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64
+    },
+    "assembly": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/accum_profile_analysis/isa/id805_base_id805_accum_accum_diagnosis.s",
+    "command": [
+      "/opt/dtk/aillvm/bin/llvm-objdump",
+      "-d",
+      "--mcpu=gfx936",
+      "--start-address=0x2100",
+      "--stop-address=0x8ff0",
+      "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/accum_profile_analysis/isa/id805_base_id805_accum_accum_diagnosis.co"
+    ],
+    "static_instructions": 4556,
+    "opcodes": {
+      "s_load_dwordx4": 2,
+      "s_mov_b64": 8,
+      "s_waitcnt": 121,
+      "s_cmp_lt_i32": 53,
+      "s_cselect_b64": 27,
+      "s_and_b64": 27,
+      "s_cbranch_vccnz": 26,
+      "s_andn2_b64": 26,
+      "s_cbranch_vccz": 7,
+      "s_cmp_ge_i32": 72,
+      "s_cbranch_scc0": 24,
+      "s_endpgm": 2,
+      "s_cmp_gt_i32": 3,
+      "v_mbcnt_lo_u32_b32": 1,
+      "v_mbcnt_hi_u32_b32": 1,
+      "v_mov_b64_e32": 129,
+      "s_movk_i32": 12,
+      "v_mad_u64_u32": 2,
+      "v_lshlrev_b32_e32": 28,
+      "s_mov_b32": 138,
+      "v_add_co_u32_e32": 18,
+      "v_mov_b32_e32": 277,
+      "v_add_u32_e32": 36,
+      "v_cmp_lt_i32_e64": 2,
+      "v_cmp_gt_i32_e64": 5,
+      "v_addc_co_u32_e32": 18,
+      "v_cmp_gt_i32_e32": 18,
+      "s_and_saveexec_b64": 20,
+      "s_cbranch_execz": 20,
+      "global_load_dwordx2": 1,
+      "v_ashrrev_i32_e32": 18,
+      "v_add_u32_sdwa": 2,
+      "v_lshrrev_b32_e32": 134,
+      "v_mul_i32_i24_e32": 1,
+      "s_or_b64": 19,
+      "ds_bpermute_b32": 8,
+      "v_cndmask_b32_e64": 9,
+      "v_cmp_ne_u32_e32": 2,
+      "s_cmp_eq_u64": 1,
+      "s_ff1_i32_b64": 1,
+      "s_lshl_b32": 80,
+      "v_sub_u32_e32": 1,
+      "s_add_i32": 144,
+      "s_branch": 7,
+      "v_readfirstlane_b32": 6,
+      "s_cbranch_scc1": 57,
+      "s_add_u32": 4,
+      "s_addc_u32": 4,
+      "s_cmp_eq_u32": 2,
+      "s_load_dwordx2": 3,
+      "s_addk_i32": 4,
+      "s_ashr_i32": 16,
+      "s_lshr_b32": 6,
+      "s_mul_i32": 58,
+      "s_cbranch_execnz": 2,
+      "s_xor_b32": 8,
+      "v_cvt_f32_u32_e32": 2,
+      "v_rcp_iflag_f32_e32": 2,
+      "s_sub_i32": 20,
+      "v_mul_f32_e32": 2,
+      "v_cvt_u32_f32_e32": 2,
+      "s_mul_hi_u32": 4,
+      "s_cmp_ge_u32": 4,
+      "s_cselect_b32": 53,
+      "s_mul_hi_i32": 1,
+      "s_load_dword": 5,
+      "s_cmpk_lt_u32": 3,
+      "s_cmp_le_u32": 1,
+      "v_or_b32_e32": 63,
+      "v_bfe_u32": 131,
+      "v_xor_b32_e32": 21,
+      "v_lshl_or_b32": 4,
+      "v_and_b32_e32": 12,
+      "s_nop": 33,
+      "s_or_b32": 7,
+      "v_cndmask_b32_e32": 1,
+      "s_xor_b64": 3,
+      "v_cmp_lt_u32_e32": 2,
+      "s_andn2_saveexec_b64": 3,
+      "v_and_or_b32": 4,
+      "v_mul_lo_u32": 17,
+      "v_add3_u32": 145,
+      "s_and_b32": 1,
+      "buffer_load_dwordx4": 102,
+      "v_or3_b32": 8,
+      "s_mulk_i32": 1,
+      "s_barrier": 51,
+      "ds_read_b64": 192,
+      "ds_read_m32x16_b16": 192,
+      "s_cmpk_gt_i32": 2,
+      "v_cmp_ne_u32_e64": 1,
+      "v_mmac_f32_16x16x16_bf16": 1472,
+      "s_setprio": 92,
+      "ds_write_b16": 128,
+      "ds_read_b128": 16,
+      "v_lshlrev_b64": 16,
+      "global_store_dwordx4": 16
+    },
+    "wait_operands": {
+      "lgkmcnt(0)": 24,
+      "vmcnt(0)": 2,
+      "vmcnt(6)": 1,
+      "vmcnt(4)": 47,
+      "vmcnt(2)": 1,
+      "lgkmcnt(8)": 46
+    },
+    "labels": [
+      "0000000000002100 <_ZN7ck_tile6kentryILi512ELi1ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi256ELi256ELi64EEEENS5_IJLi4ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_21GemmPipelineV7UniformINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELNS_13V7UniformKindE0EEENS_33GroupedGemmV7UniformStoreEpilogueItNS_16V7UniformAccTileENS_17V7UniformGeometryEEELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_>:"
+    ],
+    "direct_lds_loads": 102,
+    "unknown_lines": 0,
+    "ID": 805,
+    "arm": "base_id805_accum_accum_diagnosis",
+    "epoch": 0,
+    "dispatch": 18,
+    "captured_kernel": "void ck_tile::kentry<512, 1, ck_tile::GroupedGemmV7UniformKernel<ck_tile::GroupedGemmKernel<ck_tile::GemmSpatiallyLocalTilePartitioner<ck_tile::TileGemmShape<ck_tile::sequence<256, 256, 64>, ck_tile::sequence<4, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, 1, 1>, ck_tile::GemmPipelineV7Uniform<ck_tile::UniversalGemmPipelineProblem<unsigned short, unsigned short, float, ck_tile::TileGemmShape<ck_tile::sequence<256, 256, 64>, ck_tile::sequence<4, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, ck_tile::TileGemmUniversalTraits<false, false, false, false, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, false, false, false, 1, false, false, true, true>, (ck_tile::GemmPipelineScheduler)1, true, (ck_tile::TailNumber)10, ck_tile::null_type, ck_tile::null_type, false, 2, 2>, (ck_tile::V7UniformKind)0>, ck_tile::GroupedGemmV7UniformStoreEpilogue<unsigned short, ck_tile::V7UniformAccTile, ck_tile::V7UniformGeometry>, (ck_tile::GroupedGemmMFilter)0, 0> >, void const AS4*, int, int>(void const AS4*, int, int)",
+    "perf": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/profiles_accum/h3accum_id805_base_cu0_f7f80836/1042721_tile_example_grouped_gemm_device_args_benchmark.perf",
+    "code_object_sha256": "fadf87b1d86749d41ce993c5705b1de586a7a82163788c551ee68a3a92895aba",
+    "main_loop_candidates": [
+      {
+        "start_pc": "0x2c6c",
+        "end_pc": "0x3f3c",
+        "static_mmac": 384,
+        "line_start": 616,
+        "line_end": 1317
+      },
+      {
+        "start_pc": "0x2c2c",
+        "end_pc": "0x3f38",
+        "static_mmac": 384,
+        "line_start": 608,
+        "line_end": 1316
+      },
+      {
+        "start_pc": "0x5474",
+        "end_pc": "0x6788",
+        "static_mmac": 384,
+        "line_start": 2213,
+        "line_end": 2923
+      },
+      {
+        "start_pc": "0x409c",
+        "end_pc": "0x4f20",
+        "static_mmac": 288,
+        "line_start": 1405,
+        "line_end": 1956
+      }
+    ],
+    "instruction_anchors": [
+      {
+        "line": 624,
+        "text": "buffer_load_dwordx4 v[177:178], s[4:7], s13 idxen offen slc lds// 000000002C90: E05F3000 0D0100B1"
+      },
+      {
+        "line": 627,
+        "text": "buffer_load_dwordx4 v206, s[8:11], s12 offen lds           // 000000002CA0: E05D1000 0C0200CE"
+      },
+      {
+        "line": 628,
+        "text": "s_waitcnt lgkmcnt(8)                                       // 000000002CA8: BF8CC87F"
+      },
+      {
+        "line": 629,
+        "text": "v_mmac_f32_16x16x16_bf16 v[109:112], v[193:194], v[157:158], v[109:112]  // 000000002CAC: FFD4006D 05B73BC1"
+      },
+      {
+        "line": 631,
+        "text": "v_mmac_f32_16x16x16_bf16 v[141:144], v[193:194], v[159:160], v[141:144]  // 000000002CB8: FFD4008D 06373FC1"
+      },
+      {
+        "line": 632,
+        "text": "v_mmac_f32_16x16x16_bf16 v[137:140], v[193:194], v[153:154], v[137:140]  // 000000002CC0: FFD40089 062733C1"
+      },
+      {
+        "line": 633,
+        "text": "v_mmac_f32_16x16x16_bf16 v[129:132], v[193:194], v[155:156], v[129:132]  // 000000002CC8: FFD40081 060737C1"
+      },
+      {
+        "line": 634,
+        "text": "v_mmac_f32_16x16x16_bf16 v[113:116], v[193:194], v[149:150], v[113:116]  // 000000002CD0: FFD40071 05C72BC1"
+      },
+      {
+        "line": 635,
+        "text": "v_mmac_f32_16x16x16_bf16 v[105:108], v[193:194], v[151:152], v[105:108]  // 000000002CD8: FFD40069 05A72FC1"
+      },
+      {
+        "line": 636,
+        "text": "v_mmac_f32_16x16x16_bf16 v[101:104], v[193:194], v[145:146], v[101:104]  // 000000002CE0: FFD40065 059723C1"
+      },
+      {
+        "line": 637,
+        "text": "v_mmac_f32_16x16x16_bf16 v[97:100], v[193:194], v[147:148], v[97:100]  // 000000002CE8: FFD40061 058727C1"
+      },
+      {
+        "line": 638,
+        "text": "v_mmac_f32_16x16x16_bf16 v[93:96], v[191:192], v[157:158], v[93:96]  // 000000002CF0: FFD4005D 05773BBF"
+      },
+      {
+        "line": 639,
+        "text": "v_mmac_f32_16x16x16_bf16 v[89:92], v[191:192], v[159:160], v[89:92]  // 000000002CF8: FFD40059 05673FBF"
+      },
+      {
+        "line": 640,
+        "text": "v_mmac_f32_16x16x16_bf16 v[85:88], v[191:192], v[153:154], v[85:88]  // 000000002D00: FFD40055 055733BF"
+      },
+      {
+        "line": 641,
+        "text": "v_mmac_f32_16x16x16_bf16 v[81:84], v[191:192], v[155:156], v[81:84]  // 000000002D08: FFD40051 054737BF"
+      },
+      {
+        "line": 642,
+        "text": "v_mmac_f32_16x16x16_bf16 v[77:80], v[191:192], v[149:150], v[77:80]  // 000000002D10: FFD4004D 05372BBF"
+      },
+      {
+        "line": 643,
+        "text": "v_mmac_f32_16x16x16_bf16 v[73:76], v[191:192], v[151:152], v[73:76]  // 000000002D18: FFD40049 05272FBF"
+      },
+      {
+        "line": 644,
+        "text": "v_mmac_f32_16x16x16_bf16 v[69:72], v[191:192], v[145:146], v[69:72]  // 000000002D20: FFD40045 051723BF"
+      },
+      {
+        "line": 645,
+        "text": "v_mmac_f32_16x16x16_bf16 v[65:68], v[191:192], v[147:148], v[65:68]  // 000000002D28: FFD40041 050727BF"
+      },
+      {
+        "line": 646,
+        "text": "v_mmac_f32_16x16x16_bf16 v[61:64], v[189:190], v[157:158], v[61:64]  // 000000002D30: FFD4003D 04F73BBD"
+      },
+      {
+        "line": 647,
+        "text": "v_mmac_f32_16x16x16_bf16 v[57:60], v[189:190], v[159:160], v[57:60]  // 000000002D38: FFD40039 04E73FBD"
+      },
+      {
+        "line": 648,
+        "text": "v_mmac_f32_16x16x16_bf16 v[53:56], v[189:190], v[153:154], v[53:56]  // 000000002D40: FFD40035 04D733BD"
+      },
+      {
+        "line": 649,
+        "text": "v_mmac_f32_16x16x16_bf16 v[49:52], v[189:190], v[155:156], v[49:52]  // 000000002D48: FFD40031 04C737BD"
+      },
+      {
+        "line": 650,
+        "text": "v_mmac_f32_16x16x16_bf16 v[45:48], v[189:190], v[149:150], v[45:48]  // 000000002D50: FFD4002D 04B72BBD"
+      }
+    ]
+  },
+  {
+    "tag": "id805_candidate_id805_accum_accum_diagnosis",
+    "symbol": "_ZN7ck_tile6kentryILi256ELi1ENS_29DecodeNnLowLdsWave4N128KernelILi4EEEJPU3AS4viiEEEvDpT2_",
+    "code_object": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/accum_profile_analysis/isa/id805_candidate_id805_accum_accum_diagnosis.co",
+    "address": "0x6f800",
+    "bytes": 7296,
+    "sha256": "4ca7e376e8b9af780a40ad0d505b0737fc86960ae7355b16fc570a8b5d304bf3",
+    "metadata": {
+      ".group_segment_fixed_size": 0,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 256,
+      ".name": "_ZN7ck_tile6kentryILi256ELi1ENS_29DecodeNnLowLdsWave4N128KernelILi4EEEJPU3AS4viiEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 49,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi256ELi1ENS_29DecodeNnLowLdsWave4N128KernelILi4EEEJPU3AS4viiEEEvDpT2_.kd",
+      ".unfolded_args": [
+        {
+          ".address_space": "constant",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".offset": 8,
+          ".size": 4,
+          ".value_kind": "by_value"
+        },
+        {
+          ".offset": 12,
+          ".size": 4,
+          ".value_kind": "by_value"
+        }
+      ],
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 163,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64
+    },
+    "assembly": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/accum_profile_analysis/isa/id805_candidate_id805_accum_accum_diagnosis.s",
+    "command": [
+      "/opt/dtk/aillvm/bin/llvm-objdump",
+      "-d",
+      "--mcpu=gfx936",
+      "--start-address=0x6f800",
+      "--stop-address=0x71480",
+      "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/accum_profile_analysis/isa/id805_candidate_id805_accum_accum_diagnosis.co"
+    ],
+    "static_instructions": 1226,
+    "opcodes": {
+      "s_load_dwordx2": 3,
+      "s_waitcnt": 58,
+      "s_ashr_i32": 12,
+      "s_add_i32": 58,
+      "s_xor_b32": 4,
+      "v_cvt_f32_u32_e32": 1,
+      "s_nop": 6,
+      "v_rcp_iflag_f32_e32": 1,
+      "v_mul_f32_e32": 1,
+      "v_cvt_u32_f32_e32": 1,
+      "s_sub_i32": 7,
+      "v_readfirstlane_b32": 2,
+      "s_mul_i32": 23,
+      "s_mul_hi_u32": 2,
+      "s_cmp_ge_u32": 2,
+      "s_cselect_b32": 3,
+      "s_cmp_ge_i32": 20,
+      "s_cbranch_scc1": 16,
+      "s_mul_hi_i32": 1,
+      "s_add_u32": 9,
+      "s_addc_u32": 9,
+      "s_load_dword": 2,
+      "s_load_dwordx4": 2,
+      "s_lshl_b32": 23,
+      "s_mov_b32": 58,
+      "s_cmp_le_u32": 1,
+      "s_cselect_b64": 3,
+      "s_cmpk_lt_u32": 1,
+      "s_and_b64": 14,
+      "s_cbranch_vccnz": 14,
+      "v_lshrrev_b32_e32": 37,
+      "s_or_b32": 3,
+      "s_mov_b64": 14,
+      "v_bfe_u32": 33,
+      "v_or_b32_e32": 37,
+      "v_cmp_gt_u32_e32": 5,
+      "v_cndmask_b32_e32": 1,
+      "v_lshlrev_b32_e32": 7,
+      "v_xor_b32_e32": 12,
+      "v_and_b32_e32": 13,
+      "v_mad_u64_u32": 9,
+      "s_cmp_lt_i32": 2,
+      "s_cmp_gt_i32": 1,
+      "v_mov_b32_e32": 69,
+      "buffer_load_dwordx4": 42,
+      "v_mul_lo_u32": 1,
+      "v_add_u32_e32": 1,
+      "v_lshl_add_u32": 1,
+      "v_cndmask_b32_e64": 1,
+      "v_cmp_ne_u32_e64": 1,
+      "s_andn2_b64": 1,
+      "s_barrier": 22,
+      "s_and_b32": 2,
+      "ds_read_b64": 112,
+      "v_and_or_b32": 1,
+      "v_lshl_or_b32": 1,
+      "ds_read_m32x16_b16": 28,
+      "s_addk_i32": 2,
+      "s_movk_i32": 4,
+      "s_lshr_b32": 1,
+      "s_cmpk_lt_i32": 1,
+      "v_mmac_f32_16x16x16_bf16": 224,
+      "s_cbranch_scc0": 7,
+      "s_branch": 7,
+      "v_mov_b64_e32": 32,
+      "s_cbranch_execz": 10,
+      "v_pk_add_f32": 16,
+      "v_or3_b32": 3,
+      "v_add3_u32": 32,
+      "ds_write_b16": 32,
+      "ds_read_b128": 4,
+      "s_andn2_b32": 1,
+      "s_and_saveexec_b64": 4,
+      "s_lshl_b64": 4,
+      "v_lshlrev_b64": 4,
+      "v_add_co_u32_e32": 8,
+      "v_addc_co_u32_e32": 8,
+      "global_store_dwordx4": 4,
+      "s_or_b64": 3,
+      "s_endpgm": 1
+    },
+    "wait_operands": {
+      "lgkmcnt(0)": 37,
+      "vmcnt(0)": 21
+    },
+    "labels": [
+      "000000000006f800 <_ZN7ck_tile6kentryILi256ELi1ENS_29DecodeNnLowLdsWave4N128KernelILi4EEEJPU3AS4viiEEEvDpT2_>:"
+    ],
+    "direct_lds_loads": 42,
+    "unknown_lines": 0,
+    "ID": 805,
+    "arm": "candidate_id805_accum_accum_diagnosis",
+    "epoch": 0,
+    "dispatch": 18,
+    "captured_kernel": "void ck_tile::kentry<256, 1, ck_tile::DecodeNnLowLdsWave4N128Kernel<4>, void AS4*, int, int>(void AS4*, int, int)",
+    "perf": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/profiles_accum/h3accum_id805_candidate_cu0_42fe9f64/1042775_tile_example_grouped_gemm_device_args_benchmark.perf",
+    "code_object_sha256": "1ce1556b2aab6a10136257389710b12a9c86fa63e5112ef0d94f42dd23260596",
+    "main_loop_candidates": [
+      {
+        "start_pc": "0x6fdf4",
+        "end_pc": "0x7048c",
+        "line_start": 309,
+        "line_end": 553
+      }
+    ],
+    "instruction_anchors": [
+      {
+        "line": 309,
+        "text": "v_mmac_f32_16x16x16_bf16 v[49:52], v[121:122], v[77:78], v[49:52]  // 00000006FDF4: FFD40031 04C69B79"
+      },
+      {
+        "line": 310,
+        "text": "v_mmac_f32_16x16x16_bf16 v[53:56], v[121:122], v[79:80], v[53:56]  // 00000006FDFC: FFD40035 04D69F79"
+      },
+      {
+        "line": 311,
+        "text": "v_mmac_f32_16x16x16_bf16 v[37:40], v[119:120], v[77:78], v[37:40]  // 00000006FE04: FFD40025 04969B77"
+      },
+      {
+        "line": 312,
+        "text": "v_mmac_f32_16x16x16_bf16 v[33:36], v[119:120], v[79:80], v[33:36]  // 00000006FE0C: FFD40021 04869F77"
+      },
+      {
+        "line": 313,
+        "text": "v_mmac_f32_16x16x16_bf16 v[21:24], v[117:118], v[77:78], v[21:24]  // 00000006FE14: FFD40015 04569B75"
+      },
+      {
+        "line": 314,
+        "text": "v_mmac_f32_16x16x16_bf16 v[17:20], v[117:118], v[79:80], v[17:20]  // 00000006FE1C: FFD40011 04469F75"
+      },
+      {
+        "line": 315,
+        "text": "v_mmac_f32_16x16x16_bf16 v[5:8], v[115:116], v[77:78], v[5:8]  // 00000006FE24: FFD40005 04169B73"
+      },
+      {
+        "line": 316,
+        "text": "v_mmac_f32_16x16x16_bf16 v[1:4], v[115:116], v[79:80], v[1:4]  // 00000006FE2C: FFD40001 04069F73"
+      },
+      {
+        "line": 317,
+        "text": "v_mmac_f32_16x16x16_bf16 v[61:64], v[113:114], v[73:74], v[61:64]  // 00000006FE34: FFD4003D 04F69371"
+      },
+      {
+        "line": 318,
+        "text": "v_mmac_f32_16x16x16_bf16 v[57:60], v[113:114], v[75:76], v[57:60]  // 00000006FE3C: FFD40039 04E69771"
+      },
+      {
+        "line": 319,
+        "text": "v_mmac_f32_16x16x16_bf16 v[45:48], v[109:110], v[73:74], v[45:48]  // 00000006FE44: FFD4002D 04B6936D"
+      },
+      {
+        "line": 320,
+        "text": "v_mmac_f32_16x16x16_bf16 v[41:44], v[109:110], v[75:76], v[41:44]  // 00000006FE4C: FFD40029 04A6976D"
+      },
+      {
+        "line": 321,
+        "text": "v_mmac_f32_16x16x16_bf16 v[29:32], v[107:108], v[73:74], v[29:32]  // 00000006FE54: FFD4001D 0476936B"
+      },
+      {
+        "line": 322,
+        "text": "v_mmac_f32_16x16x16_bf16 v[25:28], v[107:108], v[75:76], v[25:28]  // 00000006FE5C: FFD40019 0466976B"
+      },
+      {
+        "line": 323,
+        "text": "v_mmac_f32_16x16x16_bf16 v[13:16], v[105:106], v[73:74], v[13:16]  // 00000006FE64: FFD4000D 04369369"
+      },
+      {
+        "line": 324,
+        "text": "v_mmac_f32_16x16x16_bf16 v[9:12], v[105:106], v[75:76], v[9:12]  // 00000006FE6C: FFD40009 04269769"
+      },
+      {
+        "line": 325,
+        "text": "s_waitcnt vmcnt(0)                                         // 00000006FE74: BF8C0F70"
+      },
+      {
+        "line": 326,
+        "text": "s_waitcnt lgkmcnt(0)                                       // 00000006FE78: BF8CC07F"
+      },
+      {
+        "line": 327,
+        "text": "s_barrier                                                  // 00000006FE7C: BF8A0000"
+      },
+      {
+        "line": 328,
+        "text": "ds_read_b64 v[127:128], v153                               // 00000006FE80: D8EC0000 7F000099"
+      },
+      {
+        "line": 329,
+        "text": "ds_read_b64 v[123:124], v154                               // 00000006FE88: D8EC0000 7B00009A"
+      },
+      {
+        "line": 330,
+        "text": "ds_read_b64 v[119:120], v155                               // 00000006FE90: D8EC0000 7700009B"
+      },
+      {
+        "line": 331,
+        "text": "ds_read_b64 v[115:116], v156                               // 00000006FE98: D8EC0000 7300009C"
+      },
+      {
+        "line": 332,
+        "text": "ds_read_m32x16_b16 v[81:84], v160                          // 00000006FEA0: D9F60000 510000A0"
+      },
+      {
+        "line": 333,
+        "text": "ds_read_b64 v[109:110], v162                               // 00000006FEA8: D8EC0000 6D0000A2"
+      },
+      {
+        "line": 334,
+        "text": "ds_read_b64 v[107:108], v161                               // 00000006FEB0: D8EC0000 6B0000A1"
+      },
+      {
+        "line": 335,
+        "text": "ds_read_b64 v[105:106], v159                               // 00000006FEB8: D8EC0000 6900009F"
+      },
+      {
+        "line": 336,
+        "text": "ds_read_b64 v[87:88], v158                                 // 00000006FEC0: D8EC0000 5700009E"
+      },
+      {
+        "line": 338,
+        "text": "ds_read_m32x16_b16 v[73:76], v157                          // 00000006FECC: D9F60000 4900009D"
+      },
+      {
+        "line": 342,
+        "text": "buffer_load_dwordx4 v[111:112], s[16:19], s43 idxen offen lds// 00000006FEE4: E05D3000 2B04006F"
+      }
+    ],
+    "layout_backward_candidates": [
+      {
+        "start_pc": "0x6fdf4",
+        "end_pc": "0x7048c",
+        "static_mmac": 96,
+        "line_start": 309,
+        "line_end": 553
+      }
+    ]
+  },
+  {
+    "tag": "id335_base_id335_accum_accum_diagnosis",
+    "symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_20GemmPipelineV7SmallMINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+    "code_object": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/accum_profile_analysis/isa/id335_base_id335_accum_accum_diagnosis.co",
+    "address": "0x2100",
+    "bytes": 13080,
+    "sha256": "84e9cc159dd62145e36bad5df25a96d939850f340ef9c5615dba227578a50b48",
+    "metadata": {
+      ".group_segment_fixed_size": 0,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 256,
+      ".name": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_20GemmPipelineV7SmallMINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 47,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_20GemmPipelineV7SmallMINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_.kd",
+      ".unfolded_args": [
+        {
+          ".address_space": "constant",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".offset": 8,
+          ".size": 4,
+          ".value_kind": "by_value"
+        },
+        {
+          ".offset": 12,
+          ".size": 4,
+          ".value_kind": "by_value"
+        }
+      ],
+      ".uniform_work_group_size": 1,
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 80,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64
+    },
+    "assembly": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/accum_profile_analysis/isa/id335_base_id335_accum_accum_diagnosis.s",
+    "command": [
+      "/opt/dtk/aillvm/bin/llvm-objdump",
+      "-d",
+      "--mcpu=gfx936",
+      "--start-address=0x2100",
+      "--stop-address=0x5418",
+      "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/accum_profile_analysis/isa/id335_base_id335_accum_accum_diagnosis.co"
+    ],
+    "static_instructions": 2390,
+    "opcodes": {
+      "s_load_dwordx4": 2,
+      "s_mov_b64": 8,
+      "s_waitcnt": 163,
+      "s_cmp_lt_i32": 53,
+      "s_cselect_b64": 29,
+      "s_and_b64": 29,
+      "s_cbranch_vccnz": 27,
+      "s_andn2_b64": 26,
+      "s_cbranch_vccz": 7,
+      "s_cmp_ge_i32": 72,
+      "s_cbranch_scc0": 24,
+      "s_endpgm": 2,
+      "s_cmp_gt_i32": 3,
+      "v_mbcnt_lo_u32_b32": 1,
+      "v_mbcnt_hi_u32_b32": 1,
+      "v_mov_b64_e32": 33,
+      "s_movk_i32": 9,
+      "v_mad_u64_u32": 2,
+      "v_lshlrev_b32_e32": 20,
+      "s_mov_b32": 140,
+      "v_add_co_u32_e32": 6,
+      "v_mov_b32_e32": 73,
+      "v_add_u32_e32": 26,
+      "v_cmp_lt_i32_e64": 2,
+      "v_cmp_gt_i32_e64": 5,
+      "v_addc_co_u32_e32": 6,
+      "v_cmp_gt_i32_e32": 6,
+      "s_and_saveexec_b64": 8,
+      "s_cbranch_execz": 8,
+      "global_load_dwordx2": 1,
+      "v_ashrrev_i32_e32": 8,
+      "v_lshrrev_b32_e32": 39,
+      "v_mul_lo_u32": 6,
+      "s_or_b64": 7,
+      "ds_bpermute_b32": 8,
+      "v_cndmask_b32_e64": 9,
+      "v_cmp_ne_u32_e32": 2,
+      "s_cmp_eq_u64": 1,
+      "s_ff1_i32_b64": 1,
+      "s_lshl_b32": 81,
+      "v_sub_u32_e32": 1,
+      "s_add_i32": 146,
+      "s_branch": 7,
+      "v_readfirstlane_b32": 6,
+      "s_cbranch_scc1": 57,
+      "s_add_u32": 4,
+      "s_addc_u32": 4,
+      "s_cmp_eq_u32": 2,
+      "s_load_dwordx2": 3,
+      "s_addk_i32": 3,
+      "s_ashr_i32": 16,
+      "s_lshr_b32": 6,
+      "s_mul_i32": 59,
+      "s_cbranch_execnz": 2,
+      "s_xor_b32": 8,
+      "v_cvt_f32_u32_e32": 2,
+      "v_rcp_iflag_f32_e32": 2,
+      "s_sub_i32": 21,
+      "v_mul_f32_e32": 2,
+      "v_cvt_u32_f32_e32": 2,
+      "s_mul_hi_u32": 4,
+      "s_cmp_ge_u32": 4,
+      "s_cselect_b32": 53,
+      "s_mul_hi_i32": 1,
+      "s_load_dword": 5,
+      "s_cmp_lt_u32": 1,
+      "s_cmpk_lt_u32": 3,
+      "s_cmp_le_u32": 2,
+      "v_or_b32_e32": 27,
+      "v_bfe_u32": 34,
+      "v_xor_b32_e32": 11,
+      "v_lshl_or_b32": 1,
+      "v_and_b32_e32": 13,
+      "s_nop": 9,
+      "s_min_i32": 1,
+      "s_or_b32": 7,
+      "v_cndmask_b32_e32": 1,
+      "s_xor_b64": 3,
+      "v_cmp_lt_u32_e32": 2,
+      "s_andn2_saveexec_b64": 3,
+      "v_and_or_b32": 3,
+      "v_add3_u32": 37,
+      "s_and_b32": 1,
+      "buffer_load_dwordx4": 102,
+      "v_or3_b32": 5,
+      "s_barrier": 51,
+      "ds_read_b64": 96,
+      "ds_read_m32x16_b16": 96,
+      "s_cmpk_gt_i32": 2,
+      "v_cmp_ne_u32_e64": 1,
+      "v_mmac_f32_16x16x16_bf16": 368,
+      "s_setprio": 92,
+      "ds_write_b16": 32,
+      "ds_read_b128": 4,
+      "v_lshlrev_b64": 4,
+      "global_store_dwordx4": 4
+    },
+    "wait_operands": {
+      "lgkmcnt(0)": 66,
+      "vmcnt(0)": 2,
+      "vmcnt(6)": 1,
+      "vmcnt(4)": 47,
+      "vmcnt(2)": 1,
+      "lgkmcnt(4)": 46
+    },
+    "labels": [
+      "0000000000002100 <_ZN7ck_tile6kentryILi256ELi2ENS_26GroupedGemmV7UniformKernelINS_17GroupedGemmKernelINS_33GemmSpatiallyLocalTilePartitionerINS_13TileGemmShapeINS_8sequenceIJLi64ELi128ELi64EEEENS5_IJLi2ELi2ELi1EEEENS5_IJLi16ELi16ELi16EEEELb0ELb0EEELi1ELi1EEENS_20GemmPipelineV7SmallMINS_28UniversalGemmPipelineProblemIttfS9_NS_23TileGemmUniversalTraitsILb0ELb0ELb0ELb0ENS_13tensor_layout4gemm8RowMajorESG_SG_Lb0ELb0ELb0ELi1ELb0ELb0ELb1ELb1EEELNS_21GemmPipelineSchedulerE1ELb1ELNS_10TailNumberE10ENS_9null_typeESK_Lb0ELi2ELi2EEELi128EEENS_32GroupedGemmV7SmallMStoreEpilogueItNS_15V7SmallMAccTileINS_16V7SmallMGeometryILi128EEEEESQ_EELNS_18GroupedGemmMFilterE0ELi0EEEEEJPU3AS4KviiEEEvDpT2_>:"
+    ],
+    "direct_lds_loads": 102,
+    "unknown_lines": 0,
+    "ID": 335,
+    "arm": "base_id335_accum_accum_diagnosis",
+    "epoch": 0,
+    "dispatch": 18,
+    "captured_kernel": "void ck_tile::kentry<256, 2, ck_tile::GroupedGemmV7UniformKernel<ck_tile::GroupedGemmKernel<ck_tile::GemmSpatiallyLocalTilePartitioner<ck_tile::TileGemmShape<ck_tile::sequence<64, 128, 64>, ck_tile::sequence<2, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, 1, 1>, ck_tile::GemmPipelineV7SmallM<ck_tile::UniversalGemmPipelineProblem<unsigned short, unsigned short, float, ck_tile::TileGemmShape<ck_tile::sequence<64, 128, 64>, ck_tile::sequence<2, 2, 1>, ck_tile::sequence<16, 16, 16>, false, false>, ck_tile::TileGemmUniversalTraits<false, false, false, false, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, ck_tile::tensor_layout::gemm::RowMajor, false, false, false, 1, false, false, true, true>, (ck_tile::GemmPipelineScheduler)1, true, (ck_tile::TailNumber)10, ck_tile::null_type, ck_tile::null_type, false, 2, 2>, 128>, ck_tile::GroupedGemmV7SmallMStoreEpilogue<unsigned short, ck_tile::V7SmallMAccTile<ck_tile::V7SmallMGeometry<128> >, ck_tile::V7SmallMGeometry<128> >, (ck_tile::GroupedGemmMFilter)0, 0> >, void const AS4*, int, int>(void const AS4*, int, int)",
+    "perf": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/profiles_accum/h3accum_id335_base_cu0_6000f27e/1042829_tile_example_grouped_gemm_device_args_benchmark.perf",
+    "code_object_sha256": "082385e356895fd3fc6c79ba3761fd28f0261dca970cbe2b57388f56b2cf5327",
+    "main_loop_candidates": [
+      {
+        "start_pc": "0x2a70",
+        "end_pc": "0x3310",
+        "static_mmac": 96,
+        "line_start": 512,
+        "line_end": 893
+      },
+      {
+        "start_pc": "0x2a50",
+        "end_pc": "0x330c",
+        "static_mmac": 96,
+        "line_start": 508,
+        "line_end": 892
+      },
+      {
+        "start_pc": "0x3c94",
+        "end_pc": "0x4558",
+        "static_mmac": 96,
+        "line_start": 1348,
+        "line_end": 1734
+      },
+      {
+        "start_pc": "0x33b0",
+        "end_pc": "0x3a78",
+        "static_mmac": 72,
+        "line_start": 933,
+        "line_end": 1241
+      }
+    ],
+    "instruction_anchors": [
+      {
+        "line": 520,
+        "text": "buffer_load_dwordx4 v[57:58], s[4:7], s13 idxen offen slc lds// 000000002A94: E05F3000 0D010039"
+      },
+      {
+        "line": 523,
+        "text": "buffer_load_dwordx4 v[59:60], s[8:11], s12 idxen offen lds // 000000002AA4: E05D3000 0C02003B"
+      },
+      {
+        "line": 524,
+        "text": "s_waitcnt lgkmcnt(4)                                       // 000000002AAC: BF8CC47F"
+      },
+      {
+        "line": 525,
+        "text": "v_mmac_f32_16x16x16_bf16 v[21:24], v[67:68], v[45:46], v[21:24]  // 000000002AB0: FFD40015 04565B43"
+      },
+      {
+        "line": 527,
+        "text": "v_mmac_f32_16x16x16_bf16 v[37:40], v[67:68], v[47:48], v[37:40]  // 000000002ABC: FFD40025 04965F43"
+      },
+      {
+        "line": 528,
+        "text": "v_mmac_f32_16x16x16_bf16 v[25:28], v[67:68], v[41:42], v[25:28]  // 000000002AC4: FFD40019 04665343"
+      },
+      {
+        "line": 529,
+        "text": "v_mmac_f32_16x16x16_bf16 v[17:20], v[67:68], v[43:44], v[17:20]  // 000000002ACC: FFD40011 04465743"
+      },
+      {
+        "line": 530,
+        "text": "v_mmac_f32_16x16x16_bf16 v[13:16], v[65:66], v[45:46], v[13:16]  // 000000002AD4: FFD4000D 04365B41"
+      },
+      {
+        "line": 531,
+        "text": "v_mmac_f32_16x16x16_bf16 v[9:12], v[65:66], v[47:48], v[9:12]  // 000000002ADC: FFD40009 04265F41"
+      },
+      {
+        "line": 532,
+        "text": "v_mmac_f32_16x16x16_bf16 v[5:8], v[65:66], v[41:42], v[5:8]  // 000000002AE4: FFD40005 04165341"
+      },
+      {
+        "line": 533,
+        "text": "v_mmac_f32_16x16x16_bf16 v[1:4], v[65:66], v[43:44], v[1:4]  // 000000002AEC: FFD40001 04065741"
+      },
+      {
+        "line": 535,
+        "text": "s_waitcnt vmcnt(4)                                         // 000000002AF8: BF8C0F74"
+      },
+      {
+        "line": 536,
+        "text": "s_waitcnt lgkmcnt(0)                                       // 000000002AFC: BF8CC07F"
+      },
+      {
+        "line": 537,
+        "text": "s_barrier                                                  // 000000002B00: BF8A0000"
+      },
+      {
+        "line": 541,
+        "text": "ds_read_m32x16_b16 v[45:48], v78 offset:24576              // 000000002B10: D9F66000 2D00004E"
+      },
+      {
+        "line": 542,
+        "text": "ds_read_m32x16_b16 v[41:44], v79 offset:24576              // 000000002B18: D9F66000 2900004F"
+      },
+      {
+        "line": 543,
+        "text": "ds_read_b64 v[67:68], v77 offset:24576                     // 000000002B20: D8EC6000 4300004D"
+      },
+      {
+        "line": 544,
+        "text": "ds_read_b64 v[65:66], v77 offset:25088                     // 000000002B28: D8EC6200 4100004D"
+      }
+    ]
+  },
+  {
+    "tag": "id335_candidate_id335_accum_accum_diagnosis",
+    "symbol": "_ZN7ck_tile6kentryILi256ELi1ENS_29DecodeNnLowLdsWave4N128KernelILi4EEEJPU3AS4viiEEEvDpT2_",
+    "code_object": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/accum_profile_analysis/isa/id335_candidate_id335_accum_accum_diagnosis.co",
+    "address": "0x6f800",
+    "bytes": 7296,
+    "sha256": "4ca7e376e8b9af780a40ad0d505b0737fc86960ae7355b16fc570a8b5d304bf3",
+    "metadata": {
+      ".group_segment_fixed_size": 0,
+      ".kernarg_segment_align": 8,
+      ".kernarg_segment_size": 16,
+      ".language": "OpenCL C",
+      ".language_version": [
+        2,
+        0
+      ],
+      ".max_flat_workgroup_size": 256,
+      ".name": "_ZN7ck_tile6kentryILi256ELi1ENS_29DecodeNnLowLdsWave4N128KernelILi4EEEJPU3AS4viiEEEvDpT2_",
+      ".private_segment_fixed_size": 0,
+      ".sgpr_count": 49,
+      ".sgpr_spill_count": 0,
+      ".symbol": "_ZN7ck_tile6kentryILi256ELi1ENS_29DecodeNnLowLdsWave4N128KernelILi4EEEJPU3AS4viiEEEvDpT2_.kd",
+      ".unfolded_args": [
+        {
+          ".address_space": "constant",
+          ".offset": 0,
+          ".size": 8,
+          ".value_kind": "global_buffer"
+        },
+        {
+          ".offset": 8,
+          ".size": 4,
+          ".value_kind": "by_value"
+        },
+        {
+          ".offset": 12,
+          ".size": 4,
+          ".value_kind": "by_value"
+        }
+      ],
+      ".uses_dynamic_stack": false,
+      ".vgpr_count": 163,
+      ".vgpr_spill_count": 0,
+      ".wavefront_size": 64
+    },
+    "assembly": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/accum_profile_analysis/isa/id335_candidate_id335_accum_accum_diagnosis.s",
+    "command": [
+      "/opt/dtk/aillvm/bin/llvm-objdump",
+      "-d",
+      "--mcpu=gfx936",
+      "--start-address=0x6f800",
+      "--stop-address=0x71480",
+      "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/accum_profile_analysis/isa/id335_candidate_id335_accum_accum_diagnosis.co"
+    ],
+    "static_instructions": 1226,
+    "opcodes": {
+      "s_load_dwordx2": 3,
+      "s_waitcnt": 58,
+      "s_ashr_i32": 12,
+      "s_add_i32": 58,
+      "s_xor_b32": 4,
+      "v_cvt_f32_u32_e32": 1,
+      "s_nop": 6,
+      "v_rcp_iflag_f32_e32": 1,
+      "v_mul_f32_e32": 1,
+      "v_cvt_u32_f32_e32": 1,
+      "s_sub_i32": 7,
+      "v_readfirstlane_b32": 2,
+      "s_mul_i32": 23,
+      "s_mul_hi_u32": 2,
+      "s_cmp_ge_u32": 2,
+      "s_cselect_b32": 3,
+      "s_cmp_ge_i32": 20,
+      "s_cbranch_scc1": 16,
+      "s_mul_hi_i32": 1,
+      "s_add_u32": 9,
+      "s_addc_u32": 9,
+      "s_load_dword": 2,
+      "s_load_dwordx4": 2,
+      "s_lshl_b32": 23,
+      "s_mov_b32": 58,
+      "s_cmp_le_u32": 1,
+      "s_cselect_b64": 3,
+      "s_cmpk_lt_u32": 1,
+      "s_and_b64": 14,
+      "s_cbranch_vccnz": 14,
+      "v_lshrrev_b32_e32": 37,
+      "s_or_b32": 3,
+      "s_mov_b64": 14,
+      "v_bfe_u32": 33,
+      "v_or_b32_e32": 37,
+      "v_cmp_gt_u32_e32": 5,
+      "v_cndmask_b32_e32": 1,
+      "v_lshlrev_b32_e32": 7,
+      "v_xor_b32_e32": 12,
+      "v_and_b32_e32": 13,
+      "v_mad_u64_u32": 9,
+      "s_cmp_lt_i32": 2,
+      "s_cmp_gt_i32": 1,
+      "v_mov_b32_e32": 69,
+      "buffer_load_dwordx4": 42,
+      "v_mul_lo_u32": 1,
+      "v_add_u32_e32": 1,
+      "v_lshl_add_u32": 1,
+      "v_cndmask_b32_e64": 1,
+      "v_cmp_ne_u32_e64": 1,
+      "s_andn2_b64": 1,
+      "s_barrier": 22,
+      "s_and_b32": 2,
+      "ds_read_b64": 112,
+      "v_and_or_b32": 1,
+      "v_lshl_or_b32": 1,
+      "ds_read_m32x16_b16": 28,
+      "s_addk_i32": 2,
+      "s_movk_i32": 4,
+      "s_lshr_b32": 1,
+      "s_cmpk_lt_i32": 1,
+      "v_mmac_f32_16x16x16_bf16": 224,
+      "s_cbranch_scc0": 7,
+      "s_branch": 7,
+      "v_mov_b64_e32": 32,
+      "s_cbranch_execz": 10,
+      "v_pk_add_f32": 16,
+      "v_or3_b32": 3,
+      "v_add3_u32": 32,
+      "ds_write_b16": 32,
+      "ds_read_b128": 4,
+      "s_andn2_b32": 1,
+      "s_and_saveexec_b64": 4,
+      "s_lshl_b64": 4,
+      "v_lshlrev_b64": 4,
+      "v_add_co_u32_e32": 8,
+      "v_addc_co_u32_e32": 8,
+      "global_store_dwordx4": 4,
+      "s_or_b64": 3,
+      "s_endpgm": 1
+    },
+    "wait_operands": {
+      "lgkmcnt(0)": 37,
+      "vmcnt(0)": 21
+    },
+    "labels": [
+      "000000000006f800 <_ZN7ck_tile6kentryILi256ELi1ENS_29DecodeNnLowLdsWave4N128KernelILi4EEEJPU3AS4viiEEEvDpT2_>:"
+    ],
+    "direct_lds_loads": 42,
+    "unknown_lines": 0,
+    "ID": 335,
+    "arm": "candidate_id335_accum_accum_diagnosis",
+    "epoch": 0,
+    "dispatch": 18,
+    "captured_kernel": "void ck_tile::kentry<256, 1, ck_tile::DecodeNnLowLdsWave4N128Kernel<4>, void AS4*, int, int>(void AS4*, int, int)",
+    "perf": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/profiles_accum/h3accum_id335_candidate_cu0_82ccedde/1042863_tile_example_grouped_gemm_device_args_benchmark.perf",
+    "code_object_sha256": "1ce1556b2aab6a10136257389710b12a9c86fa63e5112ef0d94f42dd23260596",
+    "main_loop_candidates": [
+      {
+        "start_pc": "0x6fdf4",
+        "end_pc": "0x7048c",
+        "line_start": 309,
+        "line_end": 553
+      }
+    ],
+    "instruction_anchors": [
+      {
+        "line": 309,
+        "text": "v_mmac_f32_16x16x16_bf16 v[49:52], v[121:122], v[77:78], v[49:52]  // 00000006FDF4: FFD40031 04C69B79"
+      },
+      {
+        "line": 310,
+        "text": "v_mmac_f32_16x16x16_bf16 v[53:56], v[121:122], v[79:80], v[53:56]  // 00000006FDFC: FFD40035 04D69F79"
+      },
+      {
+        "line": 311,
+        "text": "v_mmac_f32_16x16x16_bf16 v[37:40], v[119:120], v[77:78], v[37:40]  // 00000006FE04: FFD40025 04969B77"
+      },
+      {
+        "line": 312,
+        "text": "v_mmac_f32_16x16x16_bf16 v[33:36], v[119:120], v[79:80], v[33:36]  // 00000006FE0C: FFD40021 04869F77"
+      },
+      {
+        "line": 313,
+        "text": "v_mmac_f32_16x16x16_bf16 v[21:24], v[117:118], v[77:78], v[21:24]  // 00000006FE14: FFD40015 04569B75"
+      },
+      {
+        "line": 314,
+        "text": "v_mmac_f32_16x16x16_bf16 v[17:20], v[117:118], v[79:80], v[17:20]  // 00000006FE1C: FFD40011 04469F75"
+      },
+      {
+        "line": 315,
+        "text": "v_mmac_f32_16x16x16_bf16 v[5:8], v[115:116], v[77:78], v[5:8]  // 00000006FE24: FFD40005 04169B73"
+      },
+      {
+        "line": 316,
+        "text": "v_mmac_f32_16x16x16_bf16 v[1:4], v[115:116], v[79:80], v[1:4]  // 00000006FE2C: FFD40001 04069F73"
+      },
+      {
+        "line": 317,
+        "text": "v_mmac_f32_16x16x16_bf16 v[61:64], v[113:114], v[73:74], v[61:64]  // 00000006FE34: FFD4003D 04F69371"
+      },
+      {
+        "line": 318,
+        "text": "v_mmac_f32_16x16x16_bf16 v[57:60], v[113:114], v[75:76], v[57:60]  // 00000006FE3C: FFD40039 04E69771"
+      },
+      {
+        "line": 319,
+        "text": "v_mmac_f32_16x16x16_bf16 v[45:48], v[109:110], v[73:74], v[45:48]  // 00000006FE44: FFD4002D 04B6936D"
+      },
+      {
+        "line": 320,
+        "text": "v_mmac_f32_16x16x16_bf16 v[41:44], v[109:110], v[75:76], v[41:44]  // 00000006FE4C: FFD40029 04A6976D"
+      },
+      {
+        "line": 321,
+        "text": "v_mmac_f32_16x16x16_bf16 v[29:32], v[107:108], v[73:74], v[29:32]  // 00000006FE54: FFD4001D 0476936B"
+      },
+      {
+        "line": 322,
+        "text": "v_mmac_f32_16x16x16_bf16 v[25:28], v[107:108], v[75:76], v[25:28]  // 00000006FE5C: FFD40019 0466976B"
+      },
+      {
+        "line": 323,
+        "text": "v_mmac_f32_16x16x16_bf16 v[13:16], v[105:106], v[73:74], v[13:16]  // 00000006FE64: FFD4000D 04369369"
+      },
+      {
+        "line": 324,
+        "text": "v_mmac_f32_16x16x16_bf16 v[9:12], v[105:106], v[75:76], v[9:12]  // 00000006FE6C: FFD40009 04269769"
+      },
+      {
+        "line": 325,
+        "text": "s_waitcnt vmcnt(0)                                         // 00000006FE74: BF8C0F70"
+      },
+      {
+        "line": 326,
+        "text": "s_waitcnt lgkmcnt(0)                                       // 00000006FE78: BF8CC07F"
+      },
+      {
+        "line": 327,
+        "text": "s_barrier                                                  // 00000006FE7C: BF8A0000"
+      },
+      {
+        "line": 328,
+        "text": "ds_read_b64 v[127:128], v153                               // 00000006FE80: D8EC0000 7F000099"
+      },
+      {
+        "line": 329,
+        "text": "ds_read_b64 v[123:124], v154                               // 00000006FE88: D8EC0000 7B00009A"
+      },
+      {
+        "line": 330,
+        "text": "ds_read_b64 v[119:120], v155                               // 00000006FE90: D8EC0000 7700009B"
+      },
+      {
+        "line": 331,
+        "text": "ds_read_b64 v[115:116], v156                               // 00000006FE98: D8EC0000 7300009C"
+      },
+      {
+        "line": 332,
+        "text": "ds_read_m32x16_b16 v[81:84], v160                          // 00000006FEA0: D9F60000 510000A0"
+      },
+      {
+        "line": 333,
+        "text": "ds_read_b64 v[109:110], v162                               // 00000006FEA8: D8EC0000 6D0000A2"
+      },
+      {
+        "line": 334,
+        "text": "ds_read_b64 v[107:108], v161                               // 00000006FEB0: D8EC0000 6B0000A1"
+      },
+      {
+        "line": 335,
+        "text": "ds_read_b64 v[105:106], v159                               // 00000006FEB8: D8EC0000 6900009F"
+      },
+      {
+        "line": 336,
+        "text": "ds_read_b64 v[87:88], v158                                 // 00000006FEC0: D8EC0000 5700009E"
+      },
+      {
+        "line": 338,
+        "text": "ds_read_m32x16_b16 v[73:76], v157                          // 00000006FECC: D9F60000 4900009D"
+      },
+      {
+        "line": 342,
+        "text": "buffer_load_dwordx4 v[111:112], s[16:19], s43 idxen offen lds// 00000006FEE4: E05D3000 2B04006F"
+      }
+    ],
+    "layout_backward_candidates": [
+      {
+        "start_pc": "0x6fdf4",
+        "end_pc": "0x7048c",
+        "static_mmac": 96,
+        "line_start": 309,
+        "line_end": 553
+      }
+    ]
+  }
+]

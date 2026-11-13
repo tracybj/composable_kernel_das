@@ -1,0 +1,26 @@
+{
+  "at": "2026-11-13T11:37:00.253093+00:00",
+  "reason": "Code/static profile hypothesis: M32/N128/W4 has four independent FP32 MMAC accumulation chains, while M64 has eight. Improve instruction-level overlap by independently accumulating each K16 half into two local FP32 banks, then add once. Insufficient chain independence is a hypothesis, not a verified SQTT cause.",
+  "ownership_architecture": "existing H3; same whole-M ownership, N128 K32 D2 W4, A/B LDS and three operand banks",
+  "implementation_revision_of_unadopted_instance": 6035,
+  "new_instance_or_selector": false,
+  "changed_arithmetic_reduction_order": true,
+  "expected_extra_VGPR_M16_32_64": [
+    8,
+    16,
+    32
+  ],
+  "extra_global_LDS_traffic": 0,
+  "precision_threshold_unchanged": true,
+  "representatives_and_scope": "same16 actual+7fallback, same96 originals/53 weak; no winner ID exclusions",
+  "profile_fixed_ids": [
+    620,
+    621,
+    805,
+    335
+  ],
+  "heldout_seed_not_drawn": true,
+  "default_off": true,
+  "previous_source_sha256": "dc363edef3cce03c95bac73a4b843b457df988ac50469b3434b9fcf53dbcb48c",
+  "candidate_source_sha256": "d8bc912c3211c96d0ed95dfa828aa62cc5a09d95158786902f48231447ad36a4"
+}
