@@ -1,0 +1,25 @@
+{
+  "at": "2026-11-13T10:48:37.236911+00:00",
+  "classification": "Profiler-associated appSIGABRT rc134; root cause notproved. NoobservedMKFD/hymgrevents; freshGPU4HCU0/rc0/memorygatepass.",
+  "original_stop": {
+    "at": "2026-11-13T10:40:50.368694+00:00",
+    "reason": "JOB_VALIDATION_FAILURE",
+    "key": "e0_h3wave4_id686_base_cu15_bd384a9a_5095deded4",
+    "log": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/jobs/e0_h3wave4_id686_base_cu15_bd384a9a_5095deded4/run.log"
+  },
+  "fresh_gate": {
+    "at": "2026-11-13T10:48:37.236336+00:00",
+    "key": "classify_profile_abort_cu15",
+    "attempt": 1,
+    "rc": 0,
+    "output": "\n================================= System Management Interface ==================================\n================================================================================================\nHCU     Temp     AvgPwr     Perf     PwrCap     VRAM%      HCU%      Dec%      Enc%      Mode     \n0       51.0C    92.0W      auto     1000.0W    0%         0.0%      0.0%      0.0%      Normal   \n1       51.0C    77.0W      auto     1000.0W    0%         0.0%      0.0%      0.0%      Normal   \n2       53.0C    90.0W      auto     1000.0W    0%         0.0%      0.0%      0.0%      Normal   \n3       51.0C    89.0W      auto     1000.0W    0%         0.0%      0.0%      0.0%      Normal   \n4       50.0C    84.0W      auto     1000.0W    0%         0.0%      0.0%      0.0%      Normal   \n5       51.0C    90.0W      auto     1000.0W    0%         0.0%      0.0%      0.0%      Normal   \n6       51.0C    90.0W      auto     1000.0W    0%         0.0%      0.0%      0.0%      Normal   \n7       50.0C    90.0W      auto     1000.0W    0%         0.0%      0.0%      0.0%      Normal   \n================================================================================================\n======================================== End of SMI Log ========================================\n\n",
+    "physical_gpu": 4,
+    "hcu": "0.0%",
+    "mem_available_kib": 484857520,
+    "seconds": 0.0961816299968632
+  },
+  "kernel_events": [],
+  "environment_recovery_or_epoch_change": false,
+  "no_more_low_CTA_SQTT_attempts": true,
+  "ordinary_failure_retirement": true
+}

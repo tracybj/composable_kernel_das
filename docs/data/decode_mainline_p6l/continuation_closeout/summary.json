@@ -1,0 +1,105 @@
+{
+  "at": "2026-11-13T12:04:58.628127+00:00",
+  "research_closed": true,
+  "performance_Goal_complete": false,
+  "Goal_status": "active/incomplete",
+  "accepted_stable50": 0,
+  "accepted_attributable30": 0,
+  "adopted_replacements": 0,
+  "discovery_pairs": 348,
+  "stages": [
+    {
+      "stage": "phase",
+      "pairs": 46,
+      "analysis_sha256": "450b9fc63208f9db5fc62bbc53067d3b6d1e14fd12521c4913eea2c3bc156732"
+    },
+    {
+      "stage": "k64",
+      "pairs": 46,
+      "analysis_sha256": "8e56f86f9ebab6838c761b6de01376162e733a36846570572923f3e214ad2302"
+    },
+    {
+      "stage": "n256",
+      "pairs": 55,
+      "analysis_sha256": "242928fe622ea4e5cbc8d588d9d14ecb9d7c8146eb45ba7cf78f50da09f3686c"
+    },
+    {
+      "stage": "b_reuse",
+      "pairs": 59,
+      "analysis_sha256": "7ffacfead8487f9aa7d314a3eea105285538019167b73cb90752ecef0f7909fa"
+    },
+    {
+      "stage": "low_lds",
+      "pairs": 59,
+      "analysis_sha256": "fa08c4a7093d18e22c1528489519301d601b9aea34b85308782ce5f6c82aa6eb"
+    },
+    {
+      "stage": "wave4",
+      "pairs": 27,
+      "analysis_sha256": "906ecfc229f76bd5705de4f6208cd26e52881f466daf21aaf2008d4f8f390d54"
+    },
+    {
+      "stage": "noslc",
+      "pairs": 23,
+      "analysis_sha256": "470d95509197656e24454bcedaa8778dcc40116fb49294709897f5a078199030"
+    },
+    {
+      "stage": "guard",
+      "pairs": 10,
+      "analysis_sha256": "f388e3edd968a6765251b078060c12d39e6ef66388a4f6dfc10703121ef16d75"
+    },
+    {
+      "stage": "accum",
+      "pairs": 23,
+      "analysis_sha256": "5dc619762dc409282138b0aef71e27ca7dce8e29de5fe7a1cb75b4b485c7783f"
+    }
+  ],
+  "completed_jobs": 3187,
+  "formal_full_comparisons": 2976,
+  "full_output_elements": 25322607360,
+  "failed_precision_elements": 0,
+  "retained_failed_profile_jobs": [
+    {
+      "key": "e0_h3wave4_id686_base_cu15_bd384a9a_5095deded4",
+      "rc": 134,
+      "kind": "profile",
+      "raw_log": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/jobs/e0_h3wave4_id686_base_cu15_bd384a9a_5095deded4/run.log",
+      "raw_log_sha256": "f5da88c99817e53f178b1e0c71a764e8cac43b87aef99067de9b4fba385c4a55",
+      "excluded_from_valid_measurements": true,
+      "cause": "Profiler-associated application abort; cause not established as MKFD"
+    }
+  ],
+  "unknown_audit_issues": [],
+  "pending_GPU_jobs": [],
+  "profile_packages": 9,
+  "valid_SQTT_captures": 80,
+  "profile14_partial": true,
+  "GUI_verified": false,
+  "new_heldout_seed_drawn": false,
+  "historical_projection_buckets": {
+    "prefill": {
+      "cases": 312,
+      "R_ge_0.99": 292,
+      "R_0.8_to_0.99": 20,
+      "R_0.5_to_0.8": 0,
+      "R_0.3_to_0.5": 0,
+      "R_0.2_to_0.3": 0,
+      "R_lt_0.2": 0
+    },
+    "decode": {
+      "cases": 881,
+      "R_ge_0.99": 604,
+      "R_0.8_to_0.99": 263,
+      "R_0.5_to_0.8": 14,
+      "R_0.3_to_0.5": 0,
+      "R_0.2_to_0.3": 0,
+      "R_lt_0.2": 0
+    }
+  },
+  "projection_fresh": false,
+  "no_best_of_build_mix": true,
+  "original_P6k_shapes_Excel_unchanged": true,
+  "no_push_or_merge": true,
+  "deadlines_unchanged": true,
+  "final_frozen_benchmark_SHA256": "dd8e20c51f611150ada550ac634d68ff102237ee96fbba5e7dc4a590d1fc37ad"
+}

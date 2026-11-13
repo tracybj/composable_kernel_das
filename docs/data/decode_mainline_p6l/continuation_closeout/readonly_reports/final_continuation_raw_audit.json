@@ -1,0 +1,611 @@
+{
+  "at": "2026-11-13T11:55:39.122186+00:00",
+  "CPU_only": true,
+  "GPU": false,
+  "session": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/session.json",
+  "session_sha256": "18119a710879aa5804ca90515e937e6e88f38128c8f87f8d8d968657dfb3082a",
+  "audit_scope": "Completed physical records only; pending starts remain pending. This script never chooses candidates or changes acceptance.",
+  "started": 3187,
+  "completed": 3187,
+  "retained_failed_profiles": [
+    {
+      "key": "e0_h3wave4_id686_base_cu15_bd384a9a_5095deded4",
+      "rc": 134,
+      "kind": "profile",
+      "raw_log": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/jobs/e0_h3wave4_id686_base_cu15_bd384a9a_5095deded4/run.log",
+      "raw_log_sha256": "f5da88c99817e53f178b1e0c71a764e8cac43b87aef99067de9b4fba385c4a55",
+      "excluded_from_valid_measurements": true,
+      "cause": "Profiler-associated application abort; cause not established as MKFD"
+    }
+  ],
+  "all_submissions_succeeded": false,
+  "valid_accuracy_and_perf_records_verified": true,
+  "pending_job_keys": [],
+  "issues": [],
+  "completed_records_raw_audit_ok": true,
+  "physical_gpu": 4,
+  "by_binary": {
+    "ee64d307fb6f506ff84326b3b2537351aee0c13ca1b1cce89604ebc302454d1d": {
+      "jobs": 405,
+      "kinds": {
+        "regression": 2,
+        "accuracy": 117,
+        "perf": 276,
+        "profile": 10
+      },
+      "epochs": [
+        0
+      ],
+      "manifest_shas": [
+        "22aad916c70977dcbeed4a45cb43f71d1c11d36841b034e655cec71bd7848609",
+        "32434b6ab6843a527a9dff7f21ea65bbae6cdf3dc18d02f3d5e75d22d1dcf79c"
+      ],
+      "failed_profile_jobs": 0
+    },
+    "d94d9808dede6ae6ba6e8cd332d9e6b91196795e08a96713b13278ccc6a59374": {
+      "jobs": 407,
+      "kinds": {
+        "regression": 2,
+        "accuracy": 119,
+        "perf": 276,
+        "profile": 10
+      },
+      "epochs": [
+        0
+      ],
+      "manifest_shas": [
+        "3b4f58be9926878b87fa268dfd4008333152645120f44b98e3830b6c1c1e5ec3",
+        "610501d666673bdb8f1cafee84156ba15c1ed5a13d8ae36adda7e3621763c589",
+        "78ceeb69060776ccc3d85361ab8c412c8437f040af8b719b505e45ebfa85c609"
+      ],
+      "failed_profile_jobs": 0
+    },
+    "0d078209b33c37cc6eaef1ff16d0132615227e6cad4733cc121bd8b16ca9d876": {
+      "jobs": 491,
+      "kinds": {
+        "regression": 2,
+        "accuracy": 146,
+        "perf": 330,
+        "profile": 13
+      },
+      "epochs": [
+        0
+      ],
+      "manifest_shas": [
+        "133a795692ae3126086516b62b038408cc954e742bd4c393eb1cda9c1b991d2c",
+        "d7590c348d0d82a2c276ea328b8fb7e6b8e82d406173f64252fbe24f7f872b39"
+      ],
+      "failed_profile_jobs": 0
+    },
+    "6108cce9a7e056d0bcad78f122e92d61884ad27a3f225075f879f3dc19f850db": {
+      "jobs": 524,
+      "kinds": {
+        "regression": 2,
+        "accuracy": 154,
+        "perf": 354,
+        "profile": 14
+      },
+      "epochs": [
+        0
+      ],
+      "manifest_shas": [
+        "1adf63e0beef03aaad1e45fc9b9a876a498285027c44210f2385ea0fa96e7a20",
+        "b43746aef9a760f2241bd87293a17a185f34fcb6db239bc1a219bd1aa8116cfa"
+      ],
+      "failed_profile_jobs": 0
+    },
+    "a8180db82315d1cb6b875ee8b9e1ef11933fa00e81fbf835636e848da3e947ab": {
+      "jobs": 530,
+      "kinds": {
+        "regression": 2,
+        "accuracy": 158,
+        "perf": 354,
+        "profile": 16
+      },
+      "epochs": [
+        0
+      ],
+      "manifest_shas": [
+        "bde384eaaed74ccd6defc770a044cff5f4b78d19c513d01e0c20b12651fa4566",
+        "e67562a4268c751c36e80ac2a4f4d08604e8925eee58154ecca0fe2acc324376"
+      ],
+      "failed_profile_jobs": 0
+    },
+    "5aba313b48c54cf64182a7855a91ad25498edd220c0198fe5d9d4b25da5e1151": {
+      "jobs": 261,
+      "kinds": {
+        "regression": 2,
+        "accuracy": 87,
+        "perf": 162,
+        "profile": 10
+      },
+      "epochs": [
+        0
+      ],
+      "manifest_shas": [
+        "1cf21acfbd96078215ac6b838b5cd51ed0d1fee5272f976c6662c74e643c3cc1",
+        "37db2598e7a36aaa79b87daf9ff8ec109b5224b0fc4d47a2be7d1cdca2f47711",
+        "76cf5cbfef341dc2abf452dea233f569f8a0fcadf7cd02612a422a0835705f91"
+      ],
+      "failed_profile_jobs": 1
+    },
+    "ed5631780a58479627d9b5c32324322eba72ecdaaa91ef5ee48993aad1c6d11b": {
+      "jobs": 227,
+      "kinds": {
+        "regression": 2,
+        "accuracy": 79,
+        "perf": 138,
+        "profile": 8
+      },
+      "epochs": [
+        0
+      ],
+      "manifest_shas": [
+        "85dadcaf5c4b756ee971d2641e49df3900bdd99a9acd22b5048997a388c8a9a8",
+        "b7aa65fbc2c8cc2ff19c8f7b83c51385ef9e9735db90a219888502dd2ee02134"
+      ],
+      "failed_profile_jobs": 0
+    },
+    "e5105ceaf0c45ca6df3b7bcab390a97f29a906c147fa050f44c7a27dcfba8472": {
+      "jobs": 115,
+      "kinds": {
+        "regression": 2,
+        "accuracy": 53,
+        "perf": 60
+      },
+      "epochs": [
+        0
+      ],
+      "manifest_shas": [
+        "40a8d8dfa246964061aed0273a2fae7627d234a23a50a615dcae655b9fd5d08d"
+      ],
+      "failed_profile_jobs": 0
+    },
+    "dd8e20c51f611150ada550ac634d68ff102237ee96fbba5e7dc4a590d1fc37ad": {
+      "jobs": 227,
+      "kinds": {
+        "regression": 2,
+        "accuracy": 79,
+        "perf": 138,
+        "profile": 8
+      },
+      "epochs": [
+        0
+      ],
+      "manifest_shas": [
+        "b0161b027aae8e54e0f1247cb048c40e810c3d571a76e6641963089c98056cdd",
+        "e774b76900f3959c1d65412d1193cc031b00b182b70a861f92752438a314ea23"
+      ],
+      "failed_profile_jobs": 0
+    }
+  },
+  "CK_full_comparisons": 2976,
+  "CK_full_elements": 25322607360,
+  "CK_failed_elements": 0,
+  "profile_deliveries": [
+    {
+      "receipt": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/profile_delivery_batch10.json",
+      "receipt_sha256": "107eb129a4181949c6d041f059f3dbb0d4885064aa515f37c2e187eefb251358",
+      "package": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/delivery/P6l_batch10_k64_SQTT.tar.gz",
+      "package_sha256": "733e699ff216ca4417a60da11356b9233ba1852a9026f8236b18091de00fe0bd",
+      "captures": 8,
+      "compressed_capture_members_SHA_verified": 24,
+      "GUI_verified": false
+    },
+    {
+      "receipt": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/profile_delivery_batch10b.json",
+      "receipt_sha256": "95fe463ac98f6a1bacc2d6857949de256d9feb6f14ae49a0d8066145a553a5ad",
+      "package": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/delivery/P6l_batch10b_k64_wide_depth_control_SQTT.tar.gz",
+      "package_sha256": "9457a8885f96af87532e796f845fe4e6dee5bd002a01a34f41840d1366668bb7",
+      "captures": 2,
+      "compressed_capture_members_SHA_verified": 6,
+      "GUI_verified": false
+    },
+    {
+      "receipt": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/profile_delivery_batch11.json",
+      "receipt_sha256": "014728c3445ece765570e6da5216d3bd66c22415a0b41313ea0ecb8229abda90",
+      "package": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/delivery/P6l_batch11_n256_SQTT.tar.gz",
+      "package_sha256": "dacf3c005fccff5b4c617cdc9649ea8c12f172711bb699e06eb1dc9a01a0831d",
+      "captures": 12,
+      "compressed_capture_members_SHA_verified": 36,
+      "GUI_verified": false
+    },
+    {
+      "receipt": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/profile_delivery_batch12.json",
+      "receipt_sha256": "e3c71eff1df596d69f72471c6eac6430c4eac67ea942fd2d6aeacaef59cb34cb",
+      "package": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/delivery/P6l_batch12_b_reuse_SQTT.tar.gz",
+      "package_sha256": "e49a20a859f54393ed86d68792aa56d75446062ab4bb26c632cea4678c71cd20",
+      "captures": 14,
+      "compressed_capture_members_SHA_verified": 42,
+      "GUI_verified": false
+    },
+    {
+      "receipt": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/profile_delivery_batch13.json",
+      "receipt_sha256": "3436c46a9360ef455c0a852958764489f63141f4b806ba63641dfc06a8192f46",
+      "package": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/delivery/P6l_batch13_low_lds_SQTT.tar.gz",
+      "package_sha256": "3be1c929cf353c347985a7b84ec9bff71b158b045e0f3a0cfb98df2a339ec0b7",
+      "captures": 14,
+      "compressed_capture_members_SHA_verified": 42,
+      "GUI_verified": false
+    },
+    {
+      "receipt": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/profile_delivery_batch14.json",
+      "receipt_sha256": "5528f43ab3879451390ddd8925427d6b56afba579fddee123bc3197bad4166e2",
+      "package": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/delivery/P6l_batch14_wave4_PARTIAL_SQTT.tar.gz",
+      "package_sha256": "a5f2d6532b2c223bf423b8267bea1ca7e98879d6dab2817bd1899ae6e637474d",
+      "captures": 4,
+      "compressed_capture_members_SHA_verified": 12,
+      "GUI_verified": false
+    },
+    {
+      "receipt": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/profile_delivery_batch15.json",
+      "receipt_sha256": "4ab66e4997b9a905af0c151aa9ce4d2e8445443b3b849896943b48eefca44417",
+      "package": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/delivery/P6l_batch15_noslc_SQTT.tar.gz",
+      "package_sha256": "6d71c58f480c3e8b97d039a83490d42bb68ec7798bcdd2abaf0ecfd5bce54156",
+      "captures": 8,
+      "compressed_capture_members_SHA_verified": 24,
+      "GUI_verified": false
+    },
+    {
+      "receipt": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/profile_delivery_batch16.json",
+      "receipt_sha256": "1a53e3dc8d9db4b48273358cdd5fe042305b3f9d7de7f9eff11596d029c997ec",
+      "package": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/delivery/P6l_batch16_accum_SQTT.tar.gz",
+      "package_sha256": "c8b9a82d829ad17bd3bf6f0604244d09194ae799d1296f3c5df9e8cfd481a5ea",
+      "captures": 8,
+      "compressed_capture_members_SHA_verified": 24,
+      "GUI_verified": false
+    },
+    {
+      "receipt": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/profile_delivery_batch9.json",
+      "receipt_sha256": "8e9706b32227850063d29d9ed7e53231309f24ca40679bd6a8e2c1fd44adc97b",
+      "package": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/delivery/P6l_batch9_phase_first_SQTT.tar.gz",
+      "package_sha256": "3314320967ae3e237f456f69f373c0a527ae577c25d7f1e274c39b638cf6f56c",
+      "captures": 10,
+      "compressed_capture_members_SHA_verified": 30,
+      "GUI_verified": false
+    }
+  ],
+  "phases": [
+    {
+      "name": "phase",
+      "path": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/phase_discovery_analysis.json",
+      "sha256": "450b9fc63208f9db5fc62bbc53067d3b6d1e14fd12521c4913eea2c3bc156732",
+      "completed_pairs": 46,
+      "groups": [
+        {
+          "plan_sha256": "22aad916c70977dcbeed4a45cb43f71d1c11d36841b034e655cec71bd7848609",
+          "binary_sha256": "ee64d307fb6f506ff84326b3b2537351aee0c13ca1b1cce89604ebc302454d1d",
+          "epoch": 0,
+          "pairs": 46,
+          "variants": {
+            "compact": {
+              "pairs": 19,
+              "improve_gt2": 8,
+              "point_improve_ge5": 4,
+              "regress_gt2": 4,
+              "within2": 7,
+              "high_cv": 2,
+              "geometric_candidate_over_base": 1.015420583929828,
+              "equal_case_time_sum_ratio": 1.0920415798762264
+            },
+            "wide": {
+              "pairs": 14,
+              "improve_gt2": 6,
+              "point_improve_ge5": 4,
+              "regress_gt2": 8,
+              "within2": 0,
+              "high_cv": 0,
+              "geometric_candidate_over_base": 1.0315050047461214,
+              "equal_case_time_sum_ratio": 1.1465056339514366
+            }
+          }
+        }
+      ],
+      "scope": "Each phase separately same-binary; three-round discovery never merged into a per-shape best-of-build table"
+    },
+    {
+      "name": "k64",
+      "path": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/k64_discovery_analysis.json",
+      "sha256": "8e56f86f9ebab6838c761b6de01376162e733a36846570572923f3e214ad2302",
+      "completed_pairs": 46,
+      "groups": [
+        {
+          "plan_sha256": "3b4f58be9926878b87fa268dfd4008333152645120f44b98e3830b6c1c1e5ec3",
+          "binary_sha256": "d94d9808dede6ae6ba6e8cd332d9e6b91196795e08a96713b13278ccc6a59374",
+          "epoch": 0,
+          "pairs": 46,
+          "variants": {
+            "compact": {
+              "pairs": 19,
+              "improve_gt2": 5,
+              "point_improve_ge5": 3,
+              "regress_gt2": 11,
+              "within2": 3,
+              "high_cv": 12,
+              "geometric_candidate_over_base": 1.0811959091783594,
+              "equal_case_time_sum_ratio": 1.108685933748509
+            },
+            "wide": {
+              "pairs": 14,
+              "improve_gt2": 1,
+              "point_improve_ge5": 0,
+              "regress_gt2": 10,
+              "within2": 3,
+              "high_cv": 3,
+              "geometric_candidate_over_base": 1.1365933900073297,
+              "equal_case_time_sum_ratio": 1.1862229929126131
+            }
+          }
+        }
+      ],
+      "scope": "Each phase separately same-binary; three-round discovery never merged into a per-shape best-of-build table"
+    },
+    {
+      "name": "n256",
+      "path": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/n256_discovery_analysis.json",
+      "sha256": "242928fe622ea4e5cbc8d588d9d14ecb9d7c8146eb45ba7cf78f50da09f3686c",
+      "completed_pairs": 55,
+      "groups": [
+        {
+          "plan_sha256": "133a795692ae3126086516b62b038408cc954e742bd4c393eb1cda9c1b991d2c",
+          "binary_sha256": "0d078209b33c37cc6eaef1ff16d0132615227e6cad4733cc121bd8b16ca9d876",
+          "epoch": 0,
+          "pairs": 55,
+          "variants": {
+            "d2": {
+              "pairs": 19,
+              "improve_gt2": 7,
+              "point_improve_ge5": 6,
+              "regress_gt2": 11,
+              "within2": 1,
+              "high_cv": 0,
+              "geometric_candidate_over_base": 1.0423231508776667,
+              "equal_case_time_sum_ratio": 1.0240810711683541
+            },
+            "d3": {
+              "pairs": 19,
+              "improve_gt2": 4,
+              "point_improve_ge5": 3,
+              "regress_gt2": 8,
+              "within2": 7,
+              "high_cv": 1,
+              "geometric_candidate_over_base": 1.0344288268081838,
+              "equal_case_time_sum_ratio": 1.082417468674757
+            }
+          }
+        }
+      ],
+      "scope": "Each phase separately same-binary; three-round discovery never merged into a per-shape best-of-build table"
+    },
+    {
+      "name": "b_reuse",
+      "path": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/b_reuse_discovery_analysis.json",
+      "sha256": "7ffacfead8487f9aa7d314a3eea105285538019167b73cb90752ecef0f7909fa",
+      "completed_pairs": 59,
+      "groups": [
+        {
+          "plan_sha256": "1adf63e0beef03aaad1e45fc9b9a876a498285027c44210f2385ea0fa96e7a20",
+          "binary_sha256": "6108cce9a7e056d0bcad78f122e92d61884ad27a3f225075f879f3dc19f850db",
+          "epoch": 0,
+          "pairs": 59,
+          "variants": {
+            "d2": {
+              "pairs": 19,
+              "improve_gt2": 9,
+              "point_improve_ge5": 6,
+              "regress_gt2": 7,
+              "within2": 3,
+              "high_cv": 1,
+              "geometric_candidate_over_base": 1.015139070012003,
+              "equal_case_time_sum_ratio": 1.01043525721732
+            },
+            "d3": {
+              "pairs": 19,
+              "improve_gt2": 6,
+              "point_improve_ge5": 2,
+              "regress_gt2": 10,
+              "within2": 3,
+              "high_cv": 3,
+              "geometric_candidate_over_base": 1.0340275064491684,
+              "equal_case_time_sum_ratio": 1.0821427726149924
+            }
+          }
+        }
+      ],
+      "scope": "Each phase separately same-binary; three-round discovery never merged into a per-shape best-of-build table"
+    },
+    {
+      "name": "low_lds",
+      "path": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/low_lds_discovery_analysis.json",
+      "sha256": "fa08c4a7093d18e22c1528489519301d601b9aea34b85308782ce5f6c82aa6eb",
+      "completed_pairs": 59,
+      "groups": [
+        {
+          "plan_sha256": "bde384eaaed74ccd6defc770a044cff5f4b78d19c513d01e0c20b12651fa4566",
+          "binary_sha256": "a8180db82315d1cb6b875ee8b9e1ef11933fa00e81fbf835636e848da3e947ab",
+          "epoch": 0,
+          "pairs": 59,
+          "variants": {
+            "auto": {
+              "pairs": 23,
+              "improve_gt2": 8,
+              "point_improve_ge5": 4,
+              "regress_gt2": 10,
+              "within2": 5,
+              "high_cv": 2,
+              "geometric_candidate_over_base": 1.0892948559726174,
+              "equal_case_time_sum_ratio": 1.0201854959126837
+            },
+            "pure": {
+              "pairs": 23,
+              "improve_gt2": 1,
+              "point_improve_ge5": 0,
+              "regress_gt2": 18,
+              "within2": 4,
+              "high_cv": 0,
+              "geometric_candidate_over_base": 1.173542350577743,
+              "equal_case_time_sum_ratio": 1.169158187475803
+            }
+          }
+        }
+      ],
+      "scope": "Each phase separately same-binary; three-round discovery never merged into a per-shape best-of-build table"
+    },
+    {
+      "name": "wave4",
+      "path": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/wave4_discovery_analysis.json",
+      "sha256": "906ecfc229f76bd5705de4f6208cd26e52881f466daf21aaf2008d4f8f390d54",
+      "completed_pairs": 27,
+      "groups": [
+        {
+          "plan_sha256": "76cf5cbfef341dc2abf452dea233f569f8a0fcadf7cd02612a422a0835705f91",
+          "binary_sha256": "5aba313b48c54cf64182a7855a91ad25498edd220c0198fe5d9d4b25da5e1151",
+          "epoch": 0,
+          "pairs": 27,
+          "variants": {
+            "scope_wave4": {
+              "pairs": 16,
+              "improve_gt2": 1,
+              "point_improve_ge5": 1,
+              "regress_gt2": 13,
+              "within2": 2,
+              "high_cv": 1,
+              "geometric_candidate_over_base": 1.1838170128461067,
+              "equal_case_time_sum_ratio": 1.219837364299767
+            }
+          }
+        }
+      ],
+      "scope": "Each phase separately same-binary; three-round discovery never merged into a per-shape best-of-build table"
+    },
+    {
+      "name": "noslc",
+      "path": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/noslc_discovery_analysis.json",
+      "sha256": "470d95509197656e24454bcedaa8778dcc40116fb49294709897f5a078199030",
+      "completed_pairs": 23,
+      "groups": [
+        {
+          "plan_sha256": "b7aa65fbc2c8cc2ff19c8f7b83c51385ef9e9735db90a219888502dd2ee02134",
+          "binary_sha256": "ed5631780a58479627d9b5c32324322eba72ecdaaa91ef5ee48993aad1c6d11b",
+          "epoch": 0,
+          "pairs": 23,
+          "variants": {
+            "noslc": {
+              "pairs": 16,
+              "improve_gt2": 2,
+              "point_improve_ge5": 1,
+              "regress_gt2": 12,
+              "within2": 2,
+              "high_cv": 2,
+              "geometric_candidate_over_base": 1.1246568396684766,
+              "equal_case_time_sum_ratio": 1.126562673399171
+            }
+          }
+        }
+      ],
+      "scope": "Each phase separately same-binary; three-round discovery never merged into a per-shape best-of-build table"
+    },
+    {
+      "name": "guard",
+      "path": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/guard_discovery_analysis.json",
+      "sha256": "f388e3edd968a6765251b078060c12d39e6ef66388a4f6dfc10703121ef16d75",
+      "completed_pairs": 10,
+      "groups": [
+        {
+          "plan_sha256": "40a8d8dfa246964061aed0273a2fae7627d234a23a50a615dcae655b9fd5d08d",
+          "binary_sha256": "e5105ceaf0c45ca6df3b7bcab390a97f29a906c147fa050f44c7a27dcfba8472",
+          "epoch": 0,
+          "pairs": 10,
+          "variants": {
+            "noslc": {
+              "pairs": 3,
+              "improve_gt2": 1,
+              "point_improve_ge5": 1,
+              "regress_gt2": 2,
+              "within2": 0,
+              "high_cv": 1,
+              "geometric_candidate_over_base": 1.1718381202839858,
+              "equal_case_time_sum_ratio": 1.1712858207078327
+            }
+          }
+        }
+      ],
+      "scope": "Each phase separately same-binary; three-round discovery never merged into a per-shape best-of-build table"
+    },
+    {
+      "name": "accum",
+      "path": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/accum_discovery_analysis.json",
+      "sha256": "5dc619762dc409282138b0aef71e27ca7dce8e29de5fe7a1cb75b4b485c7783f",
+      "completed_pairs": 23,
+      "groups": [
+        {
+          "plan_sha256": "e774b76900f3959c1d65412d1193cc031b00b182b70a861f92752438a314ea23",
+          "binary_sha256": "dd8e20c51f611150ada550ac634d68ff102237ee96fbba5e7dc4a590d1fc37ad",
+          "epoch": 0,
+          "pairs": 23,
+          "variants": {
+            "accum": {
+              "pairs": 16,
+              "improve_gt2": 2,
+              "point_improve_ge5": 1,
+              "regress_gt2": 11,
+              "within2": 3,
+              "high_cv": 2,
+              "geometric_candidate_over_base": 1.1237989104802242,
+              "equal_case_time_sum_ratio": 1.1257429896920876
+            }
+          }
+        }
+      ],
+      "scope": "Each phase separately same-binary; three-round discovery never merged into a per-shape best-of-build table"
+    }
+  ],
+  "controllers": {
+    "noslc_controller_status.json": {
+      "at": "2026-11-13T11:19:31.282191+00:00",
+      "pid": 997856,
+      "script_sha256": "c1c2a2a02b8b93ca374961a1f0b7a2b14d0d2482374b84fc1b0bc918ac3858bf",
+      "state": "complete",
+      "note": "Discovery and profiles complete; no adoption or Goal completion without whole-domain seven-block confirmation"
+    },
+    "guard_controller_status.json": {
+      "at": "2026-11-13T11:34:54.347181+00:00",
+      "pid": 1018740,
+      "script_sha256": "46c6abb266cb972b315d18a7bf96504adaaee1f3ed6199cf7791342c9f15e4b1",
+      "state": "complete",
+      "note": "Host repair validation complete; no kernel adoption, heldout draw or Goal completion. Existing shader capture evidence remains immutable."
+    },
+    "accum_controller_status.json": {
+      "at": "2026-11-13T11:54:32.583920+00:00",
+      "pid": 1029503,
+      "script_sha256": "7321802bd41570a6b6cecb6672764b4d1b6f557073193832c1a78aeac598ccf8",
+      "state": "complete",
+      "note": "Discovery and profiles complete; no adoption or Goal completion without whole-domain seven-block confirmation"
+    },
+    "compile/build17/controller.json": {
+      "state": "complete",
+      "pid": 1027182,
+      "at": "2026-11-13T11:41:00.962439+00:00",
+      "GPU": false
+    }
+  },
+  "initial_untracked10_SHA_verified": true,
+  "readfirstlane_preserved": true,
+  "old_session_unchanged": true,
+  "frozen_P6k_and_1193_shapes_unchanged": true,
+  "recovery": {
+    "seconds": 445.3792245388031,
+    "attempts": 1
+  },
+  "environment_epoch": {
+    "id": 0,
+    "at": "2026-11-13T02:12:35.885507+00:00",
+    "reason": "new explicitly authorized session; no old-epoch data pooled"
+  },
+  "final_confirmation": null,
+  "Goal_complete": false,
+  "goal_completion_requires_all_task_deliverables_and_actual_acceptance": true,
+  "new_experiment_cutoff_UTC": "2026-11-13T12:10:44.417577+00:00",
+  "hard_end_UTC": "2026-11-13T14:10:44.417577+00:00",
+  "performance_definition": "P6k frozen GPU0 Native BLAS remains unchanged; all continuation CK paired measurements are GPU4. Fresh domain, synthetic cases and mixed historical1193 projection must remain distinct."
+}

@@ -1,0 +1,384 @@
+{
+  "at": "2026-11-13T09:38:18.951171+00:00",
+  "CPU_only": true,
+  "GPU": false,
+  "session": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/session.json",
+  "session_sha256": "18119a710879aa5804ca90515e937e6e88f38128c8f87f8d8d968657dfb3082a",
+  "audit_scope": "Completed physical records only; pending starts remain pending. This script never chooses candidates or changes acceptance.",
+  "started": 2357,
+  "completed": 2357,
+  "pending_job_keys": [],
+  "issues": [],
+  "completed_records_raw_audit_ok": true,
+  "physical_gpu": 4,
+  "by_binary": {
+    "ee64d307fb6f506ff84326b3b2537351aee0c13ca1b1cce89604ebc302454d1d": {
+      "jobs": 405,
+      "kinds": {
+        "regression": 2,
+        "accuracy": 117,
+        "perf": 276,
+        "profile": 10
+      },
+      "epochs": [
+        0
+      ],
+      "manifest_shas": [
+        "22aad916c70977dcbeed4a45cb43f71d1c11d36841b034e655cec71bd7848609",
+        "32434b6ab6843a527a9dff7f21ea65bbae6cdf3dc18d02f3d5e75d22d1dcf79c"
+      ]
+    },
+    "d94d9808dede6ae6ba6e8cd332d9e6b91196795e08a96713b13278ccc6a59374": {
+      "jobs": 407,
+      "kinds": {
+        "regression": 2,
+        "accuracy": 119,
+        "perf": 276,
+        "profile": 10
+      },
+      "epochs": [
+        0
+      ],
+      "manifest_shas": [
+        "3b4f58be9926878b87fa268dfd4008333152645120f44b98e3830b6c1c1e5ec3",
+        "610501d666673bdb8f1cafee84156ba15c1ed5a13d8ae36adda7e3621763c589",
+        "78ceeb69060776ccc3d85361ab8c412c8437f040af8b719b505e45ebfa85c609"
+      ]
+    },
+    "0d078209b33c37cc6eaef1ff16d0132615227e6cad4733cc121bd8b16ca9d876": {
+      "jobs": 491,
+      "kinds": {
+        "regression": 2,
+        "accuracy": 146,
+        "perf": 330,
+        "profile": 13
+      },
+      "epochs": [
+        0
+      ],
+      "manifest_shas": [
+        "133a795692ae3126086516b62b038408cc954e742bd4c393eb1cda9c1b991d2c",
+        "d7590c348d0d82a2c276ea328b8fb7e6b8e82d406173f64252fbe24f7f872b39"
+      ]
+    },
+    "6108cce9a7e056d0bcad78f122e92d61884ad27a3f225075f879f3dc19f850db": {
+      "jobs": 524,
+      "kinds": {
+        "regression": 2,
+        "accuracy": 154,
+        "perf": 354,
+        "profile": 14
+      },
+      "epochs": [
+        0
+      ],
+      "manifest_shas": [
+        "1adf63e0beef03aaad1e45fc9b9a876a498285027c44210f2385ea0fa96e7a20",
+        "b43746aef9a760f2241bd87293a17a185f34fcb6db239bc1a219bd1aa8116cfa"
+      ]
+    },
+    "a8180db82315d1cb6b875ee8b9e1ef11933fa00e81fbf835636e848da3e947ab": {
+      "jobs": 530,
+      "kinds": {
+        "regression": 2,
+        "accuracy": 158,
+        "perf": 354,
+        "profile": 16
+      },
+      "epochs": [
+        0
+      ],
+      "manifest_shas": [
+        "bde384eaaed74ccd6defc770a044cff5f4b78d19c513d01e0c20b12651fa4566",
+        "e67562a4268c751c36e80ac2a4f4d08604e8925eee58154ecca0fe2acc324376"
+      ]
+    }
+  },
+  "CK_full_comparisons": 2082,
+  "CK_full_elements": 16257364224,
+  "CK_failed_elements": 0,
+  "profile_deliveries": [
+    {
+      "receipt": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/profile_delivery_batch10.json",
+      "receipt_sha256": "107eb129a4181949c6d041f059f3dbb0d4885064aa515f37c2e187eefb251358",
+      "package": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/delivery/P6l_batch10_k64_SQTT.tar.gz",
+      "package_sha256": "733e699ff216ca4417a60da11356b9233ba1852a9026f8236b18091de00fe0bd",
+      "captures": 8,
+      "compressed_capture_members_SHA_verified": 24,
+      "GUI_verified": false
+    },
+    {
+      "receipt": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/profile_delivery_batch10b.json",
+      "receipt_sha256": "95fe463ac98f6a1bacc2d6857949de256d9feb6f14ae49a0d8066145a553a5ad",
+      "package": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/delivery/P6l_batch10b_k64_wide_depth_control_SQTT.tar.gz",
+      "package_sha256": "9457a8885f96af87532e796f845fe4e6dee5bd002a01a34f41840d1366668bb7",
+      "captures": 2,
+      "compressed_capture_members_SHA_verified": 6,
+      "GUI_verified": false
+    },
+    {
+      "receipt": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/profile_delivery_batch11.json",
+      "receipt_sha256": "014728c3445ece765570e6da5216d3bd66c22415a0b41313ea0ecb8229abda90",
+      "package": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/delivery/P6l_batch11_n256_SQTT.tar.gz",
+      "package_sha256": "dacf3c005fccff5b4c617cdc9649ea8c12f172711bb699e06eb1dc9a01a0831d",
+      "captures": 12,
+      "compressed_capture_members_SHA_verified": 36,
+      "GUI_verified": false
+    },
+    {
+      "receipt": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/profile_delivery_batch12.json",
+      "receipt_sha256": "e3c71eff1df596d69f72471c6eac6430c4eac67ea942fd2d6aeacaef59cb34cb",
+      "package": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/delivery/P6l_batch12_b_reuse_SQTT.tar.gz",
+      "package_sha256": "e49a20a859f54393ed86d68792aa56d75446062ab4bb26c632cea4678c71cd20",
+      "captures": 14,
+      "compressed_capture_members_SHA_verified": 42,
+      "GUI_verified": false
+    },
+    {
+      "receipt": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/profile_delivery_batch13.json",
+      "receipt_sha256": "3436c46a9360ef455c0a852958764489f63141f4b806ba63641dfc06a8192f46",
+      "package": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/delivery/P6l_batch13_low_lds_SQTT.tar.gz",
+      "package_sha256": "3be1c929cf353c347985a7b84ec9bff71b158b045e0f3a0cfb98df2a339ec0b7",
+      "captures": 14,
+      "compressed_capture_members_SHA_verified": 42,
+      "GUI_verified": false
+    },
+    {
+      "receipt": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/profile_delivery_batch9.json",
+      "receipt_sha256": "8e9706b32227850063d29d9ed7e53231309f24ca40679bd6a8e2c1fd44adc97b",
+      "package": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/delivery/P6l_batch9_phase_first_SQTT.tar.gz",
+      "package_sha256": "3314320967ae3e237f456f69f373c0a527ae577c25d7f1e274c39b638cf6f56c",
+      "captures": 10,
+      "compressed_capture_members_SHA_verified": 30,
+      "GUI_verified": false
+    }
+  ],
+  "phases": [
+    {
+      "name": "phase",
+      "path": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/phase_discovery_analysis.json",
+      "sha256": "450b9fc63208f9db5fc62bbc53067d3b6d1e14fd12521c4913eea2c3bc156732",
+      "completed_pairs": 46,
+      "groups": [
+        {
+          "plan_sha256": "22aad916c70977dcbeed4a45cb43f71d1c11d36841b034e655cec71bd7848609",
+          "binary_sha256": "ee64d307fb6f506ff84326b3b2537351aee0c13ca1b1cce89604ebc302454d1d",
+          "epoch": 0,
+          "pairs": 46,
+          "variants": {
+            "compact": {
+              "pairs": 19,
+              "improve_gt2": 8,
+              "point_improve_ge5": 4,
+              "regress_gt2": 4,
+              "within2": 7,
+              "high_cv": 2,
+              "geometric_candidate_over_base": 1.015420583929828,
+              "equal_case_time_sum_ratio": 1.0920415798762264
+            },
+            "wide": {
+              "pairs": 14,
+              "improve_gt2": 6,
+              "point_improve_ge5": 4,
+              "regress_gt2": 8,
+              "within2": 0,
+              "high_cv": 0,
+              "geometric_candidate_over_base": 1.0315050047461214,
+              "equal_case_time_sum_ratio": 1.1465056339514366
+            }
+          }
+        }
+      ],
+      "scope": "Each phase separately same-binary; three-round discovery never merged into a per-shape best-of-build table"
+    },
+    {
+      "name": "k64",
+      "path": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/k64_discovery_analysis.json",
+      "sha256": "8e56f86f9ebab6838c761b6de01376162e733a36846570572923f3e214ad2302",
+      "completed_pairs": 46,
+      "groups": [
+        {
+          "plan_sha256": "3b4f58be9926878b87fa268dfd4008333152645120f44b98e3830b6c1c1e5ec3",
+          "binary_sha256": "d94d9808dede6ae6ba6e8cd332d9e6b91196795e08a96713b13278ccc6a59374",
+          "epoch": 0,
+          "pairs": 46,
+          "variants": {
+            "compact": {
+              "pairs": 19,
+              "improve_gt2": 5,
+              "point_improve_ge5": 3,
+              "regress_gt2": 11,
+              "within2": 3,
+              "high_cv": 12,
+              "geometric_candidate_over_base": 1.0811959091783594,
+              "equal_case_time_sum_ratio": 1.108685933748509
+            },
+            "wide": {
+              "pairs": 14,
+              "improve_gt2": 1,
+              "point_improve_ge5": 0,
+              "regress_gt2": 10,
+              "within2": 3,
+              "high_cv": 3,
+              "geometric_candidate_over_base": 1.1365933900073297,
+              "equal_case_time_sum_ratio": 1.1862229929126131
+            }
+          }
+        }
+      ],
+      "scope": "Each phase separately same-binary; three-round discovery never merged into a per-shape best-of-build table"
+    },
+    {
+      "name": "n256",
+      "path": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/n256_discovery_analysis.json",
+      "sha256": "242928fe622ea4e5cbc8d588d9d14ecb9d7c8146eb45ba7cf78f50da09f3686c",
+      "completed_pairs": 55,
+      "groups": [
+        {
+          "plan_sha256": "133a795692ae3126086516b62b038408cc954e742bd4c393eb1cda9c1b991d2c",
+          "binary_sha256": "0d078209b33c37cc6eaef1ff16d0132615227e6cad4733cc121bd8b16ca9d876",
+          "epoch": 0,
+          "pairs": 55,
+          "variants": {
+            "d2": {
+              "pairs": 19,
+              "improve_gt2": 7,
+              "point_improve_ge5": 6,
+              "regress_gt2": 11,
+              "within2": 1,
+              "high_cv": 0,
+              "geometric_candidate_over_base": 1.0423231508776667,
+              "equal_case_time_sum_ratio": 1.0240810711683541
+            },
+            "d3": {
+              "pairs": 19,
+              "improve_gt2": 4,
+              "point_improve_ge5": 3,
+              "regress_gt2": 8,
+              "within2": 7,
+              "high_cv": 1,
+              "geometric_candidate_over_base": 1.0344288268081838,
+              "equal_case_time_sum_ratio": 1.082417468674757
+            }
+          }
+        }
+      ],
+      "scope": "Each phase separately same-binary; three-round discovery never merged into a per-shape best-of-build table"
+    },
+    {
+      "name": "b_reuse",
+      "path": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/b_reuse_discovery_analysis.json",
+      "sha256": "7ffacfead8487f9aa7d314a3eea105285538019167b73cb90752ecef0f7909fa",
+      "completed_pairs": 59,
+      "groups": [
+        {
+          "plan_sha256": "1adf63e0beef03aaad1e45fc9b9a876a498285027c44210f2385ea0fa96e7a20",
+          "binary_sha256": "6108cce9a7e056d0bcad78f122e92d61884ad27a3f225075f879f3dc19f850db",
+          "epoch": 0,
+          "pairs": 59,
+          "variants": {
+            "d2": {
+              "pairs": 19,
+              "improve_gt2": 9,
+              "point_improve_ge5": 6,
+              "regress_gt2": 7,
+              "within2": 3,
+              "high_cv": 1,
+              "geometric_candidate_over_base": 1.015139070012003,
+              "equal_case_time_sum_ratio": 1.01043525721732
+            },
+            "d3": {
+              "pairs": 19,
+              "improve_gt2": 6,
+              "point_improve_ge5": 2,
+              "regress_gt2": 10,
+              "within2": 3,
+              "high_cv": 3,
+              "geometric_candidate_over_base": 1.0340275064491684,
+              "equal_case_time_sum_ratio": 1.0821427726149924
+            }
+          }
+        }
+      ],
+      "scope": "Each phase separately same-binary; three-round discovery never merged into a per-shape best-of-build table"
+    },
+    {
+      "name": "low_lds",
+      "path": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/low_lds_discovery_analysis.json",
+      "sha256": "fa08c4a7093d18e22c1528489519301d601b9aea34b85308782ce5f6c82aa6eb",
+      "completed_pairs": 59,
+      "groups": [
+        {
+          "plan_sha256": "bde384eaaed74ccd6defc770a044cff5f4b78d19c513d01e0c20b12651fa4566",
+          "binary_sha256": "a8180db82315d1cb6b875ee8b9e1ef11933fa00e81fbf835636e848da3e947ab",
+          "epoch": 0,
+          "pairs": 59,
+          "variants": {
+            "auto": {
+              "pairs": 23,
+              "improve_gt2": 8,
+              "point_improve_ge5": 4,
+              "regress_gt2": 10,
+              "within2": 5,
+              "high_cv": 2,
+              "geometric_candidate_over_base": 1.0892948559726174,
+              "equal_case_time_sum_ratio": 1.0201854959126837
+            },
+            "pure": {
+              "pairs": 23,
+              "improve_gt2": 1,
+              "point_improve_ge5": 0,
+              "regress_gt2": 18,
+              "within2": 4,
+              "high_cv": 0,
+              "geometric_candidate_over_base": 1.173542350577743,
+              "equal_case_time_sum_ratio": 1.169158187475803
+            }
+          }
+        }
+      ],
+      "scope": "Each phase separately same-binary; three-round discovery never merged into a per-shape best-of-build table"
+    }
+  ],
+  "controllers": {
+    "post_low_lds_build_status.json": {
+      "at": "2026-11-13T09:23:33.820812+00:00",
+      "pid": 885625,
+      "script_sha256": "b98e58ca3fb39a910bd5393f607cc30837ac3c274a286ceaf02b6e356361498b",
+      "state": "complete",
+      "note": "B reuse actual build audited; finite qualification/discovery and profile13 complete. No adoption without whole property-domain confirmation."
+    },
+    "low_lds_controller_status.json": {
+      "at": "2026-11-13T09:23:33.813334+00:00",
+      "pid": 891319,
+      "script_sha256": "2cdcf40cd938d37037a7a5e56e3f5f0a5b3472ec871ed578fe1e25c2db86496d",
+      "state": "complete",
+      "note": "Discovery and profiles complete; no adoption or Goal completion without whole-domain seven-block confirmation"
+    },
+    "compile/build13/controller.json": {
+      "at": "2026-11-13T08:50:28.670411+00:00",
+      "pid": 2,
+      "state": "complete",
+      "GPU": false
+    }
+  },
+  "initial_untracked10_SHA_verified": true,
+  "readfirstlane_preserved": true,
+  "old_session_unchanged": true,
+  "frozen_P6k_and_1193_shapes_unchanged": true,
+  "recovery": {
+    "seconds": 445.3792245388031,
+    "attempts": 1
+  },
+  "environment_epoch": {
+    "id": 0,
+    "at": "2026-11-13T02:12:35.885507+00:00",
+    "reason": "new explicitly authorized session; no old-epoch data pooled"
+  },
+  "final_confirmation": null,
+  "Goal_complete": false,
+  "goal_completion_requires_all_task_deliverables_and_actual_acceptance": true,
+  "new_experiment_cutoff_UTC": "2026-11-13T12:10:44.417577+00:00",
+  "hard_end_UTC": "2026-11-13T14:10:44.417577+00:00",
+  "performance_definition": "P6k frozen GPU0 Native BLAS remains unchanged; all continuation CK paired measurements are GPU4. Fresh domain, synthetic cases and mixed historical1193 projection must remain distinct."
+}

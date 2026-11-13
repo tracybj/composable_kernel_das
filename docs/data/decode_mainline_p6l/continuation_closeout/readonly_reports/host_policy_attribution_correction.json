@@ -1,0 +1,15 @@
+{
+  "at": "2026-11-13T11:57:58.421473+00:00",
+  "original_comparison": "Separate CPU runs with baseline vs experimental environment differed by about1us; this includes environment parsing and priority attempt.",
+  "controlled_comparison": "Same process, same candidate environment, exact old/new extracted adapter bodies,11 alternating CPU blocks per arm.",
+  "observed_reduction_ns": [
+    42.86999999999989,
+    156.32000000000016
+  ],
+  "CPU_only": true,
+  "GPU": false,
+  "correction": "The guarded impossible priority lookup accounts for only about0.04..0.16us in this CPU fixture, not the full1us cross-environment difference. Do not attribute the whole GPU fallback delta to this repair.",
+  "formal_GPU_gain_proven": false,
+  "raw_before_comparison": "readonly_reports/policy_cpu_diagnosis/results.json",
+  "raw_controlled_comparison": "drafts/policy_fallback_guard/timing_analysis.json"
+}

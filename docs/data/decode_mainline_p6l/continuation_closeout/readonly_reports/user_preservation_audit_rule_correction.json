@@ -1,0 +1,8 @@
+{
+  "at": "2026-11-13T11:47:46.081889+00:00",
+  "initial_audit": "Failed strict before/after text comparison on query CandidateExpected array-size line.",
+  "cause": "Initial user overlay adds two bvector entries:61->63. Eight owned research instances legitimately change base61->69 and overlay63->71. Selector identity-array count has the same arithmetic update. No user candidate entry lost.",
+  "correction": "For exactly these two known array-size chunks, prove the user +2 delta and owned +8 delta; require every other changed chunk byte-exact, plus all10 untracked SHA and readfirstlane MD5.",
+  "GPU": false,
+  "raw_initial_script_retained": true
+}
