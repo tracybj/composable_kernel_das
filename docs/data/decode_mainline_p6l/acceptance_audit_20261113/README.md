@@ -66,3 +66,5 @@
 完整来源见requirements.json/csv及各audit JSON。scope_reconstruction明确为当前只读重建，不能倒称为新实验前冻结；原冻结规则和manifest仍是预登记依据。
 
 继续研究需要新的有效GPU时间授权；本次复核不改变12:10:44提交截止和14:10:44硬截止。Goal保持未完成。
+
+补充源码复核：`resume_source_audit.json` 记录跨 freeze 续跑的具体风险。freeze 会把当前 manifest SHA 写入新 parent，随后资格／发现阶段只跳过 manifest 完全相同的旧记录；因此原控制器不能当作已验证的通用一键续跑入口。这里只读计算元数据，没有调用 freeze、没有更改测量逻辑，也没有影响现有结果。修复和真实续跑验收须在新的有效窗口内执行。

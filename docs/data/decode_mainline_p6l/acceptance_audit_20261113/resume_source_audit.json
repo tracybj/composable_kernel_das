@@ -1,0 +1,57 @@
+{
+  "at": "2026-11-13T12:26:52.876288+00:00",
+  "CPU_only": true,
+  "GPU": false,
+  "no_compilation": true,
+  "no_wrapper_execution": true,
+  "actual_source_sha256": "69dcdd73b9508e3bc6a6c5339476898340e3a711e9021018f8b16d937ac06f38",
+  "same_source_as_executed_jobs": true,
+  "qualification_manifest_sha256": "e774b76900f3959c1d65412d1193cc031b00b182b70a861f92752438a314ea23",
+  "active_profile_manifest_sha256": "b0161b027aae8e54e0f1247cb048c40e810c3d571a76e6641963089c98056cdd",
+  "original_parent_manifest": "40a8d8dfa246964061aed0273a2fae7627d234a23a50a615dcae655b9fd5d08d",
+  "parent_value_if_freeze_reentered": "b0161b027aae8e54e0f1247cb048c40e810c3d571a76e6641963089c98056cdd",
+  "minimal_parent_only_change_sha256": "5feff7577801996911452fd5c355b019126a841b946ccaa4fdf1af7e2a7d507a",
+  "completed_qualification_records_matching_minimal_new_manifest": 0,
+  "completed_pair_records_matching_minimal_new_manifest": 0,
+  "source_lines_rewriting_parent": [
+    {
+      "line": 64,
+      "text": "    old=r.read(ROOT/'frozen_plan.json');m=copy.deepcopy(old);m.pop('plan_sha256',None)"
+    },
+    {
+      "line": 65,
+      "text": "    m.update(phase='h3_accum_discovery',candidate_plan_sha256=proposed['sha256'],parent_manifest_sha256=old['plan_sha256'],benchmark_sha256=plan.sha(plan.BENCH),selector_sha256=plan.sha(plan.SELECTOR))"
+    }
+  ],
+  "source_lines_filtering_completed_records": [
+    {
+      "line": 84,
+      "text": "        if any(x['logical_key']==key and x['plan_sha256']==site.manifest['plan_sha256'] and x['epoch']==site.epoch() for x in done):continue"
+    },
+    {
+      "line": 90,
+      "text": "        if any(x['logical_key']==key and x['plan_sha256']==site.manifest['plan_sha256'] and x['epoch']==site.epoch() for x in done):continue"
+    },
+    {
+      "line": 93,
+      "text": "    assert len([x for x in done if x['plan_sha256']==site.manifest['plan_sha256'] and x['epoch']==site.epoch()])==35"
+    },
+    {
+      "line": 98,
+      "text": "    assert len([x for x in qualified if x['plan_sha256']==site.manifest['plan_sha256'] and x['epoch']==site.epoch() and x['ok']])==35"
+    },
+    {
+      "line": 101,
+      "text": "        if any(x['pair']==pair['key'] and x['plan_sha256']==site.manifest['plan_sha256'] and x['epoch']==site.epoch() for x in completed):continue"
+    },
+    {
+      "line": 124,
+      "text": "    assert len([x for x in completed if x['plan_sha256']==site.manifest['plan_sha256'] and x['epoch']==site.epoch()])==23"
+    }
+  ],
+  "source_level_finding": "Reentering freeze derives a new parent-dependent manifest. Qualification/discovery skip only records with exactly the same manifest. The existing controller therefore cannot be claimed as a fully validated universal one-click resume across freeze/profile phases.",
+  "not_an_exact_full_freeze_output_simulation": true,
+  "existing_measurements_affected": false,
+  "measurement_logic_changed": false,
+  "new_GPU_authorization_required_for_execution_validation": true
+}
