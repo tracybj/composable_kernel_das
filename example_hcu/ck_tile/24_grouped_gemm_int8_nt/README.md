@@ -65,10 +65,10 @@ python3 "$E/build_and_manifest.py" --build "$B" --jobs 2
 
 export HIP_VISIBLE_DEVICES=7 CUDA_VISIBLE_DEVICES=7 DTK_VISIBLE_DEVICES=7
 export CK_INT8_CACHED_BUILD="$B"
-export CK_INT8_TEST_VERSION=v158
+export CK_INT8_TEST_VERSION=v176
 export CK_INT8_CACHED_BENCH_LIB="$B/libck_tile_int8_nt_cached_benchmark.so"
 export LD_LIBRARY_PATH="$B:/opt/dtk/lib:/opt/dtk/hip/lib:/opt/dtk/llvm/lib:${LD_LIBRARY_PATH:-}"
-GATES="$E/results/validation"
+GATES="$E/results/max_all_${CK_INT8_TEST_VERSION}_gates"
 mkdir -p "$GATES"
 export CK_INT8_K_LIFETIME_OUTPUT="$GATES/k_parallel_lifetime.json"
 ulimit -c 0
