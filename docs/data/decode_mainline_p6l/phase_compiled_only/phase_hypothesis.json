@@ -1,0 +1,28 @@
+{
+  "at": "2026-11-12T17:05:11.462470+00:00",
+  "registered_CPU_hypothesis_sha256": "5233f5e39da34396db225c5d956101eb15e92a09f6b375eb84b7ab4409f601d6",
+  "probe_resources_sha256": "9cbbc5dc073c75f2e83a602c0ea8722c9cc63942753cf546b9a3a2c6990e6479",
+  "actual_CFG_audit_sha256": "e86ef40f4c14edfc7a5753f6fd2fb4d67d43897971e10a8af4e15c4f40fff27e",
+  "selected_schedule": "All waves compute current MMAC before unchanged ready/read/prefetch",
+  "reason": "Fixed CPU rule chose lower summed VGPR count:493->467. WideM32 83->73,WideM64 128->112; compact63/86/133 unchanged. Resources/VM/LG/producer-read-barrier order and K accumulation unchanged. GPU benefit remains untested.",
+  "previous_discovery_sha256": "0bf56cea4f10c06597e4e6a46b3ba62dc43de6c4dd1406cf196a7c02c8d8f646",
+  "previous_profiles_sha256": "bcd5f5c297ef1149d7d37d8d49afa7feac0474c70be0df0e497d21ddd1eb7a51",
+  "benchmark_before_sha256": "eb02cd5d383669c7f12916f2dc11910c27f827b8837e59bfd8974426e4761fd6",
+  "new_instances": [
+    6026,
+    6027
+  ],
+  "variants": {
+    "21": "compact full",
+    "22": "wide M>=17",
+    "23": "M>=17 or K>=6144; compact lowM/wide otherwise",
+    "24": "compact M>=17 or K>=6144"
+  },
+  "main_ownership_architectures": 3,
+  "short_ownership_architectures": 2,
+  "not_fourth_architecture": true,
+  "original_deadlines_unchanged": true,
+  "original50_stable_and30_attributable_targets_unchanged": true,
+  "new_GPU_plan_required_before_any_GPU": true,
+  "adopted": false
+}

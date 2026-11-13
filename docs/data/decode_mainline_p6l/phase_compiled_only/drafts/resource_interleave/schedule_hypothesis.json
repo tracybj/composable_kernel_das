@@ -1,0 +1,55 @@
+{
+  "at": "2026-11-12T16:58:55.755391+00:00",
+  "status": "One bounded H3 instruction-order factor; register CPU probe before provider compilation/GPU",
+  "evidence": {
+    "full46": {
+      "compact": {
+        "pairs": 19,
+        "improve_gt2": 8,
+        "point_improve_ge5": 3,
+        "regress_gt2": 6,
+        "within2": 5,
+        "high_cv": 1,
+        "geometric_candidate_over_base": 1.0188959629529213,
+        "equal_case_time_sum_ratio": 1.095293172810565
+      },
+      "wide": {
+        "pairs": 14,
+        "improve_gt2": 6,
+        "point_improve_ge5": 4,
+        "regress_gt2": 8,
+        "within2": 0,
+        "high_cv": 0,
+        "geometric_candidate_over_base": 1.0326181515419752,
+        "equal_case_time_sum_ratio": 1.1474647749132931
+      }
+    },
+    "profile_analysis_sha256": "bcd5f5c297ef1149d7d37d8d49afa7feac0474c70be0df0e497d21ddd1eb7a51",
+    "finding": "Compact restores mean resident waves near the current CK control on621/312, yet does not consistently improve time. Remaining performance cannot be assigned only to resident-wave count. Current source issues future operand reads before current MMAC; all-current-MMAC-first could reduce simultaneous live operand sets. Prior V7 interleave is an alternative ordering clue, not proof of benefit here."
+  },
+  "constant": "Same complete-M ownership,K32/N128,resource buffers,VM/LG thresholds,producer/read/barrier order,per-wave K accumulation,output mapping,ABI and current paths",
+  "CPU_probe": {
+    "resource_configurations": [
+      "compact A2/B3,w4 paddedM16/32/64",
+      "wide D4,w8 paddedM32/64"
+    ],
+    "schedules": [
+      "first half compute before ready; remaining half after prefetch",
+      "all waves compute before ready"
+    ],
+    "kernels_per_target": 10,
+    "targets": [
+      "gfx936",
+      "gfx938"
+    ],
+    "no_GPU": true
+  },
+  "choice_rule": "Require zero spills/scratch. Prefer uniform compute-first if its summed gfx936 VGPR count is lower than the half-wave interleave across the same5 geometries; otherwise use half-wave interleave. This is a compiler feasibility selection, not a GPU performance selection. Adopt at most one new schedule for finite GPU testing.",
+  "CPU_model_sha256": "500d3d1263e51e0592da149a3d8ae305a63c0c0b48289ff9b42920a2ae2bbb1e",
+  "actual_GPU_plan": "After selected actual provider/source build, freeze complete representative/control plan, full precision and formal3round A/B. Final adopted domain must still pass full original domain+24 new unseen and7 blocks,50stable/30attributable. No unmeasured short resampling.",
+  "main_ownership_architectures": 3,
+  "new_ownership_architecture": false,
+  "original_deadline_unchanged": true,
+  "provider_integrated": false,
+  "GPU": false
+}

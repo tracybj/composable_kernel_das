@@ -1,0 +1,18 @@
+{
+  "at": "2026-11-12T17:05:13.814875+00:00",
+  "command": [
+    "cmake",
+    "--build",
+    "/workspace/composable_kernel/build",
+    "--target",
+    "tile_example_grouped_gemm_device_args_benchmark",
+    "tile_example_grouped_gemm_device_args_query_test",
+    "tile_example_grouped_gemm_device_args_smoke",
+    "tile_example_grouped_gemm_selector_test",
+    "tile_example_grouped_gemm_decode_depth8_selector_test",
+    "tile_example_grouped_gemm_decode_mainline_selector_test",
+    "-j4"
+  ],
+  "GPU": false,
+  "stage": 1
+}

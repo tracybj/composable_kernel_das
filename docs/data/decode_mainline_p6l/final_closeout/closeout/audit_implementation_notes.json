@@ -1,0 +1,9 @@
+{
+  "at": "2026-11-13T01:43:41.369792+00:00",
+  "initial_error": "Audit incorrectly expected a post-job hy-smi record; runtime and task require fresh pre-job hy-smi and pre/post dmesg.",
+  "runtime_inspected": "runtime.py:194 gate and238-285 execute; no post-job hy-smi is collected",
+  "correction": "Audit every required pre-job health record and both required kernel-log checks. Measurement data/runtime/acceptance remain unchanged.",
+  "GPU_executed": false,
+  "compiler_invoked": false,
+  "initial_script_sha256": "9160fed539c6ef01b58de40041a58a92d1b8e619af6539e2e3c46f9bcfb032b9"
+}

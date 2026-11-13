@@ -1,0 +1,14 @@
+{
+  "at": "2026-11-12T10:20:24.839228+00:00",
+  "epoch": 0,
+  "reason": "kernel_log_permission_context_repaired",
+  "record": {
+    "at": "2026-11-12T10:20:24.839228+00:00",
+    "reason": "KERNEL_LOG_UNREADABLE",
+    "key": "e0_h3_regression_tile_example_grouped_gemm_device_args_query_test_21f677af9d_pre",
+    "error": "dmesg: read kernel buffer failed: Operation not permitted\n"
+  },
+  "operator_action": "Archive stop caused solely by sandbox dmesg permission before first GPU command; resume only through unchanged independent-process two-healthy-observation and fixed5000probe recovery. No gate disabled, no driver action.",
+  "permission_read_check_rc": 0,
+  "no_h3_gpu_started": true
+}

@@ -1,0 +1,14 @@
+{
+  "script_sha256": "1c447e08d3e9e1780d5fad43fecf97a009124c43f1d3bb3c65e2d84065d37221",
+  "cpu_only": true,
+  "GPU": false,
+  "source_integrated": false,
+  "schedules": 2046,
+  "per_wave_stage_checks": 6297588,
+  "ok": true,
+  "unchanged": "Complete-M ownership,resource footprint,producer/read/barrier order,VM/LG thresholds,three operand banks,per-wave K/FMA order and output mapping",
+  "proposed_change": "First half of waves computes current MMAC before ready; other half keeps current MMAC after future read/prefetch. One outer divergent branch, not a per-stage branch.",
+  "evidence_limits": "Only private-operand readiness/alias/order proof. Actual instruction ordering/registers/full precision,resources and formal paired timing remain untested.",
+  "prerequisites": "Finish fixed46 resource pairs and batch8. Proceed only if remaining scheduling/overlap mechanism is supported; no new ownership architecture and no blind parameter sweep.",
+  "original_deadline_unchanged": true
+}

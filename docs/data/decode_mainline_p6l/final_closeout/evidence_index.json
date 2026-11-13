@@ -1,0 +1,216 @@
+{
+  "at": "2026-11-13T01:57:28.380839+00:00",
+  "session": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z",
+  "original_T0": "2026-11-12T02:53:23.022676+00:00",
+  "new_experiment_cutoff_epoch": 1794524003.0226762,
+  "hard_end_epoch": 1794538403.0226762,
+  "immutable_inputs_verified": true,
+  "prior_archive_files_verified": 282,
+  "commits": [
+    {
+      "commit": "5f4da600822a38fc2f8db8f0c13d230c9005d408",
+      "title": "P6l提前计算MMAC原型：仅编译与静态验证，未做GPU验证（实验用，不合入）",
+      "only_local": true,
+      "push": false
+    },
+    {
+      "commit": "bb877b17268b33c41910e3ea86b3e5af98ca904d",
+      "title": "P6l资源因素完整46对与SQTT证据归档（实验用，不合入）",
+      "only_local": true,
+      "push": false
+    },
+    {
+      "commit": "b78c07bf2dda251121987d7c74b1b1efbda338de",
+      "title": "P6l decode有界LDS与八wave资源因素（实验用，不合入）",
+      "only_local": true,
+      "push": false
+    },
+    {
+      "commit": "e5a26cff4e13aab97b11f580396e57a1dd4f792a",
+      "title": "P6l主线166条拒绝试验与固定SQTT证据归档（实验用，不合入）",
+      "only_local": true,
+      "push": false
+    },
+    {
+      "commit": "b8b9a5c8cc36b5c6095dac7951cdc0ec877adfff",
+      "title": "P6l深度与host因素完整发现证据（实验用，不合入）",
+      "only_local": true,
+      "push": false
+    },
+    {
+      "commit": "5c9d3f7538daef9560c1c86edc25b6df3cf3d7fc",
+      "title": "P6l K32五级预取与显式decode快速策略解析（实验用，不合入）",
+      "only_local": true,
+      "push": false
+    },
+    {
+      "commit": "c9d771d6bd10d32ea2da6fe2d528952d4bbc75f8",
+      "title": "P6l H3完整发现与SQTT证据归档（实验用，不合入）",
+      "only_local": true,
+      "push": false
+    },
+    {
+      "commit": "5e86b6e34a2ddfde2b85cabbea1d1706ec8ca12c",
+      "title": "feat: add cooperative decode operand pipeline and direct routes (实验用，不合入)",
+      "only_local": true,
+      "push": false
+    },
+    {
+      "commit": "7339da454f174854f5df034a84a45794edce4af0",
+      "title": "docs: archive H2 layout factors and negative results (实验用，不合入)",
+      "only_local": true,
+      "push": false
+    },
+    {
+      "commit": "7d42af80b54f91daa9cd8436b89dd38d13315e40",
+      "title": "实验用，不合入：归档H2全部39对及局部收益和回退",
+      "only_local": true,
+      "push": false
+    },
+    {
+      "commit": "a383912a73889add0f8bd93096cb95403a9f06a7",
+      "title": "实验用，不合入：共享A布局与B提前预取的受控对照",
+      "only_local": true,
+      "push": false
+    },
+    {
+      "commit": "44e44316f8cdefd3f813d951ed361569671562d3",
+      "title": "实验用，不合入：补齐被忽略规则过滤的构建元数据",
+      "only_local": true,
+      "push": false
+    },
+    {
+      "commit": "3cb8b915f7d4bc7dd630d460578d31ea8888c81e",
+      "title": "实验用，不合入：归档H1全部负结果及配对SQTT证据",
+      "only_local": true,
+      "push": false
+    },
+    {
+      "commit": "b8f4e7f027a12cb9572fe9c4ce25df68845fefc6",
+      "title": "实验用，不合入：独立decode H1及共享A H2原型",
+      "only_local": true,
+      "push": false
+    },
+    {
+      "commit": "980affa837018b2844a2ad817354c9cbef94d330",
+      "title": "实验用，不合入: 核对诊断CSV行尾规范化后的归档SHA",
+      "only_local": true,
+      "push": false
+    },
+    {
+      "commit": "3abc92e30c72fa23e5b9c16c351c6599aba21f4a",
+      "title": "实验用，不合入: P6l同卡decode诊断与首批SQTT证据",
+      "only_local": true,
+      "push": false
+    }
+  ],
+  "perf_packages": [
+    {
+      "number": 1,
+      "at": "2026-11-12T03:37:49.974023+00:00",
+      "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/delivery/P6l_batch1_CK_Native_SQTT.tar.gz",
+      "bytes": 173174075,
+      "sha256": "2f9967942eac2b663397fb76080e4a82e457f9af3f7a26187b4fc28c66ad6788",
+      "captures": 8,
+      "gui_verified": false,
+      "local_integrity_checked": true,
+      "tar_members": 38,
+      "README_verified": true
+    },
+    {
+      "number": 2,
+      "at": "2026-11-12T07:00:18.353528+00:00",
+      "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/delivery/P6l_batch2_H1_current_candidate_SQTT.tar.gz",
+      "bytes": 2756602,
+      "sha256": "7b82410cd09a7bb89d21f8d23d697f571906f1ee1df29bc060cffc651f30e297",
+      "captures": 8,
+      "gui_verified": false,
+      "local_integrity_checked": true,
+      "tar_members": 42,
+      "README_verified": true
+    },
+    {
+      "number": 3,
+      "at": "2026-11-12T08:18:06.376963+00:00",
+      "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/delivery/P6l_batch3_H2_current_candidate_SQTT.tar.gz",
+      "bytes": 6332899,
+      "sha256": "4d867d598f11b4d69cc1671151d920cfb7b2509d1a389973941b0375129ea4cd",
+      "captures": 12,
+      "gui_verified": false,
+      "local_integrity_checked": true,
+      "tar_members": 59,
+      "README_verified": true
+    },
+    {
+      "number": 4,
+      "at": "2026-11-12T09:00:08.695269+00:00",
+      "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/delivery/P6l_batch4_tuning_current_candidate_SQTT.tar.gz",
+      "bytes": 3099686,
+      "sha256": "c96c73b86a2b2bc4a0fc41e231737d6f73a00883dcb65516a600809bcdf03a8d",
+      "captures": 10,
+      "disable_identity_captures": 3,
+      "gui_verified": false,
+      "local_integrity_checked": true,
+      "tar_members": 65,
+      "README_verified": true
+    },
+    {
+      "number": 5,
+      "at": "2026-11-12T11:03:12.954220+00:00",
+      "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/delivery/P6l_batch5_h3_current_candidate_SQTT.tar.gz",
+      "bytes": 3922229,
+      "sha256": "93c01cd3bd357007cc5365fccd2c87facee2c345fd2a74c7a4f545b4765c0048",
+      "captures": 18,
+      "same_gpu_route_pairs": 4,
+      "gui_verified": false,
+      "local_integrity_checked": true,
+      "tar_members": 88,
+      "README_verified": true
+    },
+    {
+      "number": 6,
+      "at": "2026-11-12T13:04:01.168128+00:00",
+      "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/delivery/P6l_batch6_h3_factors_current_candidate_SQTT.tar.gz",
+      "bytes": 10188506,
+      "sha256": "429cf850856d86aab0263a3041b102b1d2c9357be6d57b428bf8903f01a2e247",
+      "captures": 28,
+      "same_gpu_route_pairs": 4,
+      "gui_verified": false,
+      "local_integrity_checked": true,
+      "tar_members": 127,
+      "README_verified": true
+    },
+    {
+      "number": 7,
+      "at": "2026-11-12T16:26:34.887225+00:00",
+      "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/delivery/P6l_batch7_h3_regression_SQTT.tar.gz",
+      "bytes": 3973344,
+      "sha256": "629f381331866b13608513a1351c9b9d02c20a81a60f624e65cabbd3fb768981",
+      "captures": 8,
+      "gui_verified": false,
+      "local_integrity_checked": true,
+      "tar_members": 43,
+      "README_verified": true
+    },
+    {
+      "number": 8,
+      "at": "2026-11-12T16:54:56.306538+00:00",
+      "path": "/workspace/v7_coverage/p6l_decode_mainline/run_20261112T025323Z/delivery/P6l_batch8_resource_factors_SQTT.tar.gz",
+      "bytes": 4696642,
+      "sha256": "3b79cf78bb28d5a14710f4beed7083d49ad3526b890ff39dd7e9a930022afe89",
+      "captures": 10,
+      "gui_verified": false,
+      "local_integrity_checked": true,
+      "tar_members": 51,
+      "README_verified": true
+    }
+  ],
+  "phase_archive": "/workspace/composable_kernel/docs/data/decode_mainline_p6l/phase_compiled_only",
+  "phase_GPU_validated": false,
+  "Goal_achieved": false,
+  "accepted_stable50": 0,
+  "accepted_cross30": 0,
+  "adopted_families": [],
+  "raw_logs_all_verified": "closeout/audit.json",
+  "raw_log_sha_index": "closeout/raw_log_sha256.json"
+}

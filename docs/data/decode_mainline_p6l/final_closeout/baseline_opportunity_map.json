@@ -1,0 +1,108 @@
+{
+  "at": "2026-11-12T09:57:33.882552+00:00",
+  "source_sha256": "00c80c665735d59165947e5c9458e4e3cb0327df1a47dee2926fe725af4e9d3d",
+  "main": {
+    "total": 346,
+    "weak": 171,
+    "historical_cross_if_exact5pct": 87,
+    "historical_cross_if_exact10pct": 133,
+    "max_required_improvement_pct": 24.998396221690243
+  },
+  "by_M": {
+    "1": {
+      "total": 50,
+      "weak": 22,
+      "historical_cross_if_exact5pct": 9,
+      "historical_cross_if_exact10pct": 17,
+      "max_required_improvement_pct": 17.622020242391113
+    },
+    "2": {
+      "total": 50,
+      "weak": 23,
+      "historical_cross_if_exact5pct": 11,
+      "historical_cross_if_exact10pct": 18,
+      "max_required_improvement_pct": 18.551710069120887
+    },
+    "4": {
+      "total": 50,
+      "weak": 24,
+      "historical_cross_if_exact5pct": 13,
+      "historical_cross_if_exact10pct": 20,
+      "max_required_improvement_pct": 17.370337855644834
+    },
+    "8": {
+      "total": 50,
+      "weak": 24,
+      "historical_cross_if_exact5pct": 13,
+      "historical_cross_if_exact10pct": 20,
+      "max_required_improvement_pct": 17.14328302954071
+    },
+    "16": {
+      "total": 50,
+      "weak": 25,
+      "historical_cross_if_exact5pct": 14,
+      "historical_cross_if_exact10pct": 20,
+      "max_required_improvement_pct": 18.08732262828733
+    },
+    "32": {
+      "total": 50,
+      "weak": 26,
+      "historical_cross_if_exact5pct": 16,
+      "historical_cross_if_exact10pct": 19,
+      "max_required_improvement_pct": 20.257675080999338
+    },
+    "64": {
+      "total": 46,
+      "weak": 27,
+      "historical_cross_if_exact5pct": 11,
+      "historical_cross_if_exact10pct": 19,
+      "max_required_improvement_pct": 24.998396221690243
+    }
+  },
+  "by_K": {
+    "2048": {
+      "total": 84,
+      "weak": 61,
+      "historical_cross_if_exact5pct": 21,
+      "historical_cross_if_exact10pct": 39,
+      "max_required_improvement_pct": 24.998396221690243
+    },
+    "3072": {
+      "total": 54,
+      "weak": 14,
+      "historical_cross_if_exact5pct": 6,
+      "historical_cross_if_exact10pct": 7,
+      "max_required_improvement_pct": 14.925275812777594
+    },
+    "4096": {
+      "total": 112,
+      "weak": 63,
+      "historical_cross_if_exact5pct": 44,
+      "historical_cross_if_exact10pct": 54,
+      "max_required_improvement_pct": 15.528472289696415
+    },
+    "6144": {
+      "total": 28,
+      "weak": 13,
+      "historical_cross_if_exact5pct": 7,
+      "historical_cross_if_exact10pct": 13,
+      "max_required_improvement_pct": 7.5243702265650025
+    },
+    "7168": {
+      "total": 56,
+      "weak": 20,
+      "historical_cross_if_exact5pct": 9,
+      "historical_cross_if_exact10pct": 20,
+      "max_required_improvement_pct": 7.725471432951636
+    },
+    "8192": {
+      "total": 12,
+      "weak": 0,
+      "historical_cross_if_exact5pct": 0,
+      "historical_cross_if_exact10pct": 0,
+      "max_required_improvement_pct": 0
+    }
+  },
+  "not_performance_prediction": true,
+  "note": "Arithmetic opportunity map from frozen historical P6k only, no candidate data, no same-round attribution, no selection by winner IDs, no heldout generation. Fresh baseline may move; acceptance still requires seven independent paired blocks and all-domain gates."
+}
