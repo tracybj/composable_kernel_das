@@ -1,0 +1,64 @@
+[
+  {
+    "at": "2026-11-13T04:26:02.153160+00:00",
+    "pair": "k64_id805_wide",
+    "role": "base",
+    "CU_index": 0,
+    "job_key": "e0_h3k64_id805_base_cu0_8045aa8e_b9734635ba",
+    "raw_token_bytes": 2113056,
+    "accepted_token_gate": true,
+    "inventory": {
+      "files": [
+        {
+          "path": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/profiles_k64/h3k64_id805_base_cu0_8045aa8e/697523_tile_example_grouped_gemm_device_args_benchmark.perf",
+          "bytes": 305658,
+          "sha256": "8299a198bced45e1f5fc1d5eb15af44396fc4fa6735c9f8188051ad5c41a76d2"
+        },
+        {
+          "path": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/profiles_k64/h3k64_id805_base_cu0_8045aa8e/results.txt",
+          "bytes": 444,
+          "sha256": "2ceff1fea0e9b9bd0c98dcf2c2ae94cf74c4662f77bbce98719a28d7d7cb7714"
+        },
+        {
+          "path": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/profiles_k64/h3k64_id805_base_cu0_8045aa8e/thread_trace_18__ZN7ck_tile6kentryILi512ELi1ENS_34DecodeNnCooperativeWidePhaseKernelILi4EEEJPU3AS4viiEEEvDpT2__se0_cu1.out",
+          "bytes": 5282640,
+          "sha256": "78c024639125c3d9828dbe8378ccf7f23179954182c178cde0e34a0eaf0ba152",
+          "raw_token_bytes": 2113056
+        }
+      ],
+      "raw_token_bytes": 2113056
+    },
+    "actual_kernel": "void ck_tile::kentry<512, 1, ck_tile::DecodeNnCooperativeWidePhaseKernel<4>, void AS4*, int, int>(void AS4*, int, int)"
+  },
+  {
+    "at": "2026-11-13T04:26:04.468562+00:00",
+    "pair": "k64_id805_wide",
+    "role": "candidate",
+    "CU_index": 0,
+    "job_key": "e0_h3k64_id805_candidate_cu0_b97a425b_f40090adda",
+    "raw_token_bytes": 1669920,
+    "accepted_token_gate": true,
+    "inventory": {
+      "files": [
+        {
+          "path": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/profiles_k64/h3k64_id805_candidate_cu0_b97a425b/697577_tile_example_grouped_gemm_device_args_benchmark.perf",
+          "bytes": 189431,
+          "sha256": "d5060e59471031aff530653f2894571030b562014bf6c310755c7c894d7f3429"
+        },
+        {
+          "path": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/profiles_k64/h3k64_id805_candidate_cu0_b97a425b/results.txt",
+          "bytes": 437,
+          "sha256": "9d3a15bcd2997c011587f3e1b1dfb921016e8440aa030c8aaaaf633b9c1db363"
+        },
+        {
+          "path": "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/profiles_k64/h3k64_id805_candidate_cu0_b97a425b/thread_trace_18__ZN7ck_tile6kentryILi512ELi1ENS_32DecodeNnCooperativeK64WideKernelILi4EEEJPU3AS4viiEEEvDpT2__se0_cu1.out",
+          "bytes": 4174800,
+          "sha256": "637f2c04bc977eb086d7d57f52e2a939e2a6310cd68fa0190672e9a64d258917",
+          "raw_token_bytes": 1669920
+        }
+      ],
+      "raw_token_bytes": 1669920
+    },
+    "actual_kernel": "void ck_tile::kentry<512, 1, ck_tile::DecodeNnCooperativeK64WideKernel<4>, void AS4*, int, int>(void AS4*, int, int)"
+  }
+]

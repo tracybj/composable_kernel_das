@@ -1,0 +1,162 @@
+{
+  "at": "2026-11-13T04:22:08.410081+00:00",
+  "status": "Predeclared supplemental profile only; GPU not submitted",
+  "pair": {
+    "key": "k64_id805_wide",
+    "ID": 805,
+    "base": {
+      "ID": 805,
+      "M": 64,
+      "N": 2048,
+      "K": 4096,
+      "G": 32,
+      "phase": "decode",
+      "expected": 6027,
+      "env": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "22",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "accuracy_repeats": 3,
+      "frozen_BLAS_ms": 0.4316718578338623,
+      "p6k_CK_ms": 0.51304197,
+      "p6k_R": 0.8413967727316,
+      "scheme": "v7_256x256x16_M01_1"
+    },
+    "candidate": {
+      "ID": 805,
+      "M": 64,
+      "N": 2048,
+      "K": 4096,
+      "G": 32,
+      "phase": "decode",
+      "expected": 6029,
+      "env": {
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_V7_NN_M01_8": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN": "1",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE": "0",
+        "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT": "26",
+        "CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_FAST_POLICY": "1",
+        "CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_FAST_POLICY": "0"
+      },
+      "accuracy_repeats": 3,
+      "frozen_BLAS_ms": 0.4316718578338623,
+      "p6k_CK_ms": 0.51304197,
+      "p6k_R": 0.8413967727316,
+      "scheme": "v7_256x256x16_M01_1",
+      "variant": "wide"
+    },
+    "variant": "wide",
+    "control": true,
+    "k64_compare": true,
+    "coupled_order_control": false
+  },
+  "formal_discovery_row": {
+    "pair": "k64_id805_wide",
+    "ID": 805,
+    "shape": {
+      "M": 64,
+      "N": 2048,
+      "K": 4096,
+      "G": 32
+    },
+    "variant": "wide",
+    "control": true,
+    "base_instance": 6027,
+    "candidate_instance": 6029,
+    "CK_base_ms": 0.45272249,
+    "CK_candidate_ms": 0.52200246,
+    "base_ms": 0.45272249,
+    "candidate_ms": 0.52200246,
+    "frozen_BLAS_ms": 0.4316718578338623,
+    "route_compare": false,
+    "k64_compare": true,
+    "fallback": false,
+    "ratio_candidate_over_base": 1.1530296628294299,
+    "delta_pct": 15.302966282942986,
+    "high_cv": false,
+    "base_rounds": [
+      {
+        "median_ms": 0.45232201,
+        "min_ms": 0.44272101,
+        "max_ms": 0.46336201,
+        "cv": 0.011115786
+      },
+      {
+        "median_ms": 0.45272249,
+        "min_ms": 0.44256201,
+        "max_ms": 0.46032199,
+        "cv": 0.0097371058
+      },
+      {
+        "median_ms": 0.45368201,
+        "min_ms": 0.446082,
+        "max_ms": 0.46240199,
+        "cv": 0.0084834334
+      }
+    ],
+    "candidate_rounds": [
+      {
+        "median_ms": 0.52112246,
+        "min_ms": 0.51728302,
+        "max_ms": 0.52992201,
+        "cv": 0.0048642762
+      },
+      {
+        "median_ms": 0.52200246,
+        "min_ms": 0.51984298,
+        "max_ms": 0.533283,
+        "cv": 0.0051240427
+      },
+      {
+        "median_ms": 0.52312249,
+        "min_ms": 0.518722,
+        "max_ms": 0.535043,
+        "cv": 0.0061963208
+      }
+    ],
+    "epoch": 0,
+    "plan_sha256": "3b4f58be9926878b87fa268dfd4008333152645120f44b98e3830b6c1c1e5ec3",
+    "binary_sha256": "d94d9808dede6ae6ba6e8cd332d9e6b91196795e08a96713b13278ccc6a59374",
+    "keys": [
+      "e0_k64_k64_id805_wide_7d06383033e3_base_accuracy_167a9b8682",
+      "e0_k64_k64_id805_wide_7d06383033e3_candidate_accuracy_7a6d3242fe",
+      "e0_k64_k64_id805_wide_7d06383033e3_base_r1_d5edcb5813",
+      "e0_k64_k64_id805_wide_7d06383033e3_candidate_r1_7f870666ac",
+      "e0_k64_k64_id805_wide_7d06383033e3_candidate_r2_935b0e48b7",
+      "e0_k64_k64_id805_wide_7d06383033e3_base_r2_2114cad4e0",
+      "e0_k64_k64_id805_wide_7d06383033e3_base_r3_2c8c99cf40",
+      "e0_k64_k64_id805_wide_7d06383033e3_candidate_r3_6177436e67"
+    ],
+    "accuracy_pass": true,
+    "not_final_confirmation": true
+  },
+  "pair_row_sha256": "610cefb4e895b57eef2fddbf81af66d0e8320ca61165cc01776a6820a904397e",
+  "selection_reason": "FixedID805 direct control shows K64w8+15.3% versusK32D4w8. BothfullM64,N128,8waves,and48KiBLDS; actualVGPR168versus112. Capturechecks actualresidency andwait; neither VGPRnorwait alone provescause.",
+  "expected_kernels": {
+    "base": "DecodeNnCooperativeWidePhaseKernel",
+    "candidate": "DecodeNnCooperativeK64WideKernel"
+  },
+  "capture_order": [
+    "base",
+    "candidate"
+  ],
+  "target_cu_attempts": [
+    0,
+    1,
+    2
+  ],
+  "only_sparse_pair_recapture": true,
+  "dispatch": 18,
+  "sqtt": true,
+  "formal_timing": false,
+  "prerequisite": "Original finite46 andbatch10complete; soleGPU4lock/freshhealth/dmesg/newsessioncutoff; no concurrentCPUcompile or GPU",
+  "batch_path": "delivery/P6l_batch10b_k64_wide_depth_control_SQTT.tar.gz",
+  "new_optimization_structure": false,
+  "adoption_or_Goal_count": false
+}

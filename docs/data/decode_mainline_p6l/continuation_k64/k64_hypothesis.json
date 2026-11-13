@@ -1,0 +1,26 @@
+{
+  "at": "2026-11-13T03:03:43.679014+00:00",
+  "status": "Preregistered before first K64GPU job",
+  "main_ownership_architectures": 3,
+  "short_ownership_architectures": 2,
+  "not_fourth_architecture": true,
+  "hypothesis": "K64D2 aggregates the same128K global-buffer span with half as many synchronization stages; extra operand registers, changed A-loader distribution and8wave B-LDS read replication may offset gains.",
+  "instances": [
+    6028,
+    6029
+  ],
+  "variants": {
+    "full_w4": 25,
+    "full_w8": 26,
+    "scoped_hybrid": 27,
+    "scoped_w4": 28
+  },
+  "property_scope": "Same original M<=64/N128/K>=2048 main domain; scoped candidates additionally G<=32 and(M>=17orK>=6144),108originals/73weak. These are CPUcoverage counts, not adopted results.",
+  "direct_controls": "w8 K64 compared with existingw8 K32 phase6027 has the same owner/output/compute-first schedule. w4 K64 versus6022 also differs in MMAC order; label this coupled and do not attribute timing solely toK. Existing4 direct phase controls show <1% point effect,not proof of zero effect.",
+  "complete_discovery_pairs": 46,
+  "representatives": "Keep the same19 original representatives,14 supportedwide,7fallback,4Kgranularity controls,2sameGPUroute controls",
+  "final_acceptance": "Unchanged full property domain+24 fresh unseen and7pairedblocks;≥50stable weak/≥30attributable goal; no confirmed>2%loss. Old consumedseed6411926 and all3846 historicalgeometries excluded.",
+  "new_window": "session.json explicit12h;20:10:44Beijing no new experiments,22:10:44hardend",
+  "GPU_executed": false,
+  "adopted": false
+}

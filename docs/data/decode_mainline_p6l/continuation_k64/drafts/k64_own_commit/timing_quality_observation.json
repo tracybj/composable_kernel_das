@@ -1,0 +1,15 @@
+{
+  "at": "2026-11-13T04:15:17.710234+00:00",
+  "CPU_only_read": true,
+  "GPU": false,
+  "source": "/workspace/composable_kernel/example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args_benchmark.cpp",
+  "sha256": "6dd39ba428ac5a634ffba7ced930538d2072b746b0857536cc423f807edc88b3",
+  "verified_semantics": "EventTimer records start, calls public run ABI/default selector and launch, then records stop; include_args_build0 excludes descriptor-build kernel,not the host ABI/launch call between GPUevents. One sample remains one launch.",
+  "quality_observation": "Several K64 rounds contain one or a few large max outliers while median/min are closer. All CV>5% markers remain; no samples/rounds discarded and no retry-until-pass.",
+  "possible_explanations": [
+    "CPU scheduling/submission gap inside event bracket",
+    "GPU/cache/service variation"
+  ],
+  "causal_confirmation": "None; do not label this MKFD or prove CPU preemption from the timing code alone.",
+  "current_protocol_modified": false
+}

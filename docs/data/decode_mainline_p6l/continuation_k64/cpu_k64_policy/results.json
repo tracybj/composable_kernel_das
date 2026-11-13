@@ -1,0 +1,26 @@
+{
+  "ok": true,
+  "cpu_only": true,
+  "gpu": false,
+  "case_count": 108581,
+  "comparisons": 102609,
+  "seconds": 3.3597120699996594,
+  "command": [
+    "g++",
+    "-O3",
+    "-std=c++17",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-Wno-misleading-indentation",
+    "-I/workspace/composable_kernel/include",
+    "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/cpu_k64_policy/policy_equivalence.cpp",
+    "-o",
+    "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/cpu_k64_policy/policy_equivalence"
+  ],
+  "ldd": "\tlinux-vdso.so.1 (0x00007ffc63379000)\n\tlibstdc++.so.6 => /lib/x86_64-linux-gnu/libstdc++.so.6 (0x00007fe704fec000)\n\tlibgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x00007fe704fcc000)\n\tlibc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007fe704da3000)\n\tlibm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007fe704cba000)\n\t/lib64/ld-linux-x86-64.so.2 (0x00007fe705234000)\n",
+  "old_source_sha256": "8ee90afc815b3da6f2e32831b79da0ca9fa53802686010b0c4fd26ae75ccebc6",
+  "new_source_sha256": "d13fa8c6b96828339cb803b6802f9e7768574ec287fde0ecf96fe661cbc8364c",
+  "timings": [],
+  "note": "Exact extracted policy readers and final pure selection only; excludes ABI/header validation, arch query, driver and GPU. CPU timing is not proof of formal GPU benefit."
+}
