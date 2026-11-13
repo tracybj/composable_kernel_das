@@ -121,7 +121,7 @@ int main()
     constexpr std::uint32_t all_layout = CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NT_V1 |
                                          CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NN_V1 |
                                          CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_TN_V1;
-    constexpr std::array<CandidateExpected, 68> expected{{
+    constexpr std::array<CandidateExpected, 69> expected{{
         {CK_TILE_HCU_GROUPED_GEMM_INSTANCE_BW_FAMILY_SELECTED_V1,
          CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_FAMILY_BW_V1,
          CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX936_V1,
@@ -468,6 +468,11 @@ int main()
          CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX936_V1,
          CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_MASK_BF16_V1,
          CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NN_V1},
+        {CK_TILE_HCU_GROUPED_GEMM_INSTANCE_BF16_NN_DECODE_LOW_LDS_N128_D2_W4_V1,
+         CK_TILE_HCU_GROUPED_GEMM_CANDIDATE_FAMILY_DECODE_V1,
+         CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX936_V1,
+         CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_MASK_BF16_V1,
+         CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NN_V1},
     }};
     std::set<std::string> names;
     bool passed = true;
@@ -790,7 +795,7 @@ int main()
             const char* variant = short_path ? "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_SHORT_VARIANT" :
                                                 "CK_TILE_GROUPED_GEMM_BF16_NN_DECODE_MAINLINE_VARIANT";
             decode_pass &= ::setenv(enable, "1", 1) == 0;
-            for(int v = 0; v < (short_path ? 6 : 41); ++v)
+            for(int v = 0; v < (short_path ? 6 : 43); ++v)
             {
                 const std::string value = std::to_string(v);
                 decode_pass &= ::setenv(variant, value.c_str(), 1) == 0;
@@ -799,10 +804,10 @@ int main()
                     auto probe = make_fixed_m_problem(CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_BF16_V1,
                         CK_TILE_HCU_GROUPED_GEMM_LAYOUT_NN_V1, 32, m, 1024, short_path ? 768 : 2048);
                     int expected_decode = short_path ? (v >= 3 ? 6016 + v - 3 : v == 2 ? 6012 : 6007 + v) :
-                        (v >= 37 ? 6034 : v == 35 || v == 36 ? 6033 : v == 33 || v == 34 ? 6032 : v == 31 || v == 32 ? 6031 : v == 29 || v == 30 ? 6030 : v == 25 || v == 28 ? 6028 : v == 26 ? 6029 : v == 27 ? (m <= 16 ? 6028 : 6029) : v == 21 || v == 24 ? 6026 : v == 22 ? 6027 : v == 23 ? (m <= 16 ? 6026 : 6027) : v == 17 || v == 18 ? 6024 : v == 19 ? 6025 : v == 20 ? (m <= 16 ? 6024 : 6025) : v == 12 || v == 14 ? 6023 : v == 13 ? 6022 : v == 15 ? 6013 : v == 16 ? 6015 :
+                        (v >= 41 ? 6035 : v >= 37 ? 6034 : v == 35 || v == 36 ? 6033 : v == 33 || v == 34 ? 6032 : v == 31 || v == 32 ? 6031 : v == 29 || v == 30 ? 6030 : v == 25 || v == 28 ? 6028 : v == 26 ? 6029 : v == 27 ? (m <= 16 ? 6028 : 6029) : v == 21 || v == 24 ? 6026 : v == 22 ? 6027 : v == 23 ? (m <= 16 ? 6026 : 6027) : v == 17 || v == 18 ? 6024 : v == 19 ? 6025 : v == 20 ? (m <= 16 ? 6024 : 6025) : v == 12 || v == 14 ? 6023 : v == 13 ? 6022 : v == 15 ? 6013 : v == 16 ? 6015 :
                          v >= 9 ? 6020 + v - 9 : v >= 6 ? 6013 + v - 6 :
                          v >= 3 ? 6009 + v - 3 : 6004 + v);
-                    if(!short_path && ((v >= 13 && v <= 16) || v == 18 || v == 19 || v == 22 || v == 23 || v == 24 || v == 26 || v == 27 || v == 28 || v == 30 || v == 32 || v == 34 || v == 36 || v == 38 || v == 40) && m < 17)
+                    if(!short_path && ((v >= 13 && v <= 16) || v == 18 || v == 19 || v == 22 || v == 23 || v == 24 || v == 26 || v == 27 || v == 28 || v == 30 || v == 32 || v == 34 || v == 36 || v == 38 || v == 40 || v == 42) && m < 17)
                     {
                         decode_pass &= ::setenv(disable, "1", 1) == 0;
                         auto scoped_fallback_selection = make_selection();
@@ -819,13 +824,13 @@ int main()
             decode_pass &= ::setenv(disable, "1", 1) == 0;
             auto off = make_selection();
             decode_pass &= ck_tile_hcu_grouped_gemm_select_device_args_v1(&probe, &off) == 0;
-            decode_pass &= off.instance_id < 6004 || off.instance_id > 6034;
+            decode_pass &= off.instance_id < 6004 || off.instance_id > 6035;
             decode_pass &= ::setenv(disable, "0", 1) == 0;
             decode_pass &= ::setenv(variant, "invalid", 1) == 0;
             auto invalid_decode_variant = make_selection();
             decode_pass &= ck_tile_hcu_grouped_gemm_select_device_args_v1(&probe, &invalid_decode_variant) == 0;
             decode_pass &= invalid_decode_variant.instance_id == off.instance_id;
-            for(const char* value : {"", "01", "001", "-1", "+1", "1x", "100", "41", "99"})
+            for(const char* value : {"", "01", "001", "-1", "+1", "1x", "100", "43", "99"})
             {
                 decode_pass &= ::setenv(variant, value, 1) == 0;
                 auto malformed_variant_selection = make_selection();
@@ -871,7 +876,7 @@ int main()
         // disabled and malformed; these switches must not alter the GPU ID.
         decode_pass &= ::setenv("CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_MAINLINE", "1", 1) == 0;
         decode_pass &= ::setenv("CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE", "0", 1) == 0;
-        for(int resource_variant : {17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40})
+        for(int resource_variant : {17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42})
         for(int resource_m : {1, 17, 32, 64})
         {
             const std::string resource_value = std::to_string(resource_variant);
@@ -882,8 +887,9 @@ int main()
             auto resource_fallback = make_selection();
             decode_pass &= ck_tile_hcu_grouped_gemm_select_device_args_v1(&resource_problem, &resource_fallback) == 0;
             decode_pass &= ::setenv("CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_MAINLINE", "0", 1) == 0;
-            const int resource_expected = ((resource_variant == 18 || resource_variant == 19 || resource_variant == 22 || resource_variant == 23 || resource_variant == 24 || resource_variant == 26 || resource_variant == 27 || resource_variant == 28 || resource_variant == 30 || resource_variant == 32 || resource_variant == 34 || resource_variant == 36 || resource_variant == 38 || resource_variant == 40) && resource_m < 17) ?
+            const int resource_expected = ((resource_variant == 18 || resource_variant == 19 || resource_variant == 22 || resource_variant == 23 || resource_variant == 24 || resource_variant == 26 || resource_variant == 27 || resource_variant == 28 || resource_variant == 30 || resource_variant == 32 || resource_variant == 34 || resource_variant == 36 || resource_variant == 38 || resource_variant == 40 || resource_variant == 42) && resource_m < 17) ?
                 static_cast<int>(resource_fallback.instance_id) :
+                resource_variant >= 41 ? 6035 :
                 resource_variant >= 39 ? 6034 :
                 resource_variant >= 37 ? 6034 :
                 resource_variant == 35 || resource_variant == 36 ? 6033 :
