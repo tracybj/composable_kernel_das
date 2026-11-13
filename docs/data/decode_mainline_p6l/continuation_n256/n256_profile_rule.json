@@ -1,0 +1,36 @@
+{
+  "at": "2026-11-13T03:09:40.997983+00:00",
+  "status": "K64 profile selection preregistered before first K64GPU job",
+  "selection_reason": "All share N4096/K2048. M32 compares G64 regression versus G16 gain; M64 compares G16 gain versus G8 regression. Candidate source/kernel is identical within each M pair. Old selector differs for312, which must remain visible rather than assumed identical.",
+  "fixed_before_any_capture": true,
+  "dispatch": 18,
+  "SE": 0,
+  "target_cu_order": [
+    0,
+    1,
+    2
+  ],
+  "minimum_raw_token_bytes": 4096,
+  "sections": "speed_of_light,memory_workload,occupancy,memory_chart,instruction_statistics,compute_workload,scheduler_statistics,wave_state",
+  "sqtt": true,
+  "formal_timing": false,
+  "maximum_pairs": 8,
+  "sparse_rule": "Only a sparse valid-identity capture may advance to the next predeclared CU; recapture both arms, retain all attempts. Wrong identity, dispatch, precision, MKFD or binary is not sparse.",
+  "questions": [
+    "Check actual K64D2 operand readiness and two global slots; no overwrite before all readers retire.",
+    "Compare synchronization stages per usefulK,operand VGPR,traffic and resident waves;do not infer wall time by summing wave clocks.",
+    "Use formal three-round results for discovery,then independent seven-block whole-domain acceptance if justified."
+  ],
+  "fixed_ids": [
+    621,
+    805,
+    1009,
+    312
+  ],
+  "requires_complete_discovery": 46,
+  "variant_selection": "Choose compact or wide over identical14 M>=17 representative geometries by geometric mean candidate/base. Low M uses compact. This only selects profiles; final policy needs full adopted domain confirmation.",
+  "category_completion": "Add median ordered by delta_pct,ID,variant for each missing observed gain(<-2%)/flat/loss(>2%) category among the19 selected actual representatives; retain highCV labels.",
+  "extra_depth_control_id": 805,
+  "global_depth_choice": "LowestGMoverall19representatives;diagnosticselectiononly,notadoption",
+  "source": "N256sameH3panel/depthfactor;declaredbeforefirstN256GPU"
+}

@@ -1,0 +1,16 @@
+{
+  "ok": true,
+  "cpu_only": true,
+  "GPU": false,
+  "cases": 1193,
+  "command": [
+    "g++",
+    "-O2",
+    "-std=c++17",
+    "-I/workspace/composable_kernel/include",
+    "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/mainline_selector_probe.cpp",
+    "-o",
+    "/workspace/v7_coverage/p6l_decode_mainline/continuation_20261113T021044Z/cpu_n256_campaign_baseline1193/selector_probe"
+  ],
+  "selector_sha256": "edd530b6ab4f13169856e453ff031707faa50e811be7de6947a8e47adf68e26c"
+}

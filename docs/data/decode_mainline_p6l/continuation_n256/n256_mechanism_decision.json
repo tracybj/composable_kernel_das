@@ -1,0 +1,111 @@
+{
+  "at": "2026-11-13T04:28:39.649890+00:00",
+  "proceed": true,
+  "not_a_fourth_ownership_architecture": true,
+  "main_hypotheses_still3": true,
+  "K64_discovery_sha256": "e32118ba615e012bafb68e6c3b53509ebc77b2e45b4b7680f0217c9a91f22af4",
+  "K64_analysis_sha256": "8e56f86f9ebab6838c761b6de01376162e733a36846570572923f3e214ad2302",
+  "profile10_sha256": "54ff3af5071c0da5a15d3e914b66d3f4f8e29e50f6521defe96fb0b627b3c5c1",
+  "profile10b_sha256": "bdaf4f28b0f655b54cf447ee353f1eed4e1c9af572209829bd91903e678778c7",
+  "source_commit": "4eb728782b9c9a739a075cf08d157428af224c85",
+  "K64_decision": "Reject full and registered scoped K64D2 at discovery: 4wave19GM1.081196 and8wave14GM1.136593, losses include declared lowGscope. No individual winner adoption or7block target count.",
+  "matched_control": {
+    "ID": 805,
+    "M": 64,
+    "N": 2048,
+    "K": 4096,
+    "G": 32,
+    "base_instance": 6027,
+    "candidate_instance": 6029,
+    "formal_discovery_delta_pct": 15.302966282942986,
+    "base_metrics": {
+      "geometry": {
+        "grid_work_items": [
+          262144,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 512,
+        "lds_bytes": 49152,
+        "scratch_bytes": 0,
+        "vgpr": 112,
+        "sgpr": 64
+      },
+      "mean_resident_waves_per_CU": 7.382857627771173,
+      "wait_any_over_wave_cycles": 0.16990326265009237,
+      "hbm_read_bytes": 557622400,
+      "lds_bank_conflict_over_lds_active": 0.178117048346056,
+      "sq_insts_salu_per_wave": 1303.0,
+      "sq_insts_vmem_per_wave": 194.0,
+      "sq_insts_lds_per_wave": 786.0,
+      "sq_insts_mmop_per_wave": 1024.0
+    },
+    "candidate_metrics": {
+      "geometry": {
+        "grid_work_items": [
+          262144,
+          1,
+          1
+        ],
+        "block_threads": [
+          512,
+          1,
+          1
+        ],
+        "ctas": 512,
+        "lds_bytes": 49152,
+        "scratch_bytes": 0,
+        "vgpr": 168,
+        "sgpr": 64
+      },
+      "mean_resident_waves_per_CU": 7.210188306425802,
+      "wait_any_over_wave_cycles": 0.25551973197410555,
+      "hbm_read_bytes": 562838848,
+      "lds_bank_conflict_over_lds_active": 0.3800383877159309,
+      "sq_insts_salu_per_wave": 680.0,
+      "sq_insts_vmem_per_wave": 194.0,
+      "sq_insts_lds_per_wave": 786.0,
+      "sq_insts_mmop_per_wave": 1024.0
+    }
+  },
+  "inference": "The4wave K64 resource loss is substantial. The8wave control keeps near-equal observedresidency/HBM and equalVMEM/LDS/MMACinstructioncounts, while SALU is halved but time/wait/bankconflicts worsen. Thus fewer synchronization stages/instructions is insufficient. Counter ratios do not separately prove VMEM latency or a particular A/B LDS operand is the sole cause.",
+  "next_factor": "Repack fixed16KiBBpanel toK32xN256, retain completeM/eightwaves/threeoperandbanks/compute-first. Compare only Depth2 andDepth3 onidentical N256/K32 layout. K32 retains earlier A operand layout; N doubles and capacity changes are explicit coupled factors,not N-only causality.",
+  "depth2_LDS_KiB": [
+    34,
+    36,
+    40
+  ],
+  "depth3_LDS_KiB": [
+    51,
+    54,
+    60
+  ],
+  "depth3_ready_contract": "Eachstage emits2BVMEM+1Aonlyforwave<Rows; Pending1 usesvmcnt3/2. KeepLG0 andCTAbarrier before slotreuse; dynamictailwaitsto0. RequireCPUaddress/schedule/actualISA/full-output proofs.",
+  "new_ids": [
+    6030,
+    6031
+  ],
+  "new_variants": {
+    "full_D2": 29,
+    "scoped_D2": 30,
+    "full_D3": 31,
+    "scoped_D3": 32
+  },
+  "N_contract": "N%256=0; original initialM<=64/N1024..4096/K2048..8192/K%128/G1..1024. Scoped G<=32 and(M>=17orK>=6144). All unsupported cases retain old fallback; defaultoff andDISABLEpriority.",
+  "planned_discovery_pairs": 55,
+  "planned_comparisons": "19representatives for eachdepth;7fallback;4K64-toN256 coupledrepack;4matchedD2/D3;2sameGPUroutecontrols. Exactlist/qualificationcounts freeze afterCPUselectorchecks.",
+  "old_unused_D2_draft_retained": true,
+  "old_unused_D3_math_idea_retained": true,
+  "unmodified_protocol": "No discardedhighCVrounds, noCPUaffinitychange or repeateduntilpass; newfinalbinary/epoch pairdata only.",
+  "final_acceptance_unchanged": "50stableweak/30attributablecross,fulladoptedpropertydomain+24freshunseen+7pairedblocks; no confirmed>2%loss",
+  "heldout_seed6411926_consumed": true,
+  "new_heldout_seed_not_drawn": true,
+  "deadline_source": "session.json;20:10:44Beijingexperimentcutoff/22:10:44hardend",
+  "no_full_GPU_run": true,
+  "no_push": true
+}
