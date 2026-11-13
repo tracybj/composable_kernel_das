@@ -8,26 +8,27 @@ namespace ck_tile { namespace decode_nn_cooperative_n256 {
 using namespace decode_nn_mainline;
 using decode_nn_shared::load_a_lds;
 using decode_nn_shared::read_a;
-template<int Rows,int BlockK,int Depth> struct Geometry {
+template<int Rows,int BlockK,int Depth,bool BReuse=false> struct Geometry {
  static_assert(Rows==1||Rows==2||Rows==4);
  static_assert(BlockK==32&&(Depth==2||Depth==3));
  static constexpr int Halves=2,ALoadRows=16,APanels=Rows;
  static constexpr int APanelsPerWave=(APanels+7)/8;
  static constexpr int ABytes=APanels*1024;
  static constexpr int StageBytes=ABytes+16384,LdsBytes=Depth*StageBytes;
- static constexpr int MGroups=Rows,NGroups=8/MGroups;
+ // The original partition stays the default for every existing instance.
+ static constexpr int MGroups=(BReuse && Rows>1)?Rows/2:Rows,NGroups=8/MGroups;
  static constexpr int MFragments=Rows/MGroups,WaveM=MFragments*16;
  static constexpr int WaveN=256/NGroups,NFragments=WaveN/16,BReads=NFragments/2;
  static_assert(LdsBytes<=65536);
 };
-template<int Rows,int BlockK,int Depth> struct Operands {
- using G=Geometry<Rows,BlockK,Depth>;
+template<int Rows,int BlockK,int Depth,bool BReuse=false> struct Operands {
+ using G=Geometry<Rows, BlockK, Depth, BReuse>;
  Bf16x4 a[G::Halves][G::MFragments];
  Bf16x8 b[G::Halves][G::BReads];
 };
-template<int Rows,int BlockK,int Depth,int Slot>
-CK_TILE_DEVICE void prefetch(Srd as,const uint64_t (&pairs)[Geometry<Rows,BlockK,Depth>::APanelsPerWave],Srd bs,uint32_t bo,int wave,int ldb,int k) {
- using G=Geometry<Rows,BlockK,Depth>;
+template<int Rows,int BlockK,int Depth,int Slot,bool BReuse=false>
+CK_TILE_DEVICE void prefetch(Srd as,const uint64_t (&pairs)[Geometry<Rows, BlockK, Depth, BReuse>::APanelsPerWave],Srd bs,uint32_t bo,int wave,int ldb,int k) {
+ using G=Geometry<Rows, BlockK, Depth, BReuse>;
  static_for<0,G::APanelsPerWave,1>{}([&](auto ai) {
   constexpr int i=decltype(ai)::value;
   if(wave+i*8<G::APanels)
@@ -38,22 +39,22 @@ CK_TILE_DEVICE void prefetch(Srd as,const uint64_t (&pairs)[Geometry<Rows,BlockK
   load_b(bs,bo,(uint32_t)(k+h*16)*(uint32_t)ldb*2u,Slot*G::StageBytes+G::ABytes+h*8192u+(uint32_t)wave*1024u);
  });
 }
-template<int Rows,int BlockK,int Depth,int Pending>
+template<int Rows,int BlockK,int Depth,int Pending,bool BReuse=false>
 CK_TILE_DEVICE void ready(int wave) {
  static_assert(Pending>=0 && Pending<=Depth-2);
  if constexpr(Pending==0)
   asm volatile("s_waitcnt vmcnt(0)\n" ::: "memory");
- else if(wave<Geometry<Rows,BlockK,Depth>::APanels)
+ else if(wave<Geometry<Rows, BlockK, Depth, BReuse>::APanels)
   asm volatile("s_waitcnt vmcnt(%0)\n" :: "n"(3*Pending) : "memory");
  else
   asm volatile("s_waitcnt vmcnt(%0)\n" :: "n"(2*Pending) : "memory");
 }
-template<int Rows, int BlockK, int Depth>
+template<int Rows, int BlockK, int Depth, bool BReuse=false>
 CK_TILE_DEVICE void store(const Params& p,
-    F32x4 (&c)[Geometry<Rows, BlockK, Depth>::MFragments]
-               [Geometry<Rows, BlockK, Depth>::NFragments], uint32_t lane, int wave)
+    F32x4 (&c)[Geometry<Rows, BlockK, Depth, BReuse>::MFragments]
+               [Geometry<Rows, BlockK, Depth, BReuse>::NFragments], uint32_t lane, int wave)
 {
-    using G = Geometry<Rows, BlockK, Depth>;
+    using G = Geometry<Rows, BlockK, Depth, BReuse>;
     const uint32_t wave_m = (uint32_t)wave / G::NGroups;
     const uint32_t wave_n = (uint32_t)wave % G::NGroups;
     const uint32_t base = (uint32_t)wave * 1024u;
@@ -86,17 +87,17 @@ CK_TILE_DEVICE void store(const Params& p,
     });
 }
 
-template<int Rows,int BlockK,int Depth,int Pending>
+template<int Rows,int BlockK,int Depth,int Pending,bool BReuse=false>
 CK_TILE_DEVICE void tail_ready(int wave,int pending) {
- if constexpr(Pending==0) ready<Rows,BlockK,Depth,0>(wave);
- else if(pending==0) ready<Rows,BlockK,Depth,0>(wave);
- else ready<Rows,BlockK,Depth,Pending>(wave);
+ if constexpr(Pending==0) ready<Rows,BlockK,Depth,0,BReuse>(wave);
+ else if(pending==0) ready<Rows,BlockK,Depth,0,BReuse>(wave);
+ else ready<Rows,BlockK,Depth,Pending,BReuse>(wave);
 }
-template<int Rows, int BlockK, int Depth, int Slot>
-CK_TILE_DEVICE void read(Operands<Rows, BlockK, Depth>& operand,
+template<int Rows, int BlockK, int Depth, int Slot, bool BReuse=false>
+CK_TILE_DEVICE void read(Operands<Rows, BlockK, Depth, BReuse>& operand,
                          uint32_t lane, int wave)
 {
-    using G = Geometry<Rows, BlockK, Depth>;
+    using G = Geometry<Rows, BlockK, Depth, BReuse>;
     const uint32_t wave_m = (uint32_t)wave / G::NGroups;
     const uint32_t wave_n = (uint32_t)wave % G::NGroups;
     constexpr int Chunks = BlockK / 8;
@@ -120,12 +121,12 @@ CK_TILE_DEVICE void read(Operands<Rows, BlockK, Depth>& operand,
     });
 }
 
-template<int Rows, int BlockK, int Depth>
-CK_TILE_DEVICE void calculate(const Operands<Rows, BlockK, Depth>& operand,
-    F32x4 (&c)[Geometry<Rows, BlockK, Depth>::MFragments]
-               [Geometry<Rows, BlockK, Depth>::NFragments])
+template<int Rows, int BlockK, int Depth, bool BReuse=false>
+CK_TILE_DEVICE void calculate(const Operands<Rows, BlockK, Depth, BReuse>& operand,
+    F32x4 (&c)[Geometry<Rows, BlockK, Depth, BReuse>::MFragments]
+               [Geometry<Rows, BlockK, Depth, BReuse>::NFragments])
 {
-    using G = Geometry<Rows, BlockK, Depth>;
+    using G = Geometry<Rows, BlockK, Depth, BReuse>;
     static_for<0, G::Halves, 1>{}([&](auto hi) {
         constexpr int h = decltype(hi)::value;
         static_for<0, G::MFragments, 1>{}([&](auto mi) {
@@ -142,10 +143,10 @@ CK_TILE_DEVICE void calculate(const Operands<Rows, BlockK, Depth>& operand,
     });
 }
 
-template<int Rows, int BlockK, int Depth, bool ComputeFirst>
+template<int Rows, int BlockK, int Depth, bool ComputeFirst, bool BReuse=false>
 CK_TILE_DEVICE void run(const Params& p)
 {
-    using G = Geometry<Rows, BlockK, Depth>;
+    using G = Geometry<Rows, BlockK, Depth, BReuse>;
     const uint32_t lane = (uint32_t)threadIdx.x & 63u;
     const int wave = __builtin_amdgcn_readfirstlane((int)threadIdx.x >> 6);
     auto a_srd = descriptor(p.a, (uint32_t)((int64_t)p.m * p.lda * 2));
@@ -176,16 +177,16 @@ CK_TILE_DEVICE void run(const Params& p)
     });
     static_for<0, Depth, 1>{}([&](auto si) {
         constexpr int j = decltype(si)::value;
-        prefetch<Rows, BlockK, Depth, j>(a_srd, a_pair, b_srd, b_offset, wave, p.ldb, j * BlockK);
+        prefetch<Rows, BlockK, Depth, j,BReuse>(a_srd, a_pair, b_srd, b_offset, wave, p.ldb, j * BlockK);
     });
-    ready<Rows, BlockK, Depth, Depth - 2>(wave);
+    ready<Rows, BlockK, Depth, Depth - 2,BReuse>(wave);
     asm volatile("s_barrier\n" ::: "memory");
-    Operands<Rows, BlockK, Depth> operand[3];
-    read<Rows, BlockK, Depth, 0>(operand[0], lane, wave);
+    Operands<Rows, BlockK, Depth, BReuse> operand[3];
+    read<Rows, BlockK, Depth, 0,BReuse>(operand[0], lane, wave);
     asm volatile("s_waitcnt lgkmcnt(0)\n" ::: "memory");
-    read<Rows, BlockK, Depth, 1>(operand[1], lane, wave);
+    read<Rows, BlockK, Depth, 1,BReuse>(operand[1], lane, wave);
     asm volatile("s_waitcnt lgkmcnt(0)\n\ts_barrier\n" ::: "memory");
-    prefetch<Rows, BlockK, Depth, 0>(a_srd, a_pair, b_srd, b_offset, wave, p.ldb, Depth * BlockK);
+    prefetch<Rows, BlockK, Depth, 0,BReuse>(a_srd, a_pair, b_srd, b_offset, wave, p.ldb, Depth * BlockK);
     constexpr int Cycle = 3 * Depth;
     const int stages = p.k / BlockK;
     int base = 0;
@@ -194,10 +195,10 @@ CK_TILE_DEVICE void run(const Params& p)
         static_for<0, Cycle, 1>{}([&](auto si) {
             constexpr int j = decltype(si)::value;
             if constexpr(ComputeFirst) calculate(operand[j % 3], c);
-            ready<Rows, BlockK, Depth, Depth - 2>(wave);
+            ready<Rows, BlockK, Depth, Depth - 2,BReuse>(wave);
             asm volatile("s_waitcnt lgkmcnt(0)\n\ts_barrier\n" ::: "memory");
-            read<Rows, BlockK, Depth, (j + 2) % Depth>(operand[(j + 2) % 3], lane, wave);
-            prefetch<Rows, BlockK, Depth, (j + 1) % Depth>(a_srd, a_pair, b_srd,
+            read<Rows, BlockK, Depth, (j + 2) % Depth,BReuse>(operand[(j + 2) % 3], lane, wave);
+            prefetch<Rows, BlockK, Depth, (j + 1) % Depth,BReuse>(a_srd, a_pair, b_srd,
                 b_offset, wave, p.ldb, (base + j + Depth + 1) * BlockK);
             if constexpr(!ComputeFirst) calculate(operand[j % 3], c);
         });
@@ -214,24 +215,24 @@ CK_TILE_DEVICE void run(const Params& p)
             {
                 const int remaining = stages - t - 3;
                 const int pending = remaining < Depth - 2 ? remaining : Depth - 2;
-                tail_ready<Rows, BlockK, Depth, Depth - 2>(wave, pending);
+                tail_ready<Rows, BlockK, Depth, Depth - 2,BReuse>(wave, pending);
                 asm volatile("s_waitcnt lgkmcnt(0)\n\ts_barrier\n" ::: "memory");
-                read<Rows, BlockK, Depth, (j + 2) % Depth>(operand[(j + 2) % 3], lane, wave);
+                read<Rows, BlockK, Depth, (j + 2) % Depth,BReuse>(operand[(j + 2) % 3], lane, wave);
             }
             else
             {
-                ready<Rows, BlockK, Depth, 0>(wave);
+                ready<Rows, BlockK, Depth, 0,BReuse>(wave);
                 asm volatile("s_waitcnt lgkmcnt(0)\n\ts_barrier\n" ::: "memory");
             }
             if(t + Depth + 1 < stages)
-                prefetch<Rows, BlockK, Depth, (j + 1) % Depth>(a_srd, a_pair, b_srd,
+                prefetch<Rows, BlockK, Depth, (j + 1) % Depth,BReuse>(a_srd, a_pair, b_srd,
                     b_offset, wave, p.ldb, (t + Depth + 1) * BlockK);
             if constexpr(!ComputeFirst) calculate(operand[j % 3], c);
         }
     });
-    store<Rows,BlockK,Depth>(p,c,lane,wave);
+    store<Rows,BlockK,Depth,BReuse>(p,c,lane,wave);
 }
 
-template<int Rows,int Depth=2> CK_TILE_DEVICE void run(const Params& p) {run<Rows,32,Depth,true>(p);}
+template<int Rows,int Depth=2,bool BReuse=false> CK_TILE_DEVICE void run(const Params& p) {run<Rows,32,Depth,true,BReuse>(p);}
 } }
 #pragma clang diagnostic pop

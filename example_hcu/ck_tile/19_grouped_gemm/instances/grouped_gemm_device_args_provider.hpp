@@ -195,6 +195,8 @@ int launch_registry_candidate(ck_tile::GroupedGemmInstanceId instance_id,
     case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_coop_k64_d2_w8:
     case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_coop_n256_k32_d2_w8:
     case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_coop_n256_k32_d3_w8:
+    case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_coop_n256_b_reuse_d2:
+    case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_coop_n256_b_reuse_d3:
     case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_shared_k16_d4:
     case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_shared_k16_d8:
     case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_shared_k32_d4:

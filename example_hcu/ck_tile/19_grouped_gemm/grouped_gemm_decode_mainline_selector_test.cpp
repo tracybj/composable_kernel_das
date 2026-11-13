@@ -28,6 +28,10 @@ int main()
         if(variant == 21 || variant == 24) return 6026;
         if(variant == 22) return 6027;
         if(variant == 23) return m <= 16 ? 6026 : 6027;
+        if(variant == 33) return 6032;
+        if(variant == 34) return m >= 17 || k >= 6144 ? 6032 : 0;
+        if(variant == 35) return 6033;
+        if(variant == 36) return m >= 17 || k >= 6144 ? 6033 : 0;
         if(variant == 29) return 6030;
         if(variant == 30) return m >= 17 || k >= 6144 ? 6030 : 0;
         if(variant == 31) return 6031;
@@ -61,7 +65,7 @@ int main()
         policy.enable_bf16_nn_decode_mainline = !short_path;
         policy.enable_bf16_nn_decode_short = short_path;
         p.k.extent = short_path ? 768 : 2048;
-        for(int variant = 0; variant < (short_path ? 6 : 33); ++variant)
+        for(int variant = 0; variant < (short_path ? 6 : 37); ++variant)
         {
             policy.bf16_nn_decode_mainline_variant = variant;
             policy.bf16_nn_decode_short_variant = variant;
@@ -118,7 +122,7 @@ int main()
     }
     policy.enable_bf16_nn_decode_mainline = true;
     policy.enable_bf16_nn_decode_short = false;
-    for(int variant : {12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32})
+    for(int variant : {12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36})
     {
         policy.bf16_nn_decode_mainline_variant = variant;
         for(int m : {1, 16, 17, 32, 33, 64})
@@ -131,7 +135,7 @@ int main()
     }
     // New resource routes must preserve legacy fallback on disabled requests
     // and geometry outside their contract, independent of their numeric ID.
-    for(int resource_variant : {17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32})
+    for(int resource_variant : {17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36})
     {
         policy.bf16_nn_decode_mainline_variant = resource_variant;
         p.m = GroupedGemmDimensionSummary::Common(32);
@@ -164,7 +168,7 @@ int main()
         pass &= check(p,expected);
     }
     p.group_count=32;
-    for(int v : {29,30,31,32})
+    for(int v : {29,30,31,32,33,34,35,36})
     for(int m : {1,16,17,32,33,64})
     for(int n : {1024,1152,1280,1792,4096})
     for(int k : {2048,2176,6144,8192})
@@ -175,12 +179,12 @@ int main()
         p.n=GroupedGemmDimensionSummary::Common(n);
         p.k=GroupedGemmDimensionSummary::Common(k);
         p.group_count=g;
-        const int expected=n%256==0 && ((v==29 || v==31) || (g<=32 && (m>=17 || k>=6144))) ? (v>=31?6031:6030) : 0;
+        const int expected=n%256==0 && ((v%2==1) || (g<=32 && (m>=17 || k>=6144))) ? (v>=35?6033:v>=33?6032:v>=31?6031:6030) : 0;
         pass &= check(p,expected);
     }
     p.group_count=32;
     p.n=GroupedGemmDimensionSummary::Common(1024);
-    policy.bf16_nn_decode_mainline_variant = 33;
+    policy.bf16_nn_decode_mainline_variant = 37;
     pass &= check(p, 0);
     std::cout << "DECODE_MAINLINE_SELECTOR_" << (pass ? "PASS" : "FAIL")
               << " cases=" << checks << '\n';
