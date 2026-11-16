@@ -11,6 +11,9 @@ BLASLt workbook target on all 1191 shapes for both scaled outputs. See the
 [scale contract](docs/INT8_SCALE_OUTPUT.md), and
 [full benchmark CSV](docs/benchmark/v158/results.csv).
 
+The [v121 INT8 × INT8 → INT32 archive](docs/benchmark/v121_int32/README.md)
+records the original 1178-shape NT regression without scales.
+
 ## Source layout
 
 | Location | Responsibility |
