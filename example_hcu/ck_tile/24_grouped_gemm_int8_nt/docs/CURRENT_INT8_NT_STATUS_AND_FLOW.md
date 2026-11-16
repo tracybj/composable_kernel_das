@@ -11,7 +11,7 @@ reuse. Raw fallbacks continue to use the original NT weights.
 [Selection](../instances/grouped_int8_nt_selector.hpp) uses M/N/K/G,
 device CU count, group shape uniformity, and descriptor properties such as
 output stride and scale mode. Each selected instance launches a grouped
-kernel with the expert indexed by the grid. The [scaled dispatcher](../instances/grouped_int8_nt_scaled_dispatch.cpp)
+kernel with the expert indexed by the grid. The [scaled dispatcher](../providers/grouped_gemm_int8_nt_scaled.cu)
 binds BF16 or FP16 epilogues to the chosen integer GEMM instance.
 
 | Path | Main loop and output |

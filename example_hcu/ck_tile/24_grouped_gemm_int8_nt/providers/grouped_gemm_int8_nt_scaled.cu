@@ -4,8 +4,8 @@
 #include "../kernels/grouped_int8_nt_wasp_kernel.hpp"
 #include "../kernels/grouped_int8_nt_k_parallel.hpp"
 #include "../kernels/grouped_int8_nt_scaled_epilogue.hpp"
-#include "grouped_int8_nt_instances.hpp"
-#include "grouped_int8_nt_routes.hpp"
+#include "../instances/grouped_int8_nt_instances.hpp"
+#include "../instances/grouped_int8_nt_routes.hpp"
 #ifdef CK_INT8_CACHED_TUNING
 #include "../tuning/grouped_int8_nt_tuning_internal.hpp"
 #endif
@@ -142,7 +142,7 @@ int dispatch(unsigned route,
         return m == 1 ? k_parallel<BF, 1>(args, scales, g, n, stream) \
                       : k_parallel<BF, 2>(args, scales, g, n, stream);
 #define CK_INT8_ROUTE(id, abi, kind, weights, ...) CK_INT8_SCALED_##kind(id, __VA_ARGS__)
-#include "grouped_int8_nt_routes.inc"
+#include "../instances/grouped_int8_nt_routes.inc"
 #undef CK_INT8_ROUTE
 #undef CK_INT8_SCALED_K_PARALLEL
 #undef CK_INT8_SCALED_PAIRED_WASP
@@ -207,7 +207,7 @@ std::vector<Candidate> enumerate_for_output(const Domain& d)
     add_wasp<__VA_ARGS__>(out, d, int8_routes::LegacyRaw, static_cast<unsigned>(Instance::id));
 #define CK_INT8_LEGACY_DIRECT(id) CK_INT8_LEGACY_TILE(id, DefaultFallbackTileProblem)
 #define CK_INT8_LEGACY_DIRECT_EPI(id, ...) CK_INT8_LEGACY_TILE(id, __VA_ARGS__)
-#include "grouped_int8_nt_legacy_instances.inc"
+#include "../instances/grouped_int8_nt_legacy_instances.inc"
 #undef CK_INT8_LEGACY_DIRECT_EPI
 #undef CK_INT8_LEGACY_DIRECT
 #undef CK_INT8_LEGACY_WASP
@@ -221,7 +221,7 @@ std::vector<Candidate> enumerate_for_output(const Domain& d)
     if(d.m <= 2) \
         out.push_back({int8_routes::id, 0, d.m, __VA_ARGS__::Cols, __VA_ARGS__::KSpan, __VA_ARGS__::Threads, 0});
 #define CK_INT8_ROUTE(id, abi, kind, weights, ...) CK_INT8_TUNING_##kind(id, __VA_ARGS__)
-#include "grouped_int8_nt_routes.inc"
+#include "../instances/grouped_int8_nt_routes.inc"
 #undef CK_INT8_ROUTE
 #undef CK_INT8_TUNING_K_PARALLEL
 #undef CK_INT8_TUNING_PAIRED_WASP

@@ -105,13 +105,35 @@ endif()
 find_package(Threads REQUIRED)
 option(CK_INT8_CACHED_TUNING "Build the offline scaled INT8 NT tuning API" OFF)
 
+# The provider archive owns the HIP launches used by both INT8 NT APIs.
+file(STRINGS "${CMAKE_CURRENT_LIST_DIR}/grouped_gemm_int8_nt_device_args_provider_sources.txt"
+    INT8_NT_DEVICE_ARGS_PROVIDER_SOURCES REGEX "^[^#].+")
+set_source_files_properties(${INT8_NT_DEVICE_ARGS_PROVIDER_SOURCES} PROPERTIES LANGUAGE CXX)
+
+add_library(ck_tile_hcu_grouped_gemm_int8_nt_device_args_providers STATIC EXCLUDE_FROM_ALL
+    ${INT8_NT_DEVICE_ARGS_PROVIDER_SOURCES})
+target_include_directories(ck_tile_hcu_grouped_gemm_int8_nt_device_args_providers PRIVATE
+    ${CK_ROOT}/include ${CK_ROOT}/library/include)
+target_compile_features(ck_tile_hcu_grouped_gemm_int8_nt_device_args_providers PRIVATE cxx_std_17)
+target_compile_definitions(ck_tile_hcu_grouped_gemm_int8_nt_device_args_providers PRIVATE
+    CK_ENABLE_INT8 CK_EXPERIMENTAL_BIT_INT_EXTENSION
+    $<$<BOOL:${CK_INT8_CACHED_TUNING}>:CK_INT8_CACHED_TUNING>)
+target_compile_options(ck_tile_hcu_grouped_gemm_int8_nt_device_args_providers PRIVATE
+    -Wno-global-constructors -Wno-switch-enum -Wno-undefined-reinterpret-cast
+    -Wno-sign-compare -Wno-unused-parameter
+    "SHELL: -mllvm -support-768-vgprs=true")
+set_target_properties(ck_tile_hcu_grouped_gemm_int8_nt_device_args_providers PROPERTIES
+    POSITION_INDEPENDENT_CODE ON
+    CXX_VISIBILITY_PRESET hidden
+    VISIBILITY_INLINES_HIDDEN YES)
+ck_tile_hcu_grouped_gemm_apply_codegen(ck_tile_hcu_grouped_gemm_int8_nt_device_args_providers)
+
 add_library(ck_tile_int8_nt_cached SHARED
     grouped_int8_nt_cached_api.cpp
     instances.cpp
-    instances/grouped_int8_nt_cached_dispatch.cpp
-    instances/grouped_int8_nt_pack.cpp
-    instances/grouped_int8_nt_scaled_dispatch.cpp)
-target_link_libraries(ck_tile_int8_nt_cached PRIVATE Threads::Threads)
+    instances/grouped_int8_nt_cached_dispatch.cpp)
+target_link_libraries(ck_tile_int8_nt_cached PRIVATE
+    Threads::Threads ck_tile_hcu_grouped_gemm_int8_nt_device_args_providers)
 target_include_directories(ck_tile_int8_nt_cached PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}
     ${CMAKE_CURRENT_LIST_DIR}/include
@@ -152,18 +174,16 @@ foreach(benchmark IN ITEMS tile_example_grouped_gemm_device_args_benchmark
     endif()
 endforeach()
 
-
 # Example 24 owns the scaled device-args API and its provider manifest.
 if(GPU_TARGETS MATCHES "gfx936")
     if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
         enable_testing()
     endif()
 
-    file(STRINGS "${CMAKE_CURRENT_LIST_DIR}/grouped_gemm_int8_nt_device_args_provider_sources.txt"
-        INT8_NT_DEVICE_ARGS_PROVIDERS REGEX "^[^#].+")
     add_library(ck_tile_hcu_grouped_gemm_int8_nt_device_args STATIC EXCLUDE_FROM_ALL
-        grouped_gemm_int8_nt_device_args.cpp
-        ${INT8_NT_DEVICE_ARGS_PROVIDERS})
+        grouped_gemm_int8_nt_device_args.cpp)
+    target_link_libraries(ck_tile_hcu_grouped_gemm_int8_nt_device_args
+        PUBLIC ck_tile_hcu_grouped_gemm_int8_nt_device_args_providers)
     target_include_directories(ck_tile_hcu_grouped_gemm_int8_nt_device_args
         PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include ${CK_ROOT}/include)
     target_compile_features(ck_tile_hcu_grouped_gemm_int8_nt_device_args PUBLIC cxx_std_17)

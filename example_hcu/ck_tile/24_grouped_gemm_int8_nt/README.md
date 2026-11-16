@@ -16,7 +16,8 @@ BLASLt workbook target on all 1191 shapes for both scaled outputs. See the
 | Location | Responsibility |
 | --- | --- |
 | [instances.cpp](instances.cpp) | Raw INT8 provider entry used by `19_grouped_gemm`. |
-| [instances/](instances/) | Dispatchers, selectors, routes, and tuning selectors for raw, cached, and scaled routes. |
+| [instances/](instances/) | Selectors, route definitions, and kernel instance types. |
+| [providers/](providers/) | HIP launchers for scaled GEMM and weight packing. |
 | [kernels/](kernels/) | INT8 NT kernels, cooperative and WASP main loops, epilogues, and problem definitions. |
 | [grouped_gemm_int8_nt_device_args.cpp](grouped_gemm_int8_nt_device_args.cpp) | Standalone scaled instance selection, metadata query, and launch. |
 | [grouped_gemm_int8_nt_device_args_provider_sources.txt](grouped_gemm_int8_nt_device_args_provider_sources.txt) | Providers linked by the standalone device-args target. |
