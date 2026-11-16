@@ -1,7 +1,7 @@
 {
   "source_snapshot_commit": "50e7ae55754948c23fb2e2e92fdd440dcb2a284c",
   "original19_source_contents_preserved_and_committed": true,
-  "documentation_sha256": "3b39c8ff3c463b0f804c2fc7c08a7804882c10b0013de107ecd19b8713fc7402",
+  "documentation_sha256": "46961289c5b81fa00fe957986a7b007c8158b861d2d4817261b611c2742bde10",
   "bash_syntax_blocks_checked": 9,
   "python_syntax_checked": true,
   "CPU_tests": {
@@ -37,5 +37,9 @@
     "build_artifact_handling": "Existing build/bin reused by symlink for file signatures and ldd only; no fresh complete CK compilation was performed.",
     "shape_or_BLAS_files_copied_or_modified": false,
     "full_GPU_reproduction_verified": false
+  },
+  "publication_target": {
+    "repository": "https://github.com/tracybj/composable_kernel_das",
+    "branch": "exp/bf16_nn"
   }
 }

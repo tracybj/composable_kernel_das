@@ -2,9 +2,9 @@
 
 本说明用于把本地 CK 工作区发布到新的远程仓库，让接收者 clone 后自行构建并生成新的正式口径测试结果。
 
-交付分支：`bf16-nn-reproduce-handoff`，基于 `2ab0db23ca6e0dba6ee1e98e897e862c4cb5ce80`，包含原有9个已修改文件、10个未跟踪文件，以及本次复现入口与说明的更新。保留既有 kernel 内容和实验开关，不把未采用的原型当作生产优化。原 `v7-coverage` 分支保留。
+交付分支：`exp/bf16_nn`，基于 `2ab0db23ca6e0dba6ee1e98e897e862c4cb5ce80`，包含原有9个已修改文件、10个未跟踪文件，以及本次复现入口与说明的更新。保留既有 kernel 内容和实验开关，不把未采用的原型当作生产优化。原 `v7-coverage` 分支保留。
 
-**shape 和 BLASLt 均由使用者准备，本仓库不打包它们。** 通过 `--shapes` 和 `--blas-lib` 指定路径，配合 `--session-probe`，不需要任何旧实验目录中的探针或日志。本次整理只进行本地提交和 CPU 验证，没有上传、运行 GPU 或更新正式性能数据。
+**shape 和 BLASLt 均由使用者准备，本仓库不打包它们。** 通过 `--shapes` 和 `--blas-lib` 指定路径，配合 `--session-probe`，不需要任何旧实验目录中的探针或日志。本轮仅整理交付与测试入口并进行 CPU 验证，没有运行 GPU 或更新正式性能数据。
 
 ## 1. 原 git status 中的文件是什么
 
@@ -37,17 +37,17 @@
 
 ## 2. 发布者如何上传，接收者如何取得
 
-交付分支已经包含源码和工具，不需要接收者再手工补齐未跟踪文件。发布者核对本地提交后，将该分支推送到新远程仓库。以下为之后人工发布的示例；本次整理不执行 push：
+交付分支已经包含源码和工具，不需要接收者再手工补齐未跟踪文件。发布者核对本地提交后，将该分支推送到新远程仓库。以下为之后人工发布的示例；实际发布目标为本仓库的 `exp/bf16_nn` 分支：
 
 ```bash
-git remote add publish YOUR_NEW_REMOTE_URL
-git push publish bf16-nn-reproduce-handoff:refs/heads/bf16-nn-reproduce-handoff
+git remote add github-das https://github.com/tracybj/composable_kernel_das.git
+git push github-das exp/bf16_nn:refs/heads/exp/bf16_nn
 ```
 
 接收者：
 
 ```bash
-git clone --branch bf16-nn-reproduce-handoff YOUR_NEW_REMOTE_URL composable_kernel
+git clone --branch exp/bf16_nn https://github.com/tracybj/composable_kernel_das.git composable_kernel
 cd composable_kernel
 git rev-parse HEAD
 git status --short
