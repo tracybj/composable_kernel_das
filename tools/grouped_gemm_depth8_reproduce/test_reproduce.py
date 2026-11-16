@@ -20,6 +20,8 @@ import reproduce
 import runtime as r
 
 SOURCE=plan.REPO/'docs/data/v7_optimization_p6f/final_results/policy_overlay_incremental_1193.csv'
+plan.configure_paths(os.environ.get('CK_BF16_TEST_BLAS_LIB'),
+                     [os.environ['CK_BF16_TEST_SHAPES']] if os.environ.get('CK_BF16_TEST_SHAPES') else None)
 
 
 def example(kind='accuracy',selected=5000,repeats=1):
@@ -182,7 +184,9 @@ class Tests(unittest.TestCase):
         env=dict(os.environ,PATH=str(shadow)+':'+os.environ['PATH'])
         out=self.root/'dry'
         result=subprocess.run([sys.executable,str(Path(reproduce.__file__)),'--plan',str(SOURCE),
-                               '--output',str(out),'--dry-run'],env=env,capture_output=True,text=True,timeout=120)
+                               '--output',str(out),'--shapes',str(plan.SHAPES[0]),
+                               '--blas-lib',str(plan.BLAS),'--session-probe','--dry-run'],
+                              env=env,capture_output=True,text=True,timeout=120)
         self.assertEqual(result.returncode,0,result.stdout+result.stderr)
         self.assertFalse(marker.exists());self.assertFalse((out/'jobs.jsonl').exists())
         self.assertIn('DRY_RUN_PASS',result.stdout)
@@ -251,6 +255,105 @@ class Tests(unittest.TestCase):
                 if x['kind']=='perf' and x['round']==3:x['epoch']+=1
                 r.append(other/'jobs.jsonl',x)
             self.assertFalse(report.completed(other,self.manifest)[0])
+
+    def test_explicit_inputs_do_not_read_legacy_shape_locations(self):
+        shapes=self.root/'provided.csv';shapes.write_bytes(plan.SHAPES[0].read_bytes())
+        with patch.object(plan,'BLAS',plan.BLAS),patch.object(plan,'SHAPES',[self.root/'missing_legacy.csv']):
+            plan.configure_paths(self.root/'libhipblaslt.so',[shapes])
+            self.assertEqual(len(plan.load_table(SOURCE)['cases']),1193)
+            self.assertEqual(plan.runtime_paths()['shape_files'],[str(shapes)])
+
+    def test_fresh_recovery_process_restores_caller_paths(self):
+        self.manifest['runtime_paths']=dict(blas_lib=str(self.root/'caller.so'),
+                                           shape_files=[str(self.root/'caller.csv')])
+        r.write(self.root/'frozen_plan.json',self.manifest)
+        with patch.object(plan,'BLAS',plan.BLAS),patch.object(plan,'SHAPES',plan.SHAPES):
+            r.Site(self.root)
+            self.assertEqual(plan.runtime_paths(),self.manifest['runtime_paths'])
+
+    @contextlib.contextmanager
+    def session_probe_fixture(self):
+        fixture=Path(__file__).with_name('fake_benchmark.py')
+        def command(case,kind):
+            return [sys.executable,str(fixture),'--case-json',json.dumps(case),'--kind',kind]
+        with patch.object(plan,'BENCH',Path(sys.executable)),patch.object(plan,'command',side_effect=command),\
+             patch.object(self.site,'gate',return_value=dict(at=r.stamp())),\
+             patch.object(self.site,'identity'),patch.object(self.site,'kernel_events',return_value=[]),\
+             patch.object(health,'probe_evidence',side_effect=AssertionError('Legacy evidence accessed')):
+            self.site.manifest['benchmark_sha256']=plan.sha(sys.executable)
+            self.site.manifest['probe']=health.session_probe_definition(plan.sha(sys.executable))
+            self.site.manifest['plan_sha256']=plan.digest({k:v for k,v in self.site.manifest.items()
+                                                          if k!='plan_sha256'})
+            yield
+
+    def test_session_probe_needs_real_log_and_is_excluded_from_results(self):
+        with self.session_probe_fixture():
+            health.ensure_session_probe(self.site)
+            health.ensure_session_probe(self.site)
+            self.assertEqual(len(report.records(self.root)),1)
+            self.assertEqual(report.completed(self.root,self.site.manifest),({},[]))
+            proof=r.read(self.root/'probe_validation.json')
+            log=Path(proof['record']['path'])/'run.log'
+            log.write_text(log.read_text().replace('checked=8192','checked=8191'))
+            with self.assertRaises(ValueError):health.verified_probe(self.site)
+
+    def test_session_recovery_without_prior_proof_stops_before_observations(self):
+        with self.session_probe_fixture(),patch.object(r,'locked',contextlib.nullcontext),\
+             patch.object(self.site,'check') as checks:
+            r.write(self.site.mark,dict(at=r.stamp(),epoch=0))
+            with self.assertRaises(ValueError):health.recover(self.site)
+            checks.assert_not_called()
+            self.assertTrue(self.site.stop.exists())
+            self.assertEqual(self.site.epoch(),0)
+
+    def test_validated_session_probe_recovers_with_fresh_process_command(self):
+        with self.session_probe_fixture():
+            health.ensure_session_probe(self.site)
+            r.write(self.site.mark,dict(at=r.stamp(),epoch=0))
+            def program(cmd,folder,env,timeout):
+                self.assertIn('--case-json',cmd)
+                (folder/'run.log').write_text(example(repeats=3));return 0,123
+            with patch.object(r,'locked',contextlib.nullcontext),patch.object(health.time,'sleep'),\
+                 patch.object(self.site,'check',return_value=(True,dict(at=r.stamp()))) as checks,\
+                 patch.object(self.site,'run_program',side_effect=program) as program_mock:
+                health.recover(self.site)
+                self.assertEqual(checks.call_count,2)
+                self.assertEqual(program_mock.call_count,1)
+            self.assertEqual(self.site.epoch(),1)
+            self.assertFalse(self.site.mark.exists())
+
+    def test_session_probe_bootstrap_incident_does_not_recover_unvalidated_kernel(self):
+        with self.session_probe_fixture(),patch.object(self.site,'execute',side_effect=r.EnvironmentFailure('fixture')):
+            with self.assertRaises(r.QueueStopped):health.ensure_session_probe(self.site)
+            self.assertEqual(r.read(self.site.stop)['reason'],'BOOTSTRAP_CONTROL_NOT_VALIDATED')
+            self.assertFalse((self.root/'probe_validation.json').exists())
+
+    def test_bootstrap_keeps_inflight_process_stop_and_PID(self):
+        def inflight(spec):
+            r.write(self.site.stop,dict(reason='OBSERVATION_TIMEOUT_GPU_PROCESS_REMAINS',pid=123))
+            raise r.QueueStopped('GPU process remains')
+        with self.session_probe_fixture(),patch.object(self.site,'execute',side_effect=inflight):
+            with self.assertRaises(r.QueueStopped):health.ensure_session_probe(self.site)
+            self.assertEqual(r.read(self.site.stop),dict(reason='OBSERVATION_TIMEOUT_GPU_PROCESS_REMAINS',pid=123))
+
+    def test_session_recovery_rejects_changed_frozen_manifest(self):
+        with self.session_probe_fixture():
+            health.ensure_session_probe(self.site)
+            self.site.manifest['blas_sha256']='changed'
+            with self.assertRaisesRegex(ValueError,'manifest changed'):health.verified_probe(self.site)
+
+    def test_portable_dry_run_has_no_gpu_and_does_not_read_old_probe(self):
+        shapes=self.root/'provided.csv';shapes.write_bytes(plan.SHAPES[0].read_bytes())
+        with patch.object(plan,'BLAS',plan.BLAS),patch.object(plan,'SHAPES',plan.SHAPES),\
+             patch.object(health,'probe_evidence',side_effect=AssertionError('Legacy probe accessed')),\
+             patch.object(r.Site,'run_program',side_effect=AssertionError('GPU process started')),\
+             patch.object(r.Site,'check',side_effect=AssertionError('GPU health command started')):
+            rc=reproduce.main(['--plan',str(SOURCE),'--output',str(self.root/'portable'),
+                               '--shapes',str(shapes),'--blas-lib',str(plan.BLAS),
+                               '--session-probe','--depth8','--dry-run'])
+        self.assertEqual(rc,0)
+        self.assertFalse((self.root/'portable/probe_validation.json').exists())
+        self.assertFalse((self.root/'portable/jobs.jsonl').exists())
 
 
 if __name__=='__main__':unittest.main(verbosity=2)

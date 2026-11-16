@@ -43,6 +43,7 @@ def no_core():
 
 @contextlib.contextmanager
 def locked():
+    LOCK.parent.mkdir(parents=True, exist_ok=True)
     with LOCK.open('a') as f:
         fcntl.flock(f, fcntl.LOCK_EX | fcntl.LOCK_NB)
         yield
@@ -120,6 +121,9 @@ class Site:
         self.root = Path(output).resolve()
         self.session = read(self.root/'session.json')
         self.manifest = read(self.root/'frozen_plan.json')
+        if self.manifest and self.manifest.get('runtime_paths'):
+            paths = self.manifest['runtime_paths']
+            plan.configure_paths(paths['blas_lib'], paths['shape_files'])
         self.mark = self.root/'environment_recovery_required.json'
         self.stop = self.root/'gpu_stop.json'
         self._identities = {}
@@ -206,10 +210,7 @@ class Site:
                 return None, p.pid
         return rc, p.pid
 
-    def execute(self, spec):
-        """The caller owns LOCK. Every invocation creates one fresh process."""
-        key = f"e{self.epoch()}_{spec['logical_key']}_{uuid.uuid4().hex[:10]}"
-        gate = self.gate(key)
+    def verify_frozen_files(self):
         self.identity(plan.BENCH, self.manifest['benchmark_sha256'])
         self.identity(plan.BLAS, self.manifest['blas_sha256'])
         if self.manifest.get('selector_sha256'):
@@ -220,6 +221,12 @@ class Site:
             self.identity(plan.REPO/name,sha)
         for name,sha in self.manifest.get('dependencies',{}).get('sha256',{}).items():
             self.identity(name,sha)
+
+    def execute(self, spec):
+        """The caller owns LOCK. Every invocation creates one fresh process."""
+        key = f"e{self.epoch()}_{spec['logical_key']}_{uuid.uuid4().hex[:10]}"
+        gate = self.gate(key)
+        self.verify_frozen_files()
         if spec.get('expected_binary_sha256'):
             self.identity(spec['command'][0],spec['expected_binary_sha256'])
         folder = self.root/'jobs'/key; folder.mkdir(parents=True, exist_ok=False)

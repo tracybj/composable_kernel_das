@@ -1,0 +1,65 @@
+test_actual_recipe_dimensions_and_commands (test_reproduce.Tests) ... ok
+test_bootstrap_keeps_inflight_process_stop_and_PID (test_reproduce.Tests) ... ok
+test_depth8_flag_is_cleared_and_disable_wins_in_probe (test_reproduce.Tests) ... ok
+test_depth8_overlay_changes_only_six_recipes_and_keeps_history (test_reproduce.Tests) ... ok
+test_dry_run_has_no_gpu_or_health_commands (test_reproduce.Tests) ... ok
+test_environment_does_not_inherit_previous_recipe (test_reproduce.Tests) ... ok
+test_explicit_inputs_do_not_read_legacy_shape_locations (test_reproduce.Tests) ... ok
+test_fresh_health_requires_target_clean_rc_and_idle (test_reproduce.Tests) ... ok
+test_fresh_recovery_process_restores_caller_paths (test_reproduce.Tests) ... ok
+test_frozen_binary_change_stops (test_reproduce.Tests) ... ok
+test_full_output_and_real_redzones_required (test_reproduce.Tests) ... ok
+test_gpu_deadline_is_two_hours_before_total_and_never_reset (test_reproduce.Tests) ... ok
+test_instance_error_mkfd_rc0_and_bad_timing_rejected (test_reproduce.Tests) ... ok
+test_known_correct_probe_failure_stops (test_reproduce.Tests) ... ok
+test_low_memory_stops_without_gpu (test_reproduce.Tests) ... ok
+test_observation_timeout_leaves_process_and_stops_submissions (test_reproduce.Tests) ... ok
+test_original_and_overlay_rows_share_a_csv_schema (test_reproduce.Tests) ... ok
+test_portable_dry_run_has_no_gpu_and_does_not_read_old_probe (test_reproduce.Tests) ... PLAN_VERIFIED cases1193 primary_selector1193 additional_selector0
+DRY_RUN_PASS no GPU commands
+ok
+test_qualification_jobs_are_never_accepted_as_full_replay_rows (test_reproduce.Tests) ... ok
+test_rc0_service_event_excludes_actual_fake_child (test_reproduce.Tests) ... START e0_fake_service_cfc07807a2
+DONE e0_fake_service_cfc07807a2 ok=False sec=0.07
+ok
+test_real_cpu_child_interruption_resumes_whole_shape (test_reproduce.Tests) ... START e0_id1_accuracy_eb1597a321
+DONE e0_id1_accuracy_eb1597a321 ok=True sec=0.07
+START e0_id1_r1_b89b2258e2
+DONE e0_id1_r1_b89b2258e2 ok=True sec=0.07
+START e0_id1_accuracy_144b41a33e
+DONE e0_id1_accuracy_144b41a33e ok=True sec=0.07
+START e0_id1_r1_4eb5bdfcd1
+DONE e0_id1_r1_4eb5bdfcd1 ok=True sec=0.07
+START e0_id1_r2_f9274dfeda
+DONE e0_id1_r2_f9274dfeda ok=True sec=0.07
+START e0_id1_r3_8a1893d08a
+DONE e0_id1_r3_8a1893d08a ok=True sec=0.07
+SHAPE_COMPLETE 1 1 /1193
+PILOT_PASS continuing frozen1193 plan
+ok
+test_recovery_90minute_limit_blocks_probe (test_reproduce.Tests) ... ok
+test_recovery_max3_and_probe_failure_are_terminal (test_reproduce.Tests) ... ok
+test_recovery_three_observations_spaced_and_fresh_probe (test_reproduce.Tests) ... RECOVERY_PASS epoch=1
+ok
+test_service_event_before_job_marks_environment (test_reproduce.Tests) ... ok
+test_session_probe_bootstrap_incident_does_not_recover_unvalidated_kernel (test_reproduce.Tests) ... ok
+test_session_probe_needs_real_log_and_is_excluded_from_results (test_reproduce.Tests) ... START e0_recovery_probe_bootstrap_7fc510d55c
+DONE e0_recovery_probe_bootstrap_7fc510d55c ok=True sec=0.07
+SESSION_RECOVERY_PROBE_PASS instance5000 full_output_repeats3
+ok
+test_session_recovery_rejects_changed_frozen_manifest (test_reproduce.Tests) ... START e0_recovery_probe_bootstrap_02d5844ee3
+DONE e0_recovery_probe_bootstrap_02d5844ee3 ok=True sec=0.07
+SESSION_RECOVERY_PROBE_PASS instance5000 full_output_repeats3
+ok
+test_session_recovery_without_prior_proof_stops_before_observations (test_reproduce.Tests) ... ok
+test_unreadable_kernel_log_stops_before_any_gpu (test_reproduce.Tests) ... ok
+test_validated_session_probe_recovers_with_fresh_process_command (test_reproduce.Tests) ... START e0_recovery_probe_bootstrap_837625fbb7
+DONE e0_recovery_probe_bootstrap_837625fbb7 ok=True sec=0.09
+SESSION_RECOVERY_PROBE_PASS instance5000 full_output_repeats3
+RECOVERY_PASS epoch=1
+ok
+
+----------------------------------------------------------------------
+Ran 31 tests in 6.300s
+
+OK

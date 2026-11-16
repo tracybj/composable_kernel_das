@@ -1,0 +1,212 @@
+{
+  "created_at": "2026-11-16T07:14:21.327584+00:00",
+  "purpose": "Read-only inventory supporting handoff instructions; not a fresh performance run or complete runtime-library manifest.",
+  "source_HEAD_before_documentation": "2ab0db23ca6e0dba6ee1e98e897e862c4cb5ce80",
+  "original_worktree_files": [
+    {
+      "state": "modified",
+      "path": "example_hcu/ck_tile/19_grouped_gemm/CMakeLists.txt",
+      "bytes": 48251,
+      "sha256": "c29de72564ed813ee458515ade18a4f390d8daa174bd737b879a54a19629d703"
+    },
+    {
+      "state": "modified",
+      "path": "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_decode_device_args_provider_sources.txt",
+      "bytes": 459,
+      "sha256": "c4545e45777ba08489dfd69437a06fc838d8cbbd73346a08c59b0d6e002dc4b8"
+    },
+    {
+      "state": "modified",
+      "path": "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args.cpp",
+      "bytes": 65288,
+      "sha256": "1e2156f5ba213e8a44f10d34929f97132c6572d946ef9d2af275f8654d79c2a4"
+    },
+    {
+      "state": "modified",
+      "path": "example_hcu/ck_tile/19_grouped_gemm/grouped_gemm_device_args_query_test.cpp",
+      "bytes": 53750,
+      "sha256": "b9a20ac326650ad99abae03a9055b5c15035b0fd97aa39ffb40495b8cda4f9da"
+    },
+    {
+      "state": "modified",
+      "path": "example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_device_args_provider.hpp",
+      "bytes": 16109,
+      "sha256": "da1f8cacd70d359eed16426d72dfb16a0a089dd23900d2931939c493a57a41ec"
+    },
+    {
+      "state": "modified",
+      "path": "include/ck_tile/ops/gemm/grouped_gemm_device_args.h",
+      "bytes": 13380,
+      "sha256": "f82f5f7dd299249738e16370d3e501d86f329bb9557a2e32b3ea16237a8f5687"
+    },
+    {
+      "state": "modified",
+      "path": "include/ck_tile/ops/gemm/grouped_gemm_selector.hpp",
+      "bytes": 63093,
+      "sha256": "52e912c45b90d5ebe23a1fe0e03e24cbe8c1474cf6d026aedd805aa6f59d51e6"
+    },
+    {
+      "state": "modified",
+      "path": "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_wave.hpp",
+      "bytes": 10350,
+      "sha256": "38599490edcef2fc0efdbbccf520e3954b887bcaaeb81ccc93d4a2a1fc49dcb4"
+    },
+    {
+      "state": "modified",
+      "path": "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_v7_uniform.hpp",
+      "bytes": 38069,
+      "sha256": "eacd5ccc4bf73676c64c3edd5035f5c39e000ef4741385b1054c025c27907e65"
+    },
+    {
+      "state": "untracked",
+      "path": "example_hcu/ck_tile/19_grouped_gemm/instances/grouped_gemm_bf16_nn_decode_bvector_device_args.cpp",
+      "bytes": 3063,
+      "sha256": "8453a74d798a7929059ddd14fb86378c53d89b487888d5aa8124de8293d15af8"
+    },
+    {
+      "state": "untracked",
+      "path": "include/ck_tile/ops/gemm/pipeline/gemm_pipeline_decode_nn_bvector.hpp",
+      "bytes": 6796,
+      "sha256": "159fc8d6e229a5ca758e5706242303afc44c007fbeec8fd2a7e9379bd0d8290e"
+    },
+    {
+      "state": "untracked",
+      "path": "tools/grouped_gemm_reproduce/fake_benchmark.py",
+      "bytes": 1383,
+      "sha256": "ff5261ccd3a9a689a6381eff39678393f7a29dd57bafd8a2a80c3eb07360a5f4"
+    },
+    {
+      "state": "untracked",
+      "path": "tools/grouped_gemm_reproduce/health.py",
+      "bytes": 5091,
+      "sha256": "efe7fdf60ec67cd81c71a75de6b4aa2e73ba6eb03a668358226e75c10e8d2e6b"
+    },
+    {
+      "state": "untracked",
+      "path": "tools/grouped_gemm_reproduce/plan.py",
+      "bytes": 7428,
+      "sha256": "497e8582d0ae6e35c57b7d60d8dd25f04d1c1421c555e20ae85283863bae4d3f"
+    },
+    {
+      "state": "untracked",
+      "path": "tools/grouped_gemm_reproduce/report.py",
+      "bytes": 5567,
+      "sha256": "c0dde350fede24eb3ee964eb1f1cfbcc80ea14b651155a29f391454789d212ed"
+    },
+    {
+      "state": "untracked",
+      "path": "tools/grouped_gemm_reproduce/reproduce.py",
+      "bytes": 9058,
+      "sha256": "118c5ff62008c835246b156ef83283de194348eca6757d49d826ba4567b2b9b4"
+    },
+    {
+      "state": "untracked",
+      "path": "tools/grouped_gemm_reproduce/runtime.py",
+      "bytes": 13736,
+      "sha256": "e5487a2ba7651b3f7dbd2d5bdb150c324462a2b066897cfd2c0b9edeb7279568"
+    },
+    {
+      "state": "untracked",
+      "path": "tools/grouped_gemm_reproduce/selector_probe.cpp",
+      "bytes": 1479,
+      "sha256": "7779ce361c2dcc3e36abd3fb5e483b2529cd019ad5d639ece6bf9fafe139f4e5"
+    },
+    {
+      "state": "untracked",
+      "path": "tools/grouped_gemm_reproduce/test_reproduce.py",
+      "bytes": 13149,
+      "sha256": "b3c0cb6f41c48be556dc9f8def2a19bb0beb3bc43bcca46b1935c5583e216e30"
+    }
+  ],
+  "external_files": [
+    {
+      "role": "shape_primary",
+      "path": "/workspace/shapes_1178.csv",
+      "resolved_path": "/workspace/shapes_1178.csv",
+      "bytes": 36820,
+      "sha256": "5c3ae4d1d682b919ed90adb5cfed1cec755e3b519f9003afde8c46d282e77863"
+    },
+    {
+      "role": "shape_mirror",
+      "path": "/workspace/Grouped_Geem/blaslt_tuning_tools/shapes_1178.csv",
+      "resolved_path": "/workspace/Grouped_Geem/blaslt_tuning_tools/shapes_1178.csv",
+      "bytes": 36820,
+      "sha256": "5c3ae4d1d682b919ed90adb5cfed1cec755e3b519f9003afde8c46d282e77863"
+    },
+    {
+      "role": "BLASLt_shared_library",
+      "path": "/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so",
+      "resolved_path": "/workspace/Grouped_Geem/hipblaslt-install/lib/libhipblaslt.so.0.10",
+      "bytes": 8045056,
+      "sha256": "05524e5b1032409d3b4ba3926e26a4e989f2cccb4b867e0f1a2cfaa1e63ed5a5"
+    },
+    {
+      "role": "BLASLt_dependency",
+      "path": "/workspace/Grouped_Geem/hipblaslt-install/lib/liborigami.so.1.0",
+      "resolved_path": "/workspace/Grouped_Geem/hipblaslt-install/lib/liborigami.so.1.0",
+      "bytes": 210960,
+      "sha256": "0d3cc81a94bd6239f0fe4acd770ebb00545c0a1ef43ec6807c00f0875ade6966"
+    },
+    {
+      "role": "BLASLt_gfx936_code_object",
+      "path": "/workspace/Grouped_Geem/hipblaslt-install/lib/hipblaslt/library_gfx936/TensileLibrary_gfx936.co",
+      "resolved_path": "/workspace/Grouped_Geem/hipblaslt-install/lib/hipblaslt/library_gfx936/TensileLibrary_gfx936.co",
+      "bytes": 371153152,
+      "sha256": "0100605e307ec45ab645712246805a04ccff6a402c2b86de77f6a3db88a52454"
+    },
+    {
+      "role": "MKFD_known_good_probe",
+      "path": "/workspace/v7_coverage/p6e/bench_cache",
+      "resolved_path": "/workspace/v7_coverage/p6e/bench_cache",
+      "bytes": 57609760,
+      "sha256": "1052b95c681371b0713c357ade4e3ede659df08dd4d763e3cf6023e9ab5d0d2d"
+    },
+    {
+      "role": "MKFD_probe_original_accuracy_evidence",
+      "path": "/workspace/v7_coverage/p6e/jobs.jsonl",
+      "resolved_path": "/workspace/v7_coverage/p6e/jobs.jsonl",
+      "bytes": 8300333,
+      "sha256": "69efeed30366ace3e9f0ce63d3abef1d8920402bbaa357474ee722fca35d166f"
+    }
+  ],
+  "formal_result_source": {
+    "path": "/workspace/composable_kernel/docs/data/decode_depth8_replay_p6k/results.json",
+    "resolved_path": "/workspace/composable_kernel/docs/data/decode_depth8_replay_p6k/results.json",
+    "bytes": 3616703,
+    "sha256": "00c80c665735d59165947e5c9458e4e3cb0327df1a47dee2926fe725af4e9d3d"
+  },
+  "historical_benchmark_sha256": "76642f45892426cb97e758306f780d22c95567b38f9da475105aa38a0456b5ae",
+  "current_benchmark": {
+    "path": "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+    "resolved_path": "/workspace/composable_kernel/build/bin/tile_example_grouped_gemm_device_args_benchmark",
+    "bytes": 60533760,
+    "sha256": "dd8e20c51f611150ada550ac634d68ff102237ee96fbba5e7dc4a590d1fc37ad"
+  },
+  "formal_input_plan": {
+    "path": "/workspace/composable_kernel/docs/data/v7_optimization_p6f/final_results/policy_overlay_incremental_1193.csv",
+    "resolved_path": "/workspace/composable_kernel/docs/data/v7_optimization_p6f/final_results/policy_overlay_incremental_1193.csv",
+    "bytes": 918813,
+    "sha256": "050ac954be1e7210f5da0589c8de1de80ae0a75187a7fa1e45dd93d7e8e18cc9"
+  },
+  "shape_rows": 1193,
+  "phase_counts": {
+    "decode": 881,
+    "prefill": 312
+  },
+  "physical_GPU_for_runner": 4,
+  "frozen_BLAS_gpu_by_ID": {
+    "1-1178": 0,
+    "1179-1193": 4
+  },
+  "compiler_version": "HIP version: 6.2.0-0\nclang version 18.0.0 (/buildspace/das-build/dtk-llvm-6.3.3/llvm-project/clang 8b011791e70e1deb8e27304a373e8411a1ad6cd0)\nTarget: x86_64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /opt/dtk/aillvm/bin\n",
+  "cmake_version": "cmake version 3.29.2",
+  "build_options": {
+    "CMAKE_BUILD_TYPE": "Release",
+    "CMAKE_CXX_COMPILER": "/opt/dtk/bin/aicc",
+    "CMAKE_PREFIX_PATH": "/opt/dtk;/opt/dtk/llvm;/opt/dtk/hip",
+    "GPU_TARGETS": "gfx936;gfx938",
+    "CMAKE_GENERATOR": "Unix Makefiles",
+    "CK_GROUPED_GEMM_HIPBLASLT_ROOT": ""
+  },
+  "validation_this_task": "Only source inspection, SHA256 and file inventory; no source changes, build, test, GPU run, commit or push."
+}

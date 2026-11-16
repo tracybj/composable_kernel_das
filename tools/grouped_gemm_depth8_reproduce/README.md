@@ -1,5 +1,10 @@
 # 按表复现 BF16 NN Grouped GEMM，并覆盖八级独立 Decode 候选
 
+新环境交付请先看 [完整使用说明](../../docs/bf16_nn_groupgemm_reproduce/README.zh-CN.md)。
+指定 `--shapes /path/to/shapes_1178.csv --blas-lib /path/to/libhipblaslt.so --session-probe`，
+即可使用调用者准备的输入，并在本会话先验证恢复对照；不需要旧实验目录中的探针和日志。
+下面保留原调用方式及历史协议说明。新会话应采用完整使用说明中的路径参数。
+
 入口读取1193条历史策略表，清理继承的实验开关，逐条配置正式benchmark，核对默认selector的实际实例，先全输出精度验证，再测三轮单launch性能。结果中的CK耗时全部来自当前执行；BLAS耗时保持输入表的冻结Native GroupedGemm值及原来源。
 
 `--depth8`按属性将gfx936、BF16 NN、common非空非ragged、M1～32/N256/K512/G64覆盖为实例6003。正式1193表仅命中原有六条，不增加26条合成shape。原表、历史CK耗时及其余1187条配置保持只读。实验开关默认关闭；此入口是按表配置的复测，不代表全局生产默认策略。

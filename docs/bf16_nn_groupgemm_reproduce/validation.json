@@ -1,0 +1,25 @@
+{
+  "source_snapshot_commit": "50e7ae55754948c23fb2e2e92fdd440dcb2a284c",
+  "original19_source_contents_preserved_and_committed": true,
+  "documentation_sha256": "b7fac51d67362c129b7c3cb5ec53ca95442c78163c6ec9cc1dd23632039a6dd1",
+  "bash_syntax_blocks_checked": 9,
+  "python_syntax_checked": true,
+  "CPU_tests": {
+    "count": 31,
+    "passed": true,
+    "log": "cpu_tests.txt",
+    "scope": "CPU selector probes and fake-process tests only; simulated recovery is not a GPU recovery."
+  },
+  "input_paths_supported": [
+    "--shapes",
+    "--blas-lib"
+  ],
+  "old_probe_files_required_when_session_probe_enabled": false,
+  "physical_GPU_policy": 4,
+  "full_CK_build_executed": false,
+  "GPU_test_executed": false,
+  "formal_performance_data_changed": false,
+  "shape_or_BLAS_files_copied_or_modified": false,
+  "push_executed": false,
+  "clean_clone_CPU_validation": "pending"
+}

@@ -40,6 +40,21 @@ def digest(data):
     return hashlib.sha256(json.dumps(data, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
 
 
+def configure_paths(blas_lib=None, shape_files=None):
+    """Configure caller-owned inputs without copying or changing their contents."""
+    global BLAS, SHAPES
+    if blas_lib is not None:
+        BLAS = Path(blas_lib).expanduser().absolute()
+    if shape_files is not None:
+        if not shape_files:
+            raise ValueError('At least one shape file is required')
+        SHAPES = [Path(p).expanduser().absolute() for p in shape_files]
+
+
+def runtime_paths():
+    return dict(blas_lib=str(BLAS), shape_files=[str(p) for p in SHAPES])
+
+
 def dependencies():
     """Fingerprint linked DSOs and the explicitly loaded BLAS dependencies."""
     paths={str(BLAS.resolve())}
@@ -77,7 +92,8 @@ def environment(overrides, inherited=None):
     return env
 
 
-def load_table(path, shape_files=SHAPES):
+def load_table(path, shape_files=None):
+    shape_files = SHAPES if shape_files is None else shape_files
     path = Path(path).resolve()
     for source in shape_files:
         if sha(source) != SHAPE_SHA:

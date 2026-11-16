@@ -38,6 +38,15 @@ def prepare(args):
     session=r.read(root/'session.json')
     if session['physical_gpu']!=4 or session['deadline_epoch']-session['t0_epoch']>43200.01:
         raise ValueError('Session violates GPU4/12h authorization')
+    p=root/'frozen_plan.json'
+    frozen=r.read(p)
+    if frozen and frozen.get('runtime_paths'):
+        paths=frozen['runtime_paths']
+        plan.configure_paths(paths['blas_lib'],paths['shape_files'])
+    plan.configure_paths(getattr(args,'blas_lib',None),
+                         [args.shapes] if getattr(args,'shapes',None) else None)
+    if frozen and frozen.get('runtime_paths') and plan.runtime_paths()!=frozen['runtime_paths']:
+        raise ValueError('Frozen input paths changed; use a new output directory')
     table=plan.load_table(args.plan)
     if args.depth8:
         old_bins=report.bins(table['cases'],historical=True)
@@ -51,9 +60,10 @@ def prepare(args):
         audits.append(dict(csv_path=other['csv_path'],csv_sha256=other['csv_sha256'],
                            **plan.selector_check(other,root/('cpu_'+other['csv_sha256'][:12]))))
     r.write(root/'selector_audit.json',dict(at=r.stamp(),cpu_only=True,checks=audits,total=sum(x['cases'] for x in audits)))
-    p=root/'frozen_plan.json'
     if p.exists():
-        manifest=r.read(p)
+        manifest=frozen
+        if getattr(args,'session_probe',False) and manifest['probe'].get('mode')!='session_validated_v7':
+            raise ValueError('Recovery probe mode changed; use a new output directory')
         if manifest['table']!=table: raise ValueError('CSV/recipe changed; use a new authorized run, not in-place resume')
         for path,sha in [(plan.BENCH,manifest['benchmark_sha256']),(plan.BLAS,manifest['blas_sha256']),
                          (plan.SELECTOR,manifest['selector_sha256'])]:
@@ -65,10 +75,16 @@ def prepare(args):
     else:
         diff=subprocess.check_output(['git','diff','--',PROTECTED],cwd=plan.REPO)
         (root/'protected_user.patch').write_bytes(diff)
-        manifest=dict(table=table,benchmark=str(plan.BENCH),benchmark_sha256=plan.sha(plan.BENCH),
+        benchmark_sha=plan.sha(plan.BENCH)
+        probe=(health.session_probe_definition(benchmark_sha) if getattr(args,'session_probe',False)
+               else health.probe_evidence())
+        if probe.get('mode')=='session_validated_v7':
+            plan.selector_check(dict(cases=[probe['case']]),root/'cpu_recovery_probe')
+        manifest=dict(table=table,benchmark=str(plan.BENCH),benchmark_sha256=benchmark_sha,
                       blas_library=str(plan.BLAS),blas_sha256=plan.sha(plan.BLAS),
                       selector_sha256=plan.sha(plan.SELECTOR),
-                      protected_diff_md5=hashlib.md5(diff).hexdigest(),probe=health.probe_evidence(),
+                      protected_diff_md5=hashlib.md5(diff).hexdigest(),probe=probe,
+                      runtime_paths=plan.runtime_paths(),
                       pilot_ids=PILOT,physical_gpu=4,
                       protocol=dict(dtype='bf16',layout='NN',warmup=10,samples=30,launches_per_sample=1,
                                     include_args_build=0,rounds=3,correctness_repeats=1,accuracy_redzone=16,
@@ -90,7 +106,8 @@ def prepare(args):
         manifest['plan_sha256']=plan.digest(manifest)
         r.write(p,manifest)
         (root/'input.csv').write_bytes(Path(args.plan).read_bytes())
-        subprocess.run(['ldd',str(plan.BENCH)],stdout=(root/'ldd.log').open('w'),stderr=subprocess.STDOUT,check=True,timeout=30)
+        with (root/'ldd.log').open('w') as log:
+            subprocess.run(['ldd',str(plan.BENCH)],stdout=log,stderr=subprocess.STDOUT,check=True,timeout=30)
     if manifest['plan_sha256']!=plan.digest({k:v for k,v in manifest.items() if k!='plan_sha256'}):
         raise ValueError('Frozen manifest digest mismatch')
     print('PLAN_VERIFIED cases1193 primary_selector1193 additional_selector'+str(sum(x['cases'] for x in audits[1:])),flush=True)
@@ -101,6 +118,7 @@ def run_once(site,pilot_only=False,qualification_only=False):
     with r.locked():
         if site.stop.exists(): raise r.QueueStopped('Stop marker exists; no new GPU submissions')
         if site.mark.exists(): raise r.EnvironmentFailure('Pending incident requires recovery')
+        health.ensure_session_probe(site)
         raw=report.records(site.root)
         for suffix in REGRESSIONS:
             logical='regression_'+suffix
@@ -143,6 +161,10 @@ def main(argv=None):
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--plan',help='Source-labelled1193 CSV; required except recovery/report-only')
     ap.add_argument('--output',required=True)
+    ap.add_argument('--shapes',help='Caller-provided1193-shape CSV; avoids the two legacy absolute paths')
+    ap.add_argument('--blas-lib',help='Caller-provided libhipblaslt.so; keep its installed dependencies')
+    ap.add_argument('--session-probe',action='store_true',
+                    help='Validate this build V7 control as recovery probe; no old experiment files needed')
     ap.add_argument('--resume',action='store_true')
     ap.add_argument('--dry-run',action='store_true',help='CPU parsing/selector only; never invokes GPU or hy-smi')
     ap.add_argument('--check-table',action='append',default=[],help='Additional CPU-only1193 table')
