@@ -2,18 +2,14 @@
 #pragma once
 #include "ck_tile/core.hpp"
 #include "ck_tile/host/kernel_launch.hpp"
+#include "../include/grouped_gemm_int8_nt_device_args.h"
 #include <cstdint>
 namespace ck_tile {
 struct Int8CachedWeightPackProblem
 {
     static constexpr index_t NTile = 16, KTile = 64, VectorBytes = 16, Threads = 256;
 };
-struct Int8CachedWeightPackArgs
-{
-    const int8_t* source;
-    int8_t* packed;
-    int32_t n, k, stride;
-};
+using Int8CachedWeightPackArgs = ck_tile_hcu_grouped_gemm_int8_pack_arg_v2;
 template <class Problem = Int8CachedWeightPackProblem>
 struct Int8CachedWeightPackKernel
 {

@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: MIT
+#if !defined(__HIP_DEVICE_COMPILE__) || defined(__gfx936__)
 #include "../kernels/grouped_int8_nt_kernel.hpp"
 #include "../kernels/grouped_int8_nt_wasp_kernel.hpp"
 #include "../kernels/grouped_int8_nt_k_parallel.hpp"
@@ -82,16 +83,27 @@ int raw(unsigned legacy, const void* args, const void* scales, int g, int m, int
 }
 
 template <bool BF, int Rows>
-int k_parallel(const void* args, int g, int n, hipStream_t stream)
+int k_parallel(const void* args, const void* scales, int g, int n, hipStream_t stream)
 {
     using K = ck_tile::GroupedInt8NtScaledKParallelKernel<Rows, BF>;
-    ck_tile::launch_kernel(
-        ck_tile::stream_config{stream, false},
-        ck_tile::make_kernel<512, 1>(K{},
-                                     dim3((n + 3) / 4, 1, g),
-                                     dim3(512),
-                                     0,
-                                     static_cast<const ck_tile::Int8NtKParallelArgs*>(args)));
+    const ck_tile::stream_config config{stream, false};
+    const dim3 grid((n + 3) / 4, 1, g);
+    const dim3 threads(512);
+    if(scales)
+    {
+        ck_tile::launch_kernel(config,
+                              ck_tile::make_kernel<512, 1>(
+                                  K{}, grid, threads, 0,
+                                  static_cast<const ck_tile::GemmTransKernelArg*>(args),
+                                  static_cast<const ck_tile::Int8NtScaleArgs*>(scales)));
+    }
+    else
+    {
+        ck_tile::launch_kernel(config,
+                              ck_tile::make_kernel<512, 1>(
+                                  K{}, grid, threads, 0,
+                                  static_cast<const ck_tile::Int8NtKParallelArgs*>(args)));
+    }
     return hipGetLastError() == hipSuccess ? CK_TILE_INT8_CACHED_SUCCESS_V1
                                            : CK_TILE_INT8_CACHED_INTERNAL_ERROR_V1;
 }
@@ -127,8 +139,8 @@ int dispatch(unsigned route,
     case int8_routes::id: return paired_wasp<BF, __VA_ARGS__>(args, scales, g, m, n, stream);
 #define CK_INT8_SCALED_K_PARALLEL(id, ...) \
     case int8_routes::id: \
-        return m == 1 ? k_parallel<BF, 1>(args, g, n, stream) \
-                      : k_parallel<BF, 2>(args, g, n, stream);
+        return m == 1 ? k_parallel<BF, 1>(args, scales, g, n, stream) \
+                      : k_parallel<BF, 2>(args, scales, g, n, stream);
 #define CK_INT8_ROUTE(id, abi, kind, weights, ...) CK_INT8_SCALED_##kind(id, __VA_ARGS__)
 #include "grouped_int8_nt_routes.inc"
 #undef CK_INT8_ROUTE
@@ -242,3 +254,4 @@ extern "C" int ck_tile_int8_scaled_launch_private(unsigned output,
                ? dispatch<true>(route, legacy, args, scales, g, m, n, stream)
                : dispatch<false>(route, legacy, args, scales, g, m, n, stream);
 }
+#endif

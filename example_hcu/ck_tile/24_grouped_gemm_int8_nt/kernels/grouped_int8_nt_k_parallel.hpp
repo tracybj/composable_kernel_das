@@ -3,6 +3,7 @@
 #include "grouped_int8_nt_problem.hpp"
 #include "grouped_int8_nt_scaled_epilogue.hpp"
 #include "../include/grouped_int8_nt_k_parallel_args.hpp"
+#include "ck_tile/ops/gemm/kernel/grouped_gemm_kernel.hpp"
 namespace ck_tile {
 template <int Waves_, int Cols_>
 struct Int8NtKParallelProblem
@@ -96,19 +97,43 @@ struct Int8NtKParallelEpilogue
         }
     }
 };
-// The plan uploads one compact descriptor for each group.
 template <int Rows, bool BFloat>
 struct GroupedInt8NtScaledKParallelKernel
 {
-    CK_TILE_DEVICE void operator()(const Int8NtKParallelArgs* args) const
+    CK_TILE_DEVICE static void run_group(const Int8NtKParallelArgs& a)
     {
-        using P      = Int8NtKParallelProblem<8, 4>;
-        const auto a = args[blockIdx.z];
+        using P = Int8NtKParallelProblem<8, 4>;
         const int nb = blockIdx.x * P::Cols;
         typename P::Mmac::CVecType c[Rows][P::Cols]{};
         __shared__ int32_t partial[Rows * P::Cols * P::Waves];
         Int8NtKParallelPipeline<P, Rows>{}(a, nb, c);
         Int8NtKParallelEpilogue<P, Rows, BFloat ? 1 : 2>{}(a, nb, c, partial);
+    }
+
+    CK_TILE_DEVICE void operator()(const Int8NtKParallelArgs* args) const
+    {
+        run_group(args[blockIdx.z]);
+    }
+
+    CK_TILE_DEVICE void operator()(const GemmTransKernelArg* args,
+                                   const Int8NtScaleArgs* scales) const
+    {
+        const auto& arg = args[blockIdx.z].group_karg;
+        const auto& scale = scales[blockIdx.z];
+        const Int8NtKParallelArgs group{static_cast<const int8_t*>(arg.as_ptr[0]),
+                                        static_cast<const int8_t*>(arg.bs_ptr[0]),
+                                        arg.e_ptr,
+                                        scale.a,
+                                        scale.b,
+                                        arg.M,
+                                        arg.N,
+                                        arg.K,
+                                        arg.stride_As[0],
+                                        arg.stride_Bs[0],
+                                        arg.stride_E,
+                                        scale.a_stride,
+                                        scale.b_stride};
+        run_group(group);
     }
 };
 } // namespace ck_tile

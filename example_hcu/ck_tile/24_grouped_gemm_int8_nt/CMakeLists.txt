@@ -109,6 +109,7 @@ add_library(ck_tile_int8_nt_cached SHARED
     grouped_int8_nt_cached_api.cpp
     instances.cpp
     instances/grouped_int8_nt_cached_dispatch.cpp
+    instances/grouped_int8_nt_pack.cpp
     instances/grouped_int8_nt_scaled_dispatch.cpp)
 target_link_libraries(ck_tile_int8_nt_cached PRIVATE Threads::Threads)
 target_include_directories(ck_tile_int8_nt_cached PRIVATE
@@ -150,3 +151,51 @@ foreach(benchmark IN ITEMS tile_example_grouped_gemm_device_args_benchmark
         target_link_libraries(${benchmark} PRIVATE ck_tile_int8_nt_cached)
     endif()
 endforeach()
+
+
+# Example 24 owns the scaled device-args API and its provider manifest.
+if(GPU_TARGETS MATCHES "gfx936")
+    if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+        enable_testing()
+    endif()
+
+    file(STRINGS "${CMAKE_CURRENT_LIST_DIR}/grouped_gemm_int8_nt_device_args_provider_sources.txt"
+        INT8_NT_DEVICE_ARGS_PROVIDERS REGEX "^[^#].+")
+    add_library(ck_tile_hcu_grouped_gemm_int8_nt_device_args STATIC EXCLUDE_FROM_ALL
+        grouped_gemm_int8_nt_device_args.cpp
+        ${INT8_NT_DEVICE_ARGS_PROVIDERS})
+    target_include_directories(ck_tile_hcu_grouped_gemm_int8_nt_device_args
+        PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include ${CK_ROOT}/include)
+    target_compile_features(ck_tile_hcu_grouped_gemm_int8_nt_device_args PUBLIC cxx_std_17)
+    target_compile_definitions(ck_tile_hcu_grouped_gemm_int8_nt_device_args PRIVATE
+        CK_ENABLE_INT8 CK_EXPERIMENTAL_BIT_INT_EXTENSION)
+    target_compile_options(ck_tile_hcu_grouped_gemm_int8_nt_device_args PRIVATE
+        -Wno-switch-enum -Wno-undefined-reinterpret-cast -Wno-sign-compare -Wno-unused-parameter
+        "SHELL: -mllvm -support-768-vgprs=true")
+    set_target_properties(ck_tile_hcu_grouped_gemm_int8_nt_device_args PROPERTIES
+        POSITION_INDEPENDENT_CODE ON)
+    ck_tile_hcu_grouped_gemm_apply_codegen(ck_tile_hcu_grouped_gemm_int8_nt_device_args)
+
+    add_executable(tile_example_grouped_gemm_int8_nt_device_args EXCLUDE_FROM_ALL
+        benchmarks/device_args_benchmark.cpp)
+    target_link_libraries(tile_example_grouped_gemm_int8_nt_device_args PRIVATE
+        ck_tile_hcu_grouped_gemm_int8_nt_device_args)
+
+    function(add_int8_nt_device_args_smoke flavor)
+        add_test(NAME tile_example_grouped_gemm_int8_nt_device_args_${flavor}
+            COMMAND $<TARGET_FILE:tile_example_grouped_gemm_int8_nt_device_args>
+                    ${ARGN} --time=0 --correctness-repeats=1)
+        set_tests_properties(tile_example_grouped_gemm_int8_nt_device_args_${flavor}
+            PROPERTIES LABELS "hcu;ck_tile;int8_nt;device_args;smoke")
+    endfunction()
+
+    add_int8_nt_device_args_smoke(packed_bf16
+        --m=128 --n=2048 --k=1024 --groups=4 --dtype=int8_bf16)
+    add_int8_nt_device_args_smoke(ragged_fp16
+        --m=65 --n=256 --k=512 --dtype=int8_fp16 --group-lengths=1,0,65
+        --variable-capacity=128 --allow-empty-groups=1 --include-args-build=1)
+    add_int8_nt_device_args_smoke(kparallel_bf16
+        --m=1 --n=4096 --k=6144 --groups=8 --dtype=int8_bf16)
+    add_int8_nt_device_args_smoke(kparallel_fp16
+        --m=2 --n=4096 --k=7168 --groups=8 --dtype=int8_fp16)
+endif()
