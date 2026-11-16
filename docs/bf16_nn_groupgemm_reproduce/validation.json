@@ -1,7 +1,7 @@
 {
   "source_snapshot_commit": "50e7ae55754948c23fb2e2e92fdd440dcb2a284c",
   "original19_source_contents_preserved_and_committed": true,
-  "documentation_sha256": "b7fac51d67362c129b7c3cb5ec53ca95442c78163c6ec9cc1dd23632039a6dd1",
+  "documentation_sha256": "3b39c8ff3c463b0f804c2fc7c08a7804882c10b0013de107ecd19b8713fc7402",
   "bash_syntax_blocks_checked": 9,
   "python_syntax_checked": true,
   "CPU_tests": {
@@ -21,5 +21,21 @@
   "formal_performance_data_changed": false,
   "shape_or_BLAS_files_copied_or_modified": false,
   "push_executed": false,
-  "clean_clone_CPU_validation": "pending"
+  "clean_clone_CPU_validation": {
+    "validated_commit": "e397d6924a30ca92bf7513380c40a026d9af13e4",
+    "clean_local_clone": true,
+    "original19_source_files_present_and_SHA256_matched": true,
+    "CPU_selector_cases": 1193,
+    "recovery_control_CPU_selector_checked": true,
+    "depth8_qualification_CPU_selector_checked": true,
+    "explicit_shape_and_BLAS_paths": true,
+    "legacy_probe_access_forbidden": true,
+    "GPU_process_and_health_calls_forbidden": true,
+    "dry_run_passed": true,
+    "GPU_jobs_created": false,
+    "temporary_clone_removed_after_validation": true,
+    "build_artifact_handling": "Existing build/bin reused by symlink for file signatures and ldd only; no fresh complete CK compilation was performed.",
+    "shape_or_BLAS_files_copied_or_modified": false,
+    "full_GPU_reproduction_verified": false
+  }
 }

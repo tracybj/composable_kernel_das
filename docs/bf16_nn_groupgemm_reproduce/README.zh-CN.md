@@ -232,4 +232,6 @@ CK_BF16_TEST_SHAPES="$CK_BF16_SHAPES" CK_BF16_TEST_BLAS_LIB="$CK_BF16_BLAS" \
   python3 -B -m unittest discover -s tools/grouped_gemm_depth8_reproduce -v
 ```
 
-fake进程仅为CPU测试夹具，不产生GPU成绩。具体核对记录见 [validation.json](validation.json)。本次没有执行新GPU先导或全量，也没有在新机器完成完整C++重建；接收者仍应记录实际构建、先导及需要时的全量结果。
+fake进程仅为CPU测试夹具，不产生GPU成绩。31项CPU测试通过，并从干净本地clone核对了19个原文件的签名、1193条CPU选核和带显式输入路径的dry-run。克隆核对仅复用已有build/bin作文件签名和ldd检查，没有进行完整C++重建。
+
+具体记录见 [validation.json](validation.json) 和 [干净克隆核对](clean_clone_validation.json)。本次没有执行新GPU先导或全量；接收者仍应记录实际构建、先导及需要时的全量结果。
