@@ -392,6 +392,8 @@ endif()
 # Independent decode providers, including opt-in A-register/B-private-LDS Depth8.
 # The manifest below owns all provider TUs; no dependency on V7 pipeline/codegen.
 if(GPU_TARGETS MATCHES "gfx936")
+    set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
+        ${CMAKE_CURRENT_LIST_DIR}/grouped_gemm_decode_device_args_provider_sources.txt)
     file(STRINGS ${CMAKE_CURRENT_LIST_DIR}/grouped_gemm_decode_device_args_provider_sources.txt
         HCU_GROUPED_GEMM_DECODE_SOURCES REGEX "^[^#].+")
     add_library(ck_tile_hcu_grouped_gemm_decode_bf16 STATIC EXCLUDE_FROM_ALL

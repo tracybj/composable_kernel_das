@@ -98,6 +98,8 @@ extern "C" int ck_tile_hcu_grouped_gemm_bf16_nn_decode_depth8_device_args(
     void*, int, hipStream_t, std::uint64_t, int, int, int);
 extern "C" int ck_tile_hcu_grouped_gemm_bf16_nn_decode_wave_device_args(
     void*, int, hipStream_t, std::uint64_t, int, int, int);
+extern "C" int ck_tile_hcu_grouped_gemm_bf16_nn_decode_bvector_device_args(
+    void*, int, hipStream_t, std::uint64_t, int, int, int, int);
 extern "C" int ck_tile_hcu_grouped_gemm_bf16_nn_decode_mainline_device_args(
     void*, int, hipStream_t, std::uint64_t, int, int, int, int, int);
 extern "C" int ck_tile_hcu_grouped_gemm_bf16_nn_decode_shared_device_args(
@@ -453,11 +455,18 @@ int convert_problem(const ck_tile_hcu_grouped_gemm_problem_v1* source,
     policy.enable_bf16_nn_decode_wave = decode_enable != nullptr &&
         decode_enable[0] == '1' && decode_enable[1] == '\0' &&
         !(decode_disable != nullptr && decode_disable[0] == '1' && decode_disable[1] == '\0');
+    const char* bvector_enable = std::getenv("CK_TILE_GROUPED_GEMM_ENABLE_BF16_NN_DECODE_BVECTOR");
+    const char* bvector_disable = std::getenv("CK_TILE_GROUPED_GEMM_DISABLE_BF16_NN_DECODE_BVECTOR");
+    if(bvector_enable != nullptr && (bvector_enable[0] == '1' || bvector_enable[0] == '2') &&
+       bvector_enable[1] == '\0' &&
+       !(bvector_disable != nullptr && bvector_disable[0] == '1' && bvector_disable[1] == '\0'))
+        policy.bf16_nn_decode_bvector = bvector_enable[0] - '0';
 #if !defined(CK_TILE_GROUPED_GEMM_DEVICE_ARGS_HAS_DECODE_BF16)
     policy.enable_bf16_nn_decode_depth8 = false;
     policy.enable_bf16_nn_decode_mainline = false;
     policy.enable_bf16_nn_decode_short = false;
     policy.enable_bf16_nn_decode_wave = false;
+    policy.bf16_nn_decode_bvector = 0;
 #endif
     // Local experimental adapter: no public ABI flags or shared provider header.
     const char* experiment = std::getenv("CK_TILE_GROUPED_GEMM_ENABLE_BF16_V7_NN_SMALL_M_EXPERIMENT");
@@ -745,6 +754,19 @@ int dispatch_registry_candidate(const ck_tile::GroupedGemmProblem& problem,
                 device_args, groups, stream, static_cast<std::uint64_t>(tpg) * groups, tpg,
                 static_cast<int>(problem.m.extent), static_cast<int>(problem.n.extent),
                 static_cast<int>(problem.k.extent), variant);
+        }
+#endif
+        break;
+    case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_bvector2:
+    case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_bvector4:
+#if defined(CK_TILE_GROUPED_GEMM_DEVICE_ARGS_HAS_DECODE_BF16)
+        if(dtype == ck_tile::GroupedGemmDataType::bf16 && layout == ck_tile::GroupedGemmLayout::nn)
+        {
+            const auto tpg = static_cast<int>(problem.n.extent / 128);
+            const int width = instance_id == ck_tile::GroupedGemmInstanceId::bf16_nn_decode_bvector2 ? 2 : 4;
+            return ck_tile_hcu_grouped_gemm_bf16_nn_decode_bvector_device_args(
+                device_args, groups, stream, static_cast<std::uint64_t>(tpg) * groups, tpg,
+                static_cast<int>(problem.m.extent), static_cast<int>(problem.k.extent), width);
         }
 #endif
         break;
@@ -1060,6 +1082,8 @@ void candidate_masks(ck_tile::GroupedGemmInstanceId id,
     case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_mainline_serial:
     case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_short_n64:
     case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_short_n32:
+    case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_bvector2:
+    case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_bvector4:
     case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_depth8:
     case ck_tile::GroupedGemmInstanceId::bf16_nn_decode_wave:
     case ck_tile::GroupedGemmInstanceId::v7_bf16_nn:

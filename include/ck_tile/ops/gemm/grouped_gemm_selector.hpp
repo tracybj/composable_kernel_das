@@ -129,6 +129,8 @@ struct GroupedGemmSelectorPolicy
     // Experimental archived A-register/B-private-LDS Depth8, narrow measured scope.
     bool enable_bf16_nn_decode_depth8 = false;
     bool enable_bf16_nn_decode_wave = false; // Independent, opt-in decode architecture.
+    // P6i: 0=off, 1=two adjacent BF16, 2=four adjacent BF16 per B load.
+    std::int32_t bf16_nn_decode_bvector = 0;
     bool enable_bf16_nn_decode_mainline = false;
     std::int32_t bf16_nn_decode_mainline_variant = 0;
     bool enable_bf16_nn_decode_short = false;
@@ -201,6 +203,8 @@ enum class GroupedGemmInstanceId
     v7_bf16_nn_small_m_noslc = 5017,
     bf16_nn_decode_depth8 = 6003,
     bf16_nn_decode_wave = 6000,
+    bf16_nn_decode_bvector2 = 6001,
+    bf16_nn_decode_bvector4 = 6002,
     bf16_nn_decode_mainline_d4 = 6004,
     bf16_nn_decode_mainline_d8 = 6005,
     bf16_nn_decode_mainline_serial = 6006,
@@ -252,7 +256,7 @@ struct GroupedGemmCandidateIdentity
     GroupedGemmCandidateFamily family;
 };
 
-inline constexpr std::array<GroupedGemmCandidateIdentity, 69>
+inline constexpr std::array<GroupedGemmCandidateIdentity, 71>
     grouped_gemm_candidate_registry{{
         {GroupedGemmInstanceId::bw_family_selected,
          "bw_family.selected",
@@ -358,6 +362,10 @@ inline constexpr std::array<GroupedGemmCandidateIdentity, 69>
          "decode.nn.a_reg.b_private_lds.16x128x16.s8", GroupedGemmCandidateFamily::decode},
         {GroupedGemmInstanceId::bf16_nn_decode_wave,
          "decode.nn.wave_private.16x128x16.s2", GroupedGemmCandidateFamily::decode},
+        {GroupedGemmInstanceId::bf16_nn_decode_bvector2,
+         "decode.nn.a_lds.b_vec2.m16_32_64.n128.k32.s2", GroupedGemmCandidateFamily::decode},
+        {GroupedGemmInstanceId::bf16_nn_decode_bvector4,
+         "decode.nn.a_lds.b_vec4.m16_32_64.n128.k32.s2", GroupedGemmCandidateFamily::decode},
         {GroupedGemmInstanceId::bf16_nn_decode_mainline_d4,
          "decode.nn.full_m.a_reg.b_private_lds.n128.k16.d4.op2", GroupedGemmCandidateFamily::decode},
         {GroupedGemmInstanceId::bf16_nn_decode_mainline_d8,
@@ -474,6 +482,7 @@ enum class GroupedGemmSelectionReason
     v7_bf16_nn_tail256,
     v7_bf16_nn_small_m_noslc,
     bf16_nn_decode_wave,
+    bf16_nn_decode_bvector,
     bf16_nn_decode_depth8 = 6003,
     bf16_nn_decode_mainline = 6004,
     bf16_nn_decode_short = 6007,
@@ -803,15 +812,24 @@ constexpr GroupedGemmSelection select_grouped_gemm_candidate(
                 GroupedGemmSelectionReason::bf16_nn_decode_depth8};
     // Initial experimental contract: common dense BF16 NN, M<=64. The new
     // kernel has no relationship to the V7 policy or its tile/epilogue rules.
-    if(policy.enable_bf16_nn_decode_wave && problem.arch == GroupedGemmArch::gfx936 &&
+    if((policy.enable_bf16_nn_decode_wave || policy.bf16_nn_decode_bvector == 1 ||
+        policy.bf16_nn_decode_bvector == 2) && problem.arch == GroupedGemmArch::gfx936 &&
        is_bf16 && is_nn && problem.m.kind == GroupedGemmDimensionKind::common &&
        !has_variable_k && !problem.group_lengths_are_ragged &&
        !problem.may_have_empty_groups && problem.group_count <= 1024 &&
        m <= 64 && n % 128 == 0 && k >= 32 && k <= 4096 && k % 32 == 0 &&
        n <= std::int64_t{2147483647} / (2 * k) &&
        grouped_gemm_v7_experiment_tile_bound(problem, 16, 128) <= kGroupedGemmV7MaxTiles)
+    {
+        if(policy.bf16_nn_decode_bvector == 1)
+            return {GroupedGemmInstanceId::bf16_nn_decode_bvector2,
+                    GroupedGemmSelectionReason::bf16_nn_decode_bvector};
+        if(policy.bf16_nn_decode_bvector == 2)
+            return {GroupedGemmInstanceId::bf16_nn_decode_bvector4,
+                    GroupedGemmSelectionReason::bf16_nn_decode_bvector};
         return {GroupedGemmInstanceId::bf16_nn_decode_wave,
                 GroupedGemmSelectionReason::bf16_nn_decode_wave};
+    }
     const bool has_integral_device_m_capacity =
         problem.m.kind == GroupedGemmDimensionKind::device_lengths_with_capacity &&
         problem.m.extent % problem.group_count == 0;

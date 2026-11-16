@@ -106,12 +106,39 @@ CK_TILE_DEVICE void consume(const U32x4 (&b)[2][2], uint32_t slot,
         });
     });
 }
-template<int Rows, int Depth>
+// Keep the scalar prototype available as an unchanged control. Only B loading,
+// register layout and its VMEM count are supplied by the experimental policy.
+struct ScalarBPolicy
+{
+    using Registers = U32x4;
+    static constexpr int Loads = 16;
+    CK_TILE_DEVICE static uint32_t offset(const Params& p, uint32_t lane, int wave)
+    {
+        return ((lane >> 4) * 4u * (uint32_t)p.ldb +
+                (uint32_t)p.n0 + (uint32_t)wave * 32u + (lane & 15u)) * 2u;
+    }
+    template<int Pending>
+    CK_TILE_DEVICE static void wait(Registers (&b)[2][2]) { wait_global<Pending>(b); }
+    template<int Rows, int Slot>
+    CK_TILE_DEVICE static void load(Srd a_srd, const uint64_t (&a_pair)[Rows], Srd b_srd,
+                                    uint32_t b_offset, uint32_t wave_base, int ldb,
+                                    int k, Registers (&b)[2][2])
+    {
+        prefetch<Rows, Slot>(a_srd, a_pair, b_srd, b_offset, wave_base, ldb, k, b);
+    }
+    template<int Rows>
+    CK_TILE_DEVICE static void compute(const Registers (&b)[2][2], uint32_t slot,
+                                       uint32_t lane, F32x4 (&c)[Rows][2])
+    {
+        consume<Rows>(b, slot, lane, c);
+    }
+};
+template<int Rows, int Depth, class BPolicy = ScalarBPolicy>
 CK_TILE_DEVICE void run(const Params& p)
 {
     static_assert(Rows == 1 || Rows == 2 || Rows == 4);
     static_assert(Depth == 2);
-    constexpr int Loads = Rows + 16;
+    constexpr int Loads = Rows + BPolicy::Loads;
     const uint32_t lane = (uint32_t)threadIdx.x & 63u;
     const int wave = __builtin_amdgcn_readfirstlane((int)threadIdx.x >> 6);
     const uint32_t wave_base = (uint32_t)wave * (Depth * Rows * 1024u);
@@ -133,9 +160,8 @@ CK_TILE_DEVICE void run(const Params& p)
         const uint32_t offset = row * (pitch - stride) + octet * 16u;
         a_pair[m] = (uint64_t)record | ((uint64_t)offset << 32);
     });
-    const uint32_t b_offset = ((lane >> 4) * 4u * (uint32_t)p.ldb +
-        (uint32_t)p.n0 + (uint32_t)wave * 32u + (lane & 15u)) * 2u;
-    U32x4 b[Depth][2][2];
+    const uint32_t b_offset = BPolicy::offset(p, lane, wave);
+    typename BPolicy::Registers b[Depth][2][2];
     F32x4 c[Rows][2];
     static_for<0, Rows * 2, 1>{}([&](auto index) {
         constexpr int m = decltype(index)::value / 2;
@@ -145,7 +171,7 @@ CK_TILE_DEVICE void run(const Params& p)
     static_for<0, Depth, 1>{}([&](auto index) {
         constexpr int j = decltype(index)::value;
         if(j * 32 < p.k)
-            prefetch<Rows, j>(a_srd, a_pair, b_srd, b_offset, wave_base, p.ldb, j * 32, b[j]);
+            BPolicy::template load<Rows, j>(a_srd, a_pair, b_srd, b_offset, wave_base, p.ldb, j * 32, b[j]);
     });
     // K32 can have one stage. It is a real cold path, never an unused
     // prefetch beyond the supported K. The common path has two-stage overlap.
@@ -155,10 +181,10 @@ CK_TILE_DEVICE void run(const Params& p)
     {
         static_for<0, Depth, 1>{}([&](auto index) {
             constexpr int j = decltype(index)::value;
-            wait_global<Loads * (Depth - 1)>(b[j]);
-            consume(b[j], wave_base + j * Rows * 1024u, lane, c);
+            BPolicy::template wait<Loads * (Depth - 1)>(b[j]);
+            BPolicy::template compute<Rows>(b[j], wave_base + j * Rows * 1024u, lane, c);
             if(stage + Depth + j < stages)
-                prefetch<Rows, j>(a_srd, a_pair, b_srd, b_offset, wave_base, p.ldb,
+                BPolicy::template load<Rows, j>(a_srd, a_pair, b_srd, b_offset, wave_base, p.ldb,
                                  (stage + Depth + j) * 32, b[j]);
         });
     }
@@ -168,8 +194,8 @@ CK_TILE_DEVICE void run(const Params& p)
         {
             // The final group can have one stage: vmcnt0 is deliberately
             // conservative here until the variable-count drain is proven.
-            wait_global<0>(b[j]);
-            consume(b[j], wave_base + j * Rows * 1024u, lane, c);
+            BPolicy::template wait<0>(b[j]);
+            BPolicy::template compute<Rows>(b[j], wave_base + j * Rows * 1024u, lane, c);
         }
     });
     const uint32_t row_lane = lane & 15u;
