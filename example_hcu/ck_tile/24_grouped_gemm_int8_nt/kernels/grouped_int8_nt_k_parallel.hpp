@@ -100,7 +100,7 @@ struct Int8NtKParallelEpilogue
 template <int Rows, bool BFloat>
 struct GroupedInt8NtScaledKParallelKernel
 {
-    CK_TILE_DEVICE static void run_group(const Int8NtKParallelArgs& a)
+    CK_TILE_DEVICE static void run_group(Int8NtKParallelArgs a)
     {
         using P = Int8NtKParallelProblem<8, 4>;
         const int nb = blockIdx.x * P::Cols;
