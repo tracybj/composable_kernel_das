@@ -63,9 +63,11 @@ int main()
     expect(GroupedGemmInstanceId::int8_nt_wasp_a4);
     p.k = GroupedGemmDimensionSummary::Common(4096);
     p.m = GroupedGemmDimensionSummary::Common(4224);
-    expect(GroupedGemmInstanceId::int8_nt_m128_n256_aligned);
+    expect(GroupedGemmInstanceId::int8_nt_wasp_m128_a2);
     p.n = GroupedGemmDimensionSummary::Common(4224);
-    expect(GroupedGemmInstanceId::int8_nt_m128);
+    expect(GroupedGemmInstanceId::int8_nt_wasp_m128_a2);
+    p.n = GroupedGemmDimensionSummary::Common(4240);
+    expect(GroupedGemmInstanceId::int8_nt_m256_n256_padded);
     p.m = GroupedGemmDimensionSummary::Common(16384);
     p.k = GroupedGemmDimensionSummary::Common(1232);
     p.n = GroupedGemmDimensionSummary::Common(3072);
@@ -139,7 +141,7 @@ int main()
     expect(GroupedGemmInstanceId::none);
     p.n = GroupedGemmDimensionSummary::Common(4096);
     p.m = GroupedGemmDimensionSummary::Common(384);
-    expect(GroupedGemmInstanceId::int8_nt_m128_aligned);
+    expect(GroupedGemmInstanceId::int8_nt_wasp_m128_record1024_a2);
     p.m = GroupedGemmDimensionSummary::Common(256);
     p.k = GroupedGemmDimensionSummary::Common(16384);
     expect(GroupedGemmInstanceId::int8_nt_m256_n256_aligned);
