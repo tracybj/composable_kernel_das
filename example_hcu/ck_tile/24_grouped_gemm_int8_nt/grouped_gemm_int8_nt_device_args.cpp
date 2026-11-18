@@ -3,8 +3,10 @@
 #include "include/grouped_gemm_int8_nt_device_args.h"
 
 #include <algorithm>
+#include <cstddef>
 #include <cstdint>
 #include <cstdio>
+#include <cstdlib>
 #include <iterator>
 #include <limits>
 
@@ -12,6 +14,7 @@
 #include "ck_tile/host/device_prop.hpp"
 #include "ck_tile/ops/gemm/grouped_gemm_selector.hpp"
 
+extern "C" std::size_t ck_tile_int8_nt_device_args_size_private();
 extern "C" int ck_tile_int8_scaled_launch_private(
     unsigned, unsigned, const void*, const void*, int, int, int, hipStream_t);
 extern "C" int ck_tile_int8_cached_pack_private(
@@ -32,12 +35,18 @@ constexpr int Unsupported   = CK_TILE_HCU_GROUPED_GEMM_DEVICE_ARGS_UNSUPPORTED_V
 constexpr int InternalError = CK_TILE_HCU_GROUPED_GEMM_DEVICE_ARGS_INTERNAL_ERROR_V1;
 constexpr auto ScaledAbi    = CK_TILE_HCU_GROUPED_GEMM_SCALED_ABI_VERSION;
 
+bool dispatch_trace_enabled()
+{
+    const char* value = std::getenv("CK_TILE_HCU_GROUPED_GEMM_DISPATCH_TRACE");
+    return value != nullptr && value[0] != '0';
+}
+
 template <typename T>
 int validate(const T* argument, uint32_t version)
 {
     if(argument == nullptr)
         return Invalid;
-    if(argument->struct_size != sizeof(T))
+    if(argument->struct_size < sizeof(T))
         return CK_TILE_HCU_GROUPED_GEMM_DEVICE_ARGS_BAD_STRUCT_SIZE_V1;
     if(argument->abi_version != version)
         return CK_TILE_HCU_GROUPED_GEMM_DEVICE_ARGS_BAD_VERSION_V1;
@@ -197,11 +206,12 @@ int write_selection(const Instance& instance, Selection* out)
     const int status = validate(out, CK_TILE_HCU_GROUPED_GEMM_DEVICE_ARGS_ABI_VERSION);
     if(status != Success)
         return status;
-    *out             = {};
-    out->struct_size = sizeof(*out);
-    out->abi_version = CK_TILE_HCU_GROUPED_GEMM_DEVICE_ARGS_ABI_VERSION;
-    out->instance_id = instance.id;
-    out->reason      = CK_TILE_HCU_GROUPED_GEMM_SELECTION_INT8_NT_V1;
+    const uint32_t out_size = out->struct_size;
+    *out                    = {};
+    out->struct_size        = out_size;
+    out->abi_version        = CK_TILE_HCU_GROUPED_GEMM_DEVICE_ARGS_ABI_VERSION;
+    out->instance_id        = instance.id;
+    out->reason             = CK_TILE_HCU_GROUPED_GEMM_SELECTION_INT8_NT_V1;
     copy_instance_name(out->instance_name, instance);
     return Success;
 }
@@ -231,9 +241,10 @@ extern "C" int ck_tile_hcu_grouped_gemm_query_int8_nt_instance_v2(uint32_t id, C
     const auto instance = find_instance(id);
     if(instance.id == 0)
         return Unsupported;
-    *out                   = {};
-    out->struct_size       = sizeof(*out);
-    out->abi_version       = ScaledAbi;
+    const uint32_t out_size = out->struct_size;
+    *out                    = {};
+    out->struct_size        = out_size;
+    out->abi_version        = ScaledAbi;
     out->instance_id       = id;
     out->architecture_mask = CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX936_V1;
     out->layout_mask       = CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NT_V1;
@@ -282,7 +293,26 @@ extern "C" int ck_tile_hcu_grouped_gemm_run_int8_nt_device_args_v2(const Problem
                                                     problem->max_m,
                                                     problem->n,
                                                     static_cast<hipStream_t>(launch->stream));
-        return status == 0 ? Success : InternalError;
+        status = status == 0 ? Success : InternalError;
+        if(dispatch_trace_enabled() || status != Success)
+        {
+            char instance_name[CK_TILE_HCU_GROUPED_GEMM_INSTANCE_NAME_CAPACITY];
+            copy_instance_name(instance_name, instance);
+            std::fprintf(stderr,
+                         "CK_INT8_NT_GROUPED_GEMM_DISPATCH status=%d instance_id=%u "
+                         "instance_name=%s output_type=%d group_count=%d max_m=%d n=%d k=%d "
+                         "int8_flags=%u\n",
+                         status,
+                         instance.id,
+                         instance_name,
+                         problem->output_type,
+                         problem->group_count,
+                         problem->max_m,
+                         problem->n,
+                         problem->k,
+                         problem->int8_flags);
+        }
+        return status;
     }
     catch(...)
     {
@@ -313,4 +343,9 @@ extern "C" int ck_tile_hcu_grouped_gemm_pack_int8_nt_weights_v2(
     {
         return InternalError;
     }
+}
+
+extern "C" std::size_t ck_tile_hcu_grouped_gemm_int8_nt_device_args_size_v2()
+{
+    return ck_tile_int8_nt_device_args_size_private();
 }

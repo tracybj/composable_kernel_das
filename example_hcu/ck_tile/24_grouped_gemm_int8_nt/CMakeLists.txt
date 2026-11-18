@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.20)
 get_filename_component(CK_ROOT "${CMAKE_CURRENT_LIST_DIR}/../../.." ABSOLUTE)
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
-    project(CKTileGroupedInt8Nt LANGUAGES CXX)
+    project(CKTileGroupedInt8Nt LANGUAGES C CXX)
     set(CMAKE_CXX_STANDARD 17)
     set(GPU_TARGETS gfx936 CACHE STRING "HCU architecture")
     include_directories(${CK_ROOT}/include ${CK_ROOT}/library/include)
@@ -160,4 +160,29 @@ if(GPU_TARGETS MATCHES "gfx936")
         --m=1 --n=4096 --k=6144 --groups=8 --dtype=int8_bf16)
     add_int8_nt_device_args_smoke(kparallel_fp16
         --m=2 --n=4096 --k=7168 --groups=8 --dtype=int8_fp16)
+
+    add_custom_target(tile_example_grouped_gemm_int8_nt_device_args_c_header_smoke
+        COMMAND ${CMAKE_C_COMPILER}
+                -std=c11
+                -Wall
+                -Wextra
+                -Werror
+                -I${CK_ROOT}/include
+                -I${CMAKE_CURRENT_LIST_DIR}/include
+                -fsyntax-only
+                ${CMAKE_CURRENT_LIST_DIR}/grouped_gemm_int8_nt_device_args_c_header_smoke.c
+        COMMENT "Compiling INT8 NT grouped-GEMM device-args v2 header as pure C11"
+        VERBATIM)
+    add_test(NAME tile_example_grouped_gemm_int8_nt_device_args_c_header_smoke
+        COMMAND ${CMAKE_C_COMPILER}
+                -std=c11
+                -Wall
+                -Wextra
+                -Werror
+                -I${CK_ROOT}/include
+                -I${CMAKE_CURRENT_LIST_DIR}/include
+                -fsyntax-only
+                ${CMAKE_CURRENT_LIST_DIR}/grouped_gemm_int8_nt_device_args_c_header_smoke.c)
+    set_tests_properties(tile_example_grouped_gemm_int8_nt_device_args_c_header_smoke
+        PROPERTIES LABELS "hcu;ck_tile;int8_nt;device_args;smoke")
 endif()

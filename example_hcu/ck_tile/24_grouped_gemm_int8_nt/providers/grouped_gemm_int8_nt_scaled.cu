@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 #if !defined(__HIP_DEVICE_COMPILE__) || defined(__gfx936__)
+#include "../include/grouped_gemm_int8_nt_device_args.h"
 #include "../kernels/grouped_int8_nt_kernel.hpp"
 #include "../kernels/grouped_int8_nt_wasp_kernel.hpp"
 #include "../kernels/grouped_int8_nt_k_parallel.hpp"
@@ -9,6 +10,20 @@
 #ifdef CK_INT8_CACHED_TUNING
 #include "../tuning/grouped_int8_nt_tuning_internal.hpp"
 #endif
+
+#include <cstddef>
+
+static_assert(sizeof(ck_tile_hcu_grouped_gemm_int8_scale_v2) == sizeof(ck_tile::Int8NtScaleArgs),
+              "C API scale descriptor size must match Int8NtScaleArgs");
+static_assert(offsetof(ck_tile_hcu_grouped_gemm_int8_scale_v2, a) ==
+                      offsetof(ck_tile::Int8NtScaleArgs, a) &&
+                  offsetof(ck_tile_hcu_grouped_gemm_int8_scale_v2, b) ==
+                      offsetof(ck_tile::Int8NtScaleArgs, b) &&
+                  offsetof(ck_tile_hcu_grouped_gemm_int8_scale_v2, a_stride) ==
+                      offsetof(ck_tile::Int8NtScaleArgs, a_stride) &&
+                  offsetof(ck_tile_hcu_grouped_gemm_int8_scale_v2, b_stride) ==
+                      offsetof(ck_tile::Int8NtScaleArgs, b_stride),
+              "C API scale descriptor layout must match Int8NtScaleArgs");
 
 namespace {
 
@@ -238,6 +253,11 @@ std::vector<Candidate> enumerate(const Domain& domain, unsigned output_type)
 }
 } // namespace ck_tile::int8_nt_tuning
 #endif
+
+extern "C" std::size_t ck_tile_int8_nt_device_args_size_private()
+{
+    return sizeof(ck_tile::GemmTransKernelArg);
+}
 
 extern "C" int ck_tile_int8_scaled_launch_private(unsigned output,
                                                   unsigned instance,

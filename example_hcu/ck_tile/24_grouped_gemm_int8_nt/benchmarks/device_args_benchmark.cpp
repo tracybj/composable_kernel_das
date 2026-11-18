@@ -338,6 +338,24 @@ int run_scaled_int8(const Options& options)
     selection.abi_version = CK_TILE_HCU_GROUPED_GEMM_DEVICE_ARGS_ABI_VERSION;
     check_int8_device_args(
         ck_tile_hcu_grouped_gemm_select_int8_nt_device_args_v2(&problem, &selection), "INT8 select");
+    if(ck_tile_hcu_grouped_gemm_int8_nt_device_args_size_v2() != sizeof(ck_tile::GemmTransKernelArg))
+        throw std::runtime_error("INT8 device_args_size_v2 disagrees with GemmTransKernelArg");
+    if(options.validate)
+    {
+        auto oversized = selection;
+        oversized.struct_size = sizeof(selection) + 16;
+        check_int8_device_args(
+            ck_tile_hcu_grouped_gemm_select_int8_nt_device_args_v2(&problem, &oversized),
+            "INT8 select oversized struct_size");
+        if(oversized.struct_size != sizeof(selection) + 16)
+            throw std::runtime_error("INT8 select overwrote caller selection struct_size");
+
+        auto undersized = selection;
+        undersized.struct_size = sizeof(selection) - 1;
+        if(ck_tile_hcu_grouped_gemm_select_int8_nt_device_args_v2(&problem, &undersized) !=
+           CK_TILE_HCU_GROUPED_GEMM_DEVICE_ARGS_BAD_STRUCT_SIZE_V1)
+            throw std::runtime_error("INT8 select failed to reject undersized selection");
+    }
     ck_tile_hcu_grouped_gemm_int8_candidate_info_v2 candidate{};
     candidate.struct_size = sizeof(candidate);
     candidate.abi_version = CK_TILE_HCU_GROUPED_GEMM_SCALED_ABI_VERSION;

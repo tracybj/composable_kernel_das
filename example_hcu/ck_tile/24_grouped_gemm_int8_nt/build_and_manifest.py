@@ -29,7 +29,7 @@ def sources(tuning=False):
             for part in path.relative_to(E).parts
         ):
             continue
-        if path.suffix in ['.cpp', '.hpp', '.h', '.inc', '.txt']:
+        if path.suffix in ['.c', '.cpp', '.cu', '.hpp', '.h', '.inc', '.txt']:
             extension[str(path.relative_to(ROOT))] = digest(path)
     context = [
         'include/ck_tile/ops/gemm/grouped_gemm_selector.hpp',

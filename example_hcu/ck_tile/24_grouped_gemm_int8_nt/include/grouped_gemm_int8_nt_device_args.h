@@ -2,6 +2,8 @@
 #ifndef CK_TILE_EXAMPLE_GROUPED_GEMM_INT8_NT_DEVICE_ARGS_H
 #define CK_TILE_EXAMPLE_GROUPED_GEMM_INT8_NT_DEVICE_ARGS_H
 
+#include <stddef.h>
+
 #include "ck_tile/ops/gemm/grouped_gemm_device_args.h"
 
 #ifdef __cplusplus
@@ -96,6 +98,9 @@ int ck_tile_hcu_grouped_gemm_run_int8_nt_device_args_v2(
     const ck_tile_hcu_grouped_gemm_int8_problem_v2* problem,
     const ck_tile_hcu_grouped_gemm_int8_launch_v2* launch,
     ck_tile_hcu_grouped_gemm_selection_v1* selection);
+
+// Size in bytes of one opaque device kernel argument element (GemmTransKernelArg).
+size_t ck_tile_hcu_grouped_gemm_int8_nt_device_args_size_v2(void);
 
 // One entry per group in GPU memory. The caller owns the source and packed B
 // storage. Each packed matrix needs N*K bytes and 16-byte alignment.
