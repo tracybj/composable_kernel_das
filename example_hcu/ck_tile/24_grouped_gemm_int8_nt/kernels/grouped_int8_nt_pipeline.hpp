@@ -21,18 +21,20 @@ struct GroupedInt8NtTilePipeline
         const index_t tid = get_thread_id();
         static_for<0, Policy::AVectors, 1>{}([&](auto i) {
             constexpr index_t j = decltype(i)::value;
-            const index_t vec = tid + j * P::Threads, row = vec / (P::BK / 16),
-                          ko = (vec % (P::BK / 16)) * 16;
-            if(row < P::BM && (P::Aligned || (mb + row < arg.M && kb + ko + 16 <= arg.K)))
+            const index_t vec = tid + j * P::Threads, row = vec / (P::BK / P::InputVectorBytes),
+                          ko = (vec % (P::BK / P::InputVectorBytes)) * P::InputVectorBytes;
+            if(row < P::BM &&
+               (P::Aligned || (mb + row < arg.M && kb + ko + P::InputVectorBytes <= arg.K)))
                 v.a[j] = *reinterpret_cast<const Copy*>(
                     static_cast<const int8_t*>(arg.as_ptr[0]) +
                     static_cast<long long>(mb + row) * arg.stride_As[0] + kb + ko);
         });
         static_for<0, Policy::BVectors, 1>{}([&](auto i) {
             constexpr index_t j = decltype(i)::value;
-            const index_t vec = tid + j * P::Threads, row = vec / (P::BK / 16),
-                          ko = (vec % (P::BK / 16)) * 16;
-            if(row < P::BN && (P::Aligned || (nb + row < arg.N && kb + ko + 16 <= arg.K)))
+            const index_t vec = tid + j * P::Threads, row = vec / (P::BK / P::InputVectorBytes),
+                          ko = (vec % (P::BK / P::InputVectorBytes)) * P::InputVectorBytes;
+            if(row < P::BN &&
+               (P::Aligned || (nb + row < arg.N && kb + ko + P::InputVectorBytes <= arg.K)))
                 v.b[j] = *reinterpret_cast<const Copy*>(
                     static_cast<const int8_t*>(arg.bs_ptr[0]) +
                     static_cast<long long>(nb + row) * arg.stride_Bs[0] + kb + ko);
@@ -44,8 +46,8 @@ struct GroupedInt8NtTilePipeline
         const index_t tid = get_thread_id();
         static_for<0, Policy::AVectors, 1>{}([&](auto i) {
             constexpr index_t j = decltype(i)::value;
-            const index_t vec = tid + j * P::Threads, row = vec / (P::BK / 16),
-                          ko = (vec % (P::BK / 16)) * 16;
+            const index_t vec = tid + j * P::Threads, row = vec / (P::BK / P::InputVectorBytes),
+                          ko = (vec % (P::BK / P::InputVectorBytes)) * P::InputVectorBytes;
             if(row < P::BM)
             {
                 *reinterpret_cast<Copy*>(smem + row * Policy::OperandPitch + ko) = v.a[j];
@@ -53,8 +55,8 @@ struct GroupedInt8NtTilePipeline
         });
         static_for<0, Policy::BVectors, 1>{}([&](auto i) {
             constexpr index_t j = decltype(i)::value;
-            const index_t vec = tid + j * P::Threads, row = vec / (P::BK / 16),
-                          ko = (vec % (P::BK / 16)) * 16;
+            const index_t vec = tid + j * P::Threads, row = vec / (P::BK / P::InputVectorBytes),
+                          ko = (vec % (P::BK / P::InputVectorBytes)) * P::InputVectorBytes;
             if(row < P::BN)
             {
                 *reinterpret_cast<Copy*>(smem + Policy::BPitchOffset + row * Policy::OperandPitch +
@@ -64,22 +66,23 @@ struct GroupedInt8NtTilePipeline
     }
     CK_TILE_DEVICE void Compute(const int8_t* smem, Acc (&c)[P::MR][P::NR]) const
     {
-        const index_t lane = get_thread_id() % 64, wave = get_thread_id() / 64;
-        const index_t wm = wave / P::WN, wn = wave % P::WN, ko = (lane / 16) * 8;
-        static_for<0, P::BK / 32, 1>{}([&](auto kk) {
+        const index_t lane = get_thread_id() % P::WaveSize, wave = get_thread_id() / P::WaveSize;
+        const index_t wm = wave / P::WN, wn = wave % P::WN,
+                      ko = (lane / P::MmacRows) * P::MmacInputBytes;
+        static_for<0, P::BK / P::MmacK, 1>{}([&](auto kk) {
             typename Mmac::AVecType av[P::MR];
             typename Mmac::BVecType bv[P::NR];
             static_for<0, P::MR, 1>{}([&](auto i) {
                 constexpr index_t mi = decltype(i)::value;
-                const index_t row    = wm * (P::BM / P::WM) + mi * 16 + lane % 16;
+                const index_t row    = wm * (P::BM / P::WM) + mi * P::MmacRows + lane % P::MmacRows;
                 av[mi]               = *reinterpret_cast<const typename Mmac::AVecType*>(
-                    smem + row * Policy::OperandPitch + kk * 32 + ko);
+                    smem + row * Policy::OperandPitch + kk * P::MmacK + ko);
             });
             static_for<0, P::NR, 1>{}([&](auto j) {
                 constexpr index_t ni = decltype(j)::value;
-                const index_t row    = wn * (P::BN / P::WN) + ni * 16 + lane % 16;
+                const index_t row    = wn * (P::BN / P::WN) + ni * P::MmacCols + lane % P::MmacCols;
                 bv[ni]               = *reinterpret_cast<const typename Mmac::BVecType*>(
-                    smem + Policy::BPitchOffset + row * Policy::OperandPitch + kk * 32 + ko);
+                    smem + Policy::BPitchOffset + row * Policy::OperandPitch + kk * P::MmacK + ko);
             });
             static_for<0, P::MR, 1>{}([&](auto i) {
                 static_for<0, P::NR, 1>{}([&](auto j) {

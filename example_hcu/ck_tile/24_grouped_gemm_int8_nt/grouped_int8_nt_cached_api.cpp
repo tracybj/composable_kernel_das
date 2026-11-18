@@ -23,12 +23,10 @@
 #include <string>
 #include <vector>
 
-extern "C" int
-ck_tile_int8_cached_launch_private(unsigned, unsigned, const void*, int, int, int, hipStream_t);
 extern "C" int ck_tile_int8_cached_pack_private(
     const ck_tile::Int8CachedWeightPackArgs*, int, int, int, hipStream_t);
 extern "C" int ck_tile_int8_scaled_launch_private(
-    unsigned, unsigned, unsigned, const void*, const void*, int, int, int, hipStream_t);
+    unsigned, unsigned, const void*, const void*, int, int, int, hipStream_t);
 
 namespace {
 thread_local std::string last_error;
@@ -134,12 +132,13 @@ struct ck_tile_int8_nt_cached_plan_impl
     ck_tile_int8_nt_cached_weights_impl* weights;
     void* args = nullptr;
     int g = 0, max_m = 0, launch_m = 1, n = 0, k = 0;
-    unsigned route = ck_tile::int8_routes::LegacyRaw, legacy_instance = 0;
-    unsigned output_type             = ck_tile::int8_output_types::Int32;
+    unsigned instance_key = 0, legacy_instance = 0;
+    const unsigned output_type;
     ck_tile::Int8NtScaleArgs* scales = nullptr;
     std::vector<hipStream_t> streams;
     std::mutex mutex;
-    explicit ck_tile_int8_nt_cached_plan_impl(ck_tile_int8_nt_cached_weights_impl* w) : weights(w)
+    ck_tile_int8_nt_cached_plan_impl(ck_tile_int8_nt_cached_weights_impl* w, unsigned type)
+        : weights(w), output_type(type)
     {
         weights->plans.fetch_add(1);
     }
@@ -250,11 +249,11 @@ ck_tile_int8_nt_cached_weights_query_v1(ck_tile_int8_nt_cached_weights_handle_v1
         header(info);
         current_device_is(w->device);
         ck_tile_int8_nt_cached_weights_info_v1 value{};
-        value.struct_size        = sizeof(value);
-        value.abi_version        = 1;
-        value.group_count        = w->g;
-        value.n                  = w->n;
-        value.k                  = w->k;
+        value.struct_size = sizeof(value);
+        value.abi_version = 1;
+        value.group_count = w->g;
+        value.n           = w->n;
+        value.k           = w->k;
         value.format =
             w->packable ? ck_tile::int8_weight_formats::Packed : ck_tile::int8_weight_formats::Raw;
         value.packed_device_data = w->packed;
@@ -287,33 +286,29 @@ struct TuningSelection
 
 std::unique_ptr<ck_tile_int8_nt_cached_plan_impl>
 make_plan(ck_tile_int8_nt_cached_weights_handle_v1 w,
-          const ck_tile_int8_nt_cached_group_desc_v1* groups,
+          const ck_tile_int8_nt_cached_group_desc_v2* groups,
           int32_t g,
-          unsigned output_type,
-          const ck_tile::Int8NtScaleArgs* scales = nullptr
+          const ck_tile::Int8NtScaleArgs* scales
 #ifdef CK_INT8_CACHED_TUNING
-          , const TuningSelection* tuning = nullptr
+          ,
+          const TuningSelection* tuning = nullptr
 #endif
-          )
+)
 {
-    require(w && groups && g == w->g,
-            CK_TILE_INT8_CACHED_INVALID_ARGUMENT_V1,
-            "invalid cached plan/group count");
-    current_device_is(w->device);
-    int max_m       = 0;
-    int64_t total_m = 0;
+    const unsigned output_type = groups[0].output_type;
+    int max_m                  = 0;
+    int64_t total_m            = 0;
     bool uniform = true, empty = false, native = true, raw_transposed = true;
-    bool dense_scalar_a = scales != nullptr;
-    bool dense_channel_scales = scales != nullptr;
+    bool dense_scalar_a       = true;
+    bool dense_channel_scales = true;
     for(int i = 0; i < g; ++i)
     {
         const auto& a = groups[i];
-        header(&a);
-        require(a.reserved0 == 0 && a.m >= 0 && a.m <= 1048560 && a.a_row_stride >= w->k &&
-                    a.a_row_stride % 16 == 0 && a.c_row_stride >= w->n && a.c_row_stride % 4 == 0 &&
+        require(a.m >= 0 && a.m <= 1048560 && a.a_row_stride >= w->k && a.a_row_stride % 16 == 0 &&
+                    a.c_row_stride >= w->n && a.c_row_stride % 4 == 0 &&
                     (a.m == 0 || (a.a && a.c && aligned(a.a, 16) && aligned(a.c, 16))),
                 CK_TILE_INT8_CACHED_INVALID_ARGUMENT_V1,
-                "invalid INT8 activation/INT32 output descriptor");
+                "invalid INT8 activation or 16-bit output descriptor");
         require(int64_t(a.m) * a.a_row_stride <= std::numeric_limits<int32_t>::max() &&
                     int64_t(a.m) * a.c_row_stride <= std::numeric_limits<int32_t>::max(),
                 CK_TILE_INT8_CACHED_UNSUPPORTED_V1,
@@ -325,57 +320,51 @@ make_plan(ck_tile_int8_nt_cached_weights_handle_v1 w,
         native &= a.m > 0 && (a.m % 256 == 0 || a.m == 128 || a.m == 64 || a.m == 32) &&
                   int64_t(256) * a.a_row_stride <= std::numeric_limits<int32_t>::max();
         raw_transposed &= a.a_row_stride < 16384;
-        if(scales)
-        {
-            const auto& scale = scales[i];
-            // The default policy may select paired WASP even when its epilogue
-            // needs the generic writeback for a scalar B scale.
-            const bool scalar_a = a.c_row_stride == w->n && scale.a_stride == 0;
-            dense_scalar_a &= scalar_a;
-            dense_channel_scales &= scalar_a && a.a_row_stride == w->k &&
-                                    w->raw[i].row_stride == w->k && scale.a && scale.b &&
-                                    scale.b_stride == 1;
-        }
+        const auto& scale = scales[i];
+        // The default policy may select paired WASP even when its epilogue
+        // needs the generic writeback for a scalar B scale.
+        const bool scalar_a = a.c_row_stride == w->n && scale.a_stride == 0;
+        dense_scalar_a &= scalar_a;
+        dense_channel_scales &= scalar_a && a.a_row_stride == w->k &&
+                                w->raw[i].row_stride == w->k && scale.a && scale.b &&
+                                scale.b_stride == 1;
     }
-    ck_tile::GroupedGemmProblem old{};
-    old.arch        = ck_tile::GroupedGemmArch::gfx936;
-    old.data_type   = ck_tile::GroupedGemmDataType::int8_int32;
-    old.layout      = ck_tile::GroupedGemmLayout::nt;
-    old.group_count = g;
-    old.m = uniform ? ck_tile::GroupedGemmDimensionSummary::Common(std::max(groups[0].m, 1))
-                    : ck_tile::GroupedGemmDimensionSummary::DeviceLengthsWithCapacity(
-                          std::max(total_m, int64_t(1)));
-    old.n = ck_tile::GroupedGemmDimensionSummary::Common(w->n);
-    old.k = ck_tile::GroupedGemmDimensionSummary::Common(w->k);
-    old.may_have_empty_groups    = empty;
-    old.group_lengths_are_ragged = !uniform;
-    const auto legacy            = ck_tile::select_grouped_gemm_candidate(old);
-    require(legacy.supported(),
+    ck_tile::GroupedGemmProblem summary{};
+    summary.arch        = ck_tile::GroupedGemmArch::gfx936;
+    summary.layout      = ck_tile::GroupedGemmLayout::nt;
+    summary.group_count = g;
+    summary.m = uniform ? ck_tile::GroupedGemmDimensionSummary::Common(std::max(groups[0].m, 1))
+                        : ck_tile::GroupedGemmDimensionSummary::DeviceLengthsWithCapacity(
+                              std::max(total_m, int64_t(1)));
+    summary.n = ck_tile::GroupedGemmDimensionSummary::Common(w->n);
+    summary.k = ck_tile::GroupedGemmDimensionSummary::Common(w->k);
+    summary.may_have_empty_groups    = empty;
+    summary.group_lengths_are_ragged = !uniform;
+    require(ck_tile::is_valid_grouped_gemm_int8_nt_problem(summary),
             CK_TILE_INT8_CACHED_UNSUPPORTED_V1,
-            "unsupported legacy INT8 NT shape summary");
-    auto p             = std::make_unique<ck_tile_int8_nt_cached_plan_impl>(w);
-    p->g               = g;
-    p->max_m           = max_m;
-    p->launch_m        = std::max(max_m, 1);
-    p->n               = w->n;
-    p->k               = w->k;
-    p->legacy_instance = static_cast<unsigned>(legacy.instance_id);
+            "unsupported INT8 NT shape summary");
+    auto p              = std::make_unique<ck_tile_int8_nt_cached_plan_impl>(w, output_type);
+    p->g                = g;
+    p->max_m            = max_m;
+    p->launch_m         = std::max(max_m, 1);
+    p->n                = w->n;
+    p->k                = w->k;
+    const auto fallback = ck_tile::select_grouped_gemm_int8_nt_instance(summary);
+    p->legacy_instance  = static_cast<unsigned>(fallback);
     const bool native_domain =
         uniform && !empty && native && w->n % 256 == 0 && w->k % 128 == 0 && w->k < 16384;
-    p->output_type = output_type;
-    p->route       = ck_tile::int8_cached_select_plan_route(
-        max_m,
-        w->n,
-        w->k,
-        g,
-        w->packable,
-        w->compute_units,
-        output_type != 0,
-        {native_domain, uniform && !empty, raw_transposed, dense_scalar_a, dense_channel_scales});
+    ck_tile::Int8CachedPlanRouteDomain domain{};
+    domain.native_wasp          = native_domain;
+    domain.uniform_nonempty     = uniform && !empty;
+    domain.raw_transposed       = raw_transposed;
+    domain.dense_scalar_a       = dense_scalar_a;
+    domain.dense_channel_scales = dense_channel_scales;
+    auto route                  = ck_tile::int8_cached_select_plan_route(
+        max_m, w->n, w->k, g, w->packable, w->compute_units, domain, fallback);
 #ifdef CK_INT8_CACHED_TUNING
     if(tuning)
     {
-        require(output_type && scales && uniform && !empty,
+        require(uniform && !empty,
                 CK_TILE_INT8_CACHED_UNSUPPORTED_V1,
                 "tuning requires uniform nonempty scaled groups");
         ck_tile::int8_nt_tuning::Domain domain{max_m, w->n, w->k, 0, 0, w->packable, true};
@@ -398,17 +387,18 @@ make_plan(ck_tile_int8_nt_cached_weights_handle_v1 w,
         const auto it = std::find_if(candidates.begin(), candidates.end(), [&](const auto& entry) {
             return entry.route == tuning->route && entry.legacy_instance == tuning->legacy;
         });
-        require(it != candidates.end(), CK_TILE_INT8_CACHED_UNSUPPORTED_V1,
+        require(it != candidates.end(),
+                CK_TILE_INT8_CACHED_UNSUPPORTED_V1,
                 "tuning candidate is not legal for these descriptors");
-        p->route = it->route;
+        route              = it->route;
         p->legacy_instance = it->legacy_instance;
     }
 #endif
-    if(p->route == CK_TILE_INT8_CACHED_RAW_K_PARALLEL_M1_M2_V1)
+    p->instance_key = route == ck_tile::int8_routes::LegacyRaw
+                          ? p->legacy_instance
+                          : ck_tile::int8_instance_ids::from_route(route, max_m);
+    if(route == CK_TILE_INT8_CACHED_RAW_K_PARALLEL_M1_M2_V1)
     {
-        require(scales,
-                CK_TILE_INT8_CACHED_INTERNAL_ERROR_V1,
-                "K-parallel plan requires scale descriptors");
         std::vector<ck_tile::Int8NtKParallelArgs> args;
         args.reserve(g);
         for(int i = 0; i < g; ++i)
@@ -438,7 +428,7 @@ make_plan(ck_tile_int8_nt_cached_weights_handle_v1 w,
     std::vector<KArg> args;
     args.reserve(g);
     const uint64_t per_group = uint64_t(w->n) * w->k;
-    const bool packed = ck_tile::int8_routes::uses_packed_weights(p->route);
+    const bool packed        = ck_tile::int8_routes::uses_packed_weights(route);
     for(int i = 0; i < g; ++i)
     {
         const auto& a = groups[i];
@@ -464,16 +454,16 @@ make_plan(ck_tile_int8_nt_cached_weights_handle_v1 w,
 } // namespace
 
 extern "C" CK_TILE_INT8_CACHED_API int
-ck_tile_int8_nt_cached_plan_create_v1(ck_tile_int8_nt_cached_weights_handle_v1 w,
-                                      const ck_tile_int8_nt_cached_group_desc_v1* groups,
-                                      int32_t g,
+ck_tile_int8_nt_cached_plan_create_v1(ck_tile_int8_nt_cached_weights_handle_v1,
+                                      const ck_tile_int8_nt_cached_group_desc_v1*,
+                                      int32_t,
                                       ck_tile_int8_nt_cached_plan_handle_v1* result)
 {
     return api([&] {
         require(result != nullptr, CK_TILE_INT8_CACHED_INVALID_ARGUMENT_V1, "null plan result");
         *result = nullptr;
-        auto p  = make_plan(w, groups, g, 0);
-        *result = p.release();
+        throw ApiError(CK_TILE_INT8_CACHED_UNSUPPORTED_V1,
+                       "INT32 output is unsupported; use plan_create_v2 for BF16/FP16");
     });
 }
 extern "C" CK_TILE_INT8_CACHED_API int
@@ -491,7 +481,7 @@ ck_tile_int8_nt_cached_plan_query_v1(ck_tile_int8_nt_cached_plan_handle_v1 p,
         value.max_m               = p->max_m;
         value.n                   = p->n;
         value.k                   = p->k;
-        value.route               = p->route;
+        value.route               = ck_tile::int8_instance_ids::route_for(p->instance_key);
         value.legacy_instance     = p->legacy_instance;
         value.packed_weight_bytes = p->weights->packed_bytes;
         *info                     = value;
@@ -510,19 +500,8 @@ ck_tile_int8_nt_cached_run_v1(ck_tile_int8_nt_cached_plan_handle_v1 p, void* opa
             hip_check(hipStreamWaitEvent(stream, p->weights->ready, 0));
             p->streams.push_back(stream);
         }
-        const int status =
-            p->output_type == 0
-                ? ck_tile_int8_cached_launch_private(
-                      p->route, p->legacy_instance, p->args, p->g, p->launch_m, p->n, stream)
-                : ck_tile_int8_scaled_launch_private(p->output_type,
-                                                     p->route,
-                                                     p->legacy_instance,
-                                                     p->args,
-                                                     p->scales,
-                                                     p->g,
-                                                     p->launch_m,
-                                                     p->n,
-                                                     stream);
+        const int status = ck_tile_int8_scaled_launch_private(
+            p->output_type, p->instance_key, p->args, p->scales, p->g, p->launch_m, p->n, stream);
         require(
             status == 0, CK_TILE_INT8_CACHED_INTERNAL_ERROR_V1, "INT8 cached plan launch failed");
     });
@@ -544,9 +523,10 @@ int create_plan_v2(ck_tile_int8_nt_cached_weights_handle_v1 w,
                    int32_t g,
                    ck_tile_int8_nt_cached_plan_handle_v1* result
 #ifdef CK_INT8_CACHED_TUNING
-                   , const TuningSelection* tuning = nullptr
+                   ,
+                   const TuningSelection* tuning = nullptr
 #endif
-                   )
+)
 {
     return api([&] {
         require(result, CK_TILE_INT8_CACHED_INVALID_ARGUMENT_V1, "null plan result");
@@ -555,7 +535,6 @@ int create_plan_v2(ck_tile_int8_nt_cached_weights_handle_v1 w,
                 CK_TILE_INT8_CACHED_INVALID_ARGUMENT_V1,
                 "invalid v2 groups/weights");
         current_device_is(w->device);
-        std::vector<ck_tile_int8_nt_cached_group_desc_v1> legacy(g);
         std::vector<ck_tile::Int8NtScaleArgs> scales(g);
         for(int i = 0; i < g; ++i)
         {
@@ -569,7 +548,12 @@ int create_plan_v2(ck_tile_int8_nt_cached_weights_handle_v1 w,
             require(a.reserved[0] == 0 && a.reserved[1] == 0,
                     CK_TILE_INT8_CACHED_INVALID_ARGUMENT_V1,
                     "nonzero v2 reserved field");
-            require(a.output_type <= 2 && a.output_type == groups[0].output_type,
+            require(a.output_type != CK_TILE_INT8_OUTPUT_INT32_V2,
+                    CK_TILE_INT8_CACHED_UNSUPPORTED_V1,
+                    "INT32 output is unsupported; use BF16 or FP16");
+            require((a.output_type == CK_TILE_INT8_OUTPUT_BF16_V2 ||
+                     a.output_type == CK_TILE_INT8_OUTPUT_FP16_V2) &&
+                        a.output_type == groups[0].output_type,
                     CK_TILE_INT8_CACHED_INVALID_ARGUMENT_V1,
                     "invalid/mixed output type");
             require(a.scale_a_mode <= 1 && a.scale_b_mode <= 1,
@@ -579,33 +563,26 @@ int create_plan_v2(ck_tile_int8_nt_cached_weights_handle_v1 w,
                         (!a.scale_b || aligned(a.scale_b, alignof(float))),
                     CK_TILE_INT8_CACHED_INVALID_ARGUMENT_V1,
                     "unaligned FP32 scale");
-            require(a.output_type != 0 ||
-                        (!a.scale_a && !a.scale_b && a.scale_a_mode == 0 && a.scale_b_mode == 0),
-                    CK_TILE_INT8_CACHED_INVALID_ARGUMENT_V1,
-                    "INT32 output requires no scales");
-            auto& b        = legacy[i];
-            b.struct_size  = sizeof(b);
-            b.abi_version  = 1;
-            b.a            = a.a;
-            b.c            = static_cast<int32_t*>(a.c);
-            b.m            = a.m;
-            b.a_row_stride = a.a_row_stride;
-            b.c_row_stride = a.c_row_stride;
-            scales[i]      = {a.scale_a,
-                              a.scale_b,
-                              static_cast<int32_t>(a.scale_a_mode),
-                              static_cast<int32_t>(a.scale_b_mode)};
+            scales[i] = {a.scale_a,
+                         a.scale_b,
+                         static_cast<int32_t>(a.scale_a_mode),
+                         static_cast<int32_t>(a.scale_b_mode)};
         }
-        auto p = make_plan(w, legacy.data(), g, groups[0].output_type, scales.data()
+        auto p = make_plan(w,
+                           groups,
+                           g,
+                           scales.data()
 #ifdef CK_INT8_CACHED_TUNING
-                           , tuning
+                               ,
+                           tuning
 #endif
         );
 #ifdef CK_INT8_CACHED_TUNING
         if(!p) // Enumeration completes before allocating GPU plan buffers.
             return;
 #endif
-        if(p->output_type && p->route != CK_TILE_INT8_CACHED_RAW_K_PARALLEL_M1_M2_V1)
+        if(ck_tile::int8_instance_ids::route_for(p->instance_key) !=
+           CK_TILE_INT8_CACHED_RAW_K_PARALLEL_M1_M2_V1)
         {
             hip_check(hipMalloc(reinterpret_cast<void**>(&p->scales), sizeof(scales[0]) * g));
             hip_check(
@@ -626,13 +603,13 @@ ck_tile_int8_nt_cached_plan_create_v2(ck_tile_int8_nt_cached_weights_handle_v1 w
 }
 
 #ifdef CK_INT8_CACHED_TUNING
-extern "C" CK_TILE_INT8_CACHED_API int ck_tile_int8_nt_tuning_list_v1(
-    ck_tile_int8_nt_cached_weights_handle_v1 w,
-    const ck_tile_int8_nt_cached_group_desc_v2* groups,
-    int32_t g,
-    ck_tile_int8_nt_tuning_candidate_v1* buffer,
-    size_t capacity,
-    size_t* count)
+extern "C" CK_TILE_INT8_CACHED_API int
+ck_tile_int8_nt_tuning_list_v1(ck_tile_int8_nt_cached_weights_handle_v1 w,
+                               const ck_tile_int8_nt_cached_group_desc_v2* groups,
+                               int32_t g,
+                               ck_tile_int8_nt_tuning_candidate_v1* buffer,
+                               size_t capacity,
+                               size_t* count)
 {
     if(!count || (!buffer && capacity))
         return api([&] {
@@ -657,13 +634,13 @@ extern "C" CK_TILE_INT8_CACHED_API int ck_tile_int8_nt_tuning_list_v1(
     });
 }
 
-extern "C" CK_TILE_INT8_CACHED_API int ck_tile_int8_nt_tuning_plan_create_v1(
-    ck_tile_int8_nt_cached_weights_handle_v1 w,
-    const ck_tile_int8_nt_cached_group_desc_v2* groups,
-    int32_t g,
-    uint32_t route,
-    uint32_t legacy_instance,
-    ck_tile_int8_nt_cached_plan_handle_v1* result)
+extern "C" CK_TILE_INT8_CACHED_API int
+ck_tile_int8_nt_tuning_plan_create_v1(ck_tile_int8_nt_cached_weights_handle_v1 w,
+                                      const ck_tile_int8_nt_cached_group_desc_v2* groups,
+                                      int32_t g,
+                                      uint32_t route,
+                                      uint32_t legacy_instance,
+                                      ck_tile_int8_nt_cached_plan_handle_v1* result)
 {
     const TuningSelection selection{nullptr, route, legacy_instance};
     return create_plan_v2(w, groups, g, result, &selection);

@@ -75,7 +75,7 @@ typedef struct ck_tile_int8_nt_cached_group_desc_v1
 
 enum ck_tile_int8_nt_output_type_v2
 {
-    CK_TILE_INT8_OUTPUT_INT32_V2 = 0,
+    CK_TILE_INT8_OUTPUT_INT32_V2 = 0, // Reserved; output is unsupported.
     CK_TILE_INT8_OUTPUT_BF16_V2  = 1,
     CK_TILE_INT8_OUTPUT_FP16_V2  = 2
 };
@@ -89,8 +89,8 @@ enum ck_tile_int8_nt_scale_mode_v2
 // FP32 device scale pointers;NULL means1. Scalar mode reads element0.
 // Outer mode:activation scale has M elements;weight scale has N elements.
 // Scales are borrowed,may be updated with stream ordering,and must outlive run.
-// output_type must be common across groups. INT32 requires both scales NULL
-// and scalar modes. No alpha/beta,bias,zero point or output quantization.
+// output_type must be BF16 or FP16 and common across groups.
+// No alpha/beta,bias,zero point or output quantization.
 typedef struct ck_tile_int8_nt_cached_group_desc_v2
 {
     uint32_t struct_size, abi_version; // sizeof(this descriptor),2.
@@ -145,6 +145,7 @@ ck_tile_int8_nt_cached_weights_destroy_v1(ck_tile_int8_nt_cached_weights_handle_
 // serialized internally;destroy must not race with create/run on that handle.
 // Plan destruction waits only streams on which that plan was launched.
 // All calls use the same current HIP device as weights_create.
+// Retained for binary compatibility. Returns CK_TILE_INT8_CACHED_UNSUPPORTED_V1.
 CK_TILE_INT8_CACHED_API int
 ck_tile_int8_nt_cached_plan_create_v1(ck_tile_int8_nt_cached_weights_handle_v1 weights,
                                       const ck_tile_int8_nt_cached_group_desc_v1* groups,

@@ -373,6 +373,98 @@ constexpr std::int64_t grouped_gemm_selector_k_extent(const GroupedGemmProblem& 
                : problem.k.extent;
 }
 
+// Shared tile policy for signed INT8 NT operands. The provider sets the output type.
+constexpr bool is_valid_grouped_gemm_int8_nt_problem(const GroupedGemmProblem& problem)
+{
+    return problem.arch == GroupedGemmArch::gfx936 && problem.layout == GroupedGemmLayout::nt &&
+           problem.group_count > 0 && problem.group_count <= 65535 &&
+           problem.n.kind == GroupedGemmDimensionKind::common &&
+           problem.k.kind == GroupedGemmDimensionKind::common &&
+           problem.k.extent >= 256 && problem.k.extent <= 131056 && problem.k.extent % 16 == 0 &&
+           problem.m.extent > 0 && problem.m.extent <= 1048560 &&
+           problem.n.extent > 0 && problem.n.extent <= 1048576 && problem.n.extent % 4 == 0;
+}
+
+// Call with a validated INT8 NT problem.
+constexpr GroupedGemmInstanceId select_grouped_gemm_int8_nt_instance(const GroupedGemmProblem& problem)
+{
+    const auto m = grouped_gemm_selector_m_extent(problem);
+    auto id = m <= 16 ? GroupedGemmInstanceId::int8_nt_direct_m16
+            : m <= 32 ? GroupedGemmInstanceId::int8_nt_m32
+            : m <= 64 ? GroupedGemmInstanceId::int8_nt_m64
+                      : GroupedGemmInstanceId::int8_nt_m128;
+    const bool uniform = problem.m.kind == GroupedGemmDimensionKind::common &&
+                         problem.n.kind == GroupedGemmDimensionKind::common &&
+                         !problem.may_have_empty_groups && !problem.group_lengths_are_ragged;
+    const bool aligned = uniform && problem.k.extent % 64 == 0 &&
+                         m % 128 == 0 && problem.n.extent % 128 == 0;
+    if(aligned)
+    {
+        if(m >= 4096 && (problem.k.extent <= 2048 ||
+            (m % 256 == 0 && problem.n.extent % 256 == 0)))
+            id = problem.k.extent <= 2048 ? GroupedGemmInstanceId::int8_nt_m128_mgroup8
+                                         : GroupedGemmInstanceId::int8_nt_m256_n256_ngroup;
+        else if(problem.k.extent < 2048)
+            id = GroupedGemmInstanceId::int8_nt_m128_aligned;
+        else if(m % 256 == 0 && problem.n.extent % 256 == 0)
+            id = GroupedGemmInstanceId::int8_nt_m256_n256_aligned;
+        else if(problem.n.extent % 256 == 0)
+            id = GroupedGemmInstanceId::int8_nt_m128_n256_aligned;
+    }
+    else if(m > 64 && uniform)
+        id = m >= 4096 && problem.k.extent < 2048 ? GroupedGemmInstanceId::int8_nt_m128_padded_mgroup8
+           : problem.k.extent < 2048 ? GroupedGemmInstanceId::int8_nt_m128_padded
+                                    : GroupedGemmInstanceId::int8_nt_m256_n256_padded;
+    // Small-M packed path: K128 for short reductions; K256 otherwise.
+    // G controls the BN64/BN128 resource tradeoff. No test-case identifiers.
+    if(uniform && m <= 16)
+        id = problem.k.extent < 1024
+                 ? GroupedGemmInstanceId::int8_nt_small_m_n64_k128
+                 : problem.group_count <= 16
+                       ? GroupedGemmInstanceId::int8_nt_small_m_n64_k256
+                       : GroupedGemmInstanceId::int8_nt_small_m_n128_k256;
+    // Long reductions use narrow-N K512 plus barrier-free vector output.
+    // This resource rule applies to every G, independent of benchmark labels.
+    if(uniform && m <= 16 && problem.k.extent >= 4096)
+        id = GroupedGemmInstanceId::int8_nt_small_m_n32_k512_direct;
+    // Medium-M deep-K tiles reuse operands across more output rows.
+    // Small G favors more BN64 output CTAs; short K favors lighter tiles.
+    if(uniform && m > 16 && m <= 32)
+        id = problem.k.extent < 1024 || problem.group_count <= 4
+                 ? GroupedGemmInstanceId::int8_nt_m32_n64_k128
+                 : problem.group_count <= 32
+                       ? GroupedGemmInstanceId::int8_nt_m32_n64_k256
+                       : GroupedGemmInstanceId::int8_nt_m32_n128_k256;
+    if(uniform && m > 32 && m <= 64)
+        id = problem.k.extent < 2048 || problem.group_count <= 4
+                 ? GroupedGemmInstanceId::int8_nt_m64_n128_k128
+                 : GroupedGemmInstanceId::int8_nt_m64_n128_k256;
+    // Uniform large-M WASP: the host rule uses dimensions only. The kernel
+    // retains a packed-load fallback for unsupported per-group strides.
+    if(uniform && m >= 256 && m % 256 == 0 && problem.n.extent % 32 == 0 &&
+       problem.k.extent % 128 == 0 && problem.k.extent < 16384)
+    {
+        const auto k = problem.k.extent;
+        if((k & (k - 1)) != 0)
+            id = (m <= 256 || k < 1024)
+                     ? GroupedGemmInstanceId::int8_nt_wasp_record1024_a4_transposed
+                     : GroupedGemmInstanceId::int8_nt_wasp_record1024_a4;
+        else
+            id = m <= 2048 ? GroupedGemmInstanceId::int8_nt_wasp_a4_transposed
+                 : k <= 768 ? GroupedGemmInstanceId::int8_nt_wasp_a8_transposed
+                            : GroupedGemmInstanceId::int8_nt_wasp_a4;
+    }
+    else if(uniform && m >= 128 && m % 128 == 0 && problem.n.extent % 32 == 0 &&
+            problem.k.extent % 128 == 0 && problem.k.extent < 16384)
+    {
+        const auto k = problem.k.extent;
+        id           = ((k & (k - 1)) != 0)
+                           ? GroupedGemmInstanceId::int8_nt_wasp_m128_record1024_a2
+                           : GroupedGemmInstanceId::int8_nt_wasp_m128_a2;
+    }
+    return id;
+}
+
 constexpr GroupedGemmSelection select_grouped_gemm_candidate(
     const GroupedGemmProblem& problem,
     const GroupedGemmSelectorPolicy& policy = {})
@@ -382,90 +474,12 @@ constexpr GroupedGemmSelection select_grouped_gemm_candidate(
         return {};
     }
 
-    // This bounded INT8 ABI explicitly means INT32 output without scale.
-    // M may be a device-length capacity. Never read device lengths in select.
+    // The v1 INT8 output contract is INT32 without scale.
     if(problem.data_type == GroupedGemmDataType::int8_int32)
     {
-        if(problem.arch != GroupedGemmArch::gfx936 || problem.layout != GroupedGemmLayout::nt ||
-           problem.group_count > 65535 || problem.k.kind != GroupedGemmDimensionKind::common ||
-           problem.k.extent < 256 || problem.k.extent > 131056 || problem.k.extent % 16 != 0 || problem.n.extent % 4 != 0 ||
-           problem.m.extent > 1048560 || problem.n.extent > 1048576)
+        if(!is_valid_grouped_gemm_int8_nt_problem(problem))
             return {};
-        const auto m = grouped_gemm_selector_m_extent(problem);
-        auto id = m <= 16 ? GroupedGemmInstanceId::int8_nt_direct_m16
-                : m <= 32 ? GroupedGemmInstanceId::int8_nt_m32
-                : m <= 64 ? GroupedGemmInstanceId::int8_nt_m64
-                          : GroupedGemmInstanceId::int8_nt_m128;
-        const bool uniform = problem.m.kind == GroupedGemmDimensionKind::common &&
-                             problem.n.kind == GroupedGemmDimensionKind::common &&
-                             !problem.may_have_empty_groups && !problem.group_lengths_are_ragged;
-        const bool aligned = uniform && problem.k.extent % 64 == 0 &&
-                             m % 128 == 0 && problem.n.extent % 128 == 0;
-        if(aligned)
-        {
-            if(m >= 4096 && (problem.k.extent <= 2048 ||
-                (m % 256 == 0 && problem.n.extent % 256 == 0)))
-                id = problem.k.extent <= 2048 ? GroupedGemmInstanceId::int8_nt_m128_mgroup8
-                                             : GroupedGemmInstanceId::int8_nt_m256_n256_ngroup;
-            else if(problem.k.extent < 2048)
-                id = GroupedGemmInstanceId::int8_nt_m128_aligned;
-            else if(m % 256 == 0 && problem.n.extent % 256 == 0)
-                id = GroupedGemmInstanceId::int8_nt_m256_n256_aligned;
-            else if(problem.n.extent % 256 == 0)
-                id = GroupedGemmInstanceId::int8_nt_m128_n256_aligned;
-        }
-        else if(m > 64 && uniform)
-            id = m >= 4096 && problem.k.extent < 2048 ? GroupedGemmInstanceId::int8_nt_m128_padded_mgroup8
-               : problem.k.extent < 2048 ? GroupedGemmInstanceId::int8_nt_m128_padded
-                                        : GroupedGemmInstanceId::int8_nt_m256_n256_padded;
-        // Small-M packed path: K128 for short reductions; K256 otherwise.
-        // G controls the BN64/BN128 resource tradeoff. No test-case identifiers.
-        if(uniform && m <= 16)
-            id = problem.k.extent < 1024
-                     ? GroupedGemmInstanceId::int8_nt_small_m_n64_k128
-                     : problem.group_count <= 16
-                           ? GroupedGemmInstanceId::int8_nt_small_m_n64_k256
-                           : GroupedGemmInstanceId::int8_nt_small_m_n128_k256;
-        // Long reductions use narrow-N K512 plus barrier-free vector output.
-        // This resource rule applies to every G, independent of benchmark labels.
-        if(uniform && m <= 16 && problem.k.extent >= 4096)
-            id = GroupedGemmInstanceId::int8_nt_small_m_n32_k512_direct;
-        // Medium-M deep-K tiles reuse operands across more output rows.
-        // Small G favors more BN64 output CTAs; short K favors lighter tiles.
-        if(uniform && m > 16 && m <= 32)
-            id = problem.k.extent < 1024 || problem.group_count <= 4
-                     ? GroupedGemmInstanceId::int8_nt_m32_n64_k128
-                     : problem.group_count <= 32
-                           ? GroupedGemmInstanceId::int8_nt_m32_n64_k256
-                           : GroupedGemmInstanceId::int8_nt_m32_n128_k256;
-        if(uniform && m > 32 && m <= 64)
-            id = problem.k.extent < 2048 || problem.group_count <= 4
-                     ? GroupedGemmInstanceId::int8_nt_m64_n128_k128
-                     : GroupedGemmInstanceId::int8_nt_m64_n128_k256;
-        // Uniform large-M WASP: the host rule uses dimensions only. The kernel
-        // retains a packed-load fallback for unsupported per-group strides.
-        if(uniform && m >= 256 && m % 256 == 0 && problem.n.extent % 32 == 0 &&
-           problem.k.extent % 128 == 0 && problem.k.extent < 16384)
-        {
-            const auto k = problem.k.extent;
-            if((k & (k - 1)) != 0)
-                id = (m <= 256 || k < 1024)
-                         ? GroupedGemmInstanceId::int8_nt_wasp_record1024_a4_transposed
-                         : GroupedGemmInstanceId::int8_nt_wasp_record1024_a4;
-            else
-                id = m <= 2048 ? GroupedGemmInstanceId::int8_nt_wasp_a4_transposed
-                     : k <= 768 ? GroupedGemmInstanceId::int8_nt_wasp_a8_transposed
-                                : GroupedGemmInstanceId::int8_nt_wasp_a4;
-        }
-        else if(uniform && m >= 128 && m % 128 == 0 && problem.n.extent % 32 == 0 &&
-                problem.k.extent % 128 == 0 && problem.k.extent < 16384)
-        {
-            const auto k = problem.k.extent;
-            id           = ((k & (k - 1)) != 0)
-                               ? GroupedGemmInstanceId::int8_nt_wasp_m128_record1024_a2
-                               : GroupedGemmInstanceId::int8_nt_wasp_m128_a2;
-        }
-        return {id, GroupedGemmSelectionReason::int8_nt};
+        return {select_grouped_gemm_int8_nt_instance(problem), GroupedGemmSelectionReason::int8_nt};
     }
 
     const auto effective_m = grouped_gemm_selector_m_extent(problem);

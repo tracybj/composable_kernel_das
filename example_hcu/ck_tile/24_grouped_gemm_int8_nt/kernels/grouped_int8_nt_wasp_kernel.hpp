@@ -11,8 +11,7 @@ namespace ck_tile {
 // -----------------------------------------------------------------------------
 // 1. Cooperative LDS Fallback for 256x256 Unpacked WASP outside native stride domain
 // -----------------------------------------------------------------------------
-struct GroupedInt8NtWaspFallbackProblem
-    : GroupedInt8NtTileProblem<256, 256, 64, 4, 2, false, false>
+struct GroupedInt8NtWaspFallbackProblem : GroupedInt8NtTileProblem<256, 256, 64, 4, 2, false, false>
 {
     static constexpr index_t Threads = 768, ComputeThreads = 512;
 };
@@ -82,8 +81,8 @@ struct GroupedInt8NtWaspKernel
         constexpr index_t m_align =
             (AllowTransposedMTail && P::Transpose && P::Pipeline::MasksInactiveN) ? 16 : P::BM;
         constexpr index_t n_align = (P::BN == 384 || P::Pipeline::MasksInactiveN) ? 32 : P::BN;
-        return a.M % m_align == 0 && a.N % n_align == 0 && a.K % 128 == 0 &&
-               a.stride_Bs[0] > 0 && a.stride_Bs[0] < 16384 &&
+        return a.M % m_align == 0 && a.N % n_align == 0 && a.K % 128 == 0 && a.stride_Bs[0] > 0 &&
+               a.stride_Bs[0] < 16384 &&
                static_cast<long long>(min(index_t(P::BM), a.M)) * a.stride_As[0] <= 0x7fffffffLL &&
                static_cast<long long>(a.N - nb) * a.stride_Bs[0] <= 0x7fffffffLL;
     }
@@ -102,14 +101,18 @@ struct GroupedInt8NtWaspKernel
             const auto* bp = static_cast<const int8_t*>(a.bs_ptr[0]);
             for(index_t k = 0; k < a.K; ++k)
             {
+                using Layout = Int8NtPackedWeightLayout;
+                // Expand [K tile, N tile, K group, N row, K byte] in that order.
                 const long long bo =
                     P::PackedB
-                        ? (((static_cast<long long>(k / 64) * (a.N / 16) + col / 16) * 4 +
-                            (k % 64) / 16) *
-                               16 +
-                           col % 16) *
-                                  16 +
-                              k % 16
+                        ? (((static_cast<long long>(k / Layout::KTile) * (a.N / Layout::NTile) +
+                             col / Layout::NTile) *
+                                Layout::KGroups +
+                            (k % Layout::KTile) / Layout::VectorBytes) *
+                               Layout::NTile +
+                           col % Layout::NTile) *
+                                  Layout::VectorBytes +
+                              k % Layout::VectorBytes
                         : static_cast<long long>(col) * a.stride_Bs[0] + k;
                 sum += int32_t(ap[k]) * int32_t(bp[bo]);
             }
@@ -167,9 +170,9 @@ struct GroupedInt8NtWaspKernel
             else
             {
                 scalar_fallback(a, mb, nb, [&](index_t row, index_t col, int32_t sum) {
-                    const long long co = P::Transpose
-                                             ? static_cast<long long>(col) * a.stride_E + row
-                                             : static_cast<long long>(row) * a.stride_E + col;
+                    const long long co                 = P::Transpose
+                                                             ? static_cast<long long>(col) * a.stride_E + row
+                                                             : static_cast<long long>(row) * a.stride_E + col;
                     static_cast<int32_t*>(a.e_ptr)[co] = sum;
                 });
             }
@@ -265,7 +268,8 @@ struct GroupedInt8NtWaspKernel
 };
 
 template <class P>
-using GroupedInt8NtWaspCoreKernel = GroupedInt8NtWaspKernel<P, false, GroupedInt8NtWaspCoreEpilogue<P>>;
+using GroupedInt8NtWaspCoreKernel =
+    GroupedInt8NtWaspKernel<P, false, GroupedInt8NtWaspCoreEpilogue<P>>;
 
 template <class P, bool BFloat, class Epilogue = GroupedInt8NtScaledWaspEpilogue<P, BFloat>>
 using GroupedInt8NtScaledWaspKernel = GroupedInt8NtWaspKernel<P, BFloat, Epilogue>;

@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: MIT
 // Route alias, public ID suffix, launch kind, weight format, problem type.
-// WASP supports both INT32 and scaled output. Other kinds are scaled-only.
 CK_INT8_ROUTE(LinearTransposedRaw, LINEAR_TRANSPOSED_RAW, WASP, Raw, RawTransposeM256N256)
 CK_INT8_ROUTE(LinearTransposedRecord1024, LINEAR_TRANSPOSED_RAW_RECORD1024, WASP, Raw, RawTransposeM256N256Record1024)
 CK_INT8_ROUTE(PackedWeightM256N256, PACKED_WEIGHT, WASP, Packed, PackedM256N256)

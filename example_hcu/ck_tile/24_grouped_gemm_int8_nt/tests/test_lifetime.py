@@ -47,13 +47,15 @@ def check_configuration(g, n, k, lengths):
                     for _ in range(g)
                 ]
                 c = [
-                    torch.empty((m, n), device='cuda', dtype=torch.int32)
+                    torch.empty((m, n), device='cuda', dtype=torch.bfloat16)
                     for _ in range(g)
                 ]
-                gd = (Group * g)(
+                gd = (Group2 * g)(
                     *[
                         init(
-                            Group,
+                            Group2,
+                            abi_version=2,
+                            output_type=1,
                             a=x.data_ptr(),
                             c=y.data_ptr(),
                             m=m,
@@ -64,7 +66,7 @@ def check_configuration(g, n, k, lengths):
                     ]
                 )
                 p = C.c_void_p()
-                ok(lib.ck_tile_int8_nt_cached_plan_create_v1(h, gd, g, C.byref(p)))
+                ok(lib.ck_tile_int8_nt_cached_plan_create_v2(h, gd, g, C.byref(p)))
                 plans.append(p)
                 storage.append((a, c, gd, plan_info(p).route))
             assert lib.ck_tile_int8_nt_cached_weights_destroy_v1(h) == -7
@@ -78,7 +80,7 @@ def check_configuration(g, n, k, lengths):
                     stream.synchronize()
                     for x, y, w in zip(a, c, weights):
                         assert torch.equal(
-                            y, (x.double() @ w.double().T).to(torch.int32)
+                            y, (x.double() @ w.double().T).to(torch.int32).float().bfloat16()
                         )
                     assert weight_info(h).packed_device_data == packed_ptr
                     checks.append(
@@ -101,7 +103,7 @@ def check_configuration(g, n, k, lengths):
                 ok(lib.ck_tile_int8_nt_cached_plan_destroy_v1(p))
                 p.value = None
                 for x, y, w in zip(a, c, weights):
-                    assert torch.equal(y, (x.double() @ w.double().T).to(torch.int32))
+                    assert torch.equal(y, (x.double() @ w.double().T).to(torch.int32).float().bfloat16())
         finally:
             for p in plans:
                 if p.value:

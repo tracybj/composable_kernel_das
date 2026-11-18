@@ -1,38 +1,11 @@
-"""GPU numerical gates for fused INT8 -> BF16/FP16 and unchanged INT32 APIs."""
+"""GPU numerical gates for fused INT8 -> BF16/FP16 and rejection of INT32 output."""
 
 from pathlib import Path
 import csv, ctypes as C, json, os, hashlib, time, argparse, resource
 
 resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
 import torch
-from bindings import Weight, Group, init, lib, ok, plan_info
-
-
-class Group2(C.Structure):
-    _fields_ = [
-        ('struct_size', C.c_uint32),
-        ('abi_version', C.c_uint32),
-        ('a', C.c_void_p),
-        ('c', C.c_void_p),
-        ('m', C.c_int32),
-        ('a_row_stride', C.c_int32),
-        ('c_row_stride', C.c_int32),
-        ('output_type', C.c_uint32),
-        ('scale_a', C.c_void_p),
-        ('scale_b', C.c_void_p),
-        ('scale_a_mode', C.c_uint32),
-        ('scale_b_mode', C.c_uint32),
-        ('reserved', C.c_uint64 * 2),
-    ]
-
-
-assert C.sizeof(Group2) == 80
-lib.ck_tile_int8_nt_cached_plan_create_v2.argtypes = [
-    C.c_void_p,
-    C.POINTER(Group2),
-    C.c_int32,
-    C.POINTER(C.c_void_p),
-]
+from bindings import Group2, Weight, init, lib, ok, plan_info
 
 
 def main():
@@ -67,6 +40,15 @@ def main():
             (f'route_{key}', g, [m] * g, n, k, False, {0: key, 1: scaled, 2: scaled})
         )
     cases += [
+        (
+            'w4_cooperative_long_k',
+            16,
+            [32] * 16,
+            2048,
+            4096,
+            False,
+            {1: (0, 7502), 2: (0, 7502)},
+        ),
         ('tail_padded_ragged', 4, [0, 1, 17, 33], 260, 272, True, None),
         ('special_values', 2, [16] * 2, 256, 512, False, None),
         ('rounding_ties', 2, [16] * 2, 256, 512, False, None),
@@ -293,9 +275,7 @@ def main():
                     device='cuda',
                 )
                 sb[:, 0:4] = torch.tensor([0.0, -0.5, 1.0, 1e-35], device='cuda')
-            for output, dtype in [(1, torch.bfloat16), (2, torch.float16)] + (
-                [(0, torch.int32)] if mode == 'none' else []
-            ):
+            for output, dtype in [(1, torch.bfloat16), (2, torch.float16)]:
                 span = maxm * cstride
                 capacity = (span + 7) // 8 * 8
                 raw = torch.full((g, capacity + 32), 77, device='cuda', dtype=dtype)
@@ -344,6 +324,8 @@ def main():
                             (32, 2048, 768, 4): 11,
                             (32, 1024, 2048, 8): 11,
                             (32, 1024, 2048, 64): 11,
+                            (256, 2048, 768, 4): 30,
+                            (32, 2048, 4096, 16): 32,
                         }.get((maxm, n, k, g))
                         if tuned is not None:
                             assert pi.route == tuned, (name, output, pi.route, tuned)
@@ -358,16 +340,14 @@ def main():
                 torch.cuda.synchronize()
                 bad = 0
                 for i, m in enumerate(ms):
-                    ref = refs[i] if output == 0 else refs[i].float()
+                    ref = refs[i].float()
                     if sa is not None:
                         scalea = sa[i, :m, None] if gd[i].scale_a_mode else sa[i, 0]
                         scaleb = sb[i, None, :] if gd[i].scale_b_mode else sb[i, 0]
                         ref = ref * (scalea * scaleb)
                     ref = ref.to(dtype)
                     got = out[i, :m, :n]
-                    equal = got == ref
-                    if output != 0:
-                        equal = equal | (torch.isnan(got) & torch.isnan(ref))
+                    equal = (got == ref) | (torch.isnan(got) & torch.isnan(ref))
                     count = int((~equal).sum())
                     bad += count
                     if count:
@@ -411,33 +391,6 @@ def main():
                 assert bool((raw[:, :16] == 77).all()) and bool(
                     (raw[:, 16 + span :] == 77).all()
                 ), 'allocation guards'
-                # The old v1 entry still writes exact INT32 results.
-                if output == 0:
-                    old = (Group * g)(
-                        *[
-                            init(
-                                Group,
-                                a=a[i].data_ptr(),
-                                c=out[i].data_ptr(),
-                                m=ms[i],
-                                a_row_stride=astride,
-                                c_row_stride=cstride,
-                            )
-                            for i in range(g)
-                        ]
-                    )
-                    other = C.c_void_p()
-                    ok(
-                        lib.ck_tile_int8_nt_cached_plan_create_v1(
-                            weights, old, g, C.byref(other)
-                        )
-                    )
-                    ok(lib.ck_tile_int8_nt_cached_run_v1(other, None))
-                    torch.cuda.synchronize()
-                    assert all(
-                        torch.equal(out[i, :m, :n], refs[i]) for i, m in enumerate(ms)
-                    )
-                    ok(lib.ck_tile_int8_nt_cached_plan_destroy_v1(other))
                 ok(lib.ck_tile_int8_nt_cached_plan_destroy_v1(plan))
                 rec = dict(
                     case=name,
@@ -450,14 +403,14 @@ def main():
                 )
                 records.append(rec)
                 print(json.dumps(rec), flush=True)
-                if name.startswith('special_values') and mode == 'none' and output == 0:
+                if name.startswith('special_values') and mode == 'none' and output == 1:
                     for field, value in [
                         ('abi_version', 1),
                         ('struct_size', 79),
                         ('output_type', 3),
-                        ('output_type', 1),
+                        ('output_type', 0),
                         ('scale_a_mode', 2),
-                        ('scale_a', a.data_ptr()),
+                        ('scale_a', a.data_ptr() + 1),
                         ('reserved', 1),
                     ]:
                         d = gd[0]

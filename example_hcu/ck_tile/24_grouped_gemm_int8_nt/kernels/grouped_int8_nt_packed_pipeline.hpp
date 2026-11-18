@@ -13,8 +13,8 @@ struct GroupedInt8NtPackedSmallProblem : Base
     static_assert(!Address32 || FullNK, "32-bit offsets require the complete N/K domain");
 };
 
-template <class Base, bool F, bool U>
-struct GroupedInt8NtTilePolicy<GroupedInt8NtPackedSmallProblem<Base, F, U>>
+template <class Base, bool FullNK, bool Address32>
+struct GroupedInt8NtTilePolicy<GroupedInt8NtPackedSmallProblem<Base, FullNK, Address32>>
     : GroupedInt8NtTilePolicy<Base>
 {
     using Parent                          = GroupedInt8NtTilePolicy<Base>;
@@ -22,18 +22,19 @@ struct GroupedInt8NtTilePolicy<GroupedInt8NtPackedSmallProblem<Base, F, U>>
                              SmemBytes = Parent::CStripeBytes;
 };
 
-template <class Base, bool F, bool U, class Policy>
-struct GroupedInt8NtTilePipeline<GroupedInt8NtPackedSmallProblem<Base, F, U>, Policy>
+template <class Base, bool FullNK, bool Address32, class Policy>
+struct GroupedInt8NtTilePipeline<GroupedInt8NtPackedSmallProblem<Base, FullNK, Address32>, Policy>
 {
-    using P    = GroupedInt8NtPackedSmallProblem<Base, F, U>;
-    using Mmac = typename P::Mmac;
-    using Copy = typename P::CopyVector;
-    using AVec = typename Mmac::AVecType;
-    using BVec = typename Mmac::BVecType;
-    using Acc  = typename Mmac::CVecType;
+    using P      = GroupedInt8NtPackedSmallProblem<Base, FullNK, Address32>;
+    using Mmac   = typename P::Mmac;
+    using Copy   = typename P::CopyVector;
+    using Layout = Int8NtPackedWeightLayout;
+    using AVec   = typename Mmac::AVecType;
+    using BVec   = typename Mmac::BVecType;
+    using Acc    = typename Mmac::CVecType;
     struct GlobalTile
     {
-        Copy a[P::MR][P::BK / 64], b[P::NR][P::BK / 64];
+        Copy a[P::MR][P::BK / Layout::KTile], b[P::NR][P::BK / Layout::KTile];
     };
 
     CK_TILE_DEVICE GlobalTile Load(const UniversalGemmKernelArgs<>& arg,
@@ -42,14 +43,15 @@ struct GroupedInt8NtTilePipeline<GroupedInt8NtPackedSmallProblem<Base, F, U>, Po
                                    index_t kb) const
     {
         GlobalTile v{};
-        const index_t tid = get_thread_id(), lane = tid % 64, wave = tid / 64;
-        const index_t wm = wave / P::WN, wn = wave % P::WN, q = lane / 16;
+        const index_t tid = get_thread_id(), lane = tid % P::WaveSize, wave = tid / P::WaveSize;
+        const index_t wm = wave / P::WN, wn = wave % P::WN, q = lane / P::MmacRows;
         static_for<0, P::MR, 1>{}([&](auto i) {
-            static_for<0, P::BK / 64, 1>{}([&](auto j) {
+            static_for<0, P::BK / Layout::KTile, 1>{}([&](auto j) {
                 constexpr index_t mi = decltype(i)::value, ki = decltype(j)::value;
-                const index_t row = mb + wm * (P::BM / P::WM) + mi * 16 + lane % 16,
-                              k   = kb + ki * 64 + q * 16;
-                if(row < arg.M && (P::FullNK || k + 16 <= arg.K))
+                const index_t row =
+                                  mb + wm * (P::BM / P::WM) + mi * P::MmacRows + lane % P::MmacRows,
+                              k = kb + ki * Layout::KTile + q * Layout::VectorBytes;
+                if(row < arg.M && (P::FullNK || k + P::InputVectorBytes <= arg.K))
                 {
                     // The public plan checks each A matrix span against INT32_MAX.
                     // Only the byte displacement is narrowed; the base stays 64-bit.
@@ -71,11 +73,12 @@ struct GroupedInt8NtTilePipeline<GroupedInt8NtPackedSmallProblem<Base, F, U>, Po
             });
         });
         static_for<0, P::NR, 1>{}([&](auto i) {
-            static_for<0, P::BK / 64, 1>{}([&](auto j) {
+            static_for<0, P::BK / Layout::KTile, 1>{}([&](auto j) {
                 constexpr index_t ni = decltype(i)::value, ki = decltype(j)::value;
-                const index_t row = nb + wn * (P::BN / P::WN) + ni * 16 + lane % 16,
-                              k   = kb + ki * 64 + q * 16;
-                if(P::FullNK || (row < arg.N && k + 16 <= arg.K))
+                const index_t row =
+                                  nb + wn * (P::BN / P::WN) + ni * P::MmacCols + lane % P::MmacCols,
+                              k = kb + ki * Layout::KTile + q * Layout::VectorBytes;
+                if(P::FullNK || (row < arg.N && k + P::InputVectorBytes <= arg.K))
                 {
                     // Existing prepared layout:[K/64,N/16,4,16,16]. A wave reads
                     // one contiguous 1024-byte N16/K64 block; raw activation stays MK.
@@ -83,21 +86,21 @@ struct GroupedInt8NtTilePipeline<GroupedInt8NtPackedSmallProblem<Base, F, U>, Po
                     {
                         // Prepared B has exactly N*K bytes per group. Host rejects
                         // spans outside INT32_MAX before enabling this instance.
-                        const uint32_t offset = ((static_cast<uint32_t>(kb / 64 + ki) *
-                                                      static_cast<uint32_t>(arg.N / 16) +
-                                                  static_cast<uint32_t>(row / 16)) *
-                                                     64 +
-                                                 static_cast<uint32_t>(lane)) *
-                                                16;
+                        const uint32_t offset =
+                            Layout::vector_offset(static_cast<uint32_t>(kb / Layout::KTile + ki),
+                                                  static_cast<uint32_t>(arg.N / Layout::NTile),
+                                                  static_cast<uint32_t>(row / Layout::NTile),
+                                                  static_cast<uint32_t>(lane));
                         v.b[ni][ki] = *reinterpret_cast<const Copy*>(
                             static_cast<const int8_t*>(arg.bs_ptr[0]) + offset);
                     }
                     else
                     {
                         const long long offset =
-                            ((static_cast<long long>(kb / 64 + ki) * (arg.N / 16) + row / 16) * 64 +
-                             lane) *
-                            16;
+                            Layout::vector_offset(static_cast<long long>(kb / Layout::KTile + ki),
+                                                  static_cast<long long>(arg.N / Layout::NTile),
+                                                  static_cast<long long>(row / Layout::NTile),
+                                                  static_cast<long long>(lane));
                         v.b[ni][ki] = *reinterpret_cast<const Copy*>(
                             static_cast<const int8_t*>(arg.bs_ptr[0]) + offset);
                     }
@@ -109,7 +112,7 @@ struct GroupedInt8NtTilePipeline<GroupedInt8NtPackedSmallProblem<Base, F, U>, Po
 
     CK_TILE_DEVICE void Compute(const GlobalTile& v, Acc (&c)[P::MR][P::NR]) const
     {
-        static_for<0, P::BK / 64, 1>{}([&](auto k) {
+        static_for<0, P::BK / Layout::KTile, 1>{}([&](auto k) {
             static_for<0, 2, 1>{}([&](auto part) {
                 constexpr index_t ki = decltype(k)::value, p = decltype(part)::value;
                 AVec av[P::MR];

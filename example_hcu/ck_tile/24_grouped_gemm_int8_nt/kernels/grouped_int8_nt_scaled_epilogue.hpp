@@ -3,6 +3,16 @@
 #include "grouped_int8_nt_policy.hpp"
 #include "../include/grouped_int8_nt_scale_args.hpp"
 namespace ck_tile {
+namespace int8_nt_bf16_bits {
+constexpr uint32_t DiscardedBits          = 16;
+constexpr uint32_t RoundToNearestEvenBias = 0x7fffU;
+constexpr uint32_t Fp32MagnitudeMask      = 0x7fffffffU;
+constexpr uint32_t Fp32Infinity           = 0x7f800000U;
+constexpr uint32_t Fp32HighHalfMask       = 0xffff0000U;
+constexpr uint32_t Fp32QuietNanBit        = 0x00400000U;
+constexpr uint32_t Bf16QuietNanBit        = 0x40U;
+} // namespace int8_nt_bf16_bits
+
 // Keep the FP32 rounding boundary before the selected 16-bit conversion.
 // Explicit select avoids a divergent NaN-handling region for every BF16 value.
 template <bool BFloat>
@@ -15,13 +25,19 @@ struct Int8NtDequantConvert
         if constexpr(BFloat)
         {
             const uint32_t bits    = bit_cast<uint32_t>(result);
-            const uint32_t rounded = (bits + 0x7fffU + ((bits >> 16) & 1U)) >> 16;
-            const uint32_t nan     = (bits >> 16) | 0x40U;
+            const uint32_t rounded = (bits + int8_nt_bf16_bits::RoundToNearestEvenBias +
+                                      ((bits >> int8_nt_bf16_bits::DiscardedBits) & 1U)) >>
+                                     16;
+            const uint32_t nan =
+                (bits >> int8_nt_bf16_bits::DiscardedBits) | int8_nt_bf16_bits::Bf16QuietNanBit;
             uint32_t selected;
             asm volatile("v_cmp_lt_u32 vcc, %4, %1\n\t"
                          "v_cndmask_b32 %0, %2, %3, vcc"
                          : "=v"(selected)
-                         : "v"(bits & 0x7fffffffU), "v"(rounded), "v"(nan), "s"(0x7f800000U)
+                         : "v"(bits & int8_nt_bf16_bits::Fp32MagnitudeMask),
+                           "v"(rounded),
+                           "v"(nan),
+                           "s"(int8_nt_bf16_bits::Fp32Infinity)
                          : "vcc");
             return static_cast<uint16_t>(selected);
         }
@@ -83,33 +99,41 @@ struct GroupedInt8NtScaledTileEpilogue
                                    const Acc (&c)[P::MR][P::NR],
                                    Int8NtScaleArgs scale) const
     {
-        const index_t tid = get_thread_id(), lane = tid % 64, wave = tid / 64, wm = wave / P::WN,
-                      wn = wave % P::WN;
-        auto* tmp        = reinterpret_cast<int32_t*>(smem);
+        const index_t tid = get_thread_id(), lane = tid % P::WaveSize, wave = tid / P::WaveSize,
+                      wm = wave / P::WN, wn = wave % P::WN;
+        auto* tmp = reinterpret_cast<int32_t*>(smem);
         const Int8NtDequantStore<BFloat> store{scale};
         block_sync_lds();
         static_for<0, P::MR, 1>{}([&](auto i) {
             constexpr index_t mi = decltype(i)::value;
             if constexpr(P::BatchedEpi)
             {
-                const index_t row = wm * 16 + lane % 16;
+                const index_t row = wm * P::MmacRows + lane % P::MmacRows;
                 static_for<0, P::NR, 1>{}([&](auto j) {
-                    static_for<0, 4, 1>{}([&](auto v) {
+                    static_for<0, P::AccElements, 1>{}([&](auto v) {
                         constexpr index_t ni = decltype(j)::value, vi = decltype(v)::value;
-                        const index_t col = wn * (P::BN / P::WN) + ni * 16 + lane / 16 + vi * 4;
-                        tmp[row * Policy::CPitch + (col ^ ((row % 8) * 4))] = c[mi][ni][vi];
+                        const index_t col = wn * (P::BN / P::WN) + ni * P::MmacCols +
+                                            lane / P::MmacRows + vi * P::AccElements;
+                        tmp[row * Policy::CPitch +
+                            (col ^ ((row % Policy::CSwizzleRows) * Policy::CVectorElements))] =
+                            c[mi][ni][vi];
                     });
                 });
                 block_sync_lds();
-                for(index_t vec = tid; vec < Policy::CStripeRows * P::BN / 4; vec += P::Threads)
+                for(index_t vec = tid; vec < Policy::CStripeRows * Policy::CVectorsPerRow;
+                    vec += P::Threads)
                 {
-                    const index_t r = vec / (P::BN / 4), col = (vec % (P::BN / 4)) * 4;
-                    const index_t rowout = mb + (r / 16) * (P::BM / P::WM) + mi * 16 + r % 16;
-                    if(P::Aligned || (rowout < a.M && nb + col + 4 <= a.N))
+                    const index_t lds_row = vec / Policy::CVectorsPerRow;
+                    const index_t col = (vec % Policy::CVectorsPerRow) * Policy::CVectorElements;
+                    const index_t output_row = mb + (lds_row / P::MmacRows) * (P::BM / P::WM) +
+                                               mi * P::MmacRows + lds_row % P::MmacRows;
+                    if(P::Aligned ||
+                       (output_row < a.M && nb + col + Policy::CVectorElements <= a.N))
                     {
                         const auto v = *reinterpret_cast<const typename P::CopyVector*>(
-                            tmp + r * Policy::CPitch + (col ^ ((r % 8) * 4)));
-                        store.four(a, rowout, nb + col, v[0], v[1], v[2], v[3]);
+                            tmp + lds_row * Policy::CPitch +
+                            (col ^ ((lds_row % Policy::CSwizzleRows) * Policy::CVectorElements)));
+                        store.four(a, output_row, nb + col, v[0], v[1], v[2], v[3]);
                     }
                 }
                 block_sync_lds();
@@ -119,24 +143,28 @@ struct GroupedInt8NtScaledTileEpilogue
                 static_for<0, P::WM, 1>{}([&](auto w) {
                     if(wm == decltype(w)::value)
                         static_for<0, P::NR, 1>{}([&](auto j) {
-                            static_for<0, 4, 1>{}([&](auto v) {
+                            static_for<0, P::AccElements, 1>{}([&](auto v) {
                                 constexpr index_t ni = decltype(j)::value, vi = decltype(v)::value;
-                                const index_t col =
-                                    wn * (P::BN / P::WN) + ni * 16 + lane / 16 + vi * 4;
-                                tmp[(lane % 16) * Policy::CPitch + col] = c[mi][ni][vi];
+                                const index_t col = wn * (P::BN / P::WN) + ni * P::MmacCols +
+                                                    lane / P::MmacRows + vi * P::AccElements;
+                                tmp[(lane % P::MmacRows) * Policy::CPitch + col] = c[mi][ni][vi];
                             });
                         });
                     block_sync_lds();
-                    for(index_t vec = tid; vec < Policy::CStripeRows * P::BN / 4; vec += P::Threads)
+                    for(index_t vec = tid; vec < Policy::CStripeRows * Policy::CVectorsPerRow;
+                        vec += P::Threads)
                     {
-                        const index_t r = vec / (P::BN / 4), col = (vec % (P::BN / 4)) * 4;
-                        const index_t rowout =
-                            mb + decltype(w)::value * (P::BM / P::WM) + mi * 16 + r;
-                        if(P::Aligned || (rowout < a.M && nb + col + 4 <= a.N))
+                        const index_t lds_row = vec / Policy::CVectorsPerRow;
+                        const index_t col =
+                            (vec % Policy::CVectorsPerRow) * Policy::CVectorElements;
+                        const index_t output_row =
+                            mb + decltype(w)::value * (P::BM / P::WM) + mi * P::MmacRows + lds_row;
+                        if(P::Aligned ||
+                           (output_row < a.M && nb + col + Policy::CVectorElements <= a.N))
                         {
                             const auto v = *reinterpret_cast<const typename P::CopyVector*>(
-                                tmp + r * Policy::CPitch + col);
-                            store.four(a, rowout, nb + col, v[0], v[1], v[2], v[3]);
+                                tmp + lds_row * Policy::CPitch + col);
+                            store.four(a, output_row, nb + col, v[0], v[1], v[2], v[3]);
                         }
                     }
                     block_sync_lds();
@@ -302,10 +330,15 @@ struct GroupedInt8NtScaledWaspEpilogue
 };
 
 // -----------------------------------------------------------------------------
-// Paired Store Epilogue: 16-bit packed arithmetic (v_pk_mul_f32, global_store_dwordx2)
+// Paired Store Epilogue: paired FP32 arithmetic, then packed BF16/FP16 stores.
 // -----------------------------------------------------------------------------
 namespace int8_nt_paired_store {
 using FloatPair = ext_vector_t<float, 2>;
+// v_perm selectors choose the high 16 bits of each rounded FP32 bit pattern.
+constexpr uint32_t PackRoundedBf16Halves = 0x07060302U;
+// The following selectors gather two low or two high 16-bit output halves.
+constexpr uint32_t GatherLowHalves  = 0x05040100U;
+constexpr uint32_t GatherHighHalves = 0x07060302U;
 
 CK_TILE_DEVICE FloatPair multiply(FloatPair values, FloatPair factors)
 {
@@ -317,7 +350,8 @@ CK_TILE_DEVICE FloatPair multiply(FloatPair values, FloatPair factors)
 CK_TILE_DEVICE float canonicalize_factor(float f)
 {
     const uint32_t bits = bit_cast<uint32_t>(f);
-    const uint32_t nan  = (bits & 0xffff0000U) | 0x00400000U;
+    const uint32_t nan =
+        (bits & int8_nt_bf16_bits::Fp32HighHalfMask) | int8_nt_bf16_bits::Fp32QuietNanBit;
     uint32_t out;
     asm volatile("v_cmp_u_f32 vcc, %1, %1\n\t"
                  "v_cndmask_b32 %0, %1, %2, vcc"
@@ -330,7 +364,8 @@ CK_TILE_DEVICE float canonicalize_factor(float f)
 CK_TILE_DEVICE uint32_t round_bf16_bits(float result)
 {
     const uint32_t bits = bit_cast<uint32_t>(result);
-    return bits + 0x7fffU + ((bits >> 16) & 1U);
+    return bits + int8_nt_bf16_bits::RoundToNearestEvenBias +
+           ((bits >> int8_nt_bf16_bits::DiscardedBits) & 1U);
 }
 
 template <bool BFloat>
@@ -339,8 +374,11 @@ CK_TILE_DEVICE uint16_t convert(float result)
     if constexpr(BFloat)
     {
         const uint32_t bits    = bit_cast<uint32_t>(result);
-        const uint32_t rounded = (bits + 0x7fffU + ((bits >> 16) & 1U)) >> 16;
-        const uint32_t nan     = (bits >> 16) | 0x40U;
+        const uint32_t rounded = (bits + int8_nt_bf16_bits::RoundToNearestEvenBias +
+                                  ((bits >> int8_nt_bf16_bits::DiscardedBits) & 1U)) >>
+                                 16;
+        const uint32_t nan =
+            (bits >> int8_nt_bf16_bits::DiscardedBits) | int8_nt_bf16_bits::Bf16QuietNanBit;
         uint32_t selected;
         asm volatile("v_cmp_u_f32 vcc, %1, %1\n\t"
                      "v_cndmask_b32 %0, %2, %3, vcc"
@@ -365,7 +403,7 @@ CK_TILE_DEVICE uint32_t scale_pair(int32_t first, int32_t second, FloatPair fact
         uint32_t packed;
         asm volatile("v_perm_b32 %0, %1, %2, %3"
                      : "=v"(packed)
-                     : "v"(r1), "v"(r0), "s"(0x07060302U));
+                     : "v"(r1), "v"(r0), "s"(PackRoundedBf16Halves));
         return packed;
     }
     else
@@ -450,11 +488,10 @@ struct GroupedInt8NtPairedStoreEpilogue
             // Reorder packed halves directly into four contiguous output words.
             // perm selects low bytes from its second operand, high bytes from first.
             using Output = ext_vector_t<uint32_t, 4>;
-            const Output out{
-                __builtin_amdgcn_perm(p1, p0, 0x05040100U),
-                __builtin_amdgcn_perm(p3, p2, 0x05040100U),
-                __builtin_amdgcn_perm(p1, p0, 0x07060302U),
-                __builtin_amdgcn_perm(p3, p2, 0x07060302U)};
+            const Output out{__builtin_amdgcn_perm(p1, p0, GatherLowHalves),
+                             __builtin_amdgcn_perm(p3, p2, GatherLowHalves),
+                             __builtin_amdgcn_perm(p1, p0, GatherHighHalves),
+                             __builtin_amdgcn_perm(p3, p2, GatherHighHalves)};
             const int row = mb + i * 16 + lane % 16;
             const int col = stripe + (lane / 16) * 8;
             auto* dst     = static_cast<uint16_t*>(arg.e_ptr) +

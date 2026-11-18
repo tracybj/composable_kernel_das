@@ -1,4 +1,4 @@
-"""New INT8-only API:full-range FP64,packed bytes,streams,lifetimes and contracts."""
+"""Cached INT8 to BF16: exact dot reference, packing, streams, and contracts."""
 
 from pathlib import Path
 import ctypes as C, json, os, resource, hashlib, gc
@@ -100,14 +100,16 @@ for index, (lengths, n, k) in enumerate(cases):
         x = torch.randint(-128, 128, (m, sa), device='cuda', dtype=torch.int8)
         w = torch.randint(-128, 128, (n, sb), device='cuda', dtype=torch.int8)
         raw = torch.full(
-            (m * (n + 4) + 32,), 123456789, device='cuda', dtype=torch.int32
+            (m * (n + 4) + 32,), 77, device='cuda', dtype=torch.bfloat16
         )
         y = torch.as_strided(raw[16:], (m, n), (n + 4, 1))
         arrays.append((x, w, raw, y, x.clone(), w.clone()))
         weights.append(init(Weight, data=w.data_ptr(), n=n, k=k, row_stride=sb))
         groups.append(
             init(
-                Group,
+                Group2,
+                abi_version=2,
+                output_type=1,
                 a=x.data_ptr(),
                 c=y.data_ptr(),
                 m=m,
@@ -116,7 +118,7 @@ for index, (lengths, n, k) in enumerate(cases):
             )
         )
     wd = (Weight * g)(*weights)
-    gd = (Group * g)(*groups)
+    gd = (Group2 * g)(*groups)
     handle = C.c_void_p()
     plan = C.c_void_p()
     bench = None
@@ -130,7 +132,7 @@ for index, (lengths, n, k) in enumerate(cases):
     try:
         wi = weight_info(handle)
         assert (wi.group_count, wi.n, wi.k) == (g, n, k)
-        ok(lib.ck_tile_int8_nt_cached_plan_create_v1(handle, gd, g, C.byref(plan)))
+        ok(lib.ck_tile_int8_nt_cached_plan_create_v2(handle, gd, g, C.byref(plan)))
         pi = plan_info(plan)
         assert pi.max_m == max(lengths)
         assert (
@@ -144,13 +146,13 @@ for index, (lengths, n, k) in enumerate(cases):
         compute.synchronize()
         for m, (x, w, raw, y, oldx, oldw) in zip(lengths, arrays):
             if m:
-                ref = (x[:, :k].double() @ w[:, :k].double().T).to(torch.int32)
+                ref = (x[:, :k].double() @ w[:, :k].double().T).to(torch.int32).float().bfloat16()
                 assert torch.equal(y, ref), (index, lengths, n, k, pi.route)
                 mask = torch.ones_like(raw, dtype=torch.bool)
                 torch.as_strided(mask[16:], (m, n), (n + 4, 1)).fill_(False)
-                assert bool((raw[mask] == 123456789).all())
+                assert bool((raw[mask] == 77).all())
             else:
-                assert bool((raw == 123456789).all())
+                assert bool((raw == 77).all())
             assert torch.equal(x, oldx) and torch.equal(w, oldw)
         byte_check = False
         if wi.format == 1 and wi.packed_bytes <= 4 * 1024**2:
@@ -174,25 +176,33 @@ for index, (lengths, n, k) in enumerate(cases):
             byte_check = True
         # Strict version/reserved/group-count gates must not mutate the live plan.
         bad = C.c_void_p(123)
-        gd[0].abi_version = 2
+        gd[0].abi_version = 1
         assert (
-            lib.ck_tile_int8_nt_cached_plan_create_v1(handle, gd, g, C.byref(bad)) == -2
+            lib.ck_tile_int8_nt_cached_plan_create_v2(handle, gd, g, C.byref(bad)) == -2
             and not bad.value
         )
-        gd[0].abi_version = 1
+        gd[0].abi_version = 2
         bad = C.c_void_p(123)
         gd[0].reserved[0] = 1
         assert (
-            lib.ck_tile_int8_nt_cached_plan_create_v1(handle, gd, g, C.byref(bad)) == -1
+            lib.ck_tile_int8_nt_cached_plan_create_v2(handle, gd, g, C.byref(bad)) == -1
             and not bad.value
         )
         gd[0].reserved[0] = 0
         bad = C.c_void_p(123)
         assert (
-            lib.ck_tile_int8_nt_cached_plan_create_v1(handle, gd, g + 1, C.byref(bad))
+            lib.ck_tile_int8_nt_cached_plan_create_v2(handle, gd, g + 1, C.byref(bad))
             == -1
             and not bad.value
         )
+        bad = C.c_void_p(123)
+        assert lib.ck_tile_int8_nt_cached_plan_create_v1(handle, None, g, C.byref(bad)) == -5
+        assert not bad.value
+        gd[0].output_type = 0
+        bad = C.c_void_p(123)
+        assert lib.ck_tile_int8_nt_cached_plan_create_v2(handle, gd, g, C.byref(bad)) == -5
+        assert not bad.value
+        gd[0].output_type = 1
         results.append(
             dict(
                 index=index,

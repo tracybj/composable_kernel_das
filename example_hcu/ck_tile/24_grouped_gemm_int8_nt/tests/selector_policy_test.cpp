@@ -142,26 +142,26 @@ int main()
     constexpr ck_tile::Int8CachedPlanRouteDomain padded_c{true, true, true, false, false};
     constexpr ck_tile::Int8CachedPlanRouteDomain padded_a{true, true, false, false, false};
     constexpr ck_tile::Int8CachedPlanRouteDomain ragged{false, false, true, true, true};
-    assert(int8_cached_select_plan_route(32, 8192, 2048, 128, true, 80, true, dense) ==
+    assert(int8_cached_select_plan_route(32, 8192, 2048, 128, true, 80, dense) ==
            PackedM32N64);
-    assert(int8_cached_select_plan_route(32, 8192, 2048, 128, true, 80, true, ragged) ==
+    assert(int8_cached_select_plan_route(32, 8192, 2048, 128, true, 80, ragged) ==
            LegacyRaw);
-    assert(int8_cached_select_plan_route(2048, 4096, 1536, 4, true, 80, true, dense) ==
+    assert(int8_cached_select_plan_route(2048, 4096, 1536, 4, true, 80, dense) ==
            PairedM256N384MaskedM4);
-    assert(int8_cached_select_plan_route(2048, 4096, 1536, 4, true, 80, true, padded_c) ==
+    assert(int8_cached_select_plan_route(2048, 4096, 1536, 4, true, 80, padded_c) ==
            PackedM256N384MaskedM4);
     for(int m : {14336, 16384})
-        assert(int8_cached_select_plan_route(m, 1536, 2048, 4, true, 80, true, dense) ==
+        assert(int8_cached_select_plan_route(m, 1536, 2048, 4, true, 80, dense) ==
                PairedM256N384MaskedM4);
-    assert(int8_cached_select_plan_route(8192, 1536, 2048, 4, true, 80, true, dense) ==
+    assert(int8_cached_select_plan_route(8192, 1536, 2048, 4, true, 80, dense) ==
            PairedM128N256);
-    assert(int8_cached_select_plan_route(16384, 1536, 2048, 8, true, 80, true, dense) ==
+    assert(int8_cached_select_plan_route(16384, 1536, 2048, 8, true, 80, dense) ==
            PairedM256N384);
-    assert(int8_cached_select_plan_route(16384, 1536, 2048, 4, true, 80, true, padded_c) ==
+    assert(int8_cached_select_plan_route(16384, 1536, 2048, 4, true, 80, padded_c) ==
            PackedM256N384);
-    assert(int8_cached_select_plan_route(256, 256, 512, 64, true, 80, false, dense) ==
+    assert(int8_cached_select_plan_route(256, 256, 512, 64, false, 80, dense) ==
            LinearTransposedRaw);
-    assert(int8_cached_select_plan_route(256, 256, 512, 64, true, 80, false, padded_a) ==
+    assert(int8_cached_select_plan_route(256, 256, 512, 64, false, 80, padded_a) ==
            LegacyRaw);
     assert(uses_packed_weights(PairedM256N384MaskedM4) && uses_packed_weights(PackedCooperativeM1N256));
     assert(!uses_packed_weights(LinearTransposedRaw) && !uses_packed_weights(KParallelDecode));

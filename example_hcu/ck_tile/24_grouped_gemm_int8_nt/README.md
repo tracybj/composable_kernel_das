@@ -35,6 +35,11 @@ The API follows example 19's select, query, GPU argument construction and run
 sequence. The selector uses the problem summary and selects a precompiled
 instance. It reads no GPU lengths.
 
+The selector resolves the concrete scaled instance ID, including fallback
+tiles for non-specialized inputs. The provider dispatches that ID directly.
+Example 19 and Example 24 share the INT8 NT tile policy and bind their own
+output epilogues.
+
 1. Populate the problem with the BF16 or FP16 output type and host-visible
    dimensions. For variable M, provide a total capacity and a per-group M
    upper bound. Set the ragged and empty flags as applicable.
@@ -76,12 +81,12 @@ element and the output guards. By default, its HIP event times cover the
 GEMM, including the scaled epilogue. Add `--include-args-build=1` to time
 the GPU argument builder as well. Weight prepacking runs before timing.
 
-## Historical cached API and baseline
+## Scaled cached-weight API
 
-The cached-weight extension and the raw INT32 benchmark remain available for
-baseline reproduction. The cached extension supports offline tuning with
-`CK_INT8_CACHED_TUNING=ON`. The raw comparison benchmark accepts
-`CK_INT8_BENCHMARK_HIPBLASLT_ROOT` at configuration time.
+Both Example 24 APIs write BF16 or FP16. Cached plans are created through
+`ck_tile_int8_nt_cached_plan_create_v2`. Null scale pointers use unit scales.
+Offline tuning is available with `CK_INT8_CACHED_TUNING=ON`. The original
+INT32 baseline is archived on the experiment branch.
 
 ```bash
 B="$E/build/cached"

@@ -9,8 +9,10 @@ struct Int8NtKParallelArgs
     const int8_t* a;
     const int8_t* b;
     void* c;
-    const float* sa;
-    const float* sb;
-    int m, n, k, as, bs, cs, sas, sbs;
+    const float* scale_a;
+    const float* scale_b;
+    int m, n, k;
+    int stride_a, stride_b, stride_c;
+    int scale_a_stride, scale_b_stride;
 };
 } // namespace ck_tile

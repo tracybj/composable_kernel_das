@@ -6,10 +6,11 @@
 #include "instances/grouped_int8_nt_instances.hpp"
 #include "ck_tile/ops/gemm/grouped_gemm_device_args.h"
 #include <hip/hip_runtime.h>
+#include <type_traits>
 
 namespace {
 
-template <class P, class Epilogue = ck_tile::GroupedInt8NtTileEpilogue<P>>
+template <class P, class Epilogue>
 int launch(const void* args, int groups, int m, int n, hipStream_t stream)
 {
     dim3 grid(P::MFirst ? (m + P::BM - 1) / P::BM : (n + P::BN - 1) / P::BN,
@@ -60,7 +61,10 @@ extern "C" int ck_tile_grouped_int8_nt_launch(
         static_cast<ck_tile::GroupedGemmInstanceId>(instance_id),
         [&](auto tag) {
             using P = typename decltype(tag)::type;
-            return launch<P>(args, g, m, n, s);
+            using Epilogue = std::conditional_t<decltype(tag)::UseDirectEpilogue,
+                                                ck_tile::GroupedInt8NtDirectEpilogue<P>,
+                                                ck_tile::GroupedInt8NtTileEpilogue<P>>;
+            return launch<P, Epilogue>(args, g, m, n, s);
         },
         [&](auto tag) {
             using P = typename decltype(tag)::type;
@@ -79,10 +83,6 @@ extern "C" int ck_tile_grouped_int8_nt_launch(
             return hipGetLastError() == hipSuccess
                        ? CK_TILE_HCU_GROUPED_GEMM_DEVICE_ARGS_SUCCESS_V1
                        : CK_TILE_HCU_GROUPED_GEMM_DEVICE_ARGS_INTERNAL_ERROR_V1;
-        },
-        [&](auto tag) {
-            using P = typename decltype(tag)::type;
-            return launch<P, ck_tile::GroupedInt8NtDirectEpilogue<P>>(args, g, m, n, s);
         },
         []() { return CK_TILE_HCU_GROUPED_GEMM_DEVICE_ARGS_UNSUPPORTED_V1; });
 }

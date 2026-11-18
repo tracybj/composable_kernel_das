@@ -2,6 +2,7 @@
 #pragma once
 
 #include <cstdint>
+#include "ck_tile/ops/gemm/grouped_gemm_selector.hpp"
 #include "grouped_int8_nt_routes.hpp"
 
 namespace ck_tile {
@@ -9,50 +10,44 @@ namespace ck_tile {
 // Rules derived from paired BF16/FP16 tuning on 80-CU gfx936. Call only for
 // equal, nonempty groups with dense A/B/C and scalar-A/per-channel-B scales.
 // LegacyRaw means no tuned override; retain the established selector result.
-inline unsigned int8_cached_tuned_scaled_route(
-    int m, int n, int k, int groups, bool packed, int compute_units)
+inline unsigned
+int8_cached_tuned_scaled_route(int m, int n, int k, int groups, bool packed, int compute_units)
 {
     using namespace int8_routes;
-    if(compute_units != int8_tuning_config::GFX936_DEFAULT_NUM_CU ||
-       m <= 0 || n <= 0 || k <= 0 || groups <= 0)
+    if(compute_units != int8_tuning_config::GFX936_DEFAULT_NUM_CU || m <= 0 || n <= 0 || k <= 0 ||
+       groups <= 0)
         return LegacyRaw;
 
-    if(m == 1 && n >= 2048 && n <= 4608 && n % 256 == 0 &&
-       k >= 4096 && k <= 6144 && k % 128 == 0)
+    if(m == 1 && n >= 2048 && n <= 4608 && n % 256 == 0 && k >= 4096 && k <= 6144 && k % 128 == 0)
         return KParallelDecode;
 
     if(m <= 8 && packed && n % 64 == 0 && k % 256 == 0)
     {
         // Short K favors direct VGPR loads, especially with fewer groups.
         // At N4096 the same route also wins on measured mid-K, small-G shapes.
-        if((k == 512 && (groups <= 16 || n <= 256 || m <= 2)) ||
-           (k == 768 && groups >= 24) ||
+        if((k == 512 && (groups <= 16 || n <= 256 || m <= 2)) || (k == 768 && groups >= 24) ||
            (n == 4096 && k >= 1024 && k <= 2048 && groups <= 16))
             return PackedCooperativeM1N256;
     }
 
     if(m == 16 && n % 32 == 0 && k % 512 == 0 &&
-       ((k >= 1024 && k <= 1536) || (k == 2048 && groups >= 24) ||
-        (k == 4096 && groups <= 16)))
+       ((k >= 1024 && k <= 1536) || (k == 2048 && groups >= 24) || (k == 4096 && groups <= 16)))
         return RawAlignedM16N32K512;
 
     if(m == 32)
     {
         if(packed && k <= 2048)
             return PackedM32N64;
-        if(!packed && groups >= 128 && n % 4 == 0 && k >= 1024 && k <= 2048 &&
-           k % 16 == 0)
+        if(!packed && groups >= 128 && n % 4 == 0 && k >= 1024 && k <= 2048 && k % 16 == 0)
             return RawM32N64K256W4;
     }
 
-    if(packed && (m == 2048 || m == 4096) && n == 2048 && k == 512 &&
-       groups >= 8 && groups <= 64)
+    if(packed && (m == 2048 || m == 4096) && n == 2048 && k == 512 && groups >= 8 && groups <= 64)
         return PairedM128N256;
 
     // For four groups in the measured large-M range, the four-M-tile
     // schedule and cross-half A prefetch improve the paired-store path.
-    if(packed && m >= 14336 && m <= 16384 && m % 2048 == 0 && n == 1536 &&
-       k == 2048 && groups == 4)
+    if(packed && m >= 14336 && m <= 16384 && m % 2048 == 0 && n == 1536 && k == 2048 && groups == 4)
         return PairedM256N384MaskedM4;
 
     // For M=8192, N=3072, K=4096 with G=4 or G=6, 2D MGroup=4 clustering
@@ -123,17 +118,24 @@ inline unsigned int8_cached_route(int m,
        compute_units <= 0)
         return base;
 
-    const std::uint64_t mt         = (std::uint64_t(m) + 255u) / 256u;
-    const std::uint64_t padded_m   = (mt + 3u) / 4u * 4u;
-    const std::uint64_t old_ctas   = padded_m * ((std::uint64_t(n) + 255u) / 256u) * groups;
-    const std::uint64_t wide_ctas  = padded_m * ((std::uint64_t(n) + 383u) / 384u) * groups;
-    const std::uint64_t old_waves  = (old_ctas + compute_units - 1u) / compute_units;
-    const std::uint64_t wide_waves = (wide_ctas + compute_units - 1u) / compute_units;
+    constexpr std::uint64_t tile_m          = 256;
+    constexpr std::uint64_t standard_tile_n = 256;
+    constexpr std::uint64_t wide_tile_n     = 384;
+    constexpr std::uint64_t m_cluster       = 4;
+    const std::uint64_t mt                  = (std::uint64_t(m) + tile_m - 1u) / tile_m;
+    const std::uint64_t padded_m            = (mt + m_cluster - 1u) / m_cluster * m_cluster;
+    const std::uint64_t old_ctas =
+        padded_m * ((std::uint64_t(n) + standard_tile_n - 1u) / standard_tile_n) * groups;
+    const std::uint64_t wide_ctas =
+        padded_m * ((std::uint64_t(n) + wide_tile_n - 1u) / wide_tile_n) * groups;
+    const std::uint64_t standard_batches = (old_ctas + compute_units - 1u) / compute_units;
+    const std::uint64_t wide_batches     = (wide_ctas + compute_units - 1u) / compute_units;
 
-    // Evaluates whether wide tile N=384 scheduling delivers greater occupancy than standard N=256
-    if(old_waves * 100u >= wide_waves * int8_tuning_config::WAVE_EFFICIENCY_RATIO_PCT ||
-       (old_waves >= int8_tuning_config::HIGH_WAVE_COUNT_THRESHOLD &&
-        old_waves * 100u >= wide_waves * int8_tuning_config::WAVE_HIGH_OCCUPANCY_RATIO_PCT))
+    // Compare scheduled CU batches for BN384 and BN256. Both use one CTA per CU.
+    if(standard_batches * 100u >= wide_batches * int8_tuning_config::WAVE_EFFICIENCY_RATIO_PCT ||
+       (standard_batches >= int8_tuning_config::HIGH_WAVE_COUNT_THRESHOLD &&
+        standard_batches * 100u >=
+            wide_batches * int8_tuning_config::WAVE_HIGH_OCCUPANCY_RATIO_PCT))
         return int8_routes::PackedM256N384;
 
     return base;
@@ -141,21 +143,20 @@ inline unsigned int8_cached_route(int m,
 
 // The prepared-B cooperative domain is independent of the WASP native-M domain.
 // Calibrated on M1/2/4/8, G8 and the complete long-K requirement neighborhood.
-inline unsigned int8_cached_scaled_small_route(
-    int m,
-    int n,
-    int k,
-    int groups,
-    bool packed_available,
-    int compute_units = int8_tuning_config::GFX936_DEFAULT_NUM_CU)
+inline unsigned
+int8_cached_scaled_small_route(int m,
+                               int n,
+                               int k,
+                               int groups,
+                               bool packed_available,
+                               int compute_units = int8_tuning_config::GFX936_DEFAULT_NUM_CU)
 {
     if(compute_units != int8_tuning_config::GFX936_DEFAULT_NUM_CU)
         return int8_routes::LegacyRaw;
 
     // Raw NT K-parallel reduction; requires no prepared weight layout.
-    if((m == 1 || m == 2) && n >= 4096 && n <= 6144 && n % 256 == 0 && k >= 7168 &&
-       k <= 8192 && k % 128 == 0 &&
-       (groups >= 12 || (groups == 8 && n == 4096 && k == 7168)))
+    if((m == 1 || m == 2) && n >= 4096 && n <= 6144 && n % 256 == 0 && k >= 7168 && k <= 8192 &&
+       k % 128 == 0 && (groups >= 12 || (groups == 8 && n == 4096 && k == 7168)))
         return int8_routes::KParallelDecode;
 
     // The caller has checked uniform, nonempty groups. All three tile
@@ -168,12 +169,12 @@ inline unsigned int8_cached_scaled_small_route(
         return int8_routes::RawM32N64K256W4;
 
     // Ultra-narrow M <= 8 decode专线: zero-LDS direct global memory bypass
-    return packed_available && m > 0 && m <= 8 && n == 4096 && (k == 6144 || k == 7168) && groups == 8
+    return packed_available && m > 0 && m <= 8 && n == 4096 && (k == 6144 || k == 7168) &&
+                   groups == 8
                ? int8_routes::PackedCooperativeM1N256
                : int8_routes::LegacyRaw;
 }
 
-// Scaled outputs have a separate policy; the established INT32 route is unchanged.
 // Formal paired measurements cover the low-N family and K768 M128 packed tile.
 inline unsigned int8_cached_paired_store_route(
     unsigned route, int m, int n, int k, int groups, int compute_units, bool dense_scalar)
@@ -192,22 +193,22 @@ inline unsigned int8_cached_paired_store_route(
     // Upgrade routes to paired-store epilogue implementations
     switch(route)
     {
-    case int8_routes::PackedWeightM256N256:   return int8_routes::PairedM256N256;
-    case int8_routes::PackedM128N256:         return int8_routes::PairedM128N256;
-    case int8_routes::PackedM256N384:         return int8_routes::PairedM256N384;
+    case int8_routes::PackedWeightM256N256: return int8_routes::PairedM256N256;
+    case int8_routes::PackedM128N256: return int8_routes::PairedM128N256;
+    case int8_routes::PackedM256N384: return int8_routes::PairedM256N384;
     case int8_routes::PackedM256N384MaskedM4: return int8_routes::PairedM256N384MaskedM4;
     case int8_routes::PackedM256N384MaskedM8: return int8_routes::PairedM256N384MaskedM8;
     default: return route;
     }
 }
 
-inline unsigned int8_cached_scaled_route(
-    int m,
-    int n,
-    int k,
-    int groups,
-    bool packed_available,
-    int compute_units = int8_tuning_config::GFX936_DEFAULT_NUM_CU)
+inline unsigned
+int8_cached_scaled_route(int m,
+                         int n,
+                         int k,
+                         int groups,
+                         bool packed_available,
+                         int compute_units = int8_tuning_config::GFX936_DEFAULT_NUM_CU)
 {
     if(packed_available && m >= 256 && n == 256 && k == 512)
         return m <= 1024 ? int8_routes::PackedM64N256 : int8_routes::PackedM128N256;
@@ -231,12 +232,19 @@ inline unsigned int8_cached_scaled_route(
        compute_units == int8_tuning_config::GFX936_DEFAULT_NUM_CU && m >= 2048 && m <= 4096 &&
        m % 256 == 0 && n == 4608 && k == 5120)
     {
-        const std::uint64_t mt       = (std::uint64_t(m) + 255u) / 256u;
-        const std::uint64_t padded_m = (mt + 3u) / 4u * 4u;
+        constexpr std::uint64_t tile_m          = 256;
+        constexpr std::uint64_t standard_tile_n = 256;
+        constexpr std::uint64_t wide_tile_n     = 384;
+        constexpr std::uint64_t m_cluster       = 4;
+        const auto cu_count                     = std::uint64_t(compute_units);
+        const std::uint64_t mt                  = (std::uint64_t(m) + tile_m - 1u) / tile_m;
+        const std::uint64_t padded_m            = (mt + m_cluster - 1u) / m_cluster * m_cluster;
         const std::uint64_t old_batches =
-            (padded_m * ((std::uint64_t(n) + 255u) / 256u) * groups + 79u) / 80u;
+            (padded_m * ((std::uint64_t(n) + standard_tile_n - 1u) / standard_tile_n) * groups +
+             cu_count - 1u) /
+            cu_count;
         const std::uint64_t wide_batches =
-            (padded_m * (std::uint64_t(n) / 384u) * groups + 79u) / 80u;
+            (padded_m * (std::uint64_t(n) / wide_tile_n) * groups + cu_count - 1u) / cu_count;
         if(old_batches >= int8_tuning_config::HIGH_BATCH_COUNT_THRESHOLD &&
            old_batches * 100u >= wide_batches * int8_tuning_config::BATCH_EFFICIENCY_RATIO_PCT)
             return int8_routes::PackedM256N384;
@@ -254,17 +262,18 @@ struct Int8CachedPlanRouteDomain
     bool dense_channel_scales;
 };
 
-inline unsigned int8_cached_select_plan_route(int m,
-                                             int n,
-                                             int k,
-                                             int groups,
-                                             bool packed,
-                                             int compute_units,
-                                             bool scaled,
-                                             const Int8CachedPlanRouteDomain& domain)
+inline unsigned
+int8_cached_select_plan_route(int m,
+                              int n,
+                              int k,
+                              int groups,
+                              bool packed,
+                              int compute_units,
+                              const Int8CachedPlanRouteDomain& domain,
+                              GroupedGemmInstanceId fallback = GroupedGemmInstanceId::none)
 {
     using namespace int8_routes;
-    if(scaled && domain.uniform_nonempty)
+    if(domain.uniform_nonempty)
     {
         if(domain.dense_channel_scales)
         {
@@ -278,16 +287,30 @@ inline unsigned int8_cached_select_plan_route(int m,
             return route;
     }
 
-    if(!domain.native_wasp)
-        return LegacyRaw;
-    const auto route = scaled ? int8_cached_scaled_route(m, n, k, groups, packed, compute_units)
-                              : int8_cached_route(m, n, k, groups, packed, compute_units);
+    const auto route = domain.native_wasp
+                           ? int8_cached_scaled_route(m, n, k, groups, packed, compute_units)
+                           : LegacyRaw;
+    if(compute_units == int8_tuning_config::GFX936_DEFAULT_NUM_CU && domain.uniform_nonempty &&
+       domain.dense_channel_scales)
+    {
+        // The four-wave BN64 tile is faster than the two-wave fallback in
+        // the measured long-K, moderate-group M32 domain.
+        if(route == LegacyRaw && fallback == GroupedGemmInstanceId::int8_nt_m32_n64_k256 &&
+           m == 32 && n >= 2048 && n <= 7168 && k >= 3072 && k <= 7168 && groups >= 16 &&
+           groups <= 32)
+            return RawM32N64K256W4;
+
+        // Use the existing paired-store tile when packed weights are
+        // available. Raw-only callers still need the transposed instance.
+        if(route == LinearTransposedRecord1024 && packed && m == 256 && n >= 2048 && n <= 4096 &&
+           k >= 768 && k <= 7168 && groups >= 4 && groups <= 48)
+            return PairedM128N256;
+    }
     if(!domain.raw_transposed &&
        (route == LinearTransposedRaw || route == LinearTransposedRecord1024))
         return LegacyRaw;
-    return scaled ? int8_cached_paired_store_route(
-                        route, m, n, k, groups, compute_units, domain.dense_scalar_a)
-                  : route;
+    return int8_cached_paired_store_route(
+        route, m, n, k, groups, compute_units, domain.dense_scalar_a);
 }
 
 } // namespace ck_tile

@@ -62,6 +62,23 @@ constexpr bool uses_packed_weights(unsigned route)
 
 } // namespace int8_routes
 
+namespace int8_instance_ids {
+// The key portion of the published ID also identifies the provider entry.
+constexpr unsigned RouteBit = 0x00010000;
+constexpr unsigned TwoRowsBit = 0x00020000;
+constexpr unsigned Mask = 0x0000ffff | RouteBit | TwoRowsBit;
+
+constexpr unsigned from_route(unsigned route, int m = 1)
+{
+    return RouteBit | route | (route == int8_routes::KParallelDecode && m == 2 ? TwoRowsBit : 0u);
+}
+
+constexpr unsigned route_for(unsigned instance)
+{
+    return (instance & RouteBit) ? instance & 0x0000ffff : int8_routes::LegacyRaw;
+}
+} // namespace int8_instance_ids
+
 // Architectural and empirical scheduling constants (eliminating magic numbers)
 namespace int8_tuning_config {
     // Hardware configuration defaults
@@ -82,7 +99,6 @@ namespace int8_weight_formats {
 } // namespace int8_weight_formats
 
 namespace int8_output_types {
-    constexpr unsigned Int32 = CK_TILE_INT8_OUTPUT_INT32_V2;
     constexpr unsigned Bf16  = CK_TILE_INT8_OUTPUT_BF16_V2;
     constexpr unsigned Fp16  = CK_TILE_INT8_OUTPUT_FP16_V2;
 } // namespace int8_output_types

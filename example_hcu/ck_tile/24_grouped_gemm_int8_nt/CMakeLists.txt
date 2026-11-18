@@ -24,45 +24,10 @@ if(TARGET ck_tile_hcu_grouped_gemm AND GPU_TARGETS MATCHES "gfx936")
         CK_ENABLE_INT8 CK_EXPERIMENTAL_BIT_INT_EXTENSION)
 endif()
 
-# Small development archive with the same public ABI, restricted to INT8 NT.
-# Link this OR the full CK grouped-GEMM library, not both ABI owners.
-add_library(ck_tile_hcu_grouped_gemm_int8_nt STATIC EXCLUDE_FROM_ALL
-    instances.cpp ../19_grouped_gemm/grouped_gemm_device_args.cpp)
-target_compile_definitions(ck_tile_hcu_grouped_gemm_int8_nt PRIVATE
-    CK_ENABLE_INT8 CK_EXPERIMENTAL_BIT_INT_EXTENSION
-    CK_TILE_GROUPED_GEMM_DEVICE_ARGS_HAS_INT8_NT
-    CK_TILE_GROUPED_GEMM_INT8_NT_ONLY)
-target_compile_options(ck_tile_hcu_grouped_gemm_int8_nt PRIVATE
-    -Wno-switch-enum -Wno-undefined-reinterpret-cast -Wno-sign-compare -Wno-unused-parameter
-    "SHELL: -mllvm -support-768-vgprs=true")
-target_include_directories(ck_tile_hcu_grouped_gemm_int8_nt PRIVATE
-    ${CMAKE_CURRENT_LIST_DIR} ${CMAKE_CURRENT_LIST_DIR}/../19_grouped_gemm)
-set_target_properties(ck_tile_hcu_grouped_gemm_int8_nt PROPERTIES POSITION_INDEPENDENT_CODE ON)
-ck_tile_hcu_grouped_gemm_apply_codegen(ck_tile_hcu_grouped_gemm_int8_nt)
-
-add_library(ck_tile_grouped_int8_nt_benchmark_api SHARED EXCLUDE_FROM_ALL benchmarks/public_bridge.cpp)
-target_link_libraries(ck_tile_grouped_int8_nt_benchmark_api PRIVATE ck_tile_hcu_grouped_gemm_int8_nt)
-target_compile_definitions(ck_tile_grouped_int8_nt_benchmark_api PRIVATE
-    CK_ENABLE_INT8 CK_EXPERIMENTAL_BIT_INT_EXTENSION)
-set_target_properties(ck_tile_grouped_int8_nt_benchmark_api PROPERTIES
-    OUTPUT_NAME int8_nt_public LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
-
-if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
-    add_executable(tile_example_grouped_gemm_device_args_benchmark_int8 EXCLUDE_FROM_ALL
-        ../19_grouped_gemm/grouped_gemm_device_args_benchmark.cpp)
-    target_include_directories(tile_example_grouped_gemm_device_args_benchmark_int8 PRIVATE
-        /opt/dtk/hipblas/include /opt/dtk/include)
-    target_link_libraries(tile_example_grouped_gemm_device_args_benchmark_int8 PRIVATE
-        ck_tile_hcu_grouped_gemm_int8_nt ${CMAKE_DL_LIBS})
-endif()
-
 set(CK_INT8_BENCHMARK_HIPBLASLT_ROOT "" CACHE PATH
-    "hipBLASLt installation for the optional raw INT8 comparison benchmark")
-if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR AND NOT CK_INT8_BENCHMARK_HIPBLASLT_ROOT)
-    set(CK_INT8_BENCHMARK_HIPBLASLT_ROOT "${HIPBLASLT_INSTALL}")
-endif()
+    "hipBLASLt installation for the optional Example 19 raw INT8 benchmark")
 set(INT8_BLAS_ROOT "${CK_INT8_BENCHMARK_HIPBLASLT_ROOT}")
-if(INT8_BLAS_ROOT)
+if(INT8_BLAS_ROOT AND TARGET tile_example_grouped_gemm_device_args_benchmark)
     add_library(ck_tile_grouped_int8_nt_benchmark_support STATIC EXCLUDE_FROM_ALL
         benchmarks/public_bridge.cpp benchmarks/int8_benchmark.cpp benchmarks/blas_bridge.cpp)
     target_compile_options(ck_tile_grouped_int8_nt_benchmark_support PRIVATE
@@ -74,29 +39,10 @@ if(INT8_BLAS_ROOT)
     target_link_libraries(ck_tile_grouped_int8_nt_benchmark_support PUBLIC
         ${INT8_BLAS_ROOT}/lib/libhipblaslt.so.0.10 dl)
 
-    add_executable(tile_example_grouped_gemm_int8_nt EXCLUDE_FROM_ALL benchmarks/int8_benchmark_main.cpp)
-    target_link_libraries(tile_example_grouped_gemm_int8_nt PRIVATE
-        ck_tile_grouped_int8_nt_benchmark_support ck_tile_hcu_grouped_gemm_int8_nt)
-    set_target_properties(tile_example_grouped_gemm_int8_nt PROPERTIES
-        BUILD_RPATH "${INT8_BLAS_ROOT}/lib;/opt/dtk/hip/lib")
-
-    if(TARGET tile_example_grouped_gemm_device_args_benchmark_int8)
-        target_compile_definitions(tile_example_grouped_gemm_device_args_benchmark_int8 PRIVATE
-            CK_TILE_GROUPED_GEMM_HAS_INT8_BENCHMARK CK_EXPERIMENTAL_BIT_INT_EXTENSION)
-        target_include_directories(tile_example_grouped_gemm_device_args_benchmark_int8 PRIVATE
-            ${INT8_BLAS_ROOT}/include)
-        target_link_libraries(tile_example_grouped_gemm_device_args_benchmark_int8 PRIVATE
-            ck_tile_grouped_int8_nt_benchmark_support ck_tile_hcu_grouped_gemm_int8_nt)
-        set_target_properties(tile_example_grouped_gemm_device_args_benchmark_int8 PROPERTIES
-            BUILD_RPATH "${INT8_BLAS_ROOT}/lib;/opt/dtk/hip/lib")
-    endif()
-
-    if(TARGET tile_example_grouped_gemm_device_args_benchmark)
-        target_compile_definitions(tile_example_grouped_gemm_device_args_benchmark PRIVATE
-            CK_TILE_GROUPED_GEMM_HAS_INT8_BENCHMARK)
-        target_link_libraries(tile_example_grouped_gemm_device_args_benchmark PRIVATE
-            ck_tile_grouped_int8_nt_benchmark_support)
-    endif()
+    target_compile_definitions(tile_example_grouped_gemm_device_args_benchmark PRIVATE
+        CK_TILE_GROUPED_GEMM_HAS_INT8_BENCHMARK)
+    target_link_libraries(tile_example_grouped_gemm_device_args_benchmark PRIVATE
+        ck_tile_grouped_int8_nt_benchmark_support)
 endif()
 
 # ---------------------------------------------------------------------------
@@ -128,10 +74,7 @@ set_target_properties(ck_tile_hcu_grouped_gemm_int8_nt_device_args_providers PRO
     VISIBILITY_INLINES_HIDDEN YES)
 ck_tile_hcu_grouped_gemm_apply_codegen(ck_tile_hcu_grouped_gemm_int8_nt_device_args_providers)
 
-add_library(ck_tile_int8_nt_cached SHARED
-    grouped_int8_nt_cached_api.cpp
-    instances.cpp
-    instances/grouped_int8_nt_cached_dispatch.cpp)
+add_library(ck_tile_int8_nt_cached SHARED grouped_int8_nt_cached_api.cpp)
 target_link_libraries(ck_tile_int8_nt_cached PRIVATE
     Threads::Threads ck_tile_hcu_grouped_gemm_int8_nt_device_args_providers)
 target_include_directories(ck_tile_int8_nt_cached PRIVATE
@@ -166,13 +109,12 @@ target_compile_options(ck_tile_int8_nt_cached_benchmark PRIVATE
     -Wno-global-constructors -Wno-switch-enum)
 ck_tile_hcu_grouped_gemm_apply_codegen(ck_tile_int8_nt_cached_benchmark)
 
-foreach(benchmark IN ITEMS tile_example_grouped_gemm_device_args_benchmark
-                           tile_example_grouped_gemm_device_args_benchmark_int8)
-    if(TARGET ${benchmark} AND GPU_TARGETS MATCHES "gfx936")
-        target_compile_definitions(${benchmark} PRIVATE CK_TILE_GROUPED_GEMM_HAS_SCALED_INT8)
-        target_link_libraries(${benchmark} PRIVATE ck_tile_int8_nt_cached)
-    endif()
-endforeach()
+if(TARGET tile_example_grouped_gemm_device_args_benchmark AND GPU_TARGETS MATCHES "gfx936")
+    target_compile_definitions(tile_example_grouped_gemm_device_args_benchmark PRIVATE
+        CK_TILE_GROUPED_GEMM_HAS_SCALED_INT8)
+    target_link_libraries(tile_example_grouped_gemm_device_args_benchmark PRIVATE
+        ck_tile_int8_nt_cached)
+endif()
 
 # Example 24 owns the scaled device-args API and its provider manifest.
 if(GPU_TARGETS MATCHES "gfx936")

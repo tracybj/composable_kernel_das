@@ -19,7 +19,7 @@ from validate_all_1178 import snapshot
 
 import torch
 from bindings import C, Weight, init, lib, ok, plan_info, weight_info
-from test_scaled_api import Group2
+from bindings import Group2
 
 
 class Candidate(C.Structure):

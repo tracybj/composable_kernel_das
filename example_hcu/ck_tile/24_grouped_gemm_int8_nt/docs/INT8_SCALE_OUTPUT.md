@@ -1,6 +1,6 @@
 # INT8 NT fused scale and output conversion
 
-The integer GEMM pipelines remain Cooperative and WASP. The scaled kernel
+The integer GEMM pipelines are Cooperative, WASP and CTA K-parallel. The scaled kernel
 wrappers reuse their INT32 accumulators and fuse scaling/conversion into the
 epilogue. No global INT32 intermediate or separate conversion kernel is used.
 The existing FP16/BF16-input providers are unchanged.
@@ -23,14 +23,12 @@ nonzero beta, activation functions or output requantization in this interface.
 
 | Setting | Output | Entry |
 |---|---|---|
-| Original no-scale interface | INT32 | Original `plan_create_v1` |
-| v2, no scale, output_type=0 | INT32 | `plan_create_v2` |
 | v2, output_type=1 | BF16 | FP32 scale in GEMM epilogue |
 | v2, output_type=2 | FP16 | FP32 scale in GEMM epilogue |
 
-All groups in one plan must use the same output type. INT32 rejects non-NULL
-scales and non-scalar scale modes. Explicit BF16/FP16 identity conversion is
-allowed with NULL scales. FP16 overflow produces infinity;it is not clamped.
+All groups in one plan must use the same BF16 or FP16 output type. NULL
+scales provide identity conversion. The legacy plan creation symbol and v2
+output_type=0 return unsupported. FP16 overflow produces infinity;it is not clamped.
 Conversion uses round-to-nearest, ties-to-even. BF16 NaNs are quieted and retain
 a NaN classification;payload equality is not required by numerical gates.
 
@@ -145,5 +143,5 @@ The bridge is a test oracle only and never participates in CK dispatch.
 
 The boundary gate covers the historical route and legacy-instance fixtures,
 the 13 added low-N shapes, and padded, ragged, and empty groups. It also checks
-NaN, infinity, rounding ties, and the original INT32 output. The
+NaN, infinity and rounding ties. The
 [release report](CURRENT_INT8_NT_STATUS_AND_FLOW.md) covers the full run.

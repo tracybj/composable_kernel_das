@@ -191,7 +191,7 @@ def main():
     )
     import torch
     from bindings import C, Weight, init, lib, ok, weight_info, plan_info
-    from test_scaled_api import Group2
+    from bindings import Group2
 
     lib.cached_i8_bench_pipeline.argtypes = [C.c_uint, C.c_uint]
     lib.cached_i8_bench_pipeline.restype = C.c_char_p

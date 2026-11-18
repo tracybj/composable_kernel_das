@@ -5,6 +5,7 @@
 #pragma once
 
 #include "ck_tile/core.hpp"
+#include "grouped_int8_nt_layout.hpp"
 #include "ck_tile/ops/gemm/pipeline/gemm_pipeline_ag_bg_cr_comp_v3.hpp"
 #include "ck_tile/ops/gemm/pipeline/gemm_pipeline_ag_bg_cr_comp_v4.hpp"
 
@@ -23,6 +24,14 @@ struct Int8WaspAccTileCore
 namespace grouped_int8_nt_wasp_core_detail {
 
 constexpr index_t kVmemSampleStage = 16;
+
+// Buffer descriptor bit fields used by the gfx936/gfx938 buffer-load ISA.
+constexpr uint32_t kBufferConfig              = 0x00020000u;
+constexpr uint32_t kBufferStrideMask          = 0x3fffu;
+constexpr uint32_t kBufferStrideShift         = 16;
+constexpr uint32_t kBufferSwizzleEnable       = 1u << 30;
+constexpr uint32_t kBufferOutOfBounds         = 0x80000000u;
+constexpr uint32_t kBufferSwizzleGranuleBytes = 64;
 
 struct WaspVmemSample
 {
@@ -90,16 +99,16 @@ CK_TILE_DEVICE buffer_rsrc_t wasp_make_buffer_rsrc(const void* ptr,
     r[0]                = static_cast<int32_t>(addr & 0xffffffffu);
     r[1]                = static_cast<int32_t>(addr >> 32);
     r[2]                = static_cast<int32_t>(size_bytes);
-    r[3]                = 0x00020000;
+    r[3]                = kBufferConfig;
 
-    uint32_t val = (stride_bytes & 0x3fffu) << 16;
+    uint32_t val = (stride_bytes & kBufferStrideMask) << kBufferStrideShift;
 #if defined(__gfx936__) || defined(__gfx938__)
-    if(allow_swizzle && (stride_bytes % 64u) == 0u)
+    if(allow_swizzle && (stride_bytes % kBufferSwizzleGranuleBytes) == 0u)
     {
-        const uint32_t s64 = stride_bytes / 64u;
+        const uint32_t s64 = stride_bytes / kBufferSwizzleGranuleBytes;
         if((s64 & (s64 - 1u)) == 0u)
         {
-            val |= 1u << 30;
+            val |= kBufferSwizzleEnable;
         }
     }
 #else
@@ -109,6 +118,7 @@ CK_TILE_DEVICE buffer_rsrc_t wasp_make_buffer_rsrc(const void* ptr,
     return r;
 }
 
+// A lane writes 16 bytes. A wave therefore advances m0 by 64*16 = 0x400 bytes.
 CK_TILE_DEVICE void wasp_buffer_load_x8_to_lds(buffer_rsrc_t rsrc,
                                                uint32_t lds_m0,
                                                uint32_t soffset,
@@ -255,6 +265,8 @@ CK_TILE_DEVICE void wasp_wait_vmcnt0(WaspVmemDiag& diag, index_t stage)
     wasp_wait_vmcnt0();
 }
 
+// Diagnostic waits sample the same outstanding producer loads at vmcnt 4, 2 and 0.
+// The final wait completes all global loads before the publication barrier.
 CK_TILE_DEVICE void wasp_wait_vmcnt0_producer(WaspVmemDiag& diag, index_t stage)
 {
 #if defined(CK_TILE_GROUPED_GEMM_I8_WASP_VMEM_WAIT_COUNT)
@@ -333,6 +345,14 @@ struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Poli
                   "WASP: the tile warp grid must be exactly the consumer waves");
     static_assert(BlockSize <= 1024, "WASP workgroup exceeds device block limit");
 
+    using PackedLayout = Int8NtPackedWeightLayout;
+    // Each A fragment spans 16 rows at a physical pitch of 128 INT8 bytes.
+    static constexpr index_t kMmacRows                = 16;
+    static constexpr index_t kAFragmentRowStrideBytes = kMmacRows * 128;
+    static_assert(RecordCap == 0 || RecordCap == 1024,
+                  "RecordCap supports physical stride (0) or a 1024-byte cap");
+    static constexpr index_t kRecordStrideExponentCount = 11; // 2^0 through 2^10.
+
     static constexpr index_t kStageK       = 128;
     static constexpr index_t kPassK        = 64;
     static constexpr index_t kNumStages    = 2;
@@ -394,7 +414,7 @@ struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Poli
         {
             const index_t row = row_base + i * 8 + row_group;
             const uint32_t v  = static_cast<uint32_t>(row) * pitch_bytes + k_in_panel;
-            s.v_off[i]        = (row < m_valid) ? v : (v | 0x80000000u);
+            s.v_off[i]        = (row < m_valid) ? v : (v | kBufferOutOfBounds);
         }
 
 #pragma unroll
@@ -434,11 +454,12 @@ struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Poli
     using BBuf = grouped_int8_nt_wasp_core_detail::stage16_t[2][AccTile::kNIters];
     struct AReadBases
     {
-        uint32_t h0, h1;
+        uint32_t low_k_half, high_k_half;
     };
+    // The two descriptors address adjacent N16 fragments of one consumer stripe.
     struct BPairs
     {
-        uint64_t p0, p1;
+        uint64_t first_n_fragment, second_n_fragment;
         uint32_t half_stride = 0;
     };
     CK_TILE_DEVICE void
@@ -452,7 +473,8 @@ struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Poli
         if constexpr(PackedB)
         {
             // Physical [K/64,N/16,4,16,16]; every N16/K64 fragment is contiguous.
-            const uint32_t lo = static_cast<uint32_t>(bp.p0), hi = static_cast<uint32_t>(bp.p1);
+            const uint32_t lo = static_cast<uint32_t>(bp.first_n_fragment),
+                           hi = static_cast<uint32_t>(bp.second_n_fragment);
             const uint32_t s0 = static_cast<uint32_t>(k_stage) * 2u * bp.half_stride;
             const uint32_t s1 = s0 + bp.half_stride;
             asm volatile(
@@ -469,7 +491,8 @@ struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Poli
         const uint32_t s_col_base = static_cast<uint32_t>(k_stage * kStageK) * sizeof(ADataType);
         if constexpr(BAddress != 0)
         {
-            const uint32_t p0 = static_cast<uint32_t>(bp.p0), p1 = static_cast<uint32_t>(bp.p1);
+            const uint32_t p0 = static_cast<uint32_t>(bp.first_n_fragment),
+                           p1 = static_cast<uint32_t>(bp.second_n_fragment);
             asm volatile(
                 "buffer_load_dwordx4 %0, %4, %6, %7 offen offset:0\n\t"
                 "buffer_load_dwordx4 %1, %4, %6, %7 offen offset:64\n\t"
@@ -482,8 +505,8 @@ struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Poli
             return;
         }
         wasp_buffer_load_b128_x4_idxen_soff2(b_rsrc,
-                                             bp.p0,
-                                             bp.p1,
+                                             bp.first_n_fragment,
+                                             bp.second_n_fragment,
                                              s_col_base,
                                              buf[0][0].d4,
                                              buf[1][0].d4,
@@ -528,14 +551,15 @@ struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Poli
             static_for<0, AccTile::kMIters / AReadBatch, 1>{}([&](auto gg) {
                 constexpr int base_m = decltype(gg)::value * AReadBatch;
                 stage16_t a[AReadBatch];
-                const uint32_t base = H1 ? rb.h1 : rb.h0;
+                const uint32_t base = H1 ? rb.high_k_half : rb.low_k_half;
                 static_for<0, AReadBatch, 1>{}([&](auto rr) {
                     constexpr int i = decltype(rr)::value;
                     asm volatile("ds_read_b128 %0, %1 offset:%c2"
                                  : "=&v"(a[i].d4)
-                                 : "v"(base), "n"(SLOT + (base_m + i) * 2048)
+                                 : "v"(base), "n"(SLOT + (base_m + i) * kAFragmentRowStrideBytes)
                                  : "memory");
                 });
+                // Consume this LDS batch only after its reads complete.
                 asm volatile("s_waitcnt lgkmcnt(0)" ::: "memory");
                 static_for<0, 2, 1>{}([&](auto kk) {
                     constexpr int k = decltype(kk)::value;
@@ -553,21 +577,22 @@ struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Poli
         else
         {
             stage16_t a[2][AReadBatch];
-            const uint32_t base = H1 ? rb.h1 : rb.h0;
+            const uint32_t base = H1 ? rb.high_k_half : rb.low_k_half;
             static_for<0, AReadBatch, 1>{}([&](auto rr) {
                 constexpr int i = decltype(rr)::value;
-                read_prefetch<SLOT + i * 2048>(base, a[0][i].d4);
+                read_prefetch<SLOT + i * kAFragmentRowStrideBytes>(base, a[0][i].d4);
             });
             static_for<0, AccTile::kMIters / AReadBatch, 1>{}([&](auto gg) {
                 constexpr int group = decltype(gg)::value, slot = group % 2,
                               base_m = group * AReadBatch;
+                // Consume this LDS batch only after its reads complete.
                 asm volatile("s_waitcnt lgkmcnt(0)" ::: "memory");
                 if constexpr(group + 1 < AccTile::kMIters / AReadBatch)
                 {
                     static_for<0, AReadBatch, 1>{}([&](auto rr) {
                         constexpr int i = decltype(rr)::value;
-                        read_prefetch<SLOT + (base_m + AReadBatch + i) * 2048>(base,
-                                                                               a[slot ^ 1][i].d4);
+                        read_prefetch<SLOT + (base_m + AReadBatch + i) * kAFragmentRowStrideBytes>(
+                            base, a[slot ^ 1][i].d4);
                     });
                 }
                 static_for<0, 2, 1>{}([&](auto kk) {
@@ -585,17 +610,17 @@ struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Poli
         }
     }
     template <index_t CUR>
-    CK_TILE_DEVICE void
-    c_I1(index_t consumer_id,
-         index_t k_stage,
-         index_t num_loop,
-         grouped_int8_nt_wasp_core_detail::buffer_rsrc_t b_rsrc,
-         const BPairs& b_pairs,
-         const AReadBases& a_rb,
-         grouped_int8_nt_wasp_core_detail::stage16_t (&b_regs)[2][2][AccTile::kNIters],
-         grouped_int8_nt_wasp_core_detail::stage16_t (&a_regs)[AccTile::kMIters],
-         grouped_int8_nt_wasp_core_detail::WaspVmemDiag& vmem_diag,
-         AccTile& acc) const
+    CK_TILE_DEVICE void consume_low_k_half(
+        index_t consumer_id,
+        index_t k_stage,
+        index_t num_loop,
+        grouped_int8_nt_wasp_core_detail::buffer_rsrc_t b_rsrc,
+        const BPairs& b_pairs,
+        const AReadBases& a_rb,
+        grouped_int8_nt_wasp_core_detail::stage16_t (&b_regs)[2][2][AccTile::kNIters],
+        grouped_int8_nt_wasp_core_detail::stage16_t (&a_regs)[AccTile::kMIters],
+        grouped_int8_nt_wasp_core_detail::WaspVmemDiag& vmem_diag,
+        AccTile& acc) const
     {
         using namespace grouped_int8_nt_wasp_core_detail;
         (void)consumer_id;
@@ -612,17 +637,17 @@ struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Poli
         consume_short<SLOT, false>(a_rb, b_regs[BSlot][0], acc);
     }
     template <index_t CUR>
-    CK_TILE_DEVICE void
-    c_I2(index_t consumer_id,
-         index_t k_stage,
-         index_t num_loop,
-         const AReadBases& a_rb,
-         grouped_int8_nt_wasp_core_detail::buffer_rsrc_t b_rsrc,
-         const BPairs& b_pairs,
-         grouped_int8_nt_wasp_core_detail::stage16_t (&b_regs)[2][2][AccTile::kNIters],
-         grouped_int8_nt_wasp_core_detail::stage16_t (&a_regs)[AccTile::kMIters],
-         grouped_int8_nt_wasp_core_detail::WaspVmemDiag& vmem_diag,
-         AccTile& acc) const
+    CK_TILE_DEVICE void consume_high_k_half(
+        index_t consumer_id,
+        index_t k_stage,
+        index_t num_loop,
+        const AReadBases& a_rb,
+        grouped_int8_nt_wasp_core_detail::buffer_rsrc_t b_rsrc,
+        const BPairs& b_pairs,
+        grouped_int8_nt_wasp_core_detail::stage16_t (&b_regs)[2][2][AccTile::kNIters],
+        grouped_int8_nt_wasp_core_detail::stage16_t (&a_regs)[AccTile::kMIters],
+        grouped_int8_nt_wasp_core_detail::WaspVmemDiag& vmem_diag,
+        AccTile& acc) const
     {
         using namespace grouped_int8_nt_wasp_core_detail;
         constexpr index_t SLOT  = CUR * kAStageBytes;
@@ -643,15 +668,15 @@ struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Poli
     // Only register prefetch lifetime changes; A-slot publication/retirement
     // remains one barrier per K128 stage.
     template <index_t CUR>
-    CK_TILE_DEVICE void
-    c_pair(index_t k_stage,
-           index_t num_loop,
-           grouped_int8_nt_wasp_core_detail::buffer_rsrc_t b_rsrc,
-           const BPairs& b_pairs,
-           const AReadBases& rb,
-           grouped_int8_nt_wasp_core_detail::stage16_t (&b)[2][2][AccTile::kNIters],
-           grouped_int8_nt_wasp_core_detail::WaspVmemDiag& diag,
-           AccTile& acc) const
+    CK_TILE_DEVICE void consume_k_stage_with_cross_half_prefetch(
+        index_t k_stage,
+        index_t num_loop,
+        grouped_int8_nt_wasp_core_detail::buffer_rsrc_t b_rsrc,
+        const BPairs& b_pairs,
+        const AReadBases& rb,
+        grouped_int8_nt_wasp_core_detail::stage16_t (&b)[2][2][AccTile::kNIters],
+        grouped_int8_nt_wasp_core_detail::WaspVmemDiag& diag,
+        AccTile& acc) const
     {
         using namespace grouped_int8_nt_wasp_core_detail;
         constexpr int Groups   = AccTile::kMIters / AReadBatch;
@@ -660,7 +685,7 @@ struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Poli
         stage16_t a[2][AReadBatch];
         static_for<0, AReadBatch, 1>{}([&](auto rr) {
             constexpr int i = decltype(rr)::value;
-            read_prefetch<SLOT + i * 2048>(rb.h0, a[0][i].d4);
+            read_prefetch<SLOT + i * kAFragmentRowStrideBytes>(rb.low_k_half, a[0][i].d4);
         });
         static_for<0, 2, 1>{}([&](auto hh) {
             constexpr int H = decltype(hh)::value;
@@ -671,21 +696,23 @@ struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Poli
             static_for<0, Groups, 1>{}([&](auto gg) {
                 constexpr int G = decltype(gg)::value, slot = (H * Groups + G) % 2,
                               base_m = G * AReadBatch;
+                // Consume this LDS batch only after its reads complete.
                 asm volatile("s_waitcnt lgkmcnt(0)" ::: "memory");
                 if constexpr(G + 1 < Groups)
                 {
-                    const uint32_t base = H ? rb.h1 : rb.h0;
+                    const uint32_t base = H ? rb.high_k_half : rb.low_k_half;
                     static_for<0, AReadBatch, 1>{}([&](auto rr) {
                         constexpr int i = decltype(rr)::value;
-                        read_prefetch<SLOT + (base_m + AReadBatch + i) * 2048>(base,
-                                                                               a[slot ^ 1][i].d4);
+                        read_prefetch<SLOT + (base_m + AReadBatch + i) * kAFragmentRowStrideBytes>(
+                            base, a[slot ^ 1][i].d4);
                     });
                 }
                 else if constexpr(H == 0)
                 {
                     static_for<0, AReadBatch, 1>{}([&](auto rr) {
                         constexpr int i = decltype(rr)::value;
-                        read_prefetch<SLOT + i * 2048>(rb.h1, a[slot ^ 1][i].d4);
+                        read_prefetch<SLOT + i * kAFragmentRowStrideBytes>(rb.high_k_half,
+                                                                           a[slot ^ 1][i].d4);
                     });
                 }
                 static_for<0, 2, 1>{}([&](auto kk) {
@@ -718,11 +745,13 @@ struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Poli
         {
             for(index_t k = 0; k < num_loop; k += 2)
             {
-                c_pair<0>(k, num_loop, b_rsrc, b_pairs, a_rb, b_regs, vmem_diag, acc);
+                consume_k_stage_with_cross_half_prefetch<0>(
+                    k, num_loop, b_rsrc, b_pairs, a_rb, b_regs, vmem_diag, acc);
                 grouped_int8_nt_wasp_core_detail::wasp_barrier_maybe();
                 if(k + 1 < num_loop)
                 {
-                    c_pair<1>(k + 1, num_loop, b_rsrc, b_pairs, a_rb, b_regs, vmem_diag, acc);
+                    consume_k_stage_with_cross_half_prefetch<1>(
+                        k + 1, num_loop, b_rsrc, b_pairs, a_rb, b_regs, vmem_diag, acc);
                     grouped_int8_nt_wasp_core_detail::wasp_barrier_maybe();
                 }
             }
@@ -731,53 +760,53 @@ struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Poli
         {
             for(index_t k = 0; k < num_loop; k += 2)
             {
-                c_I1<0>(consumer_id,
-                        k,
-                        num_loop,
-                        b_rsrc,
-                        b_pairs,
-                        a_rb,
-                        b_regs,
-                        a_regs,
-                        vmem_diag,
-                        acc);
+                consume_low_k_half<0>(consumer_id,
+                                      k,
+                                      num_loop,
+                                      b_rsrc,
+                                      b_pairs,
+                                      a_rb,
+                                      b_regs,
+                                      a_regs,
+                                      vmem_diag,
+                                      acc);
                 if constexpr(!OneBarrier)
                     grouped_int8_nt_wasp_core_detail::wasp_barrier_maybe();
-                c_I2<0>(consumer_id,
-                        k,
-                        num_loop,
-                        a_rb,
-                        b_rsrc,
-                        b_pairs,
-                        b_regs,
-                        a_regs,
-                        vmem_diag,
-                        acc);
+                consume_high_k_half<0>(consumer_id,
+                                       k,
+                                       num_loop,
+                                       a_rb,
+                                       b_rsrc,
+                                       b_pairs,
+                                       b_regs,
+                                       a_regs,
+                                       vmem_diag,
+                                       acc);
                 grouped_int8_nt_wasp_core_detail::wasp_barrier_maybe();
                 if(k + 1 < num_loop)
                 {
-                    c_I1<1>(consumer_id,
-                            k + 1,
-                            num_loop,
-                            b_rsrc,
-                            b_pairs,
-                            a_rb,
-                            b_regs,
-                            a_regs,
-                            vmem_diag,
-                            acc);
+                    consume_low_k_half<1>(consumer_id,
+                                          k + 1,
+                                          num_loop,
+                                          b_rsrc,
+                                          b_pairs,
+                                          a_rb,
+                                          b_regs,
+                                          a_regs,
+                                          vmem_diag,
+                                          acc);
                     if constexpr(!OneBarrier)
                         grouped_int8_nt_wasp_core_detail::wasp_barrier_maybe();
-                    c_I2<1>(consumer_id,
-                            k + 1,
-                            num_loop,
-                            a_rb,
-                            b_rsrc,
-                            b_pairs,
-                            b_regs,
-                            a_regs,
-                            vmem_diag,
-                            acc);
+                    consume_high_k_half<1>(consumer_id,
+                                           k + 1,
+                                           num_loop,
+                                           a_rb,
+                                           b_rsrc,
+                                           b_pairs,
+                                           b_regs,
+                                           a_regs,
+                                           vmem_diag,
+                                           acc);
                     grouped_int8_nt_wasp_core_detail::wasp_barrier_maybe();
                 }
             }
@@ -788,7 +817,7 @@ struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Poli
         if constexpr(RecordCap == 0)
             return physical_pitch;
         uint32_t stride = 1;
-        static_for<0, 11, 1>{}([&](auto ii) {
+        static_for<0, kRecordStrideExponentCount, 1>{}([&](auto ii) {
             constexpr uint32_t width = 1u << decltype(ii)::value;
             if(physical_pitch >= width)
                 stride = width;
@@ -814,7 +843,7 @@ struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Poli
         const uint32_t b_pitch_bytes = static_cast<uint32_t>(b_n_stride) * sizeof(ADataType);
         const uint32_t b_size_bytes =
             PackedB ? static_cast<uint32_t>(b_n_len) * b_pitch_bytes -
-                          static_cast<uint32_t>(b_n_origin) * 64u
+                          static_cast<uint32_t>(b_n_origin) * PackedLayout::KTile
                     : static_cast<uint32_t>(b_n_len - b_n_origin) * b_pitch_bytes;
         const grouped_int8_nt_wasp_core_detail::buffer_rsrc_t b_rsrc =
             grouped_int8_nt_wasp_core_detail::wasp_make_buffer_rsrc(
@@ -896,14 +925,18 @@ struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Poli
 
                 if constexpr(PackedB)
                 {
-                    b_pr.p0 = static_cast<uint32_t>(consumer_id) * 2048u + lane * 16u;
-                    b_pr.p1 = static_cast<uint32_t>(consumer_id) * 2048u + 1024u + lane * 16u;
-                    b_pr.half_stride = static_cast<uint32_t>(b_n_len) * 64u;
+                    b_pr.first_n_fragment =
+                        static_cast<uint32_t>(consumer_id) * (2u * PackedLayout::TileBytes) +
+                        lane * PackedLayout::VectorBytes;
+                    b_pr.second_n_fragment =
+                        static_cast<uint32_t>(consumer_id) * (2u * PackedLayout::TileBytes) +
+                        PackedLayout::TileBytes + lane * PackedLayout::VectorBytes;
+                    b_pr.half_stride = static_cast<uint32_t>(b_n_len) * PackedLayout::KTile;
                 }
                 else if constexpr(BAddress != 0)
                 {
-                    b_pr.p0 = nrow * b_pitch_bytes + inrow;
-                    b_pr.p1 = (nrow + 16u) * b_pitch_bytes + inrow;
+                    b_pr.first_n_fragment  = nrow * b_pitch_bytes + inrow;
+                    b_pr.second_n_fragment = (nrow + 16u) * b_pitch_bytes + inrow;
                 }
                 grouped_int8_nt_wasp_core_detail::stage16_t b_regs[2][2][AccTile::kNIters];
 
