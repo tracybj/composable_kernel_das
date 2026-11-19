@@ -31,6 +31,18 @@ namespace {
 template <bool BF>
 using PairedM256N384Problem = ck_tile::int8_nt_instances::PairedM256N384Problem<BF>;
 
+// =============================================================================
+// Three Standard Launch Providers (1:1 mapped to Device Architectures)
+//   1. WASP Architecture:        wasp(...)
+//      - Asynchronous Direct-to-LDS Producer-Consumer pipeline
+//      - Parameterized Epilogue: default single-store vs paired-store
+//   2. Cooperative Architecture: cooperative(...)
+//      - Synchronous Wave-Cooperative tile pipeline
+//      - Parameterized Pipeline: standard LDS-staging vs 0-LDS direct-VGPR
+//   3. K-Parallel Architecture:  k_parallel(...)
+//      - Multi-Wave split-K reduction for extreme small-M (M=1, 2) decode
+// =============================================================================
+
 template <bool BF, class P, class Epi = ck_tile::GroupedInt8NtScaledWaspEpilogue<P, BF>>
 int wasp(const void* args, const void* scales, int g, int m, int n, hipStream_t stream)
 {
@@ -92,13 +104,6 @@ int k_parallel(const void* args, const void* scales, int g, int n, hipStream_t s
                                            : CK_TILE_INT8_CACHED_INTERNAL_ERROR_V1;
 }
 
-template <bool BF, class P>
-int paired_wasp(const void* args, const void* scales, int g, int m, int n, hipStream_t stream)
-{
-    return wasp<BF, P, ck_tile::GroupedInt8NtPairedStoreEpilogue<P, BF>>(
-        args, scales, g, m, n, stream);
-}
-
 template <bool BF>
 int dispatch(unsigned instance,
              const void* args,
@@ -132,9 +137,10 @@ int dispatch(unsigned instance,
     case int8_instance_ids::from_route(int8_routes::id): \
         return wasp<BF, __VA_ARGS__>(args, scales, g, m, n, stream);
 #define CK_INT8_SCALED_SCALED_WASP(id, ...) CK_INT8_SCALED_WASP(id, __VA_ARGS__)
-#define CK_INT8_SCALED_PAIRED_WASP(id, ...)              \
-    case int8_instance_ids::from_route(int8_routes::id): \
-        return paired_wasp<BF, __VA_ARGS__>(args, scales, g, m, n, stream);
+#define CK_INT8_SCALED_PAIRED_WASP(id, ...)                                                     \
+    case int8_instance_ids::from_route(int8_routes::id):                                        \
+        return wasp<BF, __VA_ARGS__, ck_tile::GroupedInt8NtPairedStoreEpilogue<__VA_ARGS__, BF>>( \
+            args, scales, g, m, n, stream);
 #define CK_INT8_SCALED_K_PARALLEL(id, ...)                    \
     case int8_instance_ids::from_route(int8_routes::id, 1):   \
         return k_parallel<BF, 1>(args, scales, g, n, stream); \
