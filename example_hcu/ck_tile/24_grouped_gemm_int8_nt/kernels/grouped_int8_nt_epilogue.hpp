@@ -22,7 +22,8 @@ struct GroupedInt8NtTileEpilogue
         const index_t tid = get_thread_id(), lane = tid % P::WaveSize, wave = tid / P::WaveSize;
         const index_t wm = wave / P::WN, wn = wave % P::WN;
         auto* tmp = reinterpret_cast<int32_t*>(smem);
-        block_sync_lds();
+        if constexpr(Policy::OperandAllocation > 0)
+            block_sync_lds();
         static_for<0, P::MR, 1>{}([&](auto i) {
             constexpr index_t mi = decltype(i)::value;
             if constexpr(P::BatchedEpi)
@@ -56,7 +57,8 @@ struct GroupedInt8NtTileEpilogue
                                 (col ^
                                  ((lds_row % Policy::CSwizzleRows) * Policy::CVectorElements)));
                 }
-                block_sync_lds();
+                if constexpr(mi + 1 < P::MR)
+                    block_sync_lds();
             }
             else
             {
@@ -90,7 +92,8 @@ struct GroupedInt8NtTileEpilogue
                                 *reinterpret_cast<const typename P::CopyVector*>(
                                     tmp + lds_row * Policy::CPitch + col);
                     }
-                    block_sync_lds();
+                    if constexpr(mi + 1 < P::MR || output_wave_m + 1 < P::WM)
+                        block_sync_lds();
                 });
             }
         });

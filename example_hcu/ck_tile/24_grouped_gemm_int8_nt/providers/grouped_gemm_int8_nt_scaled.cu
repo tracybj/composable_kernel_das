@@ -52,6 +52,7 @@ int wasp(const void* args, const void* scales, int g, int m, int n, hipStream_t 
 template <bool BF, class P>
 int cooperative(const void* args, const void* scales, int groups, int m, int n, hipStream_t stream)
 {
+    using Kernel = ck_tile::GroupedInt8NtScaledTileKernel<P, BF>;
     dim3 grid(P::MFirst ? (m + P::BM - 1) / P::BM : (n + P::BN - 1) / P::BN,
               P::MFirst ? (n + P::BN - 1) / P::BN : (m + P::BM - 1) / P::BM,
               groups);
@@ -62,7 +63,7 @@ int cooperative(const void* args, const void* scales, int groups, int m, int n, 
     }
     ck_tile::launch_kernel(ck_tile::stream_config{stream, false},
                            ck_tile::make_kernel<P::Threads, P::MinBlocks>(
-                               ck_tile::GroupedInt8NtScaledTileKernel<P, BF>{},
+                               Kernel{},
                                grid,
                                dim3(P::Threads),
                                0,
@@ -79,24 +80,14 @@ int k_parallel(const void* args, const void* scales, int g, int n, hipStream_t s
     const ck_tile::stream_config config{stream, false};
     const dim3 grid((n + 3) / 4, 1, g);
     const dim3 threads(512);
-    if(scales)
-    {
-        ck_tile::launch_kernel(
-            config,
-            ck_tile::make_kernel<512, 1>(K{},
-                                         grid,
-                                         threads,
-                                         0,
-                                         static_cast<const ck_tile::GemmTransKernelArg*>(args),
-                                         static_cast<const ck_tile::Int8NtScaleArgs*>(scales)));
-    }
-    else
-    {
-        ck_tile::launch_kernel(
-            config,
-            ck_tile::make_kernel<512, 1>(
-                K{}, grid, threads, 0, static_cast<const ck_tile::Int8NtKParallelArgs*>(args)));
-    }
+    ck_tile::launch_kernel(
+        config,
+        ck_tile::make_kernel<512, 1>(K{},
+                                     grid,
+                                     threads,
+                                     0,
+                                     static_cast<const ck_tile::GemmTransKernelArg*>(args),
+                                     static_cast<const ck_tile::Int8NtScaleArgs*>(scales)));
     return hipGetLastError() == hipSuccess ? CK_TILE_INT8_CACHED_SUCCESS_V1
                                            : CK_TILE_INT8_CACHED_INTERNAL_ERROR_V1;
 }

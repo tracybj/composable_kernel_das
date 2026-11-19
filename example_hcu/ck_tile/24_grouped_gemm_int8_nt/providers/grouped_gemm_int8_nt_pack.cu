@@ -7,7 +7,9 @@ extern "C" int ck_tile_int8_cached_pack_private(
     const ck_tile::Int8CachedWeightPackArgs* args, int g, int n, int k, hipStream_t stream)
 {
     using P = ck_tile::Int8CachedWeightPackProblem;
-    const dim3 grid((n + 63) / 64, k / 64, g);
+    constexpr int n_span = 64 * P::NSteps;
+    constexpr int k_span = 64 * P::KSteps;
+    const dim3 grid((n + n_span - 1) / n_span, (k + k_span - 1) / k_span, g);
     ck_tile::launch_kernel(
         ck_tile::stream_config{stream, false},
         ck_tile::make_kernel<P::Threads, 1>(

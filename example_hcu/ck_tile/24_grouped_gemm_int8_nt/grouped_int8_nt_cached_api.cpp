@@ -4,7 +4,6 @@
 #include "instances/grouped_int8_nt_routes.hpp"
 #include "instances/grouped_int8_nt_selector.hpp"
 #include "include/grouped_int8_nt_scale_args.hpp"
-#include "include/grouped_int8_nt_k_parallel_args.hpp"
 #ifdef CK_INT8_CACHED_TUNING
 #include "tuning/grouped_int8_nt_tuning_internal.hpp"
 #endif
@@ -397,34 +396,6 @@ make_plan(ck_tile_int8_nt_cached_weights_handle_v1 w,
     p->instance_key = route == ck_tile::int8_routes::LegacyRaw
                           ? p->legacy_instance
                           : ck_tile::int8_instance_ids::from_route(route, max_m);
-    if(route == CK_TILE_INT8_CACHED_RAW_K_PARALLEL_M1_M2_V1)
-    {
-        std::vector<ck_tile::Int8NtKParallelArgs> args;
-        args.reserve(g);
-        for(int i = 0; i < g; ++i)
-        {
-            const auto& a     = groups[i];
-            const auto& b     = w->raw[i];
-            const auto& scale = scales[i];
-            args.push_back({a.a,
-                            b.data,
-                            a.c,
-                            scale.a,
-                            scale.b,
-                            a.m,
-                            w->n,
-                            w->k,
-                            a.a_row_stride,
-                            b.row_stride,
-                            a.c_row_stride,
-                            scale.a_stride,
-                            scale.b_stride});
-        }
-        const size_t bytes = args.size() * sizeof(args[0]);
-        hip_check(hipMalloc(&p->args, bytes));
-        hip_check(hipMemcpy(p->args, args.data(), bytes, hipMemcpyHostToDevice));
-        return p;
-    }
     std::vector<KArg> args;
     args.reserve(g);
     const uint64_t per_group = uint64_t(w->n) * w->k;
@@ -581,13 +552,9 @@ int create_plan_v2(ck_tile_int8_nt_cached_weights_handle_v1 w,
         if(!p) // Enumeration completes before allocating GPU plan buffers.
             return;
 #endif
-        if(ck_tile::int8_instance_ids::route_for(p->instance_key) !=
-           CK_TILE_INT8_CACHED_RAW_K_PARALLEL_M1_M2_V1)
-        {
-            hip_check(hipMalloc(reinterpret_cast<void**>(&p->scales), sizeof(scales[0]) * g));
-            hip_check(
-                hipMemcpy(p->scales, scales.data(), sizeof(scales[0]) * g, hipMemcpyHostToDevice));
-        }
+        hip_check(hipMalloc(reinterpret_cast<void**>(&p->scales), sizeof(scales[0]) * g));
+        hip_check(
+            hipMemcpy(p->scales, scales.data(), sizeof(scales[0]) * g, hipMemcpyHostToDevice));
         *result = p.release();
     });
 }

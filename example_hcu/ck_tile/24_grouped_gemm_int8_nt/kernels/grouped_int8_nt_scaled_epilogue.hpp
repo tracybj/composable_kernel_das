@@ -74,11 +74,31 @@ struct Int8NtDequantStore
                              int32_t r3) const
     {
         using V        = uint16_t __attribute__((ext_vector_type(4)));
-        const float sa = scale.a ? scale.a[row * scale.a_stride] : 1.0f;
-        const float b0 = scale.b ? scale.b[col * scale.b_stride] : 1.0f;
-        const float b1 = scale.b ? scale.b[(col + 1) * scale.b_stride] : 1.0f;
-        const float b2 = scale.b ? scale.b[(col + 2) * scale.b_stride] : 1.0f;
-        const float b3 = scale.b ? scale.b[(col + 3) * scale.b_stride] : 1.0f;
+        const float sa =
+            scale.a ? (scale.a_stride ? scale.a[row * scale.a_stride] : scale.a[0]) : 1.0f;
+        float b0 = 1.0f, b1 = 1.0f, b2 = 1.0f, b3 = 1.0f;
+        if(scale.b)
+        {
+            if(scale.b_stride == 1)
+            {
+                const float* sb = scale.b + col;
+                b0              = sb[0];
+                b1              = sb[1];
+                b2              = sb[2];
+                b3              = sb[3];
+            }
+            else if(scale.b_stride == 0)
+            {
+                b0 = b1 = b2 = b3 = scale.b[0];
+            }
+            else
+            {
+                b0 = scale.b[col * scale.b_stride];
+                b1 = scale.b[(col + 1) * scale.b_stride];
+                b2 = scale.b[(col + 2) * scale.b_stride];
+                b3 = scale.b[(col + 3) * scale.b_stride];
+            }
+        }
         const V v{Int8NtDequantConvert<BFloat>::run(r0, sa * b0),
                   Int8NtDequantConvert<BFloat>::run(r1, sa * b1),
                   Int8NtDequantConvert<BFloat>::run(r2, sa * b2),
@@ -87,6 +107,25 @@ struct Int8NtDequantStore
                               static_cast<long long>(row) * a.stride_E + col) = v;
     }
 };
+// Transpose the 4x4 (lane-K-group, accumulator-component) matrix in registers.
+CK_TILE_DEVICE void
+transpose_mmac_4x4(index_t lane, index_t h, int32_t& r0, int32_t& r1, int32_t& r2, int32_t& r3)
+{
+    const bool b0 = (h & 1) != 0, b1 = (h & 2) != 0;
+    int32_t t0 = __builtin_amdgcn_ds_bpermute((lane ^ 16) * 4, b0 ? r0 : r1),
+            t1 = __builtin_amdgcn_ds_bpermute((lane ^ 16) * 4, b0 ? r2 : r3);
+    r0         = b0 ? t0 : r0;
+    r1         = b0 ? r1 : t0;
+    r2         = b0 ? t1 : r2;
+    r3         = b0 ? r3 : t1;
+    t0         = __builtin_amdgcn_ds_bpermute((lane ^ 32) * 4, b1 ? r0 : r2);
+    t1         = __builtin_amdgcn_ds_bpermute((lane ^ 32) * 4, b1 ? r1 : r3);
+    r0         = b1 ? t0 : r0;
+    r2         = b1 ? r2 : t0;
+    r1         = b1 ? t1 : r1;
+    r3         = b1 ? r3 : t1;
+}
+
 template <class P, bool BFloat>
 struct GroupedInt8NtScaledTileEpilogue
 {
@@ -103,7 +142,8 @@ struct GroupedInt8NtScaledTileEpilogue
                       wm = wave / P::WN, wn = wave % P::WN;
         auto* tmp = reinterpret_cast<int32_t*>(smem);
         const Int8NtDequantStore<BFloat> store{scale};
-        block_sync_lds();
+        if constexpr(Policy::OperandAllocation > 0)
+            block_sync_lds();
         static_for<0, P::MR, 1>{}([&](auto i) {
             constexpr index_t mi = decltype(i)::value;
             if constexpr(P::BatchedEpi)
@@ -136,12 +176,14 @@ struct GroupedInt8NtScaledTileEpilogue
                         store.four(a, output_row, nb + col, v[0], v[1], v[2], v[3]);
                     }
                 }
-                block_sync_lds();
+                if constexpr(mi + 1 < P::MR)
+                    block_sync_lds();
             }
             else
             {
                 static_for<0, P::WM, 1>{}([&](auto w) {
-                    if(wm == decltype(w)::value)
+                    constexpr index_t wi = decltype(w)::value;
+                    if(wm == wi)
                         static_for<0, P::NR, 1>{}([&](auto j) {
                             static_for<0, P::AccElements, 1>{}([&](auto v) {
                                 constexpr index_t ni = decltype(j)::value, vi = decltype(v)::value;
@@ -158,7 +200,7 @@ struct GroupedInt8NtScaledTileEpilogue
                         const index_t col =
                             (vec % Policy::CVectorsPerRow) * Policy::CVectorElements;
                         const index_t output_row =
-                            mb + decltype(w)::value * (P::BM / P::WM) + mi * P::MmacRows + lds_row;
+                            mb + wi * (P::BM / P::WM) + mi * P::MmacRows + lds_row;
                         if(P::Aligned ||
                            (output_row < a.M && nb + col + Policy::CVectorElements <= a.N))
                         {
@@ -167,7 +209,8 @@ struct GroupedInt8NtScaledTileEpilogue
                             store.four(a, output_row, nb + col, v[0], v[1], v[2], v[3]);
                         }
                     }
-                    block_sync_lds();
+                    if constexpr(mi + 1 < P::MR || wi + 1 < P::WM)
+                        block_sync_lds();
                 });
             }
         });
@@ -242,19 +285,7 @@ struct GroupedInt8NtScaledWaspEpilogue
                     const auto v       = tile.v[decltype(i)::value * 2 + decltype(j)::value];
                     const index_t base = nb + consumer * 32 + decltype(j)::value * 16;
                     int32_t r0 = v[0], r1 = v[1], r2 = v[2], r3 = v[3];
-                    const bool b0 = h & 1, b1 = h & 2;
-                    int32_t t0    = __builtin_amdgcn_ds_bpermute((lane ^ 16) * 4, b0 ? r0 : r1),
-                            t1    = __builtin_amdgcn_ds_bpermute((lane ^ 16) * 4, b0 ? r2 : r3);
-                    r0            = b0 ? t0 : r0;
-                    r1            = b0 ? r1 : t0;
-                    r2            = b0 ? t1 : r2;
-                    r3            = b0 ? r3 : t1;
-                    t0            = __builtin_amdgcn_ds_bpermute((lane ^ 32) * 4, b1 ? r0 : r2);
-                    t1            = __builtin_amdgcn_ds_bpermute((lane ^ 32) * 4, b1 ? r1 : r3);
-                    r0            = b1 ? t0 : r0;
-                    r2            = b1 ? r2 : t0;
-                    r1            = b1 ? t1 : r1;
-                    r3            = b1 ? r3 : t1;
+                    transpose_mmac_4x4(lane, h, r0, r1, r2, r3);
                     using V       = uint16_t __attribute__((ext_vector_type(4)));
                     const auto* f = factor[decltype(j)::value];
                     const V out{Int8NtDequantConvert<BFloat>::run(r0, f[0]),
@@ -306,23 +337,10 @@ struct GroupedInt8NtScaledWaspEpilogue
                 }
                 else
                 {
-                    if(row >= original.M || base + h * 4 + 4 > original.N)
-                        return;
                     int32_t r0 = v[0], r1 = v[1], r2 = v[2], r3 = v[3];
-                    const bool b0 = h & 1, b1 = h & 2;
-                    int32_t t0 = __builtin_amdgcn_ds_bpermute((lane ^ 16) * 4, b0 ? r0 : r1),
-                            t1 = __builtin_amdgcn_ds_bpermute((lane ^ 16) * 4, b0 ? r2 : r3);
-                    r0         = b0 ? t0 : r0;
-                    r1         = b0 ? r1 : t0;
-                    r2         = b0 ? t1 : r2;
-                    r3         = b0 ? r3 : t1;
-                    t0         = __builtin_amdgcn_ds_bpermute((lane ^ 32) * 4, b1 ? r0 : r2);
-                    t1         = __builtin_amdgcn_ds_bpermute((lane ^ 32) * 4, b1 ? r1 : r3);
-                    r0         = b1 ? t0 : r0;
-                    r2         = b1 ? r2 : t0;
-                    r1         = b1 ? t1 : r1;
-                    r3         = b1 ? r3 : t1;
-                    store.four(original, row, base + h * 4, r0, r1, r2, r3);
+                    transpose_mmac_4x4(lane, h, r0, r1, r2, r3);
+                    if(row < original.M && base + h * 4 + 4 <= original.N)
+                        store.four(original, row, base + h * 4, r0, r1, r2, r3);
                 }
             });
         });

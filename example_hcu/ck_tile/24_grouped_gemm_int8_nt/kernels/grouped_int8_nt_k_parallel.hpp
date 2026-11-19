@@ -110,11 +110,6 @@ struct GroupedInt8NtScaledKParallelKernel
         Int8NtKParallelEpilogue<P, Rows, BFloat>{}(a, nb, c, partial);
     }
 
-    CK_TILE_DEVICE void operator()(const Int8NtKParallelArgs* args) const
-    {
-        run_group(args[blockIdx.z]);
-    }
-
     CK_TILE_DEVICE void operator()(const GemmTransKernelArg* args,
                                    const Int8NtScaleArgs* scales) const
     {

@@ -120,85 +120,9 @@ struct GroupedInt8NtWaspKernel
         }
     }
 
-    // Raw INT32 entry point
-    CK_TILE_DEVICE void operator()(const GemmTransKernelArg* args) const
-    {
-        const auto o = args[blockIdx.z].group_karg;
-        if(o.M <= 0 || o.N <= 0 || o.K <= 0)
-            return;
-        const UniversalGemmKernelArgs<> a{P::Transpose ? o.bs_ptr : o.as_ptr,
-                                          P::Transpose ? o.as_ptr : o.bs_ptr,
-                                          o.ds_ptr,
-                                          o.e_ptr,
-                                          P::Transpose ? o.N : o.M,
-                                          P::Transpose ? o.M : o.N,
-                                          o.K,
-                                          P::Transpose ? o.stride_Bs : o.stride_As,
-                                          P::Transpose ? o.stride_As : o.stride_Bs,
-                                          o.stride_Ds,
-                                          o.stride_E,
-                                          o.k_batch};
-        const index_t mt = (a.M + P::BM - 1) / P::BM, nt = (a.N + P::BN - 1) / P::BN;
-        if(blockIdx.x >= mt * nt)
-            return;
-        const index_t cluster = blockIdx.x / (P::MGroup * nt);
-        const index_t inner   = blockIdx.x % (P::MGroup * nt);
-        index_t local_m;
-        index_t local_n;
-        if((mt % P::MGroup) == 0 || cluster < mt / P::MGroup)
-        {
-            local_m = inner % P::MGroup;
-            local_n = inner / P::MGroup;
-        }
-        else
-        {
-            const index_t rows = mt % P::MGroup;
-            local_m            = inner % rows;
-            local_n            = inner / rows;
-        }
-        const index_t mb = (cluster * P::MGroup + local_m) * P::BM;
-        const index_t nb = local_n * P::BN;
-        if(mb >= a.M || nb >= a.N)
-            return;
-        __shared__ __align__(16) int8_t smem[P::Pipeline::kWaspLdsBytes];
-        if(!is_native<true>(a, nb))
-        {
-            if constexpr(P::BM == 256 && P::BN == 256 && !P::PackedB)
-            {
-                GroupedInt8NtWaspFallback<P>{}(a, mb, nb, smem);
-            }
-            else
-            {
-                scalar_fallback(a, mb, nb, [&](index_t row, index_t col, int32_t sum) {
-                    const long long co                 = P::Transpose
-                                                             ? static_cast<long long>(col) * a.stride_E + row
-                                                             : static_cast<long long>(row) * a.stride_E + col;
-                    static_cast<int32_t*>(a.e_ptr)[co] = sum;
-                });
-            }
-            return;
-        }
-        typename P::Pipeline::AccTile acc;
-        const auto* ap =
-            static_cast<const int8_t*>(a.as_ptr[0]) + static_cast<long long>(mb) * a.stride_As[0];
-        const auto* bp = static_cast<const int8_t*>(a.bs_ptr[0]) +
-                         static_cast<long long>(nb) * (P::PackedB ? 64 : a.stride_Bs[0]);
-        constexpr bool has_m_tail = P::Transpose && P::Pipeline::MasksInactiveN;
-        const index_t m_valid     = has_m_tail ? min(index_t(P::BM), a.M - mb) : P::BM;
-        typename P::Pipeline{}.run_raw_into(
-            ap, a.stride_As[0], m_valid, bp, a.stride_Bs[0], a.N, nb, a.K / 128, acc, smem);
-        if constexpr(P::Pipeline::MasksInactiveN)
-        {
-            const index_t wave = get_warp_id();
-            if(wave < P::ProducerWaves || nb + (wave - P::ProducerWaves) * 32 >= a.N)
-                return;
-        }
-        Epilogue{}(a, mb, nb, acc);
-    }
-
-    // Fused Scaled (BF16 / FP16) entry point
-    CK_TILE_DEVICE void operator()(const GemmTransKernelArg* args,
-                                   const Int8NtScaleArgs* scales) const
+    template <bool AllowTransposedMTail, class FallbackFn, class EpiFn>
+    CK_TILE_DEVICE static void
+    run_tile(const GemmTransKernelArg* args, FallbackFn&& fallback_fn, EpiFn&& epi_fn)
     {
         const auto o = args[blockIdx.z].group_karg;
         if(o.M <= 0 || o.N <= 0 || o.K <= 0)
@@ -240,12 +164,9 @@ struct GroupedInt8NtWaspKernel
         if(mb >= a.M || nb >= a.N)
             return;
         __shared__ __align__(16) int8_t smem[P::Pipeline::kWaspLdsBytes];
-        if(!is_native<!P::PackedB>(a, nb))
+        if(!is_native<AllowTransposedMTail>(a, nb))
         {
-            scalar_fallback(a, mb, nb, [&](index_t row, index_t col, int32_t sum) {
-                Int8NtDequantStore<BFloat>{scales[blockIdx.z]}.one(
-                    o, P::Transpose ? col : row, P::Transpose ? row : col, sum);
-            });
+            fallback_fn(o, a, mb, nb, smem);
             return;
         }
         typename P::Pipeline::AccTile acc;
@@ -263,7 +184,49 @@ struct GroupedInt8NtWaspKernel
             if(wave < P::ProducerWaves || nb + (wave - P::ProducerWaves) * 32 >= a.N)
                 return;
         }
-        Epilogue{}(o, mb, nb, acc, scales[blockIdx.z]);
+        epi_fn(o, a, mb, nb, acc);
+    }
+
+    // Raw INT32 entry point
+    CK_TILE_DEVICE void operator()(const GemmTransKernelArg* args) const
+    {
+        run_tile<true>(
+            args,
+            [](const auto&, const auto& a, index_t mb, index_t nb, int8_t* smem) {
+                if constexpr(P::BM == 256 && P::BN == 256 && !P::PackedB)
+                {
+                    GroupedInt8NtWaspFallback<P>{}(a, mb, nb, smem);
+                }
+                else
+                {
+                    scalar_fallback(a, mb, nb, [&](index_t row, index_t col, int32_t sum) {
+                        const long long co = P::Transpose
+                                                 ? static_cast<long long>(col) * a.stride_E + row
+                                                 : static_cast<long long>(row) * a.stride_E + col;
+                        static_cast<int32_t*>(a.e_ptr)[co] = sum;
+                    });
+                }
+            },
+            [](const auto&, const auto& a, index_t mb, index_t nb, const auto& acc) {
+                Epilogue{}(a, mb, nb, acc);
+            });
+    }
+
+    // Fused Scaled (BF16 / FP16) entry point
+    CK_TILE_DEVICE void operator()(const GemmTransKernelArg* args,
+                                   const Int8NtScaleArgs* scales) const
+    {
+        run_tile<!P::PackedB>(
+            args,
+            [scales](const auto& o, const auto& a, index_t mb, index_t nb, int8_t*) {
+                scalar_fallback(a, mb, nb, [&](index_t row, index_t col, int32_t sum) {
+                    Int8NtDequantStore<BFloat>{scales[blockIdx.z]}.one(
+                        o, P::Transpose ? col : row, P::Transpose ? row : col, sum);
+                });
+            },
+            [scales](const auto& o, const auto&, index_t mb, index_t nb, const auto& acc) {
+                Epilogue{}(o, mb, nb, acc, scales[blockIdx.z]);
+            });
     }
 };
 
