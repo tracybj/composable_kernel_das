@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: MIT
 #include "include/ck_tile_int8_nt_cached.h"
-#include "kernels/grouped_int8_nt_pack_kernel.hpp"
 #include "instances/grouped_int8_nt_routes.hpp"
 #include "instances/grouped_int8_nt_selector.hpp"
 #include "include/grouped_int8_nt_scale_args.hpp"
@@ -22,8 +21,6 @@
 #include <string>
 #include <vector>
 
-extern "C" int ck_tile_int8_cached_pack_private(
-    const ck_tile::Int8CachedWeightPackArgs*, int, int, int, hipStream_t);
 extern "C" int ck_tile_int8_scaled_launch_private(
     unsigned, unsigned, const void*, const void*, int, int, int, hipStream_t);
 
@@ -101,27 +98,11 @@ using KArg = ck_tile::GemmTransKernelArg;
 struct ck_tile_int8_nt_cached_weights_impl
 {
     int device = -1, g = 0, n = 0, k = 0, compute_units = 0;
-    bool packable = false, queued = false, ready_recorded = false;
     std::vector<ck_tile_int8_nt_cached_weight_desc_v1> raw;
-    int8_t* packed                                      = nullptr;
-    size_t packed_bytes                                 = 0;
-    ck_tile::Int8CachedWeightPackArgs* host_pack_args   = nullptr;
-    ck_tile::Int8CachedWeightPackArgs* device_pack_args = nullptr;
-    hipEvent_t ready                                    = nullptr;
-    hipStream_t prepare_stream                          = nullptr;
+    hipEvent_t ready = nullptr;
     std::atomic<unsigned> plans{0};
     ~ck_tile_int8_nt_cached_weights_impl()
     {
-        if(ready_recorded)
-            (void)hipEventSynchronize(ready);
-        else if(queued)
-            (void)hipStreamSynchronize(prepare_stream);
-        if(device_pack_args)
-            (void)hipFree(device_pack_args);
-        if(host_pack_args)
-            (void)hipHostFree(host_pack_args);
-        if(packed)
-            (void)hipFree(packed);
         if(ready)
             (void)hipEventDestroy(ready);
     }
@@ -199,43 +180,9 @@ ck_tile_int8_nt_cached_weights_create_v1(const ck_tile_int8_nt_cached_weight_des
         w->n             = source[0].n;
         w->k             = source[0].k;
         w->raw.assign(source, source + g);
-        // The v1 policy never consumes packed weights belowK512 or outside this
-        // native N/K domain;avoid allocating an unused copy for those families.
-        w->packable       = w->n % 256 == 0 && w->k % 128 == 0 && w->k >= 512 && w->k < 16384;
-        w->prepare_stream = reinterpret_cast<hipStream_t>(opaque_stream);
+        // Order later runs after any writes already queued by the caller.
         hip_check(hipEventCreateWithFlags(&w->ready, hipEventDisableTiming));
-        if(w->packable)
-        {
-            const uint64_t per_group = uint64_t(w->n) * w->k;
-            require(per_group <= std::numeric_limits<size_t>::max() / uint64_t(g),
-                    CK_TILE_INT8_CACHED_INVALID_ARGUMENT_V1,
-                    "packed byte size overflow");
-            w->packed_bytes = static_cast<size_t>(per_group * g);
-            hip_check(hipMalloc(reinterpret_cast<void**>(&w->packed), w->packed_bytes));
-            const size_t arg_bytes = sizeof(ck_tile::Int8CachedWeightPackArgs) * g;
-            hip_check(hipHostMalloc(
-                reinterpret_cast<void**>(&w->host_pack_args), arg_bytes, hipHostMallocDefault));
-            hip_check(hipMalloc(reinterpret_cast<void**>(&w->device_pack_args), arg_bytes));
-            for(int i = 0; i < g; ++i)
-                w->host_pack_args[i] = {source[i].data,
-                                        w->packed + uint64_t(i) * per_group,
-                                        w->n,
-                                        w->k,
-                                        source[i].row_stride};
-            w->queued = true;
-            hip_check(hipMemcpyAsync(w->device_pack_args,
-                                     w->host_pack_args,
-                                     arg_bytes,
-                                     hipMemcpyHostToDevice,
-                                     w->prepare_stream));
-            require(ck_tile_int8_cached_pack_private(
-                        w->device_pack_args, g, w->n, w->k, w->prepare_stream) == 0,
-                    CK_TILE_INT8_CACHED_INTERNAL_ERROR_V1,
-                    "INT8 weight packing launch failed");
-        }
-        w->queued = true;
-        hip_check(hipEventRecord(w->ready, w->prepare_stream));
-        w->ready_recorded = true;
+        hip_check(hipEventRecord(w->ready, reinterpret_cast<hipStream_t>(opaque_stream)));
         *result           = w.release();
     });
 }
@@ -253,10 +200,7 @@ ck_tile_int8_nt_cached_weights_query_v1(ck_tile_int8_nt_cached_weights_handle_v1
         value.group_count = w->g;
         value.n           = w->n;
         value.k           = w->k;
-        value.format =
-            w->packable ? ck_tile::int8_weight_formats::Packed : ck_tile::int8_weight_formats::Raw;
-        value.packed_device_data = w->packed;
-        value.packed_bytes       = w->packed_bytes;
+        value.format         = ck_tile::int8_weight_formats::Raw;
         *info                    = value;
     });
 }
@@ -351,22 +295,24 @@ make_plan(ck_tile_int8_nt_cached_weights_handle_v1 w,
     const auto fallback = ck_tile::select_grouped_gemm_int8_nt_instance(summary);
     p->legacy_instance  = static_cast<unsigned>(fallback);
     const bool native_domain =
-        uniform && !empty && native && w->n % 256 == 0 && w->k % 128 == 0 && w->k < 16384;
+        uniform && !empty && native && w->n % 256 == 0 && w->k % 128 == 0 && w->k <= 16384;
     ck_tile::Int8CachedPlanRouteDomain domain{};
     domain.native_wasp          = native_domain;
     domain.uniform_nonempty     = uniform && !empty;
     domain.raw_transposed       = raw_transposed;
     domain.dense_scalar_a       = dense_scalar_a;
     domain.dense_channel_scales = dense_channel_scales;
-    auto route                  = ck_tile::int8_cached_select_plan_route(
-        max_m, w->n, w->k, g, w->packable, w->compute_units, domain, fallback);
+    const bool vector_nt_domain =
+        ck_tile::int8_cached_vector_nt_domain(w->n, w->k);
+    auto route = ck_tile::int8_cached_select_plan_route(
+        max_m, w->n, w->k, g, vector_nt_domain, w->compute_units, domain, fallback);
 #ifdef CK_INT8_CACHED_TUNING
     if(tuning)
     {
         require(uniform && !empty,
                 CK_TILE_INT8_CACHED_UNSUPPORTED_V1,
                 "tuning requires uniform nonempty scaled groups");
-        ck_tile::int8_nt_tuning::Domain domain{max_m, w->n, w->k, 0, 0, w->packable, true};
+        ck_tile::int8_nt_tuning::Domain domain{max_m, w->n, w->k, 0, 0, true};
         for(int i = 0; i < g; ++i)
         {
             domain.max_a_stride = std::max(domain.max_a_stride, groups[i].a_row_stride);
@@ -398,21 +344,19 @@ make_plan(ck_tile_int8_nt_cached_weights_handle_v1 w,
                           : ck_tile::int8_instance_ids::from_route(route, max_m);
     std::vector<KArg> args;
     args.reserve(g);
-    const uint64_t per_group = uint64_t(w->n) * w->k;
-    const bool packed        = ck_tile::int8_routes::uses_packed_weights(route);
     for(int i = 0; i < g; ++i)
     {
         const auto& a = groups[i];
-        const void* b = packed ? w->packed + uint64_t(i) * per_group : w->raw[i].data;
+        const auto& b = w->raw[i];
         ck_tile::UniversalGemmKernelArgs<1, 1, 0> arg{{a.a},
-                                                      {b},
+                                                      {b.data},
                                                       {},
                                                       a.c,
                                                       a.m,
                                                       w->n,
                                                       w->k,
                                                       {a.a_row_stride},
-                                                      {packed ? w->k : w->raw[i].row_stride},
+                                                      {b.row_stride},
                                                       {},
                                                       a.c_row_stride,
                                                       1};
@@ -454,7 +398,6 @@ ck_tile_int8_nt_cached_plan_query_v1(ck_tile_int8_nt_cached_plan_handle_v1 p,
         value.k                   = p->k;
         value.route               = ck_tile::int8_instance_ids::route_for(p->instance_key);
         value.legacy_instance     = p->legacy_instance;
-        value.packed_weight_bytes = p->weights->packed_bytes;
         *info                     = value;
     });
 }

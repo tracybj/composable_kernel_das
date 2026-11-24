@@ -30,7 +30,6 @@ template <int Rows_,
           bool OneBarrier_    = true,
           int RecordCap_      = 0,
           bool EarlyB_        = false,
-          bool PackedB_       = false,
           int BAddress_       = int8_nt_b_address::IndexedRecord,
           int ConsumerWaves_  = 8,
           bool MaskInactiveN_ = false>
@@ -47,7 +46,7 @@ struct GroupedInt8NtWaspCoreProblem : GroupedInt8NtTileProblem<Rows_,
                                                                true,
                                                                Group_>
 {
-    static constexpr bool Transpose = Transpose_, PackedB = PackedB_;
+    static constexpr bool Transpose = Transpose_;
     static constexpr index_t ProducerWaves  = (Rows_ <= 64 ? 1 : Rows_ / 64),
                              ComputeThreads = 64 * ConsumerWaves_,
                              Threads        = 64 * (ProducerWaves + ConsumerWaves_);
@@ -90,7 +89,6 @@ struct GroupedInt8NtWaspCoreProblem : GroupedInt8NtTileProblem<Rows_,
                                                       OneBarrier_,
                                                       RecordCap_,
                                                       EarlyB_,
-                                                      PackedB_,
                                                       BAddress_,
                                                       MaskInactiveN_>;
     static_assert(Pipeline::BlockSize == Threads && Pipeline::kWaspLdsBytes == 2 * Rows_ * 128);
@@ -126,7 +124,6 @@ template <bool Transpose_  = false,
           bool OneBarrier_ = true,
           int RecordCap_   = 0,
           bool EarlyB_     = false,
-          bool PackedB_    = false,
           int BAddress_    = int8_nt_b_address::IndexedRecord>
 using GroupedInt8NtWaspCachedProblem = GroupedInt8NtWaspCoreProblem<256,
                                                                     Transpose_,
@@ -137,7 +134,6 @@ using GroupedInt8NtWaspCachedProblem = GroupedInt8NtWaspCoreProblem<256,
                                                                     OneBarrier_,
                                                                     RecordCap_,
                                                                     EarlyB_,
-                                                                    PackedB_,
                                                                     BAddress_,
                                                                     8>;
 
@@ -150,7 +146,6 @@ template <bool Transpose_    = false,
           bool OneBarrier_   = true,
           int RecordCap_     = 0,
           bool EarlyB_       = false,
-          bool PackedB_      = false,
           int BAddress_      = int8_nt_b_address::IndexedRecord,
           int ConsumerWaves_ = 8>
 using GroupedInt8NtWaspSplitMProblem = GroupedInt8NtWaspCoreProblem<128,
@@ -162,7 +157,6 @@ using GroupedInt8NtWaspSplitMProblem = GroupedInt8NtWaspCoreProblem<128,
                                                                     OneBarrier_,
                                                                     RecordCap_,
                                                                     EarlyB_,
-                                                                    PackedB_,
                                                                     BAddress_,
                                                                     ConsumerWaves_>;
 
@@ -175,7 +169,6 @@ template <bool Transpose_    = false,
           bool OneBarrier_   = true,
           int RecordCap_     = 0,
           bool EarlyB_       = false,
-          bool PackedB_      = false,
           int BAddress_      = int8_nt_b_address::IndexedRecord,
           int ConsumerWaves_ = 8>
 using GroupedInt8NtWaspSmallMProblem = GroupedInt8NtWaspCoreProblem<64,
@@ -187,7 +180,6 @@ using GroupedInt8NtWaspSmallMProblem = GroupedInt8NtWaspCoreProblem<64,
                                                                     OneBarrier_,
                                                                     RecordCap_,
                                                                     EarlyB_,
-                                                                    PackedB_,
                                                                     BAddress_,
                                                                     ConsumerWaves_>;
 
@@ -200,7 +192,6 @@ template <bool Transpose_    = false,
           bool OneBarrier_   = true,
           int RecordCap_     = 0,
           bool EarlyB_       = false,
-          bool PackedB_      = false,
           int BAddress_      = int8_nt_b_address::IndexedRecord,
           int ConsumerWaves_ = 8>
 using GroupedInt8NtWaspM32Problem = GroupedInt8NtWaspCoreProblem<32,
@@ -212,7 +203,6 @@ using GroupedInt8NtWaspM32Problem = GroupedInt8NtWaspCoreProblem<32,
                                                                  OneBarrier_,
                                                                  RecordCap_,
                                                                  EarlyB_,
-                                                                 PackedB_,
                                                                  BAddress_,
                                                                  ConsumerWaves_>;
 
@@ -225,7 +215,6 @@ template <bool Transpose_    = false,
           bool OneBarrier_   = true,
           int RecordCap_     = 0,
           bool EarlyB_       = false,
-          bool PackedB_      = false,
           int BAddress_      = int8_nt_b_address::IndexedRecord,
           int ConsumerWaves_ = 8>
 using GroupedInt8NtWaspPublicWideNProblem = GroupedInt8NtWaspCoreProblem<256,
@@ -237,34 +226,28 @@ using GroupedInt8NtWaspPublicWideNProblem = GroupedInt8NtWaspCoreProblem<256,
                                                                          OneBarrier_,
                                                                          RecordCap_,
                                                                          EarlyB_,
-                                                                         PackedB_,
                                                                          BAddress_,
                                                                          ConsumerWaves_>;
 
-// Prepared B, original NT direction. Entirely absent N stripes retain all
-// main-loop barrier epochs and are discarded before any epilogue accumulator
-// read.
+// Raw NT B, original NT direction (zero pre-packing, ByteOffset addressing + Cache Swizzle)
 template <int MGroup_>
-using GroupedInt8NtWaspMaskedWideProblem = GroupedInt8NtWaspCoreProblem<256,
-                                                                        false,
-                                                                        12,
-                                                                        MGroup_,
-                                                                        2,
-                                                                        true,
-                                                                        true,
-                                                                        0,
-                                                                        false,
-                                                                        true,
-                                                                        0,
-                                                                        12,
-                                                                        true>;
+using GroupedInt8NtWaspRawMaskedWideProblem = GroupedInt8NtWaspCoreProblem<256,
+                                                                           false,
+                                                                           12,
+                                                                           MGroup_,
+                                                                           2,
+                                                                           true,
+                                                                           true,
+                                                                           0,
+                                                                           false,
+                                                                           int8_nt_b_address::ByteOffset,
+                                                                           12,
+                                                                           true>;
 
-// The same masked geometry with high-half A issued during the final low-half
-// MMAC batch. Unmasked instances retain their independently tuned main loops.
 template <int MGroup_>
-struct GroupedInt8NtWaspScaledMaskedPrefetchProblem : GroupedInt8NtWaspMaskedWideProblem<MGroup_>
+struct GroupedInt8NtWaspRawMaskedPrefetchProblem : GroupedInt8NtWaspRawMaskedWideProblem<MGroup_>
 {
-    using Base     = GroupedInt8NtWaspMaskedWideProblem<MGroup_>;
+    using Base     = GroupedInt8NtWaspRawMaskedWideProblem<MGroup_>;
     using Pipeline = GroupedInt8NtWaspPipeline<typename Base::PipelineProblem,
                                                GemmPipelineAgBgCrCompV4DefaultPolicy,
                                                12,
@@ -273,8 +256,7 @@ struct GroupedInt8NtWaspScaledMaskedPrefetchProblem : GroupedInt8NtWaspMaskedWid
                                                true,
                                                0,
                                                false,
-                                               true,
-                                               0,
+                                               int8_nt_b_address::ByteOffset,
                                                true,
                                                false,
                                                true>;

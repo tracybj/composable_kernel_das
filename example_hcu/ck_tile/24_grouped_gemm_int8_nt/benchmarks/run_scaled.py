@@ -127,6 +127,7 @@ def main():
     ap.add_argument('--output', type=Path, required=True)
     ap.add_argument('--resume', action='store_true')
     ap.add_argument('--limit', type=int)
+    ap.add_argument('--ids', type=str, help='Comma-separated list of IDs to run')
     args = ap.parse_args()
     source = list(
         csv.DictReader((E / 'benchmarks/data/targets_max_all_1191.csv').open())
@@ -161,13 +162,16 @@ def main():
             case['target_TOPS'],
             rel_tol=1e-10,
         )
-    if args.limit:
+    if args.ids:
+        wanted_ids = set(int(x.strip()) for x in args.ids.split(','))
+        cases = [c for c in cases if c['ID'] in wanted_ids]
+    elif args.limit:
         cases = cases[: args.limit]
     frozen = original.snapshot()
     assert not json.loads((B / 'exported_api_symbols.json').read_text())[
         'experimental_tuning'
     ]
-    version = os.environ.get('CK_INT8_TEST_VERSION', 'v136')
+    version = os.environ.get('CK_INT8_TEST_VERSION', 'v171')
     assert version.startswith('v') and version[1:].isdigit(), 'Invalid gate version'
     validation = json.loads(
         (E / f'results/max_all_{version}_gates/scaled_validation.json').read_text()
@@ -185,8 +189,9 @@ def main():
             check['status'] == 'PASS'
             and check['library_sha256'] == frozen['api_library']
         )
+    target_dev = os.environ.get('HIP_VISIBLE_DEVICES', '0')
     assert all(
-        os.environ.get(x) == '7'
+        os.environ.get(x) == target_dev
         for x in ['HIP_VISIBLE_DEVICES', 'CUDA_VISIBLE_DEVICES', 'DTK_VISIBLE_DEVICES']
     )
     import torch
@@ -205,7 +210,9 @@ def main():
     lib.hipDeviceGetPCIBusId.restype = C.c_int
     bus = C.create_string_buffer(64)
     assert lib.hipDeviceGetPCIBusId(bus, 64, 0) == 0
-    pci = Path('/sys/class/drm/renderD135/device').resolve().name.lower()
+    target_gpu_idx = int(target_dev)
+    render_dev = f'/sys/class/drm/renderD{128 + target_gpu_idx}/device'
+    pci = Path(render_dev).resolve().name.lower()
     assert bus.value.decode().lower() == pci
     out = args.output.resolve()
     out.mkdir(parents=True, exist_ok=True)
@@ -245,7 +252,7 @@ def main():
             source_revision=subprocess.check_output(
                 ['git', '-C', str(E.parents[2]), 'rev-parse', 'HEAD'], text=True
             ).strip(),
-            gpu=7,
+            gpu=target_gpu_idx,
             pci=pci,
             device=str(prop),
             total_shapes=len(cases),
@@ -279,14 +286,13 @@ def main():
             for case in cases[len(records) :]:
                 idx, g, m, n, k = [case[x] for x in ['ID', 'G', 'M', 'N', 'K']]
                 active(case, 'allocate')
-                packed = n % 256 == 0 and k % 128 == 0 and 512 <= k < 16384
                 span = m * n
                 capacity = (span + 7) // 8 * 8
                 estimate = (
                     g
                     * (
                         m * k
-                        + n * k * (1 + int(packed))
+                        + n * k
                         + 4 * (capacity + 32)
                         + 4 * (n + 1)
                     )
@@ -359,6 +365,7 @@ def main():
                     end.synchronize()
                     ready = (time.perf_counter() - start) * 1000
                     wi = weight_info(handle)
+                    assert wi.format == 0 and not wi.packed_device_data and wi.packed_bytes == 0
                     rec = dict(
                         **case,
                         dtype='INT8xINT8',

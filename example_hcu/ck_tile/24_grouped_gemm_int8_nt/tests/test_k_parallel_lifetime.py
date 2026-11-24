@@ -6,7 +6,7 @@ import torch
 from bindings import Weight, init, lib, ok, plan_info
 from test_scaled_api import Group2
 
-assert os.environ['HIP_VISIBLE_DEVICES'] == '7'
+assert os.environ.get('HIP_VISIBLE_DEVICES') in ('0', '1', '2', '3', '4', '5', '6', '7')
 torch.set_num_threads(4)
 torch.manual_seed(20261106)
 records = []

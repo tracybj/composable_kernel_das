@@ -5,7 +5,6 @@
 #pragma once
 
 #include "ck_tile/core.hpp"
-#include "grouped_int8_nt_layout.hpp"
 #include "ck_tile/ops/gemm/pipeline/gemm_pipeline_ag_bg_cr_comp_v3.hpp"
 #include "ck_tile/ops/gemm/pipeline/gemm_pipeline_ag_bg_cr_comp_v4.hpp"
 
@@ -318,7 +317,6 @@ template <typename Problem,
           bool OneBarrier        = false,
           index_t RecordCap      = 0,
           bool EarlyB            = false,
-          bool PackedB           = false,
           index_t BAddress       = 0,
           bool MaskInactiveN     = false,
           bool SingleB           = false,
@@ -345,7 +343,7 @@ struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Poli
                   "WASP: the tile warp grid must be exactly the consumer waves");
     static_assert(BlockSize <= 1024, "WASP workgroup exceeds device block limit");
 
-    using PackedLayout = Int8NtPackedWeightLayout;
+    static constexpr index_t BAddressMode = BAddress;
     // Each A fragment spans 16 rows at a physical pitch of 128 INT8 bytes.
     static constexpr index_t kMmacRows                = 16;
     static constexpr index_t kAFragmentRowStrideBytes = kMmacRows * 128;
@@ -460,7 +458,6 @@ struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Poli
     struct BPairs
     {
         uint64_t first_n_fragment, second_n_fragment;
-        uint32_t half_stride = 0;
     };
     CK_TILE_DEVICE void
     load_B_stage(grouped_int8_nt_wasp_core_detail::buffer_rsrc_t b_rsrc,
@@ -470,24 +467,6 @@ struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Poli
                  grouped_int8_nt_wasp_core_detail::WaspVmemDiag& vmem_diag) const
     {
         using namespace grouped_int8_nt_wasp_core_detail;
-        if constexpr(PackedB)
-        {
-            // Physical [K/64,N/16,4,16,16]; every N16/K64 fragment is contiguous.
-            const uint32_t lo = static_cast<uint32_t>(bp.first_n_fragment),
-                           hi = static_cast<uint32_t>(bp.second_n_fragment);
-            const uint32_t s0 = static_cast<uint32_t>(k_stage) * 2u * bp.half_stride;
-            const uint32_t s1 = s0 + bp.half_stride;
-            asm volatile(
-                "buffer_load_dwordx4 %0, %4, %6, %7 offen\n\t"
-                "buffer_load_dwordx4 %1, %4, %6, %8 offen\n\t"
-                "buffer_load_dwordx4 %2, %5, %6, %7 offen\n\t"
-                "buffer_load_dwordx4 %3, %5, %6, %8 offen\n"
-                : "=&v"(buf[0][0].d4), "=&v"(buf[1][0].d4), "=&v"(buf[0][1].d4), "=&v"(buf[1][1].d4)
-                : "v"(lo), "v"(hi), "s"(b_rsrc), "s"(s0), "s"(s1)
-                : "memory");
-            (void)vmem_diag;
-            return;
-        }
         const uint32_t s_col_base = static_cast<uint32_t>(k_stage * kStageK) * sizeof(ADataType);
         if constexpr(BAddress != 0)
         {
@@ -681,12 +660,12 @@ struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Poli
         using namespace grouped_int8_nt_wasp_core_detail;
         constexpr int Groups   = AccTile::kMIters / AReadBatch;
         constexpr index_t SLOT = CUR * kAStageBytes;
-        wasp_wait_vmcnt0(diag, k_stage);
         stage16_t a[2][AReadBatch];
         static_for<0, AReadBatch, 1>{}([&](auto rr) {
             constexpr int i = decltype(rr)::value;
             read_prefetch<SLOT + i * kAFragmentRowStrideBytes>(rb.low_k_half, a[0][i].d4);
         });
+        wasp_wait_vmcnt0(diag, k_stage);
         static_for<0, 2, 1>{}([&](auto hh) {
             constexpr int H = decltype(hh)::value;
             // low fragments are dead, high current-B remains live.
@@ -842,18 +821,24 @@ struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Poli
 
         const uint32_t b_pitch_bytes = static_cast<uint32_t>(b_n_stride) * sizeof(ADataType);
         const uint32_t b_size_bytes =
-            PackedB ? static_cast<uint32_t>(b_n_len) * b_pitch_bytes -
-                          static_cast<uint32_t>(b_n_origin) * PackedLayout::KTile
-                    : static_cast<uint32_t>(b_n_len - b_n_origin) * b_pitch_bytes;
+            static_cast<uint32_t>(b_n_len - b_n_origin) * b_pitch_bytes;
+        uint32_t b_stride = record_stride(b_pitch_bytes);
+        if constexpr(BAddress != 0)
+        {
+            uint32_t lb = b_pitch_bytes & (~b_pitch_bytes + 1u);
+            while(lb > 8192u)
+                lb >>= 1;
+            if(lb >= grouped_int8_nt_wasp_core_detail::kBufferSwizzleGranuleBytes)
+                b_stride = lb;
+        }
         const grouped_int8_nt_wasp_core_detail::buffer_rsrc_t b_rsrc =
             grouped_int8_nt_wasp_core_detail::wasp_make_buffer_rsrc(
-                b_base, PackedB ? 0u : record_stride(b_pitch_bytes), b_size_bytes, !PackedB);
+                b_base, b_stride, b_size_bytes);
 
         grouped_int8_nt_wasp_core_detail::wasp_sync_lds_maybe();
 
         if(wid < kNumProducerWaves)
         {
-
             const auto a_src = make_a_prod_src(a_base, lda, m_valid, wid);
 
             producer_fill(a_src, 0, wid);
@@ -923,17 +908,7 @@ struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Poli
                             (static_cast<uint64_t>((nrow + 16u) * remainder + inrow) << 32) |
                                 ((nrow + 16u) * quotient)};
 
-                if constexpr(PackedB)
-                {
-                    b_pr.first_n_fragment =
-                        static_cast<uint32_t>(consumer_id) * (2u * PackedLayout::TileBytes) +
-                        lane * PackedLayout::VectorBytes;
-                    b_pr.second_n_fragment =
-                        static_cast<uint32_t>(consumer_id) * (2u * PackedLayout::TileBytes) +
-                        PackedLayout::TileBytes + lane * PackedLayout::VectorBytes;
-                    b_pr.half_stride = static_cast<uint32_t>(b_n_len) * PackedLayout::KTile;
-                }
-                else if constexpr(BAddress != 0)
+                if constexpr(BAddress != 0)
                 {
                     b_pr.first_n_fragment  = nrow * b_pitch_bytes + inrow;
                     b_pr.second_n_fragment = (nrow + 16u) * b_pitch_bytes + inrow;

@@ -25,21 +25,12 @@ struct Int8NtDequantConvert
         if constexpr(BFloat)
         {
             const uint32_t bits    = bit_cast<uint32_t>(result);
-            const uint32_t rounded = (bits + int8_nt_bf16_bits::RoundToNearestEvenBias +
-                                      ((bits >> int8_nt_bf16_bits::DiscardedBits) & 1U)) >>
-                                     16;
-            const uint32_t nan =
-                (bits >> int8_nt_bf16_bits::DiscardedBits) | int8_nt_bf16_bits::Bf16QuietNanBit;
-            uint32_t selected;
-            asm volatile("v_cmp_lt_u32 vcc, %4, %1\n\t"
-                         "v_cndmask_b32 %0, %2, %3, vcc"
-                         : "=v"(selected)
-                         : "v"(bits & int8_nt_bf16_bits::Fp32MagnitudeMask),
-                           "v"(rounded),
-                           "v"(nan),
-                           "s"(int8_nt_bf16_bits::Fp32Infinity)
-                         : "vcc");
-            return static_cast<uint16_t>(selected);
+            uint32_t lsb, rounded;
+            asm volatile("v_bfe_u32 %[lsb], %[bits], 16, 1\n\t"
+                         "v_add3_u32 %[rounded], %[bits], %[bias], %[lsb]"
+                         : [lsb] "=&v"(lsb), [rounded] "=&v"(rounded)
+                         : [bits] "v"(bits), [bias] "s"(int8_nt_bf16_bits::RoundToNearestEvenBias));
+            return static_cast<uint16_t>(rounded >> 16);
         }
         else
             return bit_cast<uint16_t>(type_convert<half_t>(result));
@@ -382,8 +373,12 @@ CK_TILE_DEVICE float canonicalize_factor(float f)
 CK_TILE_DEVICE uint32_t round_bf16_bits(float result)
 {
     const uint32_t bits = bit_cast<uint32_t>(result);
-    return bits + int8_nt_bf16_bits::RoundToNearestEvenBias +
-           ((bits >> int8_nt_bf16_bits::DiscardedBits) & 1U);
+    uint32_t lsb, rounded;
+    asm volatile("v_bfe_u32 %[lsb], %[bits], 16, 1\n\t"
+                 "v_add3_u32 %[rounded], %[bits], %[bias], %[lsb]"
+                 : [lsb] "=&v"(lsb), [rounded] "=&v"(rounded)
+                 : [bits] "v"(bits), [bias] "s"(int8_nt_bf16_bits::RoundToNearestEvenBias));
+    return rounded;
 }
 
 template <bool BFloat>
@@ -392,9 +387,7 @@ CK_TILE_DEVICE uint16_t convert(float result)
     if constexpr(BFloat)
     {
         const uint32_t bits    = bit_cast<uint32_t>(result);
-        const uint32_t rounded = (bits + int8_nt_bf16_bits::RoundToNearestEvenBias +
-                                  ((bits >> int8_nt_bf16_bits::DiscardedBits) & 1U)) >>
-                                 16;
+        const uint32_t rounded = round_bf16_bits(result) >> 16;
         const uint32_t nan =
             (bits >> int8_nt_bf16_bits::DiscardedBits) | int8_nt_bf16_bits::Bf16QuietNanBit;
         uint32_t selected;
@@ -425,7 +418,15 @@ CK_TILE_DEVICE uint32_t scale_pair(int32_t first, int32_t second, FloatPair fact
         return packed;
     }
     else
-        return uint32_t(convert<false>(result[0])) | (uint32_t(convert<false>(result[1])) << 16);
+    {
+        const uint16_t h0 = convert<false>(result[0]);
+        const uint16_t h1 = convert<false>(result[1]);
+        uint32_t packed;
+        asm volatile("v_pack_b32_f16 %0, %1, %2"
+                     : "=v"(packed)
+                     : "v"(h0), "v"(h1));
+        return packed;
+    }
 }
 
 // Swap one lane bit and one register index bit. Both halves of each packed

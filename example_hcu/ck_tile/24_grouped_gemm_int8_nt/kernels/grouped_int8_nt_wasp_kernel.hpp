@@ -82,7 +82,7 @@ struct GroupedInt8NtWaspKernel
             (AllowTransposedMTail && P::Transpose && P::Pipeline::MasksInactiveN) ? 16 : P::BM;
         constexpr index_t n_align = (P::BN == 384 || P::Pipeline::MasksInactiveN) ? 32 : P::BN;
         return a.M % m_align == 0 && a.N % n_align == 0 && a.K % 128 == 0 && a.stride_Bs[0] > 0 &&
-               a.stride_Bs[0] < 16384 &&
+               (P::Pipeline::BAddressMode != 0 || a.stride_Bs[0] < 16384) &&
                static_cast<long long>(min(index_t(P::BM), a.M)) * a.stride_As[0] <= 0x7fffffffLL &&
                static_cast<long long>(a.N - nb) * a.stride_Bs[0] <= 0x7fffffffLL;
     }
@@ -101,19 +101,7 @@ struct GroupedInt8NtWaspKernel
             const auto* bp = static_cast<const int8_t*>(a.bs_ptr[0]);
             for(index_t k = 0; k < a.K; ++k)
             {
-                using Layout = Int8NtPackedWeightLayout;
-                // Expand [K tile, N tile, K group, N row, K byte] in that order.
-                const long long bo =
-                    P::PackedB
-                        ? (((static_cast<long long>(k / Layout::KTile) * (a.N / Layout::NTile) +
-                             col / Layout::NTile) *
-                                Layout::KGroups +
-                            (k % Layout::KTile) / Layout::VectorBytes) *
-                               Layout::NTile +
-                           col % Layout::NTile) *
-                                  Layout::VectorBytes +
-                              k % Layout::VectorBytes
-                        : static_cast<long long>(col) * a.stride_Bs[0] + k;
+                const long long bo = static_cast<long long>(col) * a.stride_Bs[0] + k;
                 sum += int32_t(ap[k]) * int32_t(bp[bo]);
             }
             store_fn(row, col, sum);
@@ -173,7 +161,7 @@ struct GroupedInt8NtWaspKernel
         const auto* ap =
             static_cast<const int8_t*>(a.as_ptr[0]) + static_cast<long long>(mb) * a.stride_As[0];
         const auto* bp = static_cast<const int8_t*>(a.bs_ptr[0]) +
-                         static_cast<long long>(nb) * (P::PackedB ? 64 : a.stride_Bs[0]);
+                         static_cast<long long>(nb) * a.stride_Bs[0];
         constexpr bool has_m_tail = P::Transpose && P::Pipeline::MasksInactiveN;
         const index_t m_valid     = has_m_tail ? min(index_t(P::BM), a.M - mb) : P::BM;
         typename P::Pipeline{}.run_raw_into(
@@ -193,7 +181,7 @@ struct GroupedInt8NtWaspKernel
         run_tile<true>(
             args,
             [](const auto&, const auto& a, index_t mb, index_t nb, int8_t* smem) {
-                if constexpr(P::BM == 256 && P::BN == 256 && !P::PackedB)
+                if constexpr(P::BM == 256 && P::BN == 256)
                 {
                     GroupedInt8NtWaspFallback<P>{}(a, mb, nb, smem);
                 }
@@ -216,7 +204,7 @@ struct GroupedInt8NtWaspKernel
     CK_TILE_DEVICE void operator()(const GemmTransKernelArg* args,
                                    const Int8NtScaleArgs* scales) const
     {
-        run_tile<!P::PackedB>(
+        run_tile<true>(
             args,
             [scales](const auto& o, const auto& a, index_t mb, index_t nb, int8_t*) {
                 scalar_fallback(a, mb, nb, [&](index_t row, index_t col, int32_t sum) {

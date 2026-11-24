@@ -29,7 +29,7 @@ namespace {
 
 // The BF16 and FP16 BN384 instances use M clusters of 1 and 4 respectively.
 template <bool BF>
-using PairedM256N384Problem = ck_tile::int8_nt_instances::PairedM256N384Problem<BF>;
+using RawPairedM256N384Problem = ck_tile::int8_nt_instances::RawPairedM256N384Problem<BF>;
 
 // =============================================================================
 // Three Standard Launch Providers (1:1 mapped to Device Architectures)
@@ -145,8 +145,12 @@ int dispatch(unsigned instance,
     case int8_instance_ids::from_route(int8_routes::id, 1):   \
         return k_parallel<BF, 1>(args, scales, g, n, stream); \
     case int8_instance_ids::from_route(int8_routes::id, 2):   \
-        return k_parallel<BF, 2>(args, scales, g, n, stream);
-#define CK_INT8_ROUTE(id, abi, kind, weights, ...) CK_INT8_SCALED_##kind(id, __VA_ARGS__)
+        return k_parallel<BF, 2>(args, scales, g, n, stream); \
+    case int8_instance_ids::from_route(int8_routes::id, 4):   \
+        return k_parallel<BF, 4>(args, scales, g, n, stream); \
+    case int8_instance_ids::from_route(int8_routes::id, 8):   \
+        return k_parallel<BF, 8>(args, scales, g, n, stream);
+#define CK_INT8_ROUTE(id, abi, kind, ...) CK_INT8_SCALED_##kind(id, __VA_ARGS__)
 #include "../instances/grouped_int8_nt_routes.inc"
 #undef CK_INT8_ROUTE
 #undef CK_INT8_SCALED_K_PARALLEL
@@ -163,36 +167,31 @@ int dispatch(unsigned instance,
 #ifdef CK_INT8_CACHED_TUNING
 namespace ck_tile::int8_nt_tuning {
 namespace {
-template <class P, bool Packed = false>
+template <class P>
 void add_tile(std::vector<Candidate>& out, const Domain& d, unsigned route, unsigned instance)
 {
-    if constexpr(Packed)
-    {
-        if(!d.packed || d.n % P::BN != 0 || d.k % P::BK != 0)
-            return;
-    }
     if constexpr(P::Aligned)
         if(d.m % P::BM != 0 || d.n % P::BN != 0 || d.k % P::BK != 0)
             return;
-    out.push_back({route, instance, P::BM, P::BN, P::BK, P::Threads, Packed});
+    out.push_back({route, instance, P::BM, P::BN, P::BK, P::Threads, 0});
 }
 
 template <class P, bool Paired = false>
 void add_wasp(std::vector<Candidate>& out, const Domain& d, unsigned route, unsigned instance)
 {
-    if((P::PackedB && !d.packed) || (Paired && !d.paired))
+    if(Paired && !d.paired)
         return;
     const int m        = P::Transpose ? d.n : d.m;
     const int n        = P::Transpose ? d.m : d.n;
     const int a_stride = P::Transpose ? d.max_b_stride : d.max_a_stride;
-    const int b_stride = P::Transpose ? d.max_a_stride : (P::PackedB ? d.k : d.max_b_stride);
+    const int b_stride = P::Transpose ? d.max_a_stride : d.max_b_stride;
     // Match the native geometry in GroupedInt8NtWaspKernel::is_native.
-    constexpr int ma = P::Transpose && !P::PackedB && P::Pipeline::MasksInactiveN ? 16 : P::BM;
+    constexpr int ma = P::Transpose && P::Pipeline::MasksInactiveN ? 16 : P::BM;
     constexpr int na = P::BN == 384 || P::Pipeline::MasksInactiveN ? 32 : P::BN;
-    if(m % ma != 0 || n % na != 0 || d.k % P::BK != 0 || b_stride >= 16384 ||
+    if(m % ma != 0 || n % na != 0 || d.k % P::BK != 0 || (P::Pipeline::BAddressMode == 0 && b_stride >= 16384) ||
        int64_t(P::BM < m ? P::BM : m) * a_stride > INT32_MAX || int64_t(n) * b_stride > INT32_MAX)
         return;
-    out.push_back({route, instance, P::BM, P::BN, P::BK, P::Threads, P::PackedB});
+    out.push_back({route, instance, P::BM, P::BN, P::BK, P::Threads, 0});
 }
 
 template <bool BF>
@@ -216,9 +215,7 @@ std::vector<Candidate> enumerate_for_output(const Domain& d)
 #undef CK_INT8_LEGACY_DIRECT
 #undef CK_INT8_LEGACY_WASP
 #undef CK_INT8_LEGACY_TILE
-#define CK_INT8_TUNING_COOPERATIVE(id, ...)                                   \
-    add_tile<__VA_ARGS__, int8_routes::uses_packed_weights(int8_routes::id)>( \
-        out, d, int8_routes::id, 0);
+#define CK_INT8_TUNING_COOPERATIVE(id, ...) add_tile<__VA_ARGS__>(out, d, int8_routes::id, 0);
 #define CK_INT8_TUNING_WASP(id, ...) add_wasp<__VA_ARGS__>(out, d, int8_routes::id, 0);
 #define CK_INT8_TUNING_SCALED_WASP(id, ...) CK_INT8_TUNING_WASP(id, __VA_ARGS__)
 #define CK_INT8_TUNING_PAIRED_WASP(id, ...) add_wasp<__VA_ARGS__, true>(out, d, int8_routes::id, 0);
@@ -231,7 +228,7 @@ std::vector<Candidate> enumerate_for_output(const Domain& d)
                        __VA_ARGS__::KSpan,   \
                        __VA_ARGS__::Threads, \
                        0});
-#define CK_INT8_ROUTE(id, abi, kind, weights, ...) CK_INT8_TUNING_##kind(id, __VA_ARGS__)
+#define CK_INT8_ROUTE(id, abi, kind, ...) CK_INT8_TUNING_##kind(id, __VA_ARGS__)
 #include "../instances/grouped_int8_nt_routes.inc"
 #undef CK_INT8_ROUTE
 #undef CK_INT8_TUNING_K_PARALLEL

@@ -436,7 +436,7 @@ constexpr GroupedGemmInstanceId select_grouped_gemm_int8_nt_instance(const Group
                        ? GroupedGemmInstanceId::int8_nt_m32_n64_k256
                        : GroupedGemmInstanceId::int8_nt_m32_n128_k256;
     if(uniform && m > 32 && m <= 64)
-        id = problem.k.extent < 2048 || problem.group_count <= 4
+        id = (problem.k.extent < 2048 || m % 64 != 0 || problem.n.extent % 128 != 0 || problem.k.extent % 256 != 0)
                  ? GroupedGemmInstanceId::int8_nt_m64_n128_k128
                  : GroupedGemmInstanceId::int8_nt_m64_n128_k256;
     // Uniform large-M WASP: the host rule uses dimensions only. The kernel

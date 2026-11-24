@@ -13,7 +13,7 @@ typedef struct ck_tile_int8_nt_tuning_candidate_v1
 {
     uint32_t route, legacy_instance;
     int32_t bm, bn, bk, threads;
-    uint32_t packed_weight;
+    uint32_t packed_weight; // ABI field; always zero for native NT weights.
 } ck_tile_int8_nt_tuning_candidate_v1;
 
 // These entry points exist only in CK_INT8_CACHED_TUNING builds. Candidates are
@@ -28,7 +28,7 @@ CK_TILE_INT8_CACHED_API int ck_tile_int8_nt_tuning_list_v1(
     size_t* count);
 
 // Validates the candidate against the actual descriptors before binding raw or
-// packed weights. The returned plan uses the ordinary query/run/destroy API.
+// original NT weights. The returned plan uses the ordinary query/run/destroy API.
 CK_TILE_INT8_CACHED_API int ck_tile_int8_nt_tuning_plan_create_v1(
     ck_tile_int8_nt_cached_weights_handle_v1 weights,
     const ck_tile_int8_nt_cached_group_desc_v2* groups,

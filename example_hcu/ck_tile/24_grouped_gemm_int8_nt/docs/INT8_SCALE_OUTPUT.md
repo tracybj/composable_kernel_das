@@ -37,11 +37,11 @@ size, and zero reserved fields. Strides count elements of the corresponding
 tensor. Existing alignment/stride domains apply (16-byte A/D base alignment,
 A row stride a multiple of 16,output row stride a multiple of 4).
 
-Weights retain the existing create/destroy and INT8-only packing contract.
+Weights retain the existing create/destroy API and borrow original row-major [N,K] storage.
 Plans retain the existing run/query/destroy entry points. Scale tensors are
 borrowed and are neither packed nor cached by value. They must remain valid until all runs
 complete. Update their contents only with correct compute-stream ordering.
-Preparation owns its packed-weight buffer and records a readiness event.
+Weight creation records a readiness event on the caller stream.
 Plan creation owns and uploads its descriptor and scale-pointer arrays once.
 Caller-owned A, B, output and scale storage stays live until work completes,
 and the prepared weights handle outlives its plans. Reuse a plan for the same

@@ -151,7 +151,7 @@ if(GPU_TARGETS MATCHES "gfx936")
             PROPERTIES LABELS "hcu;ck_tile;int8_nt;device_args;smoke")
     endfunction()
 
-    add_int8_nt_device_args_smoke(packed_bf16
+    add_int8_nt_device_args_smoke(raw_bf16
         --m=128 --n=2048 --k=1024 --groups=4 --dtype=int8_bf16)
     add_int8_nt_device_args_smoke(ragged_fp16
         --m=65 --n=256 --k=512 --dtype=int8_fp16 --group-lengths=1,0,65

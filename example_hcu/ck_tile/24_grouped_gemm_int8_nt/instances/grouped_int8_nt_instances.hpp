@@ -2,7 +2,6 @@
 #pragma once
 
 #include "../kernels/grouped_int8_nt_wasp_problem.hpp"
-#include "../kernels/grouped_int8_nt_packed_pipeline.hpp"
 #include "ck_tile/ops/gemm/grouped_gemm_selector.hpp"
 
 namespace ck_tile::int8_nt_instances {
@@ -27,7 +26,7 @@ using RawAlignedM16N32K512 = GroupedInt8NtTileProblem<
     /* Aligned = */ true,
     /* PeelKLoop = */ true,
     /* BatchedEpilogue = */ true,
-    /* MinBlocks = */ 1,
+    /* MinBlocks = */ 2,
     /* CopyArgs = */ true>;
 using RawM32N64K256W4 = GroupedInt8NtTileProblem<
     /* BlockM = */ 32,
@@ -36,26 +35,11 @@ using RawM32N64K256W4 = GroupedInt8NtTileProblem<
     /* WavesM = */ 2,
     /* WavesN = */ 2,
     /* MFirst = */ false,
-    /* Aligned = */ false,
+    /* Aligned = */ true,
     /* PeelKLoop = */ true,
     /* BatchedEpilogue = */ true,
-    /* MinBlocks = */ 1,
+    /* MinBlocks = */ 2,
     /* CopyArgs = */ true>;
-using PackedM16N64K256 = GroupedInt8NtPackedSmallProblem<GroupedInt8NtTileProblem<
-                                                             /* BlockM = */ 16,
-                                                             /* BlockN = */ 64,
-                                                             /* BlockK = */ 256,
-                                                             /* WavesM = */ 1,
-                                                             /* WavesN = */ 2,
-                                                             /* MFirst = */ false,
-                                                             /* Aligned = */ false,
-                                                             /* PeelKLoop = */ true,
-                                                             /* BatchedEpilogue = */ true,
-                                                             /* MinBlocks = */ 1,
-                                                             /* CopyArgs = */ true>,
-                                                         true,
-                                                         true>;
-
 // Stable route handles identify precompiled geometry/policy, never workload IDs.
 using RawTransposeM256N256 = GroupedInt8NtWaspCachedProblem<
     /* Transpose = */ true,
@@ -66,7 +50,6 @@ using RawTransposeM256N256 = GroupedInt8NtWaspCachedProblem<
     /* OneBarrier = */ true,
     /* RecordCap = */ 0,
     /* EarlyB = */ false,
-    /* PackedB = */ false,
     /* BAddress = */ int8_nt_b_address::ByteOffset>;
 using RawTransposeM256N256Record1024 = GroupedInt8NtWaspCachedProblem<
     /* Transpose = */ true,
@@ -77,9 +60,9 @@ using RawTransposeM256N256Record1024 = GroupedInt8NtWaspCachedProblem<
     /* OneBarrier = */ true,
     /* RecordCap = */ 1024,
     /* EarlyB = */ false,
-    /* PackedB = */ false,
     /* BAddress = */ int8_nt_b_address::ByteOffset>;
-using PackedM256N256 = GroupedInt8NtWaspCachedProblem<
+// Original NT weights with byte-offset addressing and cache swizzle.
+using RawM256N256 = GroupedInt8NtWaspCachedProblem<
     /* Transpose = */ false,
     /* ConsumerSplit = */ 8,
     /* MGroup = */ 4,
@@ -88,9 +71,9 @@ using PackedM256N256 = GroupedInt8NtWaspCachedProblem<
     /* OneBarrier = */ true,
     /* RecordCap = */ 0,
     /* EarlyB = */ false,
-    /* PackedB = */ true,
-    /* BAddress = */ int8_nt_b_address::IndexedRecord>;
-using PackedM128N256 = GroupedInt8NtWaspSplitMProblem<
+    /* BAddress = */ int8_nt_b_address::ByteOffset>;
+
+using RawM128N256 = GroupedInt8NtWaspSplitMProblem<
     /* Transpose = */ false,
     /* ConsumerSplit = */ 8,
     /* MGroup = */ 4,
@@ -99,10 +82,10 @@ using PackedM128N256 = GroupedInt8NtWaspSplitMProblem<
     /* OneBarrier = */ true,
     /* RecordCap = */ 0,
     /* EarlyB = */ false,
-    /* PackedB = */ true,
-    /* BAddress = */ int8_nt_b_address::IndexedRecord,
+    /* BAddress = */ int8_nt_b_address::ByteOffset,
     /* ConsumerWaves = */ 8>;
-using PackedM128N128 = GroupedInt8NtWaspSplitMProblem<
+
+using RawM128N128 = GroupedInt8NtWaspSplitMProblem<
     /* Transpose = */ false,
     /* ConsumerSplit = */ 4,
     /* MGroup = */ 1,
@@ -111,10 +94,10 @@ using PackedM128N128 = GroupedInt8NtWaspSplitMProblem<
     /* OneBarrier = */ true,
     /* RecordCap = */ 0,
     /* EarlyB = */ false,
-    /* PackedB = */ true,
-    /* BAddress = */ int8_nt_b_address::IndexedRecord,
+    /* BAddress = */ int8_nt_b_address::ByteOffset,
     /* ConsumerWaves = */ 4>;
-using PackedM64N256 = GroupedInt8NtWaspSmallMProblem<
+
+using RawM64N256 = GroupedInt8NtWaspSmallMProblem<
     /* Transpose = */ false,
     /* ConsumerSplit = */ 8,
     /* MGroup = */ 1,
@@ -123,10 +106,10 @@ using PackedM64N256 = GroupedInt8NtWaspSmallMProblem<
     /* OneBarrier = */ true,
     /* RecordCap = */ 0,
     /* EarlyB = */ false,
-    /* PackedB = */ true,
     /* BAddress = */ int8_nt_b_address::ByteOffset,
     /* ConsumerWaves = */ 8>;
-using PackedM64N64 = GroupedInt8NtWaspSmallMProblem<
+
+using RawM64N64 = GroupedInt8NtWaspSmallMProblem<
     /* Transpose = */ false,
     /* ConsumerSplit = */ 2,
     /* MGroup = */ 1,
@@ -135,10 +118,10 @@ using PackedM64N64 = GroupedInt8NtWaspSmallMProblem<
     /* OneBarrier = */ true,
     /* RecordCap = */ 0,
     /* EarlyB = */ false,
-    /* PackedB = */ true,
     /* BAddress = */ int8_nt_b_address::ByteOffset,
     /* ConsumerWaves = */ 2>;
-using PackedM32N256 = GroupedInt8NtWaspM32Problem<
+
+using RawM32N256 = GroupedInt8NtWaspM32Problem<
     /* Transpose = */ false,
     /* ConsumerSplit = */ 8,
     /* MGroup = */ 1,
@@ -147,10 +130,10 @@ using PackedM32N256 = GroupedInt8NtWaspM32Problem<
     /* OneBarrier = */ true,
     /* RecordCap = */ 0,
     /* EarlyB = */ false,
-    /* PackedB = */ true,
     /* BAddress = */ int8_nt_b_address::ByteOffset,
     /* ConsumerWaves = */ 8>;
-using PackedM32N64 = GroupedInt8NtWaspM32Problem<
+
+using RawM32N64 = GroupedInt8NtWaspM32Problem<
     /* Transpose = */ false,
     /* ConsumerSplit = */ 2,
     /* MGroup = */ 1,
@@ -159,10 +142,10 @@ using PackedM32N64 = GroupedInt8NtWaspM32Problem<
     /* OneBarrier = */ true,
     /* RecordCap = */ 0,
     /* EarlyB = */ false,
-    /* PackedB = */ true,
     /* BAddress = */ int8_nt_b_address::ByteOffset,
     /* ConsumerWaves = */ 2>;
-using PackedM256N384 = GroupedInt8NtWaspPublicWideNProblem<
+
+using RawM256N384 = GroupedInt8NtWaspPublicWideNProblem<
     /* Transpose = */ false,
     /* ConsumerSplit = */ 12,
     /* MGroup = */ 4,
@@ -171,13 +154,11 @@ using PackedM256N384 = GroupedInt8NtWaspPublicWideNProblem<
     /* OneBarrier = */ true,
     /* RecordCap = */ 0,
     /* EarlyB = */ false,
-    /* PackedB = */ true,
-    /* BAddress = */ int8_nt_b_address::IndexedRecord,
+    /* BAddress = */ int8_nt_b_address::ByteOffset,
     /* ConsumerWaves = */ 12>;
 
-// BF16 favors one M tile per scheduling cluster here; FP16 uses four.
 template <bool BFloat>
-using PairedM256N384Problem =
+using RawPairedM256N384Problem =
     std::conditional_t<BFloat,
                        GroupedInt8NtWaspPublicWideNProblem<
                            /* Transpose = */ false,
@@ -188,15 +169,13 @@ using PairedM256N384Problem =
                            /* OneBarrier = */ true,
                            /* RecordCap = */ 0,
                            /* EarlyB = */ false,
-                           /* PackedB = */ true,
-                           /* BAddress = */ int8_nt_b_address::IndexedRecord,
+                           /* BAddress = */ int8_nt_b_address::ByteOffset,
                            /* ConsumerWaves = */ 12>,
-                       PackedM256N384>;
+                       RawM256N384>;
 
-// Cross-half A prefetch is validated for masked scaled output only. Keep the
-// unmasked problem types for their independently tuned main loops.
-using ScaledPackedM256N384MaskedM4 = GroupedInt8NtWaspScaledMaskedPrefetchProblem<4>;
-using ScaledPackedM256N384MaskedM8 = GroupedInt8NtWaspScaledMaskedPrefetchProblem<8>;
+using ScaledRawM256N384MaskedM4 = GroupedInt8NtWaspRawMaskedPrefetchProblem<4>;
+using ScaledRawM256N384MaskedM8 = GroupedInt8NtWaspRawMaskedPrefetchProblem<8>;
+using ScaledRawM256N384MaskedM16 = GroupedInt8NtWaspRawMaskedPrefetchProblem<16>;
 
 // -----------------------------------------------------------------------------
 // 2. Shared tile instance definitions
@@ -211,7 +190,7 @@ using DefaultFallbackTileProblem = GroupedInt8NtTileProblem<
     /* Aligned = */ false,
     /* PeelKLoop = */ true,
     /* BatchedEpilogue = */ true,
-    /* MinBlocks = */ 1,
+    /* MinBlocks = */ 2,
     /* CopyArgs = */ true>;
 using DirectSmallMTileProblem = GroupedInt8NtTileProblem<
     /* BlockM = */ 16,
@@ -223,7 +202,7 @@ using DirectSmallMTileProblem = GroupedInt8NtTileProblem<
     /* Aligned = */ false,
     /* PeelKLoop = */ true,
     /* BatchedEpilogue = */ true,
-    /* MinBlocks = */ 1,
+    /* MinBlocks = */ 2,
     /* CopyArgs = */ true>;
 
 template <class OnTile, class OnWasp, class OnDirectM16, class OnDefault>

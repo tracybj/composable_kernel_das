@@ -17,8 +17,6 @@
 extern "C" std::size_t ck_tile_int8_nt_device_args_size_private();
 extern "C" int ck_tile_int8_scaled_launch_private(
     unsigned, unsigned, const void*, const void*, int, int, int, hipStream_t);
-extern "C" int ck_tile_int8_cached_pack_private(
-    const ck_tile_hcu_grouped_gemm_int8_pack_arg_v2*, int, int, int, hipStream_t);
 
 namespace {
 
@@ -74,7 +72,7 @@ constexpr const char* instance_name(unsigned key)
     using namespace ck_tile;
     switch(key & ~int8_instance_ids::TwoRowsBit)
     {
-#define CK_INT8_ROUTE(id, abi, kind, weights, ...) \
+#define CK_INT8_ROUTE(id, abi, kind, ...) \
     case int8_instance_ids::from_route(int8_routes::id): return #id;
 #include "instances/grouped_int8_nt_routes.inc"
 #undef CK_INT8_ROUTE
@@ -147,7 +145,8 @@ int select(const Problem* p, Instance& instance)
         p->m.kind == CK_TILE_HCU_GROUPED_GEMM_DIMENSION_DEVICE_LENGTHS_WITH_CAPACITY_V1;
     const bool uniform  = common && (p->problem_flags & (Empty | Ragged)) == 0;
     const bool dense    = (p->int8_flags & Dense) != 0;
-    const bool can_pack = (p->int8_flags & Packed) != 0;
+    if(p->int8_flags & Packed)
+        return Unsupported;
     if((!common && !capacity) ||
        (common && (p->m.extent != p->max_m || (p->problem_flags & Ragged))) || p->max_m <= 0 ||
        p->max_m > p->m.extent || p->m.extent <= 0 || p->max_stride_a < p->k ||
@@ -181,8 +180,7 @@ int select(const Problem* p, Instance& instance)
     const bool native = uniform && (m % 256 == 0 || m == 128 || m == 64 || m == 32) &&
                         p->n % 256 == 0 && p->k % 128 == 0 && p->k < 16384 &&
                         int64_t(256) * p->max_stride_a <= MaxSpan;
-    const bool packed =
-        can_pack && p->n % 256 == 0 && p->k % 128 == 0 && p->k >= 512 && p->k < 16384;
+    const bool vector_nt_domain = ck_tile::int8_cached_vector_nt_domain(p->n, p->k);
     const auto fallback = ck_tile::select_grouped_gemm_int8_nt_instance(summary);
     ck_tile::Int8CachedPlanRouteDomain domain{};
     domain.native_wasp          = native;
@@ -191,7 +189,7 @@ int select(const Problem* p, Instance& instance)
     domain.dense_scalar_a       = dense;
     domain.dense_channel_scales = dense;
     const auto route            = ck_tile::int8_cached_select_plan_route(
-        m, p->n, p->k, p->group_count, packed, ck_tile::get_num_cu(), domain, fallback);
+        m, p->n, p->k, p->group_count, vector_nt_domain, ck_tile::get_num_cu(), domain, fallback);
     const auto key = route == ck_tile::int8_routes::LegacyRaw
                          ? static_cast<unsigned>(fallback)
                          : ck_tile::int8_instance_ids::from_route(route, m);
@@ -249,9 +247,6 @@ extern "C" int ck_tile_hcu_grouped_gemm_query_int8_nt_instance_v2(uint32_t id, C
     out->architecture_mask = CK_TILE_HCU_GROUPED_GEMM_ARCHITECTURE_MASK_GFX936_V1;
     out->layout_mask       = CK_TILE_HCU_GROUPED_GEMM_LAYOUT_MASK_NT_V1;
     out->output_type       = instance.output_type;
-    if(ck_tile::int8_routes::uses_packed_weights(
-           ck_tile::int8_instance_ids::route_for(instance.key)))
-        out->contract_flags = CK_TILE_HCU_GROUPED_GEMM_INT8_PACKED_B_V2;
     copy_instance_name(out->canonical_name, instance);
     return Success;
 }
@@ -320,29 +315,11 @@ extern "C" int ck_tile_hcu_grouped_gemm_run_int8_nt_device_args_v2(const Problem
     }
 }
 
+// Retain the ABI symbol for callers built against the former pack API.
 extern "C" int ck_tile_hcu_grouped_gemm_pack_int8_nt_weights_v2(
-    const ck_tile_hcu_grouped_gemm_int8_pack_arg_v2* args,
-    int32_t g,
-    int32_t n,
-    int32_t k,
-    void* stream)
+    const ck_tile_hcu_grouped_gemm_int8_pack_arg_v2*, int32_t, int32_t, int32_t, void*)
 {
-    try
-    {
-        if(args == nullptr || g <= 0 || g > 65535 || n <= 0 || k < 512 || k >= 16384 ||
-           n % 256 != 0 || k % 128 != 0 || int64_t(n) * k > std::numeric_limits<int32_t>::max())
-            return Invalid;
-        if(ck_tile::get_hcu_target_enum() != ck_tile::hcu_target_enum::gfx936)
-            return UnsupportedArch;
-        return ck_tile_int8_cached_pack_private(args, g, n, k, static_cast<hipStream_t>(stream)) ==
-                       0
-                   ? Success
-                   : InternalError;
-    }
-    catch(...)
-    {
-        return InternalError;
-    }
+    return Unsupported;
 }
 
 extern "C" std::size_t ck_tile_hcu_grouped_gemm_int8_nt_device_args_size_v2()

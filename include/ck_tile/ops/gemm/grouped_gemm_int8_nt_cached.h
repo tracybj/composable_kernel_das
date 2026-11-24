@@ -50,7 +50,9 @@ enum ck_tile_int8_nt_cached_route_v1
     CK_TILE_INT8_CACHED_PAIRED_M256_N384_MASKED_M8_V1       = 29,
     CK_TILE_INT8_CACHED_PAIRED_M128_N256_V1                 = 30,
     CK_TILE_INT8_CACHED_RAW_ALIGNED_M16_N32_K512_V1        = 31,
-    CK_TILE_INT8_CACHED_RAW_M32_N64_K256_W4_V1             = 32
+    CK_TILE_INT8_CACHED_RAW_M32_N64_K256_W4_V1             = 32,
+    CK_TILE_INT8_CACHED_PACKED_M256_N384_MASKED_M16_V1     = 33,
+    CK_TILE_INT8_CACHED_PAIRED_M256_N384_MASKED_M16_V1     = 34
 };
 typedef struct ck_tile_int8_nt_cached_weights_impl* ck_tile_int8_nt_cached_weights_handle_v1;
 typedef struct ck_tile_int8_nt_cached_plan_impl* ck_tile_int8_nt_cached_plan_handle_v1;
@@ -107,8 +109,8 @@ typedef struct ck_tile_int8_nt_cached_weights_info_v1
 {
     uint32_t struct_size, abi_version;
     int32_t group_count, n, k, format;
-    const int8_t* packed_device_data; // Read-only;valid until weights_destroy.
-    uint64_t packed_bytes;
+    const int8_t* packed_device_data; // Historical ABI field; always null.
+    uint64_t packed_bytes; // Historical ABI field; always zero.
     uint64_t reserved[2];
 } ck_tile_int8_nt_cached_weights_info_v1;
 typedef struct ck_tile_int8_nt_cached_plan_info_v1
@@ -116,17 +118,14 @@ typedef struct ck_tile_int8_nt_cached_plan_info_v1
     uint32_t struct_size, abi_version;
     int32_t group_count, max_m, n, k;
     uint32_t route, legacy_instance;
-    uint64_t packed_weight_bytes;
+    uint64_t packed_weight_bytes; // Historical ABI field; always zero.
     uint64_t reserved[2];
 } ck_tile_int8_nt_cached_plan_info_v1;
 
 // Every v1 struct must set struct_size=sizeof(struct),abi_version=1 and zero
 // reserved fields. Weights share N/K;M may differ across groups,including0.
-// Prepare is asynchronous on stream. Source NT weights remain valid and
-// immutable until handle destruction:raw fallback borrows them. Updating
-// weights requires a new prepare;there is no implicit pointer-keyed cache.
-// The packed format,when supported,is[G,K/64,N/16,4,16,16]. It copies INT8
-// bytes without quantization;FP16/BF16 tensors are never accepted by this API.
+// Borrow original row-major [N,K] weights. Creation records an event on the
+// caller stream. Keep source storage valid through all run completions.
 CK_TILE_INT8_CACHED_API int
 ck_tile_int8_nt_cached_weights_create_v1(const ck_tile_int8_nt_cached_weight_desc_v1* weights,
                                          int32_t group_count,

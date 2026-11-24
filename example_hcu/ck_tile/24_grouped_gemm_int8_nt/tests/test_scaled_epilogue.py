@@ -14,7 +14,7 @@ def main():
     ap.add_argument('--output', type=Path, required=True)
     ap.add_argument('--paired', action='store_true')
     args = ap.parse_args()
-    assert os.environ.get('HIP_VISIBLE_DEVICES') == '7'
+    assert os.environ.get('HIP_VISIBLE_DEVICES') in ('0', '1', '2', '3', '4', '5', '6', '7')
     torch.set_num_threads(4)
     torch.manual_seed(20261104)
     records = []

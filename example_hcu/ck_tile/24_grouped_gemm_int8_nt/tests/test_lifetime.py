@@ -36,8 +36,8 @@ def check_configuration(g, n, k, lengths):
             )
         )
         wi = weight_info(h)
-        assert wi.format == 1
-        packed_ptr = wi.packed_device_data
+        assert wi.format in (0, 1)
+        assert wi.format == 0 and not wi.packed_device_data and wi.packed_bytes == 0
         plans = []
         storage = []
         try:
@@ -70,7 +70,7 @@ def check_configuration(g, n, k, lengths):
                 plans.append(p)
                 storage.append((a, c, gd, plan_info(p).route))
             assert lib.ck_tile_int8_nt_cached_weights_destroy_v1(h) == -7
-            # Both plans reuse one immutable packed buffer; each is exercised on two streams.
+            # Both plans reuse the caller-owned raw weight matrices; each is exercised on two streams.
             for p, (a, c, gd, route) in zip(plans, storage):
                 for iteration in range(2):
                     stream = torch.cuda.Stream()
@@ -82,7 +82,7 @@ def check_configuration(g, n, k, lengths):
                         assert torch.equal(
                             y, (x.double() @ w.double().T).to(torch.int32).float().bfloat16()
                         )
-                    assert weight_info(h).packed_device_data == packed_ptr
+                    assert not weight_info(h).packed_device_data
                     checks.append(
                         dict(
                             generation=generation,

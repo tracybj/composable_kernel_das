@@ -17,19 +17,12 @@ enum class Pipeline
     KParallel,
 };
 
-enum class WeightFormat
-{
-    Raw,
-    Packed,
-};
-
 struct RouteInfo
 {
     Pipeline pipeline;
-    WeightFormat weights;
 };
 
-#define CK_INT8_ROUTE(id, abi, kind, weights, ...) constexpr auto id = CK_TILE_INT8_CACHED_##abi##_V1;
+#define CK_INT8_ROUTE(id, abi, kind, ...) constexpr auto id = CK_TILE_INT8_CACHED_##abi##_V1;
 #include "grouped_int8_nt_routes.inc"
 #undef CK_INT8_ROUTE
 
@@ -42,8 +35,8 @@ constexpr RouteInfo route_info(unsigned route)
 #define CK_INT8_PIPELINE_PAIRED_WASP Pipeline::Wasp
 #define CK_INT8_PIPELINE_COOPERATIVE Pipeline::Cooperative
 #define CK_INT8_PIPELINE_K_PARALLEL Pipeline::KParallel
-#define CK_INT8_ROUTE(id, abi, kind, weights, ...) \
-    case id: return {CK_INT8_PIPELINE_##kind, WeightFormat::weights};
+#define CK_INT8_ROUTE(id, abi, kind, ...) \
+    case id: return {CK_INT8_PIPELINE_##kind};
 #include "grouped_int8_nt_routes.inc"
 #undef CK_INT8_ROUTE
 #undef CK_INT8_PIPELINE_K_PARALLEL
@@ -51,26 +44,34 @@ constexpr RouteInfo route_info(unsigned route)
 #undef CK_INT8_PIPELINE_PAIRED_WASP
 #undef CK_INT8_PIPELINE_SCALED_WASP
 #undef CK_INT8_PIPELINE_WASP
-    default: return {Pipeline::Unknown, WeightFormat::Raw};
+    default: return {Pipeline::Unknown};
     }
-}
-
-constexpr bool uses_packed_weights(unsigned route)
-{
-    return route_info(route).weights == WeightFormat::Packed;
 }
 
 } // namespace int8_routes
 
 namespace int8_instance_ids {
 // The key portion of the published ID also identifies the provider entry.
-constexpr unsigned RouteBit = 0x00010000;
-constexpr unsigned TwoRowsBit = 0x00020000;
-constexpr unsigned Mask = 0x0000ffff | RouteBit | TwoRowsBit;
+constexpr unsigned RouteBit     = 0x00010000;
+constexpr unsigned TwoRowsBit   = 0x00020000;
+constexpr unsigned FourRowsBit  = 0x00040000;
+constexpr unsigned EightRowsBit = 0x00080000;
+constexpr unsigned RowsMask     = TwoRowsBit | FourRowsBit | EightRowsBit;
+constexpr unsigned Mask         = 0x0000ffff | RouteBit | RowsMask;
 
 constexpr unsigned from_route(unsigned route, int m = 1)
 {
-    return RouteBit | route | (route == int8_routes::KParallelDecode && m == 2 ? TwoRowsBit : 0u);
+    unsigned row_flag = 0;
+    if(route == int8_routes::KParallelDecode)
+    {
+        if(m == 2)
+            row_flag = TwoRowsBit;
+        else if(m == 4)
+            row_flag = FourRowsBit;
+        else if(m == 8)
+            row_flag = EightRowsBit;
+    }
+    return RouteBit | route | row_flag;
 }
 
 constexpr unsigned route_for(unsigned instance)
@@ -95,7 +96,6 @@ namespace int8_tuning_config {
 
 namespace int8_weight_formats {
     constexpr int Raw    = 0;
-    constexpr int Packed = 1;
 } // namespace int8_weight_formats
 
 namespace int8_output_types {

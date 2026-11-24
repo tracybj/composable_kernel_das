@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 #pragma once
 #include "ck_tile/core.hpp"
-#include "grouped_int8_nt_layout.hpp"
 #include "ck_tile/host/kernel_launch.hpp"
 #include "ck_tile/ops/gemm/kernel/gemm_tile_partitioner.hpp"
 #include "ck_tile/ops/gemm/kernel/grouped_gemm_kernel.hpp"

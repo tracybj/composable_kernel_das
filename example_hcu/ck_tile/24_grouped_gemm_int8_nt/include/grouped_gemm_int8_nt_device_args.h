@@ -18,7 +18,7 @@ typedef enum ck_tile_hcu_grouped_gemm_int8_flags_v2
     // A/B/C strides are K/K/N, A scale is scalar per group, B is per channel,
     // and both scales are present in every nonempty group.
     CK_TILE_HCU_GROUPED_GEMM_INT8_DENSE_CHANNEL_SCALE_V2 = 1u << 0,
-    // The caller can bind a packed B view if requested by query.
+    // Reserved former packed-B flag. Select/run reject requests that set it.
     CK_TILE_HCU_GROUPED_GEMM_INT8_PACKED_B_AVAILABLE_V2 = 1u << 1
 } ck_tile_hcu_grouped_gemm_int8_flags_v2;
 
@@ -63,7 +63,7 @@ typedef struct ck_tile_hcu_grouped_gemm_int8_launch_v2
     uint32_t struct_size;
     uint32_t abi_version;
     // GPU GemmTransKernelArg array. A/C are row-major, B is logical NT.
-    // Bind raw row-major [N,K] or packed B as specified by query. k_batch = 1.
+    // Bind original row-major [N,K] B with its actual row stride. k_batch = 1.
     const void* device_args;
     const ck_tile_hcu_grouped_gemm_int8_scale_v2* device_scales;
     uint32_t num_cu; // Currently must be zero (default grid).
@@ -102,8 +102,7 @@ int ck_tile_hcu_grouped_gemm_run_int8_nt_device_args_v2(
 // Size in bytes of one opaque device kernel argument element (GemmTransKernelArg).
 size_t ck_tile_hcu_grouped_gemm_int8_nt_device_args_size_v2(void);
 
-// One entry per group in GPU memory. The caller owns the source and packed B
-// storage. Each packed matrix needs N*K bytes and 16-byte alignment.
+// Historical descriptor retained for source and binary compatibility.
 typedef struct ck_tile_hcu_grouped_gemm_int8_pack_arg_v2
 {
     const int8_t* source;
@@ -113,8 +112,7 @@ typedef struct ck_tile_hcu_grouped_gemm_int8_pack_arg_v2
     int32_t stride;
 } ck_tile_hcu_grouped_gemm_int8_pack_arg_v2;
 
-// Queue weight preprocessing on stream. Keep args and storage alive until
-// ready. A consuming stream must be ordered after the preprocessing.
+// Historical API retained for ABI compatibility. Always returns UNSUPPORTED.
 int ck_tile_hcu_grouped_gemm_pack_int8_nt_weights_v2(
     const ck_tile_hcu_grouped_gemm_int8_pack_arg_v2* device_args,
     int32_t group_count,

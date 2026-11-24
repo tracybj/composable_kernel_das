@@ -17,7 +17,7 @@ BLASLt workbook target on all 1191 shapes for both scaled outputs. See the
 | --- | --- |
 | [instances.cpp](instances.cpp) | Raw INT8 provider entry used by `19_grouped_gemm`. |
 | [instances/](instances/) | Selectors, route definitions, and kernel instance types. |
-| [providers/](providers/) | HIP launchers for scaled GEMM and weight packing. |
+| [providers/](providers/) | HIP launchers for scaled GEMM. |
 | [kernels/](kernels/) | INT8 NT kernels, cooperative and WASP main loops, epilogues, and problem definitions. |
 | [grouped_gemm_int8_nt_device_args.cpp](grouped_gemm_int8_nt_device_args.cpp) | Standalone scaled instance selection, metadata query, and launch. |
 | [grouped_gemm_int8_nt_device_args_provider_sources.txt](grouped_gemm_int8_nt_device_args_provider_sources.txt) | Providers linked by the standalone device-args target. |
@@ -43,16 +43,14 @@ output epilogues.
 1. Populate the problem with the BF16 or FP16 output type and host-visible
    dimensions. For variable M, provide a total capacity and a per-group M
    upper bound. Set the ragged and empty flags as applicable.
-2. Query the selected instance for the raw or packed B format. Raw B is
-   row-major `[N,K]`. For packed B, allocate N*K bytes per group and call
-   `ck_tile_hcu_grouped_gemm_pack_int8_nt_weights_v2` before its first use.
-   Keep the caller-owned storage alive and order the consuming stream after
-   the pack.
+2. Query the selected instance and bind the original row-major [N,K] B
+   weights using their actual row stride. Keep caller-owned storage alive
+   through stream completion. The former pack API returns unsupported.
 3. Build a GPU array of `GemmTransKernelArg` and a matching FP32 scale array.
    Use each group's actual M, common N/K and strides in elements, with
    `k_batch=1`. A, B and C pointers for nonempty groups must be 16-byte aligned.
    A/B strides are multiples of 16 and C strides are multiples of 4. Set the
-   B stride to K for a packed view. A scale stride of 0 means a scalar and 1
+   actual B row stride. A scale stride of 0 means a scalar and 1
    means per-row A or per-column B. A null scale pointer means unit scale.
 4. Run on the caller's stream with the selected `expected_instance_id` and
    `num_cu=0`. The epilogue computes
@@ -79,7 +77,7 @@ ctest --test-dir "$B" -R int8_nt_device_args --output-on-failure
 The standalone benchmark uses the public API and validates every output
 element and the output guards. By default, its HIP event times cover the
 GEMM, including the scaled epilogue. Add `--include-args-build=1` to time
-the GPU argument builder as well. Weight prepacking runs before timing.
+the GPU argument builder as well. Both modes consume the original NT weights.
 
 ## Scaled cached-weight API
 

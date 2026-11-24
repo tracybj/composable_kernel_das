@@ -239,21 +239,6 @@ __global__ void check_scaled_int8(const T* output, const float* sa, const float*
     }
 }
 
-__global__ void build_int8_pack_args(ck_tile_hcu_grouped_gemm_int8_pack_arg_v2* args,
-                                     const int8_t* raw,
-                                     int8_t* packed,
-                                     int groups,
-                                     int n,
-                                     int k)
-{
-    const int group = blockIdx.x * blockDim.x + threadIdx.x;
-    if(group < groups)
-    {
-        const auto offset = std::size_t(group) * n * k;
-        args[group] = {raw + offset, packed + offset, n, k, k};
-    }
-}
-
 template <typename T>
 __global__ void build_scaled_int8_args(ck_tile::GemmTransKernelArg* args,
                                        ck_tile_hcu_grouped_gemm_int8_scale_v2* scales,
@@ -320,8 +305,7 @@ int run_scaled_int8(const Options& options)
         problem.problem_flags |= CK_TILE_HCU_GROUPED_GEMM_PROBLEM_GROUP_LENGTHS_RAGGED_V1;
     if(empty)
         problem.problem_flags |= CK_TILE_HCU_GROUPED_GEMM_PROBLEM_MAY_HAVE_EMPTY_GROUPS_V1;
-    problem.int8_flags = CK_TILE_HCU_GROUPED_GEMM_INT8_DENSE_CHANNEL_SCALE_V2 |
-                        CK_TILE_HCU_GROUPED_GEMM_INT8_PACKED_B_AVAILABLE_V2;
+    problem.int8_flags = CK_TILE_HCU_GROUPED_GEMM_INT8_DENSE_CHANNEL_SCALE_V2;
     problem.m = {variable_m ? CK_TILE_HCU_GROUPED_GEMM_DIMENSION_DEVICE_LENGTHS_WITH_CAPACITY_V1
                                 : CK_TILE_HCU_GROUPED_GEMM_DIMENSION_COMMON_V1,
                  0,
@@ -365,11 +349,11 @@ int run_scaled_int8(const Options& options)
     if(candidate.output_type != problem.output_type ||
        std::string(candidate.canonical_name) != selection.instance_name)
         throw std::runtime_error("INT8 select and query disagree");
-    const bool packed =
-        (candidate.contract_flags & CK_TILE_HCU_GROUPED_GEMM_INT8_PACKED_B_V2) != 0;
+    if(candidate.contract_flags & CK_TILE_HCU_GROUPED_GEMM_INT8_PACKED_B_V2)
+        throw std::runtime_error("INT8 NT benchmark requires raw B");
     std::cout << "SELECT instance_id=" << selection.instance_id
               << " instance_name=" << selection.instance_name
-              << " reason=" << selection.reason << " packed_b=" << packed << '\n';
+              << " reason=" << selection.reason << " packed_b=0" << '\n';
 
     const auto a_rows = std::size_t(g) * m, b_rows = std::size_t(g) * n;
     const auto c_stride = std::size_t(m) * n + 32;
@@ -378,7 +362,6 @@ int run_scaled_int8(const Options& options)
     ck_tile::DeviceMem device_lengths(g * sizeof(std::int64_t));
     ck_tile::DeviceMem args(g * sizeof(ck_tile::GemmTransKernelArg));
     ck_tile::DeviceMem scales(g * sizeof(ck_tile_hcu_grouped_gemm_int8_scale_v2));
-    std::unique_ptr<ck_tile::DeviceMem> pack_args, packed_b;
     struct Stream
     {
         hipStream_t value = nullptr;
@@ -401,29 +384,12 @@ int run_scaled_int8(const Options& options)
     device_lengths.ToDevice(lengths.data());
 
     const int blocks = (g + 255) / 256;
-    const int8_t* b_for_run = bp;
-    if(packed)
-    {
-        packed_b = std::make_unique<ck_tile::DeviceMem>(b_rows * k);
-        pack_args = std::make_unique<ck_tile::DeviceMem>(
-            g * sizeof(ck_tile_hcu_grouped_gemm_int8_pack_arg_v2));
-        auto* descriptors = static_cast<ck_tile_hcu_grouped_gemm_int8_pack_arg_v2*>(
-            pack_args->GetDeviceBuffer());
-        auto* dst = static_cast<int8_t*>(packed_b->GetDeviceBuffer());
-        build_int8_pack_args<<<blocks, 256, 0, stream>>>(descriptors, bp, dst, g, n, k);
-        hip_check(hipGetLastError(), "build INT8 pack args");
-        check_int8_device_args(
-            ck_tile_hcu_grouped_gemm_pack_int8_nt_weights_v2(descriptors, g, n, k, stream),
-            "INT8 pack");
-        b_for_run = dst;
-    }
-
     auto* gpu_args = static_cast<ck_tile::GemmTransKernelArg*>(args.GetDeviceBuffer());
     auto* gpu_scales = static_cast<ck_tile_hcu_grouped_gemm_int8_scale_v2*>(scales.GetDeviceBuffer());
     auto* gpu_lengths = static_cast<const std::int64_t*>(device_lengths.GetDeviceBuffer());
     const auto build_args = [&] {
         build_scaled_int8_args<<<blocks, 256, 0, stream>>>(
-            gpu_args, gpu_scales, ap, b_for_run, cp, sap, sbp, gpu_lengths, g, m, n, k);
+            gpu_args, gpu_scales, ap, bp, cp, sap, sbp, gpu_lengths, g, m, n, k);
         hip_check(hipGetLastError(), "build scaled INT8 args");
     };
     if(!options.include_args_build)

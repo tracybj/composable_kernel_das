@@ -7,7 +7,7 @@ resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
 import torch
 from bindings import *
 
-assert os.environ.get('HIP_VISIBLE_DEVICES') == '7'
+assert os.environ.get('HIP_VISIBLE_DEVICES') in ('0', '1', '2', '3', '4', '5', '6', '7')
 torch.set_num_threads(4)
 cases = [
     ([17, 17], 260, 528),
@@ -154,26 +154,7 @@ for index, (lengths, n, k) in enumerate(cases):
             else:
                 assert bool((raw == 77).all())
             assert torch.equal(x, oldx) and torch.equal(w, oldw)
-        byte_check = False
-        if wi.format == 1 and wi.packed_bytes <= 4 * 1024**2:
-            # hipMemcpyDeviceToHost=2 in the HIP runtime ABI;the handle's dependency
-            # lookup resolves the same runtime used by this extension. Compute waited
-            # on preparation,so the read-only packed buffer is complete here.
-            lib.hipMemcpy.argtypes = [C.c_void_p, C.c_void_p, C.c_size_t, C.c_int]
-            lib.hipMemcpy.restype = C.c_int
-            data = (C.c_ubyte * wi.packed_bytes)()
-            assert lib.hipMemcpy(data, wi.packed_device_data, wi.packed_bytes, 2) == 0
-            expected = (
-                torch.stack([z[1][:, :k].cpu() for z in arrays])
-                .reshape(g, n // 16, 16, k // 64, 4, 16)
-                .permute(0, 3, 1, 4, 2, 5)
-                .contiguous()
-            )
-            assert bytes(data) == expected.numpy().tobytes(), (
-                'Packed bytes mismatch',
-                index,
-            )
-            byte_check = True
+        assert wi.format == 0 and not wi.packed_device_data and wi.packed_bytes == 0
         # Strict version/reserved/group-count gates must not mutate the live plan.
         bad = C.c_void_p(123)
         gd[0].abi_version = 1
@@ -215,7 +196,7 @@ for index, (lengths, n, k) in enumerate(cases):
                 full_range_int8=True,
                 fp64_reference=True,
                 nondefault_prepare_and_compute_streams=True,
-                packed_bytes_checked=byte_check,
+                raw_weight_storage=True,
                 inputs_unchanged=True,
                 output_guards=True,
                 weight_lifetime_and_contracts=True,
