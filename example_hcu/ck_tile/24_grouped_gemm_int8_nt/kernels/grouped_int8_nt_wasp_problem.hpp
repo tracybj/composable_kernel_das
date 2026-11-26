@@ -244,11 +244,13 @@ using GroupedInt8NtWaspRawMaskedWideProblem = GroupedInt8NtWaspCoreProblem<256,
                                                                            12,
                                                                            true>;
 
-template <int MGroup_>
+template <int MGroup_, bool PairEpi_ = false, bool OverlapA1_ = false, bool LdsEpi_ = false>
 struct GroupedInt8NtWaspRawMaskedPrefetchProblem : GroupedInt8NtWaspRawMaskedWideProblem<MGroup_>
 {
-    using Base     = GroupedInt8NtWaspRawMaskedWideProblem<MGroup_>;
-    using Pipeline = GroupedInt8NtWaspPipeline<typename Base::PipelineProblem,
+    static constexpr bool PairEpi = PairEpi_;
+    static constexpr bool LdsEpi  = LdsEpi_;
+    using Base                    = GroupedInt8NtWaspRawMaskedWideProblem<MGroup_>;
+    using Pipeline                = GroupedInt8NtWaspPipeline<typename Base::PipelineProblem,
                                                GemmPipelineAgBgCrCompV4DefaultPolicy,
                                                12,
                                                2,
@@ -259,7 +261,8 @@ struct GroupedInt8NtWaspRawMaskedPrefetchProblem : GroupedInt8NtWaspRawMaskedWid
                                                int8_nt_b_address::ByteOffset,
                                                true,
                                                false,
-                                               true>;
+                                               true,
+                                               OverlapA1_>;
     static_assert(Pipeline::BlockSize == Base::Threads && Pipeline::kWaspLdsBytes == 65536);
 };
 

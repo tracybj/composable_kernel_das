@@ -72,6 +72,16 @@ struct GroupedInt8NtWaspFallback
 // -----------------------------------------------------------------------------
 // 2. Unified WASP Kernel (supports both Raw INT32 and Fused Scaled BF16/FP16)
 // -----------------------------------------------------------------------------
+template <class E>
+struct Int8NtHasSmemEpi : std::false_type
+{
+};
+
+template <class P, bool BF, bool PB>
+struct Int8NtHasSmemEpi<GroupedInt8NtPairedStoreEpilogue<P, BF, PB>> : std::true_type
+{
+};
+
 template <class P, bool BFloat = false, class Epilogue = GroupedInt8NtWaspCoreEpilogue<P>>
 struct GroupedInt8NtWaspKernel
 {
@@ -147,6 +157,11 @@ struct GroupedInt8NtWaspKernel
             local_m            = inner % rows;
             local_n            = inner / rows;
         }
+        if constexpr(!P::Transpose && P::Pipeline::MasksInactiveN)
+        {
+            if(cluster & 1)
+                local_n = nt - 1 - local_n;
+        }
         const index_t mb = (cluster * P::MGroup + local_m) * P::BM;
         const index_t nb = local_n * P::BN;
         if(mb >= a.M || nb >= a.N)
@@ -166,13 +181,14 @@ struct GroupedInt8NtWaspKernel
         const index_t m_valid     = has_m_tail ? min(index_t(P::BM), a.M - mb) : P::BM;
         typename P::Pipeline{}.run_raw_into(
             ap, a.stride_As[0], m_valid, bp, a.stride_Bs[0], a.N, nb, a.K / 128, acc, smem);
-        if constexpr(P::Pipeline::MasksInactiveN)
+        if constexpr(P::Pipeline::MasksInactiveN &&
+                     !(Int8NtLdsEpiTrait<P>::value && Int8NtHasSmemEpi<Epilogue>::value))
         {
             const index_t wave = get_warp_id();
             if(wave < P::ProducerWaves || nb + (wave - P::ProducerWaves) * 32 >= a.N)
                 return;
         }
-        epi_fn(o, a, mb, nb, acc);
+        epi_fn(o, a, mb, nb, acc, smem);
     }
 
     // Raw INT32 entry point
@@ -195,7 +211,7 @@ struct GroupedInt8NtWaspKernel
                     });
                 }
             },
-            [](const auto&, const auto& a, index_t mb, index_t nb, const auto& acc) {
+            [](const auto&, const auto& a, index_t mb, index_t nb, const auto& acc, int8_t*) {
                 Epilogue{}(a, mb, nb, acc);
             });
     }
@@ -212,8 +228,11 @@ struct GroupedInt8NtWaspKernel
                         o, P::Transpose ? col : row, P::Transpose ? row : col, sum);
                 });
             },
-            [scales](const auto& o, const auto&, index_t mb, index_t nb, const auto& acc) {
-                Epilogue{}(o, mb, nb, acc, scales[blockIdx.z]);
+            [scales](const auto& o, const auto&, index_t mb, index_t nb, const auto& acc, int8_t* smem) {
+                if constexpr(Int8NtLdsEpiTrait<P>::value && Int8NtHasSmemEpi<Epilogue>::value)
+                    Epilogue{}(o, mb, nb, acc, scales[blockIdx.z], smem);
+                else
+                    Epilogue{}(o, mb, nb, acc, scales[blockIdx.z]);
             });
     }
 };

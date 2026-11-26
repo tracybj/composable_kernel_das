@@ -173,9 +173,9 @@ using RawPairedM256N384Problem =
                            /* ConsumerWaves = */ 12>,
                        RawM256N384>;
 
-using ScaledRawM256N384MaskedM4 = GroupedInt8NtWaspRawMaskedPrefetchProblem<4>;
-using ScaledRawM256N384MaskedM8 = GroupedInt8NtWaspRawMaskedPrefetchProblem<8>;
-using ScaledRawM256N384MaskedM16 = GroupedInt8NtWaspRawMaskedPrefetchProblem<16>;
+using ScaledRawM256N384MaskedM4 = GroupedInt8NtWaspRawMaskedPrefetchProblem<4, false, false>;
+using ScaledRawM256N384MaskedM8 = GroupedInt8NtWaspRawMaskedPrefetchProblem<8, true, true>;
+using ScaledRawM256N384MaskedM16 = GroupedInt8NtWaspRawMaskedPrefetchProblem<8, false, false, true>;
 
 // -----------------------------------------------------------------------------
 // 2. Shared tile instance definitions

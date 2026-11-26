@@ -330,6 +330,11 @@ def main():
                         if tuned is not None:
                             assert pi.route == tuned, (name, output, pi.route, tuned)
                             want = (tuned, 0)
+                    if output and mode == 'channel' and not padded:
+                        if (maxm, n, k, g) == (64, 4096, 4096, 8):
+                            want = (0, 7604)
+                        elif (maxm, n, k, g) == (32, 4096, 4096, 8):
+                            want = (32, 0)
                     geometry = {26: 5, 27: 12, 28: 22, 29: 23, 30: 6 if want != (30, 0) else 30}.get(pi.route, pi.route)
                     assert (
                         geometry,

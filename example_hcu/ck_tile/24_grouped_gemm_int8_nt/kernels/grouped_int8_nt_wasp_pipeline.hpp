@@ -196,8 +196,8 @@ CK_TILE_DEVICE void wasp_buffer_load_b128_x4_idxen_soff2(buffer_rsrc_t rsrc,
                                                          dword4_t& o3)
 {
     asm volatile("buffer_load_dwordx4 %0, %4, %6, %7 idxen offen offset:0\n\t"
-                 "buffer_load_dwordx4 %1, %4, %6, %7 idxen offen offset:64\n\t"
                  "buffer_load_dwordx4 %2, %5, %6, %7 idxen offen offset:0\n\t"
+                 "buffer_load_dwordx4 %1, %4, %6, %7 idxen offen offset:64\n\t"
                  "buffer_load_dwordx4 %3, %5, %6, %7 idxen offen offset:64\n"
                  : "=&v"(o0), "=&v"(o1), "=&v"(o2), "=&v"(o3)
                  : "v"(p0), "v"(p1), "s"(rsrc), "s"(s_col_base)
@@ -320,7 +320,8 @@ template <typename Problem,
           index_t BAddress       = 0,
           bool MaskInactiveN     = false,
           bool SingleB           = false,
-          bool CrossHalfPrefetch = false>
+          bool CrossHalfPrefetch = false,
+          bool OverlapA1         = false>
 struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Policy>
 {
     using Base = GemmPipelineAgBgCrCompV3<Problem, Policy>;
@@ -474,8 +475,8 @@ struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Poli
                            p1 = static_cast<uint32_t>(bp.second_n_fragment);
             asm volatile(
                 "buffer_load_dwordx4 %0, %4, %6, %7 offen offset:0\n\t"
-                "buffer_load_dwordx4 %1, %4, %6, %7 offen offset:64\n\t"
                 "buffer_load_dwordx4 %2, %5, %6, %7 offen offset:0\n\t"
+                "buffer_load_dwordx4 %1, %4, %6, %7 offen offset:64\n\t"
                 "buffer_load_dwordx4 %3, %5, %6, %7 offen offset:64\n"
                 : "=&v"(buf[0][0].d4), "=&v"(buf[1][0].d4), "=&v"(buf[0][1].d4), "=&v"(buf[1][1].d4)
                 : "v"(p0), "v"(p1), "s"(b_rsrc), "s"(s_col_base)
@@ -665,26 +666,39 @@ struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Poli
             constexpr int i = decltype(rr)::value;
             read_prefetch<SLOT + i * kAFragmentRowStrideBytes>(rb.low_k_half, a[0][i].d4);
         });
-        wasp_wait_vmcnt0(diag, k_stage);
+        if constexpr(OverlapA1 && Groups > 1)
+        {
+            static_for<0, AReadBatch, 1>{}([&](auto rr) {
+                constexpr int i = decltype(rr)::value;
+                read_prefetch<SLOT + (AReadBatch + i) * kAFragmentRowStrideBytes>(
+                    rb.low_k_half, a[1][i].d4);
+            });
+        }
+        asm volatile("s_waitcnt vmcnt(2)" ::: "memory");
         static_for<0, 2, 1>{}([&](auto hh) {
             constexpr int H = decltype(hh)::value;
-            // low fragments are dead, high current-B remains live.
+            // low fragments are dead, high current-B remains live until wasp_wait_vmcnt0.
             if constexpr(H == 1)
+            {
+                wasp_wait_vmcnt0(diag, k_stage);
                 if(k_stage + 1 < num_loop)
                     load_B_stage(b_rsrc, b_pairs, k_stage + 1, b[CUR ^ 1], diag);
+            }
             static_for<0, Groups, 1>{}([&](auto gg) {
                 constexpr int G = decltype(gg)::value, slot = (H * Groups + G) % 2,
                               base_m = G * AReadBatch;
-                // Consume this LDS batch only after its reads complete.
-                asm volatile("s_waitcnt lgkmcnt(0)" ::: "memory");
                 if constexpr(G + 1 < Groups)
                 {
-                    const uint32_t base = H ? rb.high_k_half : rb.low_k_half;
-                    static_for<0, AReadBatch, 1>{}([&](auto rr) {
-                        constexpr int i = decltype(rr)::value;
-                        read_prefetch<SLOT + (base_m + AReadBatch + i) * kAFragmentRowStrideBytes>(
-                            base, a[slot ^ 1][i].d4);
-                    });
+                    if constexpr(!(OverlapA1 && H == 0 && G == 0))
+                    {
+                        const uint32_t base = H ? rb.high_k_half : rb.low_k_half;
+                        static_for<0, AReadBatch, 1>{}([&](auto rr) {
+                            constexpr int i = decltype(rr)::value;
+                            read_prefetch<SLOT + (base_m + AReadBatch + i) * kAFragmentRowStrideBytes>(
+                                base, a[slot ^ 1][i].d4);
+                        });
+                    }
+                    asm volatile("s_waitcnt lgkmcnt(%0)" : : "n"(AReadBatch) : "memory");
                 }
                 else if constexpr(H == 0)
                 {
@@ -693,6 +707,11 @@ struct GroupedInt8NtWaspPipeline : public GemmPipelineAgBgCrCompV3<Problem, Poli
                         read_prefetch<SLOT + i * kAFragmentRowStrideBytes>(rb.high_k_half,
                                                                            a[slot ^ 1][i].d4);
                     });
+                    asm volatile("s_waitcnt lgkmcnt(%0)" : : "n"(AReadBatch) : "memory");
+                }
+                else
+                {
+                    asm volatile("s_waitcnt lgkmcnt(0)" ::: "memory");
                 }
                 static_for<0, 2, 1>{}([&](auto kk) {
                     constexpr int K = decltype(kk)::value;

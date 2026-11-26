@@ -51,7 +51,7 @@ int wasp(const void* args, const void* scales, int g, int m, int n, hipStream_t 
     const dim3 grid(mt * nt, 1, g);
     ck_tile::launch_kernel(
         ck_tile::stream_config{stream, false},
-        ck_tile::make_kernel<P::Threads, 1>(ck_tile::GroupedInt8NtScaledWaspKernel<P, BF, Epi>{},
+        ck_tile::make_kernel<P::Threads, 1>(ck_tile::GroupedInt8NtScaledWaspKernel<P, (ck_tile::Int8NtLdsEpiTrait<P>::value ? false : BF), Epi>{},
                                             grid,
                                             dim3(P::Threads),
                                             0,

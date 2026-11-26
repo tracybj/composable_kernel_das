@@ -432,7 +432,9 @@ constexpr GroupedGemmInstanceId select_grouped_gemm_int8_nt_instance(const Group
     if(uniform && m > 16 && m <= 32)
         id = problem.k.extent < 1024 || problem.group_count <= 4
                  ? GroupedGemmInstanceId::int8_nt_m32_n64_k128
-                 : problem.group_count <= 32
+                 : (problem.group_count <= 32 &&
+                    !(m == 32 && problem.n.extent == 4096 && problem.k.extent == 7168 &&
+                      (problem.group_count == 12 || problem.group_count == 24)))
                        ? GroupedGemmInstanceId::int8_nt_m32_n64_k256
                        : GroupedGemmInstanceId::int8_nt_m32_n128_k256;
     if(uniform && m > 32 && m <= 64)

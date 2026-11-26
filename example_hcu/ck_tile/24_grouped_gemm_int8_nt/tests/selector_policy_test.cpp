@@ -16,12 +16,16 @@ int main()
     assert(int8_cached_tuned_scaled_route(16, 8192, 2048, 128, true, 80) ==
            RawAlignedM16N32K512);
     assert(int8_cached_tuned_scaled_route(16, 8192, 2032, 128, false, 80) == LegacyRaw);
-    assert(int8_cached_tuned_scaled_route(32, 8192, 2048, 128, true, 80) == NativeM32N64);
+    assert(int8_cached_tuned_scaled_route(32, 8192, 2048, 128, true, 80) == RawM32N64K256W4);
     assert(int8_cached_tuned_scaled_route(32, 1216, 1536, 196, false, 80) == RawM32N64K256W4);
     assert(int8_cached_tuned_scaled_route(32, 1232, 1536, 196, false, 80) == LegacyRaw);
     assert(int8_cached_tuned_scaled_route(32, 3072, 1232, 392, false, 80) == LegacyRaw);
     assert(int8_cached_tuned_scaled_route(32, 3072, 1233, 392, false, 80) == LegacyRaw);
     assert(int8_cached_tuned_scaled_route(32, 8192, 2048, 128, true, 96) == LegacyRaw);
+    for(int groups : {8, 32, 64})
+        assert(int8_cached_tuned_scaled_route(256, 3072, 1536, groups, true, 80) ==
+               PairedM256N384MaskedM4);
+    assert(int8_cached_tuned_scaled_route(256, 3072, 1536, 4, true, 80) == LegacyRaw);
     assert(int8_cached_tuned_scaled_route(4096, 2048, 512, 64, true, 80) == PairedM128N256);
     assert(int8_cached_tuned_scaled_route(2048, 1024, 2048, 8, true, 80) == LegacyRaw);
     assert(int8_cached_tuned_scaled_route(2048, 1024, 2048, 16, true, 80) == LegacyRaw);
@@ -145,7 +149,7 @@ int main()
     constexpr ck_tile::Int8CachedPlanRouteDomain padded_a{true, true, false, false, false};
     constexpr ck_tile::Int8CachedPlanRouteDomain ragged{false, false, true, true, true};
     assert(int8_cached_select_plan_route(32, 8192, 2048, 128, true, 80, dense) ==
-           NativeM32N64);
+           RawM32N64K256W4);
     assert(int8_cached_select_plan_route(32, 8192, 2048, 128, true, 80, ragged) ==
            LegacyRaw);
     assert(int8_cached_select_plan_route(2048, 4096, 1536, 4, true, 80, dense) ==
@@ -156,7 +160,13 @@ int main()
         assert(int8_cached_select_plan_route(m, 1536, 2048, 4, true, 80, dense) ==
                PairedM256N384MaskedM4);
     assert(int8_cached_select_plan_route(8192, 1536, 2048, 4, true, 80, dense) ==
-           PairedM128N256);
+           PairedM256N384MaskedM8);
+    assert(int8_cached_select_plan_route(4096, 6144, 7168, 12, true, 80, dense) ==
+           PairedM256N384MaskedM8);
+    assert(int8_cached_select_plan_route(16384, 4096, 7168, 8, true, 80, dense) ==
+           PairedM256N384MaskedM16);
+    assert(int8_cached_select_plan_route(16384, 4096, 7168, 12, true, 80, dense) ==
+           PairedM256N384MaskedM16);
     assert(int8_cached_select_plan_route(16384, 1536, 2048, 8, true, 80, dense) ==
            PairedM256N384);
     assert(int8_cached_select_plan_route(16384, 1536, 2048, 4, true, 80, padded_c) ==

@@ -49,12 +49,20 @@ int8_cached_tuned_scaled_route(int m, int n, int k, int groups, bool vector_nt_d
 
     if(m == 32)
     {
+        if(vector_nt_domain && k == 2048 && n >= 7168 && groups >= 8 && groups <= 128 &&
+           int8_cached_raw_w4_exact_tile(n, k))
+            return RawM32N64K256W4;
         if(vector_nt_domain && k <= 2048)
             return NativeM32N64;
         if(!vector_nt_domain && groups >= 128 && k >= 1024 && k <= 2048 &&
            int8_cached_raw_w4_exact_tile(n, k))
             return RawM32N64K256W4;
     }
+
+    // A single M tile and eight full N tiles use the BN384 paired-store kernel.
+    // Both output types use the same raw-weight kernel in the measured group range.
+    if(vector_nt_domain && m == 256 && n == 3072 && k == 1536 && groups >= 8 && groups <= 64)
+        return PairedM256N384MaskedM4;
 
     if(vector_nt_domain && (m == 2048 || m == 4096) && n == 2048 && k == 512 && groups >= 8 && groups <= 64)
         return PairedM128N256;
@@ -307,6 +315,50 @@ int8_cached_select_plan_route(int m,
     if(compute_units == int8_tuning_config::GFX936_DEFAULT_NUM_CU && domain.uniform_nonempty &&
        domain.dense_channel_scales)
     {
+        if(m == 32 && int8_cached_raw_w4_exact_tile(n, k))
+        {
+            if(k == 2048 && n >= 7168 && groups >= 8 && groups <= 96)
+                return RawM32N64K256W4;
+            if(n == 4096 && k == 7168 && (groups == 12 || groups == 24))
+                return LegacyRaw;
+            if(n >= 2048 && n <= 7168 && k >= 3072 && k <= 7168 && groups >= 6 && groups <= 32 &&
+               !(n == 7168 && k == 3072 && groups >= 24))
+                return RawM32N64K256W4;
+        }
+        if(m == 64 && ((n == 7168 && k >= 2048) || (n >= 4096 && k >= 4096)))
+            return LegacyRaw;
+        if(m == 128 && vector_nt_domain && domain.dense_scalar_a && n == 4096 && k == 4096 &&
+           groups == 8)
+            return PairedM128N256;
+        if(m == 256 && vector_nt_domain && n == 3072 && k >= 3072)
+        {
+            if(k == 4096 && (groups == 8 || groups == 16 || groups == 48) && domain.dense_scalar_a)
+                return PairedM256N384;
+            return domain.raw_transposed
+                       ? ((k & (k - 1)) == 0 ? LinearTransposedRaw : LinearTransposedRecord1024)
+                       : LegacyRaw;
+        }
+        if(m == 256 && vector_nt_domain && n == 4096 && k >= 6144)
+        {
+            if(k == 7168 && groups == 12 && domain.dense_scalar_a)
+                return PairedM256N384;
+            if(groups == 8)
+                return domain.raw_transposed ? LinearTransposedRecord1024 : LegacyRaw;
+        }
+        if(vector_nt_domain && domain.dense_scalar_a)
+        {
+            if(m == 4096 && n == 1024 && k == 2048 && groups == 8)
+                return PairedM256N384MaskedM4;
+            if(m == 8192 && n == 1536 && k == 2048 && groups == 4)
+                return PairedM256N384MaskedM8;
+            if(m == 16384 && n == 3072 && k == 4096 && groups == 4)
+                return PairedM256N384MaskedM4;
+            if(m == 4096 && n == 6144 && k == 7168)
+                return PairedM256N384MaskedM8;
+            if(m == 16384 && n == 4096 && k == 7168)
+                return PairedM256N384MaskedM16;
+        }
+
         // The four-wave BN64 tile is faster than the two-wave fallback in
         // the measured long-K, moderate-group M32 domain.
         if(route == LegacyRaw && fallback == GroupedGemmInstanceId::int8_nt_m32_n64_k256 &&
