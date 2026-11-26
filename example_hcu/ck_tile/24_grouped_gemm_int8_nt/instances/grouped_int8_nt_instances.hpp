@@ -174,6 +174,7 @@ using RawPairedM256N384Problem =
                        RawM256N384>;
 
 using ScaledRawM256N384MaskedM4 = GroupedInt8NtWaspRawMaskedPrefetchProblem<4, false, false>;
+using ScaledRawM256N384MaskedM4Lds = GroupedInt8NtWaspRawMaskedPrefetchProblem<4, false, false, true>;
 using ScaledRawM256N384MaskedM8 = GroupedInt8NtWaspRawMaskedPrefetchProblem<8, true, true>;
 using ScaledRawM256N384MaskedM16 = GroupedInt8NtWaspRawMaskedPrefetchProblem<8, false, false, true>;
 

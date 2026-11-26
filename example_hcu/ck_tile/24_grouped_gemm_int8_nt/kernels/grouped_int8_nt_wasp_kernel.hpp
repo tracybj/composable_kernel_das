@@ -237,10 +237,6 @@ struct GroupedInt8NtWaspKernel
     }
 };
 
-template <class P>
-using GroupedInt8NtWaspCoreKernel =
-    GroupedInt8NtWaspKernel<P, false, GroupedInt8NtWaspCoreEpilogue<P>>;
-
 template <class P, bool BFloat, class Epilogue = GroupedInt8NtScaledWaspEpilogue<P, BFloat>>
 using GroupedInt8NtScaledWaspKernel = GroupedInt8NtWaspKernel<P, BFloat, Epilogue>;
 

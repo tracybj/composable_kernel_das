@@ -27,10 +27,6 @@ static_assert(offsetof(ck_tile_hcu_grouped_gemm_int8_scale_v2, a) ==
 
 namespace {
 
-// The BF16 and FP16 BN384 instances use M clusters of 1 and 4 respectively.
-template <bool BF>
-using RawPairedM256N384Problem = ck_tile::int8_nt_instances::RawPairedM256N384Problem<BF>;
-
 // =============================================================================
 // Three Standard Launch Providers (1:1 mapped to Device Architectures)
 //   1. WASP Architecture:        wasp(...)
@@ -49,9 +45,15 @@ int wasp(const void* args, const void* scales, int g, int m, int n, hipStream_t 
     const int mm = P::Transpose ? n : m, nn = P::Transpose ? m : n;
     const int mt = (mm + P::BM - 1) / P::BM, nt = (nn + P::BN - 1) / P::BN;
     const dim3 grid(mt * nt, 1, g);
+    // MaskedM16's tuned kernel uses the FP16 scalar fallback. New LDS routes
+    // keep the requested output format in their scalar fallback.
+    constexpr bool fallback_bf = BF && !std::is_same_v<
+                                           P,
+                                           ck_tile::int8_nt_instances::ScaledRawM256N384MaskedM16>;
+    using Kernel = ck_tile::GroupedInt8NtScaledWaspKernel<P, fallback_bf, Epi>;
     ck_tile::launch_kernel(
         ck_tile::stream_config{stream, false},
-        ck_tile::make_kernel<P::Threads, 1>(ck_tile::GroupedInt8NtScaledWaspKernel<P, (ck_tile::Int8NtLdsEpiTrait<P>::value ? false : BF), Epi>{},
+        ck_tile::make_kernel<P::Threads, 1>(Kernel{},
                                             grid,
                                             dim3(P::Threads),
                                             0,
@@ -136,7 +138,6 @@ int dispatch(unsigned instance,
 #define CK_INT8_SCALED_WASP(id, ...)                     \
     case int8_instance_ids::from_route(int8_routes::id): \
         return wasp<BF, __VA_ARGS__>(args, scales, g, m, n, stream);
-#define CK_INT8_SCALED_SCALED_WASP(id, ...) CK_INT8_SCALED_WASP(id, __VA_ARGS__)
 #define CK_INT8_SCALED_PAIRED_WASP(id, ...)                                                     \
     case int8_instance_ids::from_route(int8_routes::id):                                        \
         return wasp<BF, __VA_ARGS__, ck_tile::GroupedInt8NtPairedStoreEpilogue<__VA_ARGS__, BF>>( \
@@ -145,17 +146,12 @@ int dispatch(unsigned instance,
     case int8_instance_ids::from_route(int8_routes::id, 1):   \
         return k_parallel<BF, 1>(args, scales, g, n, stream); \
     case int8_instance_ids::from_route(int8_routes::id, 2):   \
-        return k_parallel<BF, 2>(args, scales, g, n, stream); \
-    case int8_instance_ids::from_route(int8_routes::id, 4):   \
-        return k_parallel<BF, 4>(args, scales, g, n, stream); \
-    case int8_instance_ids::from_route(int8_routes::id, 8):   \
-        return k_parallel<BF, 8>(args, scales, g, n, stream);
+        return k_parallel<BF, 2>(args, scales, g, n, stream);
 #define CK_INT8_ROUTE(id, abi, kind, ...) CK_INT8_SCALED_##kind(id, __VA_ARGS__)
 #include "../instances/grouped_int8_nt_routes.inc"
 #undef CK_INT8_ROUTE
 #undef CK_INT8_SCALED_K_PARALLEL
 #undef CK_INT8_SCALED_PAIRED_WASP
-#undef CK_INT8_SCALED_SCALED_WASP
 #undef CK_INT8_SCALED_WASP
 #undef CK_INT8_SCALED_COOPERATIVE
     default: return CK_TILE_INT8_CACHED_UNSUPPORTED_V1;
@@ -217,7 +213,6 @@ std::vector<Candidate> enumerate_for_output(const Domain& d)
 #undef CK_INT8_LEGACY_TILE
 #define CK_INT8_TUNING_COOPERATIVE(id, ...) add_tile<__VA_ARGS__>(out, d, int8_routes::id, 0);
 #define CK_INT8_TUNING_WASP(id, ...) add_wasp<__VA_ARGS__>(out, d, int8_routes::id, 0);
-#define CK_INT8_TUNING_SCALED_WASP(id, ...) CK_INT8_TUNING_WASP(id, __VA_ARGS__)
 #define CK_INT8_TUNING_PAIRED_WASP(id, ...) add_wasp<__VA_ARGS__, true>(out, d, int8_routes::id, 0);
 #define CK_INT8_TUNING_K_PARALLEL(id, ...)   \
     if(d.m <= 2)                             \
@@ -233,7 +228,6 @@ std::vector<Candidate> enumerate_for_output(const Domain& d)
 #undef CK_INT8_ROUTE
 #undef CK_INT8_TUNING_K_PARALLEL
 #undef CK_INT8_TUNING_PAIRED_WASP
-#undef CK_INT8_TUNING_SCALED_WASP
 #undef CK_INT8_TUNING_WASP
 #undef CK_INT8_TUNING_COOPERATIVE
     return out;

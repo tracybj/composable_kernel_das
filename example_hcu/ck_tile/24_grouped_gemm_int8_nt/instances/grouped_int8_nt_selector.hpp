@@ -24,7 +24,13 @@ inline bool int8_cached_raw_w4_exact_tile(int n, int k)
 // equal, nonempty groups with dense A/B/C and scalar-A/per-channel-B scales.
 // LegacyRaw means no tuned override; retain the established selector result.
 inline unsigned
-int8_cached_tuned_scaled_route(int m, int n, int k, int groups, bool vector_nt_domain, int compute_units)
+int8_cached_tuned_scaled_route(int m,
+                            int n,
+                            int k,
+                            int groups,
+                            bool vector_nt_domain,
+                            int compute_units,
+                            bool fp16_output = false)
 {
     using namespace int8_routes;
     if(compute_units != int8_tuning_config::GFX936_DEFAULT_NUM_CU || m <= 0 || n <= 0 || k <= 0 ||
@@ -70,12 +76,18 @@ int8_cached_tuned_scaled_route(int m, int n, int k, int groups, bool vector_nt_d
     // For four groups in the measured large-M range, the four-M-tile
     // schedule and cross-half A prefetch improve the paired-store path.
     if(vector_nt_domain && m >= 14336 && m <= 16384 && m % 2048 == 0 && n == 1536 && k == 2048 && groups == 4)
-        return PairedM256N384MaskedM4;
+        return m == 16384 ? PairedM256N384MaskedM4Lds : PairedM256N384MaskedM4;
 
-    // For M=8192, N=3072, K=4096 with G=4 or G=6, 2D MGroup=4 clustering
-    // and cross-half A prefetch improve L2 hit rate and throughput over standard BN384.
-    if(vector_nt_domain && m == 8192 && n == 3072 && k == 4096 && (groups == 4 || groups == 6))
-        return PairedM256N384MaskedM4;
+    // Grouped-M traversal wins with eight full N tiles at the measured group counts.
+    // At six groups the LDS epilogue gives FP16 more headroom than register writeback.
+    if(vector_nt_domain && n == 3072 && k == 4096)
+    {
+        if(m == 8192 && (groups == 4 || groups == 6 || groups == 8 || groups == 12))
+            return fp16_output && groups == 6 ? PairedM256N384MaskedM4Lds
+                                              : PairedM256N384MaskedM4;
+        if(m == 16384 && (groups == 4 || groups == 6 || groups == 8))
+            return PairedM256N384MaskedM4;
+    }
     return LegacyRaw;
 }
 
@@ -282,6 +294,7 @@ struct Int8CachedPlanRouteDomain
     bool raw_transposed;
     bool dense_scalar_a;
     bool dense_channel_scales;
+    bool fp16_output = false;
 };
 
 inline unsigned
@@ -300,7 +313,8 @@ int8_cached_select_plan_route(int m,
         if(domain.dense_channel_scales)
         {
             const auto route =
-                int8_cached_tuned_scaled_route(m, n, k, groups, vector_nt_domain, compute_units);
+                int8_cached_tuned_scaled_route(
+                     m, n, k, groups, vector_nt_domain, compute_units, domain.fp16_output);
             if(route != LegacyRaw)
                 return route;
         }
@@ -351,8 +365,6 @@ int8_cached_select_plan_route(int m,
                 return PairedM256N384MaskedM4;
             if(m == 8192 && n == 1536 && k == 2048 && groups == 4)
                 return PairedM256N384MaskedM8;
-            if(m == 16384 && n == 3072 && k == 4096 && groups == 4)
-                return PairedM256N384MaskedM4;
             if(m == 4096 && n == 6144 && k == 7168)
                 return PairedM256N384MaskedM8;
             if(m == 16384 && n == 4096 && k == 7168)
@@ -376,6 +388,110 @@ int8_cached_select_plan_route(int m,
         return LegacyRaw;
     return int8_cached_paired_store_route(
         route, m, n, k, groups, compute_units, domain.dense_scalar_a);
+}
+
+struct Int8CachedPlanSelection
+{
+    unsigned route;
+    GroupedGemmInstanceId legacy_instance;
+};
+
+// Selected by paired timing at both aligned and half-cache-line output offsets.
+// Keep this policy scoped to the measured M/N/K/G families. The scaled
+// direct-M16 entry and small-M K128 entry share the same kernel.
+inline GroupedGemmInstanceId
+int8_cached_tuned_m4_m8_instance(int m, int n, int k, int groups)
+{
+    using Instance = GroupedGemmInstanceId;
+    const auto small_k128 = Instance::int8_nt_small_m_n64_k128;
+    const auto small_k256 = Instance::int8_nt_small_m_n64_k256;
+    const auto wide_k256  = Instance::int8_nt_small_m_n128_k256;
+    const auto small_n32_k512 = Instance::int8_nt_small_g_n32_k512;
+
+    switch(n)
+    {
+    case 256:
+        if(k == 512 && groups == 64)
+            return small_k128;
+        break;
+    case 1024:
+        if(k == 2048 && groups == 32)
+            return small_n32_k512;
+        break;
+    case 1536:
+        if(k == 2048 && groups == 8)
+            return small_k128;
+        break;
+    case 2048:
+        if((k == 512 && (groups == 8 || groups == 16)) || (k == 768 && groups == 32))
+            return small_k128;
+        if(k == 768 && groups == 4)
+            return small_k256;
+        break;
+    case 3072:
+        if(k == 1232 && (groups == 196 || groups == 392))
+            return small_k256;
+        if(k == 3072 && groups == 16)
+            return wide_k256;
+        if(k == 3072 && groups == 8)
+            return small_n32_k512;
+        break;
+    case 4096:
+        if(k == 1024 && groups == 16)
+            return small_k256;
+        if(k == 1536)
+        {
+            if(groups == 4)
+                return m == 8 ? small_k256 : small_k128;
+            if(groups == 6 || groups == 8 || groups == 12 || groups == 16)
+                return small_k256;
+        }
+        break;
+    case 5120:
+        if(k == 2304 && groups == 12)
+            return wide_k256;
+        break;
+    case 7168:
+        if(m == 4 && k == 3072 && groups == 12)
+            return small_n32_k512;
+        break;
+    }
+    return Instance::none;
+}
+
+inline Int8CachedPlanSelection int8_cached_select_plan(const GroupedGemmProblem& problem,
+                                                        int max_m,
+                                                        int compute_units,
+                                                        const Int8CachedPlanRouteDomain& domain)
+{
+    using Instance = GroupedGemmInstanceId;
+    using namespace int8_routes;
+    const int n = problem.n.extent;
+    const int k = problem.k.extent;
+    const int groups = problem.group_count;
+    const auto fallback = select_grouped_gemm_int8_nt_instance(problem);
+    if((max_m == 4 || max_m == 8) &&
+       compute_units == int8_tuning_config::GFX936_DEFAULT_NUM_CU &&
+       domain.uniform_nonempty && domain.dense_channel_scales)
+    {
+        const auto tuned =
+            int8_cached_tuned_m4_m8_instance(max_m, n, k, groups);
+        // The legacy small-G instance and Route 24 use the same scaled kernel.
+        if(tuned == Instance::int8_nt_small_g_n32_k512)
+            return {RawSmallM16N32K512, fallback};
+        if(tuned != Instance::none)
+            return {LegacyRaw, tuned};
+    }
+
+    return {int8_cached_select_plan_route(max_m,
+                                          n,
+                                          k,
+                                          groups,
+                                          int8_cached_vector_nt_domain(n, k),
+                                          compute_units,
+                                          domain,
+                                          fallback),
+            fallback};
 }
 
 } // namespace ck_tile

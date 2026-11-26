@@ -70,6 +70,25 @@ def candidate_list(weights, descriptors):
     return result
 
 
+# These aliases share a compiled kernel in the scaled provider. Keep the
+# requested/default ID intact and time one representative per kernel.
+_SCALED_KERNEL_ALIASES = {
+    (0, 6004): (0, 6401),  # DefaultFallbackTileProblem
+    (0, 6505): (24, 0),   # DirectSmallMTileProblem
+    (0, 8734): (24, 0),
+}
+
+
+def distinct_candidates(legal, default_key):
+    representatives = {}
+    for key in legal:
+        kernel = _SCALED_KERNEL_ALIASES.get(key, key)
+        if kernel not in representatives or key == kernel:
+            representatives[kernel] = key
+    representatives.pop(_SCALED_KERNEL_ALIASES.get(default_key, default_key), None)
+    return representatives.values()
+
+
 def selection(plan):
     info = plan_info(plan)
     return info.route, info.legacy_instance if info.route == 0 else 0
@@ -144,9 +163,8 @@ def tune_output(case, output, dtype, inputs, weights, args):
         status = lib.ck_tile_int8_nt_tuning_plan_create_v1(
             weights, desc, g, 0xFFFFFFFF, 0, C.byref(rejected))
         assert status == -5 and not rejected.value
-        for key in legal:
-            if key != default_key:
-                plans[key] = make_plan(weights, desc, key)
+        for key in distinct_candidates(legal, default_key):
+            plans[key] = make_plan(weights, desc, key)
         for key, plan in plans.items():
             benches[key] = lib.cached_i8_bench_create(plan)
             assert benches[key], lib.cached_i8_bench_error().decode()

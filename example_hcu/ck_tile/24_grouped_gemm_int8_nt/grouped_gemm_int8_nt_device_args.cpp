@@ -180,19 +180,18 @@ int select(const Problem* p, Instance& instance)
     const bool native = uniform && (m % 256 == 0 || m == 128 || m == 64 || m == 32) &&
                         p->n % 256 == 0 && p->k % 128 == 0 && p->k < 16384 &&
                         int64_t(256) * p->max_stride_a <= MaxSpan;
-    const bool vector_nt_domain = ck_tile::int8_cached_vector_nt_domain(p->n, p->k);
-    const auto fallback = ck_tile::select_grouped_gemm_int8_nt_instance(summary);
     ck_tile::Int8CachedPlanRouteDomain domain{};
     domain.native_wasp          = native;
     domain.uniform_nonempty     = uniform;
     domain.raw_transposed       = p->max_stride_a < 16384;
     domain.dense_scalar_a       = dense;
     domain.dense_channel_scales = dense;
-    const auto route            = ck_tile::int8_cached_select_plan_route(
-        m, p->n, p->k, p->group_count, vector_nt_domain, ck_tile::get_num_cu(), domain, fallback);
-    const auto key = route == ck_tile::int8_routes::LegacyRaw
-                         ? static_cast<unsigned>(fallback)
-                         : ck_tile::int8_instance_ids::from_route(route, m);
+    domain.fp16_output          = p->output_type == CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_FP16_V1;
+    const auto selection =
+        ck_tile::int8_cached_select_plan(summary, m, ck_tile::get_num_cu(), domain);
+    const auto key = selection.route == ck_tile::int8_routes::LegacyRaw
+                         ? static_cast<unsigned>(selection.legacy_instance)
+                         : ck_tile::int8_instance_ids::from_route(selection.route, m);
     const auto id =
         Base | (p->output_type == CK_TILE_HCU_GROUPED_GEMM_DATA_TYPE_FP16_V1 ? Fp16 : 0) | key;
     instance = find_instance(id);

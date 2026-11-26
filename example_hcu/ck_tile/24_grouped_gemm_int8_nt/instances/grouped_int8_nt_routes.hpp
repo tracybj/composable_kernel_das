@@ -31,7 +31,6 @@ constexpr RouteInfo route_info(unsigned route)
     switch(route)
     {
 #define CK_INT8_PIPELINE_WASP Pipeline::Wasp
-#define CK_INT8_PIPELINE_SCALED_WASP Pipeline::Wasp
 #define CK_INT8_PIPELINE_PAIRED_WASP Pipeline::Wasp
 #define CK_INT8_PIPELINE_COOPERATIVE Pipeline::Cooperative
 #define CK_INT8_PIPELINE_K_PARALLEL Pipeline::KParallel
@@ -42,7 +41,6 @@ constexpr RouteInfo route_info(unsigned route)
 #undef CK_INT8_PIPELINE_K_PARALLEL
 #undef CK_INT8_PIPELINE_COOPERATIVE
 #undef CK_INT8_PIPELINE_PAIRED_WASP
-#undef CK_INT8_PIPELINE_SCALED_WASP
 #undef CK_INT8_PIPELINE_WASP
     default: return {Pipeline::Unknown};
     }
@@ -54,23 +52,11 @@ namespace int8_instance_ids {
 // The key portion of the published ID also identifies the provider entry.
 constexpr unsigned RouteBit     = 0x00010000;
 constexpr unsigned TwoRowsBit   = 0x00020000;
-constexpr unsigned FourRowsBit  = 0x00040000;
-constexpr unsigned EightRowsBit = 0x00080000;
-constexpr unsigned RowsMask     = TwoRowsBit | FourRowsBit | EightRowsBit;
-constexpr unsigned Mask         = 0x0000ffff | RouteBit | RowsMask;
+constexpr unsigned Mask         = 0x0000ffff | RouteBit | TwoRowsBit;
 
 constexpr unsigned from_route(unsigned route, int m = 1)
 {
-    unsigned row_flag = 0;
-    if(route == int8_routes::KParallelDecode)
-    {
-        if(m == 2)
-            row_flag = TwoRowsBit;
-        else if(m == 4)
-            row_flag = FourRowsBit;
-        else if(m == 8)
-            row_flag = EightRowsBit;
-    }
+    const unsigned row_flag = route == int8_routes::KParallelDecode && m == 2 ? TwoRowsBit : 0;
     return RouteBit | route | row_flag;
 }
 

@@ -292,8 +292,6 @@ make_plan(ck_tile_int8_nt_cached_weights_handle_v1 w,
     p->launch_m         = std::max(max_m, 1);
     p->n                = w->n;
     p->k                = w->k;
-    const auto fallback = ck_tile::select_grouped_gemm_int8_nt_instance(summary);
-    p->legacy_instance  = static_cast<unsigned>(fallback);
     const bool native_domain =
         uniform && !empty && native && w->n % 256 == 0 && w->k % 128 == 0 && w->k <= 16384;
     ck_tile::Int8CachedPlanRouteDomain domain{};
@@ -302,10 +300,11 @@ make_plan(ck_tile_int8_nt_cached_weights_handle_v1 w,
     domain.raw_transposed       = raw_transposed;
     domain.dense_scalar_a       = dense_scalar_a;
     domain.dense_channel_scales = dense_channel_scales;
-    const bool vector_nt_domain =
-        ck_tile::int8_cached_vector_nt_domain(w->n, w->k);
-    auto route = ck_tile::int8_cached_select_plan_route(
-        max_m, w->n, w->k, g, vector_nt_domain, w->compute_units, domain, fallback);
+    domain.fp16_output          = output_type == ck_tile::int8_output_types::Fp16;
+    const auto selection =
+        ck_tile::int8_cached_select_plan(summary, max_m, w->compute_units, domain);
+    auto route         = selection.route;
+    p->legacy_instance = static_cast<unsigned>(selection.legacy_instance);
 #ifdef CK_INT8_CACHED_TUNING
     if(tuning)
     {

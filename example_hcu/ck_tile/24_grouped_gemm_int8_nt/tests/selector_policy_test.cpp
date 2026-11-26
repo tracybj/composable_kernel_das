@@ -33,7 +33,8 @@ int main()
            PairedM256N384MaskedM4);
     assert(int8_cached_tuned_scaled_route(8192, 3072, 4096, 6, true, 80) ==
            PairedM256N384MaskedM4);
-    assert(int8_cached_tuned_scaled_route(8192, 3072, 4096, 8, true, 80) == LegacyRaw);
+    assert(int8_cached_tuned_scaled_route(8192, 3072, 4096, 8, true, 80) ==
+           PairedM256N384MaskedM4);
 
     using ck_tile::int8_cached_route;
     assert(int8_cached_route(2048, 1536, 2048, 4, true, 80) == 12);
@@ -156,9 +157,24 @@ int main()
            PairedM256N384MaskedM4);
     assert(int8_cached_select_plan_route(2048, 4096, 1536, 4, true, 80, padded_c) ==
            NativeM256N384MaskedM4);
-    for(int m : {14336, 16384})
-        assert(int8_cached_select_plan_route(m, 1536, 2048, 4, true, 80, dense) ==
-               PairedM256N384MaskedM4);
+    constexpr ck_tile::Int8CachedPlanRouteDomain dense_fp16{true, true, true, true, true, true};
+    assert(int8_cached_select_plan_route(14336, 1536, 2048, 4, true, 80, dense) ==
+           PairedM256N384MaskedM4);
+    for(auto domain : {dense, dense_fp16})
+    {
+        assert(int8_cached_select_plan_route(16384, 1536, 2048, 4, true, 80, domain) ==
+               PairedM256N384MaskedM4Lds);
+        for(int groups : {8, 12})
+            assert(int8_cached_select_plan_route(8192, 3072, 4096, groups, true, 80, domain) ==
+                   PairedM256N384MaskedM4);
+        for(int groups : {6, 8})
+            assert(int8_cached_select_plan_route(16384, 3072, 4096, groups, true, 80, domain) ==
+                   PairedM256N384MaskedM4);
+    }
+    assert(int8_cached_select_plan_route(8192, 3072, 4096, 6, true, 80, dense) ==
+           PairedM256N384MaskedM4);
+    assert(int8_cached_select_plan_route(8192, 3072, 4096, 6, true, 80, dense_fp16) ==
+           PairedM256N384MaskedM4Lds);
     assert(int8_cached_select_plan_route(8192, 1536, 2048, 4, true, 80, dense) ==
            PairedM256N384MaskedM8);
     assert(int8_cached_select_plan_route(4096, 6144, 7168, 12, true, 80, dense) ==
@@ -175,5 +191,26 @@ int main()
            LinearTransposedRaw);
     assert(int8_cached_select_plan_route(256, 256, 512, 64, false, 80, padded_a) ==
            LegacyRaw);
+    ck_tile::GroupedGemmProblem small{};
+    small.arch = ck_tile::GroupedGemmArch::gfx936;
+    small.layout = ck_tile::GroupedGemmLayout::nt;
+    small.m = ck_tile::GroupedGemmDimensionSummary::Common(4);
+    small.n = ck_tile::GroupedGemmDimensionSummary::Common(256);
+    small.k = ck_tile::GroupedGemmDimensionSummary::Common(512);
+    small.group_count = 64;
+    const auto bf = ck_tile::int8_cached_select_plan(small, 4, 80, dense);
+    const auto fp = ck_tile::int8_cached_select_plan(small, 4, 80, dense_fp16);
+    using Instance = ck_tile::GroupedGemmInstanceId;
+    assert(bf.route == LegacyRaw && bf.legacy_instance == Instance::int8_nt_small_m_n64_k128);
+    assert(fp.route == LegacyRaw && fp.legacy_instance == Instance::int8_nt_small_m_n64_k128);
+    assert(ck_tile::int8_cached_select_plan(small, 4, 80, padded_c).legacy_instance ==
+           ck_tile::select_grouped_gemm_int8_nt_instance(small));
+    assert(ck_tile::int8_cached_select_plan(small, 4, 96, dense).legacy_instance ==
+           ck_tile::select_grouped_gemm_int8_nt_instance(small));
+    small.n = ck_tile::GroupedGemmDimensionSummary::Common(1024);
+    small.k = ck_tile::GroupedGemmDimensionSummary::Common(2048);
+    small.group_count = 32;
+    assert(ck_tile::int8_cached_select_plan(small, 4, 80, dense).route == RawSmallM16N32K512);
+    assert(ck_tile::int8_cached_select_plan(small, 4, 80, dense_fp16).route == RawSmallM16N32K512);
     std::cout << "SCALED_TAIL_POLICY_PASS\n";
 }
